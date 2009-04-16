@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- bda-build-template version 0.10.0 -->
+
+<project name="ncimbrowser-installer" default="upgrade" basedir="."
+    xmlns:ivy="antlib:org.apache.ivy.ant"
+    >
+
+    <description>
+        This build file is part of the bda-build-templates project. This is the master install file for the project.  It should be placed in project/software.  This script is copied into the distribution and  executed from the extracted distribution.  It is run by typing "ant" from the master project build.xml or from command line. This script has two flows install and upgrade.
+        Install will do the following
+            * Install binaries
+            * Configure binaries
+            * Install application
+            * Configure application
+        Upgrade will do the following
+            * Install application
+            * Configure application
+        The script includes target that may not be used by all projects, but are included in here becaue it is a template. This script has targets to deal with the following, you can delete targets you don't want to work with
+        Application servers (option for grid services also)
+            * JBoss
+            * Tomcat
+        This script requires java and ant to run. Every thing else it needs is included in the distribution.
+    </description>
+
+    <!-- Properties file related properties and tasks -->
+
+    <property environment="env" />
+    <property file="local.properties"/>
+    <property file="project.properties"/>
+    <property name="properties.file" value="${basedir}/install.properties"/>
+    <echo message="Using properties file of ${properties.file}."/>
+    <available file="${properties.file}" property="properties.file.exists" />
+    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist, please make sure that you pass in an accurate file name with the 'ant -Dproperties.file=somepath/somefile', otherwise the build will fail."/>
+    <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=(.*[\w\d\/\{\}\\]+)[ \t]+\r*$" replace="\1=\2"/>
+    <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=[ \t]+(.*[\w\d\/\{\}\\]+)\r*$" replace="\1=\2"/>
+    <property file="${properties.file}" />
+    <property name="env.name" value="local"/>
+
+    <!-- Set application.base.path based on platform -->
+    <condition property="application.base.path" value="${application.base.path.linux}">
+        <or>
+            <os family="unix" />
+            <os family="mac" />
+        </or>
+    </condition>
+    <condition property="application.base.path" value="${application.base.path.windows}">
+        <os family="windows" />
+    </condition>
+    <echo message="application.base.path=${application.base.path}"/>
+    <property name="jboss.home" value="${application.base.path}/${jboss.relative.path}"/>
+
+    <!-- Set application.data.path based on platform -->
+    <condition property="application.data.path" value="${application.data.path.linux}">
+        <or>
+            <os family="unix" />
+            <os family="mac" />
+        </or>
+    </condition>
+    <condition property="application.data.path" value="${application.data.path.windows}">
+        <os family="windows" />
+    </condition>
+    <echo message="application.data.path=${application.data.path}"/>
+
+    <!--OS Temp dir -->
+    <condition property="os.temp.dir" value="/tmp">
+        <or>
+            <os family="unix" />
+            <os family="mac" />
+        </or>
+    </condition>
+    <condition property="os.temp.dir" value="c:/temp">
+        <os family="windows" />
+    </condition>
+
+    <property name="project.name" value="ncimbrowser"/>
+
+    <!-- Generic properties -->
+    <property name="log.dir" value="${basedir}/logs" />
+    <property name="working.dir" value="${basedir}/working" />
+    <property name="temp.dir" value="${working.dir}/temp" />
+
+    <!-- Install Time properties -->
+    <!-- Source and target directories -->
+    <property name="bda-utils.dir" value="bda-utils" />
+    <property name="tools.dir" value="${basedir}/${tools.dist.relative.dir}" />
+    <property name="common.dir.src" value="${basedir}/${common.dist.relative.dir}" />
+    <property name="common.dir.dest" value="${working.dir}/${common.dist.relative.dir}" />
+    <property name="jboss-conf.dir.src" value="${basedir}/${jboss-conf.dist.relative.dir}" />
+    <property name="jboss-conf.dir.dest" value="${working.dir}/${jboss-conf.dist.relative.dir}" />
+
+    <!-- Jboss binding configurtion related properties -->
+
+    <property name="jboss.binding.template.location" value="${bda-utils.dir}/resource/${jboss.template.relative.dir}/bindings.xml"/>
+    <property name="jboss.service.template.location" value="${bda-utils.dir}/resource/${jboss.template.relative.dir}/jboss-service.xml"/>
+
+    <!-- WAR -->
+    <property name="ncimbrowser-webapp.dir.dist" value="${basedir}/${ncimbrowser-webapp.dist.relative.dir}" />
+    <property name="ncimbrowser-webapp.war.file" value="ncimbrowser.war" />
+    <property name="ncimbrowser-webapp.prop.file" value="NCImBrowserProperties.xml" />
+
+    <!-- Grid related properties -->
+    <!-- Default to false, properties can override -->
+    <property name="jboss.ssl.enable" value="false"/>
+    <!-- Paths -->
+    <path id="bda-utils.classpath">
+        <fileset dir="${bda-utils.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Task definitions -->
+
+    <taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml">
+        <classpath>
+            <pathelement location="${bda-utils.dir}/antunit-1.0.jar" />
+        </classpath>
+    </taskdef>
+    <taskdef name="xmlconfig" classname="com.xmlconfig.anttask.XmlConfig" classpathref="bda-utils.classpath" />
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
+        <classpath>
+            <pathelement location="${bda-utils.dir}/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${bda-utils.dir}/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${bda-utils.dir}/bcel-5.1.jar"/>
+            <pathelement location="${bda-utils.dir}/commons-httpclient-3.0.1.jar"/>
+            <pathelement location="${bda-utils.dir}/commons-logging-1.0.4.jar"/>
+            <pathelement location="${bda-utils.dir}/ivy-1.3.1.jar"/>
+        </classpath>
+    </taskdef>
+    <taskdef resource="liquibasetasks.properties" classpathref="bda-utils.classpath"/>
+    <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="bda-utils.classpath"/>
+    <!-- Conditionals -->
+    <available file="${jboss.home}/server/${jboss.server.name}/conf/jboss-service.xml" property="jboss.exists"/>
+    <!-- Includes-->
+    <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
+    <!-- figure out whether to use install-properties.template or upgrade-proprties.template based on the name of the properties file -->
+    <propertyregex property="properties.file.type"
+        input="${properties.file}"
+        regexp=".*(install|upgrade).*"
+        select="\1"
+        />
+    <echo message="Properties file type = ${properties.file.type}"/>
+    <switch value="${properties.file.type}">
+        <case value="install">
+            <property name="properties.template.file" value="install-properties.template" />
+        </case>
+        <case value="upgrade">
+            <property name="properties.template.file" value="upgrade-properties.template" />
+        </case>
+        <default>
+            <fail message="Property file name must include 'install' or 'upgrade' so it can be determined which properties template should be used. If you are not certain include 'upgrade' in the name of your proeprties file."/>
+        </default>
+    </switch>
+    <!-- Added to convert location to file and path -->
+    <basename file="${jboss.ssl.keystore.location}" property="jboss.ssl.keystore.file"/>
+    <dirname file="${jboss.ssl.keystore.location}" property="jboss.ssl.keystore.dir"/>
+    <!-- Start logging -->
+    <property name="install-logs.dir" location="${application.data.path}/change-logs"/>
+    <mkdir dir="${install-logs.dir}"/>
+    <tstamp>
+        <format property="install.time" pattern="yyyy-MM-dd-HH-mm" />
+    </tstamp>
+    <record name="${install-logs.dir}/install-${install.time}.log" action="start"/>
+
+    <!-- ****************************** Installer section ********************************** -->
+
+    <target name="diag">
+        <echoproperties/>
+    </target>
+
+    <target name="install:clean" description="Removes all files from the local filesystem" depends="
+        install:clean:jboss
+        ">
+    </target>
+
+    <target name="install:clean:jboss" unless="exclude.jboss">
+        <sleep seconds="5" />
+        <property name="backup.count" value="5"/>
+        <if>
+            <not>
+                <equals arg1="${exclude.jboss.backup}" arg2="true"/>
+            </not>
+            <then>
+                <!-- Jboss backup, do not compress until install is finished -->
+                <property name="backup.jboss.base.dir" location="${application.base.path}/backup/jboss"/>
+
+                <!-- So these directories won't be included in the backup, they are not needed to use jboss -->
+                <delete dir="${jboss.home}/server/${jboss.server.name}/work"/>
+                <delete dir="${jboss.home}/server/${jboss.server.name}/tmp"/>
+
+                <backup-dir
+                    src.dir="${jboss.home}"
+                    backup.base.dir="${backup.jboss.base.dir}"
+                    backup.count="${backup.count}"
+                    />
+            </then>
+        </if>
+        <delete dir="${jboss.home}"/>
+    </target>
+
+    <target name="install:init" description="Does directory management to initialize install">
+        <math result="jboss.ssl.port" operand1="${jboss.server.port}" operation="+" operand2="363" datatype="int"/>
+        <filterset id="embedded.filterset">
+            <filter token="application.base.path" value="${application.base.path}"/>
+            <filter token="application.url" value="${application.url}"/>
+            <!-- added for liquibase -->
+            <filter token="jboss.home" value="${jboss.home}"/>
+            <filter token="hibernate.cfg.file.path" value="${hibernate.cfg.file.path}"/>
+        </filterset>
+        <mkdir dir="${working.dir}" />
+        <delete dir="${working.dir}"/>
+        <mkdir dir="${working.dir}" />
+        <!-- Copy files to ensure values containing variables are expanded, such properties are stored in embedded.filterset and then copy with filter files -->
+        <copy todir="${common.dir.dest}" filtering="true">
+            <fileset dir="${common.dir.src}">
+                <include name="**/*"/>
+            </fileset>
+            <filterset refid="embedded.filterset"/>
+            <filterset>
+                <filtersfile file="${properties.file}"/>
+                <filtersfile file="project.properties"/>
+            </filterset>
+        </copy>
+    </target>
+
+    <target name="install:jboss:binaries" description="Install JBoss binaries" unless="exclude.jboss">
+        <jboss-install-binaries
+            />
+    </target>
+
+    <target name="install:jboss:ncimbrowser-webapp" description="Deploy ncimbrowser-webapp and common libraries to jboss installation" unless="exclude.jboss">
+        <!-- added to ensure working.dirs are fresh for our install -->
+        <delete dir="${jboss.home}/server/${jboss.server.name}/tmp"/>
+        <delete dir="${jboss.home}/server/${jboss.server.name}/work"/>
+        <move file="${jboss.home}/server/${jboss.server.name}/log/server.log" tofile="${jboss.home}/server/${jboss.server.name}/log/server/log.${install.time}" failonerror="false"/>
+        <copy file="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}"
+             todir="${jboss.home}/server/${jboss.server.name}/deploy"
+             overwrite="true"
+        >
+        </copy>
+        <!--  Many NCI applications require clm for csm, so you can point this to where you have the version you want to use
+        <copy file="${bda-utils.dir}/clm-3.2.jar" todir="${jboss.home}/server/${jboss.server.name}/lib" overwrite="true" />
+        -->
+    </target>
+
+    <target name="install:jboss:ncimbrowser-webapp:configure" description="Configure ncimbrowser-webapp application, copies over externalized properties or configurations that are not part of the jboss configuration"
+        unless="exclude.jboss" depends="-install:jboss:remove:jsf, -install:jboss:configure:properties-service">
+
+        <tstamp>
+            <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
+        </tstamp>
+
+        <!-- copy over any other files you may need to configure your application -->
+
+        <filterset id="embedded.filterset">
+            <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+            <filter token="ncimbrowser.conf.path" value="${application.data.path}/${ncimbrowser.conf.path}"/>
+            <filter token="ehcache.xml.file" value="${application.data.path}/${ncimbrowser.conf.path}/${ehcache.xml.file}"/>
+            <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
+            <filter token="maximum.return" value="${maximum.return}"/>
+            <filter token="maximum.tree.level" value="${maximum.tree.level}"/>
+            <filter token="sort.by.score" value="${sort.by.score}"/>
+            <filter token="incoming.mail.host" value="${incoming.mail.host}"/>
+            <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
+            <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
+            <filter token="ncim.build.info" value="Built: ${BUILD_DATE}"/>
+        </filterset>
+        <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
+        <mkdir dir="${application.data.path}/${ehcache.cache.path}" />
+        <copy todir="${application.data.path}/${ncimbrowser.conf.path}" filtering="true" overwrite="true">
+            <filterset refid="embedded.filterset"/>
+            <fileset dir="${ncimbrowser-webapp.dir.dist}/deploy">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+
+        <!-- copy JBoss-web.xml file -->
+        <!--
+        <copy file="${jboss-conf.dir.dest}/${jboss.web.xml.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
+        -->
+
+    </target>
+
+    <target name="-install:jboss:configure:properties-service">
+
+        <!-- Backup file -->
+        <copy file="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
+            tofile="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml.bak"
+        />
+
+        <xmltask source="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
+            dest="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml">
+            <xmlcatalog refid="installer.catalog"/>
+            <remove path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]"/>
+            <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
+                <![CDATA[
+                <attribute name="Properties">
+                   gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
+                   LG_CONFIG_FILE=${lg.config.file}
+                </attribute>
+                ]]>
+            </insert>
+        </xmltask>
+
+        <echo message="properties-service.xml updated." />
+
+    </target>
+
+    <target name="install:jboss:configure:log4j" description="Configure custom entries in system wide log4j" unless="exclude.jboss">
+        <echo message="Configuring Log4J"/>
+        <property name="log4j.file.name" value="log4j.xml"/>
+        <copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.pre"/>
+        <replaceregexp file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
+            byline="true"
+            match="^(&lt;!DOCTYPE.*)"
+            replace="&lt;!-- \1 --&gt;"
+            />
+        <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.1"/>-->
+        <xmltask source="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
+            dest="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}">
+            <xmlcatalog refid="installer.catalog"/>
+            <remove path="/log4j:configuration/appender[@name='TestAppender']"/>
+            <insert path="/log4j:configuration">
+                <![CDATA[
+                <appender name="TestAppender" class="org.jboss.logging.appender.RollingFileAppender">
+                    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+                    <param name="File" value="${jboss.server.log.dir}/testAppender.log"/>
+                    <param name="Append" value="false"/>
+                    <param name="MaxFileSize" value="${log4j.maxFileSize}"/>
+                    <!--<param name="MaxBackupIndex" value="${log4j.maxDays}"/>-->
+                    <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+                    </layout>
+                </appender>
+                ]]>
+            </insert>
+            <remove path="/log4j:configuration/category[@name='org.nih.nci']"/>
+            <insert path="/log4j:configuration">
+                <![CDATA[
+                <category name="org.nih.nci">
+                    <priority value="${log4j.level}"/>
+                </category>
+                ]]>
+            </insert>
+        </xmltask>
+        <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.2"/>-->
+        <validate-log4j
+            log4j.file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
+            />
+        <replaceregexp file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
+            byline="true"
+            match="^&lt;!-- (&lt;!DOCTYPE.*) --&gt;"
+            replace="\1"
+            />
+        <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.post"/>-->
+    </target>
+
+    <target name="-install:jboss:remove:jsf" description="Remove JSF library files from jbossweb to allow NCIA JSF to work" unless="exclude.jboss">
+        <delete file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-api.jar" failonerror="false" />
+        <delete file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-impl.jar" failonerror="false" />
+    </target>
+
+    <target name="install:jboss:configure" description="Configure JBoss (bindings, login-config.xml, ect)" unless="exclude.jboss"
+        depends="
+            install:jboss:configure:log4j
+            ">
+        <!-- Calls the following macros
+            jboss-bindings - configures ports for jboss
+            jboss-login-config - sets up authentication
+            secure-jboss-console - adds password to jboss console apps
+            jboss-update-shutdown - updates shutdown.jar with correct jndi port so no args need to used 4 shutdown
+            appserver-ssl-configure -  enables ssl
+            appserver-configure-external-hostname - configures jboss for use through a reverse proxy
+            grid-secure-configure-connector - configures secure grid
+        -->
+        <!-- Use below if you are defining all the ports in your install.xml not the NCICB port configuraitons-->
+        <jboss-configure
+            jboss.server.ports.name="bda-ports"
+            jboss.server.binding.template.location="${bda-utils.resource.dir}/template-binding.xml"
+            jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jboss-web.deployer/server.xml"
+            />
+        <!-- Default values for all attributes if you are using standard NCICB port configurations
+        <jboss-configure
+            />
+            -->
+    </target>
+
+    <target name="-install:jboss:configure:jbossmq-dest" description="Configure MQ settings based on contents of software/common/resource/jboss-conf/jbossmq-destinations-service.block.xml" unless="exclude.jboss">
+        <!-- Provide template to change jboss mq configurations
+        <property name="jboss-mq.block.file" value="${resource.dir.target}/jbossmq-destinations-service.block.xml"/>
+        <xmlconfig in="${jboss.home}/server/${jboss.server.name}/deploy/jms/jbossmq-destinations-service.xml" verbose="false">
+            <insertbranch path="//server" srcxmlfile="${jboss-mq.block.file}" srcpath="//mbean[1]" />
+            <insertbranch path="//server" srcxmlfile="${jboss-mq.block.file}" srcpath="//mbean[2]" />
+        </xmlconfig>
+        -->
+    </target>
+
+    <target name="install:jboss:stop" description="Stops jboss" unless="exclude.jboss">
+        <if>
+            <isset property="jboss.exists"/>
+            <then>
+                <jboss-stop-jboss jboss.server.jndi.port="${jboss.server.jndi.port}"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="install:jboss:start" description="Starts jboss" unless="exclude.jboss">
+        <if>
+            <not>
+                <isset property="exclude.start.servers"/>
+            </not>
+            <then>
+                <jboss-start-jboss />
+                <sleep seconds="15"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="install:validation:pre-install" description="Runs pre-install validation checks bda-utils">
+        <validate-pre-install
+            ant.check.version="${ant.minimum.version}"
+            java.check.version.major="${java.major.version}"
+            java.check.version.minor="${java.minor.version}"
+            />
+    </target>
+
+    <target name="install:validation:pre-install:ports" description="Checks to see if configured ports are listenting and fails buld, meant to be run after jboss:stop">
+        <validate-ports-preinstall />
+    </target>
+
+    <target name="install:validation:post-install" description="Run post-install checks from bda-utils">
+        <if>
+            <not>
+                <isset property="exclude.start.servers"/>
+            </not>
+            <then>
+                <validate-post-install />
+            </then>
+        </if>
+    </target>
+
+    <target name="install:jboss" description="Wrapper scripts that calls all required targets to install the jboss container" unless="exclude.jboss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        install:validation:pre-install:ports,
+        install:clean:jboss,
+        install:init,
+        install:jboss:binaries,
+        install:jboss:ncimbrowser-webapp:re-configure,
+        install:jboss:ncimbrowser-webapp,
+        install:jboss:ncimbrowser-webapp:configure,
+        install:jboss:configure,
+        install:post,
+        install:jboss:start
+        " >
+    </target>
+
+    <target name="install" description="Installs and configures JBOSS and deploys application"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        install:validation:pre-install:ports,
+        install:clean,
+        install:init,
+        install:jboss,
+        install:post,
+        install:jboss:start,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="install:jboss:ncimbrowser-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss">
+        <!-- This is only required if configuration files are not externalized, below is a sample of what you may do.
+        <delete dir="${working.dir}/ncimbrowser-webapp"/>
+        <unzip src="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" dest="${working.dir}/ncimbrowser-webapp"/>
+        <copy todir="${working.dir}/ncimbrowser-webapp/WEB-INF/classes" file="${jboss-conf.dir.dest}/hibernate.cfg.xml"/>
+
+        <move file="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" tofile="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}.orig"/>
+        <war destfile="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" compress="false" webxml="${working.dir}/ncimbrowser-webapp/WEB-INF/web.xml" >
+            <fileset dir="${working.dir}/ncimbrowser-webapp">
+                <include name="*/**" />
+            </fileset>
+        </war>
+        -->
+    </target>
+
+    <target name="upgrade:jboss" description="Wrapper target to call all targets required to upgrade jboss container." unless="exclude.jboss" depends="upgrade-ncm:jboss">
+    </target>
+
+    <target name="upgrade" description="Upgrades JBoss" depends="upgrade-ncm">
+    </target>
+
+    <target name="upgrade-with-dbinstall" description="Upgrades JBoss" depends="upgrade-ncm:with-dbinstall">
+    </target>
+
+    <target name="upgrade-dac:jboss" description="Wrapper target to call all targets required to upgrade jboss container." unless="exclude.jboss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        install:validation:pre-install:ports,
+        install:clean:jboss,
+        install:init,
+        install:jboss:binaries,
+        install:jboss:configure,
+        install:jboss:ncimbrowser-webapp:re-configure,
+        install:jboss:ncimbrowser-webapp,
+        install:jboss:ncimbrowser-webapp:configure,
+        install:post:jboss,
+        install:jboss:start
+        ">
+    </target>
+
+    <target name="upgrade-dac" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade-dac:with-dbinstall" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade-cm:jboss" description="Wrapper target to call all targets required to upgrade jboss container." unless="exclude.jboss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        install:validation:pre-install:ports,
+        install:init,
+        install:jboss:configure,
+        install:jboss:ncimbrowser-webapp:re-configure,
+        install:jboss:ncimbrowser-webapp,
+        install:jboss:ncimbrowser-webapp:configure,
+        install:post:jboss,
+        install:jboss:start
+        ">
+    </target>
+
+    <target name="upgrade-cm" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade-cm:with-dbinstall" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade-ncm:jboss" description="Wrapper target to call all targets required to upgrade jboss container." unless="exclude.jboss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        install:validation:pre-install:ports,
+        install:init,
+        install:jboss:ncimbrowser-webapp:re-configure,
+        install:jboss:ncimbrowser-webapp,
+        install:jboss:ncimbrowser-webapp:configure,
+        install:post:jboss,
+        install:jboss:start
+        ">
+    </target>
+
+    <target name="upgrade-ncm" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade-ncm:with-dbinstall" description="Upgrades JBoss"
+        depends="
+        install:validation:pre-install,
+        install:jboss:stop,
+        upgrade:init,
+        install:init,
+        upgrade:jboss,
+        install:validation:post-install
+        ">
+    </target>
+
+    <target name="upgrade:init">
+        <!-- Do nothing here for this app -->
+    </target>
+
+    <target name="install:post" depends="
+        install:post:jboss
+        ">
+    </target>
+
+    <target name="install:post:jboss" unless="exclude.jboss">
+        <if>
+            <not>
+                <equals arg1="${exclude.jboss.backup}" arg2="true"/>
+            </not>
+            <then>
+                <property name="changelogFile" location="${install-logs.dir}/chagneLog-${install.time}.txt"/>
+                <property name="compare1.dir" location="${backup.jboss.base.dir}/backup/${jboss.relative.path}"/>
+                <property name="compare2.dir" location="${jboss.home}"/>
+                <report-dir-diff
+                    dir1="${compare1.dir}"
+                    dir2="${compare2.dir}"
+                    reportFile="${changelogFile}"
+                    />
+                <!-- Copy app server logs -->
+                <mkdir dir="${jboss.home}/server/${jboss.server.name}/log"/>
+                <mkdir dir="${backup.jboss.base.dir}/backup/${jboss.relative.path}/server/${jboss.server.name}/log"/>
+                <!-- so the logs wont be included in the zip -->
+                <move todir="${jboss.home}/server/${jboss.server.name}/log">
+                    <fileset dir="${backup.jboss.base.dir}/backup/${jboss.relative.path}/server/${jboss.server.name}/log">
+                        <include name="*"/>
+                    </fileset>
+                </move>
+
+                <!-- Compress backup and cleanup -->
+                <mkdir dir="${backup.jboss.base.dir}/backup1"/>
+                <zip destfile="${backup.jboss.base.dir}/backup1/${jboss.relative.path}.zip" basedir="${backup.jboss.base.dir}/backup" />
+                <delete dir="${backup.jboss.base.dir}/backup"/>
+            </then>
+        </if>
+    </target>
+
+</project>

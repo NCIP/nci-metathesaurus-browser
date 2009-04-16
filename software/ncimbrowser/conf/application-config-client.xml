@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+      <bean id="EvsServiceInfo" class="java.util.HashMap">
+            <constructor-arg>
+                  <map>
+                        <entry key="APPLICATION_SERVICE_BEAN" value="EvsApplicationService"/>
+                        <entry key="AUTHENTICATION_SERVICE_BEAN" value-ref="EvsAuthenticationProvider"/>
+                        <entry key="APPLICATION_SERVICE_URL" value="@lex.evs.api.default.url@/http/applicationService"/>
+                        <entry key="APPLICATION_SERVICE_CONFIG" value-ref="EvsApplicationServiceConfig"/>
+                  </map>
+            </constructor-arg>
+      </bean>
+
+      <bean id="EvsInterceptor" class="gov.nih.nci.system.client.proxy.EVSApplicationServiceProxy" singleton="false">
+            <property name="proxyFactory">
+                  <bean class="gov.nih.nci.system.client.proxy.EVSProxyHelperImpl"/>
+            </property>
+      </bean>
+
+      <bean id="EvsApplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">
+            <property name="interceptorNames">
+             <list>
+             <value>EvsInterceptor</value>
+             <value>AppService</value>
+             </list>
+             </property>
+            <property name="interfaces" value="gov.nih.nci.system.applicationservice.EVSApplicationService"/>
+            <property name="singleton">
+                <value>false</value>
+            </property>
+      </bean>
+
+       <bean id="AppService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" singleton="false">
+            <property name="serviceUrl" value="@lex.evs.api.default.url@/http/applicationService"/>
+            <property name="serviceInterface" value="gov.nih.nci.system.applicationservice.EVSApplicationService"/>
+            <property name="httpInvokerRequestExecutor">
+                <bean class="org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor"/>
+             </property>
+       </bean>
+
+      <bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
+            <property name="remoteAuthenticationManager">
+                  <bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+                      <property name="serviceUrl" value="@lex.evs.api.default.url@/http/remoteAuthenticationManager"/>
+                      <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
+                  </bean>
+            </property>
+      </bean>
+
+      <!-- Dont touch this unless you know what you are doing -->
+      <bean id="EvsApplicationServiceConfig" class="java.lang.String">
+            <constructor-arg>
+                  <value>
+                        &lt;bean id=&quot;interceptor&quot; class=&quot;gov.nih.nci.system.client.proxy.EVSApplicationServiceProxy&quot;&gt;
+                              &lt;property name=&quot;proxyFactory&quot;&gt;
+                                    &lt;bean class=&quot;gov.nih.nci.system.client.proxy.EVSProxyHelperImpl&quot;/&gt;
+                              &lt;/property&gt;
+                        &lt;/bean&gt;
+                        &lt;bean id=&quot;applicationService&quot; class=&quot;org.springframework.aop.framework.ProxyFactoryBean&quot;&gt;
+                              &lt;property name=&quot;target&quot;&gt;
+                                    &lt;bean class=&quot;org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean&quot;&gt;
+                                          &lt;property name=&quot;serviceUrl&quot; value=&quot;URL_KEY/http/applicationService&quot;/&gt;
+                                          &lt;property name=&quot;serviceInterface&quot; value=&quot;gov.nih.nci.system.applicationservice.EVSApplicationService&quot;/&gt;
+                                          &lt;property name=&quot;httpInvokerRequestExecutor&quot;&gt;
+                                                &lt;bean class=&quot;org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor&quot;/&gt;
+                                          &lt;/property&gt;
+                                    &lt;/bean&gt;
+                              &lt;/property&gt;
+                              &lt;property name=&quot;interceptorNames&quot; value=&quot;interceptor&quot;/&gt;
+                              &lt;property name=&quot;interfaces&quot; value=&quot;gov.nih.nci.system.applicationservice.EVSApplicationService&quot;/&gt;
+                        &lt;/bean&gt;
+                        &lt;bean id=&quot;authenticationProvider&quot; class=&quot;org.acegisecurity.providers.rcp.RemoteAuthenticationProvider&quot;&gt;
+                              &lt;property name=&quot;remoteAuthenticationManager&quot;&gt;
+                                          &lt;bean class=&quot;org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean&quot;&gt;
+                                                &lt;property name=&quot;serviceUrl&quot; value=&quot;URL_KEY/http/remoteAuthenticationManager&quot;/&gt;
+                                                &lt;property name=&quot;serviceInterface&quot; value=&quot;org.acegisecurity.providers.rcp.RemoteAuthenticationManager&quot;/&gt;
+                                          &lt;/bean&gt;
+                              &lt;/property&gt;
+                        &lt;/bean&gt;
+                &lt;alias alias=&quot;EvsApplicationService&quot; name=&quot;applicationService&quot;/&gt;
+                &lt;alias alias=&quot;EvsAuthenticationProvider&quot; name=&quot;authenticationProvider&quot;/&gt;
+                  </value>
+            </constructor-arg>
+      </bean>
+
+
+</beans>
