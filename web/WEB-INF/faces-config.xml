@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+  <application>
+    <message-bundle>gov.nih.nci.evs.browser.bean.Resources</message-bundle>
+    <locale-config>
+      <default-locale>en</default-locale>
+      <supported-locale>en-us</supported-locale>
+      <supported-locale>fr</supported-locale>
+      <supported-locale>es</supported-locale>
+    </locale-config>
+  </application>
+
+  <navigation-rule>
+    <from-view-id>/pages/home.jsp</from-view-id>
+    <navigation-case> 
+       <description>message</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>concept_details</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>help</description>
+       <to-view-id>/pages/help.jsp</to-view-id>
+    </navigation-case>  
+    
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/pages/contact_us.jsp</from-view-id>
+    <navigation-case> 
+       <description>message</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>concept_details</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>help</description>
+       <to-view-id>/pages/help.jsp</to-view-id>
+    </navigation-case>  
+    
+  </navigation-rule>
+  
+  
+  <navigation-rule>
+    <from-view-id>/pages/search_results.jsp</from-view-id>
+    <navigation-case> 
+       <description>ConceptReport</description>
+       <to-view-id>/ConceptReport.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>    
+
+    <navigation-case> 
+       <description>Match</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>help</description>
+       <to-view-id>/pages/help.jsp</to-view-id>
+    </navigation-case>  
+    
+  </navigation-rule>
+  
+  <navigation-rule>
+    <from-view-id>/pages/concept_details.jsp</from-view-id>
+    <navigation-case> 
+       <description>search_results</description>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>Match</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+ 
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+        <description>help</description>
+        <to-view-id>/pages/help.jsp</to-view-id>
+    </navigation-case>  
+    
+  </navigation-rule>
+  
+  <navigation-rule>
+    <from-view-id>/pages/synonym.jsp</from-view-id>
+    <navigation-case> 
+       <description>term_type_help_info</description>
+       <to-view-id>/pages/term_type_help_info.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>  
+
+  <navigation-rule>
+    <from-view-id>/pages/subset.jsp</from-view-id>
+    <navigation-case> 
+       <description>message</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>concept_details</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>help</description>
+       <to-view-id>/pages/help.jsp</to-view-id>
+    </navigation-case>  
+  </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/pages/help.jsp</from-view-id>
+    <navigation-case> 
+       <description>message</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case> 
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case> 
+       <description>concept_details</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>   
+
+    <navigation-case> 
+       <description>contact_us</description>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+       <description>contact_us_error</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>error</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+
+  </navigation-rule>
+  
+<managed-bean>
+  <managed-bean-name>DataUtils</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.browser.bean.DataUtils</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+<managed-bean>
+  <managed-bean-name>userSessionBean</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.browser.bean.UserSessionBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+ 
+<managed-bean>
+  <managed-bean-name>ontologyBean</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.browser.bean.OntologyBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+ 
+
+</faces-config>

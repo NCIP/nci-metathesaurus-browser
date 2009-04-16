@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <DisplayItems>
+      <DisplayItem>
+            <propertyName>DEFINITION</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>ALT_DEFINITION</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>ALT_LONG_DEFINITION</propertyName>
+            <itemLabel>Alternative Long Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Preferred_Name</propertyName>
+            <itemLabel>Preferred Name</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Display_Name</propertyName>
+            <itemLabel>Display Name</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Code</propertyName>
+            <itemLabel>NCI Thesaurus Code</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>UMLS_CUI</propertyName>
+            <itemLabel>NCI Metathesaurus CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>FULL_SYN</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Synonym</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>CAS_Registry</propertyName>
+            <itemLabel>CAS Registry Number</itemLabel>
+            <url>http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno=</url>
+            <hyperlinkText>see NLM ChemIDplus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>FDA_UNII_Code</propertyName>
+            <itemLabel>FDA UNII Code</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>GenBank_Accession_Number</propertyName>
+            <itemLabel>GenBank Accession Number</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=search&amp;term=+</url>
+            <hyperlinkText>see GenBank Accession Number info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Locus_ID</propertyName>
+            <itemLabel>Locus ID</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=</url>
+            <hyperlinkText>see Locus ID info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+
+       <DisplayItem>
+            <propertyName>NCI_META_CUI</propertyName>
+            <itemLabel>NCI META CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI META CUI info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>NSC_Code</propertyName>
+            <itemLabel>NSC Code</itemLabel>
+            <url>http://dtp.nci.nih.gov/dtpstandard/servlet/dwindex?searchtype=NSC&amp;searchlist=</url>
+            <hyperlinkText>see NCI DTP info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>OMIM_Number</propertyName>
+            <itemLabel>OMIM Number</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov:80/entrez/dispomim.cgi?id=</url>
+            <hyperlinkText>see OMIM Number info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PDQ_Closed_Trial_Search_ID</propertyName>
+            <itemLabel>PDQ Closed Trial Search ID</itemLabel>
+            <url>null</url>
+            <hyperlinkText>see NCI PDQ close clinical trial info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PDQ_Open_Trial_Search_ID</propertyName>
+            <itemLabel>PDQ Open Trial Search ID</itemLabel>
+            <url>null</url>
+            <hyperlinkText>see NCI PDQ open clinical trial info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PubMedID_Primary_Reference</propertyName>
+            <itemLabel>PubMedID Primary Reference</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=</url>
+            <hyperlinkText>see PubMedID Primary Reference info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Swiss_Prot</propertyName>
+            <itemLabel>Swiss Prot</itemLabel>
+            <url>http://us.expasy.org/cgi-bin/sprot-search-ac?</url>
+            <hyperlinkText>see Swiss Prot info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>UMLS_CUI</propertyName>
+            <itemLabel>UMLS CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+    </DisplayItems>
+
+    <ConfigurableItems>
+        <ConfigurableItem>
+                 <key>EVS_SERVICE_URL</key>
+                 <value>@lex.evs.api.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_RETURN</key>
+                 <value>@maximum.return@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_TREE_LEVEL</key>
+                 <value>@maximum.tree.level@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>EHCACHE_XML_PATHNAME</key>
+                 <value>@ehcache.xml.file@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>SORT_BY_SCORE</key>
+                 <value>@sort.by.score@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>INCOMING_MAIL_HOST</key>
+                 <value>@incoming.mail.host@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCICB_CONTACT_URL</key>
+                 <value>@ncicb.contact.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>TERMINOLOGY_SUBSET_DOWNLOAD_URL</key>
+                 <value>@terminology.subset.download.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCIM_BUILD_INFO</key>
+                 <value>@ncim.build.info@</value>
+        </ConfigurableItem>
+
+    </ConfigurableItems>
+
+</root>
