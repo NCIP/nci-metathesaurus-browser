@@ -1,0 +1,81 @@
+************************************************************
+*** NCI Meta Thesaurus Browser build / deployment notes ****
+************************************************************
+
+--------------------------------------
+Pre-installation requirements
+--------------------------------------
+1. JDK 1.5
+2. Apache ANT 1.7 or newer
+
+--------------------------------------
+Deploy to DEV remotely from desktop
+--------------------------------------
+1. Rename local.properties so that it does not overwrite the remote properties file.
+2. ant -Dproperties.file=dev-upgrade.properties deploy:remote:upgrade
+
+-----------------------
+Build the application
+-----------------------
+Checkout source files from SVN at the following URL:
+https://gforge.nci.nih.gov/svnroot/ncim/trunk
+
+1. Compile the application
+   cd C:\SVN-Projects\ncit\software\build
+   ant build:all
+2. Deploy the application
+   ant deploy:local:install
+
+Step #2 will deploy a new JBoss container and start it at the following URL
+http://localhost:19280/ncimbrowser/
+
+The JBoss instance will be located in c:\Apps\ncimbrowser-webapp\jboss-4.0.5.GA by
+default.
+
+If you need to overwrite any settings, create a local.properties file and add the
+properties you wish to overwrite to it. Properties can be found in
+project.properties and install.properties.
+
+For example, if you need to change the location of the application server add the
+following to your local.properties:
+
+application.base.path.windows=h:/apps/ncimbrowser-webapp
+
+-----------------------
+Other build commands
+-----------------------
+cd C:\SVN-Projects\ncim\software\build>
+
+Usage:      ant
+Clean:      ant clean
+Build:      ant build:all
+Deploy:     ant deploy:local:install
+Redeploy:   ant deploy:hot
+
+--------------------------------------
+Location of files
+--------------------------------------
+URL:        http://localhost:19280/ncimbrowser
+
+--------------------------------------
+Trouble shooting
+--------------------------------------
+
+Clear JBoss cache
+-----------------
+Solution:
+Delete C:\Apps\jboss-4.0.5.GA\server\default\work\jboss.web\localhost
+
+JBoss rmiPort=1098 "Address already in use" error
+-------------------------------------------------
+Solution:
+cd <JBOSS_HOME>\server\default\conf directory, and changed the rmi port in
+the jboss-services.xml from 1098 to 1122 (or a port that hasn't been taken).
+Restarted JBOSS.
+
+log4j:ERROR "org.jboss.logging.util.OnlyOnceErrorHandler"
+---------------------------------------------------------
+Exceptions occurs if an application deployed on JBoss packages log4j and commons-logging related jars
+in its package. JBoss has its own versions of these jars in its lib folder which results in these conflicts.
+Solution:
+Removing the log4j and commons-logging jars from your application's package will solve this issue.
