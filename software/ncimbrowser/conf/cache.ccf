@@ -1,0 +1,41 @@
+# DEFAULT CACHE REGION
+# sets the default aux value for any non configured caches
+jcs.default=
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=2147483647
+jcs.default.elementattributes.IdleTime=2147483647
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+#To use memory shrinking ...
+jcs.default.cacheattributes.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.cacheattributes.MaxMemoryIdleTimeSeconds=2147483647
+jcs.default.cacheattributes.cacheattributes.ShrinkerIntervalSeconds=60
+# SYSTEM CACHE
+# should be defined for the storage of group attribute list
+jcs.system.groupIdCache=DC
+jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+# CACHE REGIONS AVAILABLE
+# Regions preconfigured for caching
+jcs.region.treeCache=DC
+jcs.region.treeCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.treeCache.cacheattributes.MaxObjects=1000
+jcs.region.treeCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.treeCache.elementattributes.IsEternal=false
+#4Hr maxLife...
+jcs.region.treeCache.elementattributes.MaxLifeSeconds=2147483647
+jcs.region.treeCache.elementattributes.IdleTime=2147483647
+jcs.region.treeCache.elementattributes.IsSpool=true
+jcs.region.treeCache.elementattributes.IsRemote=true
+jcs.region.treeCache.elementattributes.IsLateral=true
+# AUXILIARY CACHES AVAILABLE
+# Primary Disk Cache -- faster than the rest because of memory key storage
+jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+#jcs.auxiliary.DC.attributes.DiskPath=@NCBO_JCS_CACHE_LOCATION@
+jcs.auxiliary.DC.attributes.DiskPath=@ehcache.cache.path@
