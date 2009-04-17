@@ -13,8 +13,8 @@
     Vector propertytypes = new Vector();
     propertytypes.add("PRESENTATION");
     propertytypes.add("DEFINITION");
-    propertytypes.add("GENERIC");
-    propertytypes.add("INSTRUCTION");
+    //propertytypes.add("GENERIC");
+    //propertytypes.add("INSTRUCTION");
     propertytypes.add("COMMENT");
 
     Vector additionalproperties = new Vector();
@@ -54,7 +54,7 @@
     }
 
     propertyvalues = new Vector();
-    String concept_id = curr_concept.getId();
+    String concept_id = curr_concept.getEntityCode();
     propertyvalues.add(concept_id);
     hmap.put("Code", propertyvalues);
     Vector displayed_properties = new Vector();

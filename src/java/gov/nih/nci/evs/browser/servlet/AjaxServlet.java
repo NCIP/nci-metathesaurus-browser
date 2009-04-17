@@ -68,9 +68,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-
-
 import java.util.Arrays;
 import java.util.Iterator;
 

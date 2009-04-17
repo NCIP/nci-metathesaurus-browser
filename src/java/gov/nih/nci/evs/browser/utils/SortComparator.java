@@ -70,7 +70,7 @@ public class SortComparator implements Comparator<Object>{
 	    if (c instanceof org.LexGrid.concepts.Concept)
 	    {
 			org.LexGrid.concepts.Concept concept = (org.LexGrid.concepts.Concept) c;
-			if (sort_option == SORT_BY_CODE) return concept.getId();
+			if (sort_option == SORT_BY_CODE) return concept.getEntityCode();
 			return concept.getEntityDescription().getContent();
 
 		}

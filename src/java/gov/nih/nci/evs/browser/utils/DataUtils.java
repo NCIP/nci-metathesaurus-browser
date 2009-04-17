@@ -3,8 +3,6 @@ package gov.nih.nci.evs.browser.utils;
 import java.io.*;
 import java.util.*;
 
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -58,10 +56,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Comment;
-import org.LexGrid.concepts.Instruction;
 import org.LexGrid.concepts.Presentation;
-
-//import org.LexGrid.relations.Relations;
 
 import org.apache.log4j.Logger;
 
@@ -71,7 +66,6 @@ import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.commonTypes.EntityDescription;
 
-import org.LexGrid.concepts.ConceptProperty;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 
@@ -92,7 +86,6 @@ import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.commonTypes.EntityDescription;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.concepts.Concept;
-import org.LexGrid.concepts.ConceptProperty;
 
 import org.LexGrid.relations.Relations;
 
@@ -122,7 +115,7 @@ import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.codingSchemes.Mappings;
+import org.LexGrid.naming.Mappings;
 import org.LexGrid.naming.SupportedHierarchy;
 
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
@@ -289,7 +282,7 @@ public class DataUtils {
                         }
 
                     } catch (Exception e) {
-                        String urn = css.getCodingSchemeURN();
+                        String urn = css.getCodingSchemeURI();
                         try {
                             scheme = lbSvc.resolveCodingScheme(urn, vt);
                             if (scheme != null)
@@ -705,7 +698,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                         AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
-                            v.add(ac.getReferencedEntry().getId());
+                            v.add(ac.getReferencedEntry().getEntityCode());
                         }
                     }
                 }
@@ -729,7 +722,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         for (int i = 0; i < codes.length; i++)
         {
             ConceptReference cr = new ConceptReference();
-            cr.setCodingScheme(codingSchemeName);
+            cr.setCodingSchemeName(codingSchemeName);
             cr.setConceptCode(codes[i]);
             list.addConceptReference(cr);
         }
@@ -844,7 +837,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            java.lang.String[] ids = hierarchies[0].getAssociationIds();
+            java.lang.String[] ids = hierarchies[0].getAssociationNames();
 
             for (int i=0; i<ids.length; i++)
             {
@@ -1062,19 +1055,23 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     public static Vector getPropertyNamesByType(Concept concept, String property_type) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
-
+/*
         if (property_type.compareToIgnoreCase("GENERIC")== 0)
         {
             properties = concept.getConceptProperty();
         }
-        else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+        else
+*/
+        if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
         {
             properties = concept.getPresentation();
         }
+        /*
         else if (property_type.compareToIgnoreCase("INSTRUCTION")== 0)
         {
             properties = concept.getInstruction();
         }
+        */
         else if (property_type.compareToIgnoreCase("COMMENT")== 0)
         {
             properties = concept.getComment();
@@ -1087,7 +1084,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         if (properties == null || properties.length == 0) return v;
         for (int i=0; i<properties.length; i++) {
             Property p = (Property) properties[i];
-            //v.add(p.getText().getContent());
+            //v.add(p.getValue().getContent());
             v.add(p.getPropertyName());
         }
         return v;
@@ -1096,19 +1093,23 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     public static Vector getPropertyValues(Concept concept, String property_type, String property_name) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
-
+/*
         if (property_type.compareToIgnoreCase("GENERIC")== 0)
         {
             properties = concept.getConceptProperty();
         }
-        else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+        else
+*/
+        if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
         {
             properties = concept.getPresentation();
         }
+        /*
         else if (property_type.compareToIgnoreCase("INSTRUCTION")== 0)
         {
             properties = concept.getInstruction();
         }
+        */
         else if (property_type.compareToIgnoreCase("COMMENT")== 0)
         {
             properties = concept.getComment();
@@ -1129,7 +1130,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             Property p = (Property) properties[i];
             if (property_name.compareTo(p.getPropertyName()) == 0)
             {
-                String t = p.getText().getContent();
+                String t = p.getValue().getContent();
                 Source[] sources = p.getSource();
                 if (sources != null && sources.length > 0) {
                     Source src = sources[0];
@@ -1156,13 +1157,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             for (int i=0; i<relations.length; i++)
             {
                 Relations relation = relations[i];
-                if (relation.getDc().compareToIgnoreCase("roles") == 0)
+                if (relation.getContainerName().compareToIgnoreCase("roles") == 0)
                 {
                     org.LexGrid.relations.Association[] asso_array = relation.getAssociation();
                     for (int j=0; j<asso_array.length; j++)
                     {
                         org.LexGrid.relations.Association association = (org.LexGrid.relations.Association) asso_array[j];
-                        list.add(association.getId());
+                        list.add(association.getAssociationName());
                     }
                 }
             }
@@ -1234,7 +1235,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             Presentation p = presentations[i];
             if (p.getPropertyName().compareTo("Preferred_Name") == 0)
             {
-                return p.getText().getContent();
+                return p.getValue().getContent();
             }
         }
         return null;
@@ -1340,7 +1341,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             {
                 Concept c = (Concept) superconcept_vec.elementAt(i);
                 String pt = getPreferredName(c);
-                superconceptList.add(pt + "|" + c.getId());
+                superconceptList.add(pt + "|" + c.getEntityCode());
             }
 
             Collections.sort(superconceptList);
@@ -1352,7 +1353,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             {
                 Concept c = (Concept) subconcept_vec.elementAt(i);
                 String pt = getPreferredName(c);
-                subconceptList.add(pt + "|" + c.getId());
+                subconceptList.add(pt + "|" + c.getEntityCode());
             }
             Collections.sort(subconceptList);
             map.put(TYPE_SUBCONCEPT, subconceptList);
@@ -1545,7 +1546,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     }
                     else
                     {
-                        if (ce.getId().compareTo(code) != 0) v.add(ce);
+                        if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
                     }
                 }
             }
@@ -1697,7 +1698,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             Presentation p = properties[i];
             if (p.getPropertyName().compareTo("FULL_SYN") == 0)
             {
-                String term_name = p.getText().getContent();
+                String term_name = p.getValue().getContent();
                 String term_type = "null";
                 String term_source = "null";
                 String term_source_code = "null";
@@ -1708,8 +1709,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     for (int j=0; j<qualifiers.length; j++)
                     {
                         PropertyQualifier q = qualifiers[j];
-                        String qualifier_name = q.getPropertyQualifierId();
-                        String qualifier_value = q.getContent();
+                        String qualifier_name = q.getPropertyQualifierName();
+                        String qualifier_value = q.getValue().getContent();
                         if (qualifier_name.compareTo("source-code") == 0)
                         {
                             term_source_code = qualifier_value;

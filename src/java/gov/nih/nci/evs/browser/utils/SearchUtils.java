@@ -3,8 +3,6 @@ package gov.nih.nci.evs.browser.utils;
 import java.io.*;
 import java.util.*;
 
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -56,10 +54,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Comment;
-import org.LexGrid.concepts.Instruction;
 import org.LexGrid.concepts.Presentation;
-
-//import org.LexGrid.relations.Relations;
 
 import org.apache.log4j.Logger;
 
@@ -69,7 +64,6 @@ import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.commonTypes.EntityDescription;
 
-import org.LexGrid.concepts.ConceptProperty;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 
@@ -90,7 +84,6 @@ import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.commonTypes.EntityDescription;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.concepts.Concept;
-import org.LexGrid.concepts.ConceptProperty;
 
 import org.LexGrid.relations.Relations;
 
@@ -120,7 +113,7 @@ import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.codingSchemes.Mappings;
+import org.LexGrid.naming.Mappings;
 import org.LexGrid.naming.SupportedHierarchy;
 
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
@@ -295,7 +288,7 @@ public class SearchUtils {
                         }
 
                     } catch (Exception e) {
-                        String urn = css.getCodingSchemeURN();
+                        String urn = css.getCodingSchemeURI();
                         try {
                             scheme = lbSvc.resolveCodingScheme(urn, vt);
                             if (scheme != null)
@@ -439,7 +432,7 @@ public class SearchUtils {
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            java.lang.String[] ids = hierarchies[0].getAssociationIds();
+            java.lang.String[] ids = hierarchies[0].getAssociationNames();
 
             for (int i=0; i<ids.length; i++)
             {
@@ -765,7 +758,7 @@ public class SearchUtils {
                     (ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
 
                 org.LexGrid.concepts.Concept entry = new org.LexGrid.concepts.Concept();
-                entry.setId(ref.getConceptCode());
+                entry.setEntityCode(ref.getConceptCode());
                 entry.setEntityDescription(ref.getEntityDescription());
 
                 //Concept entry = ref.getReferencedEntry();
@@ -789,7 +782,7 @@ public class SearchUtils {
         for (int i = 0; i < codes.length; i++)
         {
             ConceptReference cr = new ConceptReference();
-            cr.setCodingScheme(codingSchemeName);
+            cr.setCodingSchemeName(codingSchemeName);
             cr.setConceptCode(codes[i]);
             list.addConceptReference(cr);
         }
@@ -851,7 +844,7 @@ public class SearchUtils {
                     ResolvedConceptReference rcr = rcra[i];
                     //org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
                     org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-                    ce.setId(rcr.getConceptCode());
+                    ce.setEntityCode(rcr.getConceptCode());
                     ce.setEntityDescription(rcr.getEntityDescription());
 
                     if (code == null)
@@ -860,7 +853,7 @@ public class SearchUtils {
                     }
                     else
                     {
-                        if (ce.getId().compareTo(code) != 0) v.add(ce);
+                        if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
                     }
                 }
             }
@@ -1199,7 +1192,7 @@ public class SearchUtils {
             {
                 int j = i + 1;
                 Concept ce = (Concept) v.elementAt(i);
-                System.out.println("(" + j + ")" + " " + ce.getId() + " " + ce.getEntityDescription().getContent());
+                System.out.println("(" + j + ")" + " " + ce.getEntityCode() + " " + ce.getEntityDescription().getContent());
             }
         }
     }
@@ -1371,7 +1364,7 @@ public class SearchUtils {
                 // based on any contained presentation.
                 Presentation[] allTermsForConcept = ce.getPresentation();
                 for (Presentation p : allTermsForConcept) {
-                    float score = score(p.getText().getContent(), compareWords, p.isIsPreferred(), i);
+                    float score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i);
 
                     // Check for a previous match on this code for a different presentation.
                     // If already present, keep the highest score.

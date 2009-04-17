@@ -76,7 +76,7 @@
                   for (int i=istart; i<iend; i++) {
                     if (i >= 0 && i<v.size()) {
                       Concept c = (Concept) v.elementAt(i);
-                      String code = c.getId();
+                      String code = c.getEntityCode();
                       String name = c.getEntityDescription().getContent();
 
                       if (i % 2 == 0) {
