@@ -9,10 +9,10 @@
     onFocus="active = true" onBlur="active = false" onkeypress="return submitEnter('search',event)"
   />
   
-  <h:selectOneListbox id="source"
+  <h:selectOneMenu id="source"
   	value="#{userSessionBean.selectedSource}">
   	<f:selectItems value="#{userSessionBean.sourceList}"/>
-  </h:selectOneListbox>
+  </h:selectOneMenu>
   
   <h:selectOneRadio id="matchtype"
   	value="#{userSessionBean.selectedMatchType}">
