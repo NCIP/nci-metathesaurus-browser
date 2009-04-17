@@ -1790,4 +1790,15 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         System.out.println("getNCIMBuildInfo returns " + NCIMBuildInfo);
         return NCIMBuildInfo;
     }
+
+
+    public static Vector<String> getMatchTypeListData(String codingSchemeName, String version) {
+        Vector<String> v = new Vector<String>();
+        v.add("String");
+        v.add("Code");
+        v.add("CUI");
+        return v;
+    }
+
+
 }
