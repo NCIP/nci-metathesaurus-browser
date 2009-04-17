@@ -8,6 +8,17 @@
     value="<%=match_text%>"
     onFocus="active = true" onBlur="active = false" onkeypress="return submitEnter('search',event)"
   />
+  
+  <h:selectOneListbox id="source"
+  	value="#{userSessionBean.selectedSource}">
+  	<f:selectItems value="#{userSessionBean.sourceList}"/>
+  </h:selectOneListbox>
+  
+  <h:selectOneRadio id="matchtype"
+  	value="#{userSessionBean.selectedMatchType}">
+  	<f:selectItems value="#{userSessionBean.matchTypeList}"/>
+  </h:selectOneRadio>
+  
   <h:commandButton
     id="search"
     value="Search"
