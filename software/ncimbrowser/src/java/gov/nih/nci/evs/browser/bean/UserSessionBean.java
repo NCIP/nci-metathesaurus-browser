@@ -180,7 +180,7 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("singleton", "true");
             request.getSession().setAttribute("dictionary", "NCI Thesaurus");
             Concept c = (Concept) v.elementAt(0);
-            request.getSession().setAttribute("code", c.getId());
+            request.getSession().setAttribute("code", c.getEntityCode());
             return "concept_details";
         }
         String message = "No match found.";
@@ -310,7 +310,13 @@ public class UserSessionBean extends Object
 	public List getSourceList() {
 		String codingSchemeName = "NCI MetaThesaurus";
 		String version = null;
+
+System.out.println("********** Calling DataUtils.getSourceListData " + codingSchemeName);
+
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+
+System.out.println("********** returned from DataUtils.getSourceListData " + sourceListData.size());
+
 		sourceList = new ArrayList();
 		for (int i=0; i<sourceListData.size(); i++) {
 			String t = (String) sourceListData.elementAt(i);

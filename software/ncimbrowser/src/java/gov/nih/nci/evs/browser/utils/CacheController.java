@@ -266,7 +266,7 @@ public class CacheController
                       }
                       else if (obj instanceof ResolvedConceptReference) {
                           Concept node = (Concept) list.get(i);
-                          code = node.getId();
+                          code = node.getEntityCode();
                           name = node.getEntityDescription().getContent();
                       }
 

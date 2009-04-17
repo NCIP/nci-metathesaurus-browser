@@ -66,7 +66,7 @@ import org.LexGrid.commonTypes.EntityDescription;
 import org.LexGrid.naming.SupportedHierarchy;
 import org.apache.commons.lang.StringUtils;
 
-import org.LexGrid.codingSchemes.Mappings;
+import org.LexGrid.naming.Mappings;
 import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.concepts.Concept;
 
@@ -149,7 +149,7 @@ public class TreeUtils {
             // registered hierarchy to prevent need to hard code
             // relationship and direction info used on lookup ...
             String hierarchyID = hierarchyDefn.getLocalId();
-            String[] associationsToNavigate = hierarchyDefn.getAssociationIds();
+            String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
             boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();
 
             // Identify the set of all codes on path from root
@@ -641,7 +641,7 @@ public class TreeUtils {
 		for (int i = 0; i < codes.length; i++)
 		{
 			ConceptReference cr = new ConceptReference();
-			cr.setCodingScheme(codingSchemeName);
+			cr.setCodingSchemeName(codingSchemeName);
 			cr.setConceptCode(codes[i]);
 			list.addConceptReference(cr);
 		}
@@ -799,7 +799,7 @@ public class TreeUtils {
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
 
             for (int k=0; k<hierarchies.length; k++) {
-				java.lang.String[] ids = hierarchies[k].getAssociationIds();
+				java.lang.String[] ids = hierarchies[k].getAssociationNames();
 
 				for (int i=0; i<ids.length; i++)
 				{
