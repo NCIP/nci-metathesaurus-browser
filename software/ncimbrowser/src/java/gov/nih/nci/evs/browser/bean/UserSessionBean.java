@@ -31,6 +31,7 @@ import java.util.Collection;
 import org.LexGrid.concepts.Concept;
 
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
+import gov.nih.nci.evs.browser.utils.*;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -295,4 +296,89 @@ public class UserSessionBean extends Object
         request.getSession().setAttribute("message", Utils.toHtml(msg));
         return "message";
     }
+
+
+    ////////////////////////////////////////////////////////////////
+    // source
+    ////////////////////////////////////////////////////////////////
+
+	private String selectedSource = null;
+	private List sourceList = null;
+	private Vector<String> sourceListData = null;
+
+
+	public List getSourceList() {
+		String codingSchemeName = "NCI MetaThesaurus";
+		String version = null;
+		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+		sourceList = new ArrayList();
+		for (int i=0; i<sourceListData.size(); i++) {
+			String t = (String) sourceListData.elementAt(i);
+			sourceList.add(new SelectItem(t));
+		}
+		if (sourceList != null && sourceList.size() > 0) {
+			selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+		}
+		return sourceList;
+	}
+
+	public void setSelectedSource(String selectedSource) {
+		this.selectedSource = selectedSource;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedSource", selectedSource);
+	}
+
+
+	public String getSelectedSource() {
+		return this.selectedSource;
+	}
+
+	public void sourceSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		//int id = Integer.parseInt((String) event.getNewValue());
+		setSelectedSource(selectedSource);
+	}
+
+	//////////////////////////////////////////////////////////////////////
+
+	private String selectedMatchType = null;
+	private List matchTypeList = null;
+	private Vector<String> matchTypeListData = null;
+
+
+	public List getMatchTypeList() {
+		String codingSchemeName = "NCI MetaThesaurus";
+		String version = null;
+		matchTypeListData = DataUtils.getMatchTypeListData(codingSchemeName, version);
+		matchTypeList = new ArrayList();
+		for (int i=0; i<matchTypeListData.size(); i++) {
+			String t = (String) matchTypeListData.elementAt(i);
+			matchTypeList.add(new SelectItem(t));
+		}
+		if (matchTypeList != null && matchTypeList.size() > 0) {
+			selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
+		}
+		return matchTypeList;
+	}
+
+	public void setSelectedMatchType(String selectedMatchType) {
+		this.selectedMatchType = selectedMatchType;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedMatchType", selectedMatchType);
+	}
+
+
+	public String getSelectedMatchType() {
+		return this.selectedMatchType;
+	}
+
+	public void matchTypeSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		//int id = Integer.parseInt((String) event.getNewValue());
+		setSelectedMatchType(selectedMatchType);
+	}
+
+
+
+
 }
