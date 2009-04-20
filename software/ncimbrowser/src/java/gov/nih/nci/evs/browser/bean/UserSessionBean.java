@@ -178,7 +178,7 @@ public class UserSessionBean extends Object
         else if (v != null && v.size() == 1)
         {
             request.getSession().setAttribute("singleton", "true");
-            request.getSession().setAttribute("dictionary", "NCI Thesaurus");
+            request.getSession().setAttribute("dictionary", "NCI MetaThesaurus");
             Concept c = (Concept) v.elementAt(0);
             request.getSession().setAttribute("code", c.getEntityCode());
             return "concept_details";

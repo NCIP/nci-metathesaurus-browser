@@ -91,7 +91,7 @@
                       }
                       %>
                           <td class="dataCellText">
-                            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI_MetaThesaurus&code=<%=code%>" ><%=name%></a>
+                            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
                           </td>
                         </tr>
                       <%

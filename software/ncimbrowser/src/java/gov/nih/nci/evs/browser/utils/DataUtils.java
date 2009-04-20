@@ -124,6 +124,22 @@ import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 
+
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.concepts.Entity;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -576,7 +592,6 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
 
 //==================================================================================================================================
-
     public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
     {
         try {
@@ -600,8 +615,6 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
             } catch (Exception e1) {
                 //e1.printStackTrace();
-				 System.out.println("getConceptByCode throws exception codingSchemeName " + codingSchemeName);
-				 System.out.println("getConceptByCode throws exception code " + code);
             }
 
             cns = cns.restrictToCodes(crefs);
@@ -612,7 +625,6 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 System.out.println("Concep not found.");
                 return null;
             }
-
             // Analyze the result ...
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 ResolvedConceptReference ref =
@@ -624,12 +636,11 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             }
          } catch (Exception e) {
              //e.printStackTrace();
-             System.out.println("getConceptByCode throws exception codingSchemeName " + codingSchemeName);
-             System.out.println("getConceptByCode throws exception code " + code);
-             return null;
+            return null;
          }
          return null;
     }
+
 
     public static NameAndValueList createNameAndValueList(String[] names, String[] values)
     {
