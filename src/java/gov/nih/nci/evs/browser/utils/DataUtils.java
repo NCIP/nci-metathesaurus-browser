@@ -223,16 +223,17 @@ public class DataUtils {
 
     public DataUtils()
     {
-        //setCodingSchemeMap();
+
     }
 
-
+/*
     public static List getOntologyList() {
         if(_ontologies == null) setCodingSchemeMap();
         return _ontologies;
     }
+*/
 
-
+/*
     private static void setCodingSchemeMap()
     {
         //if (_ontologies != null) return;
@@ -325,7 +326,9 @@ public class DataUtils {
             e.printStackTrace();
         }
     }
+*/
 
+/*
     public static Vector<String> getSupportedAssociationNames(String key)
     {
         if (csnv2codingSchemeNameMap == null)
@@ -339,7 +342,7 @@ public class DataUtils {
         if(version == null) return null;
         return getSupportedAssociationNames(codingSchemeName, version);
     }
-
+*/
 
     public static Vector<String> getSupportedAssociationNames(String codingSchemeName, String version)
     {
@@ -374,7 +377,7 @@ public class DataUtils {
         return null;
     }
 
-
+/*
     public static Vector<String> getPropertyNameListData(String key)
     {
         if (csnv2codingSchemeNameMap == null)
@@ -394,7 +397,7 @@ public class DataUtils {
         }
         return getPropertyNameListData(codingSchemeName, version);
     }
-
+*/
 
     public static Vector<String> getPropertyNameListData(String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
@@ -510,7 +513,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         return null;
     }
 
-
+/*
     public static Vector<String> getSourceListData(String key)
     {
         if (csnv2codingSchemeNameMap == null)
@@ -524,7 +527,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         if(version == null) return null;
         return getSourceListData(codingSchemeName, version);
     }
-
+*/
     public static Vector<String> getSourceListData(String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
@@ -583,7 +586,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             }
 
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(vers);
+            if (vers != null) versionOrTag.setVersion(vers);
 
             ConceptReferenceList crefs =
                 createConceptReferenceList(
@@ -594,7 +597,9 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             try {
                 cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
             } catch (Exception e1) {
-                e1.printStackTrace();
+                //e1.printStackTrace();
+				 System.out.println("getConceptByCode throws exception codingSchemeName " + codingSchemeName);
+				 System.out.println("getConceptByCode throws exception code " + code);
             }
 
             cns = cns.restrictToCodes(crefs);
@@ -612,10 +617,13 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                     (ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
 
                 Concept entry = ref.getReferencedEntry();
+
                 return entry;
             }
          } catch (Exception e) {
-             e.printStackTrace();
+             //e.printStackTrace();
+             System.out.println("getConceptByCode throws exception codingSchemeName " + codingSchemeName);
+             System.out.println("getConceptByCode throws exception code " + code);
              return null;
          }
          return null;
@@ -1614,74 +1622,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
     }
 
 
-/*
-    protected List getAncestors(
-        String scheme,
-        CodingSchemeVersionOrTag csvt,
-        String hierarchyID,
-        String code,
-        int maxDistance) throws LBException
-    {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm.setLexBIGService(lbSvc);
-
-        ArrayList list = new ArrayList();
-        int currentDistance = 0;
-        try {
-            addAncestorsToList(lbscm, scheme, csvt, hierarchyID, code, maxDistance, currentDistance, list);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return list;
-    }
-
-
-    protected void addAncestorsToList(
-        LexBIGServiceConvenienceMethods lbscm,
-        String scheme,
-        CodingSchemeVersionOrTag csvt,
-        String hierarchyID,
-        String code,
-        int maxDistance,
-        int currentDistance, List list) throws LBException
-    {
-        if (maxDistance < 0 || currentDistance < maxDistance) {
-            AssociationList associations = lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID, code, false, null);
-            for (int i = 0; i < associations.getAssociationCount(); i++) {
-                Association assoc = associations.getAssociation(i);
-                AssociatedConceptList concepts = assoc.getAssociatedConcepts();
-
-                if (concepts.getAssociatedConceptCount() == 0)
-                {
-                    Concept c = getConceptByCode(scheme, null, null, code);
-                    org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-                    ce.setId(c.getId());
-                    //ce.setEntityDescription(c.getEntityDescription().getContent());
-                    ce.setEntityDescription(c.getEntityDescription());
-                    list.add(ce);
-                }
-
-                for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
-                    AssociatedConcept concept = concepts.getAssociatedConcept(j);
-                    String nextCode = concept.getConceptCode();
-                    String nextDesc = concept.getEntityDescription().getContent();
-
-                    if (currentDistance == maxDistance)
-                    {
-                        org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-                        ce.setId(nextCode);
-                        EntityDescription ed = new EntityDescription();
-                        ed.setContent(nextDesc);
-                        ce.setEntityDescription(ed);
-                        list.add(ce);
-                    }
-                    addAncestorsToList(lbscm, scheme, csvt, hierarchyID, nextCode, maxDistance, currentDistance + 1, list);
-                }
-            }
-        }
-    }
-*/
     public static Vector getSynonyms(String scheme, String version, String tag, String code) {
         Vector v = new Vector();
         Concept concept = getConceptByCode(scheme, version, tag, code);
