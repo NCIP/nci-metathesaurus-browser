@@ -1649,7 +1649,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         for (int i=0; i<properties.length; i++)
         {
             Presentation p = properties[i];
-            if (p.getPropertyName().compareTo("FULL_SYN") == 0)
+            //if (p.getPropertyName().compareTo("FULL_SYN") == 0)
             {
                 String term_name = p.getValue().getContent();
                 String term_type = "null";
