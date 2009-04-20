@@ -157,7 +157,7 @@ import org.LexGrid.LexBIG.Exceptions.LBParameterException;
  */
 
 public class DataUtils {
-
+    private static Vector<String> sourceListData = null;
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
     int maxReturn = 5000;
     Connection con;
@@ -529,6 +529,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     }
 */
     public static Vector<String> getSourceListData(String codingSchemeName, String version) {
+		if (sourceListData !=  null) return sourceListData;
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
@@ -540,7 +541,8 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) return null;
-            Vector<String> sourceListData = new Vector<String>();
+            sourceListData = new Vector<String>();
+           	sourceListData.add("ALL");
 
             //Insert your code here
             SupportedSource[] sources = scheme.getMappings().getSupportedSource();

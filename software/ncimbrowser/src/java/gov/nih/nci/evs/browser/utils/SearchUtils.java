@@ -1483,6 +1483,93 @@ System.out.println("Matched concept code: " +  rcr.getConceptCode());
         return s;
     }
 
+////////////////////////////////////////////////////////////////////////////
+
+   private CodedNodeSet restrictToActiveStatus(CodedNodeSet cns, boolean activeOnly)
+   {
+		 if (cns == null) return null;
+		 if (!activeOnly) return cns; // no restriction, do nothing
+		 try {
+		 	 cns = cns.restrictToStatus(CodedNodeSet.ActiveOption.ACTIVE_ONLY, null);
+		 	 return cns;
+		 } catch (Exception e) {
+			 e.printStackTrace();
+			 return null;
+		 }
+   }
+
+   public Vector findConceptWithSourceCodeMatching(String scheme, String version,
+                                                                                   String sourceAbbr, String code,
+                                                                                   int maxToReturn, boolean searchInactive)
+   {
+		LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		versionOrTag.setVersion(version);
+
+		if (lbSvc == null)
+		{
+			System.out.println("lbSvc = null");
+			return null;
+		}
+
+	    LocalNameList contextList = null;
+        NameAndValueList qualifierList = null;
+
+ 		Vector<String> v = null;
+
+		if (code != null && code.compareTo("") != 0)
+		{
+			qualifierList = new NameAndValueList();
+			NameAndValue nv = new NameAndValue();
+			nv.setName("source-code");
+			nv.setContent(code);
+			qualifierList.addNameAndValue(nv);
+		}
+
+        LocalNameList propertyLnL = null;
+     // sourceLnL
+        Vector<String> w2 = new Vector<String>();
+        w2.add(sourceAbbr);
+        LocalNameList sourceLnL = vector2LocalNameList(w2);
+        if (sourceAbbr.compareTo("*") == 0 || sourceAbbr.compareToIgnoreCase("ALL") == 0)
+        {
+			sourceLnL = null;
+		}
+
+        ResolvedConceptReferencesIterator matchIterator = null;
+		SortOptionList sortCriteria = null;//Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+		try {
+			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
+			if (cns == null)
+			{
+				System.out.println("lbSvc.getCodingSchemeConceptsd returns null");
+				return null;
+			}
+			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
+
+  		    boolean activeOnly = !searchInactive;
+		    cns = restrictToActiveStatus(cns, activeOnly);
+
+			try {
+			    matchIterator = cns.resolve(sortCriteria, null,null);//ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
+			} catch (Exception ex) {
+
+		    }
+			if (matchIterator != null) {
+				v = resolveIterator(	matchIterator, maxToReturn);
+				return v;
+			}
+
+		} catch (Exception e) {
+			 //getLogger().error("ERROR: Exception in findConceptWithSourceCodeMatching.");
+			 return null;
+		}
+		return null;
+    }
+
+
+
     public static void main(String[] args)
     {
          String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
