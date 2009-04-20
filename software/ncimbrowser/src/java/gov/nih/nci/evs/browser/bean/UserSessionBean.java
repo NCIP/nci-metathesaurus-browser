@@ -135,9 +135,16 @@ public class UserSessionBean extends Object
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
 
+
+        String matchtype = (String) request.getParameter("matchtype");
+        String source = (String) request.getParameter("source");
+
+        System.out.println("*** criteria: " + matchText);
+        System.out.println("*** matchType: " + matchtype);
+        System.out.println("*** Source: " + source);
+
         String scheme = "NCI MetaThesaurus";
         String version = null;
-
         String max_str = null;
         int maxToReturn = -1;//1000;
         try {
@@ -146,23 +153,27 @@ public class UserSessionBean extends Object
         } catch (Exception ex) {
 
         }
+        Utils.StopWatch stopWatch = new Utils.StopWatch();
+        Vector<org.LexGrid.concepts.Concept> v = null;
+        if (matchtype.compareToIgnoreCase("CUI") == 0) {
+			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
+			if (c != null) {
+				v = new Vector<org.LexGrid.concepts.Concept>();
+				v.add(c);
+			}
+		}
+		else if (matchtype.compareToIgnoreCase("Code") == 0) { // source code
+			boolean searchInactive = true;
+            v = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
+												   source, matchText,
+												   maxToReturn, searchInactive);
+		} else { // String
+            v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
+		}
 
         request.getSession().setAttribute("vocabulary", scheme);
-
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
-        boolean debug = false;
-
-        //Vector<org.LexGrid.concepts.Concept> v = SearchUtils.searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
-        Vector<org.LexGrid.concepts.Concept> v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
-        //SortUtils.quickSort(v);
-
-        if (debug) {
-            System.out.println("scheme: " + scheme);
-            System.out.println("version: " + version);
-            System.out.println("keyword(s): " + matchText);
-            System.out.println("algorithm: " + matchAlgorithm);
-            System.out.println(stopWatch.getResult());
-        }
+        request.getSession().setAttribute("matchtype", matchtype);
+        request.getSession().setAttribute("source", source);
 
         if (v != null && v.size() > 1)
         {
@@ -171,10 +182,8 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("match_size", match_size);
             request.getSession().setAttribute("page_string", "1");
             request.getSession().setAttribute("selectedResultsPerPage", "50");
-            //request.getSession().setAttribute("singleton", "false");
             return "search_results";
         }
-
         else if (v != null && v.size() == 1)
         {
             request.getSession().setAttribute("singleton", "true");
@@ -184,9 +193,6 @@ public class UserSessionBean extends Object
             return "concept_details";
         }
         String message = "No match found.";
-        //if (matchAlgorithm.compareTo("exactMatch") != 0) {
-        //  message = "Please enter a more specific search string.";
-        //}
         request.getSession().setAttribute("message", message);
         return "message";
 
