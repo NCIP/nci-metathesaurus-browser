@@ -135,7 +135,7 @@ public class UserSessionBean extends Object
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
 
-        String scheme = "NCI Thesaurus";
+        String scheme = "NCI MetaThesaurus";
         String version = null;
 
         String max_str = null;
