@@ -16,7 +16,7 @@ import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
 import org.LexGrid.codingSchemes.CodingScheme;
 
-//import gov.nih.nci.evs.browser.properties.NCItBrowserProperties;
+import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -71,17 +71,16 @@ public class RemoteServerUtil {
     {
 		// default URL (to be read from a property file)
 		String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-		// to be modified (KLO)
 		url = "http://ncias-d177-v.nci.nih.gov:19280/lexevsapi50";
-		/*
-		NCItBrowserProperties properties = null;
+
+		NCImBrowserProperties properties = null;
 		try {
-			properties = NCItBrowserProperties.getInstance();
-			url = properties.getProperty(NCItBrowserProperties.EVS_SERVICE_URL);
+			properties = NCImBrowserProperties.getInstance();
+			url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
 	    } catch (Exception ex) {
 
 		}
-		*/
+
 		return createLexBIGService(url);
 	}
 
