@@ -175,6 +175,9 @@ public class UserSessionBean extends Object
         request.getSession().setAttribute("matchtype", matchtype);
         request.getSession().setAttribute("source", source);
 
+        setSelectedMatchType(matchtype);
+        setSelectedSource(source);
+
         if (v != null && v.size() > 1)
         {
             request.getSession().setAttribute("search_results", v);
