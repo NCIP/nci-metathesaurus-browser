@@ -310,14 +310,10 @@ public class UserSessionBean extends Object
 	public List getSourceList() {
 		String codingSchemeName = "NCI MetaThesaurus";
 		String version = null;
-
-System.out.println("********** Calling DataUtils.getSourceListData " + codingSchemeName);
-
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
-
-System.out.println("********** returned from DataUtils.getSourceListData " + sourceListData.size());
-
 		sourceList = new ArrayList();
+		if (sourceListData == null) return sourceList;
+
 		for (int i=0; i<sourceListData.size(); i++) {
 			String t = (String) sourceListData.elementAt(i);
 			sourceList.add(new SelectItem(t));

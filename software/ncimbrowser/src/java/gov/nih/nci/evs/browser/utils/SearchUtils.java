@@ -843,10 +843,12 @@ public class SearchUtils {
                 {
                     ResolvedConceptReference rcr = rcra[i];
                     //org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
-                    org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
+                   org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
                     ce.setEntityCode(rcr.getConceptCode());
-                    ce.setEntityDescription(rcr.getEntityDescription());
 
+System.out.println("Matched concept code: " +  rcr.getConceptCode());
+
+                    ce.setEntityDescription(rcr.getEntityDescription());
                     if (code == null)
                     {
                         v.add(ce);
