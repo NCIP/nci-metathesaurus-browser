@@ -17,7 +17,7 @@ import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.concepts.Concept;
 
 public class HistoryUtils {
-    private static final String CODING_SCHEME = "NCI Thesaurus";
+    private static final String CODING_SCHEME = "NCI MetaThesaurus";
     private static DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Vector<String> getTableHeader() {
