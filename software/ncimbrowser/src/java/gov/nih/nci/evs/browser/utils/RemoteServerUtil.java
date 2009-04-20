@@ -58,6 +58,8 @@ public class RemoteServerUtil {
 	private static String _serviceInfo = "EvsServiceInfo";
 	private Properties systemProperties = null;
 
+	private static String serviceURL = null;
+
     //public static EVSApplicationService  appService = null;
     //public static LexBIGService lbSvc;
     //private static String serviceUrl = null;
@@ -66,13 +68,12 @@ public class RemoteServerUtil {
 
     }
 
-
-	public static LexBIGService createLexBIGService()
+	public static LexEVSService createLexBIGService()
     {
 		// default URL (to be read from a property file)
-		String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-		url = "http://ncias-d177-v.nci.nih.gov:19280/lexevsapi50";
-
+		//String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
+		String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+		url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
 		NCImBrowserProperties properties = null;
 		try {
 			properties = NCImBrowserProperties.getInstance();
@@ -80,29 +81,34 @@ public class RemoteServerUtil {
 	    } catch (Exception ex) {
 
 		}
-
 		return createLexBIGService(url);
 	}
 
 
-	public static LexBIGService createLexBIGService(String serviceUrl)
+	public static LexEVSService createLexBIGService(String serviceUrl)
     {
+		serviceURL = serviceUrl;
 		try{
 			//System.out.println("RemoteServerUtil serviceUrl: " + serviceUrl);
 			if (serviceUrl == null || serviceUrl.compareTo("") == 0)
 			{
 				LexBIGService lbSvc = new LexBIGServiceImpl();
-				return lbSvc;
+				return (LexEVSService) lbSvc;
 			}
 			LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
 		    //EVSApplicationService appService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
-            return (LexBIGService) lexevsService;
+            return (LexEVSService) lexevsService;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			System.out.println("createLexBIGService throws exception.");
 		}
 		return null;
+	}
+
+	public static String getServiceURL() {
+		return serviceURL;
 	}
 
 }
