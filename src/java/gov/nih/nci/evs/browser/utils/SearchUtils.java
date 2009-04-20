@@ -125,6 +125,21 @@ import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.concepts.Entity;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -647,14 +662,18 @@ public class SearchUtils {
          ResolvedConceptReferencesIterator iterator = null;
          try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(version);
 
             if (lbSvc == null)
             {
                 System.out.println("lbSvc = null");
                 return null;
             }
+            else {
+				//System.out.println("*** Connected to " + RemoteServerUtil.getServiceURL());
+			}
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (version != null) versionOrTag.setVersion(version);
 
             cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
             if (cns == null)
@@ -843,11 +862,8 @@ public class SearchUtils {
                 {
                     ResolvedConceptReference rcr = rcra[i];
                     //org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
-                   org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
+                    org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
                     ce.setEntityCode(rcr.getConceptCode());
-
-System.out.println("Matched concept code: " +  rcr.getConceptCode());
-
                     ce.setEntityDescription(rcr.getEntityDescription());
                     if (code == null)
                     {
