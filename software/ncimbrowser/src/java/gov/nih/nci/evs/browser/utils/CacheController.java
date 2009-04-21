@@ -45,7 +45,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 
-import gov.nih.nci.evs.browser.utils.TreeUtils.TreeItem;
+//import gov.nih.nci.evs.browser.utils.TreeItem;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 

@@ -34,7 +34,7 @@ package gov.nih.nci.evs.browser.utils;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import gov.nih.nci.evs.browser.utils.TreeUtils.TreeItem;
+//import gov.nih.nci.evs.browser.utils.TreeItem;
 
 
 import java.util.List;
