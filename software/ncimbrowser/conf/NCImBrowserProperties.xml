@@ -2,6 +2,31 @@
 
 <root>
     <DisplayItems>
+    
+       <DisplayItem>
+            <propertyName>Code</propertyName>
+            <itemLabel>NCI MetaThesaurus Code</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Semantic_Type</propertyName>
+            <itemLabel>Semantic Type</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+       
+      <DisplayItem>
+            <propertyName>definition</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+       
       <DisplayItem>
             <propertyName>DEFINITION</propertyName>
             <itemLabel>Definition</itemLabel>
@@ -41,15 +66,7 @@
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
        </DisplayItem>
-
-       <DisplayItem>
-            <propertyName>Code</propertyName>
-            <itemLabel>NCI MetaThesaurus Code</itemLabel>
-            <url>null</url>
-            <hyperlinkText>null</hyperlinkText>
-            <isExternalCode>false</isExternalCode>
-       </DisplayItem>
-
+       
        <DisplayItem>
             <propertyName>textualPresentation</propertyName>
             <itemLabel>Synonym</itemLabel>
