@@ -348,8 +348,8 @@ public class UserSessionBean extends Object
 
 	public void sourceSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
-		//int id = Integer.parseInt((String) event.getNewValue());
-		setSelectedSource(selectedSource);
+		String source = (String) event.getNewValue();
+		setSelectedSource(source);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -387,8 +387,8 @@ public class UserSessionBean extends Object
 
 	public void matchTypeSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
-		//int id = Integer.parseInt((String) event.getNewValue());
-		setSelectedMatchType(selectedMatchType);
+		String matchType = (String) event.getNewValue();
+		setSelectedMatchType(matchType);
 	}
 
 
