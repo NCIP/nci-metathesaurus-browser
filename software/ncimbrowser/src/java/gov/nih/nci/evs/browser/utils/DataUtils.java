@@ -642,6 +642,89 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     }
 
 
+
+    public static CodedNodeSet restrictToSource(CodedNodeSet cns, String source) {
+		if (cns == null) return cns;
+		if (source == null || source.compareTo("*") == 0 || source.compareTo("") == 0 || source.compareTo("ALL") == 0) return cns;
+
+		LocalNameList contextList = null;
+	 // sourceLnL
+		LocalNameList sourceLnL = null;
+		NameAndValueList qualifierList = null;
+
+		Vector<String> w2 = new Vector<String>();
+		w2.add(source);
+		sourceLnL = vector2LocalNameList(w2);
+		/*
+		qualifierList = new NameAndValueList();
+		NameAndValue nv = new NameAndValue();
+		nv.setName("source-code");
+		nv.setContent(source);
+		qualifierList.addNameAndValue(nv);
+		*/
+
+		LocalNameList propertyLnL = null;
+		CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+		try {
+			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
+		} catch (Exception ex) {
+			System.out.println("restrictToSource throws exceptions.");
+			return null;
+		}
+		return cns;
+	}
+
+    public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code, String source)
+    {
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc == null???");
+                return null;
+            }
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (vers != null) versionOrTag.setVersion(vers);
+
+            ConceptReferenceList crefs =
+                createConceptReferenceList(
+                    new String[] {code}, codingSchemeName);
+
+            CodedNodeSet cns = null;
+
+            try {
+                cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+            } catch (Exception e1) {
+                //e1.printStackTrace();
+            }
+
+            cns = cns.restrictToCodes(crefs);
+            cns = restrictToSource(cns, source);
+
+            ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
+
+            if (matches == null)
+            {
+                System.out.println("Concep not found.");
+                return null;
+            }
+            // Analyze the result ...
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                ResolvedConceptReference ref =
+                    (ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+
+                Concept entry = ref.getReferencedEntry();
+
+                return entry;
+            }
+         } catch (Exception e) {
+             //e.printStackTrace();
+            return null;
+         }
+         return null;
+    }
+
     public static NameAndValueList createNameAndValueList(String[] names, String[] values)
     {
         NameAndValueList nvList = new NameAndValueList();

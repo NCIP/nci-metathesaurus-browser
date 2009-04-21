@@ -1072,9 +1072,12 @@ public class SearchUtils {
         return true;
     }
 
-
-
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, int maxToReturn) {
+		return searchByName(scheme, version, matchText, null, matchAlgorithm, maxToReturn);
+	}
+
+
+    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
         String matchText0 = matchText;
         String matchAlgorithm0 = matchAlgorithm;
         matchText0 = matchText0.trim();
@@ -1129,6 +1132,12 @@ public class SearchUtils {
 
         LocalNameList sourceList = null;
         NameAndValueList qualifierList = null;
+		if (source != null && source.compareTo("*") != 0 && source.compareTo("") != 0 && source.compareTo("ALL") != 0)
+		{
+			Vector<String> w2 = new Vector<String>();
+			w2.add(source);
+			sourceList = vector2LocalNameList(w2);
+		}
         String language = null;
         ResolvedConceptReferencesIterator iterator = restrictToMatchingProperty(
                         scheme,
@@ -1165,6 +1174,7 @@ public class SearchUtils {
                 }
                 return v;
             }
+            /*
             if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0) {
                 Concept c = getConceptByCode(scheme, null, null, matchText0);
                 if (c != null)
@@ -1174,8 +1184,10 @@ public class SearchUtils {
                     return v;
                 }
             }
+            */
             //return new Vector();
         }
+        /*
         if (matchAlgorithm0.compareToIgnoreCase("exactMatch") == 0) {
             matchText0 = matchText0.trim();
             Concept c = getConceptByCode(scheme, null, null, matchText0);
@@ -1190,12 +1202,15 @@ public class SearchUtils {
         {
             return searchByName(scheme, version, matchText0, "exactMatch", maxToReturn);
         }
+        */
         return new Vector();
     }
 
+
+
     public void testSearchByName() {
         String scheme = "NCI Thesaurus";
-        String version = "08.11d";
+        String version = null;
         String matchText = "blood";
         String matchAlgorithm = "contains";
         int maxToReturn = 1000;
