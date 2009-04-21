@@ -1159,14 +1159,12 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     public static Vector getPropertyNamesByType(Concept concept, String property_type) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
-/*
+
         if (property_type.compareToIgnoreCase("GENERIC")== 0)
         {
-            properties = concept.getConceptProperty();
+            properties = concept.getProperty();
         }
-        else
-*/
-        if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+        else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
         {
             properties = concept.getPresentation();
         }
@@ -1197,14 +1195,11 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     public static Vector getPropertyValues(Concept concept, String property_type, String property_name) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
-/*
         if (property_type.compareToIgnoreCase("GENERIC")== 0)
         {
-            properties = concept.getConceptProperty();
+            properties = concept.getProperty();
         }
-        else
-*/
-        if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+        else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
         {
             properties = concept.getPresentation();
         }
