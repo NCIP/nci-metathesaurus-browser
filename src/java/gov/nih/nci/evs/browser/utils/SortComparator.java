@@ -13,7 +13,7 @@ import org.LexGrid.concepts.Concept;
 import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 
-import gov.nih.nci.evs.browser.utils.TreeUtils.TreeItem;
+//import gov.nih.nci.evs.browser.utils.TreeItem;
 
 /**
   * <!-- LICENSE_TEXT_START -->

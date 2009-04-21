@@ -35,7 +35,7 @@ package gov.nih.nci.evs.browser.servlet;
 import org.json.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-import gov.nih.nci.evs.browser.utils.TreeUtils.TreeItem;
+import gov.nih.nci.evs.browser.utils.TreeItem;
 import gov.nih.nci.evs.browser.utils.CacheManager;
 import gov.nih.nci.evs.browser.utils.CacheController;
 
