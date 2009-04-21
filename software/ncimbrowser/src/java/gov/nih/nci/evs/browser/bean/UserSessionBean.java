@@ -329,9 +329,6 @@ public class UserSessionBean extends Object
 			String t = (String) sourceListData.elementAt(i);
 			sourceList.add(new SelectItem(t));
 		}
-		if (sourceList != null && sourceList.size() > 0) {
-			selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
-		}
 		return sourceList;
 	}
 
@@ -343,6 +340,12 @@ public class UserSessionBean extends Object
 
 
 	public String getSelectedSource() {
+		if (selectedSource == null) {
+			sourceList = getSourceList();
+			if (sourceList != null && sourceList.size() > 0) {
+				this.selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+			}
+	    }
 		return this.selectedSource;
 	}
 
@@ -368,9 +371,11 @@ public class UserSessionBean extends Object
 			String t = (String) matchTypeListData.elementAt(i);
 			matchTypeList.add(new SelectItem(t));
 		}
+		/*
 		if (matchTypeList != null && matchTypeList.size() > 0) {
 			selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
 		}
+		*/
 		return matchTypeList;
 	}
 
@@ -380,8 +385,13 @@ public class UserSessionBean extends Object
 		request.getSession().setAttribute("selectedMatchType", selectedMatchType);
 	}
 
-
 	public String getSelectedMatchType() {
+		if (selectedMatchType == null) {
+			matchTypeList = getMatchTypeList();
+			if (matchTypeList != null && matchTypeList.size() > 0) {
+				this.selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
+			}
+	    }
 		return this.selectedMatchType;
 	}
 
