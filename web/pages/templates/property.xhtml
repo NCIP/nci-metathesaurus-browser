@@ -143,7 +143,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         </p>
 <%
       }
-    } else if (propName_label.indexOf("Synonyms") == -1) {
+    } else if (propName_label.indexOf("Synonym") == -1) {
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
 
@@ -183,42 +183,45 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 %>
 <p>
 <b>Synonyms &amp; Abbreviations:&nbsp;</b>
-<table class="datatable">
-<%
-  for (int i=0; i<properties_to_display.size(); i++) {
-    String propName = (String) properties_to_display.elementAt(i);
-    String propName_label = (String) properties_to_display_label.elementAt(i);
+      <table class="dataTable" border="0">
+        <tr>
+          <th class="dataTableHeader" scope="col" align="left">Term</th>
+          <th class="dataTableHeader" scope="col" align="left">Source</th>
+          <th class="dataTableHeader" scope="col" align="left">Type
+            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
+                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
+            </a>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">Code</th>
+        </tr>
 
-    if (propName_label.indexOf("Synonyms") != -1) {
-      displayed_properties.add(propName);
-      Vector value_vec = (Vector) hmap.get(propName);
-      if (value_vec != null && value_vec.size() > 0) {
-        for (int j=0; j<value_vec.size(); j++) {
-          String value = (String) value_vec.elementAt(j);
-          int n = value.indexOf("|");
-          if (n != -1) value = value.substring(0, n);
-          if (j % 2 == 0) {
-            %>
-              <tr class="dataRowDark">
-            <%
-          } else {
-            %>
-              <tr class="dataRowLight">
-            <%
+        <%
+          Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
+          Vector synonyms = new DataUtils().getSynonyms(concept_syn);
+          for (int n=0; n<synonyms.size(); n++)
+          {
+            String s = (String) synonyms.elementAt(n);
+            Vector synonym_data = DataUtils.parseData(s, "|");
+            String term_name = (String) synonym_data.elementAt(0);
+            String term_type = (String) synonym_data.elementAt(1);
+            String term_source = (String) synonym_data.elementAt(2);
+            String term_source_code = (String) synonym_data.elementAt(3);
+            String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+        %>
+            <tr class="<%=rowColor%>">
+              <td class="dataCellText"><%=term_name%></td>
+              <td class="dataCellText"><%=term_source%></td>
+              <td class="dataCellText"><%=term_type%></td>
+              <td class="dataCellText"><%=term_source_code%></td>
+            </tr>
+        <%
           }
-            %>
-                <td><%=value%></td>
-              </tr>
-            <%
-        }
-      }
-    }
-  }
-%>
-</table>
+        %>
+      </table>
+
 </p>
-<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >Synonym Details</a>
-<p>
+
   <b>External Source Codes:&nbsp;</b>
   <table class="datatable">
     <%
@@ -274,6 +277,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       Set keyset = hmap.keySet();
       Iterator iterator = keyset.iterator();
       n = 0;
+      displayed_properties.add("textualPresentation");
 
       while (iterator.hasNext()) {
         String prop_name = (String) iterator.next();
