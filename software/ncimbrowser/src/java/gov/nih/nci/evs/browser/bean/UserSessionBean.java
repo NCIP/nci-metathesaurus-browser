@@ -139,7 +139,7 @@ public class UserSessionBean extends Object
         String matchtype = (String) request.getParameter("matchtype");
         String source = (String) request.getParameter("source");
 
-        System.out.println("*** criteria: " + matchText);
+        System.out.println("\n*** criteria: " + matchText);
         System.out.println("*** matchType: " + matchtype);
         System.out.println("*** Source: " + source);
 
@@ -156,7 +156,8 @@ public class UserSessionBean extends Object
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
         if (matchtype.compareToIgnoreCase("CUI") == 0) {
-			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
+			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
+			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText, source);
 			if (c != null) {
 				v = new Vector<org.LexGrid.concepts.Concept>();
 				v.add(c);
@@ -168,7 +169,8 @@ public class UserSessionBean extends Object
 												   source, matchText,
 												   maxToReturn, searchInactive);
 		} else { // String
-            v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
+            //v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
+            v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 		}
 
         request.getSession().setAttribute("vocabulary", scheme);
