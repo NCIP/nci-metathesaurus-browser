@@ -94,6 +94,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
  * assumed.
  */
 public class MetaTreeUtils {
+	public static String selectedSource = "NCI"; // to be modified
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
 
     public MetaTreeUtils() {
