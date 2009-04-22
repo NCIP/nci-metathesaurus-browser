@@ -228,7 +228,11 @@ public class CacheController
         {
             System.out.println("Not in cache -- calling getHierarchyRoots " );
             try {
-                list = new DataUtils().getHierarchyRoots(scheme, version, null);
+                //list = new DataUtils().getHierarchyRoots(scheme, version, null);
+                String tag = null;
+                CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+                if (version != null) csvt.setVersion(version);
+                list = new DataUtils().getSourceHierarchyRoots(scheme, csvt, "NCI");
                 nodeArray = list2JSONArray(list);
 
                 if (fromCache)

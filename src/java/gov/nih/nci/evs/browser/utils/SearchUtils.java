@@ -1044,7 +1044,7 @@ public class SearchUtils {
                 long ms = System.currentTimeMillis();
                 try {
                     //iterator = sortByScore(matchText, iterator, maxToReturn);
-                    iterator = sortByScore(matchText, iterator, maxToReturn, true);
+                    iterator = sortByScore(matchText0, iterator, maxToReturn, true);
                 } catch (Exception ex) {
 
                 }
