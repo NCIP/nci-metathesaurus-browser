@@ -952,12 +952,12 @@ public class SearchUtils {
             if (!isNumber(matchText)) {
                 if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
                 {
-                    return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
+                    return searchByName(scheme, version, matchText, source, "RegExp", maxToReturn);
                 }
             }
             if (containsSpecialChars(matchText))
             {
-                return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
+                return searchByName(scheme, version, matchText, source, "RegExp", maxToReturn);
             }
         }
 
