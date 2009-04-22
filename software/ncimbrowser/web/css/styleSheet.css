@@ -147,6 +147,7 @@ h3
 {
  float: left;
  width: 383px;
+ height: 130px;
 }
 
 .texttitle-blue 
@@ -227,7 +228,7 @@ h3
 .search-globalnav 
 {
  width: 357px;
- height: 82px;
+ height: 130px;
  background-color: #dde3ec;
  margin-left: 383px;
  border-color: red;
