@@ -648,21 +648,12 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 		if (source == null || source.compareTo("*") == 0 || source.compareTo("") == 0 || source.compareTo("ALL") == 0) return cns;
 
 		LocalNameList contextList = null;
-	 // sourceLnL
 		LocalNameList sourceLnL = null;
 		NameAndValueList qualifierList = null;
 
 		Vector<String> w2 = new Vector<String>();
 		w2.add(source);
 		sourceLnL = vector2LocalNameList(w2);
-		/*
-		qualifierList = new NameAndValueList();
-		NameAndValue nv = new NameAndValue();
-		nv.setName("source-code");
-		nv.setContent(source);
-		qualifierList.addNameAndValue(nv);
-		*/
-
 		LocalNameList propertyLnL = null;
 		CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
 		try {

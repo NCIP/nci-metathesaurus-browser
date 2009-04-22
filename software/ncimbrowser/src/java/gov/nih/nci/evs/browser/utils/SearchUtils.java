@@ -173,24 +173,8 @@ import org.LexGrid.concepts.Entity;
  */
 
 public class SearchUtils {
-    //int maxReturn = 5000;
+
     private boolean apply_sort_score = false;
-    Connection con;
-    Statement stmt;
-    ResultSet rs;
-
-    private List supportedStandardReportList = new ArrayList();
-
-    private static List standardReportTemplateList = null;
-    private static List adminTaskList = null;
-    private static List userTaskList = null;
-
-    private static List propertyTypeList = null;
-
-    private static List _ontologies = null;
-
-    private static org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
-    public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
     public CodingSchemeRenderingList csrl = null;
     private Vector supportedCodingSchemes = null;
     private static HashMap codingSchemeMap = null;
@@ -200,35 +184,12 @@ public class SearchUtils {
     private static HashMap csnv2VersionMap = null;
 
     private static List directionList = null;
-
     private static String url = null;
-
-    //==================================================================================
-    // For customized query use
-
-    public static int ALL = 0;
-    public static int PREFERRED_ONLY = 1;
-    public static int NON_PREFERRED_ONLY = 2;
-
-    static int RESOLVE_SOURCE = 1;
-    static int RESOLVE_TARGET = -1;
-    static int RESTRICT_SOURCE = -1;
-    static int RESTRICT_TARGET = 1;
-
-    public static final int SEARCH_NAME_CODE = 1;
-    public static final int SEARCH_DEFINITION = 2;
-
-    public static final int SEARCH_PROPERTY_VALUE = 3;
-    public static final int SEARCH_ROLE_VALUE = 6;
-    public static final int SEARCH_ASSOCIATION_VALUE = 7;
 
     static final List<String> STOP_WORDS = Arrays.asList(new String[] {
         "a", "an", "and", "by", "for", "of", "on", "in", "nos", "the", "to", "with"});
 
-    //static LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
-
     //==================================================================================
-
 
     public SearchUtils()
     {
@@ -611,132 +572,6 @@ public class SearchUtils {
         return nvList;
     }
 
-
-    public static ResolvedConceptReferencesIterator restrictToMatchingProperty(
-                                             String codingSchemeName,
-                                             String version,
-                                             Vector property_vec,
-                                             Vector source_vec,
-                                             Vector qualifier_name_vec,
-                                             Vector qualifier_value_vec,
-                                             java.lang.String matchText,
-                                             java.lang.String matchAlgorithm,
-                                             java.lang.String language)
-    {
-
-        LocalNameList propertyList = vector2LocalNameList(property_vec);
-        CodedNodeSet.PropertyType[] propertyTypes = null;
-        LocalNameList sourceList = vector2LocalNameList(source_vec);
-
-        NameAndValueList qualifierList = createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
-
-        return restrictToMatchingProperty(codingSchemeName,
-                                       version,
-                                       propertyList,
-                                       propertyTypes,
-                                       sourceList,
-                                       qualifierList,
-                                       matchText,
-                                       matchAlgorithm,
-                                       language);
-
-
-    }
-
-
-    public static ResolvedConceptReferencesIterator restrictToMatchingProperty(
-                                                String codingSchemeName,
-                                                String version,
-
-                                                LocalNameList propertyList,
-                                                CodedNodeSet.PropertyType[] propertyTypes,
-                                                LocalNameList sourceList,
-                                                NameAndValueList qualifierList,
-
-                                                java.lang.String matchText,
-                                                java.lang.String matchAlgorithm,
-                                                java.lang.String language)
-    {
-
-         CodedNodeSet cns = null;
-         ResolvedConceptReferencesIterator iterator = null;
-         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-
-            if (lbSvc == null)
-            {
-                System.out.println("lbSvc = null");
-                return null;
-            }
-            else {
-				//System.out.println("*** Connected to " + RemoteServerUtil.getServiceURL());
-			}
-
-            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            if (version != null) versionOrTag.setVersion(version);
-
-            cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
-            if (cns == null)
-            {
-                System.out.println("cns = null");
-                return null;
-            }
-
-            LocalNameList contextList = null;
-            try {
-                cns = cns.restrictToMatchingProperties(propertyList,
-                                               propertyTypes,
-                                               sourceList,
-                                               contextList,
-                                               qualifierList,
-                                               matchText,
-                                               matchAlgorithm,
-                                               language
-                                               );
-            } catch (Exception ex) {
-                return null;
-            }
-
-            LocalNameList restrictToProperties = new LocalNameList();
-            // KLO, 030509
-            SortOptionList sortCriteria = null;
-                //Constructors.createSortOptionList(new String[]{"matchToQuery"});
-
-            try {
-                // resolve nothing
-                boolean resolveConcepts = false;
-                //iterator = cns.resolve(sortCriteria, null, restrictToProperties, null);
-                try {
-                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-                }  catch (Exception e) {
-                    System.out.println("ERROR: cns.resolve throws exceptions.");
-                }
-
-                //ResolvedConceptReferencesIterator     resolve(SortOptionList sortOptions, LocalNameList filterOptions, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes, boolean resolveConcepts)
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return iterator;
-    }
-
-
-    private boolean isNull(String s) {
-        if (s == null) return true;
-        s = s.trim();
-        if (s.length() == 0) return true;
-        if (s.compareTo("") == 0) return true;
-        if (s.compareToIgnoreCase("null") == 0) return true;
-        return false;
-    }
-
-
     public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
     {
         try {
@@ -1072,6 +907,29 @@ public class SearchUtils {
         return true;
     }
 
+
+    public static CodedNodeSet restrictToSource(CodedNodeSet cns, String source) {
+		if (cns == null) return cns;
+		if (source == null || source.compareTo("*") == 0 || source.compareTo("") == 0 || source.compareTo("ALL") == 0) return cns;
+
+		LocalNameList contextList = null;
+		LocalNameList sourceLnL = null;
+		NameAndValueList qualifierList = null;
+
+		Vector<String> w2 = new Vector<String>();
+		w2.add(source);
+		sourceLnL = vector2LocalNameList(w2);
+		LocalNameList propertyLnL = null;
+		CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+		try {
+			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
+		} catch (Exception ex) {
+			System.out.println("restrictToSource throws exceptions.");
+			return null;
+		}
+		return cns;
+	}
+
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, maxToReturn);
 	}
@@ -1126,33 +984,61 @@ public class SearchUtils {
             matchText = preprocessRegExp(matchText);
         }
 
-        LocalNameList propertyList = null;
-        CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
-        propertyTypes[0] = CodedNodeSet.PropertyType.PRESENTATION;
+         CodedNodeSet cns = null;
+         ResolvedConceptReferencesIterator iterator = null;
+         try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
-        LocalNameList sourceList = null;
-        NameAndValueList qualifierList = null;
-		if (source != null && source.compareTo("*") != 0 && source.compareTo("") != 0 && source.compareTo("ALL") != 0)
-		{
-			Vector<String> w2 = new Vector<String>();
-			w2.add(source);
-			sourceList = vector2LocalNameList(w2);
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc = null");
+                return null;
+            }
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (version != null) versionOrTag.setVersion(version);
+
+            //cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+            cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
+
+            if (cns == null)
+            {
+                System.out.println("cns = null");
+                return null;
+            }
+
+            //LocalNameList contextList = null;
+            try {
+				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
+				cns = restrictToSource(cns, source);
+            } catch (Exception ex) {
+                return null;
+            }
+
+            LocalNameList restrictToProperties = new LocalNameList();
+            SortOptionList sortCriteria = null;
+                //Constructors.createSortOptionList(new String[]{"matchToQuery"});
+
+            try {
+                // resolve nothing
+                boolean resolveConcepts = false;
+                //iterator = cns.resolve(sortCriteria, null, restrictToProperties, null);
+                try {
+                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+                }  catch (Exception e) {
+                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-        String language = null;
-        ResolvedConceptReferencesIterator iterator = restrictToMatchingProperty(
-                        scheme,
-                        version,
 
-                        propertyList,
-                        propertyTypes,
-                        sourceList,
-                        qualifierList,
 
-                        matchText,
-                        matchAlgorithm,
-                        language);
-
-        //return sortByScore(searchPhrase, resultIterator, maxToReturn);
         if (apply_sort_score)
         {
                 long ms = System.currentTimeMillis();
@@ -1174,35 +1060,7 @@ public class SearchUtils {
                 }
                 return v;
             }
-            /*
-            if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0) {
-                Concept c = getConceptByCode(scheme, null, null, matchText0);
-                if (c != null)
-                {
-                    v = new Vector();
-                    v.add(c);
-                    return v;
-                }
-            }
-            */
-            //return new Vector();
         }
-        /*
-        if (matchAlgorithm0.compareToIgnoreCase("exactMatch") == 0) {
-            matchText0 = matchText0.trim();
-            Concept c = getConceptByCode(scheme, null, null, matchText0);
-            if (c != null)
-            {
-                Vector v = new Vector();
-                v.add(c);
-                return v;
-            }
-        }
-        else
-        {
-            return searchByName(scheme, version, matchText0, "exactMatch", maxToReturn);
-        }
-        */
         return new Vector();
     }
 
@@ -1603,7 +1461,7 @@ public class SearchUtils {
 
     public static void main(String[] args)
     {
-         String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
+         String url = "http://lexevsapi.nci.nih.gov/lexevsapi50";
          if (args.length == 1)
          {
              url = args[0];
