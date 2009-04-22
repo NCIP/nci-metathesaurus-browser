@@ -7,7 +7,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-  <title>NCI MetaThesaurus Browser</title>
+  <title>NCI MetaThesaurus Browser Home</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -53,7 +53,7 @@
           String prev_page_num_str = Integer.toString(prev_page_num);
           String next_page_num_str = Integer.toString(next_page_num);
         %>
-        <table width="700px">
+        <table width="100%">
           <tr>
             <table>
               <tr>
