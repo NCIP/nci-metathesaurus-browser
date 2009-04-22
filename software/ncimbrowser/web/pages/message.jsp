@@ -6,7 +6,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-  <title>NCI Thesaurus Browser Home</title>
+  <title>NCI MetaThesaurus Browser</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
