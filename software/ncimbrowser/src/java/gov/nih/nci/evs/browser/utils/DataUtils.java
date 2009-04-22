@@ -1692,6 +1692,32 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return list;
     }
 
+    public List getSourceHierarchyRoots(
+        String scheme,
+        CodingSchemeVersionOrTag csvt,
+        String sab) throws LBException
+    {
+		/*
+        int maxDepth = 1;
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
+        lbscm.setLexBIGService(lbSvc);
+        ResolvedConceptReferenceList roots = lbscm.getHierarchyRoots(scheme, csvt, hierarchyID);
+        */
+
+        ResolvedConceptReferenceList roots = null;
+        try {
+           roots = new MetaTreeUtils().getSourceRoots(sab);
+		   List list = ResolvedConceptReferenceList2List(roots);
+		   SortUtils.quickSort(list);
+		   return list;
+	    } catch (Exception ex) {
+
+		}
+		return new ArrayList();
+    }
+
+
     public List ResolvedConceptReferenceList2List(ResolvedConceptReferenceList rcrl)
     {
         ArrayList list = new ArrayList();
