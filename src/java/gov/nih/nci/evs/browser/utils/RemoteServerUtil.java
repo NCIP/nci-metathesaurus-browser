@@ -90,11 +90,21 @@ public class RemoteServerUtil {
 		serviceURL = serviceUrl;
 		try{
 			//System.out.println("RemoteServerUtil serviceUrl: " + serviceUrl);
+            boolean debug = false;
 			if (serviceUrl == null || serviceUrl.compareTo("") == 0)
 			{
+	             if (debug) {
+	                    System.out.println(Utils.SEPARATOR);
+	                    System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
+	                    System.out.println("LG_CONFIG_FILE: " + System.getProperty("LG_CONFIG_FILE"));
+	            }
 				LexBIGService lbSvc = new LexBIGServiceImpl();
 				return (LexEVSService) lbSvc;
 			}
+            if (debug) {
+                System.out.println(Utils.SEPARATOR);
+                System.out.println("LexBIGService(remote): " + serviceUrl);
+            }
 			LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
 		    //EVSApplicationService appService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
             return (LexEVSService) lexevsService;
