@@ -135,8 +135,9 @@ public class UserSessionBean extends Object
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
 
-
         String matchtype = (String) request.getParameter("matchtype");
+        if (matchtype == null) matchtype = "string";
+
         String source = (String) request.getParameter("source");
 
         System.out.println("\n*** criteria: " + matchText);
@@ -357,6 +358,7 @@ public class UserSessionBean extends Object
 
 	//////////////////////////////////////////////////////////////////////
 
+
 	private String selectedMatchType = null;
 	private List matchTypeList = null;
 	private Vector<String> matchTypeListData = null;
@@ -371,11 +373,6 @@ public class UserSessionBean extends Object
 			String t = (String) matchTypeListData.elementAt(i);
 			matchTypeList.add(new SelectItem(t));
 		}
-		/*
-		if (matchTypeList != null && matchTypeList.size() > 0) {
-			selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
-		}
-		*/
 		return matchTypeList;
 	}
 
