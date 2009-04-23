@@ -199,6 +199,9 @@ public class UserSessionBean extends Object
             return "concept_details";
         }
         String message = "No match found.";
+        if (matchAlgorithm.compareTo("exactMatch") == 0) {
+			message = "No match found. Please try beings with or contains match algorithm.";
+		}
         request.getSession().setAttribute("message", message);
         return "message";
 
