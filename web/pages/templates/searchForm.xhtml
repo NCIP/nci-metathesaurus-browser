@@ -30,12 +30,14 @@
       <f:selectItems value="#{userSessionBean.sourceList}"/>
     </h:selectOneMenu>
   </h:outputLabel>
+  <!--
   <h:selectOneRadio id="matchtype"
     value="#{userSessionBean.selectedMatchType}" valueChangeListener="#{userSessionBean.matchTypeSelectionChanged}"
     styleClass="textbody"
   >
     <f:selectItems value="#{userSessionBean.matchTypeList}"/>
   </h:selectOneRadio>
+  -->
   <%
     String algorithm = (String) request.getSession().getAttribute("selectedAlgorithm");
     String check_e = "", check_s = "" , check_c ="";
@@ -46,7 +48,8 @@
     else
       check_c = "checked";
   %>
+  <br/>
   <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact Match&nbsp;
   <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp;
   <input type="radio" name="algorithm" value="contains" alt="Containts" <%=check_c%>>Contains&nbsp;
-</FORM>
+ </FORM>
