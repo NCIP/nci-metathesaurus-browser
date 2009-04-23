@@ -33,12 +33,7 @@ package gov.nih.nci.evs.browser.utils;
  */
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
-
-import java.util.Vector;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -50,9 +45,7 @@ import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 
 import java.util.List;
-import java.util.Collection;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.Set;
@@ -99,6 +92,7 @@ public class CacheController
   public static final String ONTOLOGY_NODE_CHILD_COUNT = "ontology_node_child_count";
   public static final String ONTOLOGY_NODE_DEFINITION = "ontology_node_definition";
   public static final String CHILDREN_NODES = "children_nodes";
+  public static final String NCI_SOURCE = "NCI";
 
     private static CacheController instance = null;
     private static Cache cache = null;
@@ -184,7 +178,11 @@ public class CacheController
         if (nodeArray == null)
         {
             System.out.println("Not in cache -- calling getSubconcepts " );
-            map = new TreeUtils().getSubconcepts(scheme, version, code);
+            if (scheme.compareTo("NCI Thesaurus") == 0) {
+            	map = new TreeUtils().getSubconcepts(scheme, version, code);
+			} else {
+				map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE);
+			}
             nodeArray = HashMap2JSONArray(map);
 
             if (fromCache) {
