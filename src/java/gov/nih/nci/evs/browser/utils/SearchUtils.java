@@ -710,6 +710,8 @@ public class SearchUtils {
                 {
                     ResolvedConceptReference rcr = rcra[i];
                     if (sortLight) {
+
+System.out.println("sorting light");
 						org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
 						ce.setEntityCode(rcr.getConceptCode());
 						ce.setEntityDescription(rcr.getEntityDescription());
@@ -1071,19 +1073,39 @@ public class SearchUtils {
                 }
                 System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
         }
+
+        Vector v = null;
         if (iterator != null) {
-			Vector v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
-            //Vector v = resolveIterator( iterator, maxToReturn);
-            if (v != null && v.size() > 0)
-            {
-                if(!apply_sort_score)
-                {
-                    SortUtils.quickSort(v);
-                }
-                return v;
-            }
+			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
         }
-        return new Vector();
+
+        if (v == null || v.size() == 0) {
+			v = new Vector();
+			// add exact match for CUI and source code, if there is any (simple search case):
+			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
+			if (c != null) {
+				v.add(c);
+			}
+
+			boolean searchInactive = true;
+			Vector u = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
+												   source, matchText0, maxToReturn, searchInactive);
+			if (u != null) {
+				for (int j=0; j<u.size(); j++) {
+					c = (Concept) u.elementAt(j);
+					v.add(c);
+				}
+			}
+
+			if (v != null && v.size() > 0)
+			{
+				if(!apply_sort_score)
+				{
+					SortUtils.quickSort(v);
+				}
+			}
+	    }
+        return v;
     }
 
 
@@ -1255,15 +1277,28 @@ public class SearchUtils {
      */
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn) throws LBException {
         //logger.debug("Sorting by score: " + searchTerm);
+
+
+System.out.println("Mayo sort...");
+if (toSort == null)
+{
+	System.out.println("toSort == null ???");
+}
+
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
 
         // Create a bucket to store results.
         Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
+
+
         // Score all items ...
         while (toSort.hasNext()) {
             // Working in chunks of 100.
             ResolvedConceptReferenceList refs = toSort.next(100);
+
+System.out.println("refs.getResolvedConceptReferenceCount() = " + refs.getResolvedConceptReferenceCount());
+
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
 
 
@@ -1291,9 +1326,16 @@ public class SearchUtils {
 
 
                 }
+
+ ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
+ System.out.println("\t***" + ce.getEntityDescription().getContent() + " score: " + scoredTerm.score);
+
             }
         }
         // Return an iterator that will sort the scored result.
+
+System.out.println("Mayo original sort ...ScoredIterator " );
+
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
@@ -1358,12 +1400,9 @@ public class SearchUtils {
             if (keywords.contains(word))
                 matchScore += ((position / 10) + 1);
         }
-        return Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
-        /*
+        return
             Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
                 * (isPreferred ? 2 : 1);
-         */
-
     }
 
     /**
