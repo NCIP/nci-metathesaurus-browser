@@ -175,6 +175,8 @@ import org.LexGrid.concepts.Entity;
 public class SearchUtils {
 
     private boolean apply_sort_score = false;
+    private boolean sort_by_pt_only = true;
+
     public CodingSchemeRenderingList csrl = null;
     private Vector supportedCodingSchemes = null;
     private static HashMap codingSchemeMap = null;
@@ -193,31 +195,34 @@ public class SearchUtils {
 
     public SearchUtils()
     {
-        //setCodingSchemeMap();
-        try {
-            NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
-            String sort_str = properties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
-            apply_sort_score = false;
-            if (sort_str.compareTo("true") == 0) apply_sort_score = true;
-        } catch (Exception ex) {
-
-        }
+		initializeSortParameters();
     }
 
     public SearchUtils(String url)
     {
-        //setCodingSchemeMap();
         this.url = url;
-        //setCodingSchemeMap();
+        initializeSortParameters();
+    }
+
+    private void initializeSortParameters() {
         try {
             NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
             String sort_str = properties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
-            apply_sort_score = false;
-            if (sort_str.compareTo("true") == 0) apply_sort_score = true;
+            sort_by_pt_only = true;
+            apply_sort_score = true;
+            if (sort_str != null) {
+				if (sort_str.compareTo("false") == 0) {
+					apply_sort_score = false;
+				} else if (sort_str.compareToIgnoreCase("all") == 0) {
+					sort_by_pt_only = false;
+				}
+		    }
+
         } catch (Exception ex) {
 
         }
-    }
+	}
+
 
 
     private static void setCodingSchemeMap()
@@ -669,13 +674,21 @@ public class SearchUtils {
     * @param iterator the iterator
     * @param maxToReturn the max to return
     */
+
+
     public static Vector  resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn)
     {
         return resolveIterator(iterator, maxToReturn, null);
     }
 
-
     public static Vector resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn, String code)
+    {
+		return resolveIterator(iterator, maxToReturn, code, true);
+	}
+
+
+
+    public static Vector resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn, String code, boolean sortLight)
     {
         Vector v = new Vector();
         if (iterator == null)
@@ -696,18 +709,23 @@ public class SearchUtils {
                 for (int i=0; i<rcra.length; i++)
                 {
                     ResolvedConceptReference rcr = rcra[i];
-                    //org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
-                    org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-                    ce.setEntityCode(rcr.getConceptCode());
-                    ce.setEntityDescription(rcr.getEntityDescription());
-                    if (code == null)
-                    {
-                        v.add(ce);
-                    }
-                    else
-                    {
-                        if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
-                    }
+                    if (sortLight) {
+						org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
+						ce.setEntityCode(rcr.getConceptCode());
+						ce.setEntityDescription(rcr.getEntityDescription());
+						if (code == null)
+						{
+							v.add(ce);
+						}
+						else
+						{
+							if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+						}
+				    } else {
+                        Concept ce = rcr.getReferencedEntry();
+                        if (code == null) v.add(ce);
+						else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+					}
                 }
             }
         } catch (Exception e) {
@@ -1020,9 +1038,9 @@ public class SearchUtils {
                 //Constructors.createSortOptionList(new String[]{"matchToQuery"});
 
             try {
-                // resolve nothing
+                // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
-                //iterator = cns.resolve(sortCriteria, null, restrictToProperties, null);
+                if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
                 try {
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
                 }  catch (Exception e) {
@@ -1043,15 +1061,19 @@ public class SearchUtils {
         {
                 long ms = System.currentTimeMillis();
                 try {
-                    //iterator = sortByScore(matchText, iterator, maxToReturn);
-                    iterator = sortByScore(matchText0, iterator, maxToReturn, true);
+					if (sort_by_pt_only) {
+					    iterator = sortByScore(matchText0, iterator, maxToReturn, true);
+					} else {
+                        iterator = sortByScore(matchText0, iterator, maxToReturn);
+					}
                 } catch (Exception ex) {
 
                 }
                 System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         if (iterator != null) {
-            Vector v = resolveIterator( iterator, maxToReturn);
+			Vector v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+            //Vector v = resolveIterator( iterator, maxToReturn);
             if (v != null && v.size() > 0)
             {
                 if(!apply_sort_score)
@@ -1233,18 +1255,18 @@ public class SearchUtils {
      */
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn) throws LBException {
         //logger.debug("Sorting by score: " + searchTerm);
-
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
 
         // Create a bucket to store results.
         Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
-
         // Score all items ...
         while (toSort.hasNext()) {
             // Working in chunks of 100.
             ResolvedConceptReferenceList refs = toSort.next(100);
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
+
+
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
 
                 String code = ref.getConceptCode();
@@ -1265,6 +1287,9 @@ public class SearchUtils {
                             continue;
                     }
                     scoredResult.put(code, new ScoredTerm(ref, score));
+
+
+
                 }
             }
         }
@@ -1333,9 +1358,12 @@ public class SearchUtils {
             if (keywords.contains(word))
                 matchScore += ((position / 10) + 1);
         }
-        return
+        return Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
+        /*
             Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
                 * (isPreferred ? 2 : 1);
+         */
+
     }
 
     /**
