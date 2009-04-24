@@ -2,7 +2,7 @@
 
 <root>
     <DisplayItems>
-    
+
        <DisplayItem>
             <propertyName>Code</propertyName>
             <itemLabel>NCI MetaThesaurus Code</itemLabel>
@@ -18,7 +18,7 @@
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
        </DisplayItem>
-       
+
       <DisplayItem>
             <propertyName>definition</propertyName>
             <itemLabel>Definition</itemLabel>
@@ -26,7 +26,7 @@
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
        </DisplayItem>
-       
+
       <DisplayItem>
             <propertyName>DEFINITION</propertyName>
             <itemLabel>Definition</itemLabel>
@@ -66,7 +66,7 @@
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
        </DisplayItem>
-       
+
        <DisplayItem>
             <propertyName>textualPresentation</propertyName>
             <itemLabel>Synonym</itemLabel>
@@ -74,7 +74,7 @@
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
        </DisplayItem>
-       
+
        <DisplayItem>
             <propertyName>UMLS_CUI</propertyName>
             <itemLabel>NCI Metathesaurus CUI</itemLabel>
@@ -202,6 +202,11 @@
         <ConfigurableItem>
                  <key>EVS_SERVICE_URL</key>
                  <value>@lex.evs.api.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>LG_CONFIG_FILE</key>
+                 <value>@lg.config.file@</value>
         </ConfigurableItem>
 
         <ConfigurableItem>
