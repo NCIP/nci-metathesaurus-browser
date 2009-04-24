@@ -1,5 +1,4 @@
 <%
-  /*
   String version = new DataUtils().getVocabularyVersionByTag(
     "NCI Thesaurus", "PRODUCTION");
   if (version == null)
@@ -7,12 +6,11 @@
       "NCI Thesaurus", null);
   if (version == null)
     version = "";
-  */
 %>
 <div class="textbody">
   <table border="0" width="700px"><tr>
     <td><div class="texttitle-blue">Welcome</div></td>
-    <td><!-- div class="texttitle-blue-rightJust">Version: < % = version %></div --></td>
+    <td><div class="texttitle-blue-rightJust">Version: <%= version %></div></td>
   </tr></table>
   <hr/>
   <table border="0">
