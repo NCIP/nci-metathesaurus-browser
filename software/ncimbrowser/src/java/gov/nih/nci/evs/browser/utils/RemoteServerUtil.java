@@ -97,7 +97,7 @@ public class RemoteServerUtil {
             if (serviceUrl == null || serviceUrl.compareTo("") == 0)
             {
                 String lg_config_file = properties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
-                if (true) {
+                if (debug) {
                         System.out.println(Utils.SEPARATOR);
                         System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
                         System.out.println("LG_CONFIG_FILE: " + System.getProperty("LG_CONFIG_FILE"));
