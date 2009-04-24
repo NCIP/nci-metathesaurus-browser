@@ -258,6 +258,7 @@
 
         <filterset id="embedded.filterset">
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+            <filter token="lg.config.file" value="${lg.config.file}"/>
             <filter token="ncimbrowser.conf.path" value="${application.data.path}/${ncimbrowser.conf.path}"/>
             <filter token="ehcache.xml.file" value="${application.data.path}/${ncimbrowser.conf.path}/${ehcache.xml.file}"/>
             <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
@@ -298,10 +299,9 @@
             <remove path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]"/>
             <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
                 <![CDATA[
-                <attribute name="Properties">
-                   gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
-                   LG_CONFIG_FILE=${lg.config.file}
-                </attribute>
+                    <attribute name="Properties">
+      gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
+    </attribute>
                 ]]>
             </insert>
         </xmltask>
