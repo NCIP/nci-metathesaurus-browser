@@ -49,8 +49,9 @@ public class NCImBrowserProperties {
         private static List displayItemList;
         private static HashMap configurableItemMap;
 
-       //KLO
+        // KLO
         public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
+        public static final String LG_CONFIG_FILE = "LG_CONFIG_FILE";
         public static final String MAXIMUM_RETURN = "MAXIMUM_RETURN";
         public static final String EHCACHE_XML_PATHNAME = "EHCACHE_XML_PATHNAME";
         public static final String SORT_BY_SCORE = "SORT_BY_SCORE";
@@ -69,6 +70,7 @@ public class NCImBrowserProperties {
         private static int maxToReturn = 1000;
         private static int maxTreeLevel = 1000;
         private static String service_url = null;
+        private static String lg_config_file = null;
 
         private static String sort_by_score = null;
         private static String incoming_mail_host = null;
@@ -101,8 +103,10 @@ public class NCImBrowserProperties {
                         maxTreeLevel = Integer.parseInt(max_tree_level_str);
 
                         service_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
-
                         //System.out.println("EVS_SERVICE_URL: " + service_url);
+
+                        lg_config_file = NCImBrowserProperties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
+                        //System.out.println("LG_CONFIG_FILE: " + lg_config_file);
 
                         sort_by_score = NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
                         ncicb_contact_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.NCICB_CONTACT_URL);
