@@ -52,61 +52,68 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
  */
 
 public class RemoteServerUtil {
-	private static String _serviceInfo = "EvsServiceInfo";
-	private Properties systemProperties = null;
 
-	private static String serviceURL = null;
-
+    private static boolean debug = true;
+    private static String _serviceInfo = "EvsServiceInfo";
+    private Properties systemProperties = null;
+    private static String serviceURL = null;
 
     public RemoteServerUtil() {
+        // Do nothing
+    }
 
+    public static LexBIGService createLexBIGService()
+    {
+        // default URL (to be read from a property file)
+        //String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
+        String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+        } catch (Exception ex) {
+            // Do nothing
+        }
+        return createLexBIGService(url);
     }
 
 
-	public static LexBIGService createLexBIGService()
+    public static LexBIGService createLexBIGService(String serviceUrl)
     {
-		// default URL (to be read from a property file)
-		String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-		NCImBrowserProperties properties = null;
-		try {
-			properties = NCImBrowserProperties.getInstance();
-			url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
-	    } catch (Exception ex) {
+        try {
 
-		}
-		return createLexBIGService(url);
-	}
+            NCImBrowserProperties properties = null;
+            properties = NCImBrowserProperties.getInstance();
 
+            if (serviceUrl == null || serviceUrl.compareTo("") == 0)
+            {
+                String lg_config_file = properties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
+                System.setProperty(NCImBrowserProperties.LG_CONFIG_FILE,lg_config_file);
 
-	public static LexBIGService createLexBIGService(String serviceUrl)
-    {
-        try{
-            boolean debug = false;
-			if (serviceUrl == null || serviceUrl.compareTo("") == 0)
-			{
-			    if (debug) {
-			        System.out.println(Utils.SEPARATOR);
-			        System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
-			        System.out.println("LG_CONFIG_FILE: " + System.getProperty("LG_CONFIG_FILE"));
-			    }
-				LexBIGService lbSvc = new LexBIGServiceImpl();
-				return lbSvc;
-			}
+                if (debug) {
+                    System.out.println(Utils.SEPARATOR);
+                    System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
+                    System.out.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
+                }
+                LexBIGService lbSvc = new LexBIGServiceImpl();
+                return lbSvc;
+            }
             if (debug) {
                 System.out.println(Utils.SEPARATOR);
                 System.out.println("LexBIGService(remote): " + serviceUrl);
             }
-			LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+            LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
             return (LexBIGService) lexevsService;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	public static String getServiceURL() {
-		return serviceURL;
-	}
+    public static String getServiceURL() {
+        return serviceURL;
+    }
 }
