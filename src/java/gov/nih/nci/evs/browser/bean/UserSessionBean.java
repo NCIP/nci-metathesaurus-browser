@@ -233,19 +233,23 @@ public class UserSessionBean extends Object
     }
 
     public String getSelectedResultsPerPage() {
-        return this.selectedResultsPerPage;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String s = (String) request.getSession().getAttribute("selectedResultsPerPage");
+        if (s != null) {
+            this.selectedResultsPerPage = s;
+	    }
+	    return this.selectedResultsPerPage;
     }
 
 
     public void resultsPerPageChanged(ValueChangeEvent event) {
-        if (event.getNewValue() == null) return;
+        if (event.getNewValue() == null)
+        {
+			return;
+		}
         String newValue = (String) event.getNewValue();
-
-        System.out.println("resultsPerPageChanged; " + newValue);
         setSelectedResultsPerPage(newValue);
-
     }
-
 
 
     public String linkAction() {
@@ -402,6 +406,69 @@ public class UserSessionBean extends Object
 	}
 
 
+    ////////////////////////////////////////////////////////////////
+    // concept sources
+    ////////////////////////////////////////////////////////////////
+
+	private String selectedConceptSource = null;
+	private List conceptSourceList = null;
+	private Vector<String> conceptSourceListData = null;
+
+
+	public List getConceptSourceList() {
+		String codingSchemeName = "NCI MetaThesaurus";
+		String version = null;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String code = (String) request.getSession().getAttribute("code");
+		conceptSourceListData = DataUtils.getSources(codingSchemeName, version, null, code);
+		conceptSourceList = new ArrayList();
+		if (conceptSourceListData == null) return conceptSourceList;
+
+		for (int i=0; i<conceptSourceListData.size(); i++) {
+			String t = (String) conceptSourceListData.elementAt(i);
+			conceptSourceList.add(new SelectItem(t));
+		}
+		return conceptSourceList;
+	}
+
+	public void setSelectedConceptSource(String selectedConceptSource) {
+		this.selectedConceptSource = selectedConceptSource;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedConceptSource", selectedConceptSource);
+	}
+
+
+	public String getSelectedConceptSource() {
+		if (selectedConceptSource == null) {
+			conceptSourceList = getConceptSourceList();
+			if (conceptSourceList != null && conceptSourceList.size() > 0) {
+				this.selectedConceptSource = ((SelectItem) conceptSourceList.get(0)).getLabel();
+			}
+	    }
+		return this.selectedConceptSource;
+	}
+
+	public void conceptSourceSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		String source = (String) event.getNewValue();
+		setSelectedConceptSource(source);
+	}
+
+    public String viewNeighborhoodAction() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        //String sab = (String) request.getParameter("selectedConceptSource");
+        String sab = getSelectedConceptSource();
+        String code = (String) request.getParameter("code");
+
+        System.out.println("*** viewNeighborhoodAction sab " + sab);
+        System.out.println("*** viewNeighborhoodAction code " + code);
+
+        //String message = "View Neighborhood in " + sab + " page is under construction.";
+        //request.getSession().setAttribute("message", message);
+        return "neighborhood";
+
+    }
 
 
 }

@@ -30,7 +30,8 @@
           String match_size = (String) request.getSession().getAttribute("match_size");
           String page_string = (String) request.getSession().getAttribute("page_string");
           String page_number = (String) request.getParameter("page_number");
-          String selectedResultsPerPage = (String) request.getParameter("selectedResultsPerPage");
+          //String selectedResultsPerPage = (String) request.getParameter("selectedResultsPerPage");
+          String selectedResultsPerPage = (String) request.getSession().getAttribute("selectedResultsPerPage");
           if (page_number != null)
           {
               page_string = page_number;
