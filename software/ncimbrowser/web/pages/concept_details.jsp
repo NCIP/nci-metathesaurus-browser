@@ -80,8 +80,8 @@
           <%@ include file="/pages/templates/typeLinks.xhtml" %>
           <div class="tabTableContentContainer">
             <%@ include file="/pages/templates/property.xhtml" %>
+            <%@ include file="/pages/templates/sources.xhtml" %>
             <%@ include file="/pages/templates/relationship.xhtml" %>
-            <%@ include file="/pages/templates/synonym.xhtml" %>
             <%@ include file="/pages/templates/nciFooter.html" %>
           </div>
         </div>

@@ -768,4 +768,54 @@ public class MetaTreeUtils {
         return "<Not assigned>";
     }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+    public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
+            CodingSchemeVersionOrTag csvt, SupportedHierarchy hierarchyDefn, String focusCode, int maxLevel) throws LBException {
+        HashMap hmap = new HashMap();
+        TreeItem ti = new TreeItem("<Root>", "Root node");
+        long ms = System.currentTimeMillis();
+        int pathsResolved = 0;
+        try {
+
+            // Resolve 'is_a' hierarchy info. This example will
+            // need to make some calls outside of what is covered
+            // by existing convenience methods, but we use the
+            // registered hierarchy to prevent need to hard code
+            // relationship and direction info used on lookup ...
+            String hierarchyID = hierarchyDefn.getLocalId();
+            String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
+            boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();
+
+            // Identify the set of all codes on path from root
+            // to the focus code ...
+            Map<String, EntityDescription> codesToDescriptions = new HashMap<String, EntityDescription>();
+            AssociationList pathsFromRoot = getPathsFromRoot(lbsvc, lbscm, scheme, csvt, hierarchyID, focusCode,
+                    codesToDescriptions, maxLevel);
+
+            // Typically there will be one path, but handle multiple just in
+            // case.  Each path from root provides a 'backbone', from focus
+            // code to root, for additional nodes to hang off of in our
+            // printout. For every backbone node, one level of children is
+            // printed, along with an indication of whether those nodes can
+            // be expanded.
+
+            for (Iterator<Association> paths = pathsFromRoot.iterateAssociation(); paths.hasNext();) {
+                addPathFromRoot(ti, lbsvc, lbscm, scheme, csvt, paths.next(), associationsToNavigate, associationsNavigatedFwd,
+                        codesToDescriptions);
+                pathsResolved++;
+            }
+
+        } finally {
+            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) +
+                " to resolve " + pathsResolved + " paths from root.");
+        }
+
+        hmap.put(focusCode, ti);
+        return hmap;
+    }
+*/
+
 }

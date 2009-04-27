@@ -1,4 +1,4 @@
-<form>
+<FORM NAME="paginationForm" METHOD="POST" action="<%=request.getContextPath() %>/pages/search_results.jsf?" >
   <table>
     <tr>
       <td class="textbody" align=left>
@@ -48,7 +48,7 @@
         Show
         <h:selectOneMenu
           id="id" value="#{userSessionBean.selectedResultsPerPage}"
-          valueChangeListener="#{userSessionBean.resultsPerPageChanged}">
+          valueChangeListener="#{userSessionBean.resultsPerPageChanged}" immediate="true" onchange="submit()"> 
           <f:selectItems value="#{userSessionBean.resultsPerPageList}"/>
         </h:selectOneMenu>
         &nbsp;results per page

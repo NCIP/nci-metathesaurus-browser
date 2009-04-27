@@ -710,8 +710,6 @@ public class SearchUtils {
                 {
                     ResolvedConceptReference rcr = rcra[i];
                     if (sortLight) {
-
-System.out.println("sorting light");
 						org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
 						ce.setEntityCode(rcr.getConceptCode());
 						ce.setEntityDescription(rcr.getEntityDescription());
@@ -818,7 +816,7 @@ System.out.println("sorting light");
             boolean resolveBackward = true;
 
             int resolveAssociationDepth = 1;
-            int maxToReturn = 1000;
+            int maxToReturn = -1;
 
             ResolvedConceptReferencesIterator iterator = codedNodeGraph2CodedNodeSetIterator(
                             cng,
@@ -869,7 +867,7 @@ System.out.println("sorting light");
             boolean resolveBackward = false;
 
             int resolveAssociationDepth = 1;
-            int maxToReturn = 1000;
+            int maxToReturn = -1;
 
             ResolvedConceptReferencesIterator iterator = codedNodeGraph2CodedNodeSetIterator(
                             cng,
@@ -1115,7 +1113,7 @@ System.out.println("sorting light");
         String version = null;
         String matchText = "blood";
         String matchAlgorithm = "contains";
-        int maxToReturn = 1000;
+        int maxToReturn = -1;
 
         long ms = System.currentTimeMillis();
         Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
@@ -1276,32 +1274,17 @@ System.out.println("sorting light");
      * @throws LBException
      */
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn) throws LBException {
-        //logger.debug("Sorting by score: " + searchTerm);
-
-
-System.out.println("Mayo sort...");
-if (toSort == null)
-{
-	System.out.println("toSort == null ???");
-}
-
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
 
         // Create a bucket to store results.
         Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
 
-
         // Score all items ...
         while (toSort.hasNext()) {
             // Working in chunks of 100.
             ResolvedConceptReferenceList refs = toSort.next(100);
-
-System.out.println("refs.getResolvedConceptReferenceCount() = " + refs.getResolvedConceptReferenceCount());
-
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
-
-
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
 
                 String code = ref.getConceptCode();
@@ -1322,20 +1305,10 @@ System.out.println("refs.getResolvedConceptReferenceCount() = " + refs.getResolv
                             continue;
                     }
                     scoredResult.put(code, new ScoredTerm(ref, score));
-
-
-
                 }
-
- ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
- System.out.println("\t***" + ce.getEntityDescription().getContent() + " score: " + scoredTerm.score);
-
             }
         }
         // Return an iterator that will sort the scored result.
-
-System.out.println("Mayo original sort ...ScoredIterator " );
-
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
@@ -1400,9 +1373,9 @@ System.out.println("Mayo original sort ...ScoredIterator " );
             if (keywords.contains(word))
                 matchScore += ((position / 10) + 1);
         }
-        return
-            Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
-                * (isPreferred ? 2 : 1);
+        return Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
+            //Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
+                //* (isPreferred ? 2 : 1);
     }
 
     /**

@@ -1849,5 +1849,37 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return v;
     }
 
+    public static Vector getSources(String scheme, String version, String tag, String code) {
+		Vector sources = getSynonyms(scheme, version, tag, code);
+		//GLIOBLASTOMA MULTIFORME|DI|DXP|U000721
+		HashSet hset = new HashSet();
+		Vector source_vec = new Vector();
+		for (int i=0; i<sources.size(); i++)
+		{
+			String s = (String) sources.elementAt(i);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String name = (String) ret_vec.elementAt(0);
+			String type = (String) ret_vec.elementAt(1);
+			String src = (String) ret_vec.elementAt(2);
+			String srccode = (String) ret_vec.elementAt(3);
+			if (!hset.contains(src)) {
+				hset.add(src);
+				source_vec.add(src);
+			}
+		}
+        SortUtils.quickSort(source_vec);
+        return source_vec;
+	}
 
+
+	public static boolean containSource(Vector sources, String source) {
+		if (sources == null || sources.size() == 0) return false;
+		for (int i=0; i<sources.size(); i++) {
+			String s = (String) sources.elementAt(i);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String src = (String) ret_vec.elementAt(2);
+			if (src.compareTo(source) == 0) return true;
+		}
+		return false;
+	}
 }
