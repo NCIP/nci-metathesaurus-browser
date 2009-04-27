@@ -57,11 +57,9 @@
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
-       <description>help</description>
-       <to-view-id>/pages/help.jsp</to-view-id>
-    </navigation-case>  
+
     
+   
   </navigation-rule>
 
   <navigation-rule>
@@ -202,6 +200,13 @@
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
 
+    <navigation-case>
+       <description>neighborhood</description>
+       <from-action>#{userSessionBean.viewNeighborhoodAction}</from-action>
+       <from-outcome>neighborhood</from-outcome>
+       <to-view-id>/pages/neighborhood.jsp</to-view-id>
+    </navigation-case>
+    
     <navigation-case> 
         <description>help</description>
         <to-view-id>/pages/help.jsp</to-view-id>
