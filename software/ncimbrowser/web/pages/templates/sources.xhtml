@@ -1,0 +1,52 @@
+<%
+  if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
+  {
+    %>
+    <h2>Sources</h2>
+    <div>
+      <table class="dataTable" border="0">
+        <tr>
+            <td>
+        <%
+          Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+          String concept_src_id = concept_src.getEntityCode();
+          Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
+          String source_str = "";
+          for (int n=0; n<sources.size(); n++)
+          {
+              String s = (String) sources.elementAt(n);
+              %>
+	      <a href="<%= request.getContextPath() %>/atoms.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+          }  
+        %>
+            </td>
+        </tr>
+        <tr>
+           <td>
+                <FORM NAME="neighborhoodForm" METHOD="POST" CLASS="neighborhood-form" >
+           
+		     <h:outputLabel id="conceptSourceLabel" value="View Neighborhood in" styleClass="textbody">
+			 <h:selectOneMenu id="concept_source"
+			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
+			    styleClass="textbody">
+			    <f:selectItems value="#{userSessionBean.conceptSourceList}"/>
+			 </h:selectOneMenu>
+		     </h:outputLabel> 
+		     <h:commandButton
+		        id="ok"
+		        value="OK"
+		        action="#{userSessionBean.viewNeighborhoodAction}"
+		        alt="View Neighborhood">
+		     </h:commandButton>
+	        </FORM>
+		     
+           </td>
+        </tr>
+      </table>
+    </div>
+    <%
+  }
+%>
