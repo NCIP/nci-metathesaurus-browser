@@ -1,0 +1,43 @@
+
+<%
+  Concept concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+  String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
+  String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
+%>
+        
+    <h2>Neighborhood of `<%=concept_neighborhood_name%>' in <%=neighborhood_sab%></h2>
+    <div>
+      <table class="dataTable" border="0">
+        <tr>
+           <td>
+               <h2>Synonyms</h2>
+           </td>
+        </tr>
+        <tr>
+           <td>
+               <h2>Neighborhood</h2>
+           </td>
+        </tr>        
+        <tr>
+           <td>
+                <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
+           
+		     <h:outputLabel id="conceptSourceLabel" value="Change to Neighborhood in" styleClass="textbody">
+			 <h:selectOneMenu id="concept_source"
+			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
+			    styleClass="textbody">
+			    <f:selectItems value="#{userSessionBean.conceptSourceList}"/>
+			 </h:selectOneMenu>
+		     </h:outputLabel> 
+		     <h:commandButton
+		        id="ok"
+		        value="Ok"
+		        action="#{userSessionBean.viewNeighborhoodAction}"
+		        alt="View Neighborhood">
+		     </h:commandButton>
+	        </FORM>
+		     
+           </td>
+        </tr>
+      </table>
+    </div>
