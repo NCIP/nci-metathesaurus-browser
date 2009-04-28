@@ -1428,12 +1428,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
             if (roleList.size() > 0) {
-                        Collections.sort(roleList);
+                        //Collections.sort(roleList);
+                        SortUtils.quickSort(roleList);
                     }
 
             if (associationList.size() > 0) {
-                        Collections.sort(associationList);
-
+                        //Collections.sort(associationList);
+                        SortUtils.quickSort(associationList);
                     }
 
             map.put(TYPE_ROLE, roleList);
@@ -1893,58 +1894,41 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return false;
 	}
 
-    // Find concepts in neighborhood:
-    public Vector getAssociatedConcepts(String scheme, String version, String code, String sab)
-            throws LBException {
-		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-		if (version != null) csvt.setVersion(version);
-		//Concept c = getConceptByCode(scheme, version, null, code);
-		/*
-        ResolvedConceptReference rcr = new ResolvedConceptReference();
-        rcr.setReferencedEntry(c);
-        */
-        ConceptReference cr = new ConceptReference();
-        cr.setConceptCode(code);
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        // Resolve neighboring concepts with associations
-        // qualified by the SAB.
-        CodedNodeGraph neighborsBySource = lbSvc.getNodeGraph(scheme, csvt, null);
-        neighborsBySource = neighborsBySource.restrictToAssociations(null, ConvenienceMethods.createNameAndValueList(sab, "Source"));
-
-        ResolvedConceptReferenceList nodes = null;
-        try {
-            nodes = neighborsBySource.resolveAsList(
-            cr, true, true, Integer.MAX_VALUE, 1,
-            null, new PropertyType[] { PropertyType.PRESENTATION },
-            sortByCode_, null, -1);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
-
+    public Vector getAssociatedConcepts(String scheme, String version, String code, String sab) {
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null) csvt.setVersion(version);
+        ResolvedConceptReferenceList matches = null;
         Vector v = new Vector();
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+            //NameAndValueList nameAndValueList = ConvenienceMethods.createNameAndValueList(assocNames);
 
-        List<AssociatedConcept> neighbors = new ArrayList<AssociatedConcept>();
-        for (ResolvedConceptReference node : nodes.getResolvedConceptReference()) {
-            // Process sources and targets ...
-            if (node.getSourceOf() != null)
-                for (Association assoc : node.getSourceOf().getAssociation())
-                    for (AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept())
-                        if (isValidForSAB(ac, sab)) {
-                            neighbors.add(ac);
-                            v.add(ac.getReferencedEntry());
-						}
+            NameAndValueList nameAndValueList_qualifier = null;
+            cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+            ConceptReference graphFocus = ConvenienceMethods.createConceptReference(code, scheme);
 
-			if (node.getTargetOf() != null)
-                for (Association assoc : node.getTargetOf().getAssociation())
-                    for (AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept())
-                        if (isValidForSAB(ac, sab)) {
-                            neighbors.add(ac);
-                            v.add(ac.getReferencedEntry());
-						}
+            boolean resolveForward = true;
+            boolean resolveBackward = true;
+
+            int resolveAssociationDepth = 1;
+            int maxToReturn = -1;
+
+            ResolvedConceptReferencesIterator iterator = codedNodeGraph2CodedNodeSetIterator(
+                            cng,
+                            graphFocus,
+                            resolveForward,
+                            resolveBackward,
+                            resolveAssociationDepth,
+                            maxToReturn);
+
+            v = resolveIterator(iterator, maxToReturn, code);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return v;
-    }
+
+	}
 
     protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
         for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
