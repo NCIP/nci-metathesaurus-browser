@@ -1,9 +1,9 @@
 <%
   String version = new DataUtils().getVocabularyVersionByTag(
-    "NCI Thesaurus", "PRODUCTION");
+    "NCI MetaThesaurus", "PRODUCTION");
   if (version == null)
     version = new DataUtils().getVocabularyVersionByTag(
-      "NCI Thesaurus", null);
+      "NCI MetaThesaurus", null);
   if (version == null)
     version = "";
 %>
