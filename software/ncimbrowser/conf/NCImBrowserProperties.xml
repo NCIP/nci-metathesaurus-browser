@@ -5,7 +5,7 @@
 
        <DisplayItem>
             <propertyName>Code</propertyName>
-            <itemLabel>NCI MetaThesaurus Code</itemLabel>
+            <itemLabel>Concept Unique Identifier (CUI)</itemLabel>
             <url>null</url>
             <hyperlinkText>null</hyperlinkText>
             <isExternalCode>false</isExternalCode>
