@@ -32,21 +32,22 @@
             String neighborhood_code = (String) request.getParameter("code");
 %>
               <h2>Source: <%=neighborhood_sab%></h2> 
+              
 	      <table class="dataTable" border="0">
-		<tr>
-		  <th class="dataTableHeader" scope="col" align="left">Source Code</th>
-		  <th class="dataTableHeader" scope="col" align="left">Type</th>
-		    <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-			'_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		      <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-		    </a>
-		  </th>
-		  <th class="dataTableHeader" scope="col" align="left">Name</th>
-		</tr>
+			<tr>
+			  <th class="dataTableHeader" scope="col" align="left">Code</th>
+			  <th class="dataTableHeader" scope="col" align="left">Type
+			    <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
+				'_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+			      <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
+			    </a>
+			  </th>
+			  <th class="dataTableHeader" scope="col" align="left">Name</th>
+			</tr>
 
 		<%
 		  Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-		  Vector synonyms = new DataUtils().getSynonyms(concept_syn);
+		  Vector synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
 		  for (int n=0; n<synonyms.size(); n++)
 		  {
 		    String s = (String) synonyms.elementAt(n);
