@@ -1729,14 +1729,22 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return list;
     }
 
+    public static Vector getSynonyms(String scheme, String version, String tag, String code, String sab) {
+        Concept concept = getConceptByCode(scheme, version, tag, code);
+        return getSynonyms(concept, sab);
+    }
+
 
     public static Vector getSynonyms(String scheme, String version, String tag, String code) {
-        Vector v = new Vector();
         Concept concept = getConceptByCode(scheme, version, tag, code);
-        return getSynonyms(concept);
+        return getSynonyms(concept, null);
     }
 
     public static Vector getSynonyms(Concept concept) {
+		return getSynonyms(concept, null);
+    }
+
+    public static Vector getSynonyms(Concept concept, String sab) {
         if (concept == null) return null;
         Vector v = new Vector();
         Presentation[] properties = concept.getPresentation();
@@ -1744,43 +1752,47 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         for (int i=0; i<properties.length; i++)
         {
             Presentation p = properties[i];
-            //if (p.getPropertyName().compareTo("FULL_SYN") == 0)
-            {
-                String term_name = p.getValue().getContent();
-                String term_type = "null";
-                String term_source = "null";
-                String term_source_code = "null";
+            // name
+			String term_name = p.getValue().getContent();
+			String term_type = "null";
+			String term_source = "null";
+			String term_source_code = "null";
 
-                PropertyQualifier[] qualifiers = p.getPropertyQualifier();
-                if (qualifiers != null)
-                {
-                    for (int j=0; j<qualifiers.length; j++)
-                    {
-                        PropertyQualifier q = qualifiers[j];
-                        String qualifier_name = q.getPropertyQualifierName();
-                        String qualifier_value = q.getValue().getContent();
-                        if (qualifier_name.compareTo("source-code") == 0)
-                        {
-                            term_source_code = qualifier_value;
-                            break;
-                        }
-                    }
-                }
-                term_type = p.getRepresentationalForm();
-                Source[] sources = p.getSource();
-                if (sources != null && sources.length > 0)
-                {
-                    Source src = sources[0];
-                    term_source = src.getContent();
-                }
-                v.add(term_name + "|" + term_type + "|" + term_source + "|" + term_source_code);
-            }
+            // source-code
+			PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+			if (qualifiers != null)
+			{
+				for (int j=0; j<qualifiers.length; j++)
+				{
+					PropertyQualifier q = qualifiers[j];
+					String qualifier_name = q.getPropertyQualifierName();
+					String qualifier_value = q.getValue().getContent();
+					if (qualifier_name.compareTo("source-code") == 0)
+					{
+						term_source_code = qualifier_value;
+						break;
+					}
+				}
+			}
+			// term type
+			term_type = p.getRepresentationalForm();
+
+			// source
+			Source[] sources = p.getSource();
+			if (sources != null && sources.length > 0)
+			{
+				Source src = sources[0];
+				term_source = src.getContent();
+			}
+			if (sab == null) {
+			    v.add(term_name + "|" + term_type + "|" + term_source + "|" + term_source_code);
+			} else if (term_source != null && sab.compareTo(term_source) == 0) {
+				v.add(term_name + "|" + term_type + "|" + term_source + "|" + term_source_code);
+			}
         }
         SortUtils.quickSort(v);
         return v;
-    }
-
-
+	}
 
     public String getNCICBContactURL()
     {
