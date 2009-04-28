@@ -155,7 +155,7 @@ public class PropertyFileParser {
 			Element el = (Element)nl.item(0);
 			textVal = el.getFirstChild().getNodeValue();
 		}
-		return textVal;
+		return textVal.trim();
 	}
 
 	private boolean getBooleanValue(Element ele, String tagName) {
