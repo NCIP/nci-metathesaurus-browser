@@ -175,6 +175,8 @@ import org.LexGrid.concepts.Entity;
 public class DataUtils {
     private static Vector<String> sourceListData = null;
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
+    static SortOptionList sortByCode_ = Constructors.createSortOptionList(new String[] {"code"});
+
     int maxReturn = 5000;
     Connection con;
     Statement stmt;
@@ -233,6 +235,9 @@ public class DataUtils {
     public String NCICBContactURL = null;
     public String terminologySubsetDownloadURL = null;
     public String NCIMBuildInfo = null;
+
+    static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
+    static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
 
     //==================================================================================
 
@@ -1342,12 +1347,17 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         // Perform the query ...
         ResolvedConceptReferenceList matches = null;
 
-        List list = getSupportedRoleNames(lbSvc, scheme, version);
+        List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
 
         ArrayList roleList = new ArrayList();
         ArrayList associationList = new ArrayList();
         ArrayList superconceptList = new ArrayList();
         ArrayList subconceptList = new ArrayList();
+
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+
+
 
         HashMap map = new HashMap();
         try {
@@ -1394,19 +1404,22 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                             if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
                                 //printAssocation(scheme, version, code, assoc.getAssociationName(), ac.getConceptCode());
                                 String s = associationName + "|" + pt + "|" + ac.getConceptCode();
-                                if (isRole)
-                                {
-                                    if (associationName.compareToIgnoreCase("hasSubtype") != 0)
-                                    {
-                                    //System.out.println("Adding role: " + s);
-                                        roleList.add(s);
-                                    }
-                                }
-                                else
-                                {
-                                    //System.out.println("Adding association: " + s);
-                                    associationList.add(s);
-                                }
+                                if (!parent_asso_vec.contains(associationName) &&
+                                    !child_asso_vec.contains(associationName)) {
+									if (isRole)
+									{
+										if (associationName.compareToIgnoreCase("hasSubtype") != 0)
+										{
+										//System.out.println("Adding role: " + s);
+											roleList.add(s);
+										}
+									}
+									else
+									{
+										//System.out.println("Adding association: " + s);
+										associationList.add(s);
+									}
+							    }
                             }
                         }
                     }
@@ -1430,7 +1443,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             for (int i=0; i<superconcept_vec.size(); i++)
             {
                 Concept c = (Concept) superconcept_vec.elementAt(i);
-                String pt = getPreferredName(c);
+                //String pt = getPreferredName(c);
+                String pt = c.getEntityDescription().getContent();
                 superconceptList.add(pt + "|" + c.getEntityCode());
             }
 
@@ -1442,7 +1456,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             for (int i=0; i<subconcept_vec.size(); i++)
             {
                 Concept c = (Concept) subconcept_vec.elementAt(i);
-                String pt = getPreferredName(c);
+                //String pt = getPreferredName(c);
+                String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
             }
             Collections.sort(subconceptList);
@@ -1457,17 +1472,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public Vector getSuperconcepts(String scheme, String version, String code)
     {
-        //String assocName = "hasSubtype";
-        String hierarchicalAssoName = "hasSubtype";
-        Vector hierarchicalAssoName_vec = getHierarchyAssociationId(scheme, version);
-        if (hierarchicalAssoName_vec != null && hierarchicalAssoName_vec.size() > 0)
-        {
-            hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-        }
-        return getAssociationSources(scheme, version, code, hierarchicalAssoName);
+        return getAssociationSources(scheme, version, code, hierAssocToChildNodes_);
     }
 
-    public Vector getAssociationSources(String scheme, String version, String code, String assocName)
+
+    public Vector getAssociationSources(String scheme, String version, String code, String[] assocNames)
     {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null) csvt.setVersion(version);
@@ -1477,9 +1486,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-            NameAndValueList nameAndValueList =
-                createNameAndValueList(
-                    new String[] {assocName}, null);
+
+            NameAndValueList nameAndValueList = ConvenienceMethods.createNameAndValueList(assocNames);
 
             NameAndValueList nameAndValueList_qualifier = null;
             cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
@@ -1489,7 +1497,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             boolean resolveBackward = true;
 
             int resolveAssociationDepth = 1;
-            int maxToReturn = 1000;
+            int maxToReturn = -1;
 
             ResolvedConceptReferencesIterator iterator = codedNodeGraph2CodedNodeSetIterator(
                             cng,
@@ -1508,17 +1516,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public Vector getSubconcepts(String scheme, String version, String code)
     {
-        //String assocName = "hasSubtype";
-        String hierarchicalAssoName = "hasSubtype";
-        Vector hierarchicalAssoName_vec = getHierarchyAssociationId(scheme, version);
-        if (hierarchicalAssoName_vec != null && hierarchicalAssoName_vec.size() > 0)
-        {
-            hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-        }
-        return getAssociationTargets(scheme, version, code, hierarchicalAssoName);
+        return getAssociationTargets(scheme, version, code, hierAssocToChildNodes_);
     }
 
-    public Vector getAssociationTargets(String scheme, String version, String code, String assocName)
+    public Vector getAssociationTargets(String scheme, String version, String code, String[] assocNames)
     {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null) csvt.setVersion(version);
@@ -1528,9 +1529,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-            NameAndValueList nameAndValueList =
-                createNameAndValueList(
-                    new String[] {assocName}, null);
+            NameAndValueList nameAndValueList = ConvenienceMethods.createNameAndValueList(assocNames);
 
             NameAndValueList nameAndValueList_qualifier = null;
             cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
@@ -1540,7 +1539,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             boolean resolveBackward = false;
 
             int resolveAssociationDepth = 1;
-            int maxToReturn = 1000;
+            int maxToReturn = -1;
 
             ResolvedConceptReferencesIterator iterator = codedNodeGraph2CodedNodeSetIterator(
                             cng,
@@ -1629,7 +1628,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                 {
                     ResolvedConceptReference rcr = rcra[i];
                     org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
-                    //System.out.println("Iteration " + iteration + " " + ce.getId() + " " + ce.getEntityDescription().getContent());
                     if (code == null)
                     {
                         v.add(ce);
@@ -1894,4 +1892,65 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		}
 		return false;
 	}
+
+    // Find concepts in neighborhood:
+    public Vector getAssociatedConcepts(String scheme, String version, String code, String sab)
+            throws LBException {
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+		//Concept c = getConceptByCode(scheme, version, null, code);
+		/*
+        ResolvedConceptReference rcr = new ResolvedConceptReference();
+        rcr.setReferencedEntry(c);
+        */
+        ConceptReference cr = new ConceptReference();
+        cr.setConceptCode(code);
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        // Resolve neighboring concepts with associations
+        // qualified by the SAB.
+        CodedNodeGraph neighborsBySource = lbSvc.getNodeGraph(scheme, csvt, null);
+        neighborsBySource = neighborsBySource.restrictToAssociations(null, ConvenienceMethods.createNameAndValueList(sab, "Source"));
+
+        ResolvedConceptReferenceList nodes = null;
+        try {
+            nodes = neighborsBySource.resolveAsList(
+            cr, true, true, Integer.MAX_VALUE, 1,
+            null, new PropertyType[] { PropertyType.PRESENTATION },
+            sortByCode_, null, -1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+        Vector v = new Vector();
+
+        List<AssociatedConcept> neighbors = new ArrayList<AssociatedConcept>();
+        for (ResolvedConceptReference node : nodes.getResolvedConceptReference()) {
+            // Process sources and targets ...
+            if (node.getSourceOf() != null)
+                for (Association assoc : node.getSourceOf().getAssociation())
+                    for (AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept())
+                        if (isValidForSAB(ac, sab)) {
+                            neighbors.add(ac);
+                            v.add(ac.getReferencedEntry());
+						}
+
+			if (node.getTargetOf() != null)
+                for (Association assoc : node.getTargetOf().getAssociation())
+                    for (AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept())
+                        if (isValidForSAB(ac, sab)) {
+                            neighbors.add(ac);
+                            v.add(ac.getReferencedEntry());
+						}
+        }
+        return v;
+    }
+
+    protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
+        for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
+            if ("Source".equalsIgnoreCase(qualifier.getContent())
+                    && sab.equalsIgnoreCase(qualifier.getName()))
+                return true;
+        return false;
+    }
 }

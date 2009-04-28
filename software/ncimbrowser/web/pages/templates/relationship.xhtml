@@ -14,7 +14,7 @@
     ArrayList concepts = null;
     String label = "";
 %>
-  <h2>Relationships with other NCI Thesaurus Concepts</h2>
+  <h2>Relationships with other NCI MetaThesaurus Concepts</h2>
   <p>
     <%
       label = "Parent Concepts:";
@@ -111,55 +111,6 @@
     %>
   </p>
 
-  <p>
-  <%
-     if (roles.size() > 0)
-     {
-  %>
-       <b>Role Relationships:</b>
-  <%
-     } else {
-  %>
-       <b>Role Relationships: </b><i>(none)</i>
-  <%
-     }
-  %>
-  <br/>
-  <i>(Roles are true for current concept and descendants, may be inherited from parent(s).)</i>
-  <table class="dataTable">
-    <%
-      int n1 = 0;
-      for (int i=0; i<roles.size(); i++) {
-
-        String s = (String) roles.get(i);
-        Vector ret_vec = DataUtils.parseData(s, "|");
-        String role_name = (String) ret_vec.elementAt(0);
-        String target_concept_name = (String) ret_vec.elementAt(1);
-        String target_concept_code = (String) ret_vec.elementAt(2);
-
-        if (n1 % 2 == 0) {
-          %>
-            <tr class="dataRowDark">
-          <%
-        } else {
-          %>
-            <tr class="dataRowLight">
-          <%
-        }
-        n1++;
-        %>
-              <td><%=role_name%></td>
-              <td>
-                <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-                  <%=target_concept_name%>
-                </a>
-              </td>
-            </tr>
-      <%
-      }
-      %>
-  </table>
-</p>
 <p>
 <%
   if (associations.size() > 0) {
