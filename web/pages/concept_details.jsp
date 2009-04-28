@@ -79,10 +79,20 @@
           <hr>
           <%@ include file="/pages/templates/typeLinks.xhtml" %>
           <div class="tabTableContentContainer">
+            <%
+            if (type != null && type.compareTo("synonym") == 0) {
+            %>
+                <%@ include file="/pages/templates/synonym.xhtml" %>
+            <%
+            } else {
+            %>
             <%@ include file="/pages/templates/property.xhtml" %>
             <%@ include file="/pages/templates/sources.xhtml" %>
             <%@ include file="/pages/templates/relationship.xhtml" %>
             <%@ include file="/pages/templates/nciFooter.html" %>
+            <%
+            }
+            %>
           </div>
         </div>
         <!-- end Page content -->
