@@ -70,10 +70,12 @@ System.out.println("synonyms size: " + synonyms.size());
         </tr>
 
         <%
-          Vector associated_concepts = new Vector();//new DataUtils().getAssociatedConcepts("NCI MetaThesaurus", null, null, concept_syn.getEntityCode());
+          //Vector associated_concepts = new Vector();//new DataUtils().getAssociatedConcepts("NCI MetaThesaurus", null, null, concept_syn.getEntityCode());
+          Vector associated_concepts = new DataUtils().getAssociatedConcepts("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+          
+          int lcv = 1;
           for (int i=0; i<associated_concepts.size(); i++) {
               Concept c = (Concept) associated_concepts.elementAt(i);
-          
 		   synonyms = new DataUtils().getSynonyms(c, neighborhood_sab);
 	System.out.println("synonyms size: " + synonyms.size());          
 		  for (int n=0; n<synonyms.size(); n++)
@@ -84,7 +86,8 @@ System.out.println("synonyms size: " + synonyms.size());
 		    String term_type = (String) synonym_data.elementAt(1);
 		    String term_source = (String) synonym_data.elementAt(2);
 		    String term_source_code = (String) synonym_data.elementAt(3);
-		    String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+		    lcv++;
+		    String rowColor = (lcv%2 == 0) ? "dataRowDark" : "dataRowLight";
 		%>
 		    <tr class="<%=rowColor%>">
 		      <td class="dataCellText"><%=term_name%></td>
