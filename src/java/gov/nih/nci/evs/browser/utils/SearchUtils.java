@@ -1143,6 +1143,25 @@ public class SearchUtils {
         return adjusted;
     }
 
+
+    protected static List<String> toWords2(String s, String delimitRegex, boolean removeStopWords, boolean removeDuplicates) {
+		s = s.trim();
+		s = replaceSpecialCharsWithBlankChar(s);
+		List<String> adjusted = new ArrayList<String>();
+        StringTokenizer st = new StringTokenizer(s);
+        while (st.hasMoreTokens()) {
+			String temp = st.nextToken().toLowerCase();
+            if (removeDuplicates && adjusted.contains(temp))
+                continue;
+            if (!removeStopWords || !STOP_WORDS.contains(temp))
+            {
+                adjusted.add(temp);
+			}
+        }
+        return adjusted;
+    }
+
+
     protected static String[] toWords(String s, boolean removeStopWords) {
         String[] words = s.split("\\s");
         List<String> adjusted = new ArrayList<String>();
@@ -1386,7 +1405,8 @@ public class SearchUtils {
      * @return List
      */
     protected List<String> toScoreWords(String s) {
-        return toWords(s, "[\\s,:+-;]", true, true);
+        //return toWords(s, "[\\s,:+-;]", true, true);
+        return toWords2(s, "[\\s,:+-;]", true, true);
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1402,7 +1422,7 @@ public class SearchUtils {
     }
 
     private static String replaceSpecialCharsWithBlankChar(String s){
-        String escapedChars = "/.|!(){}[]^\"~*?;-_";
+        String escapedChars = "/.|!(){}[]^\"~*?;-_,";
         for (int i=0; i<escapedChars.length(); i++)
         {
             char c = escapedChars.charAt(i);
