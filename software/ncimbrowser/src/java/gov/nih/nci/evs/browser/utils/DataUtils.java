@@ -1357,8 +1357,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
 
-
-
         HashMap map = new HashMap();
         try {
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
@@ -1449,7 +1447,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                 superconceptList.add(pt + "|" + c.getEntityCode());
             }
 
-            Collections.sort(superconceptList);
+            SortUtils.quickSort(superconceptList);
             map.put(TYPE_SUPERCONCEPT, superconceptList);
 
 
@@ -1461,7 +1459,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                 String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
             }
-            Collections.sort(subconceptList);
+            SortUtils.quickSort(subconceptList);
             map.put(TYPE_SUBCONCEPT, subconceptList);
 
 
@@ -1894,6 +1892,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return false;
 	}
 
+
     public Vector getAssociatedConcepts(String scheme, String version, String code, String sab) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null) csvt.setVersion(version);
@@ -1926,9 +1925,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        SortUtils.quickSort(v);
         return v;
 
 	}
+
 
     protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
         for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
@@ -1937,4 +1938,5 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                 return true;
         return false;
     }
+
 }

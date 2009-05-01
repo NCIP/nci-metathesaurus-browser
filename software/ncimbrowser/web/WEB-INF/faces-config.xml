@@ -38,11 +38,6 @@
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
 
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
-
     <navigation-case>
        <description>contact_us_message</description>
        <from-action>#{userSessionBean.contactUs}</from-action>
@@ -82,11 +77,6 @@
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
 
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
-
     <navigation-case>
        <description>contact_us_message</description>
        <from-action>#{userSessionBean.contactUs}</from-action>
@@ -106,10 +96,6 @@
   
   <navigation-rule>
     <from-view-id>/pages/search_results.jsp</from-view-id>
-    <navigation-case> 
-       <description>ConceptReport</description>
-       <to-view-id>/ConceptReport.jsp</to-view-id>
-    </navigation-case>
     
     <navigation-case> 
        <description>Search</description>
@@ -124,11 +110,6 @@
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
-
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -168,11 +149,6 @@
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
 
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
- 
     <navigation-case>
        <description>contact_us_message</description>
        <from-action>#{userSessionBean.contactUs}</from-action>
@@ -227,11 +203,6 @@
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
 
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
-
     <navigation-case>
        <description>contact_us_message</description>
        <from-action>#{userSessionBean.contactUs}</from-action>
@@ -270,11 +241,6 @@
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>   
-
-    <navigation-case> 
-       <description>contact_us</description>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
 
     <navigation-case>
        <description>contact_us_message</description>
