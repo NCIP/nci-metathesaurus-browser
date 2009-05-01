@@ -298,11 +298,9 @@
             <xmlcatalog refid="installer.catalog"/>
             <remove path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]"/>
             <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
-                <![CDATA[
-                    <attribute name="Properties">
-      gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
-    </attribute>
-                ]]>
+<![CDATA[<attribute name="Properties">
+    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
+</attribute>]]>
             </insert>
         </xmltask>
 
@@ -438,7 +436,7 @@
                 <isset property="exclude.start.servers"/>
             </not>
             <then>
-                <validate-post-install />
+                <validate-post-install propertyfile.backup.location="${application.data.path}"/>
             </then>
         </if>
     </target>
