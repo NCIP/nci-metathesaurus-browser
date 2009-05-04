@@ -52,17 +52,18 @@
             String name = c.getEntityDescription().getContent();
             String code = c.getEntityCode();
             String sortBy = request.getParameter("sortBy");
+            request.getSession().setAttribute("sortBy", sortBy);
             Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
-            synonyms = new DataUtils().sortSynonyms(synonyms, sortBy);
+            if (synonyms == null) {
+                synonyms = new DataUtils().getSynonyms(c);
+                request.getSession().setAttribute("synonyms", synonyms);
+            }
           %>
-
           <div class="texttitle-blue">
             <%=name%> (Code <%=code%>)
           </div>
           <hr>
           <%@ include file="/pages/templates/typeLinks.xhtml" %>
-          
-          
           <div class="tabTableContentContainer">
           
 
@@ -71,20 +72,61 @@
       <table class="dataTable" border="0">
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
-              <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=name">Term</a>
+              <%
+              String sort_by = (String) request.getSession().getAttribute("sortBy");
+              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              %>
+                 Term
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=name">Term</a>
+              <% 	
+              }
+              %>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
-              <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=source">Source</a>
+              <%
+              if (sort_by != null && sort_by.compareTo("source") == 0) {
+              %>
+                 Source
+              <%   
+              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=source">Source</a>
+              <% 	
+              }
+              %>          
           </th>
           <th class="dataTableHeader" scope="col" align="left">
-              <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=type">Type</a>
+              <%
+              if (sort_by != null && sort_by.compareTo("type") == 0) {
+              %>
+                 Type
+              <%   
+              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=type">Type</a>
+              <% 	
+              }
+              %>               
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
                 '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
               </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
-             <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=code">Code</a>
+              <%
+              if (sort_by != null && sort_by.compareTo("code") == 0) {
+              %>
+                 Code
+              <%   
+              } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=code">Code</a>
+              <% 	
+              }
+              %>             
           </th>
         </tr>
 
