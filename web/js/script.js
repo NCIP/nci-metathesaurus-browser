@@ -27,7 +27,7 @@ function bookmark(url,title){
 function openQuickLinkSite(url) {
     if (url != "#")
     {
-        window.open (url, "", "alwaysRaised,dependent,status,scrollbars,resizable,width=800,height=600"); 
+        window.open (url, "_blank", "alwaysRaised,dependent,status,scrollbars,resizable,width=800,height=600"); 
     }
 }
 
