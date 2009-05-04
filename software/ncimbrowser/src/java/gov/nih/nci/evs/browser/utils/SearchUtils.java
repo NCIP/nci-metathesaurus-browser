@@ -954,53 +954,71 @@ public class SearchUtils {
 
 
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
-        String matchText0 = matchText;
-        String matchAlgorithm0 = matchAlgorithm;
-        matchText0 = matchText0.trim();
-        boolean preprocess = true;
+		String matchText0 = matchText;
+		String matchAlgorithm0 = matchAlgorithm;
+		matchText0 = matchText0.trim();
+		boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
         {
-            return new Vector();
-        }
+			return new Vector();
+		}
 
         matchText = matchText.trim();
         if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0)
         {
-            //KLO 032409
-            if (!isNumber(matchText)) {
-                if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
-                {
-                    return searchByName(scheme, version, matchText, source, "RegExp", maxToReturn);
-                }
-            }
-            if (containsSpecialChars(matchText))
-            {
-                return searchByName(scheme, version, matchText, source, "RegExp", maxToReturn);
-            }
-        }
+			//KLO 032409
+			if (!isNumber(matchText)) {
+				if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
+				{
+					return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
+				}
+		    }
+		    if (containsSpecialChars(matchText))
+		    {
+				return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
+			}
+		}
 
-        else if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
-        {
-            /*
-            matchText = "^" + matchText;
-            matchAlgorithm = "RegExp";
-            preprocess = false;
-            */
-        }
-        else if (matchAlgorithm.compareToIgnoreCase("contains") == 0)
-        {
-            matchText = replaceSpecialCharsWithBlankChar(matchText);
-            if (matchText.indexOf(" ") != -1) {
-                matchText = preprocessContains(matchText);
-                matchAlgorithm = "RegExp";
-                preprocess = false;
-            }
-        }
+		else if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
+		{
+		    /*
+			matchText = "^" + matchText;
+			matchAlgorithm = "RegExp";
+			preprocess = false;
+			*/
+		}
+		else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+		{
+			/*
+			//matchText = replaceSpecialCharsWithBlankChar(matchText);
+			if (matchText.indexOf(" ") != -1) {
+				matchText = preprocessContains(matchText);
+				matchAlgorithm = "RegExp";
+				preprocess = false;
+		    } else {
+				String delim = ".*";
+				matchText = delim + matchText + delim;
+				matchAlgorithm = "RegExp";
+				preprocess = false;
+			}
+			*/
 
-        if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
-        {
-            matchText = preprocessRegExp(matchText);
-        }
+            if (containsSpecialChars(matchText)) {
+				String delim = ".*";
+				matchText = delim + matchText + delim;
+				matchAlgorithm = "RegExp";
+				preprocess = false;
+		    } else if (matchText.indexOf(" ") != -1) {
+				matchText = preprocessContains(matchText);
+				matchAlgorithm = "RegExp";
+				preprocess = false;
+		    }
+
+		}
+		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
+		{
+			matchText = preprocessRegExp(matchText);
+		}
 
          CodedNodeSet cns = null;
          ResolvedConceptReferencesIterator iterator = null;
@@ -1497,18 +1515,20 @@ public class SearchUtils {
 			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
 			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
 
-  		    boolean activeOnly = !searchInactive;
-		    cns = restrictToActiveStatus(cns, activeOnly);
+            if (cns != null) {
+				boolean activeOnly = !searchInactive;
+				cns = restrictToActiveStatus(cns, activeOnly);
 
-			try {
-			    matchIterator = cns.resolve(sortCriteria, null,null);//ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
-			} catch (Exception ex) {
+				try {
+					matchIterator = cns.resolve(sortCriteria, null,null);//ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
+				} catch (Exception ex) {
 
+				}
+				if (matchIterator != null) {
+					v = resolveIterator(	matchIterator, maxToReturn);
+					return v;
+				}
 		    }
-			if (matchIterator != null) {
-				v = resolveIterator(	matchIterator, maxToReturn);
-				return v;
-			}
 
 		} catch (Exception e) {
 			 //getLogger().error("ERROR: Exception in findConceptWithSourceCodeMatching.");
