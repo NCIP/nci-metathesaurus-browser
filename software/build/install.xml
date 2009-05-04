@@ -288,21 +288,43 @@
 
     <target name="-install:jboss:configure:properties-service">
 
+        <!-- Check if already updated -->
+        <condition property="properties-service.updated">
+            <isfileselected file="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml">
+                <contains text="NCImBrowserProperties" casesensitive="no"/>
+            </isfileselected>
+        </condition>
+
         <!-- Backup file -->
         <copy file="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
             tofile="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml.bak"
         />
 
-        <xmltask source="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
-            dest="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml">
-            <xmlcatalog refid="installer.catalog"/>
-            <remove path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]"/>
-            <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
+        <if>
+            <equals arg1="${properties-service.updated}" arg2="true"/>
+            <then>
+                <xmltask source="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
+                    dest="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml">
+                    <xmlcatalog refid="installer.catalog"/>
+                    <replace path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]">
 <![CDATA[<attribute name="Properties">
     gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
 </attribute>]]>
-            </insert>
-        </xmltask>
+                    </replace>
+                </xmltask>
+            </then>
+            <else>
+                <xmltask source="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml"
+                    dest="${jboss.home}/server/${jboss.server.name}/deploy/properties-service.xml">
+                    <xmlcatalog refid="installer.catalog"/>
+                    <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
+<![CDATA[<attribute name="Properties">
+    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${ncimbrowser-webapp.prop.file}
+</attribute>]]>
+                    </insert>
+                </xmltask>
+            </else>
+        </if>
 
         <echo message="properties-service.xml updated." />
 
