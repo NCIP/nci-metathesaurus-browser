@@ -1939,4 +1939,30 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return false;
     }
 
+    public Vector sortSynonyms(Vector synonyms, String sortBy) {
+		HashMap hmap = new HashMap();
+		Vector key_vec = new Vector();
+        for (int n=0; n<synonyms.size(); n++)
+        {
+            String s = (String) synonyms.elementAt(n);
+            Vector synonym_data = DataUtils.parseData(s, "|");
+            String term_name = (String) synonym_data.elementAt(0);
+            String term_type = (String) synonym_data.elementAt(1);
+            String term_source = (String) synonym_data.elementAt(2);
+            String term_source_code = (String) synonym_data.elementAt(3);
+            String key = term_name;
+            if (sortBy.compareTo("type") == 0) key = term_type;
+            if (sortBy.compareTo("source") == 0) key = term_source;
+            if (sortBy.compareTo("code") == 0) key = term_source_code;
+            hmap.put(key, s);
+            key_vec.add(key);
+		}
+		key_vec = SortUtils.quickSort(key_vec);
+		Vector v = new Vector();
+		for (int i=0; i<key_vec.size(); i++) {
+			String s = (String) key_vec.elementAt(i);
+			v.add((String) hmap.get(s));
+		}
+		return v;
+	}
 }

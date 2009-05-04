@@ -188,6 +188,7 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("match_size", match_size);
             request.getSession().setAttribute("page_string", "1");
             request.getSession().setAttribute("selectedResultsPerPage", "50");
+            request.getSession().setAttribute("new_search", Boolean.TRUE);
             return "search_results";
         }
         else if (v != null && v.size() == 1)
