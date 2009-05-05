@@ -249,7 +249,12 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
         <%
           Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-          Vector synonyms = new DataUtils().getSynonyms(concept_syn);
+          Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
+          if (synonyms == null) {
+              synonyms = new DataUtils().getSynonyms(concept_syn);
+          }
+          
+          synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           for (int n=0; n<synonyms.size(); n++)
           {
             String s = (String) synonyms.elementAt(n);

@@ -30,27 +30,74 @@
 <%
             String neighborhood_sab = (String) request.getParameter("sab");
             String neighborhood_code = (String) request.getParameter("code");
+            String sort_by = (String) request.getParameter("sortBy");
+            if (sort_by == null) sort_by = "name";
 %>
               <h2>Source: <%=neighborhood_sab%></h2> 
               
 	      <table class="dataTable" border="0">
-			<tr>
-			  <th class="dataTableHeader" scope="col" align="left">Code</th>
-			  <th class="dataTableHeader" scope="col" align="left">Type
-			    <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-				'_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-			      <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-			    </a>
-			  </th>
-			  <th class="dataTableHeader" scope="col" align="left">Name</th>
-			</tr>
+	      
+        <tr>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by != null && sort_by.compareTo("code") == 0) {
+              %>
+                 Code
+              <%   
+              } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=code">Code</a>
+              <% 	
+              }
+              %>             
+          </th>        
 
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by != null && sort_by.compareTo("type") == 0) {
+              %>
+                 Type
+              <%   
+              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=type">Code</a>
+              <% 	
+              }
+              %>               
+              <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
+                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
+              </a>
+          </th>
+
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              
+              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              %>
+                 Term
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=name">Term</a>
+              <% 	
+              }
+              %>
+          </th>
+          
+        </tr>	      
+	      
 		<%
 		  Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-		  Vector synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
-		  for (int n=0; n<synonyms.size(); n++)
+		  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
+		  if (neighborhood_synonyms == null) {
+		  	neighborhood_synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
+		  	neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
+		  	request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
+		  }
+		  for (int n=0; n<neighborhood_synonyms.size(); n++)
 		  {
-		    String s = (String) synonyms.elementAt(n);
+		    String s = (String) neighborhood_synonyms.elementAt(n);
 		    Vector synonym_data = DataUtils.parseData(s, "|");
 		    String term_name = (String) synonym_data.elementAt(0);
 		    String term_type = (String) synonym_data.elementAt(1);

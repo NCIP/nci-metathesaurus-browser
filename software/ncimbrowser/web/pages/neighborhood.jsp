@@ -27,7 +27,241 @@
       <%@ include file="/pages/templates/content-header.xhtml" %>
       <!-- Page content -->
       <div class="pagecontent">
-        <%@ include file="/pages/templates/neighborhood.xhtml" %>
+      
+      
+<%
+  Concept concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+  String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
+  String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
+  
+  String code = concept_neighborhood.getEntityCode();
+  String sort_by = (String) request.getSession().getAttribute("sortBy");
+  if (sort_by == null) {
+      sort_by = "name";
+  }
+  String sort_by2 = (String) request.getSession().getAttribute("sortBy2");
+  if (sort_by2 == null) {
+      sort_by2 = "name";
+  }  
+  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
+  if (neighborhood_synonyms == null) {
+      neighborhood_synonyms = new DataUtils().getSynonyms(concept_neighborhood, neighborhood_sab);
+      request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
+  }
+  neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
+  
+%>
+        
+    <h2>Neighborhood of `<%=concept_neighborhood_name%>' in <%=neighborhood_sab%></h2>
+    <div>
+      <table class="dataTable" border="0">
+        <tr>
+           <td>
+
+<b>Synonyms</b>
+      <table class="dataTable" border="0">
+      
+        <tr>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              %>
+                 Term
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=name&&sortBy2=<%=sort_by2%>">Term</a>
+              <% 	
+              }
+              %>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by != null && sort_by.compareTo("source") == 0) {
+              %>
+                 Source
+              <%   
+              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=source&&sortBy2=<%=sort_by2%>">Source</a>
+              <% 	
+              }
+              %>          
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by != null && sort_by.compareTo("type") == 0) {
+              %>
+                 Type
+              <%   
+              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=type&&sortBy2=<%=sort_by2%>">Type</a>
+              <% 	
+              }
+              %>               
+              <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
+                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
+              </a>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by != null && sort_by.compareTo("code") == 0) {
+              %>
+                 Code
+              <%   
+              } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=code&&sortBy2=<%=sort_by2%>">Code</a>
+              <% 	
+              }
+              %>             
+          </th>
+        </tr>
+
+
+        <%
+          for (int n=0; n<neighborhood_synonyms.size(); n++)
+          {
+            String s = (String) neighborhood_synonyms.elementAt(n);
+            Vector synonym_data = DataUtils.parseData(s, "|");
+            String term_name = (String) synonym_data.elementAt(0);
+            String term_type = (String) synonym_data.elementAt(1);
+            String term_source = (String) synonym_data.elementAt(2);
+            String term_source_code = (String) synonym_data.elementAt(3);
+            String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+        %>
+            <tr class="<%=rowColor%>">
+              <td class="dataCellText"><%=term_name%></td>
+              <td class="dataCellText"><%=term_source%></td>
+              <td class="dataCellText"><%=term_type%></td>
+              <td class="dataCellText"><%=term_source_code%></td>
+            </tr>
+        <%
+          }
+        %>
+      </table>
+</p>              
+           </td>
+        </tr>
+        <tr>
+           <td>
+
+<b>Neighborhood</b>
+      <table class="dataTable" border="0">
+      
+        <tr>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 == null || sort_by2.compareTo("name") == 0) {
+              %>
+                 Term
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=name&&sortBy=<%=sort_by%>">Term</a>
+              <% 	
+              }
+              %>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 != null && sort_by2.compareTo("source") == 0) {
+              %>
+                 Source
+              <%   
+              } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("source") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=source&&sortBy=<%=sort_by%>">Source</a>
+              <% 	
+              }
+              %>          
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 != null && sort_by2.compareTo("type") == 0) {
+              %>
+                 Type
+              <%   
+              } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("type") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=type&&sortBy=<%=sort_by%>">Type</a>
+              <% 	
+              }
+              %>               
+              <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
+                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
+              </a>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 != null && sort_by2.compareTo("code") == 0) {
+              %>
+                 Code
+              <%   
+              } else if ((sort_by2 == null) || sort_by2 != null && sort_by2.compareTo("code") != 0) {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=code&&sortBy=<%=sort_by%>">Code</a>
+              <% 	
+              }
+              %>             
+          </th>
+        </tr>
+
+        <%
+          Vector neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+          for (int i=0; i<neighborhood_atoms.size(); i++) {
+		    String s = (String) neighborhood_atoms.elementAt(i);
+		    Vector synonym_data = DataUtils.parseData(s, "|");
+		    String term_name = (String) synonym_data.elementAt(0);
+		    String term_type = (String) synonym_data.elementAt(1);
+		    String term_source = (String) synonym_data.elementAt(2);
+		    String term_source_code = (String) synonym_data.elementAt(3);
+		    String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
+		%>
+		    <tr class="<%=rowColor%>">
+		      <td class="dataCellText"><%=term_name%></td>
+		      <td class="dataCellText"><%=term_source%></td>
+		      <td class="dataCellText"><%=term_type%></td>
+		      <td class="dataCellText"><%=term_source_code%></td>
+		    </tr>
+		<%
+	 }
+        %>
+      </table>
+</p>                   
+          </td>
+        </tr>        
+        <tr>
+           <td>
+                <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
+           
+		     <h:outputLabel id="conceptSourceLabel" value="Change to Neighborhood in" styleClass="textbody">
+			 <h:selectOneMenu id="concept_source"
+			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
+			    styleClass="textbody">
+			    <f:selectItems value="#{userSessionBean.conceptSourceList}"/>
+			 </h:selectOneMenu>
+		     </h:outputLabel> 
+		     <h:commandButton
+		        id="ok"
+		        value="Ok"
+		        action="#{userSessionBean.viewNeighborhoodAction}"
+		        alt="View Neighborhood">
+		     </h:commandButton>
+	        </FORM>
+		     
+           </td>
+        </tr>
+      </table>
+    </div>
+        
+        
+        
+        
+        
         <%@ include file="/pages/templates/nciFooter.html" %>
       </div>
       <!-- end Page content -->
