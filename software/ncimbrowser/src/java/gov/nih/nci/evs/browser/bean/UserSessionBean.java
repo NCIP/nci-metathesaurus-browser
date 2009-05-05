@@ -137,9 +137,6 @@ public class UserSessionBean extends Object
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
 
-  System.out.println("searchAction: " + matchText);
-  System.out.println("matchAlgorithm: " + matchAlgorithm);
-
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null) matchtype = "string";
 
