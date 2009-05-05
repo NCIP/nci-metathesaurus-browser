@@ -3,6 +3,8 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -83,6 +85,15 @@
                       Concept c = (Concept) v.elementAt(i);
                       String code = c.getEntityCode();
                       String name = c.getEntityDescription().getContent();
+                      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
+                      String semantic_type = "";
+                      if (semantic_types != null && semantic_types.size() > 0) {
+                          for (int j=0; j<semantic_types.size(); j++) {
+                              String t = (String) semantic_types.elementAt(j);
+                              semantic_type = semantic_type + t;
+                              if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+                          }
+                      }
 
                       if (i % 2 == 0) {
                         %>
@@ -97,6 +108,9 @@
                           <td class="dataCellText">
                             <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
                           </td>
+                          <td class="dataCellText">
+                              <%=semantic_type%>
+                          </td>                          
                         </tr>
                       <%
                     }
