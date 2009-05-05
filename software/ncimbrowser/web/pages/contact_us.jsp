@@ -52,10 +52,10 @@
               </b>
               For questions related to NCI’s Cancer.gov Web site,
               see the
-              <a href="http://www.cancer.gov/help">Cancer.gov help page</a>. &nbsp;
+              <a href="http://www.cancer.gov/help" target="_blank" alt="Cancer.gov help">Cancer.gov help page</a>. &nbsp;
               For help and other questions concerning NCI Enterprise Vocabulary
               Services (EVS),
-              see the <a href="http://evs.nci.nih.gov/">EVS Web site</a>.
+              see the <a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Web site</a>.
             </p>
 
             <%
@@ -103,7 +103,7 @@
               </h:commandButton>
               &nbsp;&nbsp;<INPUT type="reset" value="Clear" alt="Clear">
             </form>
-            <a href="http://www.cancer.gov/policies/page3" ><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
+            <a href="http://www.cancer.gov/policies/page3" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/templates/nciFooter.html" %>
           </div>
           <!-- end Page content -->
