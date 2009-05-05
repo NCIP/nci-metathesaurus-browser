@@ -51,13 +51,21 @@
             Concept c = (Concept) request.getSession().getAttribute("concept");
             String name = c.getEntityDescription().getContent();
             String code = c.getEntityCode();
-            String sortBy = request.getParameter("sortBy");
-            request.getSession().setAttribute("sortBy", sortBy);
+            String sort_by = request.getParameter("sortBy");
+            
+System.out.println("Sortby: " + sort_by);            
+            
+            if (sort_by == null) {
+System.out.println("set Sortby to: " + sort_by);            
+                sort_by = "name";
+            }
+            //request.getSession().setAttribute("sortBy", sortBy);
             Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
             if (synonyms == null) {
                 synonyms = new DataUtils().getSynonyms(c);
                 request.getSession().setAttribute("synonyms", synonyms);
             }
+            synonyms = new DataUtils().sortSynonyms(synonyms, sort_by); 
           %>
           <div class="texttitle-blue">
             <%=name%> (Code <%=code%>)
@@ -73,8 +81,8 @@
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              String sort_by = (String) request.getSession().getAttribute("sortBy");
-              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              //String sort_by = (String) request.getSession().getAttribute("sortBy");
+              if (sort_by.compareTo("name") == 0) {
               %>
                  Term
               <%   
@@ -131,9 +139,6 @@
         </tr>
 
         <%
-          //Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-          
-          //request.getSession().setAttribute("synonyms", synonyms);
           for (int n=0; n<synonyms.size(); n++)
           {
             String s = (String) synonyms.elementAt(n);

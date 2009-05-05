@@ -71,6 +71,9 @@
             String ltag = null;
             Concept c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
             request.getSession().setAttribute("concept", c);
+            
+            request.getSession().removeAttribute("synonyms");
+            
             String name = c.getEntityDescription().getContent();
           %>
           <div class="texttitle-blue">
