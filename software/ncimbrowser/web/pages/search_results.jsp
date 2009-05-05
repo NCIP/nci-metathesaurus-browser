@@ -34,9 +34,6 @@
           //String selectedResultsPerPage = (String) request.getParameter("selectedResultsPerPage");
           String selectedResultsPerPage = (String) request.getSession().getAttribute("selectedResultsPerPage");
           
-System.out.println("****************** search_results page -- matchText: " + matchText);
-         
-          
           if (page_number != null && new_search == Boolean.FALSE)
           {
               page_string = page_number;
