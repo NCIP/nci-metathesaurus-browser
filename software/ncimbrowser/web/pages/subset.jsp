@@ -44,19 +44,19 @@
         <table width="100%" border="0">
           <tr>
             <td>
-              <a href="http://www.cancer.gov/cancertopics/terminologyresources/CDISC">
+              <a href="http://www.cancer.gov/cancertopics/terminologyresources/CDISC" target="_blank" alt="CDISC">
                 <img src="<%=basePath%>/images/CDISC_Logo.jpg" border="0"
                   alt="Clinical Data Interchange Standards Consortium (CDISC) Termiology"/>
               </a>
             </td>
             <td>
-              <a href="http://www.cancer.gov/cancertopics/terminologyresources/FDA">
+              <a href="http://www.cancer.gov/cancertopics/terminologyresources/FDA" target="_blank" alt="FDA">
                 <img src="<%=basePath%>/images/FDA_Logo.jpg" border="0"
                   alt="U.S. Food ad Drug Administration Termiology"/>
               </a>
             </td>
             <td>
-              <a href="http://www.cancer.gov/cancertopics/terminologyresources/FMT">
+              <a href="http://www.cancer.gov/cancertopics/terminologyresources/FMT" target="_blank" alt="FMT">
                 <img src="<%=basePath%>/images/FMT_Logo.jpg" border="0"
                   alt="Federal Medication Terminologies"/>
               </a>
@@ -65,7 +65,7 @@
           <tr>
             <td class="textbody" valign="top">
               <i>
-                <a href="#" onclick="javascript:window.open('http://www.cancer.gov/cancertopics/terminologyresources/CDISC', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <a href="http://www.cancer.gov/cancertopics/terminologyresources/CDISC" target="_blank" alt="CDISC">
                   Clinical Data Interchange Standards Consortium (CDISC) Termiology:
                 </a>
                 CDISC is an international, non-profit organization hat develops and supports global data standards for medical research.
@@ -75,7 +75,7 @@
             </td>
             <td class="textbody" valign="top">
               <i>
-                <a href="#" onclick="javascript:window.open('http://www.cancer.gov/cancertopics/terminologyresources/FDA', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <a href="http://www.cancer.gov/cancertopics/terminologyresources/FDA" target="_blank" alt="FDA">
                   U.S. Food ad Drug Administration Termiology:
                 </a>
                 The FDA is working with EVS to develop and supporyt controlled
@@ -84,7 +84,7 @@
             </td>
             <td class="textbody" valign="top">
               <i>
-                <a href="#" onclick="javascript:window.open('http://www.cancer.gov/cancertopics/terminologyresources/FMT', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                <a href="http://www.cancer.gov/cancertopics/terminologyresources/FMT" target="_blank" alt="FMT">
                   Federal Medication Terminologies:
                 </a>
                 The Federal Medication (FedMed) interagency collaboration is organizing
@@ -102,7 +102,7 @@
           <i>
             EVS is developing extended method to create, browse, download, and have direct computer API access to these and other NCIt subsets.
             Click
-            <a href="#" onclick="javascript:window.open('<%=terminology_subset_download_url%>', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+            <a href="<%=terminology_subset_download_url%>" target="_blank" alt="Terminology Subset Download">
               here
             </a>
             to download Terminology Subset Reports.
