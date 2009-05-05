@@ -128,13 +128,7 @@
   </navigation-rule>
   
   <navigation-rule>
-    <from-view-id>/pages/concept_details.jsp</from-view-id>
-    <navigation-case> 
-       <description>search_results</description>
-       <from-outcome>search_results</from-outcome>
-       <to-view-id>/pages/search_results.jsp</to-view-id>
-    </navigation-case>
-    
+   
     <navigation-case> 
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -169,17 +163,17 @@
        <from-outcome>neighborhood</from-outcome>
        <to-view-id>/pages/neighborhood.jsp</to-view-id>
     </navigation-case>
-   
+
+    <from-view-id>/pages/concept_details.jsp</from-view-id>
+    <navigation-case> 
+       <description>search_results</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+    
   </navigation-rule>
   
-  <navigation-rule>
-    <from-view-id>/pages/synonym.jsp</from-view-id>
-    <navigation-case> 
-       <description>term_type_help_info</description>
-       <to-view-id>/pages/term_type_help_info.jsp</to-view-id>
-    </navigation-case>
-  </navigation-rule>  
-
   <navigation-rule>
     <from-view-id>/pages/subset.jsp</from-view-id>
     <navigation-case> 
