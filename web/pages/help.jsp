@@ -56,8 +56,8 @@
           <a href="mailto:NCIThesaurus@mail.nih.gov">NCIThesaurus@mail.nih.gov</a><br>
           <br>
           You can also use the <a href="contact_us.jsf">online</a> form available on this browser. For questions related
-          to NCI’s Cancer.gov Web site, see the <a href="http://www.cancer.gov/help">Cancer.gov help page</a>. For help and
-          other questions concerning NCI Enterprise Vocabulary Services (EVS), see the <a href="http://evs.nci.nih.gov/">EVS Web site</a>.
+          to NCI’s Cancer.gov Web site, see the <a href="http://www.cancer.gov/help" target="_blank" alt="Cancer.gov help">Cancer.gov help page</a>. For help and
+          other questions concerning NCI Enterprise Vocabulary Services (EVS), see the <a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Web site</a>.
         </p>
         <p class="textbody">
           <h2><A NAME="searchhelp">Search Help</A></h2>
@@ -71,7 +71,7 @@
             <li>There are no wildcard characters.  All characters are matched literally (e.g., using "Begins With", NAT2* will match NAT2*5 Allele but not NAT2 Gene).
           </ul>
           Search of other concept data, approximate matching, and other features will be added to future releases of this
-          browser. Some of these features are currently available in the <a href="http://bioportal.nci.nih.gov/ncbo/faces/index.xhtml">NCI BioPortal Browser</a>.
+          browser. Some of these features are currently available in the <a href="http://bioportal.nci.nih.gov" target="_blank" alt="NCI BioPortal">NCI BioPortal Browser</a>.
         </p>
         <p class="textbody">
           <b>Search results</b> are displayed by concept preferred name in alphabetical order.  Some details:
@@ -113,7 +113,7 @@
         </p>
         <p class="textbody">
           <h2><A NAME="additionalinfo">Additional Information</A></h2>
-          Several journal articles describe NCIt in greater detail.  These are listed in the <a href="http://evs.nci.nih.gov/aboutEVS">About EVS</a> page on the EVS Web site.
+          Several journal articles describe NCIt in greater detail.  These are listed in the <a href="http://evs.nci.nih.gov/aboutEVS" target="_blank" alt="EVS">About EVS</a> page on the EVS Web site.
           (Need to make available, describe, and link to other NCIt documentation.  This section will be provided soon.)
         </p>
         <br>
