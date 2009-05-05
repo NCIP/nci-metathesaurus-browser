@@ -451,6 +451,9 @@ public class UserSessionBean extends Object
 
 	public void conceptSourceSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().removeAttribute("neighborhood_synonyms");
+		request.getSession().removeAttribute("neighborhood_atoms");
 		String source = (String) event.getNewValue();
 		setSelectedConceptSource(source);
 	}
@@ -461,10 +464,6 @@ public class UserSessionBean extends Object
         //String sab = (String) request.getParameter("selectedConceptSource");
         String sab = getSelectedConceptSource();
         String code = (String) request.getParameter("code");
-
-        System.out.println("*** viewNeighborhoodAction sab " + sab);
-        System.out.println("*** viewNeighborhoodAction code " + code);
-
         //String message = "View Neighborhood in " + sab + " page is under construction.";
         //request.getSession().setAttribute("message", message);
         return "neighborhood";
