@@ -32,17 +32,25 @@
 <%
   Concept concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
   String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
+ 
+System.out.println("*** neighborhood_sab: " + neighborhood_sab); 
+if (neighborhood_sab == null) {
+    neighborhood_sab = (String) request.getParameter("sab");
+}
+  
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
   
   String code = concept_neighborhood.getEntityCode();
-  String sort_by = (String) request.getSession().getAttribute("sortBy");
+  String sort_by = (String) request.getParameter("sortBy");
   if (sort_by == null) {
       sort_by = "name";
   }
-  String sort_by2 = (String) request.getSession().getAttribute("sortBy2");
+  String sort_by2 = (String) request.getParameter("sortBy2");
   if (sort_by2 == null) {
       sort_by2 = "name";
-  }  
+  } 
+  
+ 
   Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
   if (neighborhood_synonyms == null) {
       neighborhood_synonyms = new DataUtils().getSynonyms(concept_neighborhood, neighborhood_sab);
@@ -70,7 +78,7 @@
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=name&&sortBy2=<%=sort_by2%>">Term</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=name&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Term</a>
               <% 	
               }
               %>
@@ -83,7 +91,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=source&&sortBy2=<%=sort_by2%>">Source</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=source&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Source</a>
               <% 	
               }
               %>          
@@ -96,7 +104,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=type&&sortBy2=<%=sort_by2%>">Type</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=type&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Type</a>
               <% 	
               }
               %>               
@@ -113,7 +121,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=code&&sortBy2=<%=sort_by2%>">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=code&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Code</a>
               <% 	
               }
               %>             
@@ -160,7 +168,7 @@
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=name&&sortBy=<%=sort_by%>">Term</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=name&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Term</a>
               <% 	
               }
               %>
@@ -173,7 +181,7 @@
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("source") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=source&&sortBy=<%=sort_by%>">Source</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=source&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Source</a>
               <% 	
               }
               %>          
@@ -186,7 +194,7 @@
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("type") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=type&&sortBy=<%=sort_by%>">Type</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Type</a>
               <% 	
               }
               %>               
@@ -203,7 +211,7 @@
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null && sort_by2.compareTo("code") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=code&&sortBy=<%=sort_by%>">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=code&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Code</a>
               <% 	
               }
               %>             
@@ -211,7 +219,13 @@
         </tr>
 
         <%
-          Vector neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+        
+	  Vector neighborhood_atoms = (Vector) request.getSession().getAttribute("neighborhood_atoms");
+	  if (neighborhood_atoms == null) {
+	      neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+	      request.getSession().setAttribute("neighborhood_atoms", neighborhood_atoms);
+	  }
+	  neighborhood_atoms = new DataUtils().sortSynonyms(neighborhood_atoms, sort_by2);
           for (int i=0; i<neighborhood_atoms.size(); i++) {
 		    String s = (String) neighborhood_atoms.elementAt(i);
 		    Vector synonym_data = DataUtils.parseData(s, "|");
