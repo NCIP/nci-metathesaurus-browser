@@ -36,7 +36,10 @@
           <A HREF="#additionalinfo">Additional Information</A>
         </p>
         <p class="textbody">
-          <h2><A NAME="introduction">Introduction</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="introduction">Introduction</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>        
           <b>NCI Thesaurus (NCIt)</b> is an extensive reference terminology with some complex features.
           Each specific meaning, such as melanoma, lung, or chemotherapy, is represented by a distinct
           concept with a unique, permanent code.  Each concept provides additional information, such as
@@ -48,7 +51,10 @@
           <b>This help file</b> provides a basic starting point, to help use the NCIt browser effectively. It also provides pointers on how to learn more, get additional help or offer suggestions.
         </p>
         <p class="textbody">
-          <h2><A NAME="contactus">Contact Us</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="contactus">Contact Us</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>        
           The email contact point for questions or suggestions on NCIt content, browsers, distribution files,
           or other issues is:<br>
           <br>
@@ -60,7 +66,10 @@
           other questions concerning NCI Enterprise Vocabulary Services (EVS), see the <a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Web site</a>.
         </p>
         <p class="textbody">
-          <h2><A NAME="searchhelp">Search Help</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="searchhelp">Search Help</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>
           <b>In the Search box</b>, enter all or part of what you are looking for and click the "Search" button. Some details:
           <ul>
             <li>You can search for a concept’s preferred name, synonyms, acronyms, or codes.
@@ -98,7 +107,10 @@
           </ul>
         </p>
         <p class="textbody">
-          <h2><A NAME="viewhierarchy">View Hierarchy</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="viewhierarchy">View Hierarchy</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>
           <ul>
             <li>Click on the View Hierarchy link at the top of the page to bring up a separate window showing the NCI Thesaurus hierarchy.
             <li>Browse through the levels by clicking on the + next to each concept.
@@ -106,13 +118,19 @@
           </ul>
         </p>
         <p class="textbody">
-          <h2><A NAME="subsets">Subsets</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="subsets">Subsets</A></h2></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>
           <ul>
             <li>Click on the Subsets link at the top of the page to read about and link to NCI Thesaurus Subsets.
           </ul>
         </p>
         <p class="textbody">
-          <h2><A NAME="additionalinfo">Additional Information</A></h2>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="additionalinfo">Additional Information</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+          </tr></table>
           Several journal articles describe NCIt in greater detail.  These are listed in the <a href="http://evs.nci.nih.gov/aboutEVS" target="_blank" alt="EVS">About EVS</a> page on the EVS Web site.
           (Need to make available, describe, and link to other NCIt documentation.  This section will be provided soon.)
         </p>
