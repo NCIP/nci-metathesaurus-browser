@@ -50,6 +50,7 @@
             String dictionary = null;
             String code = null;
             String type = null;
+            String sortBy = null;
 
             String singleton = (String) request.getSession().getAttribute("singleton");
             if (singleton != null && singleton.compareTo("true") == 0) {
@@ -59,10 +60,14 @@
               dictionary = (String) request.getParameter("dictionary");
               code = (String) request.getParameter("code");
               type = (String) request.getParameter("type");
+              sortBy = (String) request.getParameter("sortBy");
             }
             if (type == null) {
               type = "properties";
             }
+            if (sortBy == null) {
+              sortBy = "name";
+            }            
             request.getSession().setAttribute("dictionary", dictionary);
             request.getSession().setAttribute("code", code);
             request.getSession().setAttribute("type", type);
