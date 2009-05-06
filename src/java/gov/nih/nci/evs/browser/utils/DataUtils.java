@@ -231,6 +231,7 @@ public class DataUtils {
     public static String TYPE_ASSOCIATION = "type_association";
     public static String TYPE_SUPERCONCEPT = "type_superconcept";
     public static String TYPE_SUBCONCEPT = "type_subconcept";
+    public static String TYPE_SIBLINGCONCEPT = "type_siblingconcept";
 
     public String NCICBContactURL = null;
     public String terminologySubsetDownloadURL = null;
@@ -238,6 +239,7 @@ public class DataUtils {
 
     static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
     static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
+    static String[] assocToSiblingNodes_ = new String[] { "SIB" };
 
     //==================================================================================
 
@@ -1352,10 +1354,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         ArrayList roleList = new ArrayList();
         ArrayList associationList = new ArrayList();
         ArrayList superconceptList = new ArrayList();
+        ArrayList siblingList = new ArrayList();
         ArrayList subconceptList = new ArrayList();
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
 
         HashMap map = new HashMap();
         try {
@@ -1404,17 +1408,18 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                                 String s = associationName + "|" + pt + "|" + ac.getConceptCode();
                                 if (!parent_asso_vec.contains(associationName) &&
                                     !child_asso_vec.contains(associationName)) {
+										/*
 									if (isRole)
 									{
 										if (associationName.compareToIgnoreCase("hasSubtype") != 0)
 										{
-										//System.out.println("Adding role: " + s);
 											roleList.add(s);
 										}
 									}
-									else
-									{
-										//System.out.println("Adding association: " + s);
+									*/
+									if (sibling_asso_vec.contains(associationName)) {
+									    siblingList.add(s);
+									} else {
 										associationList.add(s);
 									}
 							    }
@@ -1437,6 +1442,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             map.put(TYPE_ROLE, roleList);
             map.put(TYPE_ASSOCIATION, associationList);
+            map.put(TYPE_SIBLINGCONCEPT, siblingList);
 
             Vector superconcept_vec = getSuperconcepts(scheme, version, code);
             for (int i=0; i<superconcept_vec.size(); i++)
