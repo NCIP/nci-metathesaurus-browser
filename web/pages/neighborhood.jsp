@@ -30,17 +30,37 @@
       
       
 <%
-  Concept concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+  String code = (String) request.getParameter("code");
+  Concept concept_neighborhood = null;
+  if (code == null) {
+	  concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+	  code = concept_neighborhood.getEntityCode();
+  } else {
+          concept_neighborhood = DataUtils.getConceptByCode("NCI MetaThesaurus", null, null, code);
+          request.getSession().setAttribute("concept", concept_neighborhood);
+          request.getSession().removeAttribute("neighborhood_atoms");
+          request.getSession().removeAttribute("neighborhood_synonyms");
+  }
+	  
   String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
- 
-System.out.println("*** neighborhood_sab: " + neighborhood_sab); 
-if (neighborhood_sab == null) {
+  if (neighborhood_sab == null) {
     neighborhood_sab = (String) request.getParameter("sab");
-}
-  
+  }
+
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
+
+  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
+  if (neighborhood_synonyms == null) {
+      neighborhood_synonyms = new DataUtils().getSynonyms(concept_neighborhood, neighborhood_sab);
+      request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
+  }
+
+  Vector neighborhood_atoms = (Vector) request.getSession().getAttribute("neighborhood_atoms");
+  if (neighborhood_atoms == null) {
+      neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+      request.getSession().setAttribute("neighborhood_atoms", neighborhood_atoms);
+  }
   
-  String code = concept_neighborhood.getEntityCode();
   String sort_by = (String) request.getParameter("sortBy");
   if (sort_by == null) {
       sort_by = "name";
@@ -48,16 +68,10 @@ if (neighborhood_sab == null) {
   String sort_by2 = (String) request.getParameter("sortBy2");
   if (sort_by2 == null) {
       sort_by2 = "name";
-  } 
-  
- 
-  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
-  if (neighborhood_synonyms == null) {
-      neighborhood_synonyms = new DataUtils().getSynonyms(concept_neighborhood, neighborhood_sab);
-      request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
-  }
+  }   
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
-  
+  neighborhood_atoms = new DataUtils().sortSynonyms(neighborhood_atoms, sort_by2);
+    
 %>
         
     <h2>Neighborhood of `<%=concept_neighborhood_name%>' in <%=neighborhood_sab%></h2>
@@ -219,13 +233,6 @@ if (neighborhood_sab == null) {
         </tr>
 
         <%
-        
-	  Vector neighborhood_atoms = (Vector) request.getSession().getAttribute("neighborhood_atoms");
-	  if (neighborhood_atoms == null) {
-	      neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
-	      request.getSession().setAttribute("neighborhood_atoms", neighborhood_atoms);
-	  }
-	  neighborhood_atoms = new DataUtils().sortSynonyms(neighborhood_atoms, sort_by2);
           for (int i=0; i<neighborhood_atoms.size(); i++) {
 		    String s = (String) neighborhood_atoms.elementAt(i);
 		    Vector synonym_data = DataUtils.parseData(s, "|");
@@ -233,13 +240,14 @@ if (neighborhood_sab == null) {
 		    String term_type = (String) synonym_data.elementAt(1);
 		    String term_source = (String) synonym_data.elementAt(2);
 		    String term_source_code = (String) synonym_data.elementAt(3);
+		    String concept_code = (String) synonym_data.elementAt(4);
 		    String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
 		%>
 		    <tr class="<%=rowColor%>">
-		      <td class="dataCellText"><%=term_name%></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=concept_code%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
 		      <td class="dataCellText"><%=term_source%></td>
 		      <td class="dataCellText"><%=term_type%></td>
-		      <td class="dataCellText"><%=term_source_code%></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=concept_code%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
 		    </tr>
 		<%
 	 }
