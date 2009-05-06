@@ -9,7 +9,8 @@
           <th class="dataTableHeader" scope="col" align="left">
               <%
               String sort_by = (String) request.getSession().getAttribute("sortBy");
-              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              if (sort_by == null) sort_by = "name";
+              if (sort_by.compareTo("name") == 0) {
               %>
                  Term
               <%   
@@ -22,7 +23,7 @@
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by != null && sort_by.compareTo("source") == 0) {
+              if (sort_by.compareTo("source") == 0) {
               %>
                  Source
               <%   
@@ -35,7 +36,7 @@
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by != null && sort_by.compareTo("type") == 0) {
+              if (sort_by.compareTo("type") == 0) {
               %>
                  Type
               <%   
@@ -52,7 +53,7 @@
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by != null && sort_by.compareTo("code") == 0) {
+              if (sort_by.compareTo("code") == 0) {
               %>
                  Code
               <%   
@@ -69,6 +70,7 @@
           Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
           Vector synonyms = new DataUtils().getSynonyms(concept_syn);
           request.getSession().setAttribute("synonyms", synonyms);
+          synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           for (int n=0; n<synonyms.size(); n++)
           {
             String s = (String) synonyms.elementAt(n);

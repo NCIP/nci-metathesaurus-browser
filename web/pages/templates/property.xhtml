@@ -193,7 +193,6 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
               <%
               String sort_by = request.getParameter("sortBy");
               if (sort_by == null) {
-                  //sort_by = (String) request.getSession().getAttribute("sortBy");
                   sort_by = "name";
               }
               if (sort_by.compareTo("name") == 0) {
