@@ -1974,13 +1974,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         Vector associated_concepts = getAssociatedConcepts(scheme, version, code, sab);
         for (int i=0; i<associated_concepts.size(); i++) {
             Concept c = (Concept) associated_concepts.elementAt(i);
+            String concept_code = c.getEntityCode();
 		    Vector synonyms = getSynonyms(c, sab);
 		    for (int n=0; n<synonyms.size(); n++)
 		    {
 				String s = (String) synonyms.elementAt(n);
 				if (!hset.contains(s))
 				{
-					v.add(s);
+					v.add(s + "|" + concept_code);
 					hset.add(s);
 				}
 			}
