@@ -232,6 +232,8 @@ public class DataUtils {
     public static String TYPE_SUPERCONCEPT = "type_superconcept";
     public static String TYPE_SUBCONCEPT = "type_subconcept";
     public static String TYPE_SIBLINGCONCEPT = "type_siblingconcept";
+    public static String TYPE_BROADERCONCEPT = "type_broaderconcept";
+    public static String TYPE_NARROWERCONCEPT = "type_narrowerconcept";
 
     public String NCICBContactURL = null;
     public String terminologySubsetDownloadURL = null;
@@ -240,6 +242,8 @@ public class DataUtils {
     static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
     static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
     static String[] assocToSiblingNodes_ = new String[] { "SIB" };
+    static String[] assocToBTNodes_ = new String[] { "RB", "BT" };
+    static String[] assocToNTNodes_ = new String[] { "RN", "NT" };
 
     //==================================================================================
 
@@ -1356,10 +1360,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         ArrayList superconceptList = new ArrayList();
         ArrayList siblingList = new ArrayList();
         ArrayList subconceptList = new ArrayList();
+        ArrayList btList = new ArrayList();
+        ArrayList ntList = new ArrayList();
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
         Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
 
         HashMap map = new HashMap();
         try {
@@ -1400,25 +1408,17 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
                             String name = "No Description";
                             if (ed != null) name = ed.getContent();
-
-                            //String pt = getPreferredName(ac.getReferencedEntry());
                             String pt = name;
                             if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-                                //printAssocation(scheme, version, code, assoc.getAssociationName(), ac.getConceptCode());
                                 String s = associationName + "|" + pt + "|" + ac.getConceptCode();
                                 if (!parent_asso_vec.contains(associationName) &&
                                     !child_asso_vec.contains(associationName)) {
-										/*
-									if (isRole)
-									{
-										if (associationName.compareToIgnoreCase("hasSubtype") != 0)
-										{
-											roleList.add(s);
-										}
-									}
-									*/
 									if (sibling_asso_vec.contains(associationName)) {
 									    siblingList.add(s);
+									} else if (bt_vec.contains(associationName)) {
+									    btList.add(s);
+									} else if (nt_vec.contains(associationName)) {
+									    ntList.add(s);
 									} else {
 										associationList.add(s);
 									}
@@ -1431,18 +1431,30 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
             if (roleList.size() > 0) {
-                        //Collections.sort(roleList);
                         SortUtils.quickSort(roleList);
-                    }
+		    }
 
             if (associationList.size() > 0) {
-                        //Collections.sort(associationList);
                         SortUtils.quickSort(associationList);
-                    }
+            }
+
+            if (siblingList.size() > 0) {
+                        SortUtils.quickSort(siblingList);
+            }
+
+            if (btList.size() > 0) {
+                        SortUtils.quickSort(btList);
+            }
+
+            if (ntList.size() > 0) {
+                        SortUtils.quickSort(ntList);
+            }
 
             map.put(TYPE_ROLE, roleList);
             map.put(TYPE_ASSOCIATION, associationList);
             map.put(TYPE_SIBLINGCONCEPT, siblingList);
+            map.put(TYPE_BROADERCONCEPT, btList);
+            map.put(TYPE_NARROWERCONCEPT, ntList);
 
             Vector superconcept_vec = getSuperconcepts(scheme, version, code);
             for (int i=0; i<superconcept_vec.size(); i++)
