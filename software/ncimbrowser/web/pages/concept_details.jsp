@@ -51,6 +51,7 @@
             String code = null;
             String type = null;
             String sortBy = null;
+            String name = null;
 
             String singleton = (String) request.getSession().getAttribute("singleton");
             if (singleton != null && singleton.compareTo("true") == 0) {
@@ -64,43 +65,66 @@
             }
             if (type == null) {
               type = "properties";
-            }
+            } 
+            
             if (sortBy == null) {
               sortBy = "name";
-            }            
-            request.getSession().setAttribute("dictionary", dictionary);
-            request.getSession().setAttribute("code", code);
-            request.getSession().setAttribute("type", type);
-            request.getSession().setAttribute("singleton", "false");
-            String vers = null;
-            String ltag = null;
-            Concept c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
-            request.getSession().setAttribute("concept", c);
-            
-            request.getSession().removeAttribute("synonyms");
-            
-            String name = c.getEntityDescription().getContent();
-          %>
-          <div class="texttitle-blue">
-            <%=name%> (Code <%=code%>)
-          </div>
-          <hr>
-          <%@ include file="/pages/templates/typeLinks.xhtml" %>
-          <div class="tabTableContentContainer">
-            <%
-            if (type != null && type.compareTo("synonym") == 0) {
-            %>
-                <%@ include file="/pages/templates/synonym.xhtml" %>
-            <%
+            } 
+            if (dictionary == null) {
+                dictionary = "NCI MetaThesaurus";
+            }  
+            Concept c = null;
+            name = "";
+            if (dictionary.compareTo("NCI MetaThesaurus") != 0) {
+               //name = "The server encountered an internal error that prevented it from fulfilling this request.";
+               name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
             } else {
-            %>
-            <%@ include file="/pages/templates/property.xhtml" %>
-            <%@ include file="/pages/templates/sources.xhtml" %>
-            <%@ include file="/pages/templates/relationship.xhtml" %>
+		    String vers = null;
+		    String ltag = null;
+		    c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
+		    if (c != null) {
+		       request.getSession().setAttribute("concept", c);
+		       request.getSession().setAttribute("code", code);
+		       name = c.getEntityDescription().getContent();
+		    } else {
+		       //name = "The server encountered an internal error that prevented it from fulfilling this request.";
+		       name = "ERROR: Invalid code - " + code + ".";
+		    }
+	   }
+
+           
+          if (c != null) {
+		    request.getSession().setAttribute("dictionary", dictionary);
+		    request.getSession().setAttribute("type", type);
+		    request.getSession().setAttribute("singleton", "false");
+          
+          %>
+		  <div class="texttitle-blue">
+		      <%=name%> (Code <%=code%>)
+		  </div>
+		  
+		  <hr>
+		  <%@ include file="/pages/templates/typeLinks.xhtml" %>
+		  <div class="tabTableContentContainer">
+			    <%@ include file="/pages/templates/property.xhtml" %>
+			    <%@ include file="/pages/templates/sources.xhtml" %>
+			    <%@ include file="/pages/templates/relationship.xhtml" %>
+			    <!--
+			    <%@ include file="/pages/templates/synonym.xhtml" %>
+			    -->
+		  </div>	    
+          <%
+          } else {
+          %>
+ 		  <div class="textbody">
+		      <%=name%>
+		  </div> 
+	  <%	  
+          }
+          %>
+          
+            
             <%@ include file="/pages/templates/nciFooter.html" %>
-            <%
-            }
-            %>
           </div>
         </div>
         <!-- end Page content -->
