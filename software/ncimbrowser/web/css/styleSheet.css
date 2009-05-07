@@ -195,6 +195,15 @@ h3
  font-weight: bold;
 }
 
+.textbodyredregular 
+{
+ font-size: 12px;
+ color: #A90101;
+ font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
+ font-weight: bold;
+}
+
+
 .datarowdark 
 {
  font-size: 12px;

@@ -603,55 +603,56 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
 
 //==================================================================================================================================
-    public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
-    {
+	public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
+	{
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-            if (lbSvc == null)
-            {
-                System.out.println("lbSvc == null???");
-                return null;
-            }
+			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+			if (lbSvc == null)
+			{
+				System.out.println("lbSvc == null???");
+				return null;
+			}
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(vers);
 
-            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            if (vers != null) versionOrTag.setVersion(vers);
+			ConceptReferenceList crefs =
+				createConceptReferenceList(
+					new String[] {code}, codingSchemeName);
 
-            ConceptReferenceList crefs =
-                createConceptReferenceList(
-                    new String[] {code}, codingSchemeName);
-
-            CodedNodeSet cns = null;
-
-            try {
-                cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
-            } catch (Exception e1) {
-                //e1.printStackTrace();
-            }
-
-            cns = cns.restrictToCodes(crefs);
-            ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
-
-            if (matches == null)
-            {
-                System.out.println("Concep not found.");
-                return null;
-            }
-            // Analyze the result ...
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                ResolvedConceptReference ref =
-                    (ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
-
-                Concept entry = ref.getReferencedEntry();
-
-                return entry;
-            }
-         } catch (Exception e) {
-             //e.printStackTrace();
-            return null;
-         }
-         return null;
-    }
-
+			CodedNodeSet cns = null;
+			try {
+				cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+				cns = cns.restrictToCodes(crefs);
+				ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
+				if (matches == null)
+				{
+					System.out.println("Concep not found.");
+					return null;
+				}
+                int count = matches.getResolvedConceptReferenceCount();
+				// Analyze the result ...
+				if (count == 0) return null;
+				if (count > 0) {
+                    try {
+					    ResolvedConceptReference ref =
+							(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+						Concept entry = ref.getReferencedEntry();
+						return entry;
+					} catch (Exception ex1) {
+						System.out.println("Exception entry == null");
+						return null;
+					}
+				}
+		    } catch (Exception e1) {
+				e1.printStackTrace();
+				return null;
+			}
+		 } catch (Exception e) {
+			 e.printStackTrace();
+			 return null;
+		 }
+		 return null;
+	}
 
 
     public static CodedNodeSet restrictToSource(CodedNodeSet cns, String source) {
