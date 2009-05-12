@@ -76,6 +76,14 @@
        </DisplayItem>
 
        <DisplayItem>
+            <propertyName>NCI_META_CUI</propertyName>
+            <itemLabel>NCI Metathesaurus CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+       
+       <DisplayItem>
             <propertyName>UMLS_CUI</propertyName>
             <itemLabel>NCI Metathesaurus CUI</itemLabel>
             <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
@@ -119,10 +127,11 @@
             <propertyName>GenBank_Accession_Number</propertyName>
             <itemLabel>GenBank Accession Number</itemLabel>
             <url>http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=search&amp;term=+</url>
-            <hyperlinkText>see GenBank Accession Number info</hyperlinkText>
+            <hyperlinkText>see GenBank info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
+<!--   Note: Locus_ID has been deprecated by EntrezGene_ID.
        <DisplayItem>
             <propertyName>Locus_ID</propertyName>
             <itemLabel>Locus ID</itemLabel>
@@ -130,13 +139,21 @@
             <hyperlinkText>see Locus ID info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
+ -->
 
+       <DisplayItem>
+            <propertyName>EntrezGene_ID</propertyName>
+            <itemLabel>EntrezGene ID</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&amp;cmd=ShowDetailView&amp;TermToSearch=</url>
+            <hyperlinkText>see NCBI EntrezGene info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
 
        <DisplayItem>
             <propertyName>NCI_META_CUI</propertyName>
             <itemLabel>NCI META CUI</itemLabel>
             <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
-            <hyperlinkText>see NCI META CUI info</hyperlinkText>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
@@ -152,7 +169,7 @@
             <propertyName>OMIM_Number</propertyName>
             <itemLabel>OMIM Number</itemLabel>
             <url>http://www.ncbi.nlm.nih.gov:80/entrez/dispomim.cgi?id=</url>
-            <hyperlinkText>see OMIM Number info</hyperlinkText>
+            <hyperlinkText>see OMIM info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
@@ -160,7 +177,7 @@
             <propertyName>PDQ_Closed_Trial_Search_ID</propertyName>
             <itemLabel>PDQ Closed Trial Search ID</itemLabel>
             <url>null</url>
-            <hyperlinkText>see NCI PDQ close clinical trial info</hyperlinkText>
+            <hyperlinkText>see NCI PDQ closed clinical trial info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
@@ -176,7 +193,7 @@
             <propertyName>PubMedID_Primary_Reference</propertyName>
             <itemLabel>PubMedID Primary Reference</itemLabel>
             <url>http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=</url>
-            <hyperlinkText>see PubMedID Primary Reference info</hyperlinkText>
+            <hyperlinkText>see PubMed Primary Reference info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
@@ -184,7 +201,7 @@
             <propertyName>Swiss_Prot</propertyName>
             <itemLabel>Swiss Prot</itemLabel>
             <url>http://us.expasy.org/cgi-bin/sprot-search-ac?</url>
-            <hyperlinkText>see Swiss Prot info</hyperlinkText>
+            <hyperlinkText>see UniProt/Swiss-Prot info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
