@@ -1345,6 +1345,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public HashMap getRelationshipHashMap(String scheme, String version, String code)
     {
+		return getRelationshipHashMap(scheme, version, code, null);
+	}
+
+
+    public HashMap getRelationshipHashMap(String scheme, String version, String code, String sab)
+    {
         //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -1376,6 +1382,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             //ResolvedConceptReferenceList branch = cng.resolveAsList(focus, associationsNavigatedFwd,
             //      !associationsNavigatedFwd, -1, 2, noopList_, null, null, null, -1, false);
+
+            if (sab != null) {
+				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+			}
 
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
@@ -1986,8 +1996,106 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return v;
 	}
 
+    public Vector sortSynonymData(Vector synonyms, String sortBy) {
+		if (sortBy == null) sortBy = "name";
+		HashMap hmap = new HashMap();
+		Vector key_vec = new Vector();
+        for (int n=0; n<synonyms.size(); n++)
+        {
+            String s = (String) synonyms.elementAt(n);
+            Vector synonym_data = DataUtils.parseData(s, "|");
+            String term_name = (String) synonym_data.elementAt(0);
+            String term_type = (String) synonym_data.elementAt(1);
+            String term_source = (String) synonym_data.elementAt(2);
+            String term_source_code = (String) synonym_data.elementAt(3);
+            String cui = (String) synonym_data.elementAt(4);
+            String rel = (String) synonym_data.elementAt(5);
+            String key = term_name + term_source_code;
+            if (sortBy.compareTo("type") == 0) key = term_type + term_name;
+            if (sortBy.compareTo("source") == 0) key = term_source + term_name;
+            if (sortBy.compareTo("code") == 0) key = term_source_code + term_name;
+            if (sortBy.compareTo("rel") == 0) key = rel + term_source_code + term_name;
+            if (sortBy.compareTo("cui") == 0) key = cui + term_source_code + term_name;
 
-	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+            hmap.put(key, s);
+            key_vec.add(key);
+		}
+		key_vec = SortUtils.quickSort(key_vec);
+		Vector v = new Vector();
+		for (int i=0; i<key_vec.size(); i++) {
+			String s = (String) key_vec.elementAt(i);
+			v.add((String) hmap.get(s));
+		}
+		return v;
+	}
+
+
+
+    public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
+    {
+        //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+        HashMap hmap = new HashMap();
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null) csvt.setVersion(version);
+
+        // Perform the query ...
+        ResolvedConceptReferenceList matches = null;
+
+        List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
+        HashMap map = new HashMap();
+        try {
+            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+            if (sab != null) {
+				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+			}
+
+/*
+ ResolvedConceptReferenceList 	resolveAsList(ConceptReference graphFocus, boolean resolveForward, boolean resolveBackward, int resolveCodedEntryDepth,
+ int resolveAssociationDepth, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes,
+ SortOptionList sortOptions, LocalNameList filterOptions, int maxToReturn)  */
+
+            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+            propertyTypes[0] = PropertyType.PRESENTATION;
+            matches = cng.resolveAsList(
+                    ConvenienceMethods.createConceptReference(code, scheme),
+                    //true, false, 1, 1, new LocalNameList(), null, null, 1024);
+                    true, false, 1, 1, null, propertyTypes, null, null, -1, false);
+
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                Enumeration<ResolvedConceptReference> refEnum =
+                    matches .enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = refEnum.nextElement();
+                    AssociationList sourceof = ref.getSourceOf();
+                    Association[] associations = sourceof.getAssociation();
+
+                    for (int i = 0; i < associations.length; i++) {
+                        Association assoc = associations[i];
+                        String associationName = assoc.getAssociationName();
+                        Vector v = new Vector();
+                        AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+                        for (int j = 0; j < acl.length; j++) {
+                            AssociatedConcept ac = acl[j];
+                            if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+								v.add(ac);
+							}
+						}
+						hmap.put(associationName, v);
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return hmap;
+    }
+
+/*
+    public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
 		HashSet hset = new HashSet();
 		Vector v = new Vector();
         Vector associated_concepts = getAssociatedConcepts(scheme, version, code, sab);
@@ -2008,4 +2116,30 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	    SortUtils.quickSort(v);
 	    return v;
 	}
+*/
+
+	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+		Vector w = new Vector();
+		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		Set keyset = hmap.keySet();
+		Iterator it = keyset.iterator();
+		while (it.hasNext())
+		{
+			String associationName = (String) it.next();
+			Vector v = (Vector) hmap.get(associationName);
+			for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				EntityDescription ed = ac.getEntityDescription();
+				Concept c = ac.getReferencedEntry();
+				Vector synonyms = getSynonyms(c);
+				for (int j=0; j<synonyms.size(); j++) {
+					String t = (String) synonyms.elementAt(j);
+					t = t + "|" + c.getEntityCode() + "|" + associationName;
+					w.add(t);
+				}
+			}
+		}
+		SortUtils.quickSort(w);
+		return w;
+     }
 }

@@ -70,7 +70,7 @@
       sort_by2 = "name";
   }   
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
-  neighborhood_atoms = new DataUtils().sortSynonyms(neighborhood_atoms, sort_by2);
+  neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
     
 %>
         
@@ -176,6 +176,33 @@
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
+              if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
+              %>
+                 Relationship
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a>
+              <% 	
+              }
+              %>
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 == null || sort_by2.compareTo("cui") == 0) {
+              %>
+                 CUI
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=cui&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">CUI</a>
+              <% 	
+              }
+              %>
+          </th>          
+          
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
               if (sort_by2 == null || sort_by2.compareTo("name") == 0) {
               %>
                  Term
@@ -240,14 +267,23 @@
 		    String term_type = (String) synonym_data.elementAt(1);
 		    String term_source = (String) synonym_data.elementAt(2);
 		    String term_source_code = (String) synonym_data.elementAt(3);
-		    String concept_code = (String) synonym_data.elementAt(4);
+		    String cui = (String) synonym_data.elementAt(4);
+		    String rel = (String) synonym_data.elementAt(5);
+		    
 		    String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
 		%>
 		    <tr class="<%=rowColor%>">
-		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=concept_code%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
+		      <td class="dataCellText"><%=rel%></td>
+		      <td class="dataCellText">
+			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=cui%>">
+			    <%=cui%>
+			  </a>		      
+		      </td>
+		      
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
 		      <td class="dataCellText"><%=term_source%></td>
 		      <td class="dataCellText"><%=term_type%></td>
-		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=concept_code%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
 		    </tr>
 		<%
 	 }

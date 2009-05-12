@@ -129,11 +129,10 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
           value_wo_qualifier = value.substring(0, n);
           qualifier = value.substring(n+1, value.length());
-          if (qualifier.compareTo("NCI") != 0) {
-            value = value_wo_qualifier;
+          value = value_wo_qualifier;
+          if (qualifier.compareTo("") != 0) {
             propName_label = qualifier + " " + propName_label2;
-          } else
-              value = value_wo_qualifier;
+          } 
         }
 
         String url_str = url + value;
@@ -157,14 +156,12 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
           if (n != -1 && (propName_label.indexOf("Definition") != -1 ||
               propName_label.indexOf("DEFINITION") != -1)) {
-            value_wo_qualifier = value.substring(0, n);
-            qualifier = value.substring(n+1, value.length());
-            if (qualifier.compareTo("NCI") != 0) {
-              value = value_wo_qualifier;
-              propName_label = qualifier + " " + propName_label2;
-            } else {
-              value = value_wo_qualifier;
-            }
+              value_wo_qualifier = value.substring(0, n);
+	      qualifier = value.substring(n+1, value.length());
+	      value = value_wo_qualifier;
+	      if (qualifier.compareTo("") != 0) {
+	          propName_label = qualifier + " " + propName_label2;
+	      } 
           }
 
           if (k == 0) {
