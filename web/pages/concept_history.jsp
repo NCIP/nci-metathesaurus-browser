@@ -3,6 +3,7 @@
 <%@ page import="java.util.Vector" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HistoryUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%
@@ -11,7 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>NCI MetaThesaurus History</title>
+    <title>NCI Thesaurus History</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -19,15 +20,38 @@
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <%
     String code = (String) request.getParameter("code");
+    code = HTTPUtils.cleanXSS(code);
+    
     String dictionary = (String) request.getParameter("dictionary");
+    dictionary = HTTPUtils.cleanXSS(dictionary);
     String vers = null;
     String ltag = null;
     Concept concept = (Concept) request.getSession().getAttribute("concept");
-    String concept_name = concept.getEntityDescription().getContent();
-    Vector headers = HistoryUtils.getTableHeader();
-    Vector rows = HistoryUtils.getEditActions(dictionary, vers, ltag, code);
+    if (concept == null) {
+        concept = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
+    } else {
+        request.getSession().setAttribute("concept", concept);    
+    }
+    String msg = null;   
+    if (concept == null) {
+           msg = "ERROR: Invalid code - " + code + ".";
+    } else {
+           msg = "ERROR: Unable to generate the requested page.";
+    }    
   %>
   <f:view>
+  <% 
+    if (concept == null) {
+   %>  
+ 		  <div class="textbody">
+		      <%=msg%>
+		  </div> 
+  <%
+    } else {
+	    Vector rows = HistoryUtils.getEditActions(dictionary, vers, ltag, code);
+	    String concept_name = concept.getEntityDescription().getContent();
+	    Vector headers = HistoryUtils.getTableHeader();
+  %>  
     <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
@@ -46,7 +70,7 @@
           <td valign="top"><div id="closeWindow"><a href="javascript:window.close();"><img src="<%=basePath%>/images/thesaurus_close_icon.gif" width="10" height="10" border="0" alt="Close Window" />&nbsp;CLOSE WINDOW</a></div></td>
         </tr>
         </table>
-        <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
+        <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI MetaThesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
           <!-- History content -->
           <div class="pageTitle"><b><%=concept_name%> (Code <%=code%>)</b></div>
@@ -101,6 +125,9 @@
         </div>
       </div>
     </div>
+    <%
+    }
+    %>
   </f:view>
   </body>
 </html>

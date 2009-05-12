@@ -17,7 +17,7 @@ import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.concepts.Concept;
 
 public class HistoryUtils {
-    private static final String CODING_SCHEME = "NCI MetaThesaurus";
+    private static final String CODING_SCHEME = "NCI Thesaurus";
     private static DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Vector<String> getTableHeader() {
@@ -33,9 +33,14 @@ public class HistoryUtils {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         HistoryService hs = lbSvc.getHistoryService(CODING_SCHEME);
 
-        NCIChangeEventList list = hs.getEditActionList(Constructors
-            .createConceptReference(code, null), null, null);
-        return getEditActions(codingSchemeName, vers, ltag, code, list);
+        try {
+			NCIChangeEventList list = hs.getEditActionList(Constructors
+				.createConceptReference(code, null), null, null);
+			return getEditActions(codingSchemeName, vers, ltag, code, list);
+	    } catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
     }
 
     private static Vector<String> getEditActions(String codingSchemeName,
@@ -48,7 +53,7 @@ public class HistoryUtils {
             ChangeType type = event.getEditaction();
             Date date = event.getEditDate();
             String rCode = event.getReferencecode();
-            String desc = "none";
+            String desc = "N/A";
             if (rCode != null && rCode.length() > 0 &&
                     ! rCode.equalsIgnoreCase("null")) {
                 Concept c = DataUtils.getConceptByCode(

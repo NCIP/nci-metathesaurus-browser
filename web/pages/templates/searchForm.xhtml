@@ -29,15 +29,18 @@
   -->
   <%
     String algorithm = (String) request.getSession().getAttribute("selectedAlgorithm");
-    String check_e = "", check_s = "" , check_c ="";
+    String check_e = "", check_b = "", check_s = "" , check_c ="";
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
       check_e = "checked";
     else if (algorithm.compareTo("startsWith") == 0)
       check_s= "checked";
+    else if (algorithm.compareTo("bestMatch") == 0)
+      check_b= "checked";      
     else
       check_c = "checked";
   %>
-    <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact Match&nbsp;
+  <input type="radio" name="algorithm" value="DoubleMetaphoneLuceneQuery" alt="Best Match" <%=check_b%>>Best Match&nbsp;
+  <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact Match&nbsp;
   <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp;
   <input type="radio" name="algorithm" value="contains" alt="Containts" <%=check_c%>>Contains&nbsp;
   <br/>

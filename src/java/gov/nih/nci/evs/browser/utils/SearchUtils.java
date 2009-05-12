@@ -140,6 +140,9 @@ import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
 import org.LexGrid.concepts.Entity;
 
+import org.apache.commons.codec.language.DoubleMetaphone;
+
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -191,6 +194,8 @@ public class SearchUtils {
     static final List<String> STOP_WORDS = Arrays.asList(new String[] {
         "a", "an", "and", "by", "for", "of", "on", "in", "nos", "the", "to", "with"});
 
+    private DoubleMetaphone doubleMetaphone = null;
+
     //==================================================================================
 
     public SearchUtils()
@@ -205,6 +210,7 @@ public class SearchUtils {
     }
 
     private void initializeSortParameters() {
+		doubleMetaphone = new DoubleMetaphone();
         try {
             NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
             String sort_str = properties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
@@ -698,14 +704,16 @@ public class SearchUtils {
         }
         try {
             int iteration = 0;
-
-
             while (iterator.hasNext())
             {
                 iteration++;
                 iterator = iterator.scroll(maxToReturn);
                 ResolvedConceptReferenceList rcrl = iterator.getNext();
                 ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
+
+
+ System.out.println("rcra.length --- " + rcra.length);
+
                 for (int i=0; i<rcra.length; i++)
                 {
                     ResolvedConceptReference rcr = rcra[i];
@@ -957,11 +965,13 @@ public class SearchUtils {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
+
 		boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
         {
 			return new Vector();
 		}
+
 
         matchText = matchText.trim();
         if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0)
@@ -1020,6 +1030,10 @@ public class SearchUtils {
 			matchText = preprocessRegExp(matchText);
 		}
 
+System.out.println("Matching algorithm: " + matchAlgorithm);
+System.out.println("maxToReturn: " + maxToReturn);
+
+
          CodedNodeSet cns = null;
          ResolvedConceptReferencesIterator iterator = null;
          try {
@@ -1055,12 +1069,20 @@ public class SearchUtils {
             SortOptionList sortCriteria = null;
                 //Constructors.createSortOptionList(new String[]{"matchToQuery"});
 
+
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
                 try {
+
+long ms = System.currentTimeMillis();
+System.out.println("cns.resolve " );
+
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+
+System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
                 }
@@ -1074,26 +1096,42 @@ public class SearchUtils {
 			return null;
 		}
 
+System.out.println("Start sorting " + matchAlgorithm);
+
 
         if (apply_sort_score)
         {
                 long ms = System.currentTimeMillis();
                 try {
+					/*
 					if (sort_by_pt_only) {
 					    iterator = sortByScore(matchText0, iterator, maxToReturn, true);
 					} else {
                         iterator = sortByScore(matchText0, iterator, maxToReturn);
 					}
+					*/
+					if (sort_by_pt_only) {
+					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm);
+					} else {
+                        iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm);
+					}
+
                 } catch (Exception ex) {
 
                 }
                 System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
         }
 
+System.out.println("resolveIterator " + matchAlgorithm);
+
         Vector v = null;
         if (iterator != null) {
+			//testing KLO
+			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
         }
+
+System.out.println("resolveIterator v.size() " + v.size());
 
         if (v == null || v.size() == 0) {
 			v = new Vector();
@@ -1131,7 +1169,7 @@ public class SearchUtils {
         String version = null;
         String matchText = "blood";
         String matchAlgorithm = "contains";
-        int maxToReturn = -1;
+        int maxToReturn = 200;
 
         long ms = System.currentTimeMillis();
         Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
@@ -1349,6 +1387,56 @@ public class SearchUtils {
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
+    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, String algorithm) throws LBException {
+        // Determine the set of individual words to compare against.
+        List<String> compareWords = toScoreWords(searchTerm);
+        if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
+			for (int k=0; k<compareWords.size(); k++) {
+				String word = (String) compareWords.get(k);
+				compareWords.set(k, doubleMetaphone.encode(word));
+				//System.out.println("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
+			}
+		}
+
+        // Create a bucket to store results.
+        Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
+
+        // Score all items ...
+        while (toSort.hasNext()) {
+            // Working in chunks of 100.
+            ResolvedConceptReferenceList refs = toSort.next(100);
+            for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
+                ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
+
+                String code = ref.getConceptCode();
+                Concept ce = ref.getReferencedEntry();
+
+                // Note: Preferred descriptions carry more weight,
+                // but we process all terms to allow the score to improve
+                // based on any contained presentation.
+                Presentation[] allTermsForConcept = ce.getPresentation();
+                for (Presentation p : allTermsForConcept) {
+					float score = (float) 0.0;
+					if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") != 0) {
+                        score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i);
+					} else {
+						score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i, true);
+					}
+                    // Check for a previous match on this code for a different presentation.
+                    // If already present, keep the highest score.
+                    if (scoredResult.containsKey(code)) {
+                        ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
+                        if (scoredTerm.score > score)
+                            continue;
+                    }
+                    scoredResult.put(code, new ScoredTerm(ref, score));
+                }
+            }
+        }
+        // Return an iterator that will sort the scored result.
+        return new ScoredIterator(scoredResult.values(), maxToReturn);
+    }
+
 
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, boolean descriptionOnly) throws LBException {
 
@@ -1375,7 +1463,41 @@ public class SearchUtils {
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
+    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, boolean descriptionOnly, String algorithm) throws LBException {
 
+        if (!descriptionOnly) return sortByScore(searchTerm, toSort, maxToReturn);
+        // Determine the set of individual words to compare against.
+        List<String> compareWords = toScoreWords(searchTerm);
+        if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
+			for (int k=0; k<compareWords.size(); k++) {
+				String word = (String) compareWords.get(k);
+				compareWords.set(k, doubleMetaphone.encode(word));
+			}
+		}
+
+        // Create a bucket to store results.
+        Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
+
+        // Score all items ...
+        while (toSort.hasNext()) {
+            // Working in chunks of 100.
+            ResolvedConceptReferenceList refs = toSort.next(100);
+            for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
+                ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
+                String code = ref.getConceptCode();
+                String name = ref.getEntityDescription().getContent();
+                float score = (float) 0.0;//score(name, compareWords, true, i);
+				if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
+					score = score(name, compareWords, true, i, true);
+				} else {
+					score = score(name, compareWords, true, i);
+				}
+                scoredResult.put(code, new ScoredTerm(ref, score));
+            }
+        }
+        // Return an iterator that will sort the scored result.
+        return new ScoredIterator(scoredResult.values(), maxToReturn);
+    }
 
     /**
      * Returns a score providing a relative comparison of the given
@@ -1414,6 +1536,25 @@ public class SearchUtils {
             //Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
                 //* (isPreferred ? 2 : 1);
     }
+
+
+    /* scoring method for DoubleMetaphoneLuceneQuery */
+    protected float score(String text, List<String> keyword_codes, boolean isPreferred, float searchRank, boolean fuzzy_match) {
+        List<String> wordsToCompare = toScoreWords(text);
+        float totalWords = wordsToCompare.size();
+        float matchScore = 0;
+        float position = 0;
+        for (Iterator<String> words = wordsToCompare.listIterator(); words.hasNext(); position++) {
+            String word = words.next();
+            if (fuzzy_match) word = doubleMetaphone.encode(word);
+            if (keyword_codes.contains(word))
+                matchScore += ((position / 10) + 1);
+        }
+        return Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
+            //Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
+                //* (isPreferred ? 2 : 1);
+    }
+
 
     /**
      * Return words from the given string to be used in scoring
