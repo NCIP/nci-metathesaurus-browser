@@ -710,10 +710,6 @@ public class SearchUtils {
                 iterator = iterator.scroll(maxToReturn);
                 ResolvedConceptReferenceList rcrl = iterator.getNext();
                 ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
-
-
- System.out.println("rcra.length --- " + rcra.length);
-
                 for (int i=0; i<rcra.length; i++)
                 {
                     ResolvedConceptReference rcr = rcra[i];
@@ -1012,9 +1008,8 @@ public class SearchUtils {
 				preprocess = false;
 			}
 			*/
-
+            String delim = ".*";
             if (containsSpecialChars(matchText)) {
-				String delim = ".*";
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
 				preprocess = false;
@@ -1022,17 +1017,18 @@ public class SearchUtils {
 				matchText = preprocessContains(matchText);
 				matchAlgorithm = "RegExp";
 				preprocess = false;
-		    }
+				//KLO 051209
+			} else if (matchText.indexOf(" ") == -1) {
+				matchText = delim + matchText + delim;
+				matchAlgorithm = "RegExp";
+				preprocess = false;
+			}
 
 		}
 		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
 		{
 			matchText = preprocessRegExp(matchText);
 		}
-
-System.out.println("Matching algorithm: " + matchAlgorithm);
-System.out.println("maxToReturn: " + maxToReturn);
-
 
          CodedNodeSet cns = null;
          ResolvedConceptReferencesIterator iterator = null;
@@ -1076,12 +1072,9 @@ System.out.println("maxToReturn: " + maxToReturn);
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
                 try {
 
-long ms = System.currentTimeMillis();
-System.out.println("cns.resolve " );
-
+					long ms = System.currentTimeMillis();
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-
-System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+					System.out.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1095,9 +1088,6 @@ System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMil
 			e.printStackTrace();
 			return null;
 		}
-
-System.out.println("Start sorting " + matchAlgorithm);
-
 
         if (apply_sort_score)
         {
@@ -1119,19 +1109,17 @@ System.out.println("Start sorting " + matchAlgorithm);
                 } catch (Exception ex) {
 
                 }
-                System.out.println("Sorting delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+                System.out.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
         }
-
-System.out.println("resolveIterator " + matchAlgorithm);
 
         Vector v = null;
         if (iterator != null) {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+			long ms = System.currentTimeMillis();
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+			System.out.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
         }
-
-System.out.println("resolveIterator v.size() " + v.size());
 
         if (v == null || v.size() == 0) {
 			v = new Vector();
@@ -1370,7 +1358,7 @@ System.out.println("resolveIterator v.size() " + v.size());
                 // based on any contained presentation.
                 Presentation[] allTermsForConcept = ce.getPresentation();
                 for (Presentation p : allTermsForConcept) {
-                    float score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i);
+                    float score = score(p.getValue().getContent(), compareWords, p.isIsPreferred());
 
                     // Check for a previous match on this code for a different presentation.
                     // If already present, keep the highest score.
@@ -1397,14 +1385,18 @@ System.out.println("resolveIterator v.size() " + v.size());
 				//System.out.println("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
 			}
 		}
-
         // Create a bucket to store results.
         Map<String, ScoredTerm> scoredResult = new TreeMap<String, ScoredTerm>();
-
         // Score all items ...
+
+        int knt = 0;
         while (toSort.hasNext()) {
             // Working in chunks of 100.
-            ResolvedConceptReferenceList refs = toSort.next(100);
+            long ms = System.currentTimeMillis();
+            ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
+            System.out.println("Run time (ms): toSort.next(500) method call took " + (System.currentTimeMillis() - ms));
+            ms = System.currentTimeMillis();
+
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
 
@@ -1418,9 +1410,9 @@ System.out.println("resolveIterator v.size() " + v.size());
                 for (Presentation p : allTermsForConcept) {
 					float score = (float) 0.0;
 					if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") != 0) {
-                        score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i);
+                        score = score(p.getValue().getContent(), compareWords, p.isIsPreferred());
 					} else {
-						score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), i, true);
+						score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), true);
 					}
                     // Check for a previous match on this code for a different presentation.
                     // If already present, keep the highest score.
@@ -1432,6 +1424,10 @@ System.out.println("resolveIterator v.size() " + v.size());
                     scoredResult.put(code, new ScoredTerm(ref, score));
                 }
             }
+            int num_concepts = refs.getResolvedConceptReferenceCount();
+
+            knt = knt + num_concepts;
+            System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms));
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -1455,7 +1451,7 @@ System.out.println("resolveIterator v.size() " + v.size());
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
                 String code = ref.getConceptCode();
                 String name = ref.getEntityDescription().getContent();
-                float score = score(name, compareWords, true, i);
+                float score = score(name, compareWords, true);
                 scoredResult.put(code, new ScoredTerm(ref, score));
             }
         }
@@ -1481,19 +1477,27 @@ System.out.println("resolveIterator v.size() " + v.size());
         // Score all items ...
         while (toSort.hasNext()) {
             // Working in chunks of 100.
-            ResolvedConceptReferenceList refs = toSort.next(100);
+            long ms = System.currentTimeMillis();
+
+            ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
+
+            System.out.println("Run time (ms): toSort.next(500) took " + (System.currentTimeMillis() - ms));
+
+            ms = System.currentTimeMillis();
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
                 String code = ref.getConceptCode();
                 String name = ref.getEntityDescription().getContent();
                 float score = (float) 0.0;//score(name, compareWords, true, i);
 				if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
-					score = score(name, compareWords, true, i, true);
+					score = score(name, compareWords, true, true);
 				} else {
-					score = score(name, compareWords, true, i);
+					score = score(name, compareWords, true);
 				}
                 scoredResult.put(code, new ScoredTerm(ref, score));
             }
+
+            System.out.println("Run time (ms): assign scores took " + (System.currentTimeMillis() - ms));
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -1522,7 +1526,7 @@ System.out.println("resolveIterator v.size() " + v.size());
      * @param searchRank
      * @return The score; a higher value indicates a stronger match.
      */
-    protected float score(String text, List<String> keywords, boolean isPreferred, float searchRank) {
+    protected float score(String text, List<String> keywords, boolean isPreferred) {
         List<String> wordsToCompare = toScoreWords(text);
         float totalWords = wordsToCompare.size();
         float matchScore = 0;
@@ -1539,7 +1543,7 @@ System.out.println("resolveIterator v.size() " + v.size());
 
 
     /* scoring method for DoubleMetaphoneLuceneQuery */
-    protected float score(String text, List<String> keyword_codes, boolean isPreferred, float searchRank, boolean fuzzy_match) {
+    protected float score(String text, List<String> keyword_codes, boolean isPreferred, boolean fuzzy_match) {
         List<String> wordsToCompare = toScoreWords(text);
         float totalWords = wordsToCompare.size();
         float matchScore = 0;
@@ -1550,7 +1554,9 @@ System.out.println("resolveIterator v.size() " + v.size());
             if (keyword_codes.contains(word))
                 matchScore += ((position / 10) + 1);
         }
-        return Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
+        float score = Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
+        System.out.println("(*) " + text + " -- " + score);
+        return score;
             //Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
                 //* (isPreferred ? 2 : 1);
     }
