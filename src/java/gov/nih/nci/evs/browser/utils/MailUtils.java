@@ -32,9 +32,9 @@ public class MailUtils extends Object {
         return Utils.toStrings(value, ";", false);
     }
 
-    public static String getIncomingMailHost() throws Exception {
-        String value = getProperty(NCImBrowserProperties.INCOMING_MAIL_HOST,
-            "incoming.mail.host");
+    public static String getMailSmtpServer() throws Exception {
+        String value = getProperty(NCImBrowserProperties.MAIL_SMTP_SERVER,
+            "mail.smtp.server");
         return value;
     }
 
@@ -51,14 +51,14 @@ public class MailUtils extends Object {
         return true;
     }
 
-    private static void postMailValidation(String incomingMailHost,
+    private static void postMailValidation(String mail_smtp_server,
             String from, String recipients[],
             String subject, String message) throws Exception {
         StringBuffer error = new StringBuffer();
         String indent = "    ";
         int ctr = 0;
 
-        if (incomingMailHost == null || incomingMailHost.length() <= 0)
+        if (mail_smtp_server == null || mail_smtp_server.length() <= 0)
             { error.append(indent + "* mail host\n"); ++ctr; }
         if (subject == null || subject.length() <= 0)
             { error.append(indent + "* subject of your email\n"); ++ctr; }
@@ -85,12 +85,12 @@ public class MailUtils extends Object {
     public static void postMail(String from, String recipients[],
             String subject, String message) throws MessagingException,
             Exception {
-        String incomingMailHost = getIncomingMailHost();
-        postMailValidation(incomingMailHost, from, recipients, subject, message);
+        String mail_smtp_server = getMailSmtpServer();
+        postMailValidation(mail_smtp_server, from, recipients, subject, message);
 
         // Sets the host smtp address.
         Properties props = new Properties();
-        props.put("mail.smtp.host", incomingMailHost);
+        props.put("mail.smtp.host", mail_smtp_server);
 
         // Creates some properties and get the default session.
         Session session = Session.getDefaultInstance(props, null);

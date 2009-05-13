@@ -142,6 +142,19 @@ public class UserSessionBean extends Object
 
         String source = (String) request.getParameter("source");
 
+        boolean debug = false;
+        if (debug) {
+            try {
+                System.out.println(Utils.SEPARATOR);
+                System.out.println("* criteria: " + matchText);
+                System.out.println("* matchType: " + matchtype);
+                System.out.println("* source: " + source);
+                System.out.println("* sort.by.score: " + NCImBrowserProperties.
+                    getProperty(NCImBrowserProperties.SORT_BY_SCORE));
+            } catch (Exception e) {
+            }
+        }
+
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String max_str = null;
