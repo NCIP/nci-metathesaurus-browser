@@ -142,10 +142,6 @@ public class UserSessionBean extends Object
 
         String source = (String) request.getParameter("source");
 
-        System.out.println("\n*** criteria: " + matchText);
-        System.out.println("*** matchType: " + matchtype);
-        System.out.println("*** Source: " + source);
-
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String max_str = null;
