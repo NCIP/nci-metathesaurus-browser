@@ -247,8 +247,8 @@
         </ConfigurableItem>
 
         <ConfigurableItem>
-                 <key>INCOMING_MAIL_HOST</key>
-                 <value>@incoming.mail.host@</value>
+                 <key>MAIL_SMTP_SERVER</key>
+                 <value>@mail.smtp.server@</value>
         </ConfigurableItem>
 
         <ConfigurableItem>
