@@ -111,9 +111,7 @@
 			    <%@ include file="/pages/templates/property.xhtml" %>
 			    <%@ include file="/pages/templates/sources.xhtml" %>
 			    <%@ include file="/pages/templates/relationship.xhtml" %>
-			    <!--
 			    <%@ include file="/pages/templates/synonym.xhtml" %>
-			    -->
 		  </div>	    
           <%
           } else {
