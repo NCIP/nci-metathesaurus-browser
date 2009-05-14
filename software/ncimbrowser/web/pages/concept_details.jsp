@@ -15,6 +15,7 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.DisplayItem" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="org.LexGrid.concepts.Presentation" %>
 <%@ page import="org.LexGrid.commonTypes.Source" %>
@@ -71,11 +72,11 @@
               sortBy = "name";
             } 
             if (dictionary == null) {
-                dictionary = "NCI MetaThesaurus";
+                dictionary = Constants.CODING_SCHEME_NAME;
             }  
             Concept c = null;
             name = "";
-            if (dictionary.compareTo("NCI MetaThesaurus") != 0) {
+            if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
                //name = "The server encountered an internal error that prevented it from fulfilling this request.";
                name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
             } else {
@@ -86,6 +87,7 @@
 		       request.getSession().setAttribute("concept", c);
 		       request.getSession().setAttribute("code", code);
 		       name = c.getEntityDescription().getContent();
+	       
 		    } else {
 		       //name = "The server encountered an internal error that prevented it from fulfilling this request.";
 		       name = "ERROR: Invalid code - " + code + ".";
@@ -100,7 +102,7 @@
           
           %>
 		  <div class="texttitle-blue">
-		      <%=name%> (Code <%=code%>)
+		      <%=name%> (CUI <%=code%>)
 		  </div>
 		  
 		  <hr>
