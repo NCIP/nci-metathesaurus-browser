@@ -59,6 +59,21 @@
     String concept_id = curr_concept.getEntityCode();
     propertyvalues.add(concept_id);
     hmap.put("Code", propertyvalues);
+
+	// NCIt code		       
+	Vector syns = DataUtils.getSynonyms(c, "NCI");
+	if (syns != null && syns.size() > 0) {
+	   Vector nci_code_vec = new Vector();
+	   String syn_line = (String) syns.elementAt(0);
+	   Vector synonym_data = DataUtils.parseData(syn_line, "|");
+	   String term_name = (String) synonym_data.elementAt(0);
+	   String term_type = (String) synonym_data.elementAt(1);
+	   String term_source = (String) synonym_data.elementAt(2);
+	   String term_source_code = (String) synonym_data.elementAt(3);  
+	   nci_code_vec.add(term_source_code);
+	   hmap.put("NCIt Code", nci_code_vec);
+	}
+    
     Vector displayed_properties = new Vector();
     Vector properties_to_display = new Vector();
     Vector properties_to_display_label = new Vector();
@@ -68,6 +83,11 @@
     for (int i=0; i<displayItemList.size(); i++) {
       DisplayItem displayItem = (DisplayItem) displayItemList.get(i);
       if (!displayItem.getIsExternalCode()) {
+        properties_to_display.add(displayItem.getPropertyName());
+        properties_to_display_label.add(displayItem.getItemLabel());
+        properties_to_display_url.add(displayItem.getUrl());
+        properties_to_display_linktext.add(displayItem.getHyperlinkText());
+      } else if (displayItem.getPropertyName().compareTo("NCIt Code") == 0) {
         properties_to_display.add(displayItem.getPropertyName());
         properties_to_display_label.add(displayItem.getItemLabel());
         properties_to_display_url.add(displayItem.getUrl());
