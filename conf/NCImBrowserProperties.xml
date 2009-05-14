@@ -14,7 +14,7 @@
        <DisplayItem>
             <propertyName>NCIt Code</propertyName>
             <itemLabel>NCI Thesaurus Code</itemLabel>
-            <url>http://localhost:19280/ncitbrowser/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
+            <url>@ncit.url@/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
             <hyperlinkText>see NCI Thesaurus info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
