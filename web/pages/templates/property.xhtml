@@ -38,19 +38,42 @@
 
     for (int i=0; i<propertytypes.size(); i++) {
       String propertytype = (String) propertytypes.elementAt(i);
-      Vector propertynames = DataUtils.getPropertyNamesByType(
-        curr_concept, propertytype);
+      Vector propertynames = DataUtils.getPropertyNamesByType(curr_concept, propertytype);
 
       for (int j=0; j<propertynames.size(); j++) {
         String propertyname = (String) propertynames.elementAt(j);
+
 
         if (!hset.contains(propertyname)) {
           hset.add(propertyname);
           propertyvalues = DataUtils.getPropertyValues(
             curr_concept, propertytype, propertyname);
 
-          if (propertyvalues != null)
-            hmap.put(propertyname, propertyvalues);
+          if (propertyvalues != null) {
+             if (propertyname.compareToIgnoreCase("definition") != 0) {
+                hmap.put(propertyname, propertyvalues);
+             }
+             else {
+                Vector new_propertyvalues = new Vector(); 
+                for (int k=0; k<propertyvalues.size(); k++) {
+                    String definition_str = (String) propertyvalues.elementAt(k);
+		    Vector def_data = DataUtils.parseData(definition_str, "|");
+		    String def_description = (String) def_data.elementAt(0);
+		    String def_source = (String) def_data.elementAt(1);
+		    if (def_source.compareTo("NCI") == 0) {
+		       new_propertyvalues.add(def_description + "|" + "NCIt"); 
+		    } 
+                }
+                for (int k=0; k<propertyvalues.size(); k++) {
+                    String definition_str = (String) propertyvalues.elementAt(k);
+		    Vector def_data = DataUtils.parseData(definition_str, "|");
+		    String def_description = (String) def_data.elementAt(0);
+		    String def_source = (String) def_data.elementAt(1);
+		    if (def_source.compareTo("NCI") != 0) new_propertyvalues.add(definition_str);
+                } 
+                hmap.put(propertyname, new_propertyvalues);
+             }
+          }
         }
       }
     }
@@ -174,8 +197,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
           String value_wo_qualifier = value;
           int n = value.indexOf("|");
 
-          if (n != -1 && (propName_label.indexOf("Definition") != -1 ||
-              propName_label.indexOf("DEFINITION") != -1)) {
+          if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
               value_wo_qualifier = value.substring(0, n);
 	      qualifier = value.substring(n+1, value.length());
 	      value = value_wo_qualifier;
@@ -346,6 +368,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     %>
     </table>
 </p>
+
+<!--
 <p>
   <b>Other Properties:</b>
   <table class="datatable">
@@ -400,6 +424,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     %>
   </table>
 </p>
+-->
 <p>
   <b>Additional Concept Data:&nbsp;</b>
   <table class="datatable">
