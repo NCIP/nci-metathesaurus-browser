@@ -222,7 +222,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 }
 %>
 <p>
-<b>Synonyms &amp; Abbreviations:&nbsp;</b>
+<b>Synonyms &amp; Abbreviations:</b>
+<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(See Synonym Details)</a>
 <table class="datatable">
 <%
   for (int i=0; i<properties_to_display.size(); i++) {
@@ -264,7 +265,6 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 %>
 </table>
 </p>
-<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >Synonym Details</a>
 <p>
 
 <!--
