@@ -12,6 +12,14 @@
        </DisplayItem>
 
        <DisplayItem>
+            <propertyName>NCIt Code</propertyName>
+            <itemLabel>NCI Thesaurus Code</itemLabel>
+            <url>http://localhost:19280/ncitbrowser/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
+            <hyperlinkText>see NCI Thesaurus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+       
+       <DisplayItem>
             <propertyName>Semantic_Type</propertyName>
             <itemLabel>Semantic Type</itemLabel>
             <url>null</url>
