@@ -19,14 +19,7 @@
     <h:graphicImage value="/images/search-help.gif" style="border-width:0;"/>
   </h:outputLink>
 
-  <!--
-  <h:selectOneRadio id="matchtype"
-    value="#{userSessionBean.selectedMatchType}" valueChangeListener="#{userSessionBean.matchTypeSelectionChanged}"
-    styleClass="textbody"
-  >
-    <f:selectItems value="#{userSessionBean.matchTypeList}"/>
-  </h:selectOneRadio>
-  -->
+
   <%
     String algorithm = (String) request.getSession().getAttribute("selectedAlgorithm");
     String check_e = "", check_b = "", check_s = "" , check_c ="";
@@ -34,7 +27,7 @@
       check_e = "checked";
     else if (algorithm.compareTo("startsWith") == 0)
       check_s= "checked";
-    else if (algorithm.compareTo("bestMatch") == 0)
+    else if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
       check_b= "checked";      
     else
       check_c = "checked";
