@@ -3,6 +3,10 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
+
+
+
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
 %>
@@ -36,7 +40,7 @@
 	  concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
 	  code = concept_neighborhood.getEntityCode();
   } else {
-          concept_neighborhood = DataUtils.getConceptByCode("NCI MetaThesaurus", null, null, code);
+          concept_neighborhood = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, code);
           request.getSession().setAttribute("concept", concept_neighborhood);
           request.getSession().removeAttribute("neighborhood_atoms");
           request.getSession().removeAttribute("neighborhood_synonyms");
@@ -57,7 +61,7 @@
 
   Vector neighborhood_atoms = (Vector) request.getSession().getAttribute("neighborhood_atoms");
   if (neighborhood_atoms == null) {
-      neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms("NCI MetaThesaurus", null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+      neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms(Constants.CODING_SCHEME_NAME, null, concept_neighborhood.getEntityCode(), neighborhood_sab);
       request.getSession().setAttribute("neighborhood_atoms", neighborhood_atoms);
   }
   
@@ -275,7 +279,7 @@
 		    <tr class="<%=rowColor%>">
 		      <td class="dataCellText"><%=rel%></td>
 		      <td class="dataCellText">
-			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=cui%>">
+			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>">
 			    <%=cui%>
 			  </a>		      
 		      </td>
