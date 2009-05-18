@@ -119,9 +119,7 @@ import org.LexGrid.naming.SupportedHierarchy;
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
-//import gov.nih.nci.evs.reportwriter.properties.NCImBrowserProperties;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
-
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 
@@ -474,7 +472,6 @@ public class SearchUtils {
         Vector<String> v = new Vector();
         try {
             RemoteServerUtil rsu = new RemoteServerUtil();
-            //EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if(csrl == null) System.out.println("csrl is NULL");
@@ -702,6 +699,8 @@ public class SearchUtils {
             System.out.println("No match.");
             return v;
         }
+
+        if (maxToReturn < 0) maxToReturn = 100;
         try {
             int iteration = 0;
             while (iterator.hasNext())
@@ -727,9 +726,15 @@ public class SearchUtils {
 						}
 				    } else {
                         Concept ce = rcr.getReferencedEntry();
-                        if (code == null) v.add(ce);
-						else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+                        if (ce == null) {
+							System.out.println("rcr.getReferencedEntry() returns null???");
+						} else {
+							if (code == null) v.add(ce);
+							else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+					    }
 					}
+					// to be modified:
+					//if (v.size() > 100) break;
                 }
             }
         } catch (Exception e) {
@@ -915,7 +920,6 @@ public class SearchUtils {
         }
         searchPhrase.append(delim);
         String t = searchPhrase.toString();
-        //System.out.println("preprocessContains " + t);
         return t;
     }
 
@@ -951,6 +955,58 @@ public class SearchUtils {
 		}
 		return cns;
 	}
+
+
+    public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code, String source)
+    {
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc == null???");
+                return null;
+            }
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (vers != null) versionOrTag.setVersion(vers);
+
+            ConceptReferenceList crefs =
+                createConceptReferenceList(
+                    new String[] {code}, codingSchemeName);
+
+            CodedNodeSet cns = null;
+
+            try {
+                cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+            } catch (Exception e1) {
+                //e1.printStackTrace();
+            }
+
+            cns = cns.restrictToCodes(crefs);
+            cns = restrictToSource(cns, source);
+
+            ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
+
+            if (matches == null)
+            {
+                System.out.println("Concep not found.");
+                return null;
+            }
+            // Analyze the result ...
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                ResolvedConceptReference ref =
+                    (ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+
+                Concept entry = ref.getReferencedEntry();
+
+                return entry;
+            }
+         } catch (Exception e) {
+             //e.printStackTrace();
+            return null;
+         }
+         return null;
+    }
 
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, maxToReturn);
@@ -1023,7 +1079,6 @@ public class SearchUtils {
 				matchAlgorithm = "RegExp";
 				preprocess = false;
 			}
-
 		}
 		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
 		{
@@ -1124,7 +1179,8 @@ public class SearchUtils {
         if (v == null || v.size() == 0) {
 			v = new Vector();
 			// add exact match for CUI and source code, if there is any (simple search case):
-			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
+			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
+			Concept c = getConceptByCode(scheme, version, null, matchText0, source);
 			if (c != null) {
 				v.add(c);
 			}
@@ -1147,6 +1203,15 @@ public class SearchUtils {
 				}
 			}
 	    }
+
+	    if (v == null || v.size() == 0) {
+		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
+			{
+				return searchByName(scheme, version, matchText0, "startsWith",
+						maxToReturn);
+			}
+		}
+
         return v;
     }
 
@@ -1155,8 +1220,9 @@ public class SearchUtils {
     public void testSearchByName() {
         String scheme = "NCI Thesaurus";
         String version = null;
-        String matchText = "blood";
-        String matchAlgorithm = "contains";
+        String matchText = "breast canser";
+        matchText = "dog";
+        String matchAlgorithm = "DoubleMetaphoneLuceneQuery";
         int maxToReturn = 200;
 
         long ms = System.currentTimeMillis();
@@ -1358,16 +1424,18 @@ public class SearchUtils {
                 // based on any contained presentation.
                 Presentation[] allTermsForConcept = ce.getPresentation();
                 for (Presentation p : allTermsForConcept) {
-                    float score = score(p.getValue().getContent(), compareWords, p.isIsPreferred());
+                    float score = score(p.getValue().getContent(), compareWords);
 
                     // Check for a previous match on this code for a different presentation.
                     // If already present, keep the highest score.
-                    if (scoredResult.containsKey(code)) {
-                        ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
-                        if (scoredTerm.score > score)
-                            continue;
-                    }
-                    scoredResult.put(code, new ScoredTerm(ref, score));
+                    if (score > 0.) {
+						if (scoredResult.containsKey(code)) {
+							ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
+							if (scoredTerm.score > score)
+								continue;
+						}
+						scoredResult.put(code, new ScoredTerm(ref, score));
+				    }
                 }
             }
         }
@@ -1375,14 +1443,36 @@ public class SearchUtils {
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
-    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, String algorithm) throws LBException {
+    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort,
+                                                            int maxToReturn, String algorithm) throws LBException {
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
-        if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
+        List<String> compareCodes = new ArrayList<String>();
+		for (int k=0; k<compareWords.size(); k++) {
+			String word = (String) compareWords.get(k);
+			compareCodes.add(word);
+		}
+        String target = "";
+		if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
+
+			/*
 			for (int k=0; k<compareWords.size(); k++) {
 				String word = (String) compareWords.get(k);
-				compareWords.set(k, doubleMetaphone.encode(word));
+				String doubleMetaphonecode = doubleMetaphoneEncode(word);
+				compareWords.set(k, doubleMetaphonecode);
 				//System.out.println("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
+				target = target + doubleMetaphonecode;
+				if (k < compareWords.size()-1) target = target + " ";
+			}
+			*/
+			compareCodes = new ArrayList<String>();
+			for (int k=0; k<compareWords.size(); k++) {
+				String word = (String) compareWords.get(k);
+				String doubleMetaphonecode = doubleMetaphoneEncode(word);
+				compareCodes.add(doubleMetaphonecode);
+				//System.out.println("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
+				target = target + doubleMetaphonecode;
+				if (k < compareWords.size()-1) target = target + " ";
 			}
 		}
         // Create a bucket to store results.
@@ -1410,23 +1500,27 @@ public class SearchUtils {
                 for (Presentation p : allTermsForConcept) {
 					float score = (float) 0.0;
 					if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") != 0) {
-                        score = score(p.getValue().getContent(), compareWords, p.isIsPreferred());
+                        score = score(p.getValue().getContent(), compareWords);
 					} else {
-						score = score(p.getValue().getContent(), compareWords, p.isIsPreferred(), true);
+						score = score(p.getValue().getContent(), compareWords, compareCodes, target, true);
 					}
-                    // Check for a previous match on this code for a different presentation.
-                    // If already present, keep the highest score.
-                    if (scoredResult.containsKey(code)) {
-                        ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
-                        if (scoredTerm.score > score)
-                            continue;
-                    }
-                    scoredResult.put(code, new ScoredTerm(ref, score));
+
+					if (score > 0.) {
+						// Check for a previous match on this code for a different presentation.
+						// If already present, keep the highest score.
+						if (scoredResult.containsKey(code)) {
+							ScoredTerm scoredTerm = (ScoredTerm) scoredResult.get(code);
+							if (scoredTerm.score > score)
+								continue;
+						}
+						scoredResult.put(code, new ScoredTerm(ref, score));
+				    }
                 }
             }
             int num_concepts = refs.getResolvedConceptReferenceCount();
 
             knt = knt + num_concepts;
+            if (knt > 1000) break;
             System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms));
         }
         // Return an iterator that will sort the scored result.
@@ -1435,7 +1529,6 @@ public class SearchUtils {
 
 
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, boolean descriptionOnly) throws LBException {
-
         if (!descriptionOnly) return sortByScore(searchTerm, toSort, maxToReturn);
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
@@ -1451,23 +1544,31 @@ public class SearchUtils {
                 ResolvedConceptReference ref = refs.getResolvedConceptReference(i);
                 String code = ref.getConceptCode();
                 String name = ref.getEntityDescription().getContent();
-                float score = score(name, compareWords, true);
-                scoredResult.put(code, new ScoredTerm(ref, score));
+                float score = score(name, compareWords);
+                if (score > 0.) {
+                	scoredResult.put(code, new ScoredTerm(ref, score));
+			    }
             }
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
-    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn, boolean descriptionOnly, String algorithm) throws LBException {
-
+    protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn,
+                                                            boolean descriptionOnly, String algorithm) throws LBException {
         if (!descriptionOnly) return sortByScore(searchTerm, toSort, maxToReturn);
         // Determine the set of individual words to compare against.
+
         List<String> compareWords = toScoreWords(searchTerm);
+        List<String> compareCodes = new ArrayList<String>(compareWords.size());
+        String target = "";
         if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
 			for (int k=0; k<compareWords.size(); k++) {
 				String word = (String) compareWords.get(k);
-				compareWords.set(k, doubleMetaphone.encode(word));
+				String doubleMetaphonecode = doubleMetaphoneEncode(word);
+				compareCodes.set(k, doubleMetaphonecode);
+				target = target + doubleMetaphonecode;
+				if (k < compareWords.size()-1) target = target + " ";
 			}
 		}
 
@@ -1490,14 +1591,15 @@ public class SearchUtils {
                 String name = ref.getEntityDescription().getContent();
                 float score = (float) 0.0;//score(name, compareWords, true, i);
 				if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
-					score = score(name, compareWords, true, true);
+					score = score(name, compareWords, compareCodes, target, true);
 				} else {
-					score = score(name, compareWords, true);
+					score = score(name, compareWords);
 				}
-                scoredResult.put(code, new ScoredTerm(ref, score));
+				if (score > 0.) {
+                	scoredResult.put(code, new ScoredTerm(ref, score));
+			    }
             }
-
-            System.out.println("Run time (ms): assign scores took " + (System.currentTimeMillis() - ms));
+            System.out.println("Run time (ms): assigning scores took " + (System.currentTimeMillis() - ms));
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -1526,7 +1628,7 @@ public class SearchUtils {
      * @param searchRank
      * @return The score; a higher value indicates a stronger match.
      */
-    protected float score(String text, List<String> keywords, boolean isPreferred) {
+    protected float score(String text, List<String> keywords) {
         List<String> wordsToCompare = toScoreWords(text);
         float totalWords = wordsToCompare.size();
         float matchScore = 0;
@@ -1543,19 +1645,36 @@ public class SearchUtils {
 
 
     /* scoring method for DoubleMetaphoneLuceneQuery */
-    protected float score(String text, List<String> keyword_codes, boolean isPreferred, boolean fuzzy_match) {
+    protected float score(String text, List<String> keywords, List<String> keyword_codes, String target, boolean fuzzy_match) {
         List<String> wordsToCompare = toScoreWords(text);
         float totalWords = wordsToCompare.size();
         float matchScore = 0;
         float position = 0;
+        String s = "";
+        int k = 0;
         for (Iterator<String> words = wordsToCompare.listIterator(); words.hasNext(); position++) {
             String word = words.next();
-            if (fuzzy_match) word = doubleMetaphone.encode(word);
-            if (keyword_codes.contains(word))
-                matchScore += ((position / 10) + 1);
+            if (keywords.contains(word)) {
+                //matchScore += ((position / 10) + 1);
+                //matchScore = matchScore * 2;
+                matchScore = matchScore + (float) 10. * ((position / 10) + 1);
+                word = doubleMetaphoneEncode(word);
+
+			} else if (fuzzy_match) {
+				word = doubleMetaphoneEncode(word);
+				if (keyword_codes.contains(word)) {
+					matchScore += ((position / 10) + 1);
+				}
+			}
+			s = s + word;
+			if (k < wordsToCompare.size()-1) s = s + " ";
+			k++;
         }
+
+        if (s.indexOf(target) == -1) {
+			return (float) 0.0;
+		}
         float score = Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2));
-        System.out.println("(*) " + text + " -- " + score);
         return score;
             //Math.max(0, 100 + (matchScore / totalWords * 100) - (totalWords * 2))
                 //* (isPreferred ? 2 : 1);
@@ -1616,6 +1735,8 @@ public class SearchUtils {
 												   String sourceAbbr, String code,
 												   int maxToReturn, boolean searchInactive)
    {
+	    if (sourceAbbr == null || code == null) return new Vector();
+
 		LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 		versionOrTag.setVersion(version);
@@ -1685,10 +1806,31 @@ public class SearchUtils {
     }
 
 
+///////////////////////////////////
+
+	private static final boolean isInteger(final String s)
+	{
+		for (int x = 0; x < s.length(); x++) {
+			final char c = s.charAt(x);
+			if (x == 0 && (c == '-')) continue;  // negative
+			if ((c >= '0') && (c <= '9')) continue;  // 0 - 9
+			return false; // invalid
+		}
+		return true; // valid
+	}
+
+    protected String doubleMetaphoneEncode(String word) {
+		if (word == null || word.length() == 0) return word;
+		if (isInteger(word)) return word;
+		String firstChar = word.substring(0, 1).toUpperCase();
+		return firstChar + doubleMetaphone.encode(word);
+	}
+
+/////////////////////////////////////////////////////////////////
 
     public static void main(String[] args)
     {
-         String url = "http://lexevsapi.nci.nih.gov/lexevsapi50";
+         String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
          if (args.length == 1)
          {
              url = args[0];
