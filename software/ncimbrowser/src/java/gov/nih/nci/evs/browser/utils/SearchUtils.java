@@ -700,7 +700,7 @@ public class SearchUtils {
             return v;
         }
 
-        if (maxToReturn < 0) maxToReturn = 100;
+        if (maxToReturn <= 0) maxToReturn = 100;
         try {
             int iteration = 0;
             while (iterator.hasNext())
@@ -708,34 +708,38 @@ public class SearchUtils {
                 iteration++;
                 iterator = iterator.scroll(maxToReturn);
                 ResolvedConceptReferenceList rcrl = iterator.getNext();
-                ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
-                for (int i=0; i<rcra.length; i++)
-                {
-                    ResolvedConceptReference rcr = rcra[i];
-                    if (sortLight) {
-						org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-						ce.setEntityCode(rcr.getConceptCode());
-						ce.setEntityDescription(rcr.getEntityDescription());
-						if (code == null)
+                if (rcrl != null) {
+					ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
+					if (rcra != null && rcra.length > 0) {
+						for (int i=0; i<rcra.length; i++)
 						{
-							v.add(ce);
-						}
-						else
-						{
-							if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
-						}
-				    } else {
-                        Concept ce = rcr.getReferencedEntry();
-                        if (ce == null) {
-							System.out.println("rcr.getReferencedEntry() returns null???");
-						} else {
-							if (code == null) v.add(ce);
-							else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
-					    }
-					}
-					// to be modified:
-					//if (v.size() > 100) break;
-                }
+							ResolvedConceptReference rcr = rcra[i];
+							if (rcr != null) {
+								if (sortLight) {
+									org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
+									ce.setEntityCode(rcr.getConceptCode());
+									ce.setEntityDescription(rcr.getEntityDescription());
+									if (code == null)
+									{
+										v.add(ce);
+									}
+									else
+									{
+										if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+									}
+								} else {
+									Concept ce = rcr.getReferencedEntry();
+									if (ce == null) {
+										System.out.println("rcr.getReferencedEntry() returns null???");
+									} else {
+										if (code == null) v.add(ce);
+										else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+									}
+								}
+						    }
+					   }
+			       }
+		       }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1520,7 +1524,7 @@ public class SearchUtils {
             int num_concepts = refs.getResolvedConceptReferenceCount();
 
             knt = knt + num_concepts;
-            if (knt > 1000) break;
+            //if (knt > 1000) break;
             System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms));
         }
         // Return an iterator that will sort the scored result.
