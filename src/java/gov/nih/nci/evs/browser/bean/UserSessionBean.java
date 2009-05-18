@@ -167,6 +167,8 @@ public class UserSessionBean extends Object
         }
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
+
+        /*
         if (matchtype.compareToIgnoreCase("CUI") == 0) {
 			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
 			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText, source);
@@ -184,12 +186,15 @@ public class UserSessionBean extends Object
             //v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
             v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 		}
+		*/
+
+		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
-        request.getSession().setAttribute("matchtype", matchtype);
+        //request.getSession().setAttribute("matchtype", matchtype);
         request.getSession().setAttribute("source", source);
 
-        setSelectedMatchType(matchtype);
+        //setSelectedMatchType(matchtype);
         setSelectedSource(source);
 
         if (v != null && v.size() > 1)
@@ -216,7 +221,6 @@ public class UserSessionBean extends Object
 		}
         request.getSession().setAttribute("message", message);
         return "message";
-
     }
 
 
@@ -376,7 +380,7 @@ public class UserSessionBean extends Object
 	}
 
 	//////////////////////////////////////////////////////////////////////
-
+/*
 
 	private String selectedMatchType = null;
 	private List matchTypeList = null;
@@ -398,6 +402,9 @@ public class UserSessionBean extends Object
 	public void setSelectedMatchType(String selectedMatchType) {
 		this.selectedMatchType = selectedMatchType;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+System.out.println("************* setSelectedMatchType selectedMatchType");
+
 		request.getSession().setAttribute("selectedMatchType", selectedMatchType);
 	}
 
@@ -408,6 +415,9 @@ public class UserSessionBean extends Object
 				this.selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
 			}
 	    }
+
+System.out.println("************* getSelectedMatchType selectedMatchType");
+
 		return this.selectedMatchType;
 	}
 
@@ -417,6 +427,7 @@ public class UserSessionBean extends Object
 		setSelectedMatchType(matchType);
 	}
 
+*/
 
     ////////////////////////////////////////////////////////////////
     // concept sources
