@@ -55,6 +55,8 @@ import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.commonTypes.EntityDescription;
 
+import gov.nih.nci.evs.browser.common.Constants;
+
 
 
 
@@ -69,7 +71,7 @@ public class MetaTreeUtils {
     LexBIGService lbsvc_ = null;
 
 	private LexBIGService lbs;
-	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
+	//private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 
 	public static void main(String[] args) throws Exception {
 		MetaTreeUtils getRoots = new MetaTreeUtils();
@@ -149,7 +151,7 @@ public class MetaTreeUtils {
 	 * @throws LBException
 	 */
 	private ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
-		CodedNodeSet cns = lbs.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
+		CodedNodeSet cns = lbs.getCodingSchemeConcepts(Constants.CODING_SCHEME_NAME, null);
 		cns.restrictToProperties(null, new PropertyType[] {PropertyType.PRESENTATION}, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
 		ResolvedConceptReference[] refs = cns.resolveToList(null, null, new PropertyType[] {PropertyType.PRESENTATION}, -1).getResolvedConceptReference();
 
@@ -170,7 +172,7 @@ public class MetaTreeUtils {
      * @throws Exception
      */
     private ResolvedConceptReference resolveReferenceGraphForward(ResolvedConceptReference ref) throws Exception {
-        CodedNodeGraph cng = lbs.getNodeGraph(NCI_META_THESAURUS, null, null);
+        CodedNodeGraph cng = lbs.getNodeGraph(Constants.CODING_SCHEME_NAME, null, null);
         cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD", "hasSubtype"}), null);
         ResolvedConceptReference[] refs = cng.resolveAsList(ref, true, false, 1, 1, null, null, null, -1).getResolvedConceptReference();
         return refs[0];

@@ -33,6 +33,8 @@ import org.LexGrid.concepts.Concept;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import gov.nih.nci.evs.browser.utils.*;
 
+import gov.nih.nci.evs.browser.common.Constants;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -111,7 +113,7 @@ public class UserSessionBean extends Object
         quickLinkList = new ArrayList();
         quickLinkList.add(new SelectItem("Quick Links"));
         quickLinkList.add(new SelectItem("NCI Terminology Browser"));
-        quickLinkList.add(new SelectItem("NCI MetaThesaurus"));
+        //quickLinkList.add(new SelectItem(Constants.CODING_SCHEME_NAME));
         quickLinkList.add(new SelectItem("EVS Home"));
         quickLinkList.add(new SelectItem("NCI Terminology Resources"));
         return quickLinkList;
@@ -155,7 +157,7 @@ public class UserSessionBean extends Object
             }
         }
 
-        String scheme = "NCI MetaThesaurus";
+        String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
         String max_str = null;
         int maxToReturn = -1;//1000;
@@ -210,7 +212,7 @@ public class UserSessionBean extends Object
         else if (v != null && v.size() == 1)
         {
             request.getSession().setAttribute("singleton", "true");
-            request.getSession().setAttribute("dictionary", "NCI MetaThesaurus");
+            request.getSession().setAttribute("dictionary", Constants.CODING_SCHEME_NAME);
             Concept c = (Concept) v.elementAt(0);
             request.getSession().setAttribute("code", c.getEntityCode());
             return "concept_details";
@@ -343,7 +345,7 @@ public class UserSessionBean extends Object
 
 
 	public List getSourceList() {
-		String codingSchemeName = "NCI MetaThesaurus";
+		String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
 		sourceList = new ArrayList();
@@ -439,7 +441,7 @@ System.out.println("************* getSelectedMatchType selectedMatchType");
 
 
 	public List getConceptSourceList() {
-		String codingSchemeName = "NCI MetaThesaurus";
+		String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		String version = null;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String code = (String) request.getSession().getAttribute("code");
