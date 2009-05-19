@@ -144,8 +144,7 @@ public class UserSessionBean extends Object
 
         String source = (String) request.getParameter("source");
 
-        boolean debug = false;
-        if (debug) {
+        if (NCImBrowserProperties.debugOn) {
             try {
                 System.out.println(Utils.SEPARATOR);
                 System.out.println("* criteria: " + matchText);
