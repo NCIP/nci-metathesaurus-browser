@@ -694,49 +694,57 @@ public class SearchUtils {
     public static Vector resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn, String code, boolean sortLight)
     {
         Vector v = new Vector();
+        if (maxToReturn == 0) return v;
         if (iterator == null)
         {
             System.out.println("No match.");
             return v;
         }
-
-        if (maxToReturn <= 0) maxToReturn = 100;
+        int scroll_size = 200;
         try {
             int iteration = 0;
             while (iterator.hasNext())
             {
-                iteration++;
-                iterator = iterator.scroll(maxToReturn);
+                iterator = iterator.scroll(scroll_size);
                 ResolvedConceptReferenceList rcrl = iterator.getNext();
                 if (rcrl != null) {
 					ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
-					if (rcra != null && rcra.length > 0) {
+					if (rcra == null) break;
+					if (rcra.length > 0) {
 						for (int i=0; i<rcra.length; i++)
 						{
 							ResolvedConceptReference rcr = rcra[i];
-							if (rcr != null) {
-								if (sortLight) {
-									org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
-									ce.setEntityCode(rcr.getConceptCode());
-									ce.setEntityDescription(rcr.getEntityDescription());
-									if (code == null)
-									{
-										v.add(ce);
-									}
-									else
-									{
-										if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
-									}
-								} else {
-									Concept ce = rcr.getReferencedEntry();
-									if (ce == null) {
-										System.out.println("rcr.getReferencedEntry() returns null???");
-									} else {
-										if (code == null) v.add(ce);
-										else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
-									}
+							if (rcr == null) {
+								System.out.println("resolveIterator rcr == null???");
+								break;
+							}
+
+							if (sortLight) {
+								org.LexGrid.concepts.Concept ce = new org.LexGrid.concepts.Concept();
+								ce.setEntityCode(rcr.getConceptCode());
+								ce.setEntityDescription(rcr.getEntityDescription());
+								if (code == null)
+								{
+									v.add(ce);
 								}
-						    }
+								else
+								{
+									if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+								}
+							} else {
+								Concept ce = rcr.getReferencedEntry();
+								if (ce == null) {
+									System.out.println("resolveIterator rcr.getReferencedEntry() returns null???");
+									break;
+								} else {
+									if (code == null) v.add(ce);
+									else if (ce.getEntityCode().compareTo(code) != 0) v.add(ce);
+								}
+							}
+					   }
+					   iteration++;
+					   if (maxToReturn > 0 & iteration*scroll_size >= maxToReturn) {
+						   break;
 					   }
 			       }
 		       }
