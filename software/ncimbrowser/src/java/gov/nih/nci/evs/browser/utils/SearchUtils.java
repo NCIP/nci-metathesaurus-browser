@@ -1496,7 +1496,7 @@ public class SearchUtils {
             // Working in chunks of 100.
             long ms = System.currentTimeMillis();
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
-            System.out.println("Run time (ms): toSort.next(500) method call took " + (System.currentTimeMillis() - ms));
+            System.out.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
             ms = System.currentTimeMillis();
 
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
@@ -1533,7 +1533,7 @@ public class SearchUtils {
 
             knt = knt + num_concepts;
             //if (knt > 1000) break;
-            System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms));
+            System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -1594,7 +1594,7 @@ public class SearchUtils {
 
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
 
-            System.out.println("Run time (ms): toSort.next(500) took " + (System.currentTimeMillis() - ms));
+            System.out.println("Run time (ms): toSort.next() took " + (System.currentTimeMillis() - ms) + " millisec.");
 
             ms = System.currentTimeMillis();
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
@@ -1611,7 +1611,7 @@ public class SearchUtils {
                 	scoredResult.put(code, new ScoredTerm(ref, score));
 			    }
             }
-            System.out.println("Run time (ms): assigning scores took " + (System.currentTimeMillis() - ms));
+            System.out.println("Run time (ms): assigning scores took " + (System.currentTimeMillis() - ms) + " millisec.");
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -1834,8 +1834,11 @@ public class SearchUtils {
     protected String doubleMetaphoneEncode(String word) {
 		if (word == null || word.length() == 0) return word;
 		if (isInteger(word)) return word;
+		/*
 		String firstChar = word.substring(0, 1).toUpperCase();
 		return firstChar + doubleMetaphone.encode(word);
+		*/
+		return doubleMetaphone.encode(word);
 	}
 
 /////////////////////////////////////////////////////////////////
