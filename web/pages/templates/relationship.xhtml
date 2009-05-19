@@ -183,17 +183,6 @@
     %>
         <b><%=label%></b> <i>(none)</i>
     <%
-      } else if (concepts.size() == 1) {
-          String s = (String) concepts.get(0);
-          Vector ret_vec = DataUtils.parseData(s, "|");
-          String cName = (String) ret_vec.elementAt(0);
-          String cCode = (String) ret_vec.elementAt(1);
-    %>
-          <b><%=label%></b>
-          <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=cCode%>">
-            <%=cName%>
-          </a>
-    <%
       } else {
     %>
         <b><%=label%></b>
@@ -242,17 +231,6 @@
       {
     %>
         <b><%=label%></b> <i>(none)</i>
-    <%
-      } else if (concepts.size() == 1) {
-          String s = (String) concepts.get(0);
-          Vector ret_vec = DataUtils.parseData(s, "|");
-          String cName = (String) ret_vec.elementAt(0);
-          String cCode = (String) ret_vec.elementAt(1);
-    %>
-          <b><%=label%></b>
-          <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=cCode%>">
-            <%=cName%>
-          </a>
     <%
       } else {
     %>
