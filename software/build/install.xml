@@ -257,6 +257,7 @@
         <!-- copy over any other files you may need to configure your application -->
 
         <filterset id="embedded.filterset">
+            <filter token="debug.on" value="${debug.on}"/>
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
             <filter token="lg.config.file" value="${lg.config.file}"/>
             <filter token="ncimbrowser.conf.path" value="${application.data.path}/${ncimbrowser.conf.path}"/>
