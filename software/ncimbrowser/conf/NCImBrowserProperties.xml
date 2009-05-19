@@ -225,6 +225,11 @@
 
     <ConfigurableItems>
         <ConfigurableItem>
+                 <key>DEBUG_ON</key>
+                 <value>@debug.on@</value>
+        </ConfigurableItem>
+        
+        <ConfigurableItem>
                  <key>EVS_SERVICE_URL</key>
                  <value>@lex.evs.api.url@</value>
         </ConfigurableItem>
