@@ -115,7 +115,10 @@
 		<%
 		  }
 		%>
-	      </table>        
+	      </table>  
+	      
+	      <p></p>
+              <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=neighborhood_code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Return to Sources</a>
         
         <%@ include file="/pages/templates/nciFooter.html" %>
       </div>
