@@ -1980,10 +1980,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
             String term_source_code = (String) synonym_data.elementAt(3);
-            String key = term_name + term_source_code;
-            if (sortBy.compareTo("type") == 0) key = term_type + term_name;
-            if (sortBy.compareTo("source") == 0) key = term_source + term_name;
-            if (sortBy.compareTo("code") == 0) key = term_source_code + term_name;
+            String key = term_name + "|" + term_source_code;
+            if (sortBy.compareTo("type") == 0) key = term_type + "|" + term_name;
+            if (sortBy.compareTo("source") == 0) key = term_source + "|" + term_name + "|" + term_source_code;
+            if (sortBy.compareTo("code") == 0) key = term_source_code + "|" + term_name;
             hmap.put(key, s);
             key_vec.add(key);
 		}
