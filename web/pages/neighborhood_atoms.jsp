@@ -31,6 +31,7 @@
             String neighborhood_sab = (String) request.getParameter("sab");
             String neighborhood_code = (String) request.getParameter("code");
             String sort_by = (String) request.getParameter("sortBy");
+           
             if (sort_by == null) sort_by = "name";
 %>
               <h2>Source: <%=neighborhood_sab%></h2> 
@@ -40,13 +41,13 @@
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by != null && sort_by.compareTo("code") == 0) {
+              if (sort_by.compareTo("code") == 0) {
               %>
                  Code
               <%   
-              } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
+              } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=code">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=code">Code</a>
               <% 	
               }
               %>             
@@ -54,13 +55,13 @@
 
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by != null && sort_by.compareTo("type") == 0) {
+              if (sort_by.compareTo("type") == 0) {
               %>
                  Type
               <%   
-              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
+              } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=type">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=type">Type</a>
               <% 	
               }
               %>               
@@ -73,13 +74,13 @@
           <th class="dataTableHeader" scope="col" align="left">
               <%
               
-              if (sort_by == null || sort_by.compareTo("name") == 0) {
+              if (sort_by.compareTo("name") == 0) {
               %>
                  Term
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&&sab=<%=neighborhood_sab%>&&sortBy=name">Term</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=name">Term</a>
               <% 	
               }
               %>
@@ -92,9 +93,10 @@
 		  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
 		  if (neighborhood_synonyms == null) {
 		  	neighborhood_synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
-		  	neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
-		  	request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
 		  }
+		  neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
+		  request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
+		  
 		  for (int n=0; n<neighborhood_synonyms.size(); n++)
 		  {
 		    String s = (String) neighborhood_synonyms.elementAt(n);
