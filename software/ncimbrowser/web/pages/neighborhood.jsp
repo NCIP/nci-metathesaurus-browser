@@ -175,6 +175,14 @@
            <td>
 
 <b>Neighborhood</b>
+<%
+if (neighborhood_atoms.size() == 0) {
+%>
+<br/>
+<i>(No data is found.)</i>
+<%
+} else {
+%>
       <table class="dataTable" border="0">
       
         <tr>
@@ -293,6 +301,9 @@
 	 }
         %>
       </table>
+<%
+}      
+%>      
 </p>                   
           </td>
         </tr>        
@@ -321,6 +332,8 @@
     </div>
         
         
+      <p></p>
+      <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Return to Sources</a>
         
         
         
