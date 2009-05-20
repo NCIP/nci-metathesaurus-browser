@@ -1831,13 +1831,21 @@ public class SearchUtils {
 		return true; // valid
 	}
 
+	private static final boolean containsDigit(final String s)
+	{
+		for (int x = 0; x < s.length(); x++) {
+			final char c = s.charAt(x);
+			if (x == 0 && (c == '-')) continue;  // negative
+			if ((c >= '0') && (c <= '9')) return true;
+		}
+		return false; // does not contain digit
+	}
+
     protected String doubleMetaphoneEncode(String word) {
 		if (word == null || word.length() == 0) return word;
-		if (isInteger(word)) return word;
-		/*
-		String firstChar = word.substring(0, 1).toUpperCase();
-		return firstChar + doubleMetaphone.encode(word);
-		*/
+		//if (isInteger(word)) return word;
+		if (containsDigit(word)) return word;
+
 		return doubleMetaphone.encode(word);
 	}
 
