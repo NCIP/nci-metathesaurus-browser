@@ -53,6 +53,7 @@
             String type = null;
             String sortBy = null;
             String name = null;
+            Concept c = null;
 
             String singleton = (String) request.getSession().getAttribute("singleton");
             if (singleton != null && singleton.compareTo("true") == 0) {
@@ -61,6 +62,7 @@
             } else {
               dictionary = (String) request.getParameter("dictionary");
               code = (String) request.getParameter("code");
+              if (code == null) code = (String) request.getSession().getAttribute("code");
               type = (String) request.getParameter("type");
               sortBy = (String) request.getParameter("sortBy");
             }
@@ -74,7 +76,7 @@
             if (dictionary == null) {
                 dictionary = Constants.CODING_SCHEME_NAME;
             }  
-            Concept c = null;
+            
             name = "";
             if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
                //name = "The server encountered an internal error that prevented it from fulfilling this request.";
