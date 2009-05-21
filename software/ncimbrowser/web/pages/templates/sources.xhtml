@@ -15,7 +15,10 @@
             <td>
         <%
           Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+          
           String concept_src_id = concept_src.getEntityCode();
+          request.getSession().setAttribute("code", concept_src_id);
+           
           Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
           String source_str = "";
           for (int n=0; n<sources.size(); n++)
