@@ -101,6 +101,7 @@
               }
               %>
           </th>
+<!--          
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by != null && sort_by.compareTo("source") == 0) {
@@ -114,6 +115,12 @@
               }
               %>          
           </th>
+-->
+
+          <th class="dataTableHeader" scope="col" align="left">
+                 Source
+          </th>
+          
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by != null && sort_by.compareTo("type") == 0) {
@@ -226,6 +233,7 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>
           </th>
+<!--          
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by2 != null && sort_by2.compareTo("source") == 0) {
@@ -239,6 +247,11 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>          
           </th>
+-->  
+          <th class="dataTableHeader" scope="col" align="left">
+                 Source
+          </th>
+          
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by2 != null && sort_by2.compareTo("type") == 0) {
