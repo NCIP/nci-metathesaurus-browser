@@ -2131,7 +2131,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
 				Concept c = ac.getReferencedEntry();
-				Vector synonyms = getSynonyms(c);
+				Vector synonyms = getSynonyms(c, sab);
 				for (int j=0; j<synonyms.size(); j++) {
 					String t = (String) synonyms.elementAt(j);
 					t = t + "|" + c.getEntityCode() + "|" + associationName;
