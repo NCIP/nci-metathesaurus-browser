@@ -198,6 +198,10 @@ public class UserSessionBean extends Object
         //setSelectedMatchType(matchtype);
         setSelectedSource(source);
 
+        request.getSession().removeAttribute("neighborhood_synonyms");
+        request.getSession().removeAttribute("neighborhood_atoms");
+
+
         if (v != null && v.size() > 1)
         {
             request.getSession().setAttribute("search_results", v);
