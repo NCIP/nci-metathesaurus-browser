@@ -18,16 +18,28 @@
         <tr>
             <td>
         <%
-          String source_str = "";
           for (int n=0; n<sources.size(); n++)
           {
               String s = (String) sources.elementAt(n);
+              if (s.compareTo("NCI") == 0) {
               %>
 	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
-          }  
+              }
+          }
+          for (int n=0; n<sources.size(); n++)
+          {
+              String s = (String) sources.elementAt(n);
+              if (s.compareTo("NCI") != 0) {
+              %>
+	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+              }
+          }          
         %>
             </td>
         </tr>
