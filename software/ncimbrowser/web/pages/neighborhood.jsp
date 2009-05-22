@@ -53,6 +53,13 @@
   if (neighborhood_sab == null) {
     neighborhood_sab = (String) request.getParameter("sab");
   }
+  
+  Vector src_vec = new Vector();
+  for (int k=0; k<source_vec.size(); k++) {
+      String src = (String) source_vec.elementAt(k);
+      if (src.compareTo(neighborhood_sab) != 0) src_vec.add(src);
+  }
+  
 
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
 
@@ -322,23 +329,38 @@ if (neighborhood_atoms.size() == 0) {
 %>      
 </p>                   
           </td>
-        </tr>        
+        </tr> 
+        <%
+        if (src_vec.size() > 0) {
+        %>
         <tr>
            <td styleClass="textbody">
            Switch to: &nbsp;
            
         <%
-          
-          
-          for (int n=0; n<source_vec.size(); n++)
+          for (int n=0; n<src_vec.size(); n++)
           {
-              String s = (String) source_vec.elementAt(n);
+              String s = (String) src_vec.elementAt(n);
+              if (s.compareTo("NCI") == 0) {
               %>
 	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
-          }  
+	      }
+          } 
+          for (int n=0; n<src_vec.size(); n++)
+          {
+              String s = (String) src_vec.elementAt(n);
+              if (s.compareTo("NCI") != 0) {
+              %>
+	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+	      }
+          }       
+        }
         %>           
 <!--           
                 <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
@@ -365,7 +387,7 @@ if (neighborhood_atoms.size() == 0) {
         
         
       <p></p>
-      <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Return to Sources</a>
+      Return to <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Sources</a>
         
         
         
