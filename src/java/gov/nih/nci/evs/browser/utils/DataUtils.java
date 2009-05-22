@@ -1996,10 +1996,20 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return v;
 	}
 
-    public Vector sortSynonymData(Vector synonyms, String sortBy) {
-		if (sortBy == null) sortBy = "name";
+
+
+/*
+    public Vector sortSynonymDataByRel(Vector synonyms) {
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
+		String key = null;
+
         for (int n=0; n<synonyms.size(); n++)
         {
             String s = (String) synonyms.elementAt(n);
@@ -2010,13 +2020,16 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             String term_source_code = (String) synonym_data.elementAt(3);
             String cui = (String) synonym_data.elementAt(4);
             String rel = (String) synonym_data.elementAt(5);
-            String key = term_name + term_source_code;
-            if (sortBy.compareTo("type") == 0) key = term_type + term_name;
-            if (sortBy.compareTo("source") == 0) key = term_source + term_name;
-            if (sortBy.compareTo("code") == 0) key = term_source_code + term_name;
-            if (sortBy.compareTo("rel") == 0) key = rel + term_source_code + term_name;
-            if (sortBy.compareTo("cui") == 0) key = cui + term_source_code + term_name;
 
+			String category = "0";
+			if (parent_asso_vec.contains(rel)) category = "1";
+			else if (child_asso_vec.contains(rel)) category = "2";
+			else if (bt_vec.contains(rel)) category = "3";
+			else if (nt_vec.contains(rel)) category = "4";
+			else if (sibling_asso_vec.contains(rel)) category = "5";
+			else category = "6";
+
+			key = category + rel + term_name + term_source_code;
             hmap.put(key, s);
             key_vec.add(key);
 		}
@@ -2028,8 +2041,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		}
 		return v;
 	}
-
-
+*/
 
     public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
     {
@@ -2117,8 +2129,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	    return v;
 	}
 */
-
+/*
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+
 		Vector w = new Vector();
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
 		Set keyset = hmap.keySet();
@@ -2142,4 +2155,87 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		SortUtils.quickSort(w);
 		return w;
      }
+*/
+	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+
+		Vector w = new Vector();
+		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		Set keyset = hmap.keySet();
+		Iterator it = keyset.iterator();
+		while (it.hasNext())
+		{
+			String rel = (String) it.next();
+			String category = "Other";
+			if (parent_asso_vec.contains(rel)) category = "Parent";
+			else if (child_asso_vec.contains(rel)) category = "Child";
+			else if (bt_vec.contains(rel)) category = "Broader";
+			else if (nt_vec.contains(rel)) category = "Narrower";
+			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+			Vector v = (Vector) hmap.get(rel);
+			for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				EntityDescription ed = ac.getEntityDescription();
+				Concept c = ac.getReferencedEntry();
+				Vector synonyms = getSynonyms(c, sab);
+				for (int j=0; j<synonyms.size(); j++) {
+					String t = (String) synonyms.elementAt(j);
+					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+					w.add(t);
+				}
+			}
+		}
+		SortUtils.quickSort(w);
+		return w;
+     }
+
+     public String getRelationshipCode(String id) {
+		 if (id.compareTo("Parent") == 0) return "1";
+		 else if (id.compareTo("Child") == 0) return "2";
+		 else if (id.compareTo("Broader") == 0) return "3";
+		 else if (id.compareTo("Narrower") == 0) return "4";
+		 else if (id.compareTo("Sibling") == 0) return "5";
+		 else return "6";
+	 }
+
+    public Vector sortSynonymData(Vector synonyms, String sortBy) {
+		if (sortBy == null) sortBy = "name";
+		HashMap hmap = new HashMap();
+		Vector key_vec = new Vector();
+        for (int n=0; n<synonyms.size(); n++)
+        {
+            String s = (String) synonyms.elementAt(n);
+            Vector synonym_data = DataUtils.parseData(s, "|");
+            String term_name = (String) synonym_data.elementAt(0);
+            String term_type = (String) synonym_data.elementAt(1);
+            String term_source = (String) synonym_data.elementAt(2);
+            String term_source_code = (String) synonym_data.elementAt(3);
+            String cui = (String) synonym_data.elementAt(4);
+            String rel = (String) synonym_data.elementAt(5);
+            String rel_type = (String) synonym_data.elementAt(6);
+            String key = term_name + term_source_code;
+            if (sortBy.compareTo("type") == 0) key = term_type + term_name;
+            if (sortBy.compareTo("source") == 0) key = term_source + term_name;
+            if (sortBy.compareTo("code") == 0) key = term_source_code + term_name;
+            if (sortBy.compareTo("rel") == 0) key = rel + term_name + term_source_code;
+            if (sortBy.compareTo("cui") == 0) key = cui + term_name + term_source_code;
+
+            if (sortBy.compareTo("rel_type") == 0) key = getRelationshipCode(rel_type) + rel + term_name + term_source_code;
+
+            hmap.put(key, s);
+            key_vec.add(key);
+		}
+		key_vec = SortUtils.quickSort(key_vec);
+		Vector v = new Vector();
+		for (int i=0; i<key_vec.size(); i++) {
+			String s = (String) key_vec.elementAt(i);
+			v.add((String) hmap.get(s));
+		}
+		return v;
+	}
 }

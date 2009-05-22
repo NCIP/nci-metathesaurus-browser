@@ -205,13 +205,26 @@ if (neighborhood_atoms.size() == 0) {
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
+              if (sort_by2 == null || sort_by2.compareTo("rel_type") == 0) {
               %>
                  Relationship
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel_type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a>
+              <% 	
+              }
+              %>
+          </th>        
+          <th class="dataTableHeader" scope="col" align="left">
+              <%
+              if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
+              %>
+                 Rel. Name
+              <%   
+              } else {
+              %>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Name</a>
               <% 	
               }
               %>
@@ -304,10 +317,12 @@ if (neighborhood_atoms.size() == 0) {
 		    String term_source_code = (String) synonym_data.elementAt(3);
 		    String cui = (String) synonym_data.elementAt(4);
 		    String rel = (String) synonym_data.elementAt(5);
+		    String rel_type = (String) synonym_data.elementAt(6);
 		    
 		    String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
 		%>
 		    <tr class="<%=rowColor%>">
+		      <td class="dataCellText"><%=rel_type%></td>
 		      <td class="dataCellText"><%=rel%></td>
 		      <td class="dataCellText">
 			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>">
