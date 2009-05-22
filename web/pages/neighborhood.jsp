@@ -324,7 +324,7 @@ if (neighborhood_atoms.size() == 0) {
            <td>
                 <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
            
-		     <h:outputLabel id="conceptSourceLabel" value="Change to Neighborhood in" styleClass="textbody">
+		     <h:outputLabel id="conceptSourceLabel" value="Change source to " styleClass="textbody">
 			 <h:selectOneMenu id="concept_source"
 			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
 			    styleClass="textbody">

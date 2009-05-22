@@ -1,43 +1,24 @@
 <%
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
   {
+          Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+          String concept_src_id = concept_src.getEntityCode();
+          request.getSession().setAttribute("code", concept_src_id);
+          Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
     %>
     <h2>
-    Sources
+      Sources 
       <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
 	'_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 	<img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-      </a>    
+      </a>
     </h2>
     <div>
       <table class="dataTable" border="0">
         <tr>
-            <td>
-        <%
-          Concept concept_src = (Concept) request.getSession().getAttribute("concept");
-          
-          String concept_src_id = concept_src.getEntityCode();
-          request.getSession().setAttribute("code", concept_src_id);
-           
-          Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
-          String source_str = "";
-          for (int n=0; n<sources.size(); n++)
-          {
-              String s = (String) sources.elementAt(n);
-              %>
-	      <a href="<%= request.getContextPath() %>/atoms.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&sab=<%=s%>">
-	         <%=s%>
-	      </a>&nbsp;
-	      <%
-          }  
-        %>
-            </td>
-        </tr>
-        <tr>
            <td>
                 <FORM NAME="neighborhoodForm" METHOD="POST" CLASS="neighborhood-form" >
-           
-		     <h:outputLabel id="conceptSourceLabel" value="View Neighborhood in" styleClass="textbody">
+	             <h:outputLabel id="conceptSourceLabel" value="View Concept Information in" styleClass="textbody">
 			 <h:selectOneMenu id="concept_source"
 			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
 			    styleClass="textbody">
