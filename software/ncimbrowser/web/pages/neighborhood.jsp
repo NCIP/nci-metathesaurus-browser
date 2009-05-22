@@ -45,6 +45,9 @@
           request.getSession().removeAttribute("neighborhood_atoms");
           request.getSession().removeAttribute("neighborhood_synonyms");
   }
+  
+  Vector source_vec = new DataUtils().getSources("NCI MetaThesaurus", null, null, code);
+  
 	  
   String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
   if (neighborhood_sab == null) {
@@ -78,7 +81,7 @@
     
 %>
         
-    <h2>Neighborhood of `<%=concept_neighborhood_name%>' in <%=neighborhood_sab%></h2>
+    <h2>Concept information of `<%=concept_neighborhood_name%>' from <%=neighborhood_sab%></h2>
     <div>
       <table class="dataTable" border="0">
         <tr>
@@ -321,10 +324,26 @@ if (neighborhood_atoms.size() == 0) {
           </td>
         </tr>        
         <tr>
-           <td>
+           <td styleClass="textbody">
+           Switch to: &nbsp;
+           
+        <%
+          
+          
+          for (int n=0; n<source_vec.size(); n++)
+          {
+              String s = (String) source_vec.elementAt(n);
+              %>
+	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+          }  
+        %>           
+<!--           
                 <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
            
-		     <h:outputLabel id="conceptSourceLabel" value="Change source to " styleClass="textbody">
+		     <h:outputLabel id="conceptSourceLabel" value="Switch to " styleClass="textbody">
 			 <h:selectOneMenu id="concept_source"
 			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
 			    styleClass="textbody">
@@ -338,7 +357,7 @@ if (neighborhood_atoms.size() == 0) {
 		        alt="View Neighborhood">
 		     </h:commandButton>
 	        </FORM>
-		     
+-->		     
            </td>
         </tr>
       </table>
