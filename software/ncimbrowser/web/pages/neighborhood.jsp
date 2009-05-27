@@ -5,8 +5,6 @@
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 
-
-
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
 %>
@@ -47,9 +45,9 @@
   }
   
   Vector source_vec = new DataUtils().getSources("NCI MetaThesaurus", null, null, code);
-  
 	  
   String neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
+  
   if (neighborhood_sab == null) {
     neighborhood_sab = (String) request.getParameter("sab");
   }
@@ -220,11 +218,11 @@ if (neighborhood_atoms.size() == 0) {
               <%
               if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
               %>
-                 Rel. Name
+                 Rel. Label
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Name</a>
+              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Label</a>
               <% 	
               }
               %>
