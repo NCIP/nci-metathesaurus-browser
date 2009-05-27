@@ -1771,6 +1771,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
     }
 
     public static Vector getSynonyms(Concept concept, String sab) {
+
         if (concept == null) return null;
         Vector v = new Vector();
         Presentation[] properties = concept.getPresentation();
@@ -1810,10 +1811,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				Source src = sources[0];
 				term_source = src.getContent();
 			}
+			String t = null;
 			if (sab == null) {
-			    v.add(term_name + "|" + term_type + "|" + term_source + "|" + term_source_code);
+			    t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
+			    v.add(t);
 			} else if (term_source != null && sab.compareTo(term_source) == 0) {
-				v.add(term_name + "|" + term_type + "|" + term_source + "|" + term_source_code);
+				t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
+				v.add(t);
 			}
         }
         SortUtils.quickSort(v);
@@ -1972,18 +1976,20 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
+		String delim = "  ";
         for (int n=0; n<synonyms.size(); n++)
         {
-            String s = (String) synonyms.elementAt(n);
+			String s = (String) synonyms.elementAt(n);
             Vector synonym_data = DataUtils.parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
             String term_source_code = (String) synonym_data.elementAt(3);
-            String key = term_name + "|" + term_source_code;
-            if (sortBy.compareTo("type") == 0) key = term_type + "|" + term_name;
-            if (sortBy.compareTo("source") == 0) key = term_source + "|" + term_name + "|" + term_source_code;
-            if (sortBy.compareTo("code") == 0) key = term_source_code + "|" + term_name;
+            String key = term_name + delim + term_source + delim + term_source_code + delim + term_type;
+            if (sortBy.compareTo("type") == 0) key = term_type + delim + term_name + delim + term_source + delim + term_source_code;
+            if (sortBy.compareTo("source") == 0) key = term_source + delim + term_name + delim + term_source_code + delim + term_type;
+            if (sortBy.compareTo("code") == 0) key = term_source_code + delim + term_name + delim + term_source + delim + term_type;
+
             hmap.put(key, s);
             key_vec.add(key);
 		}
@@ -2178,16 +2184,20 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
 			Vector v = (Vector) hmap.get(rel);
+			HashSet hset = new HashSet();
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
 				Concept c = ac.getReferencedEntry();
-				Vector synonyms = getSynonyms(c, sab);
-				for (int j=0; j<synonyms.size(); j++) {
-					String t = (String) synonyms.elementAt(j);
-					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
-					w.add(t);
-				}
+				if (!hset.contains(c.getEntityCode())) {
+					hset.add(c.getEntityCode());
+					Vector synonyms = getSynonyms(c, sab);
+					for (int j=0; j<synonyms.size(); j++) {
+						String t = (String) synonyms.elementAt(j);
+						t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+						w.add(t);
+					}
+			    }
 			}
 		}
 		SortUtils.quickSort(w);
@@ -2207,6 +2217,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
+		String delim = "  ";
         for (int n=0; n<synonyms.size(); n++)
         {
             String s = (String) synonyms.elementAt(n);
@@ -2218,14 +2229,15 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             String cui = (String) synonym_data.elementAt(4);
             String rel = (String) synonym_data.elementAt(5);
             String rel_type = (String) synonym_data.elementAt(6);
-            String key = term_name + term_source_code;
-            if (sortBy.compareTo("type") == 0) key = term_type + term_name;
-            if (sortBy.compareTo("source") == 0) key = term_source + term_name;
-            if (sortBy.compareTo("code") == 0) key = term_source_code + term_name;
-            if (sortBy.compareTo("rel") == 0) key = rel + term_name + term_source_code;
-            if (sortBy.compareTo("cui") == 0) key = cui + term_name + term_source_code;
 
-            if (sortBy.compareTo("rel_type") == 0) key = getRelationshipCode(rel_type) + rel + term_name + term_source_code;
+            String rel_type_str = getRelationshipCode(rel_type);
+            String key = term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + cui + delim + rel + delim + rel_type_str;
+            if (sortBy.compareTo("type") == 0) key = term_type +delim + term_name + delim + term_source + delim + term_source_code + delim + cui + delim + rel + delim + rel_type_str;
+            if (sortBy.compareTo("source") == 0) key = term_source +delim + term_name + delim + term_type + delim + cui + delim + rel + delim + rel_type_str;
+            if (sortBy.compareTo("code") == 0) key = term_source_code + delim + term_name + delim + term_type + delim + term_source + delim + cui + delim + rel + delim + rel_type_str;
+            if (sortBy.compareTo("rel") == 0) key = rel + term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + cui + delim + rel_type_str;
+            if (sortBy.compareTo("cui") == 0) key = cui + term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + rel + delim + rel_type_str;
+            if (sortBy.compareTo("rel_type") == 0) key = rel_type_str + delim + rel + delim +  term_name + delim + term_type + delim + term_source + delim + term_source_code + delim + cui;
 
             hmap.put(key, s);
             key_vec.add(key);
