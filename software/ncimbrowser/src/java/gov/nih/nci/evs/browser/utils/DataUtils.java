@@ -2164,6 +2164,24 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return w;
      }
 */
+    private String findRepresentativeTerm(Concept c, String sab) {
+		Vector synonyms = getSynonyms(c, sab);
+		if(synonyms == null || synonyms.size() == 0) return null;
+		//String c_name = c.getEntityDescription().getContent();
+		String t = (String) synonyms.elementAt(0);
+		for (int j=0; j<synonyms.size(); j++) {
+			//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
+			t = (String) synonyms.elementAt(j);
+			Vector<String> w = parseData(t, "|");
+			/*
+			String term_name = w.elementAt(0);
+			if (term_name.compareTo(c_name) == 0) return t;
+			*/
+			String term_type = w.elementAt(1);
+			if (term_type.compareTo("SY") != 0) return t;
+		}
+		return t;
+	}
 
 
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
@@ -2196,6 +2214,16 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				Concept c = ac.getReferencedEntry();
 				if (!hset.contains(c.getEntityCode())) {
 					hset.add(c.getEntityCode());
+					String t = findRepresentativeTerm(c, sab);
+					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+					w.add(t);
+
+					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+						if (rel_hset.contains(c.getEntityCode())) {
+							rel_hset.add(c.getEntityCode());
+						}
+					}
+					/*
 					Vector synonyms = getSynonyms(c, sab);
 					for (int j=0; j<synonyms.size(); j++) {
 						//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
@@ -2209,6 +2237,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 							}
 						}
 					}
+					*/
 			    }
 			}
 		}
