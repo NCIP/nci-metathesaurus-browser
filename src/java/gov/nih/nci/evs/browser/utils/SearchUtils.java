@@ -1040,6 +1040,7 @@ public class SearchUtils {
         matchText = matchText.trim();
         if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0)
         {
+			/*
 			//KLO 032409
 			if (!isNumber(matchText)) {
 				if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
@@ -1051,6 +1052,7 @@ public class SearchUtils {
 		    {
 				return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
 			}
+			*/
 		}
 
 		else if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
