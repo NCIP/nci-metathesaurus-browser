@@ -18,7 +18,7 @@
               String s = (String) sources.elementAt(n);
               if (s.compareTo("NCI") == 0) {
               %>
-	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
+	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
@@ -29,7 +29,7 @@
               String s = (String) sources.elementAt(n);
               if (s.compareTo("NCI") != 0) {
               %>
-	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
+	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
@@ -126,7 +126,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") == 0) {
               %>
-	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=s%>">
+	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
@@ -137,7 +137,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") != 0) {
               %>
-	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=s%>">
+	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=s%>">
 	         <%=s%>
 	      </a>&nbsp;
 	      <%
@@ -161,7 +161,7 @@
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=name&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Term</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy=name&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Term</a>
               <% 	
               }
               %>
@@ -175,7 +175,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=source&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Source</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy=source&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Source</a>
               <% 	
               }
               %>          
@@ -199,7 +199,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=type&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Type</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy=type&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Type</a>
               <% 	
               }
               %>               
@@ -216,7 +216,7 @@
               <%   
               } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy=code&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy=code&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Code</a>
               <% 	
               }
               %>             
@@ -271,7 +271,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel_type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=rel_type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a>
               <% 	
               }
               %>
@@ -284,7 +284,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Label</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Label</a>
               <% 	
               }
               %>
@@ -297,7 +297,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=cui&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">CUI</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=cui&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">CUI</a>
               <% 	
               }
               %>
@@ -311,7 +311,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=name&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Term</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=name&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Term</a>
               <% 	
               }
               %>
@@ -325,7 +325,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("source") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=source&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Source</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=source&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Source</a>
               <% 	
               }
               %>          
@@ -343,7 +343,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("type") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Type</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Type</a>
               <% 	
               }
               %>               
@@ -360,7 +360,7 @@ if (neighborhood_atoms.size() == 0) {
               <%   
               } else if ((sort_by2 == null) || sort_by2 != null && sort_by2.compareTo("code") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?sortBy2=code&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Code</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=code&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Code</a>
               <% 	
               }
               %>             
@@ -390,10 +390,10 @@ if (neighborhood_atoms.size() == 0) {
 			  </a>		      
 		      </td>
 		      
-		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
 		      <td class="dataCellText"><%=term_source%></td>
 		      <td class="dataCellText"><%=term_type%></td>
-		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
 		    </tr>
 		<%
 	 }

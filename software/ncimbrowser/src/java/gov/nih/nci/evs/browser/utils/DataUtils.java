@@ -2164,6 +2164,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return w;
      }
 */
+
+
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
@@ -2172,9 +2174,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
 
 		Vector w = new Vector();
+		HashSet hset = new HashSet();
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
+		HashSet rel_hset = new HashSet();
 		while (it.hasNext())
 		{
 			String rel = (String) it.next();
@@ -2184,9 +2188,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			else if (bt_vec.contains(rel)) category = "Broader";
 			else if (nt_vec.contains(rel)) category = "Narrower";
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
-
 			Vector v = (Vector) hmap.get(rel);
-			HashSet hset = new HashSet();
+
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
@@ -2195,15 +2198,41 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 					hset.add(c.getEntityCode());
 					Vector synonyms = getSynonyms(c, sab);
 					for (int j=0; j<synonyms.size(); j++) {
+						//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
 						String t = (String) synonyms.elementAt(j);
 						t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
 						w.add(t);
+
+						if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+							if (rel_hset.contains(c.getEntityCode())) {
+								rel_hset.add(c.getEntityCode());
+							}
+						}
 					}
 			    }
 			}
 		}
-		SortUtils.quickSort(w);
-		return w;
+
+        Vector u = new Vector();
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+			String associationName = v.elementAt(5);
+			if (associationName.compareTo("RO") != 0) {
+				u.add(s);
+			} else {
+				String associationTargetCode = v.elementAt(4);
+				if (!rel_hset.contains(associationTargetCode)) {
+					u.add(s);
+				}
+			}
+		}
+
+		//SortUtils.quickSort(w);
+		//return w;
+		SortUtils.quickSort(u);
+		return u;
+
      }
 
      public String getRelationshipCode(String id) {
