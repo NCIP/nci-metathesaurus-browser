@@ -1,3 +1,10 @@
+<%
+  Concept concept_typelinks = (Concept) request.getSession().getAttribute("concept");
+  String concept_typelinks_id = concept_typelinks.getEntityCode();
+  //request.getSession().setAttribute("code", concept_src_id);
+  Vector sources_typelinks = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_typelinks_id);
+%>
+
 <table width="700px" cellspacing="0" cellpadding="0" border="0" class="tabTable">
   <tr>
     <%
@@ -131,11 +138,18 @@
           
           
     <td align="right" valign="top">
-        <input onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');"
-                  type="button"
-                 class="redButton"
-                 value="View in Hierarchy"
-        />&nbsp;&nbsp;
+    <%
+        if (sources_typelinks.contains("NCI")) {
+     %>   
+		<input onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');"
+			  type="button"
+			 class="redButton"
+			 value="View in Hierarchy"
+		/>&nbsp;&nbsp;
+	<%	
+        }
+        %>
+        
         <input onClick="javascript:window.open('<%=request.getContextPath() %>/pages/concept_history.jsf?dictionary=<%=scheme%>&code=<%=id%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');"
                   type="button"
                  class="redButton"

@@ -83,16 +83,46 @@
   }   
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
-    
 %>
-        
     <h2>Concept information of `<%=concept_neighborhood_name%>' from <%=neighborhood_sab%></h2>
     <div>
       <table class="dataTable" border="0">
+        <%
+        if (src_vec.size() > 0) {
+        %>
+        <tr>
+           <td styleClass="textbody">
+           Switch to: &nbsp;
+        <%
+          for (int n=0; n<src_vec.size(); n++)
+          {
+              String s = (String) src_vec.elementAt(n);
+              if (s.compareTo("NCI") == 0) {
+              %>
+	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+	      }
+          } 
+          for (int n=0; n<src_vec.size(); n++)
+          {
+              String s = (String) src_vec.elementAt(n);
+              if (s.compareTo("NCI") != 0) {
+              %>
+	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+	         <%=s%>
+	      </a>&nbsp;
+	      <%
+	      }
+          }       
+        }
+        %>           
+           </td>
+        </tr>
         <tr>
            <td>
-
-<b>Synonyms</b>
+<br/><b>Synonyms</b>
       <table class="dataTable" border="0">
       
         <tr>
@@ -342,58 +372,6 @@ if (neighborhood_atoms.size() == 0) {
 %>      
 </p>                   
           </td>
-        </tr> 
-        <%
-        if (src_vec.size() > 0) {
-        %>
-        <tr>
-           <td styleClass="textbody">
-           Switch to: &nbsp;
-           
-        <%
-          for (int n=0; n<src_vec.size(); n++)
-          {
-              String s = (String) src_vec.elementAt(n);
-              if (s.compareTo("NCI") == 0) {
-              %>
-	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
-	         <%=s%>
-	      </a>&nbsp;
-	      <%
-	      }
-          } 
-          for (int n=0; n<src_vec.size(); n++)
-          {
-              String s = (String) src_vec.elementAt(n);
-              if (s.compareTo("NCI") != 0) {
-              %>
-	      <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
-	         <%=s%>
-	      </a>&nbsp;
-	      <%
-	      }
-          }       
-        }
-        %>           
-<!--           
-                <FORM NAME="changeNeighborhoodForm" METHOD="POST" CLASS="change_neighborhood-form" >
-           
-		     <h:outputLabel id="conceptSourceLabel" value="Switch to " styleClass="textbody">
-			 <h:selectOneMenu id="concept_source"
-			    value="#{userSessionBean.selectedConceptSource}" valueChangeListener="#{userSessionBean.conceptSourceSelectionChanged}"
-			    styleClass="textbody">
-			    <f:selectItems value="#{userSessionBean.conceptSourceList}"/>
-			 </h:selectOneMenu>
-		     </h:outputLabel> 
-		     <h:commandButton
-		        id="ok"
-		        value="Ok"
-		        action="#{userSessionBean.viewNeighborhoodAction}"
-		        alt="View Neighborhood">
-		     </h:commandButton>
-	        </FORM>
--->		     
-           </td>
         </tr>
       </table>
     </div>
