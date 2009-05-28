@@ -1708,7 +1708,8 @@ public class SearchUtils {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean containsSpecialChars(String s){
-        String escapedChars = "/.|!(){}[]^\"~*?;-_";
+        //String escapedChars = "/.|!(){}[]^\"~*?;-_";
+        String escapedChars = "/.|!(){}[]^\"~?;-_";
         for (int i=0; i<escapedChars.length(); i++)
         {
             char c = escapedChars.charAt(i);

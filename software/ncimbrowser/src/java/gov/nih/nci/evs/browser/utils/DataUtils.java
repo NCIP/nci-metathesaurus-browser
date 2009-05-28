@@ -1442,23 +1442,25 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
             if (roleList.size() > 0) {
-                        SortUtils.quickSort(roleList);
+                SortUtils.quickSort(roleList);
 		    }
 
             if (associationList.size() > 0) {
-                        SortUtils.quickSort(associationList);
+				//KLO, 052909
+				associationList = removeRedundantRelationships(associationList, "RO");
+                SortUtils.quickSort(associationList);
             }
 
             if (siblingList.size() > 0) {
-                        SortUtils.quickSort(siblingList);
+                SortUtils.quickSort(siblingList);
             }
 
             if (btList.size() > 0) {
-                        SortUtils.quickSort(btList);
+                SortUtils.quickSort(btList);
             }
 
             if (ntList.size() > 0) {
-                        SortUtils.quickSort(ntList);
+                SortUtils.quickSort(ntList);
             }
 
             map.put(TYPE_ROLE, roleList);
@@ -2249,5 +2251,34 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			v.add((String) hmap.get(s));
 		}
 		return v;
+	}
+
+    //KLO, 052909
+	private ArrayList removeRedundantRelationships(ArrayList associationList, String rel) {
+		ArrayList a = new ArrayList();
+		HashSet target_set = new HashSet();
+		for (int i=0; i<associationList.size(); i++) {
+			String s = (String) associationList.get(i);
+			Vector<String> w = parseData(s, "|");
+			String associationName = w.elementAt(0);
+			if (associationName.compareTo(rel) != 0) {
+				String associationTargetCode = w.elementAt(2);
+				target_set.add(associationTargetCode);
+			}
+		}
+		for (int i=0; i<associationList.size(); i++) {
+			String s = (String) associationList.get(i);
+			Vector<String> w = parseData(s, "|");
+			String associationName = w.elementAt(0);
+			if (associationName.compareTo(rel) != 0) {
+				a.add(s);
+			} else {
+				String associationTargetCode = w.elementAt(2);
+				if (!target_set.contains(associationTargetCode)) {
+					a.add(s);
+				}
+			}
+		}
+        return a;
 	}
 }
