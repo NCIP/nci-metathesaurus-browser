@@ -140,6 +140,7 @@ import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
 import org.LexGrid.concepts.Entity;
 
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -2167,20 +2168,20 @@ System.out.println("WARNING: property_type not found -- " + property_type);
     private String findRepresentativeTerm(Concept c, String sab) {
 		Vector synonyms = getSynonyms(c, sab);
 		if(synonyms == null || synonyms.size() == 0) return null;
+		return NCImBrowserProperties.getHighestTermGroupRank(synonyms);
+		/*
 		//String c_name = c.getEntityDescription().getContent();
 		String t = (String) synonyms.elementAt(0);
 		for (int j=0; j<synonyms.size(); j++) {
 			//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
 			t = (String) synonyms.elementAt(j);
 			Vector<String> w = parseData(t, "|");
-			/*
-			String term_name = w.elementAt(0);
-			if (term_name.compareTo(c_name) == 0) return t;
-			*/
+
 			String term_type = w.elementAt(1);
 			if (term_type.compareTo("SY") != 0) return t;
 		}
 		return t;
+		*/
 	}
 
 

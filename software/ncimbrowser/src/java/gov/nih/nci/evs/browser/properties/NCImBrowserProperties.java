@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import gov.nih.nci.evs.browser.utils.DataUtils;
+import gov.nih.nci.evs.browser.bean.TermGroupRank;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -47,6 +50,7 @@ import org.apache.log4j.Logger;
 public class NCImBrowserProperties {
 
         private static List displayItemList;
+        private static List termGroupRankList;
         private static HashMap configurableItemMap;
 
         // KLO
@@ -97,9 +101,9 @@ public class NCImBrowserProperties {
                     if(NCImBrowserProperties == null) {
                         NCImBrowserProperties = new NCImBrowserProperties();
                         loadProperties();
-                        
+
                         debugOn = Boolean.parseBoolean(getProperty(DEBUG_ON));
-                        
+
                         String max_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.MAXIMUM_RETURN);
                         maxToReturn = Integer.parseInt(max_str);
 
@@ -138,6 +142,52 @@ public class NCImBrowserProperties {
             return this.displayItemList;
         }
 
+        public List getTermGroupRankList() {
+            return this.termGroupRankList;
+        }
+
+        //KLO, 052909
+        public static String getRank(String term_type, String term_source) {
+            if (termGroupRankList == null || termGroupRankList.size() == 0) return "0";
+			for (int i=0; i<termGroupRankList.size(); i++) {
+			   TermGroupRank termGroupRank = (TermGroupRank) termGroupRankList.get(i);
+			   if (term_type.compareTo(termGroupRank.getTermGroup()) == 0 && term_source.compareTo(termGroupRank.getSource()) == 0) {
+				   return termGroupRank.getIndex();
+			   }
+		    }
+ 		    return "0";
+		}
+
+        //KLO, 052909
+        public static String getHighestTermGroupRank(Vector synonyms) {
+            if(synonyms == null || synonyms.size() == 0) return null;
+            String maxRank = null;
+            String t = (String) synonyms.elementAt(0);
+            if (synonyms.size() == 1) {
+				return t;
+			}
+			String rank = null;
+			String term_data = t;
+			Vector<String> w = DataUtils.parseData(term_data, "|");
+			String term_type = w.elementAt(1);
+			String term_source = w.elementAt(2);
+			maxRank = getRank(term_type, term_source);
+
+			for (int j=1; j<synonyms.size(); j++) {
+				//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
+				t = (String) synonyms.elementAt(j);
+				w = DataUtils.parseData(t, "|");
+				term_type = w.elementAt(1);
+				term_source = w.elementAt(2);
+				rank = getRank(term_type, term_source);
+				if (rank != null && rank.compareTo(maxRank) > 0) {
+					maxRank = rank;
+					term_data = t;
+				}
+			}
+            return term_data;
+        }
+
 
         private static void loadProperties() throws Exception {
             String propertyFile = System.getProperty("gov.nih.nci.evs.browser.NCImBrowserProperties");
@@ -148,6 +198,9 @@ public class NCImBrowserProperties {
             parser.run();
 
             displayItemList = parser.getDisplayItemList();
+            termGroupRankList = parser.getTermGroupRankList();
             configurableItemMap = parser.getConfigurableItemMap();
         }
+
+
     }
