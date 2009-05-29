@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import gov.nih.nci.evs.browser.bean.DisplayItem;
+import gov.nih.nci.evs.browser.bean.TermGroupRank;
 
 
 /**
@@ -54,6 +55,8 @@ import gov.nih.nci.evs.browser.bean.DisplayItem;
 public class PropertyFileParser {
 
 	List displayItemList;
+	List termGroupRankList;
+
 	HashMap configurableItemMap;
 	String xmlfile;
 
@@ -61,11 +64,13 @@ public class PropertyFileParser {
 
 	public PropertyFileParser(){
 		displayItemList = new ArrayList();
+		termGroupRankList = new ArrayList();
 		configurableItemMap = new HashMap();
 	}
 
 	public PropertyFileParser(String xmlfile){
 		displayItemList = new ArrayList();
+		termGroupRankList = new ArrayList();
 		configurableItemMap = new HashMap();
 		this.xmlfile = xmlfile;
 	}
@@ -115,6 +120,15 @@ public class PropertyFileParser {
 			for(int i = 0 ; i < list2.getLength();i++) {
 				Element el = (Element) list2.item(i);
 				getConfigurableItem(el);
+			}
+		}
+
+		NodeList list3 = docEle.getElementsByTagName("TermGroupRank");
+		if(list3 != null && list3.getLength() > 0) {
+			for(int i = 0 ; i < list3.getLength();i++) {
+				Element el = (Element) list3.item(i);
+				TermGroupRank e = getTermGroupRank(el);
+				termGroupRankList.add(e);
 			}
 		}
 	}
@@ -170,6 +184,20 @@ public class PropertyFileParser {
 		while(it.hasNext()) {
 			System.out.println(it.next().toString());
 		}
+	}
+
+	public List getTermGroupRankList() {
+		return this.termGroupRankList;
+	}
+
+
+	private TermGroupRank getTermGroupRank(Element termGroupRankElement) {
+	    String index = getTextValue(termGroupRankElement,"index");
+		String source = getTextValue(termGroupRankElement,"source");
+		String termgroup = getTextValue(termGroupRankElement,"termgroup");
+
+		TermGroupRank item = new TermGroupRank(index,source,termgroup);
+		return item;
 	}
 
 
