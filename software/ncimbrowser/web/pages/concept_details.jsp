@@ -39,6 +39,45 @@
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <f:view>
+  
+<%  
+    String dictionary = null;
+    String code = null;
+    String type = null;
+    String sortBy = null;
+    String name = null;
+    Concept c = null;
+    String vers = null;
+    String ltag = null;
+    
+    String singleton = (String) request.getSession().getAttribute("singleton");
+    if (singleton != null && singleton.compareTo("true") == 0) {
+      dictionary = (String) request.getSession().getAttribute("dictionary");
+      if (dictionary == null) {
+	dictionary = Constants.CODING_SCHEME_NAME;
+      }  
+      code = (String) request.getSession().getAttribute("code");
+    } else {
+      dictionary = (String) request.getParameter("dictionary");
+      if (dictionary == null) {
+         dictionary = Constants.CODING_SCHEME_NAME;
+      }  
+      code = (String) request.getParameter("code");
+      if (code == null) code = (String) request.getSession().getAttribute("code");
+      type = (String) request.getParameter("type");
+      sortBy = (String) request.getParameter("sortBy");
+    }
+    c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
+    if (c != null) {
+	    Vector synonyms = DataUtils.getSynonyms(c, "NCI");
+	    Boolean codeInNCI = Boolean.FALSE;
+	    if (synonyms != null && synonyms.size() > 0) {
+		codeInNCI = Boolean.TRUE;;
+	    }
+	    request.getSession().setAttribute("codeInNCI", codeInNCI);
+    }
+%>           
+  
     <%@ include file="/pages/templates/header.xhtml" %>
     <div class="center-page">
       <%@ include file="/pages/templates/sub-header.xhtml" %>
@@ -48,6 +87,7 @@
         <!-- Page content -->
         <div class="pagecontent">
           <%
+          /*
             String dictionary = null;
             String code = null;
             String type = null;
@@ -66,6 +106,7 @@
               type = (String) request.getParameter("type");
               sortBy = (String) request.getParameter("sortBy");
             }
+          */  
             if (type == null) {
               type = "properties";
             } 
@@ -73,18 +114,15 @@
             if (sortBy == null) {
               sortBy = "name";
             } 
-            if (dictionary == null) {
-                dictionary = Constants.CODING_SCHEME_NAME;
-            }  
             
             name = "";
             if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
                //name = "The server encountered an internal error that prevented it from fulfilling this request.";
                name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
             } else {
-		    String vers = null;
-		    String ltag = null;
-		    c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
+		    //String vers = null;
+		    //String ltag = null;
+		    //c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
 		    if (c != null) {
 		       request.getSession().setAttribute("concept", c);
 		       request.getSession().setAttribute("code", code);

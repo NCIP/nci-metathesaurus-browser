@@ -2115,73 +2115,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return hmap;
     }
 
-/*
-    public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
-		HashSet hset = new HashSet();
-		Vector v = new Vector();
-        Vector associated_concepts = getAssociatedConcepts(scheme, version, code, sab);
-        for (int i=0; i<associated_concepts.size(); i++) {
-            Concept c = (Concept) associated_concepts.elementAt(i);
-            String concept_code = c.getEntityCode();
-		    Vector synonyms = getSynonyms(c, sab);
-		    for (int n=0; n<synonyms.size(); n++)
-		    {
-				String s = (String) synonyms.elementAt(n);
-				if (!hset.contains(s))
-				{
-					v.add(s + "|" + concept_code);
-					hset.add(s);
-				}
-			}
-	    }
-	    SortUtils.quickSort(v);
-	    return v;
-	}
-*/
-/*
-	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
-
-		Vector w = new Vector();
-		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
-		Set keyset = hmap.keySet();
-		Iterator it = keyset.iterator();
-		while (it.hasNext())
-		{
-			String associationName = (String) it.next();
-			Vector v = (Vector) hmap.get(associationName);
-			for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				EntityDescription ed = ac.getEntityDescription();
-				Concept c = ac.getReferencedEntry();
-				Vector synonyms = getSynonyms(c, sab);
-				for (int j=0; j<synonyms.size(); j++) {
-					String t = (String) synonyms.elementAt(j);
-					t = t + "|" + c.getEntityCode() + "|" + associationName;
-					w.add(t);
-				}
-			}
-		}
-		SortUtils.quickSort(w);
-		return w;
-     }
-*/
     private String findRepresentativeTerm(Concept c, String sab) {
 		Vector synonyms = getSynonyms(c, sab);
 		if(synonyms == null || synonyms.size() == 0) return null;
 		return NCImBrowserProperties.getHighestTermGroupRank(synonyms);
-		/*
-		//String c_name = c.getEntityDescription().getContent();
-		String t = (String) synonyms.elementAt(0);
-		for (int j=0; j<synonyms.size(); j++) {
-			//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
-			t = (String) synonyms.elementAt(j);
-			Vector<String> w = parseData(t, "|");
-
-			String term_type = w.elementAt(1);
-			if (term_type.compareTo("SY") != 0) return t;
-		}
-		return t;
-		*/
 	}
 
 
