@@ -202,6 +202,7 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
         request.getSession().removeAttribute("code");
+        request.getSession().removeAttribute("codeInNCI");
 
         if (v != null && v.size() > 1)
         {
