@@ -106,7 +106,7 @@
   }
   String sort_by2 = (String) request.getParameter("sortBy2");
   if (sort_by2 == null) {
-      sort_by2 = "name";
+      sort_by2 = "rel_type";
   }   
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
@@ -244,7 +244,7 @@
         <tr>
            <td>
 
-<b>Neighborhood</b>
+<b>Relationships</b>
 <%
 if (neighborhood_atoms.size() == 0) {
 %>
@@ -273,11 +273,11 @@ if (neighborhood_atoms.size() == 0) {
               <%
               if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
               %>
-                 Rel. Label
+                 Rel. Attribute
               <%   
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Label</a>
+              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Attribute</a>
               <% 	
               }
               %>
@@ -309,21 +309,7 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>
           </th>
-<!--          
-          <th class="dataTableHeader" scope="col" align="left">
-              <%
-              if (sort_by2 != null && sort_by2.compareTo("source") == 0) {
-              %>
-                 Source
-              <%   
-              } else if ((sort_by2 == null) || sort_by2 != null  && sort_by.compareTo("source") != 0) {
-              %>
-              	<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&sortBy2=source&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Source</a>
-              <% 	
-              }
-              %>          
-          </th>
--->  
+
           <th class="dataTableHeader" scope="col" align="left">
                  Source
           </th>
@@ -367,13 +353,17 @@ if (neighborhood_atoms.size() == 0) {
 		    String term_source_code = (String) synonym_data.elementAt(3);
 		    String cui = (String) synonym_data.elementAt(4);
 		    String rel = (String) synonym_data.elementAt(5);
+		    String rel_display_value = rel;
+		    if (DataUtils.containsAllUpperCaseChars(rel)) {
+		        rel_display_value = "";
+		    }
 		    String rel_type = (String) synonym_data.elementAt(6);
 		    
 		    String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
 		%>
 		    <tr class="<%=rowColor%>">
 		      <td class="dataCellText"><%=rel_type%></td>
-		      <td class="dataCellText"><%=rel%></td>
+		      <td class="dataCellText"><%=rel_display_value%></td>
 		      <td class="dataCellText">
 			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>">
 			    <%=cui%>
@@ -396,13 +386,6 @@ if (neighborhood_atoms.size() == 0) {
           </td>
         </tr>
       </table>
-    </div>
-         <%@ include file="/pages/templates/nciFooter.html" %>
-      </div>
-      <!-- end Page content -->
-    </div>
-    
-    
     <%
   }
 %>

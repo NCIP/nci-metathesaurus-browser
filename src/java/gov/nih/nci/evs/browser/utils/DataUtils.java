@@ -246,6 +246,9 @@ public class DataUtils {
     static String[] assocToBTNodes_ = new String[] { "RB", "BT" };
     static String[] assocToNTNodes_ = new String[] { "RN", "NT" };
 
+    static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other"};
+
+
     //==================================================================================
 
 
@@ -2202,7 +2205,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
      }
 
-     public String getRelationshipCode(String id) {
+     public static String getRelationshipCode(String id) {
 		 if (id.compareTo("Parent") == 0) return "1";
 		 else if (id.compareTo("Child") == 0) return "2";
 		 else if (id.compareTo("Broader") == 0) return "3";
@@ -2211,7 +2214,15 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		 else return "6";
 	 }
 
-    public Vector sortSynonymData(Vector synonyms, String sortBy) {
+    public static boolean containsAllUpperCaseChars(String s) {
+		for (int i=0; i<s.length(); i++) {
+			char ch = s.charAt(i);
+			if (ch < 65 || ch > 90) return false;
+		}
+		return true;
+	}
+
+    public static Vector sortSynonymData(Vector synonyms, String sortBy) {
 		if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
@@ -2233,10 +2244,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             if (sortBy.compareTo("type") == 0) key = term_type +delim + term_name + delim + term_source + delim + term_source_code + delim + cui + delim + rel + delim + rel_type_str;
             if (sortBy.compareTo("source") == 0) key = term_source +delim + term_name + delim + term_type + delim + cui + delim + rel + delim + rel_type_str;
             if (sortBy.compareTo("code") == 0) key = term_source_code + delim + term_name + delim + term_type + delim + term_source + delim + cui + delim + rel + delim + rel_type_str;
-            if (sortBy.compareTo("rel") == 0) key = rel + term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + cui + delim + rel_type_str;
+            if (sortBy.compareTo("rel") == 0) {
+				String rel_key = rel;
+				if (containsAllUpperCaseChars(rel)) rel_key = "|";
+				 key = rel + term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + cui + delim + rel_type_str;
+		    }
             if (sortBy.compareTo("cui") == 0) key = cui + term_name + delim + term_type + delim + term_source + delim + term_source_code +delim + rel + delim + rel_type_str;
             if (sortBy.compareTo("rel_type") == 0) key = rel_type_str + delim + rel + delim +  term_name + delim + term_type + delim + term_source + delim + term_source_code + delim + cui;
-
             hmap.put(key, s);
             key_vec.add(key);
 		}
@@ -2277,4 +2291,66 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		}
         return a;
 	}
+
+	public HashMap getAssociationTargetHashMap(String scheme, String version, String code) {
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+        Vector category_vec = new Vector(Arrays.asList(relationshipCategories_));
+
+        HashMap rel_hmap = new HashMap();
+		for (int k=0; k<category_vec.size(); k++) {
+			String  category = (String) category_vec.elementAt(k);
+			Vector vec =  new Vector();
+			rel_hmap.put(category, vec);
+		}
+
+		Vector w = new Vector();
+		HashSet hset = new HashSet();
+		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
+		Set keyset = hmap.keySet();
+		Iterator it = keyset.iterator();
+		while (it.hasNext())
+		{
+			String rel = (String) it.next();
+			String category = "Other";
+			if (parent_asso_vec.contains(rel)) category = "Parent";
+			else if (child_asso_vec.contains(rel)) category = "Child";
+			else if (bt_vec.contains(rel)) category = "Broader";
+			else if (nt_vec.contains(rel)) category = "Narrower";
+			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+			Vector v = (Vector) hmap.get(rel);
+
+			for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				EntityDescription ed = ac.getEntityDescription();
+				Concept c = ac.getReferencedEntry();
+                String source = "unspecified";
+				for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
+					if ("Source".equalsIgnoreCase(qualifier.getContent())) {
+						source = qualifier.getName();
+						w = (Vector) rel_hmap.get(category);
+						if (w == null) {
+							w = new Vector();
+						}
+						String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
+						if (!w.contains(str)) {
+							w.add(str);
+						    rel_hmap.put(category, w);
+						}
+					}
+				}
+			}
+		}
+
+		for (int k=0; k<category_vec.size(); k++) {
+			String  category = (String) category_vec.elementAt(k);
+			w =  (Vector) rel_hmap.get(category);
+			SortUtils.quickSort(w);
+			rel_hmap.put(category, w);
+		}
+		return rel_hmap;
+     }
 }

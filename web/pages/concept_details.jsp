@@ -87,26 +87,6 @@
         <!-- Page content -->
         <div class="pagecontent">
           <%
-          /*
-            String dictionary = null;
-            String code = null;
-            String type = null;
-            String sortBy = null;
-            String name = null;
-            Concept c = null;
-
-            String singleton = (String) request.getSession().getAttribute("singleton");
-            if (singleton != null && singleton.compareTo("true") == 0) {
-              dictionary = (String) request.getSession().getAttribute("dictionary");
-              code = (String) request.getSession().getAttribute("code");
-            } else {
-              dictionary = (String) request.getParameter("dictionary");
-              code = (String) request.getParameter("code");
-              if (code == null) code = (String) request.getSession().getAttribute("code");
-              type = (String) request.getParameter("type");
-              sortBy = (String) request.getParameter("sortBy");
-            }
-          */  
             if (type == null) {
               type = "properties";
             } 
