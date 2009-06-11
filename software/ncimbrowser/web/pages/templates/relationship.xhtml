@@ -17,22 +17,41 @@
     Vector other_vec = (Vector) hmap.get("Other");
         
     String label = "";
+    String rel_value = "";
     //rel + "|" + c..getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source
    
 %>
   <h2>Relationships with other NCI MetaThesaurus Concepts:</h2>
+  
+<P/>
+<TABLE BORDER="0" WIDTH="100%" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
+<TR>
+<TD align="center"><b>
+<A HREF="#Parent">Parent&nbsp;Concepts</A> |
+<A HREF="#Child">Child&nbsp;Concepts</A> |
+<A HREF="#Broader">Broader&nbsp;Concepts</A> |
+<A HREF="#Narrower">Narrower&nbsp;Concepts</A> |
+<A HREF="#Sibling">Sibling&nbsp;Concepts</A> |
+<A HREF="#Other">Other&nbsp;Related&nbsp;Concepts</A>
+</TD>
+</TR>
+</table>  
+  
   <p>
     <%
       label = "Parent Concepts:";
+      rel_value = "Parent";
       if (superconcept_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Parent"><%=label%><a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Parent"><%=label%><a></b>
 	<table class="dataTable">
+	  <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+	  <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -56,6 +75,8 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
+		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
 			  <%=target_concept_name%>
@@ -75,15 +96,18 @@
   <p>
     <%
       label = "Child Concepts:";
+      rel_value = "Child";
       if (subconcept_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Child"><%=label%><a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Child"><%=label%><a></b>
 	<table class="dataTable">
+	  <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+	  <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -107,6 +131,8 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
+		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
 			  <%=target_concept_name%>
@@ -126,16 +152,18 @@
   <p>
     <%
       label = "Broader Concepts:";
+      rel_value = "Broader";
       if (broader_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Broader"><%=label%><a></b><i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Broader"><%=label%><a></b>
 	<table class="dataTable">
           <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+          <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -159,6 +187,7 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
 		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
@@ -179,16 +208,18 @@
   <p>
     <%
       label = "Narrower Concepts:";
+      rel_value = "Narrower";
       if (narrower_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Narrower"><%=label%><a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Narrower"><%=label%><a></b>
 	<table class="dataTable">
           <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+          <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -212,6 +243,7 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
 		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
@@ -232,16 +264,18 @@
   <p>
     <%
       label = "Sibling Concepts:";
+      rel_value = "Sibling";
       if (sibling_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Sibling"><%=label%><a> <i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Sibling"><%=label%><a>
 	<table class="dataTable">
           <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+          <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -265,6 +299,7 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
 		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
@@ -285,16 +320,18 @@
   <p>
     <%
       label = "Other Relationships:";
+      rel_value = "Other";
       if (other_vec.size() <= 0)
       {
     %>
-        <b><%=label%></b> <i>(none)</i>
+        <b><a name="Other"><%=label%><a> <i>(none)</i>
     <%
       } else {
     %>
-        <b><%=label%></b>
+        <b><a name="Other"><%=label%><a>
 	<table class="dataTable">
           <th class="dataTableHeader" scope="col" align="left">Relationship</th>
+          <th class="dataTableHeader" scope="col" align="left">Rel. Attribute</th>
           <th class="dataTableHeader" scope="col" align="left">Name</th>
           <th class="dataTableHeader" scope="col" align="left">Source</th>
 	  <%
@@ -318,6 +355,7 @@
 		}
 		n2++;
 		%>
+		      <td><%=rel_value%></td>
 		      <td><%=relationship_name%></td>
 		      <td>
 			<a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
@@ -335,7 +373,19 @@
     %>
   </p>  
  
-
+<P/>
+<TABLE BORDER="0" WIDTH="100%" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
+<TR>
+<TD align="center"><b>
+<A HREF="#Parent">Parent&nbsp;Concepts</A> |
+<A HREF="#Child">Child&nbsp;Concepts</A> |
+<A HREF="#Broader">Broader&nbsp;Concepts</A> |
+<A HREF="#Narrower">Narrower&nbsp;Concepts</A> |
+<A HREF="#Sibling">Sibling&nbsp;Concepts</A> |
+<A HREF="#Other">Other&nbsp;Related&nbsp;Concepts</A>
+</TD>
+</TR>
+</table>  
 <%
 }
 %>

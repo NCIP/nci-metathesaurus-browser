@@ -1,48 +1,11 @@
 <%
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
   {
-	  Concept concept_src = (Concept) request.getSession().getAttribute("concept");
-	  String concept_src_id = concept_src.getEntityCode();
-	  request.getSession().setAttribute("code", concept_src_id);
-	  Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
+	  //Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+	  //String concept_src_id = concept_src.getEntityCode();
+	  //request.getSession().setAttribute("code", concept_src_id);
+	  //Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
     %>
-
-<!--    
-    <div>
-      <table class="dataTable" border="0">
-        <tr>
-            <td>
-        <%
-          for (int n=0; n<sources.size(); n++)
-          {
-              String s = (String) sources.elementAt(n);
-              if (s.compareTo("NCI") == 0) {
-              %>
-	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
-	         <%=s%>
-	      </a>&nbsp;
-	      <%
-              }
-          }
-          for (int n=0; n<sources.size(); n++)
-          {
-              String s = (String) sources.elementAt(n);
-              if (s.compareTo("NCI") != 0) {
-              %>
-	      <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=sources&dictionary=NCI%20MetaThesaurus&code=<%=concept_src_id%>&type=sources&sab=<%=s%>">
-	         <%=s%>
-	      </a>&nbsp;
-	      <%
-              }
-          }          
-        %>
-            </td>
-        </tr>
-        
-
-      </table>
-    </div>
--->    
 
       <!-- Page content -->
       <div class="pagecontent">
@@ -61,8 +24,13 @@
           request.getSession().removeAttribute("neighborhood_synonyms");
   }
   
+  String neighborhood_sab = null;
   Vector source_vec = new DataUtils().getSources("NCI MetaThesaurus", null, null, code);
-  String neighborhood_sab = (String) request.getParameter("sab");
+  if (source_vec != null && source_vec.size() == 1) {
+      neighborhood_sab = (String) source_vec.elementAt(0);
+  } else {
+      neighborhood_sab = (String) request.getParameter("sab");
+  }
   if (neighborhood_sab == null) {
      neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
   } 
