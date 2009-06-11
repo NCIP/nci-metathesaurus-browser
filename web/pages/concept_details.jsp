@@ -82,77 +82,75 @@
         if (u != null && u.size() > 1) {
             multipleCUIs = true;
             System.out.println("************************************ Multiple CUIs");
-        } else {
-            System.out.println("************************************ Single CUI");
-        }
- 
-%>
+    %>
 		
-		
-        <table width="700px">
-          <tr>
-            <table>
-              <tr>
-                <td class="texttitle-blue">Result for:</td>
-                <td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
-              </tr>
-            </table>
-          </tr>
-          <tr>
-            <td><hr></td>
-          </tr>
-          <tr>
-            <td>
-              <b>Multiple concepts are found that contain <%=sab%> code &nbsp;<%=sourcecode%>:</b>
-            </td>
-          </tr>
-          <tr>
-            <td class="textbody">
-              <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
-                <%
-                  for (int i=0; i<u.size(); i++) {
-                      c = (Concept) u.elementAt(i);
-                      code = c.getEntityCode();
-                      name = c.getEntityDescription().getContent();
-                      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
-                      String semantic_type = "";
-                      if (semantic_types != null && semantic_types.size() > 0) {
-                          for (int j=0; j<semantic_types.size(); j++) {
-                              String t = (String) semantic_types.elementAt(j);
-                              semantic_type = semantic_type + t;
-                              if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-                          }
-                      }
+		<table width="700px">
+		  <tr>
+		    <table>
+		      <tr>
+			<td class="texttitle-blue">Result for:</td>
+			<td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
+		      </tr>
+		    </table>
+		  </tr>
+		  <tr>
+		    <td><hr></td>
+		  </tr>
+		  <tr>
+		    <td>
+		      <b>Multiple concepts are found that contain <%=sab%> code &nbsp;<%=sourcecode%>:</b>
+		    </td>
+		  </tr>
+		  <tr>
+		    <td class="textbody">
+		      <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
+			<%
+			  for (int i=0; i<u.size(); i++) {
+			      c = (Concept) u.elementAt(i);
+			      code = c.getEntityCode();
+			      name = c.getEntityDescription().getContent();
+			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
+			      String semantic_type = "";
+			      if (semantic_types != null && semantic_types.size() > 0) {
+				  for (int j=0; j<semantic_types.size(); j++) {
+				      String t = (String) semantic_types.elementAt(j);
+				      semantic_type = semantic_type + t;
+				      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+				  }
+			      }
 
-                      if (i % 2 == 0) {
-                        %>
-                          <tr class="dataRowDark">
-                        <%
-                      } else {
-                        %>
-                          <tr class="dataRowLight">
-                        <%
-                      }
-                      %>
-                          <td class="dataCellText">
-                          <!--
-                            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-                           -->  
-		            <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
-                          </td>
-                          <td class="dataCellText">
-                              <%=semantic_type%>
-                          </td>                          
-                        </tr>
-                      <%
-                   }
-                %>
-              </table>
-            </td>
-          </tr>
-        </table>
+			      if (i % 2 == 0) {
+				%>
+				  <tr class="dataRowDark">
+				<%
+			      } else {
+				%>
+				  <tr class="dataRowLight">
+				<%
+			      }
+			      %>
+				  <td class="dataCellText">
+				  <!--
+				    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+				   -->  
+				    <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
+				  </td>
+				  <td class="dataCellText">
+				      <%=semantic_type%>
+				  </td>                          
+				</tr>
+			      <%
+			   }
+			%>
+		      </table>
+		    </td>
+		  </tr>
+		</table>
     <%
-    } else {
+        }
+    } 
+    
+    if (!multipleCUIs) {
 
     String singleton = (String) request.getSession().getAttribute("singleton");
     if (singleton != null && singleton.compareTo("true") == 0) {
@@ -167,7 +165,11 @@
          dictionary = Constants.CODING_SCHEME_NAME;
       }  
       code = (String) request.getParameter("code");
-      if (code == null) code = (String) request.getSession().getAttribute("code");
+      if (code == null) {
+          code = (String) request.getSession().getAttribute("code");
+      } else {
+          request.getSession().removeAttribute("AssociationTargetHashMap");
+      }
       sortBy = (String) request.getParameter("sortBy");
     }
     c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
