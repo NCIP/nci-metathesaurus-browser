@@ -2292,7 +2292,56 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return a;
 	}
 
-	public HashMap getAssociationTargetHashMap(String scheme, String version, String code) {
+
+    public static Vector sortRelationshipData(Vector relationships, String sortBy) {
+		if (sortBy == null) sortBy = "name";
+		HashMap hmap = new HashMap();
+		Vector key_vec = new Vector();
+		String delim = "  ";
+        for (int n=0; n<relationships.size(); n++)
+        {
+            String s = (String) relationships.elementAt(n);
+            Vector ret_vec = DataUtils.parseData(s, "|");
+	        String relationship_name = (String) ret_vec.elementAt(0);
+	        String target_concept_name = (String) ret_vec.elementAt(1);
+	        String target_concept_code = (String) ret_vec.elementAt(2);
+	        String rel_sab = (String) ret_vec.elementAt(3);
+
+            String key = target_concept_name + delim
+                       + relationship_name + delim
+                       + target_concept_code + delim
+                       + rel_sab;
+            if (sortBy.compareTo("source") == 0) {
+                   key = rel_sab + delim
+                       + target_concept_name + delim
+                       + relationship_name + delim
+                       + target_concept_code;
+		    } else if (sortBy.compareTo("rela") == 0) {
+                  key = relationship_name + delim
+                       + target_concept_name + delim
+                       + target_concept_code + delim
+                       + rel_sab;
+		    } else if (sortBy.compareTo("code") == 0) {
+                  key = target_concept_code + delim
+                       + target_concept_name + delim
+                       + relationship_name + delim
+                       + rel_sab;
+			}
+
+            hmap.put(key, s);
+            key_vec.add(key);
+		}
+		key_vec = SortUtils.quickSort(key_vec);
+		Vector v = new Vector();
+		for (int i=0; i<key_vec.size(); i++) {
+			String s = (String) key_vec.elementAt(i);
+			v.add((String) hmap.get(s));
+		}
+		return v;
+	}
+
+
+	public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
         Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
@@ -2345,12 +2394,28 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 
-		for (int k=0; k<category_vec.size(); k++) {
-			String  category = (String) category_vec.elementAt(k);
-			w =  (Vector) rel_hmap.get(category);
-			SortUtils.quickSort(w);
-			rel_hmap.put(category, w);
+        if (sort_option == null) {
+			for (int k=0; k<category_vec.size(); k++) {
+				String  category = (String) category_vec.elementAt(k);
+				w =  (Vector) rel_hmap.get(category);
+				SortUtils.quickSort(w);
+				rel_hmap.put(category, w);
+			}
+		} else {
+			for (int k=0; k<category_vec.size(); k++) {
+				String  category = (String) category_vec.elementAt(k);
+				w =  (Vector) rel_hmap.get(category);
+				String sortOption = (String) sort_option.elementAt(k);
+				//SortUtils.quickSort(w);
+				w = sortRelationshipData(w, sortOption);
+				rel_hmap.put(category, w);
+			}
 		}
 		return rel_hmap;
-     }
+	}
+
+
+	public HashMap getAssociationTargetHashMap(String scheme, String version, String code) {
+		return getAssociationTargetHashMap(scheme, version, code, null);
+    }
 }
