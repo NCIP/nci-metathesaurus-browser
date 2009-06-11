@@ -39,7 +39,10 @@
     if (sort5 == null) sort5 = "name"; // by name
         
     DataUtils util = new DataUtils();
-    HashMap hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
+    HashMap hmap = (HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
+    if (hmap == null) {
+    	hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
+    }
     Vector superconcept_vec = (Vector) hmap.get("Parent");
     Vector subconcept_vec = (Vector) hmap.get("Child");
     Vector broader_vec = (Vector) hmap.get("Broader");
