@@ -203,6 +203,7 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("concept");
         request.getSession().removeAttribute("code");
         request.getSession().removeAttribute("codeInNCI");
+        request.getSession().removeAttribute("AssociationTargetHashMap");
 
         if (v != null && v.size() > 1)
         {
