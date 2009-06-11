@@ -204,6 +204,7 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("code");
         request.getSession().removeAttribute("codeInNCI");
         request.getSession().removeAttribute("AssociationTargetHashMap");
+        request.getSession().removeAttribute("type");
 
         if (v != null && v.size() > 1)
         {

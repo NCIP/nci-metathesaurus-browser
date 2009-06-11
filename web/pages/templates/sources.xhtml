@@ -1,32 +1,34 @@
 <%
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
   {
-	  //Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+	  Concept concept_src = (Concept) request.getSession().getAttribute("concept");
 	  //String concept_src_id = concept_src.getEntityCode();
 	  //request.getSession().setAttribute("code", concept_src_id);
-	  //Vector sources = new DataUtils().getSources("NCI MetaThesaurus", null, null, concept_src_id);
+	  //Vector sources = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_src_id);
     %>
 
       <!-- Page content -->
       <div class="pagecontent">
       
-      
 <%
-  code = (String) request.getParameter("code");
+  
   Concept concept_neighborhood = null;
-  if (code == null) {
+  if (concept_neighborhood == null) {
 	  concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
 	  code = concept_neighborhood.getEntityCode();
+	  
   } else {
+    
           concept_neighborhood = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, code);
           request.getSession().setAttribute("concept", concept_neighborhood);
           request.getSession().removeAttribute("neighborhood_atoms");
-          request.getSession().removeAttribute("neighborhood_synonyms");
+          
           request.getSession().removeAttribute("selectedConceptSource");
   }
-  
+  request.getSession().removeAttribute("neighborhood_synonyms");
   String neighborhood_sab = null;
-  Vector source_vec = new DataUtils().getSources("NCI MetaThesaurus", null, null, code);
+  Vector source_vec = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, code);
+  
   if (source_vec != null && source_vec.size() == 1) {
       neighborhood_sab = (String) source_vec.elementAt(0);
   } else {

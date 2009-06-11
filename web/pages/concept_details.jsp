@@ -64,6 +64,7 @@
     String sab = null;
     String sourcecode = null;
     
+    
     String checkmultiplicity = (String) request.getParameter("checkmultiplicity");
     if (checkmultiplicity == null) checkmultiplicity = "false";
     
@@ -81,7 +82,7 @@
 	Vector u = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
         if (u != null && u.size() > 1) {
             multipleCUIs = true;
-            System.out.println("************************************ Multiple CUIs");
+            System.out.println("**** Multiple CUIs");
     %>
 		
 		<table width="700px">
@@ -172,6 +173,9 @@
       }
       sortBy = (String) request.getParameter("sortBy");
     }
+    
+    
+    
     c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
     if (c != null) {
 	    Vector synonyms = DataUtils.getSynonyms(c, "NCI");
@@ -198,9 +202,6 @@
                //name = "The server encountered an internal error that prevented it from fulfilling this request.";
                name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
             } else {
-		    //String vers = null;
-		    //String ltag = null;
-		    //c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
 		    if (c != null) {
 		       request.getSession().setAttribute("concept", c);
 		       request.getSession().setAttribute("code", code);
@@ -217,7 +218,9 @@
 		    request.getSession().setAttribute("dictionary", dictionary);
 		    request.getSession().setAttribute("type", type);
 		    request.getSession().setAttribute("singleton", "false");
-          
+ request.getSession().setAttribute("Concept", c);
+ request.getSession().setAttribute("Concept", c.getEntityCode());
+ 
           %>
 		  <div class="texttitle-blue">
 		      <%=name%> (CUI <%=code%>)
