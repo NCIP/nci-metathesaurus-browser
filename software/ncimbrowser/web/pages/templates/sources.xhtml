@@ -22,6 +22,7 @@
           request.getSession().setAttribute("concept", concept_neighborhood);
           request.getSession().removeAttribute("neighborhood_atoms");
           request.getSession().removeAttribute("neighborhood_synonyms");
+          request.getSession().removeAttribute("selectedConceptSource");
   }
   
   String neighborhood_sab = null;
@@ -83,7 +84,7 @@
     <div>
       <table class="dataTable" border="0">
         <%
-        if (src_vec.size() > 0) {
+        if (src_vec.size() > 1) {
         %>
         <tr>
            <td styleClass="textbody">
@@ -341,7 +342,7 @@ if (neighborhood_atoms.size() == 0) {
 		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
 		      <td class="dataCellText"><%=term_source%></td>
 		      <td class="dataCellText"><%=term_type%></td>
-		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>
+		      <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>&&sourcecode=<%=term_source_code%>&&checkmultiplicity=true"><%=term_source_code%></a></td>
 		    </tr>
 		<%
 	 }
