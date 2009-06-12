@@ -2186,16 +2186,22 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         Vector u = new Vector();
 		for (int i=0; i<w.size(); i++) {
 			String s = (String) w.elementAt(i);
+
+System.out.println(s);
+
 			Vector<String> v = parseData(s, "|");
-			String associationName = v.elementAt(5);
-			if (associationName.compareTo("RO") != 0) {
-				u.add(s);
-			} else {
-				String associationTargetCode = v.elementAt(4);
-				if (!rel_hset.contains(associationTargetCode)) {
+
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("RO") != 0) {
 					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
 				}
-			}
+		    }
 		}
 
 		//SortUtils.quickSort(w);
