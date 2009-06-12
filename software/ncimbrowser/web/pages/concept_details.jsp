@@ -82,7 +82,6 @@
 	Vector u = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
         if (u != null && u.size() > 1) {
             multipleCUIs = true;
-            System.out.println("**** Multiple CUIs");
     %>
 		
 		<table width="700px">
@@ -99,7 +98,7 @@
 		  </tr>
 		  <tr>
 		    <td>
-		      <b>Multiple concepts are found that contain <%=sab%> code &nbsp;<%=sourcecode%>:</b>
+		      <b>Multiple concepts are found containing <%=sab%> code &nbsp;<%=sourcecode%>:</b>
 		    </td>
 		  </tr>
 		  <tr>

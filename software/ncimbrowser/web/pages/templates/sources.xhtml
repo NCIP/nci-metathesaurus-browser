@@ -25,9 +25,11 @@
           
           request.getSession().removeAttribute("selectedConceptSource");
   }
+  
+  DataUtils dataUtils = new DataUtils();
   request.getSession().removeAttribute("neighborhood_synonyms");
   String neighborhood_sab = null;
-  Vector source_vec = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, code);
+  Vector source_vec = dataUtils.getSources(Constants.CODING_SCHEME_NAME, null, null, code);
   
   if (source_vec != null && source_vec.size() == 1) {
       neighborhood_sab = (String) source_vec.elementAt(0);
@@ -58,19 +60,22 @@
   
 
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
-
+/*
   Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
   if (neighborhood_synonyms == null) {
       neighborhood_synonyms = new DataUtils().getSynonyms(concept_neighborhood, neighborhood_sab);
       request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
   }
-
+*/
+  Vector neighborhood_synonyms = dataUtils.getSynonyms(concept_neighborhood, neighborhood_sab);
+/*
   Vector neighborhood_atoms = (Vector) request.getSession().getAttribute("neighborhood_atoms");
   if (neighborhood_atoms == null) {
       neighborhood_atoms = new DataUtils().getNeighborhoodSynonyms(Constants.CODING_SCHEME_NAME, null, concept_neighborhood.getEntityCode(), neighborhood_sab);
       request.getSession().setAttribute("neighborhood_atoms", neighborhood_atoms);
   }
-  
+*/
+  Vector neighborhood_atoms = dataUtils.getNeighborhoodSynonyms(Constants.CODING_SCHEME_NAME, null, concept_neighborhood.getEntityCode(), neighborhood_sab);
   String sort_by = (String) request.getParameter("sortBy");
   if (sort_by == null) {
       sort_by = "name";
