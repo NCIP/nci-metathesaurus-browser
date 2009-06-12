@@ -2186,9 +2186,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         Vector u = new Vector();
 		for (int i=0; i<w.size(); i++) {
 			String s = (String) w.elementAt(i);
-
-System.out.println(s);
-
 			Vector<String> v = parseData(s, "|");
 
 			if (v.size() >=5) {

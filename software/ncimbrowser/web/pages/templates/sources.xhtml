@@ -338,16 +338,16 @@ if (neighborhood_atoms.size() == 0) {
 		    <tr class="<%=rowColor%>">
 		      <td class="dataCellText" width=60><%=rel_type%></td>
 		      <td class="dataCellText" width=240><%=rel_display_value%></td>
-		      <td class="dataCellText" width=90>
+		      <td class="dataCellText" width=80>
 			  <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>">
 			    <%=cui%>
 			  </a>		      
 		      </td>
 		      
 		      <td class="dataCellText" width=400><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
-		      <td class="dataCellText" width=90><%=term_source%></td>
+		      <td class="dataCellText" width=80><%=term_source%></td>
 		      <td class="dataCellText" width=60><%=term_type%></td>
-		      <td class="dataCellText" width=90><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>&&sourcecode=<%=term_source_code%>&&checkmultiplicity=true"><%=term_source_code%></a></td>
+		      <td class="dataCellText" width=80><a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=cui%>&&sab=<%=neighborhood_sab%>&&sourcecode=<%=term_source_code%>&&checkmultiplicity=true"><%=term_source_code%></a></td>
 		    </tr>
 		<%
 	 }
