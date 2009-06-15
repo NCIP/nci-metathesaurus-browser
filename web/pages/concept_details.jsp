@@ -40,6 +40,12 @@
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <f:view>
 
+<%
+String concept_details_code = (String) request.getParameter("code");
+if (concept_details_code != null) {
+    request.getSession().setAttribute("code", concept_details_code);
+}
+%>
 
 	    <%@ include file="/pages/templates/header.xhtml" %>
 	    <div class="center-page">
