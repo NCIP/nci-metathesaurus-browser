@@ -55,8 +55,6 @@ import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.commonTypes.EntityDescription;
 
-import gov.nih.nci.evs.browser.common.Constants;
-
 
 
 
@@ -71,7 +69,8 @@ public class MetaTreeUtils {
     LexBIGService lbsvc_ = null;
 
 	private LexBIGService lbs;
-	//private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
+	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
+	private static String NCI_SOURCE = "NCI";
 
 	public static void main(String[] args) throws Exception {
 		MetaTreeUtils getRoots = new MetaTreeUtils();
@@ -151,7 +150,7 @@ public class MetaTreeUtils {
 	 * @throws LBException
 	 */
 	private ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
-		CodedNodeSet cns = lbs.getCodingSchemeConcepts(Constants.CODING_SCHEME_NAME, null);
+		CodedNodeSet cns = lbs.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
 		cns.restrictToProperties(null, new PropertyType[] {PropertyType.PRESENTATION}, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
 		ResolvedConceptReference[] refs = cns.resolveToList(null, null, new PropertyType[] {PropertyType.PRESENTATION}, -1).getResolvedConceptReference();
 
@@ -172,7 +171,7 @@ public class MetaTreeUtils {
      * @throws Exception
      */
     private ResolvedConceptReference resolveReferenceGraphForward(ResolvedConceptReference ref) throws Exception {
-        CodedNodeGraph cng = lbs.getNodeGraph(Constants.CODING_SCHEME_NAME, null, null);
+        CodedNodeGraph cng = lbs.getNodeGraph(NCI_META_THESAURUS, null, null);
         cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD", "hasSubtype"}), null);
         ResolvedConceptReference[] refs = cng.resolveAsList(ref, true, false, 1, 1, null, null, null, -1).getResolvedConceptReference();
         return refs[0];
@@ -196,11 +195,138 @@ public class MetaTreeUtils {
     	return false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void Util_displayMessage(String s) {
-	    System.out.println(s);
+    /////////////////////
+    // Tree
+    /////////////////////
+    private static void Util_displayMessage(String s) {
+		System.out.println(s);
 	}
+
+    private static void Util_displayAndLogError(String s, Exception e) {
+		System.out.println(s);
+	}
+
+
+    /**
+     * Process the provided code, constraining relationships
+     * to the given source abbreviation.
+     * @throws LBException
+     */
+    public void run(String cui, String sab) throws LBException {
+        // Resolve the coding scheme.
+        /*
+        CodingSchemeSummary css = Util.promptForCodeSystem();
+        if (css == null)
+            return;
+
+        String scheme = css.getCodingSchemeURI();
+        */
+
+        String scheme = "NCI MetaThesaurus";
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        //csvt.setVersion(css.getRepresentsVersion());
+
+        // Resolve the requested concept.
+        ResolvedConceptReference rcr = resolveConcept(scheme, csvt, cui);
+        if (rcr == null) {
+            Util_displayMessage("Unable to resolve a concept for CUI = '" + cui + "'");
+            return;
+        }
+
+        // Print a header for the item being processed.
+        Util_displayMessage("============================================================");
+        Util_displayMessage("Concept Information");;
+        Util_displayMessage("============================================================");
+        printHeader(rcr, sab);
+
+        // Print the hierarchies for the requested SAB.
+        Util_displayMessage("");
+        Util_displayMessage("============================================================");
+        Util_displayMessage("Hierarchies applicable for CUI " + cui + " for SAB " + sab);
+        Util_displayMessage("============================================================");
+        TreeItem ti = new TreeItem("<Start>", "Start of Tree", null);
+        long ms = System.currentTimeMillis();
+        int pathsResolved = 0;
+        int maxLevel = -1;
+        try {
+            // Identify the set of all codes on path from root
+            // to the focus code ...
+            TreeItem[] pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
+            pathsResolved = pathsFromRoot.length;
+            for (TreeItem rootItem : pathsFromRoot)
+                ti.addChild("CHD", rootItem);
+        } finally {
+            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+                    + pathsResolved + " paths from root.");
+        }
+        printTree(ti, cui, 0);
+
+        // Print the neighboring CUIs/AUIs for this SAB.
+        Util_displayMessage("");
+        Util_displayMessage("============================================================");
+        Util_displayMessage("Neighboring CUIs and AUIs for CUI " + cui + " for SAB " + sab);;
+        Util_displayMessage("============================================================");
+        printNeighborhood(scheme, csvt, rcr, sab);
+    }
+
+    public HashMap getTreePathData(String scheme, String version, String sab, String code) throws LBException {
+		if (sab == null) sab = NCI_SOURCE;
+ 		return getTreePathData(scheme, version, sab, code, -1);
+    }
+
+
+    public HashMap getTreePathData(String scheme, String version, String sab, String code, int maxLevel) throws LBException {
+		if (sab == null) sab = NCI_SOURCE;
+		LexBIGService lbsvc = RemoteServerUtil.createLexBIGService();
+		LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbsvc
+				.getGenericExtension("LexBIGServiceConvenienceMethods");
+		lbscm.setLexBIGService(lbsvc);
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+
+		return getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
+    }
+
+
+    public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
+            CodingSchemeVersionOrTag csvt, String sab, String focusCode) throws LBException {
+		if (sab == null) sab = NCI_SOURCE;
+		return getTreePathData(lbsvc, lbscm, scheme, csvt, sab, focusCode, -1);
+	}
+
+
+    public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
+            CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel) throws LBException {
+        if (sab == null) sab = NCI_SOURCE;
+        HashMap hmap = new HashMap();
+        long ms = System.currentTimeMillis();
+
+        ResolvedConceptReference rcr = resolveConcept(scheme, csvt, cui);
+        if (rcr == null) {
+            Util_displayMessage("Unable to resolve a concept for CUI = '" + cui + "'");
+            return null;
+        }
+
+        //TreeItem ti = new TreeItem("<Start>", "Start of Tree", null);
+        TreeItem ti = new TreeItem("<Root>", "Root node", null);
+        int pathsResolved = 0;
+        try {
+            // Identify the set of all codes on path from root
+            // to the focus code ...
+            TreeItem[] pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
+            pathsResolved = pathsFromRoot.length;
+            for (TreeItem rootItem : pathsFromRoot)
+                ti.addChild("CHD", rootItem);
+        } finally {
+            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+                    + pathsResolved + " paths from root.");
+        }
+        hmap.put(cui, ti);
+        return hmap;
+    }
+
+
 
     /**
      * Prints formatted text providing context for
@@ -224,8 +350,6 @@ public class MetaTreeUtils {
      *
      * @param ti
      */
-
-     /*
     protected void printTree(TreeItem ti, String focusCode, int depth) {
         StringBuffer indent = new StringBuffer();
         for (int i = 0; i < depth * 2; i++)
@@ -253,7 +377,6 @@ public class MetaTreeUtils {
                 printTree(childItem, focusCode, depth + 1);
         }
     }
-    */
 
     /**
      * Prints formatted text with the CUIs and AUIs of
@@ -367,7 +490,7 @@ public class MetaTreeUtils {
      */
     protected TreeItem[] buildPathsToRoot(ResolvedConceptReference rcr,
             String scheme, CodingSchemeVersionOrTag csvt,
-            String sab) throws LBException {
+            String sab, int maxLevel) throws LBException {
 
         // Create a starting point for tree building.
         TreeItem ti =
@@ -383,7 +506,7 @@ public class MetaTreeUtils {
         buildPathsToUpperNodes(
             ti, rcr, scheme, csvt, sab,
             new HashMap<String, TreeItem>(),
-            rootItems);
+            rootItems, maxLevel, 0);
 
         // Return root items discovered during child to parent
         // processing.
@@ -401,8 +524,10 @@ public class MetaTreeUtils {
     protected void buildPathsToUpperNodes(TreeItem ti, ResolvedConceptReference rcr,
             String scheme, CodingSchemeVersionOrTag csvt,
             String sab, Map<String, TreeItem> code2Tree,
-            Set<TreeItem> roots)
+            Set<TreeItem> roots, int maxLevel, int currLevel)
         throws LBException {
+
+        if (maxLevel != -1 && currLevel >= maxLevel) return;
 
         // Only need to process a code once ...
         if (code2Tree.containsKey(rcr.getCode()))
@@ -483,7 +608,7 @@ public class MetaTreeUtils {
 
                                     // Try to go higher through recursion.
                                     buildPathsToUpperNodes(tiParent, refParent,
-                                        scheme, csvt, sab, code2Tree, roots);
+                                        scheme, csvt, sab, code2Tree, roots, maxLevel, currLevel+1);
                                 }
 
                                 // Add the child
@@ -522,7 +647,8 @@ public class MetaTreeUtils {
      */
     protected LexBIGService getLexBIGService() throws LBException {
         if (lbsvc_ == null)
-            lbsvc_ = LexBIGServiceImpl.defaultInstance();
+            //lbsvc_ = LexBIGServiceImpl.defaultInstance();
+            lbsvc_ = RemoteServerUtil.createLexBIGService();
         return lbsvc_;
     }
 
@@ -533,6 +659,7 @@ public class MetaTreeUtils {
         if (lbscm_ == null)
             lbscm_ = (LexBIGServiceConvenienceMethods)
                 getLexBIGService().getGenericExtension("LexBIGServiceConvenienceMethods");
+            lbscm_.setLexBIGService(lbsvc_);
         return lbscm_;
     }
 
@@ -644,7 +771,6 @@ public class MetaTreeUtils {
                 return true;
         return false;
     }
-
 
 ////////////////////////
 
@@ -771,53 +897,36 @@ public class MetaTreeUtils {
     }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public List getTopNodes(TreeItem ti) {
+		List list = new ArrayList();
+		getTopNodes(ti, list, 0, 1);
+		return list;
+	}
 
-/*
-    public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
-            CodingSchemeVersionOrTag csvt, SupportedHierarchy hierarchyDefn, String focusCode, int maxLevel) throws LBException {
-        HashMap hmap = new HashMap();
-        TreeItem ti = new TreeItem("<Root>", "Root node");
-        long ms = System.currentTimeMillis();
-        int pathsResolved = 0;
-        try {
 
-            // Resolve 'is_a' hierarchy info. This example will
-            // need to make some calls outside of what is covered
-            // by existing convenience methods, but we use the
-            // registered hierarchy to prevent need to hard code
-            // relationship and direction info used on lookup ...
-            String hierarchyID = hierarchyDefn.getLocalId();
-            String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
-            boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();
+    public void getTopNodes(TreeItem ti, List list, int currLevel, int maxLevel) {
+        if (list == null) list = new ArrayList();
+        if (currLevel > maxLevel) return;
+        if (ti.assocToChildMap.keySet().size() > 0) {
+			if (ti.text.compareTo("Root node") != 0)
+			{
+				ResolvedConceptReference rcr = new ResolvedConceptReference();
+				rcr.setConceptCode(ti.code);
+				EntityDescription entityDescription = new EntityDescription();
+				entityDescription.setContent(ti.text);
+				rcr.setEntityDescription(entityDescription);
+				//System.out.println("Root: " + ti.text);
+				list.add(rcr);
+		    }
+		}
 
-            // Identify the set of all codes on path from root
-            // to the focus code ...
-            Map<String, EntityDescription> codesToDescriptions = new HashMap<String, EntityDescription>();
-            AssociationList pathsFromRoot = getPathsFromRoot(lbsvc, lbscm, scheme, csvt, hierarchyID, focusCode,
-                    codesToDescriptions, maxLevel);
-
-            // Typically there will be one path, but handle multiple just in
-            // case.  Each path from root provides a 'backbone', from focus
-            // code to root, for additional nodes to hang off of in our
-            // printout. For every backbone node, one level of children is
-            // printed, along with an indication of whether those nodes can
-            // be expanded.
-
-            for (Iterator<Association> paths = pathsFromRoot.iterateAssociation(); paths.hasNext();) {
-                addPathFromRoot(ti, lbsvc, lbscm, scheme, csvt, paths.next(), associationsToNavigate, associationsNavigatedFwd,
-                        codesToDescriptions);
-                pathsResolved++;
-            }
-
-        } finally {
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) +
-                " to resolve " + pathsResolved + " paths from root.");
+        for (String association : ti.assocToChildMap.keySet()) {
+            List<TreeItem> children = ti.assocToChildMap.get(association);
+            Collections.sort(children);
+            for (TreeItem childItem : children) {
+                getTopNodes(childItem, list, currLevel+1, maxLevel);
+			}
         }
-
-        hmap.put(focusCode, ti);
-        return hmap;
     }
-*/
 
 }
