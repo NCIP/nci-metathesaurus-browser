@@ -124,8 +124,6 @@ public class UserSessionBean extends Object
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         String matchText = (String) request.getParameter("matchText");
-
-
         matchText = matchText.trim();
         //[#19965] Error message is not displayed when Search Criteria is not proivded
         if (matchText.length() == 0)
@@ -138,7 +136,6 @@ public class UserSessionBean extends Object
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
-
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null) matchtype = "string";
 
@@ -206,6 +203,9 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
+        request.getSession().setAttribute("type", "properties");
+
+
         if (v != null && v.size() > 1)
         {
             request.getSession().setAttribute("search_results", v);
@@ -222,6 +222,7 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("dictionary", Constants.CODING_SCHEME_NAME);
             Concept c = (Concept) v.elementAt(0);
             request.getSession().setAttribute("code", c.getEntityCode());
+            request.getSession().setAttribute("concept", c);
             return "concept_details";
         }
         String message = "No match found.";

@@ -41,10 +41,17 @@
   <f:view>
 
 <%
-String concept_details_code = (String) request.getParameter("code");
-if (concept_details_code != null) {
+Concept concept_details_c = null;
+String concept_details_code = null;
+Object concept_details_obj = request.getSession().getAttribute("concept");
+if (concept_details_obj == null) {
+    concept_details_code = (String) request.getParameter("code");
     request.getSession().setAttribute("code", concept_details_code);
+} else {
+    concept_details_c = (Concept) concept_details_obj;
+    concept_details_code = concept_details_c.getEntityCode();
 }
+
 %>
 
 	    <%@ include file="/pages/templates/header.xhtml" %>
