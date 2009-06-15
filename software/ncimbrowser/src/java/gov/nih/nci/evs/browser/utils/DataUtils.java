@@ -1922,11 +1922,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 	public static boolean containSource(Vector sources, String source) {
 		if (sources == null || sources.size() == 0) return false;
+		String s = null;
 		for (int i=0; i<sources.size(); i++) {
-			String s = (String) sources.elementAt(i);
-			Vector ret_vec = DataUtils.parseData(s, "|");
-			String src = (String) ret_vec.elementAt(2);
-			if (src.compareTo(source) == 0) return true;
+			s = (String) sources.elementAt(i);
+			if (s.compareTo(source) == 0) return true;
 		}
 		return false;
 	}
