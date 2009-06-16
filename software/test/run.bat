@@ -12,7 +12,7 @@ for %%x in (lib\*.*) do (
 set CLASSPATH=%CP%
 
 set java=java
-set class=gov.nih.nci.evs.browser.utils.SearchUtils
+set class=gov.nih.nci.evs.browser.utils.test.SearchUtilsTest
 rem set config_file=-DLG_CONFIG_FILE=t:\2.3.0\resources\config\config.props
 set args=-propertyFile C:/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml
 set args=%args% -performanceTesting
