@@ -3,13 +3,13 @@ set OCP=%CLASSPATH%
 setlocal enabledelayedexpansion
 
 cd ..\ncimbrowser
-set COMMONS=.
-set COMMONS=%COMMONS%;conf
-set COMMONS=%COMMONS%;build\web\WEB-INF\classes
+set CP=.
+set CP=%CP%;conf
+set CP=%CP%;build\web\WEB-INF\classes
 for %%x in (lib\*.*) do (
-  set COMMONS=!COMMONS!;%%x
+  set CP=!CP!;%%x
 )
-set CLASSPATH=%COMMONS%
+set CLASSPATH=%CP%
 
 set java=java
 set class=gov.nih.nci.evs.browser.utils.SearchUtils
