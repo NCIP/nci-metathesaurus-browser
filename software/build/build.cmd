@@ -29,6 +29,7 @@ if "%1" == "clean" (
 )
 if "%1" == "dev" (
     ant -Dproperties.file=C:\SVN-Projects\ncim-properties\properties\dev-upgrade.properties deploy:remote:upgrade
+    rem ant -Dproperties.file=C:\@\src\browsers\ncim.properties\dev-upgrade.properties deploy:remote:upgrade
     goto DONE
 )
 
