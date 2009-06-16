@@ -21,12 +21,11 @@ public class Utils {
             _startMS = System.currentTimeMillis();
         }
         
-        public long duration() {
+        public long getDuration() {
             return System.currentTimeMillis() - _startMS;
         }
         
-        public String getResult() {
-            long time = duration();
+        public String getResult(long time) {
             double timeSec = time/1000.0;
             double timeMin = timeSec/60.0;
             
@@ -35,8 +34,12 @@ public class Utils {
                 _doubleFormatter.format(timeMin) + " min";
         }
         
-        public String getResultInSeconds() {
-            long time = duration();
+        public String getResult() {
+            long time = getDuration();
+            return getResult(time);
+        }
+        
+        public String formatInSec(long time) {
             double timeSec = time/1000.0;
             return _doubleFormatter.format(timeSec);
         }
