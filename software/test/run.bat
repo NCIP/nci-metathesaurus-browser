@@ -13,9 +13,7 @@ set CLASSPATH=%CP%
 
 set java=java
 set class=gov.nih.nci.evs.browser.utils.test.SearchUtilsTest
-rem set config_file=-DLG_CONFIG_FILE=t:\2.3.0\resources\config\config.props
 set args=-propertyFile C:/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml
-set args=%args% -performanceTesting
 
 @echo on
 %java% %config_file% %class% %args%

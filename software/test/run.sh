@@ -11,9 +11,7 @@ setenv CLASSPATH $CP
 
 set java=(java -Xms2048m -Xmx2048m)
 set class=gov.nih.nci.evs.browser.utils.test.SearchUtilsTest
-#set config_file=-DLG_CONFIG_FILE=/local/content/evs/ncimbrowser50/config/lbconfig.props
 set args=(-propertyFile /home/evsuser/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml)
-set args=($args -performanceTesting)
 
 set cmd = "$java $class $args"
 echo $cmd
