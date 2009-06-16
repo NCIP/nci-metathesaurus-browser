@@ -34,6 +34,12 @@ public class Utils {
                 _doubleFormatter.format(timeSec) + " sec, " + 
                 _doubleFormatter.format(timeMin) + " min";
         }
+        
+        public String getResultInSeconds() {
+            long time = duration();
+            double timeSec = time/1000.0;
+            return _doubleFormatter.format(timeSec);
+        }
     }
     
     public static String[] toStrings(String value, String delimiter, 

@@ -1029,8 +1029,6 @@ public class SearchUtils {
 
 
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
-        debugArguments(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
-
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1871,17 +1869,6 @@ public class SearchUtils {
 		int score = max_str_length - penalty_multiplier_2 * m2 - penalty_multiplier_1 * m1;
 		return Math.max(0, score);
 	}
-
-/////////////////////////////////////////////////////////////////
-    protected static boolean isPerformanceTesting = false;
-    
-    protected static void debug(String text) {
-    }
-
-    protected static void debugArguments(String scheme, String version,
-        String matchText, String source, String matchAlgorithm,
-        int maxToReturn) {
-    }
 
 /////////////////////////////////////////////////////////////////
     public static void main(String[] args)
