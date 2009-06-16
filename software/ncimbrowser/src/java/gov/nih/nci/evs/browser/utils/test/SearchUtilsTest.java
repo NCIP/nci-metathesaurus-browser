@@ -7,7 +7,6 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
     public static boolean suppressMessage = false;
-    public static boolean isPerformanceTesting = false;
     private boolean displayParameters = false;
     private boolean displayConcepts = false;
     private boolean displayTabDelimitedFormat = false;
@@ -34,9 +33,6 @@ public class SearchUtilsTest extends SearchUtils {
     }
 
     private static void debug(String text) {
-        if (! isPerformanceTesting)
-            return;
-        //System.out.println("PERF: " + text);
         System.out.println(text);
     }
 
@@ -50,20 +46,21 @@ public class SearchUtilsTest extends SearchUtils {
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Concept> v = searchByName(scheme, version,
             matchText, matchAlgorithm, maxToReturn);
-        String runtime = stopWatch.getResultInSeconds();
+        long duration = stopWatch.getDuration();
 
-        if (displayConcepts) {
+        if (displayConcepts && v.size() > 0) {
+            debug("* List of concepts:");
             for (int i = 0; i < v.size(); i++) {
                 int j = i + 1;
                 Concept ce = v.elementAt(i);
-                debug("(" + j + ")" + " " + ce.getEntityCode() + " "
+                debug("  " + j + ") " + ce.getEntityCode() + " "
                     + ce.getEntityDescription().getContent());
             }
         }
         debug(! displayTabDelimitedFormat, "* Number of concepts: " + v.size());
-        debug(! displayConcepts, "* Run time: " + runtime + " sec");
-        debug(displayTabDelimitedFormat, "Excel: " + matchText + "\t" + 
-            matchAlgorithm + "\t" + runtime + "\t" + v.size());
+        debug(! displayTabDelimitedFormat, "* " + stopWatch.getResult(duration));
+        debug(displayTabDelimitedFormat, "* Tabbed: " + matchText + "\t" + 
+            matchAlgorithm + "\t" + stopWatch.formatInSec(duration) + "\t" + v.size());
     }
     
     private void test1() {
@@ -91,11 +88,7 @@ public class SearchUtilsTest extends SearchUtils {
         String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
-            if (arg.equals("-performanceTesting")) {
-                isPerformanceTesting = true;
-            } else if (arg.equals("+performanceTesting")) {
-                isPerformanceTesting = false;
-            } else if (arg.equals("-url")) {
+            if (arg.equals("-url")) {
                 prevArg = arg;
             } else if (prevArg.equals("-url")) {
                 url = arg;
