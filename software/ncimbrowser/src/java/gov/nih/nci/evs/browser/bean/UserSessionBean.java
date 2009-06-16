@@ -203,7 +203,7 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
-        request.getSession().setAttribute("type", "properties");
+        //request.getSession().setAttribute("type", "properties");
 
 
         if (v != null && v.size() > 1)
@@ -223,6 +223,7 @@ public class UserSessionBean extends Object
             Concept c = (Concept) v.elementAt(0);
             request.getSession().setAttribute("code", c.getEntityCode());
             request.getSession().setAttribute("concept", c);
+            request.getSession().setAttribute("type", "properties");
             return "concept_details";
         }
         String message = "No match found.";

@@ -11,9 +11,15 @@
     <%
       String scheme = (String) request.getSession().getAttribute("dictionary");
       String id = (String) request.getSession().getAttribute("code");
-      String data_type = (String) request.getSession().getAttribute("type");
+      
+      //String data_type = (String) request.getSession().getAttribute("type");
+      
+      String data_type = (String) request.getParameter("type");
+      
+ System.out.println("*** typeLinks.xhtml  data_type " + data_type);    
       
       if (data_type == null) data_type = "properties";
+     
       
      %>
      <td width="134" height="21">
