@@ -18,5 +18,3 @@ set args=($args -performanceTesting)
 set cmd = "$java $class $args"
 echo $cmd
 $cmd
-
-
