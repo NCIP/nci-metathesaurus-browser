@@ -1026,6 +1026,8 @@ public class SearchUtils {
 
 
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
+        debugArguments(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+        
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1853,8 +1855,54 @@ public class SearchUtils {
 	}
 
 /////////////////////////////////////////////////////////////////
-
-    public static void main(String[] args)
+    private static boolean isPerformanceTesting = false;
+    
+    private static void debug(String text) {
+        if (isPerformanceTesting)
+            System.out.println(text);
+    }
+    
+    private static void debugArguments(String scheme, String version, 
+        String matchText, String source, String matchAlgorithm,
+        int maxToReturn) {
+        debug(Utils.SEPARATOR);
+        debug("scheme = " + scheme);
+        debug("version = " + version);
+        debug("matchText = " + matchText);
+        debug("source = " + source);
+        debug("matchAlgorithm = " + matchAlgorithm);
+        debug("maxToReturn = " + maxToReturn);
+    }
+    
+    public static void mainTest(String[] args)
+    {
+        String prevArg = "";
+        String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+        for (int i=0; i<args.length; ++i) {
+            String arg = args[i];
+            if (arg.equals("-performanceTesting")) {
+                isPerformanceTesting = true;
+            } else if (arg.equals("+performanceTesting")) {
+                isPerformanceTesting = false;
+            } else if (arg.equals("-url")) {
+                prevArg = arg;
+            } else if (prevArg.equals("-url")) {
+                url = arg;
+                prevArg = "";
+            } else if (arg.equals("-propertyFile")) {
+                prevArg = arg;
+            } else if (prevArg.equals("-propertyFile")) {
+                System.setProperty("gov.nih.nci.evs.browser.NCImBrowserProperties", arg);
+                prevArg = "";
+            }
+        }
+        
+        SearchUtils test = new SearchUtils(url);
+        test.testSearchByName();
+    }
+    
+/////////////////////////////////////////////////////////////////
+    public static void mainOrig(String[] args)
     {
          String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
          if (args.length == 1)
@@ -1867,5 +1915,9 @@ public class SearchUtils {
          test.testSearchByName();
     }
 
+    public static void main(String[] args)
+    {
+        mainOrig(args);
+        //mainTest(args);
+    }
 }
-
