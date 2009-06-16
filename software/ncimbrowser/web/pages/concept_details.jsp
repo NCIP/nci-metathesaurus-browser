@@ -82,7 +82,23 @@ if (concept_details_obj == null) {
     if (checkmultiplicity == null) checkmultiplicity = "false";
     
     type = (String) request.getParameter("type");
-    if (type == null) type = "properties";
+ System.out.println("*** concept_details.jsp  type " + type);    
+    
+    
+    
+            if (type == null) {
+                type = "properties";
+            }
+            else if (type.compareTo("properties") != 0 &&
+                     type.compareTo("relationship") != 0 &&
+                     type.compareTo("synonym") != 0 &&
+                     type.compareTo("sources") != 0 &&
+                     type.compareTo("all") != 0) {
+                type = "properties";
+            }    
+    
+    
+    
     
     boolean multipleCUIs = false;
     
@@ -228,10 +244,9 @@ if (concept_details_obj == null) {
            
           if (c != null) {
 		    request.getSession().setAttribute("dictionary", dictionary);
-		    request.getSession().setAttribute("type", type);
 		    request.getSession().setAttribute("singleton", "false");
  request.getSession().setAttribute("Concept", c);
- request.getSession().setAttribute("Concept", c.getEntityCode());
+ request.getSession().setAttribute("code", c.getEntityCode());
  
           %>
 		  <div class="texttitle-blue">
