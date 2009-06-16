@@ -36,9 +36,7 @@
   } else {
       neighborhood_sab = (String) request.getParameter("sab");
   }
-  if (neighborhood_sab == null) {
-     neighborhood_sab = (String) request.getSession().getAttribute("selectedConceptSource");
-  } 
+
   if (neighborhood_sab == null) {
       if (source_vec.contains("NCI")) {
           neighborhood_sab = "NCI";
