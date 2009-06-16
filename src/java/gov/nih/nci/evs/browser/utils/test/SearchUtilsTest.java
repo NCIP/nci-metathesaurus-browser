@@ -6,8 +6,11 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
+    public static boolean suppressMessage = false;
     public static boolean isPerformanceTesting = false;
-    private static boolean isExcelFormat = false;
+    private boolean displayParameters = false;
+    private boolean displayConcepts = false;
+    private boolean displayTabDelimitedFormat = false;
     
     public SearchUtilsTest(String url) {
         super(url);
@@ -16,23 +19,28 @@ public class SearchUtilsTest extends SearchUtils {
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         int maxToReturn) {
-        debug(! isExcelFormat, Utils.SEPARATOR);
-        debug(! isExcelFormat, "scheme = " + scheme);
-        debug(! isExcelFormat, "version = " + version);
-        debug(! isExcelFormat, "matchText = " + matchText);
-        debug(! isExcelFormat, "source = " + source);
-        debug(! isExcelFormat, "matchAlgorithm = " + matchAlgorithm);
-        debug(! isExcelFormat, "maxToReturn = " + maxToReturn);
+        if (displayParameters) {
+            debug(Utils.SEPARATOR);
+            debug("* Search parameters:");
+            debug("  * scheme = " + scheme);
+            debug("  * version = " + version);
+            debug("  * matchText = " + matchText);
+            debug("  * source = " + source);
+            debug("  * matchAlgorithm = " + matchAlgorithm);
+            debug("  * maxToReturn = " + maxToReturn);
+        }
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
 
-    private void debug(String text) {
-        if (isPerformanceTesting)
-            System.out.println("PERF: " + text);
+    private static void debug(String text) {
+        if (! isPerformanceTesting)
+            return;
+        //System.out.println("PERF: " + text);
+        System.out.println(text);
     }
 
-    private void debug(boolean display, String text) {
+    private static void debug(boolean display, String text) {
         if (display)
             debug(text);
     }
@@ -40,21 +48,22 @@ public class SearchUtilsTest extends SearchUtils {
     public void search(String scheme, String version, String matchText,
         String matchAlgorithm, int maxToReturn) {
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version,
+        Vector<Concept> v = searchByName(scheme, version,
             matchText, matchAlgorithm, maxToReturn);
         String runtime = stopWatch.getResultInSeconds();
-        debug(! isExcelFormat, "Run time: " + runtime + " sec");
-        if (v != null) {
-            debug(! isExcelFormat, "# of results: " + v.size());
+
+        if (displayConcepts) {
             for (int i = 0; i < v.size(); i++) {
                 int j = i + 1;
-                Concept ce = (Concept) v.elementAt(i);
-                debug(! isExcelFormat, "(" + j + ")" + " " + ce.getEntityCode() + " "
+                Concept ce = v.elementAt(i);
+                debug("(" + j + ")" + " " + ce.getEntityCode() + " "
                     + ce.getEntityDescription().getContent());
             }
         }
-        debug(isExcelFormat, "Excel: " + matchText + "\t" + matchAlgorithm + 
-            "\t" + runtime + "\t" + v.size());
+        debug(! displayTabDelimitedFormat, "* Number of concepts: " + v.size());
+        debug(! displayConcepts, "* Run time: " + runtime + " sec");
+        debug(displayTabDelimitedFormat, "Excel: " + matchText + "\t" + 
+            matchAlgorithm + "\t" + runtime + "\t" + v.size());
     }
     
     private void test1() {
@@ -62,15 +71,19 @@ public class SearchUtilsTest extends SearchUtils {
         String version = null;
         String matchAlgorithm = "contains";
         matchAlgorithm = "exactMatch";
-        int maxToReturn = 200;
+        int maxToReturn = -1;
 
+        displayParameters = Prompt.prompt("Display parameters", displayParameters);
+        displayConcepts = Prompt.prompt("Display concepts", displayConcepts);
+        displayTabDelimitedFormat = Prompt.prompt("Display tab delimited", displayTabDelimitedFormat);
+        
         String[] matchTexts = new String[] {
             "blood", "cell"
         };
 
         for (int i=0; i<matchTexts.length; ++i)
             search(scheme, version, matchTexts[i], matchAlgorithm, maxToReturn);
-        debug("Done");
+        debug("* Done");
     }
 
     public static void main(String[] args) {
@@ -97,6 +110,14 @@ public class SearchUtilsTest extends SearchUtils {
         }
 
         SearchUtilsTest test = new SearchUtilsTest(url);
-        test.test1();
+        boolean isContinue = true;
+        do {
+            test.test1();
+            debug("");
+            debug(Utils.SEPARATOR);
+            isContinue = Prompt.prompt("Continue", isContinue);
+            if (! isContinue) break;
+        } while (isContinue);
+        debug("Done");
     }
 }
