@@ -1,10 +1,11 @@
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
 <%
    //Object obj = request.getSession().getAttribute("concept");
    Object obj = request.getSession().getAttribute("code");
    Boolean codeInNCI = Boolean.FALSE;
    if (obj != null) {
        String menuBar_code = (String) obj;
-       Vector menuBar_sources = DataUtils.getSources("NCI MetaThesaurus", null, null, menuBar_code); 
+       Vector menuBar_sources = DataUtils.getSources(Constants.CODING_SCHEME_NAME, null, null, menuBar_code); 
        boolean bool_obj = DataUtils.containSource(menuBar_sources, "NCI");
        codeInNCI = new Boolean(bool_obj);
    }
