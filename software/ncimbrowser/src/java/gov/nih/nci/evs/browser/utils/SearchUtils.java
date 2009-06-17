@@ -121,6 +121,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
+import gov.nih.nci.evs.browser.utils.test.SearchUtilsTest;
 
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
@@ -1032,6 +1033,7 @@ public class SearchUtils {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
+		Utils.StopWatch stopWatch = new Utils.StopWatch();
 
 		boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
@@ -1143,9 +1145,11 @@ public class SearchUtils {
                 boolean resolveConcepts = false;
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
                 try {
+                    stopWatch.start();
 					long ms = System.currentTimeMillis();
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-					System.out.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+					Debug.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+                    SearchUtilsTest.debug("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1162,6 +1166,7 @@ public class SearchUtils {
 
         if (apply_sort_score)
         {
+                stopWatch.start();
                 long ms = System.currentTimeMillis();
                 try {
 					if (sort_by_pt_only) {
@@ -1173,16 +1178,19 @@ public class SearchUtils {
                 } catch (Exception ex) {
 
                 }
-                System.out.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+                Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+                SearchUtilsTest.debug("* sortByScore: " + stopWatch.getResult());
         }
 
         Vector v = null;
         if (iterator != null) {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+            stopWatch.start();
 			long ms = System.currentTimeMillis();
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
-			System.out.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+			Debug.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+			SearchUtilsTest.debug("* resolveIterator: " + stopWatch.getResult());
         }
 
         if (v == null || v.size() == 0) {
@@ -1480,9 +1488,12 @@ public class SearchUtils {
         int knt = 0;
         while (toSort.hasNext()) {
             // Working in chunks of 100.
+            Utils.StopWatch stopWatch = new Utils.StopWatch();
             long ms = System.currentTimeMillis();
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
-            System.out.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
+            Debug.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
+            SearchUtilsTest.debug("* toSort.next(500): " + stopWatch.getResult());
+            stopWatch.start();
             ms = System.currentTimeMillis();
 
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
@@ -1529,7 +1540,8 @@ public class SearchUtils {
 
             knt = knt + num_concepts;
             //if (knt > 1000) break;
-            System.out.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
+            Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
+            SearchUtilsTest.debug("* Sorted [" + knt + " concepts]: " + stopWatch.getResult());
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
