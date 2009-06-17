@@ -11,7 +11,8 @@ public class SearchUtilsTest extends SearchUtils {
     private boolean suppressOtherMessages = true;
     private boolean displayParameters = false;
     private boolean displayConcepts = false;
-    private boolean displayTabDelimitedFormat = false;
+    private static boolean displayTabDelimitedFormat = false;
+    private static ArrayList<String> tabList = new ArrayList<String>();
 
     public SearchUtilsTest(String url) {
         super(url);
@@ -47,9 +48,41 @@ public class SearchUtilsTest extends SearchUtils {
         if (displayDetails)
             debug("  " + text);
     }
+    
+    public static void debugTabbedValue(int index, String name, String value) {
+        if (! displayTabDelimitedFormat || tabList == null)
+            return;
+
+        String text = "";
+        if (name != null && name.length() > 0)
+            text += name + ":\t";
+        if (value != null && value.length() > 0)
+            text += value + "\t";
+        if (index < 0)
+            tabList.add(text);
+        else tabList.add(index, text);
+    }
+    
+    public static void debugTabbedValue(String name, String value) {
+        debugTabbedValue(-1, name, value);
+    }
+
+    private static void displayTabbedValues() {
+        if (! displayTabDelimitedFormat || tabList == null || tabList.size() <= 0)
+            return;
+
+        StringBuffer buffer = new StringBuffer();
+        Iterator<String> iterator = tabList.iterator();
+        while (iterator.hasNext()) {
+            String value = iterator.next();
+            buffer.append(value);
+        }
+        debug(buffer.toString());
+    }
 
     public void search(String scheme, String version, String matchText,
         String matchAlgorithm, int maxToReturn) {
+        tabList = new ArrayList<String>();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Concept> v = searchByName(scheme, version, matchText,
             matchAlgorithm, maxToReturn);
@@ -69,9 +102,15 @@ public class SearchUtilsTest extends SearchUtils {
             debug("  * Number of concepts: " + v.size());
             debug("  * Total runtime: " + stopWatch.getResult(duration));
         }
-        debug(displayTabDelimitedFormat, "* Tabbed: " + matchText + "\t"
-            + matchAlgorithm + "\t" + stopWatch.formatInSec(duration) + "\t"
-            + v.size());
+        if (displayTabDelimitedFormat) {
+            int i=0;
+            debugTabbedValue(i++, "* Tabbed", "");
+            debugTabbedValue(i++, "matchText", matchText);
+            debugTabbedValue(i++, "algorithm", matchAlgorithm);
+            debugTabbedValue(i++, "hits", Integer.toString(v.size()));
+            debugTabbedValue(i++, "runtime", stopWatch.formatInSec(duration));
+            displayTabbedValues();
+        }
     }
 
     private void testSearch() {
@@ -94,12 +133,13 @@ public class SearchUtilsTest extends SearchUtils {
         String[] matchTexts = new String[] { "blood", "cell" };
 
         for (int i = 0; i < matchTexts.length; ++i) {
+            String matchText = matchTexts[i];
             if (displayDetails) {
                 debug("");
                 debug(Utils.SEPARATOR);
-                debug("* Details:");
+                debug("* Details: " + matchAlgorithm + " " + matchText);
             }
-            search(scheme, version, matchTexts[i], matchAlgorithm, maxToReturn);
+            search(scheme, version, matchText, matchAlgorithm, maxToReturn);
         }
         debug("* Done");
     }

@@ -43,6 +43,11 @@ public class Utils {
             double timeSec = time/1000.0;
             return _doubleFormatter.format(timeSec);
         }
+
+        public String formatInSec() {
+            long time = getDuration();
+            return formatInSec(time);
+        }
     }
     
     public static String[] toStrings(String value, String delimiter, 
