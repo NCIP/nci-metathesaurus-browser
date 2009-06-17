@@ -28,43 +28,43 @@
       <!-- Page content -->
       <div class="pagecontent">
 <%
-            String neighborhood_sab = (String) request.getParameter("sab");
-            String neighborhood_code = (String) request.getParameter("code");
-            String sort_by = (String) request.getParameter("sortBy");
-           
+            String neighborhood_sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
+            String neighborhood_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
+            String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sortBy"));
+
             if (sort_by == null) sort_by = "name";
 %>
-              <h2>Source: <%=neighborhood_sab%></h2> 
-              
-	      <table class="dataTable" border="0">
-	      
+              <h2>Source: <%=neighborhood_sab%></h2>
+
+        <table class="dataTable" border="0">
+
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by.compareTo("code") == 0) {
               %>
                  Code
-              <%   
+              <%
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=code">Code</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=code">Code</a>
+              <%
               }
-              %>             
-          </th>        
+              %>
+          </th>
 
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by.compareTo("type") == 0) {
               %>
                  Type
-              <%   
+              <%
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=type">Type</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=type">Type</a>
+              <%
               }
-              %>               
+              %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
                 '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
@@ -73,53 +73,53 @@
 
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              
+
               if (sort_by.compareTo("name") == 0) {
               %>
                  Term
-              <%   
+              <%
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=name">Term</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/neighborhood_atoms.jsf?code=<%=neighborhood_code%>&sab=<%=neighborhood_sab%>&sortBy=name">Term</a>
+              <%
               }
               %>
           </th>
-          
-        </tr>	      
-	      
-		<%
-		  Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-		  Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
-		  if (neighborhood_synonyms == null) {
-		  	neighborhood_synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
-		  }
-		  neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
-		  request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
-		  
-		  for (int n=0; n<neighborhood_synonyms.size(); n++)
-		  {
-		    String s = (String) neighborhood_synonyms.elementAt(n);
-		    Vector synonym_data = DataUtils.parseData(s, "|");
-		    String term_name = (String) synonym_data.elementAt(0);
-		    String term_type = (String) synonym_data.elementAt(1);
-		    String term_source = (String) synonym_data.elementAt(2);
-		    String term_source_code = (String) synonym_data.elementAt(3);
-		    String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
-		%>
-		    <tr class="<%=rowColor%>">
-		      <td class="dataCellText"><%=term_source_code%></td>
-		      <td class="dataCellText"><%=term_type%></td>
-		      <td class="dataCellText"><%=term_name%></td>
-		    </tr>
-		<%
-		  }
-		%>
-	      </table>  
-	      
-	      <p></p>
+
+        </tr>
+
+    <%
+      Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
+      Vector neighborhood_synonyms = (Vector) request.getSession().getAttribute("neighborhood_synonyms");
+      if (neighborhood_synonyms == null) {
+        neighborhood_synonyms = new DataUtils().getSynonyms(concept_syn, neighborhood_sab);
+      }
+      neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
+      request.getSession().setAttribute("neighborhood_synonyms", neighborhood_synonyms);
+
+      for (int n=0; n<neighborhood_synonyms.size(); n++)
+      {
+        String s = (String) neighborhood_synonyms.elementAt(n);
+        Vector synonym_data = DataUtils.parseData(s, "|");
+        String term_name = (String) synonym_data.elementAt(0);
+        String term_type = (String) synonym_data.elementAt(1);
+        String term_source = (String) synonym_data.elementAt(2);
+        String term_source_code = (String) synonym_data.elementAt(3);
+        String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+    %>
+        <tr class="<%=rowColor%>">
+          <td class="dataCellText"><%=term_source_code%></td>
+          <td class="dataCellText"><%=term_type%></td>
+          <td class="dataCellText"><%=term_name%></td>
+        </tr>
+    <%
+      }
+    %>
+        </table>
+
+        <p></p>
               <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=neighborhood_code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Return to Sources</a>
-        
+
         <%@ include file="/pages/templates/nciFooter.html" %>
       </div>
       <!-- end Page content -->

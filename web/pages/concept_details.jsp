@@ -45,7 +45,7 @@ Concept concept_details_c = null;
 String concept_details_code = null;
 Object concept_details_obj = request.getSession().getAttribute("concept");
 if (concept_details_obj == null) {
-    concept_details_code = (String) request.getParameter("code");
+    concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
     request.getSession().setAttribute("code", concept_details_code);
 } else {
     concept_details_c = (Concept) concept_details_obj;
@@ -54,18 +54,18 @@ if (concept_details_obj == null) {
 
 %>
 
-	    <%@ include file="/pages/templates/header.xhtml" %>
-	    <div class="center-page">
-	      <%@ include file="/pages/templates/sub-header.xhtml" %>
-	      <!-- Main box -->
-	      <div id="main-area">
-		<%@ include file="/pages/templates/content-header.xhtml" %>
-		
+      <%@ include file="/pages/templates/header.xhtml" %>
+      <div class="center-page">
+        <%@ include file="/pages/templates/sub-header.xhtml" %>
+        <!-- Main box -->
+        <div id="main-area">
+    <%@ include file="/pages/templates/content-header.xhtml" %>
+
         <!-- Page content -->
         <div class="pagecontent">
-                
-                
-<%  
+
+
+<%
     String dictionary = null;
     String code = null;
     String type = null;
@@ -76,12 +76,12 @@ if (concept_details_obj == null) {
     String ltag = null;
     String sab = null;
     String sourcecode = null;
-    
-    
-    String checkmultiplicity = (String) request.getParameter("checkmultiplicity");
+
+
+    String checkmultiplicity = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("checkmultiplicity"));
     if (checkmultiplicity == null) checkmultiplicity = "false";
 
-    type = (String) request.getParameter("type");
+    type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
 
 System.out.println("*** concept_details.jsp type: " + type);
 
@@ -94,185 +94,185 @@ System.out.println("*** concept_details.jsp type: " + type);
                      type.compareTo("sources") != 0 &&
                      type.compareTo("all") != 0) {
                 type = "properties";
-            }    
-    
-    
-    
-    
+            }
+
+
+
+
     boolean multipleCUIs = false;
-    
+
     if (type.compareTo("sources") == 0 && checkmultiplicity.compareTo("true") == 0) {
-    
-	boolean searchInactive = true;
-	sab = (String) request.getParameter("sab");
-	sourcecode = (String) request.getParameter("sourcecode");
-	int maxToReturn = 100;
-	Vector u = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
+
+  boolean searchInactive = true;
+  sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
+  sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
+  int maxToReturn = 100;
+  Vector u = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
         if (u != null && u.size() > 1) {
             multipleCUIs = true;
     %>
-		
-		<table width="700px">
-		  <tr>
-		    <table>
-		      <tr>
-			<td class="texttitle-blue">Result for:</td>
-			<td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
-		      </tr>
-		    </table>
-		  </tr>
-		  <tr>
-		    <td><hr></td>
-		  </tr>
-		  <tr>
-		    <td>
-		      <b>Multiple concepts are found containing <%=sab%> code &nbsp;<%=sourcecode%>:</b>
-		    </td>
-		  </tr>
-		  <tr>
-		    <td class="textbody">
-		      <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
-			<%
-			  for (int i=0; i<u.size(); i++) {
-			      c = (Concept) u.elementAt(i);
-			      code = c.getEntityCode();
-			      name = c.getEntityDescription().getContent();
-			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
-			      String semantic_type = "";
-			      if (semantic_types != null && semantic_types.size() > 0) {
-				  for (int j=0; j<semantic_types.size(); j++) {
-				      String t = (String) semantic_types.elementAt(j);
-				      semantic_type = semantic_type + t;
-				      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-				  }
-			      }
 
-			      if (i % 2 == 0) {
-				%>
-				  <tr class="dataRowDark">
-				<%
-			      } else {
-				%>
-				  <tr class="dataRowLight">
-				<%
-			      }
-			      %>
-				  <td class="dataCellText">
-				  <!--
-				    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-				   -->  
-				    <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
-				  </td>
-				  <td class="dataCellText">
-				      <%=semantic_type%>
-				  </td>                          
-				</tr>
-			      <%
-			   }
-			%>
-		      </table>
-		    </td>
-		  </tr>
-		</table>
+    <table width="700px">
+      <tr>
+        <table>
+          <tr>
+      <td class="texttitle-blue">Result for:</td>
+      <td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
+          </tr>
+        </table>
+      </tr>
+      <tr>
+        <td><hr></td>
+      </tr>
+      <tr>
+        <td>
+          <b>Multiple concepts are found containing <%=sab%> code &nbsp;<%=sourcecode%>:</b>
+        </td>
+      </tr>
+      <tr>
+        <td class="textbody">
+          <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
+      <%
+        for (int i=0; i<u.size(); i++) {
+            c = (Concept) u.elementAt(i);
+            code = c.getEntityCode();
+            name = c.getEntityDescription().getContent();
+            Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
+            String semantic_type = "";
+            if (semantic_types != null && semantic_types.size() > 0) {
+          for (int j=0; j<semantic_types.size(); j++) {
+              String t = (String) semantic_types.elementAt(j);
+              semantic_type = semantic_type + t;
+              if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+          }
+            }
+
+            if (i % 2 == 0) {
+        %>
+          <tr class="dataRowDark">
+        <%
+            } else {
+        %>
+          <tr class="dataRowLight">
+        <%
+            }
+            %>
+          <td class="dataCellText">
+          <!--
+            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+           -->
+            <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
+          </td>
+          <td class="dataCellText">
+              <%=semantic_type%>
+          </td>
+        </tr>
+            <%
+         }
+      %>
+          </table>
+        </td>
+      </tr>
+    </table>
     <%
         }
-    } 
-    
+    }
+
     if (!multipleCUIs) {
 
-    String singleton = (String) request.getSession().getAttribute("singleton");
+    String singleton = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("singleton"));
     if (singleton != null && singleton.compareTo("true") == 0) {
-      dictionary = (String) request.getSession().getAttribute("dictionary");
+      dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));
       if (dictionary == null) {
-	dictionary = Constants.CODING_SCHEME_NAME;
-      }  
-      code = (String) request.getSession().getAttribute("code");
+  dictionary = Constants.CODING_SCHEME_NAME;
+      }
+      code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
     } else {
-      dictionary = (String) request.getParameter("dictionary");
+      dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
       if (dictionary == null) {
          dictionary = Constants.CODING_SCHEME_NAME;
-      }  
-      code = (String) request.getParameter("code");
+      }
+      code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
       if (code == null) {
-          code = (String) request.getSession().getAttribute("code");
+          code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
       } else {
           request.getSession().removeAttribute("AssociationTargetHashMap");
       }
-      sortBy = (String) request.getParameter("sortBy");
+      sortBy = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sortBy"));
     }
-    
-    
-    
+
+
+
     c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
     if (c != null) {
-	    Vector synonyms = DataUtils.getSynonyms(c, "NCI");
-	    Boolean code_In_NCI = Boolean.FALSE;
-	    if (synonyms != null && synonyms.size() > 0) {
-		code_In_NCI = Boolean.TRUE;;
-	    }
-	    request.getSession().setAttribute("codeInNCI", code_In_NCI);
+      Vector synonyms = DataUtils.getSynonyms(c, "NCI");
+      Boolean code_In_NCI = Boolean.FALSE;
+      if (synonyms != null && synonyms.size() > 0) {
+    code_In_NCI = Boolean.TRUE;;
+      }
+      request.getSession().setAttribute("codeInNCI", code_In_NCI);
     }
-%>           
-  
-        
+%>
+
+
           <%
             if (type == null) {
               type = "properties";
-            } 
-            
+            }
+
             if (sortBy == null) {
               sortBy = "name";
-            } 
-            
+            }
+
             name = "";
             if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
                //name = "The server encountered an internal error that prevented it from fulfilling this request.";
                name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
             } else {
-		    if (c != null) {
-		       request.getSession().setAttribute("concept", c);
-		       request.getSession().setAttribute("code", code);
-		       name = c.getEntityDescription().getContent();
-	       
-		    } else {
-		       //name = "The server encountered an internal error that prevented it from fulfilling this request.";
-		       name = "ERROR: Invalid code - " + code + ".";
-		    }
-	   }
+        if (c != null) {
+           request.getSession().setAttribute("concept", c);
+           request.getSession().setAttribute("code", code);
+           name = c.getEntityDescription().getContent();
 
-           
+        } else {
+           //name = "The server encountered an internal error that prevented it from fulfilling this request.";
+           name = "ERROR: Invalid code - " + code + ".";
+        }
+     }
+
+
           if (c != null) {
-		    request.getSession().setAttribute("dictionary", dictionary);
-		    request.getSession().setAttribute("singleton", "false");
+        request.getSession().setAttribute("dictionary", dictionary);
+        request.getSession().setAttribute("singleton", "false");
  request.getSession().setAttribute("Concept", c);
  request.getSession().setAttribute("code", c.getEntityCode());
- 
+
           %>
-		  <div class="texttitle-blue">
-		      <%=name%> (CUI <%=code%>)
-		  </div>
-		  
-		  <hr>
-		  <%@ include file="/pages/templates/typeLinks.xhtml" %>
-		  <div class="tabTableContentContainer">
-			    <%@ include file="/pages/templates/property.xhtml" %>
-			    <%@ include file="/pages/templates/relationship.xhtml" %>
-			    <%@ include file="/pages/templates/synonym.xhtml" %>
-			    <%@ include file="/pages/templates/sources.xhtml" %>
-		  </div>	    
+      <div class="texttitle-blue">
+          <%=name%> (CUI <%=code%>)
+      </div>
+
+      <hr>
+      <%@ include file="/pages/templates/typeLinks.xhtml" %>
+      <div class="tabTableContentContainer">
+          <%@ include file="/pages/templates/property.xhtml" %>
+          <%@ include file="/pages/templates/relationship.xhtml" %>
+          <%@ include file="/pages/templates/synonym.xhtml" %>
+          <%@ include file="/pages/templates/sources.xhtml" %>
+      </div>
           <%
           } else {
           %>
- 		  <div class="textbody">
-		      <%=name%>
-		  </div> 
-	  <%	  
+      <div class="textbody">
+          <%=name%>
+      </div>
+    <%
           }
       }
-      
-request.getSession().removeAttribute("type");     
+
+request.getSession().removeAttribute("type");
           %>
-            
+
             <%@ include file="/pages/templates/nciFooter.html" %>
           </div>
         </div>

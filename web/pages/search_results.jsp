@@ -28,14 +28,14 @@
       <div class="pagecontent">
         <%
           Vector v = (Vector) request.getSession().getAttribute("search_results");
-          String matchText = (String) request.getSession().getAttribute("matchText");
-          String match_size = (String) request.getSession().getAttribute("match_size");
-          String page_string = (String) request.getSession().getAttribute("page_string");
+          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+          String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
+          String page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
           Boolean new_search = (Boolean) request.getSession().getAttribute("new_search");
-          String page_number = (String) request.getParameter("page_number");
-          //String selectedResultsPerPage = (String) request.getParameter("selectedResultsPerPage");
-          String selectedResultsPerPage = (String) request.getSession().getAttribute("selectedResultsPerPage");
-          
+          String page_number = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("page_number"));
+          //String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("selectedResultsPerPage"));
+          String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedResultsPerPage"));
+
           if (page_number != null && new_search == Boolean.FALSE)
           {
               page_string = page_number;
@@ -110,7 +110,7 @@
                           </td>
                           <td class="dataCellText" width=300>
                               <%=semantic_type%>
-                          </td>                          
+                          </td>
                         </tr>
                       <%
                     }
