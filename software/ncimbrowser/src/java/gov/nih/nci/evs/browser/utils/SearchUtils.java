@@ -1149,7 +1149,7 @@ public class SearchUtils {
 					long ms = System.currentTimeMillis();
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 					Debug.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    SearchUtilsTest.debug("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
+                    SearchUtilsTest.debugDetails("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1179,7 +1179,7 @@ public class SearchUtils {
 
                 }
                 Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-                SearchUtilsTest.debug("* sortByScore: " + stopWatch.getResult());
+                SearchUtilsTest.debugDetails("* sortByScore: " + stopWatch.getResult());
         }
 
         Vector v = null;
@@ -1190,7 +1190,7 @@ public class SearchUtils {
 			long ms = System.currentTimeMillis();
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-			SearchUtilsTest.debug("* resolveIterator: " + stopWatch.getResult());
+			SearchUtilsTest.debugDetails("* resolveIterator: " + stopWatch.getResult());
         }
 
         if (v == null || v.size() == 0) {
@@ -1492,7 +1492,7 @@ public class SearchUtils {
             long ms = System.currentTimeMillis();
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
             Debug.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
-            SearchUtilsTest.debug("* toSort.next(500): " + stopWatch.getResult());
+            SearchUtilsTest.debugDetails("* toSort.next(500): " + stopWatch.getResult());
             stopWatch.start();
             ms = System.currentTimeMillis();
 
@@ -1541,7 +1541,7 @@ public class SearchUtils {
             knt = knt + num_concepts;
             //if (knt > 1000) break;
             Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
-            SearchUtilsTest.debug("* Sorted [" + knt + " concepts]: " + stopWatch.getResult());
+            SearchUtilsTest.debugDetails("* Sorted [" + knt + " concepts]: " + stopWatch.getResult());
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);

@@ -7,6 +7,7 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
     private static boolean isPerformanceTesting = false;
+    private static boolean displayDetails = true;
     private boolean suppressOtherMessages = true;
     private boolean displayParameters = false;
     private boolean displayConcepts = false;
@@ -20,7 +21,6 @@ public class SearchUtilsTest extends SearchUtils {
         String version, String matchText, String source, String matchAlgorithm,
         int maxToReturn) {
         if (displayParameters) {
-            debug(Utils.SEPARATOR);
             debug("* Search parameters:");
             debug("  * scheme = " + scheme);
             debug("  * version = " + version);
@@ -33,14 +33,19 @@ public class SearchUtilsTest extends SearchUtils {
             matchAlgorithm, maxToReturn);
     }
 
-    public static void debug(String text) {
+    private static void debug(String text) {
         if (isPerformanceTesting)
             System.out.println(text);
     }
 
-    public static void debug(boolean display, String text) {
+    private static void debug(boolean display, String text) {
         if (display)
             debug(text);
+    }
+    
+    public static void debugDetails(String text) {
+        if (displayDetails)
+            debug("  " + text);
     }
 
     public void search(String scheme, String version, String matchText,
@@ -59,7 +64,7 @@ public class SearchUtilsTest extends SearchUtils {
                     + ce.getEntityDescription().getContent());
             }
         }
-        if (! displayTabDelimitedFormat) {
+        if (displayDetails) {
             debug("* Result: " + matchAlgorithm + " " + matchText);
             debug("  * Number of concepts: " + v.size());
             debug("  * Total runtime: " + stopWatch.getResult(duration));
@@ -69,7 +74,7 @@ public class SearchUtilsTest extends SearchUtils {
             + v.size());
     }
 
-    private void test1() {
+    private void testSearch() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
@@ -81,14 +86,21 @@ public class SearchUtilsTest extends SearchUtils {
         Debug.setDisplay(!suppressOtherMessages);
         displayParameters = Prompt.prompt("Display parameters",
             displayParameters);
+        displayDetails = Prompt.prompt("Display details", displayDetails);
         displayConcepts = Prompt.prompt("Display concepts", displayConcepts);
         displayTabDelimitedFormat = Prompt.prompt("Display tab delimited",
             displayTabDelimitedFormat);
 
         String[] matchTexts = new String[] { "blood", "cell" };
 
-        for (int i = 0; i < matchTexts.length; ++i)
+        for (int i = 0; i < matchTexts.length; ++i) {
+            if (displayDetails) {
+                debug("");
+                debug(Utils.SEPARATOR);
+                debug("* Details:");
+            }
             search(scheme, version, matchTexts[i], matchAlgorithm, maxToReturn);
+        }
         debug("* Done");
     }
 
@@ -115,7 +127,7 @@ public class SearchUtilsTest extends SearchUtils {
         SearchUtilsTest test = new SearchUtilsTest(url);
         boolean isContinue = true;
         do {
-            test.test1();
+            test.testSearch();
             debug("");
             debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
