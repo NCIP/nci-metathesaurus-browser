@@ -58,11 +58,15 @@ public class SearchUtilsTest extends SearchUtils {
         if (! displayTabDelimitedFormat || tabList == null)
             return;
 
+        String delimiter = "\t";
+        delimiter = " | ";
         String text = "";
+        
         if (name != null && name.length() > 0)
-            text += name + ":\t";
+            text += name + ":" + delimiter;
         if (value != null && value.length() > 0)
-            text += value + "\t";
+            text += value + delimiter;
+        
         if (index < 0)
             tabList.add(text);
         else tabList.add(index, text);
