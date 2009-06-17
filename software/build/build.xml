@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-templage verison 0.10.0 -->
+<!-- bda-build-templage verison 1.1.0 -->
 
 <project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
@@ -150,13 +150,8 @@
     </path>
 
     <!-- Task definitions -->
-    <taskdef name="xmlconfig" classname="com.xmlconfig.anttask.XmlConfig" classpathref="bda-utils.classpath" />
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.classpath" />
-    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
-        <classpath>
-            <pathelement location="${bda-utils.dir}/ant-contrib-1.0b3.jar" />
-        </classpath>
-    </taskdef>
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda-utils.classpath"/>
     <!-- Includes- include BDA marcos -->
     <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
     <!-- Start logging -->
