@@ -81,11 +81,11 @@ public class SearchUtilsTest extends SearchUtils {
     }
 
     public void search(String scheme, String version, String matchText,
-        String matchAlgorithm, int maxToReturn) {
+        String source, String matchAlgorithm, int maxToReturn) {
         tabList = new ArrayList<String>();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Concept> v = searchByName(scheme, version, matchText,
-            matchAlgorithm, maxToReturn);
+            source, matchAlgorithm, maxToReturn);
         long duration = stopWatch.getDuration();
 
         if (displayConcepts && v.size() > 0) {
@@ -117,6 +117,7 @@ public class SearchUtilsTest extends SearchUtils {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
+        String source = null;
         matchAlgorithm = "exactMatch";
         int maxToReturn = -1;
 
@@ -139,7 +140,7 @@ public class SearchUtilsTest extends SearchUtils {
                 debug(Utils.SEPARATOR);
                 debug("* Details: " + matchAlgorithm + " " + matchText);
             }
-            search(scheme, version, matchText, matchAlgorithm, maxToReturn);
+            search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
         debug("* Done");
     }
