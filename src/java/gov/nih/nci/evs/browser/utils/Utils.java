@@ -16,6 +16,10 @@ public class Utils {
         public StopWatch() {
             start();
         }
+        
+        public static DecimalFormat getFormatter() {
+            return _doubleFormatter;
+        }
     
         public void start() {
             _startMS = System.currentTimeMillis();

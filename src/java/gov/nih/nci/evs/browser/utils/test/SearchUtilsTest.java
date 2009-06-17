@@ -33,13 +33,17 @@ public class SearchUtilsTest extends SearchUtils {
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
+    
+    public static boolean isPerformanceTesting() {
+        return isPerformanceTesting;
+    }
 
-    private static void debug(String text) {
+    public static void debug(String text) {
         if (isPerformanceTesting)
             System.out.println(text);
     }
 
-    private static void debug(boolean display, String text) {
+    public static void debug(boolean display, String text) {
         if (display)
             debug(text);
     }
@@ -117,8 +121,8 @@ public class SearchUtilsTest extends SearchUtils {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
+        //matchAlgorithm = "exactMatch";
         String source = null;
-        matchAlgorithm = "exactMatch";
         int maxToReturn = -1;
 
         suppressOtherMessages = Prompt.prompt(
@@ -131,14 +135,17 @@ public class SearchUtilsTest extends SearchUtils {
         displayTabDelimitedFormat = Prompt.prompt("Display tab delimited",
             displayTabDelimitedFormat);
 
-        String[] matchTexts = new String[] { "blood", "cell" };
+        String[] matchTexts = new String[] { 
+            //"blood", 
+            "cell" 
+        };
 
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
             if (displayDetails) {
                 debug("");
                 debug(Utils.SEPARATOR);
-                debug("* Details: " + matchAlgorithm + " " + matchText);
+                debug("* Search Details: " + matchAlgorithm + " " + matchText);
             }
             search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
