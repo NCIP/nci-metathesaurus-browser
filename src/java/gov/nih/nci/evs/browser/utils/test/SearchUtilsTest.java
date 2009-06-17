@@ -7,10 +7,11 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
     private static boolean isPerformanceTesting = false;
-    private static boolean displayDetails = true;
     private boolean suppressOtherMessages = true;
     private boolean displayParameters = false;
+    private static boolean displayDetails = false;
     private boolean displayConcepts = false;
+    private boolean displayResults = true;
     private static boolean displayTabDelimitedFormat = false;
     private static ArrayList<String> tabList = new ArrayList<String>();
 
@@ -101,7 +102,7 @@ public class SearchUtilsTest extends SearchUtils {
                     + ce.getEntityDescription().getContent());
             }
         }
-        if (displayDetails) {
+        if (displayResults) {
             debug("* Result: " + matchAlgorithm + " " + matchText);
             debug("  * Number of concepts: " + v.size());
             debug("  * Total runtime: " + stopWatch.getResult(duration));
@@ -116,30 +117,54 @@ public class SearchUtilsTest extends SearchUtils {
             displayTabbedValues();
         }
     }
+    
+    private void promptSearch() {
+        debug("* Prompt:");
+        suppressOtherMessages = Prompt.prompt(
+            "  * Suppress other debugging messages", suppressOtherMessages);
+        Debug.setDisplay(!suppressOtherMessages);
+        displayParameters = Prompt.prompt("  * Display parameters",
+            displayParameters);
+        displayDetails = Prompt.prompt("  * Display details", displayDetails);
+        displayConcepts = Prompt.prompt("  * Display concepts", displayConcepts);
+        displayResults = Prompt.prompt("  * Display results", displayResults);
+        displayTabDelimitedFormat = Prompt.prompt("  * Display tab delimited",
+            displayTabDelimitedFormat);
+    }
 
     private void testSearch() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
-        //matchAlgorithm = "exactMatch";
         String source = null;
         int maxToReturn = -1;
-
-        suppressOtherMessages = Prompt.prompt(
-            "Suppress other debugging messages", suppressOtherMessages);
-        Debug.setDisplay(!suppressOtherMessages);
-        displayParameters = Prompt.prompt("Display parameters",
-            displayParameters);
-        displayDetails = Prompt.prompt("Display details", displayDetails);
-        displayConcepts = Prompt.prompt("Display concepts", displayConcepts);
-        displayTabDelimitedFormat = Prompt.prompt("Display tab delimited",
-            displayTabDelimitedFormat);
-
         String[] matchTexts = new String[] { 
-            //"blood", 
-            "cell" 
+            "100",
+            "bone",
+            "blood",
+            "allele",
+            "tumor",
+            "cancer",
+            "gene",
+            "neoplasm",
+            "grade",
+            "cell",
+            "ctcae",
+            "carcinoma",
+            "infection",
+            "event",
+            "adverse",
+            "stage",
+            "device",
+            "protein",
+            "gland",
+            "injury"
         };
-
+        
+//        matchAlgorithm = "exactMatch";
+//        matchTexts = new String[] { "cell" };
+        promptSearch();
+        
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
             if (displayDetails) {
