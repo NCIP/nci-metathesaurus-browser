@@ -51,12 +51,12 @@
             Concept c = (Concept) request.getSession().getAttribute("concept");
             String name = c.getEntityDescription().getContent();
             String code = c.getEntityCode();
-            String sort_by = request.getParameter("sortBy");
-            
-System.out.println("Sortby: " + sort_by);            
-            
+            String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));
+
+System.out.println("Sortby: " + sort_by);
+
             if (sort_by == null) {
-System.out.println("set Sortby to: " + sort_by);            
+System.out.println("set Sortby to: " + sort_by);
                 sort_by = "name";
             }
             //request.getSession().setAttribute("sortBy", sortBy);
@@ -65,7 +65,7 @@ System.out.println("set Sortby to: " + sort_by);
                 synonyms = new DataUtils().getSynonyms(c);
                 request.getSession().setAttribute("synonyms", synonyms);
             }
-            synonyms = new DataUtils().sortSynonyms(synonyms, sort_by); 
+            synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           %>
           <div class="texttitle-blue">
             <%=name%> (Code <%=code%>)
@@ -73,7 +73,7 @@ System.out.println("set Sortby to: " + sort_by);
           <hr>
           <%@ include file="/pages/templates/typeLinks.xhtml" %>
           <div class="tabTableContentContainer">
-          
+
 
     <h2>Synonym Details</h2>
     <div>
@@ -81,15 +81,15 @@ System.out.println("set Sortby to: " + sort_by);
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              //String sort_by = (String) request.getSession().getAttribute("sortBy");
+              //String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortBy"));
               if (sort_by.compareTo("name") == 0) {
               %>
                  Term
-              <%   
+              <%
               } else {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=name">Term</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=name">Term</a>
+              <%
               }
               %>
           </th>
@@ -98,26 +98,26 @@ System.out.println("set Sortby to: " + sort_by);
               if (sort_by != null && sort_by.compareTo("source") == 0) {
               %>
                  Source
-              <%   
+              <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=source">Source</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=source">Source</a>
+              <%
               }
-              %>          
+              %>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort_by != null && sort_by.compareTo("type") == 0) {
               %>
                  Type
-              <%   
+              <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=type">Type</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=type">Type</a>
+              <%
               }
-              %>               
+              %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
                 '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
@@ -128,13 +128,13 @@ System.out.println("set Sortby to: " + sort_by);
               if (sort_by != null && sort_by.compareTo("code") == 0) {
               %>
                  Code
-              <%   
+              <%
               } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
               %>
-              	<a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=code">Code</a>
-              <% 	
+                <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=code">Code</a>
+              <%
               }
-              %>             
+              %>
           </th>
         </tr>
 
@@ -160,7 +160,7 @@ System.out.println("set Sortby to: " + sort_by);
         %>
       </table>
     </div>
-            
+
           </div>
         </div>
         <!-- end Page content -->
