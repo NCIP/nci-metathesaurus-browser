@@ -6,7 +6,8 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
-    private boolean suppressOtherMessages = false;
+    private static boolean isPerformanceTesting = false;
+    private boolean suppressOtherMessages = true;
     private boolean displayParameters = false;
     private boolean displayConcepts = false;
     private boolean displayTabDelimitedFormat = false;
@@ -14,7 +15,7 @@ public class SearchUtilsTest extends SearchUtils {
     public SearchUtilsTest(String url) {
         super(url);
     }
-
+    
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         int maxToReturn) {
@@ -32,11 +33,12 @@ public class SearchUtilsTest extends SearchUtils {
             matchAlgorithm, maxToReturn);
     }
 
-    private static void debug(String text) {
-        System.out.println(text);
+    public static void debug(String text) {
+        if (isPerformanceTesting)
+            System.out.println(text);
     }
 
-    private static void debug(boolean display, String text) {
+    public static void debug(boolean display, String text) {
         if (display)
             debug(text);
     }
@@ -57,8 +59,11 @@ public class SearchUtilsTest extends SearchUtils {
                     + ce.getEntityDescription().getContent());
             }
         }
-        debug(!displayTabDelimitedFormat, "* Number of concepts: " + v.size());
-        debug(!displayTabDelimitedFormat, "* " + stopWatch.getResult(duration));
+        if (! displayTabDelimitedFormat) {
+            debug("* Result: " + matchAlgorithm + " " + matchText);
+            debug("  * Number of concepts: " + v.size());
+            debug("  * Total runtime: " + stopWatch.getResult(duration));
+        }
         debug(displayTabDelimitedFormat, "* Tabbed: " + matchText + "\t"
             + matchAlgorithm + "\t" + stopWatch.formatInSec(duration) + "\t"
             + v.size());
@@ -106,16 +111,18 @@ public class SearchUtilsTest extends SearchUtils {
             }
         }
 
+        isPerformanceTesting = true;
         SearchUtilsTest test = new SearchUtilsTest(url);
         boolean isContinue = true;
         do {
             test.test1();
             debug("");
             debug(Utils.SEPARATOR);
-            isContinue = Prompt.prompt("Continue", isContinue);
+            isContinue = Prompt.prompt("Rerun", isContinue);
             if (!isContinue)
                 break;
         } while (isContinue);
         debug("Done");
+        isPerformanceTesting = false;
     }
 }

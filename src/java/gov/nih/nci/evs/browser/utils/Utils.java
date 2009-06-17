@@ -29,7 +29,7 @@ public class Utils {
             double timeSec = time/1000.0;
             double timeMin = timeSec/60.0;
             
-            return "Run time: " + time + " ms, " + 
+            return "" + time + " ms, " + 
                 _doubleFormatter.format(timeSec) + " sec, " + 
                 _doubleFormatter.format(timeMin) + " min";
         }
