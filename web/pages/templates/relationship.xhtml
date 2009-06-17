@@ -5,6 +5,7 @@
     String scheme_curr = (String) request.getSession().getAttribute("dictionary");
     String version_curr = null;
     String code_curr = (String) request.getSession().getAttribute("code");
+    String defaultSortOption = "source";
     
     Vector sort_option = new Vector();
     int num_tables = 6;
@@ -16,7 +17,7 @@
     String sort5 = null;
     
     for (int k=0; k<num_tables; k++) {
-        sort_option.add("name");
+        sort_option.add(defaultSortOption);
     }
     for (int k=0; k<num_tables; k++) {
         String option = (String) request.getParameter("sort" + k);
@@ -31,12 +32,13 @@
     sort4 = (String) sort_option.elementAt(4);
     sort5 = (String) sort_option.elementAt(5);
     
-    if (sort0 == null) sort0 = "name"; // by name
-    if (sort1 == null) sort1 = "name"; // by name
-    if (sort2 == null) sort2 = "name"; // by name
-    if (sort3 == null) sort3 = "name"; // by name
-    if (sort4 == null) sort4 = "name"; // by name
-    if (sort5 == null) sort5 = "name"; // by name
+    
+    if (sort0 == null) sort0 = defaultSortOption;
+    if (sort1 == null) sort1 = defaultSortOption;
+    if (sort2 == null) sort2 = defaultSortOption;
+    if (sort3 == null) sort3 = defaultSortOption;
+    if (sort4 == null) sort4 = defaultSortOption;
+    if (sort5 == null) sort5 = defaultSortOption;
         
     DataUtils util = new DataUtils();
     HashMap hmap = (HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
