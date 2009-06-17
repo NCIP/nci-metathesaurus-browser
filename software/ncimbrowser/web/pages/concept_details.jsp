@@ -80,12 +80,11 @@ if (concept_details_obj == null) {
     
     String checkmultiplicity = (String) request.getParameter("checkmultiplicity");
     if (checkmultiplicity == null) checkmultiplicity = "false";
-    
+
     type = (String) request.getParameter("type");
- System.out.println("*** concept_details.jsp  type " + type);    
-    
-    
-    
+
+System.out.println("*** concept_details.jsp type: " + type);
+
             if (type == null) {
                 type = "properties";
             }

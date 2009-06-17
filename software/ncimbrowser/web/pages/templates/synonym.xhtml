@@ -7,7 +7,7 @@
     %>
     <h2>Synonym Details</h2>
     <div>
-      <table class="dataTable" border="0">
+      <table class="dataTable" border="0" width=1000>
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -89,10 +89,10 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText"><%=term_name%></td>
-              <td class="dataCellText"><%=term_source%></td>
-              <td class="dataCellText"><%=term_type%></td>
-              <td class="dataCellText"><%=term_source_code%></td>
+              <td class="dataCellText" width=700><%=term_name%></td>
+              <td class="dataCellText" width=100><%=term_source%></td>
+              <td class="dataCellText" width=100><%=term_type%></td>
+              <td class="dataCellText" width=100><%=term_source_code%></td>
             </tr>
         <%
           }
