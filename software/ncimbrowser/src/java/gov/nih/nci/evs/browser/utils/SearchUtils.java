@@ -1228,6 +1228,7 @@ public class SearchUtils {
 		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
 			{
 		        SearchUtilsTest.debug("NOTE: Switching from \"contains\" to \"startsWith\" search.");
+                SearchUtilsTest.debug("        for \"" + matchAlgorithm + "\" \"" + matchText + "\"");
 				return searchByName(scheme, version, matchText0, "startsWith",
 						maxToReturn);
 			}
