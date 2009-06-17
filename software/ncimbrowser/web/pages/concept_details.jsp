@@ -270,6 +270,8 @@ if (concept_details_obj == null) {
 	  <%	  
           }
       }
+      
+request.getSession().removeAttribute("type");     
           %>
             
             <%@ include file="/pages/templates/nciFooter.html" %>

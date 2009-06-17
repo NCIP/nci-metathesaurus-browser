@@ -78,7 +78,7 @@
           </tr>
           <tr>
             <td class="textbody">
-              <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
+              <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
                 <%
                   for (int i=istart; i<iend; i++) {
                     if (i >= 0 && i<v.size()) {
@@ -105,10 +105,10 @@
                         <%
                       }
                       %>
-                          <td class="dataCellText">
+                          <td class="dataCellText" width=700>
                             <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
                           </td>
-                          <td class="dataCellText">
+                          <td class="dataCellText" width=300>
                               <%=semantic_type%>
                           </td>                          
                         </tr>
