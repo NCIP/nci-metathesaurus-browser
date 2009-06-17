@@ -6,11 +6,11 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
-    public static boolean suppressMessage = false;
+    private boolean suppressOtherMessages = false;
     private boolean displayParameters = false;
     private boolean displayConcepts = false;
     private boolean displayTabDelimitedFormat = false;
-    
+
     public SearchUtilsTest(String url) {
         super(url);
     }
@@ -44,8 +44,8 @@ public class SearchUtilsTest extends SearchUtils {
     public void search(String scheme, String version, String matchText,
         String matchAlgorithm, int maxToReturn) {
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<Concept> v = searchByName(scheme, version,
-            matchText, matchAlgorithm, maxToReturn);
+        Vector<Concept> v = searchByName(scheme, version, matchText,
+            matchAlgorithm, maxToReturn);
         long duration = stopWatch.getDuration();
 
         if (displayConcepts && v.size() > 0) {
@@ -57,12 +57,13 @@ public class SearchUtilsTest extends SearchUtils {
                     + ce.getEntityDescription().getContent());
             }
         }
-        debug(! displayTabDelimitedFormat, "* Number of concepts: " + v.size());
-        debug(! displayTabDelimitedFormat, "* " + stopWatch.getResult(duration));
-        debug(displayTabDelimitedFormat, "* Tabbed: " + matchText + "\t" + 
-            matchAlgorithm + "\t" + stopWatch.formatInSec(duration) + "\t" + v.size());
+        debug(!displayTabDelimitedFormat, "* Number of concepts: " + v.size());
+        debug(!displayTabDelimitedFormat, "* " + stopWatch.getResult(duration));
+        debug(displayTabDelimitedFormat, "* Tabbed: " + matchText + "\t"
+            + matchAlgorithm + "\t" + stopWatch.formatInSec(duration) + "\t"
+            + v.size());
     }
-    
+
     private void test1() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
@@ -70,15 +71,18 @@ public class SearchUtilsTest extends SearchUtils {
         matchAlgorithm = "exactMatch";
         int maxToReturn = -1;
 
-        displayParameters = Prompt.prompt("Display parameters", displayParameters);
+        suppressOtherMessages = Prompt.prompt(
+            "Suppress other debugging messages", suppressOtherMessages);
+        Debug.setDisplay(!suppressOtherMessages);
+        displayParameters = Prompt.prompt("Display parameters",
+            displayParameters);
         displayConcepts = Prompt.prompt("Display concepts", displayConcepts);
-        displayTabDelimitedFormat = Prompt.prompt("Display tab delimited", displayTabDelimitedFormat);
-        
-        String[] matchTexts = new String[] {
-            "blood", "cell"
-        };
+        displayTabDelimitedFormat = Prompt.prompt("Display tab delimited",
+            displayTabDelimitedFormat);
 
-        for (int i=0; i<matchTexts.length; ++i)
+        String[] matchTexts = new String[] { "blood", "cell" };
+
+        for (int i = 0; i < matchTexts.length; ++i)
             search(scheme, version, matchTexts[i], matchAlgorithm, maxToReturn);
         debug("* Done");
     }
@@ -109,7 +113,8 @@ public class SearchUtilsTest extends SearchUtils {
             debug("");
             debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Continue", isContinue);
-            if (! isContinue) break;
+            if (!isContinue)
+                break;
         } while (isContinue);
         debug("Done");
     }
