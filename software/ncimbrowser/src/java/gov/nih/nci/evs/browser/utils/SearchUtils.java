@@ -1150,6 +1150,7 @@ public class SearchUtils {
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 					Debug.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
                     SearchUtilsTest.debugDetails("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
+                    SearchUtilsTest.debugTabbedValue("cns.resolve", stopWatch.formatInSec());
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1180,6 +1181,7 @@ public class SearchUtils {
                 }
                 Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
                 SearchUtilsTest.debugDetails("* sortByScore: " + stopWatch.getResult());
+                SearchUtilsTest.debugTabbedValue("sortByScore", stopWatch.formatInSec());
         }
 
         Vector v = null;
@@ -1191,6 +1193,7 @@ public class SearchUtils {
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
 			SearchUtilsTest.debugDetails("* resolveIterator: " + stopWatch.getResult());
+            SearchUtilsTest.debugTabbedValue("resolveIterator", stopWatch.formatInSec());
         }
 
         if (v == null || v.size() == 0) {
