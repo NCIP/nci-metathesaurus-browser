@@ -15,13 +15,13 @@
   </head>
   <%
     String ncicb_contact_url = new DataUtils().getNCICBContactURL();
-    String subject = request.getParameter("subject");
-    String message = request.getParameter("message");
-    String emailaddress = request.getParameter("emailaddress");
+    String subject = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("subject"));
+    String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("message"));
+    String emailaddress = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("emailaddress"));
     if (subject == null) subject = "";
     if (message == null) message = "";
     if (emailaddress == null) emailaddress = "";
-    String errorMsg = (String) request.getAttribute("errorMsg");
+    String errorMsg = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("errorMsg"));
     if (errorMsg == null) errorMsg = "";
     boolean error = errorMsg.length() > 0;
   %>

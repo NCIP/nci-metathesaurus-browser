@@ -24,7 +24,7 @@
       <!-- Page content -->
       <div class="pagecontent">
         <%
-          String message = (String) request.getSession().getAttribute("message");
+          String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("message"));
         %>
         <b><%=message%></b>
         <%@ include file="/pages/templates/nciFooter.html" %>

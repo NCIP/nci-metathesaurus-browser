@@ -1,6 +1,6 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" >
   <%
-    String match_text = (String) request.getSession().getAttribute("matchText");
+    String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     if (match_text == null) match_text = "";
   %>
   <input CLASS="searchbox-input"
@@ -21,14 +21,14 @@
 
 
   <%
-    String algorithm = (String) request.getSession().getAttribute("selectedAlgorithm");
+    String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
       check_e = "checked";
     else if (algorithm.compareTo("startsWith") == 0)
       check_s= "checked";
     else if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
-      check_b= "checked";      
+      check_b= "checked";
     else
       check_c = "checked";
   %>
@@ -49,5 +49,5 @@
         <f:selectItems value="#{userSessionBean.sourceList}"/>
       </h:selectOneMenu>
   </h:outputLabel>
-  
+
  </FORM>
