@@ -709,7 +709,7 @@ public class SearchUtils {
             int iteration = 0;
             while (iterator.hasNext())
             {
-                iterator = iterator.scroll(scroll_size);
+               iterator = iterator.scroll(scroll_size);
                 ResolvedConceptReferenceList rcrl = iterator.getNext();
                 if (rcrl != null) {
 					ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
@@ -1553,10 +1553,10 @@ public class SearchUtils {
         if (SearchUtilsTest.isPerformanceTesting()) {
             long duration = stopWatchTotal.getDuration(), avgDuration = duration/nloops;
             SearchUtilsTest.debugDetails("* Summary of toSort/Sorted calls:");
-            SearchUtilsTest.debugDetails("  * Loops: " + nloops);
-            SearchUtilsTest.debugTabbedValue("Loops", Integer.toString(nloops));
-            SearchUtilsTest.debugDetails("  * Runtime: " + stopWatchTotal.getResult(duration));
-            SearchUtilsTest.debugTabbedValue("Runtime", stopWatchTotal.formatInSec(duration));
+            SearchUtilsTest.debugDetails("  * Iterations: " + nloops);
+            SearchUtilsTest.debugTabbedValue("Iterations", Integer.toString(nloops));
+            SearchUtilsTest.debugDetails("  * Run Time: " + stopWatchTotal.getResult(duration));
+            SearchUtilsTest.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
             SearchUtilsTest.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
             SearchUtilsTest.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
         }

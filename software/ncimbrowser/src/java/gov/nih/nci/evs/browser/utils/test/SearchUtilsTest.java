@@ -115,10 +115,10 @@ public class SearchUtilsTest extends SearchUtils {
         if (displayTabDelimitedFormat) {
             int i=0;
             debugTabbedValue(i++, "* Tabbed", "");
-            debugTabbedValue(i++, "matchText", matchText);
-            debugTabbedValue(i++, "algorithm", matchAlgorithm);
-            debugTabbedValue(i++, "hits", Integer.toString(v.size()));
-            debugTabbedValue(i++, "runtime", stopWatch.formatInSec(duration));
+            debugTabbedValue(i++, "Keyword", matchText);
+            debugTabbedValue(i++, "Algorithm", matchAlgorithm);
+            debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
+            debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             displayTabbedValues();
         }
     }
