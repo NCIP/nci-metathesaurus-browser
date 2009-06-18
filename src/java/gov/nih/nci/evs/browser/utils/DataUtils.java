@@ -2396,6 +2396,40 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 
+		// remove redundant RO relationships
+		HashSet other_hset = new HashSet();
+		Vector w2 = (Vector) rel_hmap.get("Other");
+		for (int k=0; k<w2.size(); k++) {
+			String s = (String) w2.elementAt(k);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			String t = name + "|" + target_code + "|" + src;
+			if (rel.compareTo("RO") != 0 && !other_hset.contains(t)) {
+				other_hset.add(t);
+			}
+		}
+		Vector w3 = new Vector();
+		for (int k=0; k<w2.size(); k++) {
+			String s = (String) w2.elementAt(k);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			if (rel.compareTo("RO") != 0) {
+				w3.add(s);
+			} else { //RO
+				String t = name + "|" + target_code + "|" + src;
+				if (!other_hset.contains(t)) {
+					w3.add(s);
+				}
+			}
+		}
+		rel_hmap.put("Other", w3);
+
         if (sort_option == null) {
 			for (int k=0; k<category_vec.size(); k++) {
 				String  category = (String) category_vec.elementAt(k);

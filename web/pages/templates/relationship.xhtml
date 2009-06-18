@@ -140,6 +140,11 @@
         String s = (String) superconcept_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }        
+        
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -156,7 +161,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
@@ -241,6 +246,10 @@
         String s = (String) subconcept_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }             
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -257,7 +266,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
@@ -342,6 +351,10 @@
         String s = (String) broader_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }             
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -358,7 +371,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
@@ -443,6 +456,10 @@
         String s = (String) narrower_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }             
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -459,7 +476,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
@@ -544,6 +561,10 @@
         String s = (String) sibling_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }             
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -560,7 +581,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
@@ -645,6 +666,10 @@
         String s = (String) other_vec.get(i);
         Vector ret_vec = DataUtils.parseData(s, "|");
         String relationship_name = (String) ret_vec.elementAt(0);
+        String rel_display_value = relationship_name;
+        if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
+            rel_display_value = "";
+        }             
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -661,7 +686,7 @@
     n2++;
     %>
           <td width=60><%=rel_value%></td>
-          <td width=250><%=relationship_name%></td>
+          <td width=250><%=rel_display_value%></td>
           <td width=400>
       <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
         <%=target_concept_name%>
