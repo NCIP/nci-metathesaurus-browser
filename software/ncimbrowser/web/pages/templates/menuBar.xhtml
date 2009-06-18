@@ -1,26 +1,8 @@
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
-<%
-   //Object obj = request.getSession().getAttribute("concept");
-   Object obj = request.getSession().getAttribute("code");
-   Boolean codeInNCI = Boolean.FALSE;
-   if (obj != null) {
-       String menuBar_code = (String) obj;
-       Vector menuBar_sources = DataUtils.getSources(Constants.CODING_SCHEME_NAME, null, null, menuBar_code); 
-       boolean bool_obj = DataUtils.containSource(menuBar_sources, "NCI");
-       codeInNCI = new Boolean(bool_obj);
-   }
-%>
 <div class="global-nav">
   <a href="<%= request.getContextPath() %>">Home</a>
-    <%
-        if (codeInNCI != null && codeInNCI.equals(Boolean.TRUE)) {
-     %>    
   | <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     View NCIt Hierarchy
   </a>
-	<%	
-        }
-        %>
-        
   | <a href="<%= request.getContextPath() %>/pages/help.jsf">Help</a>
 </div>
