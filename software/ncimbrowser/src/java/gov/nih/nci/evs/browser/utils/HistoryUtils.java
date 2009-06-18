@@ -16,8 +16,11 @@ import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.concepts.Concept;
 
+import gov.nih.nci.evs.browser.common.Constants;
+
+
 public class HistoryUtils {
-    private static final String CODING_SCHEME = "NCI Thesaurus";
+    //private static final String CODING_SCHEME = "NCI MetaThesaurus";
     private static DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Vector<String> getTableHeader() {
@@ -31,7 +34,7 @@ public class HistoryUtils {
     public static Vector<String> getEditActions(String codingSchemeName,
             String vers, String ltag, String code) throws LBException {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        HistoryService hs = lbSvc.getHistoryService(CODING_SCHEME);
+        HistoryService hs = lbSvc.getHistoryService(Constants.CODING_SCHEME_NAME);
 
         try {
 			NCIChangeEventList list = hs.getEditActionList(Constructors
