@@ -1180,8 +1180,8 @@ public class SearchUtils {
 
                 }
                 Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-                SearchUtilsTest.debugDetails("* sortByScore: " + stopWatch.getResult());
-                SearchUtilsTest.debugTabbedValue("sortByScore", stopWatch.formatInSec());
+                //SearchUtilsTest.debugDetails("* sortByScore: " + stopWatch.getResult());
+                //SearchUtilsTest.debugTabbedValue("sortByScore", stopWatch.formatInSec());
         }
 
         Vector v = null;
@@ -1227,8 +1227,8 @@ public class SearchUtils {
 	    if (v == null || v.size() == 0) {
 		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
 			{
-		        SearchUtilsTest.debug("NOTE: Switching from \"contains\" to \"startsWith\" search.");
-                SearchUtilsTest.debug("        for \"" + matchAlgorithm + "\" \"" + matchText + "\"");
+		        SearchUtilsTest.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
+                SearchUtilsTest.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
 				return searchByName(scheme, version, matchText0, "startsWith",
 						maxToReturn);
 			}
@@ -1492,14 +1492,19 @@ public class SearchUtils {
 
         int knt = 0, nloops = 0;
         Utils.StopWatch stopWatchTotal = new Utils.StopWatch();
+        Utils.StopWatch stopWatch = new Utils.StopWatch();
+        long duration = 0, callingToSortNextTime = 0, sortingTime = 0;
         while (toSort.hasNext()) {
             ++nloops;
             // Working in chunks of 100.
-            Utils.StopWatch stopWatch = new Utils.StopWatch();
+            stopWatch.start();
             long ms = System.currentTimeMillis();
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
             Debug.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
-            SearchUtilsTest.debugDetails("" + nloops + ") toSort.next(500): " + stopWatch.getResult());
+            duration = stopWatch.getDuration();
+            SearchUtilsTest.debugDetails("" + nloops + ") toSort.next(500): " + stopWatch.getResult(duration) + " [ResolvedConceptReferencesIterator.next]");
+            callingToSortNextTime += duration;
+
             stopWatch.start();
             ms = System.currentTimeMillis();
 
@@ -1548,10 +1553,13 @@ public class SearchUtils {
             knt = knt + num_concepts;
             //if (knt > 1000) break;
             Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
-            SearchUtilsTest.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + stopWatch.getResult());
+            duration = stopWatch.getDuration();
+            SearchUtilsTest.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + stopWatch.getResult(duration));
+            sortingTime += duration;
         }
         if (SearchUtilsTest.isPerformanceTesting()) {
-            long duration = stopWatchTotal.getDuration(), avgDuration = duration/nloops;
+            duration = stopWatchTotal.getDuration();
+            long avgDuration = duration/nloops;
             SearchUtilsTest.debugDetails("* Summary of toSort/Sorted calls:");
             SearchUtilsTest.debugDetails("  * Iterations: " + nloops);
             SearchUtilsTest.debugTabbedValue("Iterations", Integer.toString(nloops));
@@ -1559,6 +1567,10 @@ public class SearchUtils {
             SearchUtilsTest.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
             SearchUtilsTest.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
             SearchUtilsTest.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
+            SearchUtilsTest.debugDetails("  * toSort.next: " + stopWatchTotal.getResult(callingToSortNextTime));
+            SearchUtilsTest.debugTabbedValue("toSort.next", stopWatchTotal.formatInSec(callingToSortNextTime));
+            SearchUtilsTest.debugDetails("  * sorting: " + stopWatchTotal.getResult(sortingTime));
+            SearchUtilsTest.debugTabbedValue("sorting", stopWatchTotal.formatInSec(sortingTime));
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
