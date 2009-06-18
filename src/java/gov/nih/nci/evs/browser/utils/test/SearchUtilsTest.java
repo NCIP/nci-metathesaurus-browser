@@ -18,7 +18,7 @@ public class SearchUtilsTest extends SearchUtils {
     public SearchUtilsTest(String url) {
         super(url);
     }
-
+    
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         int maxToReturn) {
@@ -31,10 +31,11 @@ public class SearchUtilsTest extends SearchUtils {
             debug("  * matchAlgorithm = " + matchAlgorithm);
             debug("  * maxToReturn = " + maxToReturn);
         }
+        debug(displayDetails, "* Search Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
-
+    
     public static boolean isPerformanceTesting() {
         return isPerformanceTesting;
     }
@@ -48,12 +49,12 @@ public class SearchUtilsTest extends SearchUtils {
         if (display)
             debug(text);
     }
-
+    
     public static void debugDetails(String text) {
         if (displayDetails)
             debug("  " + text);
     }
-
+    
     public static void debugTabbedValue(int index, String name, String value) {
         if (! displayTabDelimitedFormat || tabList == null)
             return;
@@ -61,17 +62,17 @@ public class SearchUtilsTest extends SearchUtils {
         String delimiter = "\t";
         delimiter = " | ";
         String text = "";
-
+        
         if (name != null && name.length() > 0)
             text += name + ":" + delimiter;
         if (value != null && value.length() > 0)
             text += value + delimiter;
-
+        
         if (index < 0)
             tabList.add(text);
         else tabList.add(index, text);
     }
-
+    
     public static void debugTabbedValue(String name, String value) {
         debugTabbedValue(-1, name, value);
     }
@@ -121,7 +122,7 @@ public class SearchUtilsTest extends SearchUtils {
             displayTabbedValues();
         }
     }
-
+    
     private void promptSearch() {
         debug("* Prompt:");
         suppressOtherMessages = Prompt.prompt(
@@ -142,7 +143,7 @@ public class SearchUtilsTest extends SearchUtils {
         String matchAlgorithm = "contains";
         String source = null;
         int maxToReturn = -1;
-        String[] matchTexts = new String[] {
+        String[] matchTexts = new String[] { 
             "100",
             "bone",
             "blood",
@@ -157,24 +158,24 @@ public class SearchUtilsTest extends SearchUtils {
             "carcinoma",
             "infection",
             "event",
-            "adverse",
+//            "adverse",
             "stage",
             "device",
             "protein",
             "gland",
             "injury"
         };
-
+        
         matchAlgorithm = "exactMatch";
-        matchTexts = new String[] { "adverse" };
+//        matchTexts = new String[] { "cell" };
+//        matchTexts = new String[] { "adverse" };
         promptSearch();
-
+        
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
             if (displayDetails) {
                 debug("");
                 debug(Utils.SEPARATOR);
-                debug("* Search Details: " + matchAlgorithm + " " + matchText);
             }
             search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
