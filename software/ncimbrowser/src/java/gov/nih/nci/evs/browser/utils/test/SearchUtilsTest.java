@@ -166,8 +166,8 @@ public class SearchUtilsTest extends SearchUtils {
             "injury"
         };
         
-        matchAlgorithm = "exactMatch";
-//        matchTexts = new String[] { "cell" };
+//        matchAlgorithm = "exactMatch";
+        matchTexts = new String[] { "cell" };
 //        matchTexts = new String[] { "adverse" };
         promptSearch();
         
