@@ -1,6 +1,6 @@
 <!--
-$Id$
-$HeadURL$
+$Id: ivy-test.xml 1667 2009-05-18 22:23:53Z saksass $
+$HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-template/software/common/ivy/ivy-test.xml $
 
 This is the definition of a virtual module called bda-download that has a dependency of bda-utils.  This virtual project causes the download of bda-utils from the NCICB Ivy Repository.  This file currently points to the 1.0 version of bda-utils if you want to use another version change the rev="1.0" to the desired version.
 -->
@@ -19,16 +19,19 @@ This is the definition of a virtual module called bda-download that has a depend
     <conf name="test-javancss"/>
     <conf name="test-checkstyle"/>
     <conf name="test-findbugs"/>
+    <conf name="test-simian"/>
+    <conf name="test-jdepend" />
   </configurations>
   <publications>    
   </publications>
   <dependencies>
-    <dependency org="openqa" name="selenium-server" rev="1.0-beta-1" conf="test-selenium->master"/>
-    <dependency org="junit" name="junit" rev="4.3.1" conf="test-junit->master"/>
-    <dependency org="cobertura" name="cobertura" rev="1.9" conf="test-cobertura->runtime"/>  
+	<dependency org="redhillconsulting" name="simian" rev="2.2.24" conf="test-simian->master" />
+    <dependency org="openqa" name="selenium-server" rev="1.0-beta-2" conf="test-selenium->master"/>
+    <dependency org="junit" name="junit" rev="4.6" conf="test-junit->master"/>
+    <dependency org="cobertura" name="cobertura" rev="1.9.1" conf="test-cobertura->runtime"/>  
     <dependency org="javancss" name="javancss" rev="29.50" conf="test-javancss->runtime"/>
-    <dependency org="checkstyle" name="checkstyle" rev="4.4" conf="test-checkstyle->runtime"/>
-    <dependency org="umd" name="findbugs-ant" rev="1.3.4" conf="test-findbugs->runtime"/>
-    <dependency org="pmd" name="pmd" rev="4.2.1" conf="test-pmd->runtime"/>
+    <dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test-checkstyle->runtime"/>
+    <dependency org="pmd" name="pmd" rev="4.2.5" conf="test-pmd->runtime"/>
+    <dependency org="jdepend" name="jdepend" rev="2.9" conf="test-jdepend->master" />
   </dependencies>
 </ivy-module>
