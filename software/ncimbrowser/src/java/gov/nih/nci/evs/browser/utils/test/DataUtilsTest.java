@@ -3,21 +3,15 @@ package gov.nih.nci.evs.browser.utils.test;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class DataUtilsTest extends DataUtils {
-    private void testSearch() {
+    public void testData() {
         
     }
     
-    public static void main(String[] args) {
+    private static void parse(String[] args) {
         String prevArg = "";
-        String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
-            if (arg.equals("-url")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-url")) {
-                url = arg;
-                prevArg = "";
-            } else if (arg.equals("-propertyFile")) {
+            if (arg.equals("-propertyFile")) {
                 prevArg = arg;
             } else if (prevArg.equals("-propertyFile")) {
                 System.setProperty(
@@ -25,12 +19,16 @@ public class DataUtilsTest extends DataUtils {
                 prevArg = "";
             }
         }
+    }
 
+    public static void main(String[] args) {
+        parse(args);
+        
         DBG.setPerformanceTesting(true);
         DataUtilsTest test = new DataUtilsTest();
         boolean isContinue = true;
         do {
-            test.testSearch();
+            test.testData();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
