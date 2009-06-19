@@ -21,10 +21,10 @@ if "%1" == "deploy" (
     goto DONE
 )
 if "%1" == "clean" (
-    ant clean
     if exist ..\target\*.* (
        rmdir /Q /S ..\target
     )
+    ant clean
     goto DONE
 )
 if "%1" == "dev" (
