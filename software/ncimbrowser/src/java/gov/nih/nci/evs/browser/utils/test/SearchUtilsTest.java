@@ -6,14 +6,10 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
-    private static boolean isPerformanceTesting = false;
-    private boolean suppressOtherMessages = true;
-    private boolean displayParameters = false;
-    private static boolean displayDetails = false;
-    private boolean displayConcepts = false;
-    private boolean displayResults = true;
-    private static boolean displayTabDelimitedFormat = false;
-    private static ArrayList<String> tabList = new ArrayList<String>();
+    private boolean _suppressOtherMessages = true;
+    private boolean _displayParameters = false;
+    private boolean _displayConcepts = false;
+    private boolean _displayResults = true;
 
     public SearchUtilsTest(String url) {
         super(url);
@@ -22,119 +18,69 @@ public class SearchUtilsTest extends SearchUtils {
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         int maxToReturn) {
-        if (displayParameters) {
-            debug("* Search parameters:");
-            debug("  * scheme = " + scheme);
-            debug("  * version = " + version);
-            debug("  * matchText = " + matchText);
-            debug("  * source = " + source);
-            debug("  * matchAlgorithm = " + matchAlgorithm);
-            debug("  * maxToReturn = " + maxToReturn);
+        if (_displayParameters) {
+            DBG.debug("* Search parameters:");
+            DBG.debug("  * scheme = " + scheme);
+            DBG.debug("  * version = " + version);
+            DBG.debug("  * matchText = " + matchText);
+            DBG.debug("  * source = " + source);
+            DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
+            DBG.debug("  * maxToReturn = " + maxToReturn);
         }
-        debug(displayDetails, "* Search Details: " + matchAlgorithm + " " + matchText);
+        DBG.debugDetails("* Search Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
     
-    public static boolean isPerformanceTesting() {
-        return isPerformanceTesting;
-    }
-
-    public static void debug(String text) {
-        if (isPerformanceTesting)
-            System.out.println(text);
-    }
-
-    public static void debug(boolean display, String text) {
-        if (display)
-            debug(text);
-    }
-    
-    public static void debugDetails(String text) {
-        if (displayDetails)
-            debug("  " + text);
-    }
-    
-    public static void debugTabbedValue(int index, String name, String value) {
-        if (! displayTabDelimitedFormat || tabList == null)
-            return;
-
-        String delimiter = "\t";
-        delimiter = " | ";
-        String text = "";
-        
-        if (name != null && name.length() > 0)
-            text += name + ":" + delimiter;
-        if (value != null && value.length() > 0)
-            text += value + delimiter;
-        
-        if (index < 0)
-            tabList.add(text);
-        else tabList.add(index, text);
-    }
-    
-    public static void debugTabbedValue(String name, String value) {
-        debugTabbedValue(-1, name, value);
-    }
-
-    private static void displayTabbedValues() {
-        if (! displayTabDelimitedFormat || tabList == null || tabList.size() <= 0)
-            return;
-
-        StringBuffer buffer = new StringBuffer();
-        Iterator<String> iterator = tabList.iterator();
-        while (iterator.hasNext()) {
-            String value = iterator.next();
-            buffer.append(value);
-        }
-        debug(buffer.toString());
-    }
-
     public void search(String scheme, String version, String matchText,
         String source, String matchAlgorithm, int maxToReturn) {
-        tabList = new ArrayList<String>();
+        DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Concept> v = searchByName(scheme, version, matchText,
             source, matchAlgorithm, maxToReturn);
         long duration = stopWatch.getDuration();
 
-        if (displayConcepts && v.size() > 0) {
-            debug("* List of concepts:");
+        if (_displayConcepts && v.size() > 0) {
+            DBG.debug("* List of concepts:");
             for (int i = 0; i < v.size(); i++) {
                 int j = i + 1;
                 Concept ce = v.elementAt(i);
-                debug("  " + j + ") " + ce.getEntityCode() + " "
+                DBG.debug("  " + j + ") " + ce.getEntityCode() + " "
                     + ce.getEntityDescription().getContent());
             }
         }
-        if (displayResults) {
-            debug("* Result: " + matchAlgorithm + " " + matchText);
-            debug("  * Number of concepts: " + v.size());
-            debug("  * Total runtime: " + stopWatch.getResult(duration));
+        if (_displayResults) {
+            DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
+            DBG.debug("  * Number of concepts: " + v.size());
+            DBG.debug("  * Total runtime: " + stopWatch.getResult(duration));
         }
-        if (displayTabDelimitedFormat) {
+        if (DBG.isDisplayTabDelimitedFormat()) {
             int i=0;
-            debugTabbedValue(i++, "* Tabbed", "");
-            debugTabbedValue(i++, "Keyword", matchText);
-            debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-            debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
-            debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
-            displayTabbedValues();
+            DBG.debugTabbedValue(i++, "* Tabbed", "");
+            DBG.debugTabbedValue(i++, "Keyword", matchText);
+            DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
+            DBG.debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
+            DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
+            DBG.displayTabbedValues();
         }
     }
     
     private void promptSearch() {
-        debug("* Prompt:");
-        suppressOtherMessages = Prompt.prompt(
-            "  * Suppress other debugging messages", suppressOtherMessages);
-        Debug.setDisplay(!suppressOtherMessages);
-        displayParameters = Prompt.prompt("  * Display parameters",
-            displayParameters);
-        displayDetails = Prompt.prompt("  * Display details", displayDetails);
-        displayConcepts = Prompt.prompt("  * Display concepts", displayConcepts);
-        displayResults = Prompt.prompt("  * Display results", displayResults);
-        displayTabDelimitedFormat = Prompt.prompt("  * Display tab delimited",
-            displayTabDelimitedFormat);
+        boolean isOn = false;
+        
+        DBG.debug("* Prompt:");
+        _suppressOtherMessages = Prompt.prompt(
+            "  * Suppress other debugging messages", _suppressOtherMessages);
+        Debug.setDisplay(!_suppressOtherMessages);
+        _displayParameters = Prompt.prompt("  * Display parameters",
+            _displayParameters);
+        isOn = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+        DBG.setDisplayDetails(isOn);
+        _displayConcepts = Prompt.prompt("  * Display concepts", _displayConcepts);
+        _displayResults = Prompt.prompt("  * Display results", _displayResults);
+        isOn = Prompt.prompt("  * Display tab delimited",
+            DBG.isDisplayTabDelimitedFormat());
+        DBG.setDisplayTabDelimitedFormat(isOn);
     }
 
     private void testSearch() {
@@ -166,20 +112,19 @@ public class SearchUtilsTest extends SearchUtils {
             "injury"
         };
         
-//        matchAlgorithm = "exactMatch";
+        matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
-//        matchTexts = new String[] { "adverse" };
         promptSearch();
         
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
-            if (displayDetails) {
-                debug("");
-                debug(Utils.SEPARATOR);
+            if (DBG.isDisplayDetails()) {
+                DBG.debug("");
+                DBG.debug(Utils.SEPARATOR);
             }
             search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
-        debug("* Done");
+        DBG.debug("* Done");
     }
 
     public static void main(String[] args) {
@@ -201,18 +146,18 @@ public class SearchUtilsTest extends SearchUtils {
             }
         }
 
-        isPerformanceTesting = true;
+        DBG.setPerformanceTesting(true);
         SearchUtilsTest test = new SearchUtilsTest(url);
         boolean isContinue = true;
         do {
             test.testSearch();
-            debug("");
-            debug(Utils.SEPARATOR);
+            DBG.debug("");
+            DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
             if (!isContinue)
                 break;
         } while (isContinue);
-        debug("Done");
-        isPerformanceTesting = false;
+        DBG.debug("Done");
+        DBG.setPerformanceTesting(false);
     }
 }
