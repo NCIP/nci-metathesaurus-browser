@@ -121,7 +121,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
-import gov.nih.nci.evs.browser.utils.test.SearchUtilsTest;
+import gov.nih.nci.evs.browser.utils.test.*;
 
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
@@ -1149,8 +1149,8 @@ public class SearchUtils {
 					long ms = System.currentTimeMillis();
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 					Debug.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    SearchUtilsTest.debugDetails("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
-                    SearchUtilsTest.debugTabbedValue("cns.resolve", stopWatch.formatInSec());
+                    DBG.debugDetails("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
+                    DBG.debugTabbedValue("cns.resolve", stopWatch.formatInSec());
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1192,8 +1192,8 @@ public class SearchUtils {
 			long ms = System.currentTimeMillis();
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-			SearchUtilsTest.debugDetails("* resolveIterator: " + stopWatch.getResult());
-            SearchUtilsTest.debugTabbedValue("resolveIterator", stopWatch.formatInSec());
+			DBG.debugDetails("* resolveIterator: " + stopWatch.getResult());
+			DBG.debugTabbedValue("resolveIterator", stopWatch.formatInSec());
         }
 
         if (v == null || v.size() == 0) {
@@ -1227,8 +1227,8 @@ public class SearchUtils {
 	    if (v == null || v.size() == 0) {
 		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
 			{
-		        SearchUtilsTest.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
-                SearchUtilsTest.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
+		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
+		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
 				return searchByName(scheme, version, matchText0, "startsWith",
 						maxToReturn);
 			}
@@ -1502,7 +1502,7 @@ public class SearchUtils {
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
             Debug.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
             duration = stopWatch.getDuration();
-            SearchUtilsTest.debugDetails("" + nloops + ") toSort.next(500): " + stopWatch.getResult(duration) + " [ResolvedConceptReferencesIterator.next]");
+            DBG.debugDetails("" + nloops + ") toSort.next(500): " + stopWatch.getResult(duration) + " [ResolvedConceptReferencesIterator.next]");
             callingToSortNextTime += duration;
 
             stopWatch.start();
@@ -1554,23 +1554,23 @@ public class SearchUtils {
             //if (knt > 1000) break;
             Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
             duration = stopWatch.getDuration();
-            SearchUtilsTest.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + stopWatch.getResult(duration));
+            DBG.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + stopWatch.getResult(duration));
             sortingTime += duration;
         }
-        if (SearchUtilsTest.isPerformanceTesting()) {
+        if (DBG.isPerformanceTesting()) {
             duration = stopWatchTotal.getDuration();
             long avgDuration = duration/nloops;
-            SearchUtilsTest.debugDetails("* Summary of toSort/Sorted calls:");
-            SearchUtilsTest.debugDetails("  * Run Time: " + stopWatchTotal.getResult(duration));
-            SearchUtilsTest.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
-            SearchUtilsTest.debugDetails("  * Iterations: " + nloops);
-            SearchUtilsTest.debugTabbedValue("Iterations", Integer.toString(nloops));
-            SearchUtilsTest.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
-            SearchUtilsTest.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
-            SearchUtilsTest.debugDetails("  * toSort.next: " + stopWatchTotal.getResult(callingToSortNextTime));
-            SearchUtilsTest.debugTabbedValue("toSort.next", stopWatchTotal.formatInSec(callingToSortNextTime));
-            SearchUtilsTest.debugDetails("  * sorting: " + stopWatchTotal.getResult(sortingTime));
-            SearchUtilsTest.debugTabbedValue("sorting", stopWatchTotal.formatInSec(sortingTime));
+            DBG.debugDetails("* Summary of toSort/Sorted calls:");
+            DBG.debugDetails("  * Run Time: " + stopWatchTotal.getResult(duration));
+            DBG.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
+            DBG.debugDetails("  * Iterations: " + nloops);
+            DBG.debugTabbedValue("Iterations", Integer.toString(nloops));
+            DBG.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
+            DBG.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
+            DBG.debugDetails("  * toSort.next: " + stopWatchTotal.getResult(callingToSortNextTime));
+            DBG.debugTabbedValue("toSort.next", stopWatchTotal.formatInSec(callingToSortNextTime));
+            DBG.debugDetails("  * sorting: " + stopWatchTotal.getResult(sortingTime));
+            DBG.debugTabbedValue("sorting", stopWatchTotal.formatInSec(sortingTime));
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
