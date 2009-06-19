@@ -2360,9 +2360,19 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
+
+		long ms = System.currentTimeMillis();
+		String action = "Retrieving all relationships from the server";
+		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
+		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
+
+		// Categorize relationships into six categories and find association source data
+		ms = System.currentTimeMillis();
+		action = "Categorizing relationships into six categories; finding source data for each relationship";
 		while (it.hasNext())
 		{
 			String rel = (String) it.next();
@@ -2395,8 +2405,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 			}
 		}
+		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
 
-		// remove redundant RO relationships
+		// Remove redundant RO relationships
+		ms = System.currentTimeMillis();
+		action = "Removing redundant RO relationships";
+
 		HashSet other_hset = new HashSet();
 		Vector w2 = (Vector) rel_hmap.get("Other");
 		for (int k=0; k<w2.size(); k++) {
@@ -2429,7 +2443,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 		rel_hmap.put("Other", w3);
+		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
 
+        ms = System.currentTimeMillis();
+        action = "Sorting relationships by sort options (columns)";
+
+        // Sort relationships by sort options (columns)
         if (sort_option == null) {
 			for (int k=0; k<category_vec.size(); k++) {
 				String  category = (String) category_vec.elementAt(k);
@@ -2447,6 +2466,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				rel_hmap.put(category, w);
 			}
 		}
+		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
 		return rel_hmap;
 	}
 
