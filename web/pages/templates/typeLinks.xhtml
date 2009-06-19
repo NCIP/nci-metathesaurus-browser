@@ -149,21 +149,22 @@
     <td align="right" valign="top">
     <%
         if (sources_typelinks.contains("NCI")) {
-     %>
-    <input onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');"
-        type="button"
-       class="redButton"
-       value="View in NCIt Hierarchy"
-    />&nbsp;&nbsp;
-  <%
+    %>
+        <a class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+        <img name="Hierarchy"
+          src="<%=request.getContextPath() %>/images/Hierarchy_button.gif"
+          width="91px" height="17px" border="0" alt="View in NCIt Hierarchy"
+          title="View in NCIt Hierarchy"/>
+        </a>
+    <%
         }
-        %>
-
-        <input onClick="javascript:window.open('<%=request.getContextPath() %>/pages/concept_history.jsf?dictionary=<%=scheme%>&code=<%=id%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');"
-                  type="button"
-                 class="redButton"
-                 value="View History"
-        />
+    %>
+        <a class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/concept_history.jsf?dictionary=<%=scheme%>&code=<%=id%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+        <img name="history"
+          src="<%=request.getContextPath() %>/images/history_button.gif"
+          width="44px" height="17px" border="0" alt="View History"
+          title="View History"/>
+        </a>
     </td>
   </tr>
 </table>
