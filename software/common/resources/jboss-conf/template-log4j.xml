@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml 56612 2006-09-07 15:12:39Z thomas.diesler@jboss.com $ -->
+<!-- $Id: template-log4j.xml 1497 2009-04-06 15:43:42Z saksass $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
