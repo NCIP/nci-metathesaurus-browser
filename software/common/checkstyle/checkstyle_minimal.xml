@@ -31,7 +31,9 @@
         <module name="CyclomaticComplexity"/>       
         
         <!-- make sure message beans meet extra-lingual constraints -->
+	<!--
         <module name="j2ee.MessageBean"/>
+	-->
     </module>
 
 </module>
