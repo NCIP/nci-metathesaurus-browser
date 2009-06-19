@@ -1561,10 +1561,10 @@ public class SearchUtils {
             duration = stopWatchTotal.getDuration();
             long avgDuration = duration/nloops;
             SearchUtilsTest.debugDetails("* Summary of toSort/Sorted calls:");
-            SearchUtilsTest.debugDetails("  * Iterations: " + nloops);
-            SearchUtilsTest.debugTabbedValue("Iterations", Integer.toString(nloops));
             SearchUtilsTest.debugDetails("  * Run Time: " + stopWatchTotal.getResult(duration));
             SearchUtilsTest.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
+            SearchUtilsTest.debugDetails("  * Iterations: " + nloops);
+            SearchUtilsTest.debugTabbedValue("Iterations", Integer.toString(nloops));
             SearchUtilsTest.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
             SearchUtilsTest.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
             SearchUtilsTest.debugDetails("  * toSort.next: " + stopWatchTotal.getResult(callingToSortNextTime));
