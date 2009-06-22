@@ -4,6 +4,8 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
+
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -60,6 +62,7 @@
           String next_page_num_str = Integer.toString(next_page_num);
         %>
         <table width="700px">
+
           <tr>
             <table>
               <tr>
@@ -79,6 +82,16 @@
           <tr>
             <td class="textbody">
               <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
+              
+          <%
+          if (NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE).compareToIgnoreCase("all") == 0) {
+          %>
+		  <th class="dataTableHeader" scope="col" align="left">Concept</th>
+		  <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
+          <%		  
+          } 
+          %>              
+              
                 <%
                   for (int i=istart; i<iend; i++) {
                     if (i >= 0 && i<v.size()) {
