@@ -115,7 +115,7 @@ public class RelationshipTest extends DataUtils {
             "C0175677", // Injury
         };
 
-        // codes = new String[] { "C0017636" };
+//        codes = new String[] { "C0017636" };
                 
         prompt();
         for (int i = 0; i < codes.length; ++i) {

@@ -249,7 +249,6 @@ public class DataUtils {
     static String[] assocToNTNodes_ = new String[] { "RN", "NT" };
 
     static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other"};
-    private Utils.StopWatch stopWatch = new Utils.StopWatch();
 
 
     //==================================================================================
@@ -2059,6 +2058,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
     {
+        Utils.StopWatch stopWatch = new Utils.StopWatch();
         //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
         HashMap hmap = new HashMap();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -2072,9 +2072,15 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
         HashMap map = new HashMap();
         try {
+            stopWatch.start();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+            DBG.debugDetails("* lbSvc.getNodeGraph: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
+            DBG.debugTabbedValue("lbSvc.getNodeGraph", stopWatch.formatInSec());
             if (sab != null) {
+                stopWatch.start();
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+	            DBG.debugDetails("* cng.restrictToAssociations: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
+	            DBG.debugTabbedValue("cng.restrictToAssociations", stopWatch.formatInSec());
 			}
 
 /*
@@ -2084,11 +2090,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
+            stopWatch.start();
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
                     //true, false, 1, 1, new LocalNameList(), null, null, 1024);
                     true, false, 1, 1, null, propertyTypes, null, null, -1, false);
-
+            DBG.debugDetails("* ConvenienceMethods.createConceptReference: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
+            DBG.debugTabbedValue("ConvenienceMethods.createConceptReference", stopWatch.formatInSec());
+            
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
                     matches .enumerateResolvedConceptReference();
@@ -2136,10 +2145,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
+	    //Utils.StopWatch stopWatch = new Utils.StopWatch();
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		//DBG.debugDetails("* getAssociatedConceptsHashMap: " + stopWatch.getResult() + " [getNeighborhoodSynonyms]");
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
 		HashSet rel_hset = new HashSet();
+		
 		while (it.hasNext())
 		{
 			String rel = (String) it.next();
@@ -2364,7 +2376,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
-		stopWatch.start();
+		Utils.StopWatch stopWatch = new Utils.StopWatch();
 		long ms = System.currentTimeMillis();
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
