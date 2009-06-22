@@ -26,6 +26,7 @@ public class MainTest {
                 switch (i) {
                 case 1: SearchUtilsTest.main(args); break;
                 case 2: RelationshipTest.main(args); break;
+                case 3: BySourceTest.main(args); break;
                 default: println("Invalid choice.  Try again."); break;
                 }
                 println("");
@@ -37,6 +38,8 @@ public class MainTest {
     
     public static void main(String[] args) {
         //prompt(args);
-        RelationshipTest.main(args);
+        //SearchUtilsTest.main(args);
+        //RelationshipTest.main(args);
+        BySourceTest.main(args);
     }
 }
