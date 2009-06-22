@@ -27,7 +27,7 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
             DBG.debug("  * maxToReturn = " + maxToReturn);
         }
-        DBG.debugDetails("* Search Details: " + matchAlgorithm + " " + matchText);
+        DBG.debug(DBG.isDisplayDetails(), "* Search Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }

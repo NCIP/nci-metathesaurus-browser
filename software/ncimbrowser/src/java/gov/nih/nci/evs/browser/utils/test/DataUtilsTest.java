@@ -22,7 +22,7 @@ public class DataUtilsTest extends DataUtils {
                 DBG.debug("  * sort_option[" + i + "]: " + value.toString());
             }
         }
-        DBG.debugDetails("* Search Details: " + code);
+        DBG.debug(DBG.isDisplayDetails(), "* Associations Details: " + code);
         return super.getAssociationTargetHashMap(scheme, version, code, sort_option);
     }
 
