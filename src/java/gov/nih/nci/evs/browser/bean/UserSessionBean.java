@@ -226,6 +226,9 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("code", c.getEntityCode());
             request.getSession().setAttribute("concept", c);
             request.getSession().setAttribute("type", "properties");
+
+            request.getSession().setAttribute("new_search", Boolean.TRUE);
+
             return "concept_details";
         }
         String message = "No match found.";
