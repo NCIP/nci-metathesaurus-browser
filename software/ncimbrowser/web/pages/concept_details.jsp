@@ -52,6 +52,10 @@ if (concept_details_obj == null) {
     concept_details_code = concept_details_c.getEntityCode();
 }
 
+String concept_details_type = (String) request.getSession().getAttribute("type");
+Boolean isNew = (Boolean) request.getSession().getAttribute("new_search");
+request.getSession().removeAttribute("new_search");
+
 %>
 
       <%@ include file="/pages/templates/header.xhtml" %>
@@ -81,9 +85,16 @@ if (concept_details_obj == null) {
     String checkmultiplicity = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("checkmultiplicity"));
     if (checkmultiplicity == null) checkmultiplicity = "false";
 
-    type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+type = "properties";
+if (isNew == null)
+{
+	type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+} else if (isNew.equals(Boolean.FALSE)) {
+        type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+}
 
-System.out.println("*** concept_details.jsp type: " + type);
+request.getSession().setAttribute("type", type);
+
 
             if (type == null) {
                 type = "properties";
@@ -102,7 +113,9 @@ System.out.println("*** concept_details.jsp type: " + type);
     boolean multipleCUIs = false;
 
     if (type.compareTo("sources") == 0 && checkmultiplicity.compareTo("true") == 0) {
-
+    
+        request.getSession().setAttribute("type", type); 
+        
   boolean searchInactive = true;
   sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
   sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));

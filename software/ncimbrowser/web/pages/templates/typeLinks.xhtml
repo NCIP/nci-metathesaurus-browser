@@ -12,14 +12,9 @@
       String scheme = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));
       String id = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
 
-      //String data_type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("type"));
-
-      String data_type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
-
- System.out.println("*** typeLinks.xhtml  data_type " + data_type);
+      String data_type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("type"));
 
       if (data_type == null) data_type = "properties";
-
 
      %>
      <td width="134" height="21">
