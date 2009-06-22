@@ -2377,6 +2377,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Iterator it = keyset.iterator();
 
 		// Categorize relationships into six categories and find association source data
+		stopWatch.start();
 		ms = System.currentTimeMillis();
 		action = "Categorizing relationships into six categories; finding source data for each relationship";
 		while (it.hasNext())
@@ -2411,9 +2412,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 			}
 		}
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
+        DBG.debugTabbedValue(action, stopWatch.formatInSec());
 
 		// Remove redundant RO relationships
+        stopWatch.start();
 		ms = System.currentTimeMillis();
 		action = "Removing redundant RO relationships";
 
@@ -2449,8 +2453,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 		rel_hmap.put("Other", w3);
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
+        DBG.debugTabbedValue(action, stopWatch.formatInSec());
 
+        stopWatch.start();
         ms = System.currentTimeMillis();
         action = "Sorting relationships by sort options (columns)";
 
@@ -2472,7 +2479,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				rel_hmap.put(category, w);
 			}
 		}
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
+        DBG.debugTabbedValue(action, stopWatch.formatInSec());
 		return rel_hmap;
 	}
 
