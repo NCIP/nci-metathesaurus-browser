@@ -141,6 +141,12 @@ public class UserSessionBean extends Object
 
         String source = (String) request.getParameter("source");
 
+        //if (source == null) {
+		//	source = "ALL";
+		//}
+		//request.getSession().setAttribute("source", source);
+		//setSelectedSource(source);
+
         if (NCImBrowserProperties.debugOn) {
             try {
                 System.out.println(Utils.SEPARATOR);
@@ -190,10 +196,8 @@ public class UserSessionBean extends Object
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
-        request.getSession().setAttribute("source", source);
 
-        //setSelectedMatchType(matchtype);
-        setSelectedSource(source);
+
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -202,8 +206,6 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("codeInNCI");
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
-
-        //request.getSession().setAttribute("type", "properties");
 
 
         if (v != null && v.size() > 1)
@@ -354,12 +356,11 @@ public class UserSessionBean extends Object
 
 
 	public List getSourceList() {
+		if (sourceListData != null) return sourceList;
 		String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
 		sourceList = new ArrayList();
-		if (sourceListData == null) return sourceList;
-
 		for (int i=0; i<sourceListData.size(); i++) {
 			String t = (String) sourceListData.elementAt(i);
 			sourceList.add(new SelectItem(t));
@@ -375,19 +376,15 @@ public class UserSessionBean extends Object
 
 
 	public String getSelectedSource() {
-		if (selectedSource == null) {
-			sourceList = getSourceList();
-			if (sourceList != null && sourceList.size() > 0) {
-				this.selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
-			}
-	    }
 		return this.selectedSource;
 	}
 
 	public void sourceSelectionChanged(ValueChangeEvent event) {
-		if (event.getNewValue() == null) return;
-		String source = (String) event.getNewValue();
-		setSelectedSource(source);
+		if (event.getNewValue() != null) {
+			String source = (String) event.getNewValue();
+			System.out.println("==================== sourceSelectionChanged to: " + source);
+			setSelectedSource(source);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////
