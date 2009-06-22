@@ -122,6 +122,8 @@ import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
+import gov.nih.nci.evs.browser.utils.test.DBG;
+
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 
 
@@ -247,6 +249,7 @@ public class DataUtils {
     static String[] assocToNTNodes_ = new String[] { "RN", "NT" };
 
     static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other"};
+    private Utils.StopWatch stopWatch = new Utils.StopWatch();
 
 
     //==================================================================================
@@ -2361,11 +2364,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
+		stopWatch.start();
 		long ms = System.currentTimeMillis();
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
+        DBG.debugTabbedValue(action, stopWatch.formatInSec());
 
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
