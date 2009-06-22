@@ -7,7 +7,6 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
     private static String _url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
-    private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayConcepts = false;
     private boolean _displayResults = true;
@@ -66,22 +65,22 @@ public class SearchUtilsTest extends SearchUtils {
         }
     }
     
-    private void promptSearch() {
-        boolean isOn = false;
+    private void prompt() {
+        boolean isTrue = false;
         
         DBG.debug("* Prompt:");
-        _suppressOtherMessages = Prompt.prompt(
-            "  * Suppress other debugging messages", _suppressOtherMessages);
-        Debug.setDisplay(!_suppressOtherMessages);
+        isTrue = Prompt.prompt(
+            "  * Suppress other debugging messages", Debug.isDisplay());
+        Debug.setDisplay(isTrue);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
-        isOn = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
-        DBG.setDisplayDetails(isOn);
+        isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+        DBG.setDisplayDetails(isTrue);
         _displayConcepts = Prompt.prompt("  * Display concepts", _displayConcepts);
         _displayResults = Prompt.prompt("  * Display results", _displayResults);
-        isOn = Prompt.prompt("  * Display tab delimited",
+        isTrue = Prompt.prompt("  * Display tab delimited",
             DBG.isDisplayTabDelimitedFormat());
-        DBG.setDisplayTabDelimitedFormat(isOn);
+        DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
     private void testSearch() {
@@ -115,7 +114,7 @@ public class SearchUtilsTest extends SearchUtils {
         
         matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
-        promptSearch();
+        prompt();
         
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
