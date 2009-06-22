@@ -25,6 +25,14 @@ public class DataUtilsTest extends DataUtils {
         DBG.debug(DBG.isDisplayDetails(), "* Associations Details: " + code);
         return super.getAssociationTargetHashMap(scheme, version, code, sort_option);
     }
+    
+    private void displayList(String indent, String text, Vector<String> vector) {
+        DBG.debug(indent + "* List: " + text);
+        Object[] list = vector.toArray();
+        for (int i=0; i<list.length; ++i)
+            DBG.debug(indent + "  " + (i+1) + ") " + list[i]);
+        DBG.debug(indent + "  * Total: " + list.length);
+    }
 
     public void getAssociationTarget(String scheme, String version, String code, Vector sort_option) {
         DBG.clearTabbbedValues();
@@ -32,16 +40,16 @@ public class DataUtilsTest extends DataUtils {
         HashMap hmap = getAssociationTargetHashMap(scheme, version, code, sort_option);
         long duration = stopWatch.getDuration();
 
-        Vector<String> v = new Vector(hmap.keySet());
+        Vector<String> vector = new Vector<String>(hmap.keySet());
         int count = 0;
         
-        if (_displayAssociations && v.size() > 0) {
+        if (vector.size() > 0) {
             DBG.debug("* List of associations:");
-            for (int i = 0; i < v.size(); i++) {
-                int j = i + 1;
-                String key = v.elementAt(i);
-                Vector value = (Vector) hmap.get(key);
-                DBG.debug("  " + j + ") " + key + " " + value);
+            for (int i = 0; i < vector.size(); i++) {
+                String key = vector.elementAt(i);
+                Vector<String> value = (Vector<String>) hmap.get(key);
+                if (_displayAssociations)
+                    displayList("    ", key, value);
                 count += value.size();
             }
         }
@@ -54,7 +62,7 @@ public class DataUtilsTest extends DataUtils {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "code", code);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
+            DBG.debugTabbedValue(i++, "Hits", Integer.toString(count));
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.displayTabbedValues();
         }
@@ -65,7 +73,7 @@ public class DataUtilsTest extends DataUtils {
         
         DBG.debug("* Prompt:");
         isTrue = Prompt.prompt(
-            "  * Suppress other debugging messages", Debug.isDisplay());
+            "  * Suppress other debugging messages", ! Debug.isDisplay());
         Debug.setDisplay(isTrue);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
