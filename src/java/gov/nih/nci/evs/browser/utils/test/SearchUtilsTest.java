@@ -28,39 +28,39 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
             DBG.debug("  * maxToReturn = " + maxToReturn);
         }
-        DBG.debug(DBG.isDisplayDetails(), "* Search Details: " + matchAlgorithm + " " + matchText);
+        DBG.debug(DBG.isDisplayDetails(), "* Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
     
-    public void search(String scheme, String version, String matchText,
+    public void searchByNameTest(String scheme, String version, String matchText,
         String source, String matchAlgorithm, int maxToReturn) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<Concept> v = searchByName(scheme, version, matchText,
+        Vector<Concept> vector = searchByName(scheme, version, matchText,
             source, matchAlgorithm, maxToReturn);
         long duration = stopWatch.getDuration();
 
-        if (_displayConcepts && v.size() > 0) {
+        if (_displayConcepts && vector.size() > 0) {
             DBG.debug("* List of concepts:");
-            for (int i = 0; i < v.size(); i++) {
+            for (int i = 0; i < vector.size(); i++) {
                 int j = i + 1;
-                Concept ce = v.elementAt(i);
+                Concept ce = vector.elementAt(i);
                 DBG.debug("  " + j + ") " + ce.getEntityCode() + " "
                     + ce.getEntityDescription().getContent());
             }
         }
         if (_displayResults) {
             DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
-            DBG.debug("  * Number of concepts: " + v.size());
-            DBG.debug("  * Total runtime: " + stopWatch.getResult(duration));
+            DBG.debug("  * Number of concepts: " + vector.size());
+            DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
         }
         if (DBG.isDisplayTabDelimitedFormat()) {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "Keyword", matchText);
             DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
+            DBG.debugTabbedValue(i++, "Hits", Integer.toString(vector.size()));
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.displayTabbedValues();
         }
@@ -84,7 +84,7 @@ public class SearchUtilsTest extends SearchUtils {
         DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
-    private void testSearch() {
+    private void test1() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
@@ -123,7 +123,7 @@ public class SearchUtilsTest extends SearchUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+            searchByNameTest(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
         DBG.debug("* Done");
     }
@@ -154,7 +154,7 @@ public class SearchUtilsTest extends SearchUtils {
         SearchUtilsTest test = new SearchUtilsTest(_url);
         boolean isContinue = true;
         do {
-            test.testSearch();
+            test.test1();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
