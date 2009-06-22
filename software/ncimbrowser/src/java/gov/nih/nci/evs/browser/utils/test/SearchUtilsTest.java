@@ -70,7 +70,7 @@ public class SearchUtilsTest extends SearchUtils {
         
         DBG.debug("* Prompt:");
         isTrue = Prompt.prompt(
-            "  * Suppress other debugging messages", Debug.isDisplay());
+            "  * Suppress other debugging messages", ! Debug.isDisplay());
         Debug.setDisplay(isTrue);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
