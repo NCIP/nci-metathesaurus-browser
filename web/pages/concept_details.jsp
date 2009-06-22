@@ -88,7 +88,7 @@ request.getSession().removeAttribute("new_search");
 type = "properties";
 if (isNew == null)
 {
-	type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+  type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
 } else if (isNew.equals(Boolean.FALSE)) {
         type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
 }
@@ -113,9 +113,9 @@ request.getSession().setAttribute("type", type);
     boolean multipleCUIs = false;
 
     if (type.compareTo("sources") == 0 && checkmultiplicity.compareTo("true") == 0) {
-    
-        request.getSession().setAttribute("type", type); 
-        
+
+        request.getSession().setAttribute("type", type);
+
   boolean searchInactive = true;
   sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
   sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
@@ -239,8 +239,7 @@ request.getSession().setAttribute("type", type);
 
             name = "";
             if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
-               //name = "The server encountered an internal error that prevented it from fulfilling this request.";
-               name = "ERROR: Invalid coding scheme name - " + dictionary + ".";
+               name = "ERROR: Invalid coding scheme name.";
             } else {
         if (c != null) {
            request.getSession().setAttribute("concept", c);
@@ -248,8 +247,7 @@ request.getSession().setAttribute("type", type);
            name = c.getEntityDescription().getContent();
 
         } else {
-           //name = "The server encountered an internal error that prevented it from fulfilling this request.";
-           name = "ERROR: Invalid code - " + code + ".";
+           name = "ERROR: Invalid code.";
         }
      }
 
