@@ -2,10 +2,13 @@ package gov.nih.nci.evs.browser.utils.test;
 
 import java.util.*;
 
+import org.LexGrid.concepts.*;
+
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class DataUtilsTest extends DataUtils {
+    private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayAssociations = false;
     private boolean _displayResults = true;
@@ -44,7 +47,7 @@ public class DataUtilsTest extends DataUtils {
         int count = 0;
         
         if (vector.size() > 0) {
-            DBG.debug("* List of associations:");
+            DBG.debug(_displayAssociations, "* List of associations:");
             for (int i = 0; i < vector.size(); i++) {
                 String key = vector.elementAt(i);
                 Vector<String> value = (Vector<String>) hmap.get(key);
@@ -53,8 +56,11 @@ public class DataUtilsTest extends DataUtils {
                 count += value.size();
             }
         }
+
+        Concept concept = getConceptByCode(scheme, version, null, code);
+        String conceptName = concept.getEntityDescription().getContent();
         if (_displayResults) {
-            DBG.debug("* Result: " + code);
+            DBG.debug("* Result: " + code + " (" + conceptName + ")");
             DBG.debug("  * Number of associations: " + count);
             DBG.debug("  * Total runtime: " + stopWatch.getResult(duration));
         }
@@ -64,6 +70,7 @@ public class DataUtilsTest extends DataUtils {
             DBG.debugTabbedValue(i++, "code", code);
             DBG.debugTabbedValue(i++, "Hits", Integer.toString(count));
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
+            DBG.debugTabbedValue("Concept name", conceptName);
             DBG.displayTabbedValues();
         }
     }
@@ -72,9 +79,9 @@ public class DataUtilsTest extends DataUtils {
         boolean isTrue = false;
         
         DBG.debug("* Prompt:");
-        isTrue = Prompt.prompt(
-            "  * Suppress other debugging messages", ! Debug.isDisplay());
-        Debug.setDisplay(isTrue);
+        _suppressOtherMessages = Prompt.prompt(
+            "  * Suppress other debugging messages", _suppressOtherMessages);
+        Debug.setDisplay(!_suppressOtherMessages);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
         isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
@@ -86,17 +93,48 @@ public class DataUtilsTest extends DataUtils {
         DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
-    public void testData() {
-        prompt();
-        
+    public void testAssociations() {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
-        String code = "C0017636";
         Vector<String> sort_option = new Vector<String>();
         for (int i=0; i<6; ++i)
             sort_option.add("source");
         
-        getAssociationTarget(scheme, version, code, sort_option);
+        String[] codes = new String[] { 
+            "C0017636", // Glioblastoma 
+            "C1704407", // Arabic numeral 100
+            "C0391978", // Bone Tissue
+            "C0005767", // Blood
+            "C0002085", // Allele
+            "C0000735", // Abdominal Neoplasms
+            "C0998265", // Cancer Genus
+            "C0017337", // Gene
+            "C0027651", // Neoplasms
+            "C0441800", // Grade
+            "CL342077", // Cell
+            "C1516728", // Common Terminology Criteria for Adverse Events
+            "C0007097", // Carcinoma
+            "C0021311", // Infection 
+            "C0441471", // Event
+            "C1306673", // Stage
+            "C0699733", // Devices
+            "C0033684", // Proteins
+            "C1285092", // Gland
+            "C0175677", // Injury
+        };
+
+        // codes = new String[] { "C0017636" };
+                
+        prompt();
+        for (int i = 0; i < codes.length; ++i) {
+            String code = codes[i];
+            if (DBG.isDisplayDetails()) {
+                DBG.debug("");
+                DBG.debug(Utils.SEPARATOR);
+            }
+            getAssociationTarget(scheme, version, code, sort_option);
+        }
+        DBG.debug("* Done");
     }
     
     private static void parse(String[] args) {
@@ -120,7 +158,7 @@ public class DataUtilsTest extends DataUtils {
         DataUtilsTest test = new DataUtilsTest();
         boolean isContinue = true;
         do {
-            test.testData();
+            test.testAssociations();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
