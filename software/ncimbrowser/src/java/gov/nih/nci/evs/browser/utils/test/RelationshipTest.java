@@ -7,7 +7,7 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-public class DataUtilsTest extends DataUtils {
+public class RelationshipTest extends DataUtils {
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayAssociations = false;
@@ -155,7 +155,7 @@ public class DataUtilsTest extends DataUtils {
         parse(args);
         
         DBG.setPerformanceTesting(true);
-        DataUtilsTest test = new DataUtilsTest();
+        RelationshipTest test = new RelationshipTest();
         boolean isContinue = true;
         do {
             test.testAssociations();
