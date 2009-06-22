@@ -214,7 +214,7 @@ public class UserSessionBean extends Object
             String match_size = Integer.toString(v.size());
             request.getSession().setAttribute("match_size", match_size);
             request.getSession().setAttribute("page_string", "1");
-            request.getSession().setAttribute("selectedResultsPerPage", "50");
+            //request.getSession().setAttribute("selectedResultsPerPage", "50");
             request.getSession().setAttribute("new_search", Boolean.TRUE);
             return "search_results";
         }
@@ -238,48 +238,55 @@ public class UserSessionBean extends Object
 
 
 
-    private String selectedResultsPerPage = null;
-    private List resultsPerPageList = null;
+	private String selectedResultsPerPage = null;
+	private List resultsPerPageList = null;
 
-    public List getResultsPerPageList() {
-        resultsPerPageList = new ArrayList();
-        resultsPerPageList.add(new SelectItem("10"));
-        resultsPerPageList.add(new SelectItem("25"));
-        resultsPerPageList.add(new SelectItem("50"));
-        resultsPerPageList.add(new SelectItem("75"));
-        resultsPerPageList.add(new SelectItem("100"));
-        resultsPerPageList.add(new SelectItem("250"));
-        resultsPerPageList.add(new SelectItem("500"));
+	public List getResultsPerPageList() {
+		resultsPerPageList = new ArrayList();
+		resultsPerPageList.add(new SelectItem("10"));
+		resultsPerPageList.add(new SelectItem("25"));
+		resultsPerPageList.add(new SelectItem("50"));
+		resultsPerPageList.add(new SelectItem("75"));
+		resultsPerPageList.add(new SelectItem("100"));
+		resultsPerPageList.add(new SelectItem("250"));
+		resultsPerPageList.add(new SelectItem("500"));
 
-        selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2)).getLabel(); // default to 50
-        return resultsPerPageList;
-    }
+		selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2))
+				.getLabel(); // default to 50
+		return resultsPerPageList;
+	}
 
-    public void setSelectedResultsPerPage(String selectedResultsPerPage) {
-        this.selectedResultsPerPage = selectedResultsPerPage;
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        request.getSession().setAttribute("selectedResultsPerPage", selectedResultsPerPage);
-    }
+	public void setSelectedResultsPerPage(String selectedResultsPerPage) {
+		if (selectedResultsPerPage == null)
+			return;
+		this.selectedResultsPerPage = selectedResultsPerPage;
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedResultsPerPage",
+				selectedResultsPerPage);
+	}
 
-    public String getSelectedResultsPerPage() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String s = (String) request.getSession().getAttribute("selectedResultsPerPage");
-        if (s != null) {
-            this.selectedResultsPerPage = s;
-	    }
-	    return this.selectedResultsPerPage;
-    }
+	public String getSelectedResultsPerPage() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
+		String s = (String) request.getSession().getAttribute(
+				"selectedResultsPerPage");
+		if (s != null) {
+			this.selectedResultsPerPage = s;
+		} else {
+			this.selectedResultsPerPage = "50";
+			request.getSession().setAttribute("selectedResultsPerPage", "50");
+		}
+		return this.selectedResultsPerPage;
+	}
 
-
-    public void resultsPerPageChanged(ValueChangeEvent event) {
-        if (event.getNewValue() == null)
-        {
+	public void resultsPerPageChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) {
 			return;
 		}
-        String newValue = (String) event.getNewValue();
-        setSelectedResultsPerPage(newValue);
-    }
-
+		String newValue = (String) event.getNewValue();
+		setSelectedResultsPerPage(newValue);
+	}
 
     public String linkAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -356,7 +363,7 @@ public class UserSessionBean extends Object
 
 
 	public List getSourceList() {
-		if (sourceListData != null) return sourceList;
+		if (sourceList != null) return sourceList;
 		String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
