@@ -2,6 +2,7 @@ package gov.nih.nci.evs.browser.utils.test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
 
 public class DBG {
     private static boolean _isPerformanceTesting = false;
@@ -85,5 +86,13 @@ public class DBG {
             buffer.append(value);
         }
         debug(buffer.toString());
+    }
+    
+    public static void debugVector(String indent, String text, Vector<?> vector) {
+        debug(indent + text);
+        Object[] list = vector.toArray();
+        for (int i=0; i<list.length; ++i)
+            debug(indent + "  " + (i+1) + ") " + list[i].toString());
+        debug(indent + "  * Total: " + list.length);
     }
 }

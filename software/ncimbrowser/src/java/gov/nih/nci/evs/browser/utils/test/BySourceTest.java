@@ -7,60 +7,45 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-public class RelationshipTest extends DataUtils {
+public class BySourceTest extends DataUtils {
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
-    private boolean _displayRelationships = false;
+    private boolean _displaySources = false;
     private boolean _displayResults = true;
 
-    public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
+    public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         if (_displayParameters) {
             DBG.debug("* Search parameters:");
             DBG.debug("  * scheme = " + scheme);
             DBG.debug("  * version = " + version);
             DBG.debug("  * code = " + code);
-            Object items[] = sort_option.toArray();
-            for (int i=0; i<items.length; ++i) {
-                Object value = items[i];
-                DBG.debug("  * sort_option[" + i + "]: " + value.toString());
-            }
+            DBG.debug("  * sab = " + sab);
         }
         DBG.debug(DBG.isDisplayDetails(), "* Details: " + code);
-        return super.getAssociationTargetHashMap(scheme, version, code, sort_option);
+        return super.getNeighborhoodSynonyms(scheme, version, code, sab);
     }
-    
-    public void getAssociationTargetHashMapTest(String scheme, String version, String code, Vector sort_option) {
+
+    public void getNeighborhoodSynonymsTest(String scheme, String version, String code, String sab) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        HashMap hmap = getAssociationTargetHashMap(scheme, version, code, sort_option);
+        Vector vector = getNeighborhoodSynonyms(scheme, version, code, sab);
         long duration = stopWatch.getDuration();
 
-        Vector<String> vector = new Vector<String>(hmap.keySet());
-        int count = 0;
-        
-        if (vector.size() > 0) {
-            DBG.debug(_displayRelationships, "* List of associations:");
-            for (int i = 0; i < vector.size(); i++) {
-                String key = vector.elementAt(i);
-                Vector<String> value = (Vector<String>) hmap.get(key);
-                if (_displayRelationships)
-                    DBG.debugVector("    ", "* List: " + key, value);
-                count += value.size();
-            }
-        }
+        if (_displaySources && vector.size() > 0)
+            DBG.debugVector("", "* List:", vector);
 
         Concept concept = getConceptByCode(scheme, version, null, code);
         String conceptName = concept.getEntityDescription().getContent();
         if (_displayResults) {
             DBG.debug("* Result: " + code + " (" + conceptName + ")");
-            DBG.debug("  * Hits: " + count);
+            DBG.debug("  * Hits: " + vector.size());
             DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
         }
         if (DBG.isDisplayTabDelimitedFormat()) {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "code", code);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(count));
+            DBG.debugTabbedValue(i++, "Hits", Integer.toString(vector.size()));
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.debugTabbedValue("Concept name", conceptName);
             DBG.displayTabbedValues();
@@ -78,7 +63,7 @@ public class RelationshipTest extends DataUtils {
             _displayParameters);
         isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
         DBG.setDisplayDetails(isTrue);
-        _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
+        _displaySources = Prompt.prompt("  * Display sources", _displaySources);
         _displayResults = Prompt.prompt("  * Display results", _displayResults);
         isTrue = Prompt.prompt("  * Display tab delimited",
             DBG.isDisplayTabDelimitedFormat());
@@ -88,9 +73,7 @@ public class RelationshipTest extends DataUtils {
     public void test1() {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
-        Vector<String> sort_option = new Vector<String>();
-        for (int i=0; i<6; ++i)
-            sort_option.add("source");
+        String sab = "NCI";
         
         String[] codes = new String[] { 
             "C0017636", // Glioblastoma 
@@ -115,7 +98,7 @@ public class RelationshipTest extends DataUtils {
             "C0175677", // Injury
         };
 
-        // codes = new String[] { "C0017636" };
+        codes = new String[] { "C0017636" };
                 
         prompt();
         for (int i = 0; i < codes.length; ++i) {
@@ -124,7 +107,7 @@ public class RelationshipTest extends DataUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            getAssociationTargetHashMapTest(scheme, version, code, sort_option);
+            getNeighborhoodSynonymsTest(scheme, version, code, sab);
         }
         DBG.debug("* Done");
     }
@@ -147,7 +130,7 @@ public class RelationshipTest extends DataUtils {
         parse(args);
         
         DBG.setPerformanceTesting(true);
-        RelationshipTest test = new RelationshipTest();
+        BySourceTest test = new BySourceTest();
         boolean isContinue = true;
         do {
             test.test1();
