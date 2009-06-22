@@ -16,7 +16,7 @@ public class MainTest {
             println(SEPARATOR);
             println("Main Menu:");
             println(INDENT + "1) " + "SearchUtilsTest");
-            println(INDENT + "2) " + "DataUtilsTest");
+            println(INDENT + "2) " + "RelationshipTest");
             println(INDENT + "0) " + "Quit");
             println(SEPARATOR);
             i = Prompt.prompt("Choose", i);
@@ -25,7 +25,7 @@ public class MainTest {
             try {
                 switch (i) {
                 case 1: SearchUtilsTest.main(args); break;
-                case 2: DataUtilsTest.main(args); break;
+                case 2: RelationshipTest.main(args); break;
                 default: println("Invalid choice.  Try again."); break;
                 }
                 println("");
@@ -37,6 +37,6 @@ public class MainTest {
     
     public static void main(String[] args) {
         //prompt(args);
-        DataUtilsTest.main(args);
+        RelationshipTest.main(args);
     }
 }
