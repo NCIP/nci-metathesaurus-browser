@@ -34,6 +34,8 @@
   %>
   <!--
   <input type="radio" name="algorithm" value="DoubleMetaphoneLuceneQuery" alt="Best Match" <%=check_b%>>Best Match&nbsp;
+  
+  styleClass="textbody"
   -->
   <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact&nbsp;
   <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp;
@@ -44,11 +46,8 @@
       value="Source"
       styleClass="textbody"
     >
-      <h:selectOneMenu id="source"
-        value="#{userSessionBean.selectedSource}" valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-        styleClass="textbody"
-      >
-        <f:selectItems value="#{userSessionBean.sourceList}"/>
+      <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}" valueChangeListener="#{userSessionBean.sourceSelectionChanged}" immediate="true">
+           <f:selectItems value="#{userSessionBean.sourceList}"/>
       </h:selectOneMenu>
   </h:outputLabel>
 
