@@ -34,7 +34,7 @@
     }
     String msg = null;
     if (concept == null) {
-           msg = "ERROR: Invalid code - " + code + ".";
+           msg = "ERROR: Invalid code.";
     } else {
            msg = "ERROR: Unable to generate the requested page.";
     }
