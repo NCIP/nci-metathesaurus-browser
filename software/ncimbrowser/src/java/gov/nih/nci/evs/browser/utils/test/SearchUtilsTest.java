@@ -7,6 +7,7 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
     private static String _url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+    private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayConcepts = false;
     private boolean _displayResults = true;
@@ -69,9 +70,9 @@ public class SearchUtilsTest extends SearchUtils {
         boolean isTrue = false;
         
         DBG.debug("* Prompt:");
-        isTrue = Prompt.prompt(
-            "  * Suppress other debugging messages", ! Debug.isDisplay());
-        Debug.setDisplay(isTrue);
+        _suppressOtherMessages = Prompt.prompt(
+            "  * Suppress other debugging messages", _suppressOtherMessages);
+        Debug.setDisplay(!_suppressOtherMessages);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
         isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
