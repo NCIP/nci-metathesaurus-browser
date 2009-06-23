@@ -106,4 +106,16 @@ public class Utils {
         text = text.replaceAll("  ", "&nbsp;&nbsp;");
         return text;
     }
+    
+    public static String toString(String[] list) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("{ ");
+        for (int i=0; i<list.length; ++i) {
+            if (i>0)
+                buffer.append(", ");
+            buffer.append(list[i]);
+        }
+        buffer.append(" }");
+        return buffer.toString();
+    }
 }

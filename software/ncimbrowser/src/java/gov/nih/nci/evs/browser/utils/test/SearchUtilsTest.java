@@ -115,6 +115,8 @@ public class SearchUtilsTest extends SearchUtils {
         
         matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
+        
+        DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
         prompt();
         
         for (int i = 0; i < matchTexts.length; ++i) {
