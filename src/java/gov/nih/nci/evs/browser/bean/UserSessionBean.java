@@ -123,12 +123,6 @@ public class UserSessionBean extends Object
     public String searchAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-
-
-String selectedSAB = (String) request.getSession().getAttribute("selectedSource");
-System.out.println("******** searchAction selectedSAB: " + selectedSAB);
-
-
         String matchText = (String) request.getParameter("matchText");
         matchText = matchText.trim();
         //[#19965] Error message is not displayed when Search Criteria is not proivded
@@ -147,11 +141,13 @@ System.out.println("******** searchAction selectedSAB: " + selectedSAB);
 
         String source = (String) request.getParameter("source");
 
-        //if (source == null) {
-		//	source = "ALL";
-		//}
+System.out.println("******** searchAction source: " + source);
+
+        if (source == null) {
+			source = "ALL";
+		}
 		//request.getSession().setAttribute("source", source);
-		//setSelectedSource(source);
+		setSelectedSource(source);
 
         if (NCImBrowserProperties.debugOn) {
             try {
@@ -366,7 +362,7 @@ System.out.println("******** searchAction selectedSAB: " + selectedSAB);
     // source
     ////////////////////////////////////////////////////////////////
 
-	private String selectedSource = null;
+	private String selectedSource = "ALL";
 	private List sourceList = null;
 	private Vector<String> sourceListData = null;
 
@@ -385,13 +381,21 @@ System.out.println("******** searchAction selectedSAB: " + selectedSAB);
 	}
 
 	public void setSelectedSource(String selectedSource) {
-		this.selectedSource = selectedSource;
+		if (selectedSource == null) return;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().removeAttribute("selectedSource");
 		request.getSession().setAttribute("selectedSource", selectedSource);
+		this.selectedSource = selectedSource;
 	}
 
 
 	public String getSelectedSource() {
+		if (selectedSource == null) {
+			sourceList = getSourceList();
+			if (sourceList != null && sourceList.size() > 0) {
+				this.selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+			}
+	    }
 		return this.selectedSource;
 	}
 

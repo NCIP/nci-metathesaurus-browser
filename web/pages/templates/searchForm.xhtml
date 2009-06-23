@@ -48,9 +48,11 @@
       value="Source"
       styleClass="textbody"
     >
+    
       <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}" valueChangeListener="#{userSessionBean.sourceSelectionChanged}" immediate="true">
            <f:selectItems value="#{userSessionBean.sourceList}"/>
       </h:selectOneMenu>
+      
   </h:outputLabel>
 
  </FORM>
