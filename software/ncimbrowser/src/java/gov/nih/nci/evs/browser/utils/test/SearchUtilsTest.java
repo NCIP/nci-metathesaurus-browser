@@ -6,14 +6,13 @@ import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 public class SearchUtilsTest extends SearchUtils {
-    private static String _url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayConcepts = false;
     private boolean _displayResults = true;
 
-    public SearchUtilsTest(String url) {
-        super(url);
+    public SearchUtilsTest() {
+        super(null);
     }
     
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
@@ -134,12 +133,7 @@ public class SearchUtilsTest extends SearchUtils {
         String prevArg = "";
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
-            if (arg.equals("-url")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-url")) {
-                _url = arg;
-                prevArg = "";
-            } else if (arg.equals("-propertyFile")) {
+            if (arg.equals("-propertyFile")) {
                 prevArg = arg;
             } else if (prevArg.equals("-propertyFile")) {
                 System.setProperty(
@@ -153,7 +147,7 @@ public class SearchUtilsTest extends SearchUtils {
         parse(args);
         
         DBG.setPerformanceTesting(true);
-        SearchUtilsTest test = new SearchUtilsTest(_url);
+        SearchUtilsTest test = new SearchUtilsTest();
         boolean isContinue = true;
         do {
             test.runTest();

@@ -39,8 +39,8 @@ public class MainTest {
     
     public static void main(String[] args) {
 //        prompt(args);
-//        SearchUtilsTest.main(args);
-//        RelationshipTest.main(args);
+        SearchUtilsTest.main(args);
+        RelationshipTest.main(args);
         BySourceTest.main(args);
     }
 }
