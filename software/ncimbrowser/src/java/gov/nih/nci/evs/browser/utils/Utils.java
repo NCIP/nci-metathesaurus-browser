@@ -45,13 +45,8 @@ public class Utils {
             return getIncrement();
         }
         
-        public static String getResult(long time) {
-            double timeSec = time/1000.0;
-            double timeMin = timeSec/60.0;
-            
-            return "" + time + " ms, " + 
-                _doubleFormatter.format(timeSec) + " sec, " + 
-                _doubleFormatter.format(timeMin) + " min";
+        public String getResult(long time) {
+            return timeToString(time);
         }
         
         public String getResult() {
@@ -59,15 +54,28 @@ public class Utils {
             return getResult(time);
         }
         
-        public static String formatInSec(long time) {
-            double timeSec = time/1000.0;
-            return _doubleFormatter.format(timeSec);
+        public String formatInSec(long time) {
+            return timeInSec(time);
         }
 
         public String formatInSec() {
             long time = getDuration();
             return formatInSec(time);
         }
+    }
+    
+    public static String timeToString(long time) {
+        double timeSec = time/1000.0;
+        double timeMin = timeSec/60.0;
+        
+        return "" + time + " ms, " + 
+            _doubleFormatter.format(timeSec) + " sec, " + 
+            _doubleFormatter.format(timeMin) + " min";
+    }
+    
+    public static String timeInSec(long time) {
+        double timeSec = time/1000.0;
+        return _doubleFormatter.format(timeSec);
     }
     
     public static String[] toStrings(String value, String delimiter, 
