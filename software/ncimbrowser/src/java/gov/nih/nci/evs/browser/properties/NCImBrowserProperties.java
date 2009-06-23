@@ -73,8 +73,8 @@ public class NCImBrowserProperties {
         private static Properties properties = new Properties();
 
         public static boolean debugOn = false;
-        private static int maxToReturn = 1000;
-        private static int maxTreeLevel = 1000;
+        public static int maxToReturn = 1000;
+        public static int maxTreeLevel = 1000;
         private static String service_url = null;
         private static String lg_config_file = null;
 
