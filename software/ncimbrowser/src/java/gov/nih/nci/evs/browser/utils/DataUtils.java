@@ -2097,7 +2097,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     true, false, 1, 1, null, propertyTypes, null, null, -1, false);
             DBG.debugDetails("* ConvenienceMethods.createConceptReference: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
             DBG.debugTabbedValue("ConvenienceMethods.createConceptReference", stopWatch.formatInSec());
-            
+
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
                     matches .enumerateResolvedConceptReference();
@@ -2136,6 +2136,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	}
 
 
+    // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
@@ -2145,15 +2146,35 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
-	    //Utils.StopWatch stopWatch = new Utils.StopWatch();
+
+        long ms = System.currentTimeMillis();
+        String action = "Retrieving distance-one relationships from the server";
+
+	    Utils.StopWatch stopWatch = new Utils.StopWatch();
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
-		//DBG.debugDetails("* getAssociatedConceptsHashMap: " + stopWatch.getResult() + " [getNeighborhoodSynonyms]");
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
 		HashSet rel_hset = new HashSet();
-		
+
+		long ms_categorization_delay = 0;
+		long ms_categorization;
+
+		long ms_find_highest_rank_atom_delay = 0;
+		long ms_find_highest_rank_atom;
+
+		long ms_remove_RO_delay = 0;
+		long ms_remove_RO;
+
+		long ms_all_delay = 0;
+		long ms_all;
+
+		ms_all = System.currentTimeMillis();
+
 		while (it.hasNext())
 		{
+			ms_categorization = System.currentTimeMillis();
 			String rel = (String) it.next();
 			String category = "Other";
 			if (parent_asso_vec.contains(rel)) category = "Parent";
@@ -2161,43 +2182,37 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			else if (bt_vec.contains(rel)) category = "Broader";
 			else if (nt_vec.contains(rel)) category = "Narrower";
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
 			Vector v = (Vector) hmap.get(rel);
 
+            // For each related concept:
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
 				Concept c = ac.getReferencedEntry();
 				if (!hset.contains(c.getEntityCode())) {
 					hset.add(c.getEntityCode());
+					// Find the highest ranked atom data
+					ms_find_highest_rank_atom = System.currentTimeMillis();
 					String t = findRepresentativeTerm(c, sab);
+					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+
 					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
 					w.add(t);
 
+                    // Temporarily save non-RO other relationships
 					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
 						if (rel_hset.contains(c.getEntityCode())) {
 							rel_hset.add(c.getEntityCode());
 						}
 					}
-					/*
-					Vector synonyms = getSynonyms(c, sab);
-					for (int j=0; j<synonyms.size(); j++) {
-						//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
-						String t = (String) synonyms.elementAt(j);
-						t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
-						w.add(t);
-
-						if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-							if (rel_hset.contains(c.getEntityCode())) {
-								rel_hset.add(c.getEntityCode());
-							}
-						}
-					}
-					*/
 			    }
 			}
 		}
 
         Vector u = new Vector();
+        // Remove redundant RO relationships
 		for (int i=0; i<w.size(); i++) {
 			String s = (String) w.elementAt(i);
 			Vector<String> v = parseData(s, "|");
@@ -2214,10 +2229,24 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 		    }
 		}
+		ms_all_delay = System.currentTimeMillis() - ms_all;
 
-		//SortUtils.quickSort(w);
-		//return w;
+		action = "categorizing relationships into six categories";
+		Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+
+		action = "finding highest ranked atoms";
+		Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+
+		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
+		action = "removing redundant RO relationships";
+		Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+
+        // Initial sort (refer to sortSynonymData method for sorting by a specific column)
+
+		long ms_sort_delay = System.currentTimeMillis();
 		SortUtils.quickSort(u);
+		action = "initial sorting";
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_sort_delay));
 		return u;
 
      }
