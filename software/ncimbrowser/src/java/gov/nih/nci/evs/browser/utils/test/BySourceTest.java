@@ -12,6 +12,8 @@ public class BySourceTest extends DataUtils {
     private boolean _displayParameters = false;
     private boolean _displayRelationships = false;
     private boolean _displayResults = true;
+    private String _sab = "NCI";  // Source Abbreviation
+    private String _sortBy = "cui";
 
     public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         if (_displayParameters) {
@@ -25,11 +27,15 @@ public class BySourceTest extends DataUtils {
         return super.getNeighborhoodSynonyms(scheme, version, code, sab);
     }
 
-    public void getNeighborhoodSynonymsTest(String scheme, String version, String code, String sab) {
+    public void getNeighborhoodSynonymsTest(String scheme, String version, 
+        String code, String sab, String sortBy) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector vector = getNeighborhoodSynonyms(scheme, version, code, sab);
         long duration = stopWatch.getDuration();
+        stopWatch.start();
+        DataUtils.sortSynonymData(vector, sortBy);
+        long duration2 = stopWatch.getDuration();
 
         if (_displayRelationships && vector.size() > 0)
             DBG.debugVector("", "* List:", vector);
@@ -39,7 +45,9 @@ public class BySourceTest extends DataUtils {
         if (_displayResults) {
             DBG.debug("* Result: " + code + " (" + conceptName + ")");
             DBG.debug("  * Hits: " + vector.size());
-            DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
+            DBG.debug("  * Run Time: " + stopWatch.getResult(duration));
+            DBG.debug("  * Sort By: " + sortBy);
+            DBG.debug("  * Run Time: " + stopWatch.getResult(duration2));
         }
         if (DBG.isDisplayTabDelimitedFormat()) {
             int i=0;
@@ -47,6 +55,8 @@ public class BySourceTest extends DataUtils {
             DBG.debugTabbedValue(i++, "code", code);
             DBG.debugTabbedValue(i++, "Hits", Integer.toString(vector.size()));
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
+            DBG.debugTabbedValue("Sort By", sortBy);
+            DBG.debugTabbedValue("Run Time", stopWatch.getResult(duration2));
             DBG.debugTabbedValue("Concept name", conceptName);
             DBG.displayTabbedValues();
         }
@@ -68,12 +78,13 @@ public class BySourceTest extends DataUtils {
         isTrue = Prompt.prompt("  * Display tab delimited",
             DBG.isDisplayTabDelimitedFormat());
         DBG.setDisplayTabDelimitedFormat(isTrue);
+        _sab = Prompt.prompt("  * Source", _sab);
+        _sortBy = Prompt.prompt("  * Sort By", _sortBy);
     }
 
-    public void test1() {
+    public void runTest() {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
-        String sab = "NCI";
         
         String[] codes = new String[] { 
             "C0017636", // Glioblastoma 
@@ -98,9 +109,9 @@ public class BySourceTest extends DataUtils {
             "C0175677", // Injury
         };
 
-//        codes = new String[] { "C0017636" };
-        sab = "SNOMEDCT";
-        codes = new String[] { "C0439793" };
+        codes = new String[] { "C0017636" };
+//        codes = new String[] { "C0439793" }; // Severity (Worst Case)
+//      _sourceAbbrev = "SNOMEDCT";
                 
         prompt();
         for (int i = 0; i < codes.length; ++i) {
@@ -109,7 +120,7 @@ public class BySourceTest extends DataUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            getNeighborhoodSynonymsTest(scheme, version, code, sab);
+            getNeighborhoodSynonymsTest(scheme, version, code, _sab, _sortBy);
         }
         DBG.debug("* Done");
     }
@@ -135,7 +146,7 @@ public class BySourceTest extends DataUtils {
         BySourceTest test = new BySourceTest();
         boolean isContinue = true;
         do {
-            test.test1();
+            test.runTest();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);

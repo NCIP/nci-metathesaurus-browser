@@ -2266,6 +2266,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	}
 
     public static Vector sortSynonymData(Vector synonyms, String sortBy) {
+        DYEE.header();
+        DYEE.printMethod();
+        DYEE.printList("synonyms", synonyms);
+        DYEE.printVar("sortBy", sortBy);
 		if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
@@ -2337,7 +2341,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
     public static Vector sortRelationshipData(Vector relationships, String sortBy) {
-		if (sortBy == null) sortBy = "name";
+        DYEE.header();
+        DYEE.printMethod();
+        DYEE.printList("relationships", relationships);
+        DYEE.printVar("sortBy", sortBy);
+        if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
 		String delim = "  ";
