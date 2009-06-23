@@ -53,7 +53,7 @@ public class BySourceTest extends DataUtils {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "code", code);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(vector.size()));
+            DBG.debugTabbedValue(i++, "Hits", vector.size());
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.debugTabbedValue("Sort By", sortBy);
             DBG.debugTabbedValue("Run Time", stopWatch.getResult(duration2));

@@ -49,6 +49,15 @@ public class DBG {
             debug("  " + text);
     }
     
+    public static void debugDetails(String name, String value) {
+        debugDetails("* " + name + " = " + value);
+        debugTabbedValue(name, value);
+    }
+
+    public static void debugDetails(String name, int value) {
+        debugDetails(name, Integer.toString(value));
+    }
+    
     public static void debugDetails(long timeMS, String text, 
         String additionalText) {
         if (_displayDetails) {
@@ -85,6 +94,14 @@ public class DBG {
     }
     
     public static void debugTabbedValue(String name, String value) {
+        debugTabbedValue(-1, name, value);
+    }
+
+    public static void debugTabbedValue(int index, String name, int value) {
+        debugTabbedValue(index, name, Integer.toString(value));
+    }
+    
+    public static void debugTabbedValue(String name, int value) {
         debugTabbedValue(-1, name, value);
     }
 
