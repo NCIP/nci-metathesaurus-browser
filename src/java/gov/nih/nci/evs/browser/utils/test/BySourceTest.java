@@ -44,6 +44,7 @@ public class BySourceTest extends DataUtils {
         String conceptName = concept.getEntityDescription().getContent();
         if (_displayResults) {
             DBG.debug("* Result: " + code + " (" + conceptName + ")");
+            DBG.debug("  * sab: " + sab);
             DBG.debug("  * Hits: " + vector.size());
             DBG.debug("  * Run Time: " + stopWatch.getResult(duration));
             DBG.debug("  * Sort By: " + sortBy);
@@ -53,6 +54,7 @@ public class BySourceTest extends DataUtils {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "code", code);
+            DBG.debugTabbedValue(i++, "sab", sab);
             DBG.debugTabbedValue(i++, "Hits", vector.size());
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.debugTabbedValue("Sort By", sortBy);
@@ -114,6 +116,7 @@ public class BySourceTest extends DataUtils {
 //        codes = new String[] { "C0439793" }; // Severity (Worst Case)
         _sab = "SNOMEDCT";
 
+        DBG.debug("* codes: " + Utils.toString(codes));
         prompt();
         for (int i = 0; i < codes.length; ++i) {
             String code = codes[i];

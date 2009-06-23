@@ -17,6 +17,7 @@ public class MainTest {
             println("Main Menu:");
             println(INDENT + "1) " + "SearchUtilsTest");
             println(INDENT + "2) " + "RelationshipTest");
+            println(INDENT + "3) " + "BySourceTest");
             println(INDENT + "0) " + "Quit");
             println(SEPARATOR);
             i = Prompt.prompt("Choose", i);
@@ -37,9 +38,9 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-        //prompt(args);
-        //SearchUtilsTest.main(args);
-        //RelationshipTest.main(args);
+//        prompt(args);
+//        SearchUtilsTest.main(args);
+//        RelationshipTest.main(args);
         BySourceTest.main(args);
     }
 }
