@@ -29,10 +29,6 @@
       <!-- Page content -->
       <div class="pagecontent">
         <%
-        
-String results_selectedSource = (String) request.getSession().getAttribute("selectedSource");
-System.out.println("********************search results page: Selected source: " + results_selectedSource);
-        
           Vector v = (Vector) request.getSession().getAttribute("search_results");
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
           String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
