@@ -2244,6 +2244,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		SortUtils.quickSort(u);
 		action = "initial sorting";
 		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_sort_delay));
+        DBG.debugDetails((System.currentTimeMillis() - ms_sort_delay), action, "getNeighborhoodSynonyms");
+
+		DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 		return u;
 
      }

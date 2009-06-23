@@ -60,7 +60,7 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "Keyword", matchText);
             DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(vector.size()));
+            DBG.debugTabbedValue(i++, "Hits", vector.size());
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.displayTabbedValues();
         }
