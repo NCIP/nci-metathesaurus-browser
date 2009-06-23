@@ -10,7 +10,7 @@ import gov.nih.nci.evs.browser.utils.*;
 public class BySourceTest extends DataUtils {
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
-    private boolean _displaySources = false;
+    private boolean _displayRelationships = false;
     private boolean _displayResults = true;
 
     public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
@@ -31,7 +31,7 @@ public class BySourceTest extends DataUtils {
         Vector vector = getNeighborhoodSynonyms(scheme, version, code, sab);
         long duration = stopWatch.getDuration();
 
-        if (_displaySources && vector.size() > 0)
+        if (_displayRelationships && vector.size() > 0)
             DBG.debugVector("", "* List:", vector);
 
         Concept concept = getConceptByCode(scheme, version, null, code);
@@ -55,7 +55,7 @@ public class BySourceTest extends DataUtils {
     private void prompt() {
         boolean isTrue = false;
         
-        DBG.debug("* Prompt:");
+        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
         _suppressOtherMessages = Prompt.prompt(
             "  * Suppress other debugging messages", _suppressOtherMessages);
         Debug.setDisplay(!_suppressOtherMessages);
@@ -63,7 +63,7 @@ public class BySourceTest extends DataUtils {
             _displayParameters);
         isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
         DBG.setDisplayDetails(isTrue);
-        _displaySources = Prompt.prompt("  * Display sources", _displaySources);
+        _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
         _displayResults = Prompt.prompt("  * Display results", _displayResults);
         isTrue = Prompt.prompt("  * Display tab delimited",
             DBG.isDisplayTabDelimitedFormat());
@@ -98,7 +98,7 @@ public class BySourceTest extends DataUtils {
             "C0175677", // Injury
         };
 
-//        codes = new String[] { "C0017636" };
+        codes = new String[] { "C0017636" };
                 
         prompt();
         for (int i = 0; i < codes.length; ++i) {

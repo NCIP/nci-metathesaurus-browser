@@ -2141,12 +2141,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
-        long ms = System.currentTimeMillis();
+		long ms = System.currentTimeMillis();
         String action = "Retrieving distance-one relationships from the server";
-
-	    Utils.StopWatch stopWatch = new Utils.StopWatch();
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
 		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		DBG.debugDetails((System.currentTimeMillis() - ms), action, "getNeighborhoodSynonyms");
 
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
@@ -2227,13 +2226,16 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		action = "categorizing relationships into six categories";
 		Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+		DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
 
 		action = "finding highest ranked atoms";
 		Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+		DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
 
 		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
 		action = "removing redundant RO relationships";
 		Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+        DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
 
         // Initial sort (refer to sortSynonymData method for sorting by a specific column)
 
