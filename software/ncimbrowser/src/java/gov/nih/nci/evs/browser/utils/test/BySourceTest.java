@@ -56,7 +56,7 @@ public class BySourceTest extends DataUtils {
             DBG.debugTabbedValue(i++, "Hits", vector.size());
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.debugTabbedValue("Sort By", sortBy);
-            DBG.debugTabbedValue("Run Time", stopWatch.getResult(duration2));
+            DBG.debugTabbedValue("Run Time", stopWatch.formatInSec(duration2));
             DBG.debugTabbedValue("Concept name", conceptName);
             DBG.displayTabbedValues();
         }
