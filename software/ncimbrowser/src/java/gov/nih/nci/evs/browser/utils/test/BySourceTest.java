@@ -107,12 +107,13 @@ public class BySourceTest extends DataUtils {
             "C0033684", // Proteins
             "C1285092", // Gland
             "C0175677", // Injury
+            "C0439793", // Severity (Worst Case)
         };
 
-        codes = new String[] { "C0017636" };
+//        codes = new String[] { "C0017636" };
 //        codes = new String[] { "C0439793" }; // Severity (Worst Case)
-//      _sourceAbbrev = "SNOMEDCT";
-                
+        _sab = "SNOMEDCT";
+
         prompt();
         for (int i = 0; i < codes.length; ++i) {
             String code = codes[i];
