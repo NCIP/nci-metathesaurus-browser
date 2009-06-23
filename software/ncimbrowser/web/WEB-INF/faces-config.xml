@@ -327,12 +327,14 @@
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>  
   </navigation-rule>      
-    
+
+<!--    
 <managed-bean>
   <managed-bean-name>DataUtils</managed-bean-name>
   <managed-bean-class>gov.nih.nci.evs.browser.bean.DataUtils</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
 </managed-bean>
+-->
 
 <managed-bean>
   <managed-bean-name>userSessionBean</managed-bean-name>
