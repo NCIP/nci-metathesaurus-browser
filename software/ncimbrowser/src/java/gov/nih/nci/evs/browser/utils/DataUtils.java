@@ -2072,7 +2072,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         try {
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
             if (sab != null) {
-                stopWatch.start();
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
 			}
 /*
@@ -2082,7 +2081,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
-            stopWatch.start();
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
                     //true, false, 1, 1, new LocalNameList(), null, null, 1024);
