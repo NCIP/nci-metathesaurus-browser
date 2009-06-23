@@ -98,7 +98,9 @@ public class BySourceTest extends DataUtils {
             "C0175677", // Injury
         };
 
-        codes = new String[] { "C0017636" };
+//        codes = new String[] { "C0017636" };
+        sab = "SNOMEDCT";
+        codes = new String[] { "C0439793" };
                 
         prompt();
         for (int i = 0; i < codes.length; ++i) {
