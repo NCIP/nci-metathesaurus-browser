@@ -70,7 +70,7 @@ public class RelationshipTest extends DataUtils {
     private void prompt() {
         boolean isTrue = false;
         
-        DBG.debug("* Prompt:");
+        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
         _suppressOtherMessages = Prompt.prompt(
             "  * Suppress other debugging messages", _suppressOtherMessages);
         Debug.setDisplay(!_suppressOtherMessages);

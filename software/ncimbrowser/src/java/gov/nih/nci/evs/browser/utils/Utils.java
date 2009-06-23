@@ -12,6 +12,7 @@ public class Utils {
 
     public static class StopWatch {
         private long _startMS = 0;
+        private long _incrementMS = 0;
         
         public StopWatch() {
             start();
@@ -20,16 +21,31 @@ public class Utils {
         public static DecimalFormat getFormatter() {
             return _doubleFormatter;
         }
+        
+        public void reset() {
+            _startMS = 0;
+            _incrementMS = 0;
+        }
     
         public void start() {
             _startMS = System.currentTimeMillis();
         }
         
-        public long getDuration() {
-            return System.currentTimeMillis() - _startMS;
+        public void storeIncrement() {
+            _incrementMS += getIncrement();
         }
         
-        public String getResult(long time) {
+        public long getIncrement() {
+            return System.currentTimeMillis() - _startMS;
+        }
+
+        public long getDuration() {
+            if (_incrementMS > 0)
+                return _incrementMS;
+            return getIncrement();
+        }
+        
+        public static String getResult(long time) {
             double timeSec = time/1000.0;
             double timeMin = timeSec/60.0;
             
@@ -43,7 +59,7 @@ public class Utils {
             return getResult(time);
         }
         
-        public String formatInSec(long time) {
+        public static String formatInSec(long time) {
             double timeSec = time/1000.0;
             return _doubleFormatter.format(timeSec);
         }
