@@ -116,7 +116,8 @@ public class RelationshipTest extends DataUtils {
         };
 
 //        codes = new String[] { "C0017636" };
-                
+
+        DBG.debug("* codes: " + Utils.toString(codes));
         prompt();
         for (int i = 0; i < codes.length; ++i) {
             String code = codes[i];
