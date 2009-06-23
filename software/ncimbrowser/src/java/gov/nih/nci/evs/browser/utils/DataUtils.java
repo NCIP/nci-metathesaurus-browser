@@ -2142,11 +2142,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
-		long ms = System.currentTimeMillis();
+		long ms = System.currentTimeMillis(), delay=0;
         String action = "Retrieving distance-one relationships from the server";
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
-		DBG.debugDetails((System.currentTimeMillis() - ms), action, "getNeighborhoodSynonyms");
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+		DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
@@ -2243,8 +2244,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		long ms_sort_delay = System.currentTimeMillis();
 		SortUtils.quickSort(u);
 		action = "initial sorting";
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_sort_delay));
-        DBG.debugDetails((System.currentTimeMillis() - ms_sort_delay), action, "getNeighborhoodSynonyms");
+		delay = System.currentTimeMillis() - ms_sort_delay;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
 		DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 		return u;
@@ -2405,20 +2407,18 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
-		Utils.StopWatch stopWatch = new Utils.StopWatch();
-		long ms = System.currentTimeMillis();
+		long ms = System.currentTimeMillis(), delay=0;
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
-        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
-        DBG.debugTabbedValue(action, stopWatch.formatInSec());
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
 
 		// Categorize relationships into six categories and find association source data
-		stopWatch.start();
 		ms = System.currentTimeMillis();
 		action = "Categorizing relationships into six categories; finding source data for each relationship";
 		while (it.hasNext())
@@ -2453,12 +2453,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 			}
 		}
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
-        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
-        DBG.debugTabbedValue(action, stopWatch.formatInSec());
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
 		// Remove redundant RO relationships
-        stopWatch.start();
 		ms = System.currentTimeMillis();
 		action = "Removing redundant RO relationships";
 
@@ -2494,11 +2493,10 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 		rel_hmap.put("Other", w3);
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
-        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
-        DBG.debugTabbedValue(action, stopWatch.formatInSec());
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
-        stopWatch.start();
         ms = System.currentTimeMillis();
         action = "Sorting relationships by sort options (columns)";
 
@@ -2520,9 +2518,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				rel_hmap.put(category, w);
 			}
 		}
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
-        DBG.debugDetails("* " + action + ": " + stopWatch.getResult() + " [getAssociationTargetHashMap]");
-        DBG.debugTabbedValue(action, stopWatch.formatInSec());
+        delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 		return rel_hmap;
 	}
 
