@@ -1393,10 +1393,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
 			}
 
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, new LocalNameList(), null, null, 1024);
-                    true, false, 1, 1, noopList_, null, null, null, -1, false);
+                    //true, false, 1, 1, noopList_, null, null, null, -1, false);
+                    true, false, 1, 1, noopList_, null, null, null, maxToReturn, false);
+
+
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
