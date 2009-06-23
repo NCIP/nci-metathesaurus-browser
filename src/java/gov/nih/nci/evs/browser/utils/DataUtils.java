@@ -180,7 +180,7 @@ public class DataUtils {
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
     static SortOptionList sortByCode_ = Constructors.createSortOptionList(new String[] {"code"});
 
-    int maxReturn = 5000;
+    //int maxReturn = 5000;
     Connection con;
     Statement stmt;
     ResultSet rs;
@@ -791,9 +791,10 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             NameAndValueList nameAndValueList_qualifier = null;
             cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
 
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    false, true, 1, 1, new LocalNameList(), null, null, maxReturn);
+                    false, true, 1, 1, new LocalNameList(), null, null, maxToReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
