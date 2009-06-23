@@ -2058,8 +2058,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
     {
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
-        //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
         HashMap hmap = new HashMap();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -2072,17 +2070,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
         HashMap map = new HashMap();
         try {
-            stopWatch.start();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-            DBG.debugDetails("* lbSvc.getNodeGraph: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
-            DBG.debugTabbedValue("lbSvc.getNodeGraph", stopWatch.formatInSec());
             if (sab != null) {
                 stopWatch.start();
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
-	            DBG.debugDetails("* cng.restrictToAssociations: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
-	            DBG.debugTabbedValue("cng.restrictToAssociations", stopWatch.formatInSec());
 			}
-
 /*
  ResolvedConceptReferenceList 	resolveAsList(ConceptReference graphFocus, boolean resolveForward, boolean resolveBackward, int resolveCodedEntryDepth,
  int resolveAssociationDepth, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes,
@@ -2095,8 +2087,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     ConvenienceMethods.createConceptReference(code, scheme),
                     //true, false, 1, 1, new LocalNameList(), null, null, 1024);
                     true, false, 1, 1, null, propertyTypes, null, null, -1, false);
-            DBG.debugDetails("* ConvenienceMethods.createConceptReference: " + stopWatch.getResult() + " [getAssociatedConceptsHashMap]");
-            DBG.debugTabbedValue("ConvenienceMethods.createConceptReference", stopWatch.formatInSec());
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
