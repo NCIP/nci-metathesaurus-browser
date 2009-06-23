@@ -1,11 +1,8 @@
 package gov.nih.nci.evs.browser.utils.test;
 
-import gov.nih.nci.evs.browser.utils.Utils;
-import gov.nih.nci.evs.browser.utils.Utils.StopWatch;
+import gov.nih.nci.evs.browser.utils.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 public class DBG {
     private static boolean _isPerformanceTesting = false;
@@ -52,27 +49,17 @@ public class DBG {
             debug("  " + text);
     }
     
-    public static void debugDetails(long duration, String text, 
+    public static void debugDetails(long timeMS, String text, 
         String additionalText) {
         if (_displayDetails) {
             StringBuffer buffer = new StringBuffer();
             buffer.append("* " + text + ": ");
-            buffer.append(Utils.StopWatch.getResult(duration));
+            buffer.append(Utils.timeToString(timeMS));
             if (additionalText != null && additionalText.length() > 0)
                 buffer.append(" [" + additionalText+ "]");
             debugDetails(buffer.toString());
         }
-        debugTabbedValue(text, Utils.StopWatch.formatInSec(duration));
-    }
-
-    public static void debugDetails(StopWatch stopWatch, String text, 
-        String additionalText) {
-        long duration = stopWatch.getDuration();
-        debugDetails(duration, text, additionalText);
-    }
-
-    public static void debugDetails(StopWatch stopWatch, String text) {
-        debugDetails(stopWatch, text);
+        debugTabbedValue(text, Utils.timeInSec(timeMS));
     }
     
     public static void clearTabbbedValues() {
