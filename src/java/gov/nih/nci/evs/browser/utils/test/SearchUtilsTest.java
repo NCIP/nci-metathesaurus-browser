@@ -84,7 +84,7 @@ public class SearchUtilsTest extends SearchUtils {
         DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
-    private void test1() {
+    private void runTest() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
@@ -154,7 +154,7 @@ public class SearchUtilsTest extends SearchUtils {
         SearchUtilsTest test = new SearchUtilsTest(_url);
         boolean isContinue = true;
         do {
-            test.test1();
+            test.runTest();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);

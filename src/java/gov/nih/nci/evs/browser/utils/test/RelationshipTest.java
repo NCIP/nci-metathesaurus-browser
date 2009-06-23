@@ -85,7 +85,7 @@ public class RelationshipTest extends DataUtils {
         DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
-    public void test1() {
+    public void runTest() {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
         Vector<String> sort_option = new Vector<String>();
@@ -150,7 +150,7 @@ public class RelationshipTest extends DataUtils {
         RelationshipTest test = new RelationshipTest();
         boolean isContinue = true;
         do {
-            test.test1();
+            test.runTest();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);
