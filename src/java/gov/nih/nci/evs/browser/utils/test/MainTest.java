@@ -38,9 +38,13 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-//        prompt(args);
-        SearchUtilsTest.main(args);
-        RelationshipTest.main(args);
-        BySourceTest.main(args);
+        int which = 1;
+        
+        switch (which) {
+        case 0: prompt(args); break;
+        case 1: SearchUtilsTest.main(args); break;
+        case 2: RelationshipTest.main(args); break;
+        case 3: BySourceTest.main(args); break;
+        }
     }
 }
