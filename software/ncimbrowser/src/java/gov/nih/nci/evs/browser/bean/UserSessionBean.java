@@ -123,6 +123,12 @@ public class UserSessionBean extends Object
     public String searchAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
+
+
+String selectedSAB = (String) request.getSession().getAttribute("selectedSource");
+System.out.println("******** searchAction selectedSAB: " + selectedSAB);
+
+
         String matchText = (String) request.getParameter("matchText");
         matchText = matchText.trim();
         //[#19965] Error message is not displayed when Search Criteria is not proivded
