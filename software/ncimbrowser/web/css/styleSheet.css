@@ -162,7 +162,7 @@ h3
  font-weight: bold;
 }
 
-.textsubtitle-blue
+.textsubtitle-blue 
 {
  font-size: 17px;
  color: #2F2F5F;
@@ -448,6 +448,42 @@ h3
 .tabtablecontentcontainer a 
 {
  font-size: 12px;
+ text-decoration: underline;
+}
+
+.subtab a:link 
+{
+ font-size: 14px;
+ color: #2F2F5F;
+ cursor: pointer;
+ font-weight: normal;
+ text-decoration: underline;
+}
+
+.subtab a:visited 
+{
+ font-size: 14px;
+ color: #2F2F5F;
+ cursor: pointer;
+ font-weight: normal;
+ text-decoration: underline;
+}
+
+.subtab a:hover 
+{
+ font-size: 13px;
+ color: #2F2F5F;
+ cursor: pointer;
+ font-weight: bold;
+ text-decoration: underline;
+}
+
+.subtab a:active 
+{
+ font-size: 14px;
+ color: #2F2F5F;
+ cursor: pointer;
+ font-weight: normal;
  text-decoration: underline;
 }
 
