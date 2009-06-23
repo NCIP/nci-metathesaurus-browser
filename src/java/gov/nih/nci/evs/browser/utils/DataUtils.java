@@ -2081,10 +2081,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
+
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
+
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, new LocalNameList(), null, null, 1024);
-                    true, false, 1, 1, null, propertyTypes, null, null, -1, false);
+                    //true, false, 1, 1, null, propertyTypes, null, null, -1, false);
+                    true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
