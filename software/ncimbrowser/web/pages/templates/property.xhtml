@@ -136,7 +136,7 @@
     }
   }
 %>
-<h2>Term and Properties</h2>
+<p class="textsubtitle-blue">Terms and Properties</p>
 <%
 if (!bool_obj.equals(Boolean.TRUE) ||
   (concept_status != null &&
@@ -270,31 +270,31 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
   <%
 
-	boolean has_external_source_codes = false;
-	int n = 0;
-	for (int i=0; i<external_source_codes.size(); i++) {
-		String propName = (String) external_source_codes.elementAt(i);
-		String propName_label = (String) external_source_codes_label.elementAt(i);
-		String prop_url = (String) external_source_codes_url.elementAt(i);
-		String prop_linktext = (String) external_source_codes_linktext.elementAt(i);
+  boolean has_external_source_codes = false;
+  int n = 0;
+  for (int i=0; i<external_source_codes.size(); i++) {
+    String propName = (String) external_source_codes.elementAt(i);
+    String propName_label = (String) external_source_codes_label.elementAt(i);
+    String prop_url = (String) external_source_codes_url.elementAt(i);
+    String prop_linktext = (String) external_source_codes_linktext.elementAt(i);
 
-		displayed_properties.add(propName);
-		Vector value_vec = (Vector) hmap.get(propName);
+    displayed_properties.add(propName);
+    Vector value_vec = (Vector) hmap.get(propName);
 
-		if (value_vec != null && value_vec.size() > 0) {
-		   has_external_source_codes = true;
-		   break;
-		}
-	}
-  
-  
+    if (value_vec != null && value_vec.size() > 0) {
+       has_external_source_codes = true;
+       break;
+    }
+  }
+
+
   if (!has_external_source_codes) {
   %>
       <b>External Source Codes:&nbsp;</b> <i>(none)</i>
-  <%    
+  <%
   } else {
   %>
-  
+
   <b>External Source Codes:&nbsp;</b>
   <table class="datatable">
     <%
@@ -307,7 +307,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
         displayed_properties.add(propName);
         Vector value_vec = (Vector) hmap.get(propName);
-        
+
         if (value_vec != null && value_vec.size() > 0) {
           for (int j=0; j<value_vec.size(); j++) {
             String value = (String) value_vec.elementAt(j);
@@ -343,11 +343,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     }
     %>
     </table>
-    
+
     <%
     }
     %>
-    
+
 </p>
 
 <!--
@@ -427,19 +427,19 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       String kind = "not available";
       String kind_prop_name = "Kind";
       String kind_label = "Kind:";
-    %>  
+    %>
 
   <%
   if (primitive == null) {
   %>
       <b>Additional Concept Data:&nbsp;</b> <i>(none)</i>
-  <%    
+  <%
   } else {
   %>
-  
+
 
   <table class="datatable">
-    
+
     <%
     if (primitive != null) {
     %>
@@ -454,8 +454,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
     <%
     }
-    %>  
-  
+    %>
+
 </p>
 <%
   String requestURL = request.getRequestURL().toString();
