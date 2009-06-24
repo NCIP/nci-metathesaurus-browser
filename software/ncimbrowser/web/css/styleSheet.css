@@ -172,6 +172,16 @@ h3
  margin-bottom: 8px;
 }
 
+.textsubtitle-blue-small
+{
+ font-size: 15px;
+ color: #2F2F5F;
+ font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
+ font-weight: bold;
+ margin-top: 8px;
+ margin-bottom: 8px;
+}
+
 .texttitle-blue-rightjust 
 {
  font-size: 10px;
