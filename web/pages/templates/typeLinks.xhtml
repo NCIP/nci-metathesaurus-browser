@@ -6,7 +6,7 @@
   Vector sources_typelinks = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_typelinks_id);
 %>
 
-<table width="700px" cellspacing="0" cellpadding="0" border="0" class="tabTable">
+<table cellspacing="0" cellpadding="0" border="0" class="tabTable">
   <tr>
     <%
       String scheme = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));
