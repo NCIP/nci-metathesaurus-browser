@@ -112,7 +112,7 @@ public class SearchUtilsTest extends SearchUtils {
             "injury"
         };
         
-        matchAlgorithm = "exactMatch";
+//        matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
         
         DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
