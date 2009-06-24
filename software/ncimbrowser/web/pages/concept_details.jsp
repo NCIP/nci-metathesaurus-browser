@@ -283,9 +283,7 @@ request.getSession().setAttribute("type", type);
 
 request.getSession().removeAttribute("type");
           %>
-
             <%@ include file="/pages/templates/nciFooter.html" %>
-          </div>
         </div>
         <!-- end Page content -->
       </div>
