@@ -103,7 +103,11 @@
                       if (semantic_types != null && semantic_types.size() > 0) {
                           for (int j=0; j<semantic_types.size(); j++) {
                               String t = (String) semantic_types.elementAt(j);
-                              semantic_type = semantic_type + t;
+                              if (j == 0) {
+                                  semantic_type = semantic_type + t;
+                              } else {
+                                  semantic_type = semantic_type + "&nbsp;" + t;
+                              }
                               if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
                           }
                       }
@@ -118,10 +122,10 @@
                         <%
                       }
                       %>
-                          <td class="dataCellText" width=700>
+                          <td class="dataCellText" width=600>
                             <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
                           </td>
-                          <td class="dataCellText" width=300>
+                          <td class="dataCellText" width=400>
                               <%=semantic_type%>
                           </td>
                         </tr>
