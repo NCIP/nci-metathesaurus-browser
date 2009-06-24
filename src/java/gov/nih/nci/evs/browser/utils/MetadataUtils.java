@@ -123,12 +123,6 @@ public class MetadataUtils {
 
 
     public MetadataPropertyList getMetadataPropertyList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
-
-		System.out.println("\nCoding Scheme " + codingSchemeName);
-		System.out.println("\turn: " + urn);
-		System.out.println("\tversion: " + version);
-
-		//Vector serviceMetadata_vec = new Vector();
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
 
         LexBIGServiceMetadata smd = null;
@@ -162,8 +156,6 @@ public class MetadataUtils {
 			}
 
 			if (mdpl == null) return null;
-			System.out.println("\tmdpl.getMetadataPropertyCount() = " + mdpl.getMetadataPropertyCount());
-			//if (mdpl.getMetadataPropertyCount() == 0) return serviceMetadata_vec;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -221,7 +213,6 @@ public class MetadataUtils {
 
     public String getEntityDescriptionForCodingScheme(MetadataPropertyList mdpl, String codingSchemeName, String propertyName) {
 		try {
-			System.out.println("(*) codingSchemeName: " + codingSchemeName);
 			List<MetadataProperty> properties = getMetadataForCodingScheme(mdpl, codingSchemeName);
 			if (properties == null) return null;
 
@@ -230,7 +221,6 @@ public class MetadataUtils {
 			//'codingSchemeURI', 'representsVersion', etc... so you can pick out which ones
 			//you'd like to use.
 			for(MetadataProperty prop : properties){
-				System.out.println("\tProperty Name: " + prop.getName() + "\n\tProperty Value: " + prop.getValue());
 				if (prop.getName().compareTo(propertyName) == 0) {
 					return prop.getValue();
 				}
