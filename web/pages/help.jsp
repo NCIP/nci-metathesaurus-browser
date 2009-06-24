@@ -32,8 +32,8 @@
           <A HREF="#searchhelp">Search</A><br>
           <A HREF="#conceptdetails">Concept Details</A><br>
           <A HREF="#hierarchy">View NCIt Hierarchy</A><br>
-          <A HREF="#sources">Sources</A>
-          <A HREF="#knownissues">Known Issues</A>
+          <A HREF="#sources">Sources</A><br>
+          <A HREF="#knownissues">Known Issues</A><br>
           <A HREF="#additionalinformation">Additional Information</A>
         </p>
         <p class="textbody">
@@ -47,10 +47,11 @@
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including
           some propriety vocabularies with restrictions on their use.
           <br><br>
-          <b>The NCIm Browser</b> is designed for ease of use by a diverse user community. This first release focuses on the
-          data and features most users want. Future releases will add advanced search options, additional information from
-          source terminologies, and other things requested by users. <b>Get in touch</b> to get help or offer suggestions
-          using the browser’s <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a> page.
+          <b>The NCIm Browser</b> is for the retrieval of concepts from the NCI Metathesaurus.  It is designed for ease of
+          use by a diverse user community. This first release focuses on the data and features most users want. Future
+          releases will add advanced search options, additional information from source terminologies, and other things
+          requested by users. <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a> to provide feedback
+          and get additional help on the NCIm Browser.
           <br><br>
           <b>This help file</b> provides basic information about how to use the NCIm Browser effectively. It also provides
           pointers on how to learn more about NCIm and related resources. The following typeface font conventions are used
@@ -128,7 +129,8 @@
             presented through NCIm concepts. Concepts are often found in several different places. The focus concept will
             be bold, underlined, and colored red.  This function only appears in concepts with NCIt content.  Hierarchy
             displays from other sources will be provided in a later browser release.
-            <li><b>History</b>: Click the button to view a history of edit actions on this concept, including dates and reference concepts involved in actions that split or merge concepts.
+            <li><b>History</b>: Click the button to view a history of edit actions on this concept, including dates and
+            reference concepts involved in actions that split or merge concepts.
          </ul>
         </p>
         <p class="textbody">
@@ -162,7 +164,7 @@
           [To be completed closer to release: ] There are important known issues in data, functionality and documentation
           that we are working to address for release 2.  These include the following:
           <ul>
-            </li><b>Data</b>: NCI Metathesaurus data was significantly abbreviated in the LexEVS 5.0 implementation.
+            <li><b>Data</b>: NCI Metathesaurus data was significantly abbreviated in the LexEVS 5.0 implementation.
             Of particular importance,
             <ul>
               <li>Relationships ...[to be written]
