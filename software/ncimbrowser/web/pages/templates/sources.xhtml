@@ -22,7 +22,6 @@
           concept_neighborhood = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, code);
           request.getSession().setAttribute("concept", concept_neighborhood);
           request.getSession().removeAttribute("neighborhood_atoms");
-
           request.getSession().removeAttribute("selectedConceptSource");
   }
 
@@ -58,7 +57,6 @@
           src_vec.add(src);
       }
   }
-
 
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
   Vector neighborhood_synonyms = dataUtils.getSynonyms(concept_neighborhood, neighborhood_sab);
