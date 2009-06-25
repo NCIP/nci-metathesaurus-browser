@@ -1088,19 +1088,26 @@ public class SearchUtils {
 				matchAlgorithm = "RegExp";
 				preprocess = false;
 		    } else if (matchText.indexOf(" ") != -1) {
+				System.out.println("multiple words preprocessContains: " + matchText);
 				matchText = preprocessContains(matchText);
+				System.out.println("preprocessContains yields matchText: " + matchText);
 				matchAlgorithm = "RegExp";
 				preprocess = false;
 				//KLO 051209
 			} else if (matchText.indexOf(" ") == -1) {
+				/* single token
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
 				preprocess = false;
+				*/
 			}
 		}
 		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
 		{
+			System.out.println("preprocessRegExp: " + matchText);
 			matchText = preprocessRegExp(matchText);
+		} else {
+			System.out.println("No preprocessRegExp: " + matchText);
 		}
 
          CodedNodeSet cns = null;

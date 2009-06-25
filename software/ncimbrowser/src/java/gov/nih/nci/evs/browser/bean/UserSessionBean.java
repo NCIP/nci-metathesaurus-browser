@@ -140,9 +140,6 @@ public class UserSessionBean extends Object
         if (matchtype == null) matchtype = "string";
 
         String source = (String) request.getParameter("source");
-
-System.out.println("******** searchAction source: " + source);
-
         if (source == null) {
 			source = "ALL";
 		}
