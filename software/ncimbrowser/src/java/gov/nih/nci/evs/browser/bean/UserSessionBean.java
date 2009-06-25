@@ -141,10 +141,8 @@ public class UserSessionBean extends Object
 
         String rankingStr = (String) request.getParameter("ranking");
         boolean ranking = rankingStr != null && rankingStr.equals("on");
-        SortByScore sortByScore = new SortByScore();
-        if (ranking)
-            sortByScore.setType(SortByScore.Type.ALL);
-        else sortByScore.setType(SortByScore.Type.FALSE);
+        SortByScore sortByScore = new SortByScore(ranking);
+        request.getSession().setAttribute("ranking", Boolean.toString(ranking));
 
         String source = (String) request.getParameter("source");
         if (source == null) {
