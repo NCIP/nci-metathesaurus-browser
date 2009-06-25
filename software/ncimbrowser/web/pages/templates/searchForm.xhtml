@@ -2,6 +2,11 @@
   <%
     String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     if (match_text == null) match_text = "";
+    String ranking_str = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("ranking"));
+    boolean is_ranking = true;
+    if (ranking_str == null || ranking_str.equalsIgnoreCase("false"))
+      is_ranking = false;
+    String check_ranking = is_ranking ? "checked" : "";
   %>
   <input CLASS="searchbox-input"
     name="matchText"
@@ -42,7 +47,7 @@
   <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact&nbsp;
   <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp;
   <input type="radio" name="algorithm" value="contains" alt="Containts" <%=check_c%>>Contains&nbsp;
-  <input type="checkbox" name="ranking">Ranking (Slow)
+  <input type="checkbox" name="ranking" <%= check_ranking %>>Ranking (Slow)
   <br/>
     <h:outputLabel
       id="sourceLabel"
