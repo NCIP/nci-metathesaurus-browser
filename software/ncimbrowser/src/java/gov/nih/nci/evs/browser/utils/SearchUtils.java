@@ -179,8 +179,7 @@ public class SearchUtils {
 	private int penalty_multiplier_1 = 1;
 	private int penalty_multiplier_2 = 2;
 
-    private boolean apply_sort_score = false;
-    private boolean sort_by_pt_only = true;
+    private SortByScore sortByScore = null;
 
     public CodingSchemeRenderingList csrl = null;
     private Vector supportedCodingSchemes = null;
@@ -252,7 +251,7 @@ public class SearchUtils {
         }
         
         public String toString() {
-            return type.name() + "(" +
+            return type.name().toLowerCase() + " (" +
                 "sort_by_pt_only: " + sort_by_pt_only +
                 ", apply_sort_score: " + apply_sort_score + ")";
         }
@@ -260,9 +259,7 @@ public class SearchUtils {
 
     private void initializeSortParameters() {
 		doubleMetaphone = new DoubleMetaphone();
-        SortByScore sortByScore = new SortByScore();
-        sort_by_pt_only = sortByScore.sort_by_pt_only;
-        apply_sort_score = sortByScore.apply_sort_score;
+        sortByScore = new SortByScore();
 	}
 
 
@@ -1144,7 +1141,7 @@ public class SearchUtils {
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
-                if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
+                if (sortByScore.apply_sort_score && !sortByScore.sort_by_pt_only) resolveConcepts = true;
 
 				System.out.println("resolveConcepts? " + resolveConcepts);
 
@@ -1167,13 +1164,14 @@ public class SearchUtils {
 			return null;
 		}
 
-		System.out.println("apply_sort_score? " + apply_sort_score);
+		System.out.println("sortByScore: " + sortByScore);
+		System.out.println("apply_sort_score? " + sortByScore.apply_sort_score);
 
-        if (apply_sort_score)
+        if (sortByScore.apply_sort_score)
         {
                 long ms = System.currentTimeMillis();
                 try {
-					if (sort_by_pt_only) {
+					if (sortByScore.sort_by_pt_only) {
 					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
 					} else {
                         iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
@@ -1190,7 +1188,7 @@ public class SearchUtils {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			long ms = System.currentTimeMillis(), delay = 0;
-			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+			v = resolveIterator( iterator, maxToReturn, null, sortByScore.sort_by_pt_only);
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
 			DBG.debugDetails(delay, "resolveIterator", "searchByName");
         }
@@ -1227,7 +1225,7 @@ public class SearchUtils {
 			}
 		}
 
-		if(!apply_sort_score)
+		if(!sortByScore.apply_sort_score)
 		{
 			v = SortUtils.quickSort(v);
 		}
