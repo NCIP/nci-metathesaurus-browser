@@ -42,6 +42,7 @@
           {
               page_string = page_number;
           }
+          
           request.getSession().setAttribute("new_search", Boolean.FALSE);
           int page_num = Integer.parseInt(page_string);
           int next_page_num = page_num + 1;
