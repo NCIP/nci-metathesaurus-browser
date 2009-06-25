@@ -1040,34 +1040,8 @@ public class SearchUtils {
 			return new Vector();
 		}
 
-
         matchText = matchText.trim();
-        if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0)
-        {
-			/*
-			//KLO 032409
-			if (!isNumber(matchText)) {
-				if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
-				{
-					return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
-				}
-		    }
-		    if (containsSpecialChars(matchText))
-		    {
-				return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
-			}
-			*/
-		}
-
-		else if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
-		{
-		    /*
-			matchText = "^" + matchText;
-			matchAlgorithm = "RegExp";
-			preprocess = false;
-			*/
-		}
-		else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+        if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
 		{
 			/*
 			//matchText = replaceSpecialCharsWithBlankChar(matchText);
@@ -1086,33 +1060,20 @@ public class SearchUtils {
             if (containsSpecialChars(matchText)) {
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
-				preprocess = false;
 		    } else if (matchText.indexOf(" ") != -1) {
-				System.out.println("multiple words preprocessContains: " + matchText);
+				// multiple tokens case:
 				matchText = preprocessContains(matchText);
-				System.out.println("preprocessContains yields matchText: " + matchText);
 				matchAlgorithm = "RegExp";
-				preprocess = false;
-				//KLO 051209
 			} else if (matchText.indexOf(" ") == -1) {
-				/* single token
+				// single token case:
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
-				preprocess = false;
-				*/
 			}
 		}
-		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
-		{
-			System.out.println("preprocessRegExp: " + matchText);
-			matchText = preprocessRegExp(matchText);
-		} else {
-			System.out.println("No preprocessRegExp: " + matchText);
-		}
 
-         CodedNodeSet cns = null;
-         ResolvedConceptReferencesIterator iterator = null;
-         try {
+        CodedNodeSet cns = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
             if (lbSvc == null)
@@ -1151,7 +1112,7 @@ public class SearchUtils {
                 boolean resolveConcepts = false;
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
 
-System.out.println("** resolveConcepts? " + resolveConcepts);
+				System.out.println("resolveConcepts? " + resolveConcepts);
 
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
@@ -1172,7 +1133,7 @@ System.out.println("** resolveConcepts? " + resolveConcepts);
 			return null;
 		}
 
-System.out.println("** apply_sort_score? " + apply_sort_score);
+		System.out.println("apply_sort_score? " + apply_sort_score);
 
         if (apply_sort_score)
         {
