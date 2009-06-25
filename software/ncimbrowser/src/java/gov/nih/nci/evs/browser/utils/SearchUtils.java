@@ -210,56 +210,11 @@ public class SearchUtils {
         initializeSortParameters();
     }
     
-    public static class SortByScore {
-        public enum TYPE { FALSE, TRUE, ALL };
-        public TYPE type = TYPE.TRUE;
-        public boolean sort_by_pt_only = true;
-        public boolean apply_sort_score = true;
-
-        public SortByScore() {
-            try {
-                String value = NCImBrowserProperties.getProperty(
-                    NCImBrowserProperties.SORT_BY_SCORE);
-                if (value == null)
-                    return;  // Use default values
-                parse(TYPE.valueOf(value.toUpperCase()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        public SortByScore(SortByScore.TYPE type) {
-            parse(type);
-        }
-        
-        private void parse(SortByScore.TYPE type) {
-            this.type = type;
-            switch (type) {
-            case FALSE:
-                sort_by_pt_only = true;
-                apply_sort_score = false;
-                break;
-            case ALL:
-                sort_by_pt_only = false;
-                apply_sort_score = true;
-                break;
-            default: //TRUE 
-                sort_by_pt_only = true;
-                apply_sort_score = true;
-                break;
-            }
-        }
-        
-        public String toString() {
-            return type.name().toLowerCase() + " (" +
-                "sort_by_pt_only: " + sort_by_pt_only +
-                ", apply_sort_score: " + apply_sort_score + ")";
-        }
-    }
 
     private void initializeSortParameters() {
 		doubleMetaphone = new DoubleMetaphone();
         sortByScore = new SortByScore();
+        sortByScore.setTypeByPropertyFile();
 	}
 
 
@@ -1141,7 +1096,7 @@ public class SearchUtils {
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
-                if (sortByScore.apply_sort_score && !sortByScore.sort_by_pt_only) resolveConcepts = true;
+                if (sortByScore.isApplySortScore() && !sortByScore.isSortByPtOnly()) resolveConcepts = true;
 
 				System.out.println("resolveConcepts? " + resolveConcepts);
 
@@ -1165,13 +1120,13 @@ public class SearchUtils {
 		}
 
 		System.out.println("sortByScore: " + sortByScore);
-		System.out.println("apply_sort_score? " + sortByScore.apply_sort_score);
+		System.out.println("apply_sort_score? " + sortByScore.isApplySortScore());
 
-        if (sortByScore.apply_sort_score)
+        if (sortByScore.isApplySortScore())
         {
                 long ms = System.currentTimeMillis();
                 try {
-					if (sortByScore.sort_by_pt_only) {
+					if (sortByScore.isSortByPtOnly()) {
 					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
 					} else {
                         iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
@@ -1188,7 +1143,7 @@ public class SearchUtils {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			long ms = System.currentTimeMillis(), delay = 0;
-			v = resolveIterator( iterator, maxToReturn, null, sortByScore.sort_by_pt_only);
+			v = resolveIterator( iterator, maxToReturn, null, sortByScore.isSortByPtOnly());
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
 			DBG.debugDetails(delay, "resolveIterator", "searchByName");
         }
@@ -1225,7 +1180,7 @@ public class SearchUtils {
 			}
 		}
 
-		if(!sortByScore.apply_sort_score)
+		if(!sortByScore.isApplySortScore())
 		{
 			v = SortUtils.quickSort(v);
 		}
