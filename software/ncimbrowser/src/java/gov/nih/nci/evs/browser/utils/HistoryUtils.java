@@ -34,7 +34,7 @@ public class HistoryUtils {
     public static Vector<String> getEditActions(String codingSchemeName,
             String vers, String ltag, String code) throws LBException {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        HistoryService hs = lbSvc.getHistoryService(Constants.CODING_SCHEME_NAME);
+        HistoryService hs = lbSvc.getHistoryService(codingSchemeName);//Constants.CODING_SCHEME_NAME);
 
         try {
 			NCIChangeEventList list = hs.getEditActionList(Constructors

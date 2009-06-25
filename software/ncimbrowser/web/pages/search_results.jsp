@@ -4,6 +4,8 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
+
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -40,6 +42,7 @@
           {
               page_string = page_number;
           }
+          
           request.getSession().setAttribute("new_search", Boolean.FALSE);
           int page_num = Integer.parseInt(page_string);
           int next_page_num = page_num + 1;
@@ -60,6 +63,7 @@
           String next_page_num_str = Integer.toString(next_page_num);
         %>
         <table width="700px">
+
           <tr>
             <table>
               <tr>
@@ -79,6 +83,16 @@
           <tr>
             <td class="textbody">
               <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
+              
+          <%
+          if (NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE).compareToIgnoreCase("all") == 0) {
+          %>
+		  <th class="dataTableHeader" scope="col" align="left">Concept</th>
+		  <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
+          <%		  
+          } 
+          %>              
+              
                 <%
                   for (int i=istart; i<iend; i++) {
                     if (i >= 0 && i<v.size()) {
@@ -90,7 +104,11 @@
                       if (semantic_types != null && semantic_types.size() > 0) {
                           for (int j=0; j<semantic_types.size(); j++) {
                               String t = (String) semantic_types.elementAt(j);
-                              semantic_type = semantic_type + t;
+                              if (j == 0) {
+                                  semantic_type = semantic_type + t;
+                              } else {
+                                  semantic_type = semantic_type + "&nbsp;" + t;
+                              }
                               if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
                           }
                       }
@@ -105,10 +123,10 @@
                         <%
                       }
                       %>
-                          <td class="dataCellText" width=700>
+                          <td class="dataCellText" width=600>
                             <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
                           </td>
-                          <td class="dataCellText" width=300>
+                          <td class="dataCellText" width=400>
                               <%=semantic_type%>
                           </td>
                         </tr>

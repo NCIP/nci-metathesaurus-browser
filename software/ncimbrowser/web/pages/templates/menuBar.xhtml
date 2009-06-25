@@ -1,6 +1,11 @@
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
 <div class="global-nav">
   <a href="<%= request.getContextPath() %>">Home</a>
+  |
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    Source
+        </a>  
   | <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     View NCIt Hierarchy
   </a>

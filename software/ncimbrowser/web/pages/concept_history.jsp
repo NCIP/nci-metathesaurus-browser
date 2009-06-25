@@ -24,6 +24,9 @@
 
     String dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
     dictionary = HTTPUtils.cleanXSS(dictionary);
+    
+System.out.println("concept_history.jsp " + dictionary);    
+    
     String vers = null;
     String ltag = null;
     Concept concept = (Concept) request.getSession().getAttribute("concept");
@@ -34,7 +37,7 @@
     }
     String msg = null;
     if (concept == null) {
-           msg = "ERROR: Invalid code - " + code + ".";
+           msg = "ERROR: Invalid code.";
     } else {
            msg = "ERROR: Unable to generate the requested page.";
     }
@@ -49,6 +52,10 @@
   <%
     } else {
       Vector rows = HistoryUtils.getEditActions(dictionary, vers, ltag, code);
+      
+System.out.println("concept_history.jsp rows " + rows.size());    
+      
+      
       String concept_name = concept.getEntityDescription().getContent();
       Vector headers = HistoryUtils.getTableHeader();
   %>

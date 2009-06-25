@@ -53,9 +53,11 @@ Deploy:     ant deploy:local:install
 Redeploy:   ant deploy:hot
 
 --------------------------------------
-Location of files
+URLs
 --------------------------------------
-URL:        http://localhost:19280/ncimbrowser
+Local:	http://localhost:19280/ncimbrowser
+DEV:	http://ncim-dev.nci.nih.gov/
+QA:	http://ncim-qa.nci.nih.gov/
 
 --------------------------------------
 Trouble shooting

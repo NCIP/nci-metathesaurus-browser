@@ -56,20 +56,20 @@
     String rel_value = "";
 
 %>
-  <h2>Relationships with other NCI MetaThesaurus Concepts:</h2>
+<p class="textsubtitle-blue">Relationships with other NCI MetaThesaurus Concepts:</p>
 
 <P/>
-<TABLE BORDER="0" WIDTH="100%" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
-<TR>
-<TD align="center"><b>
-<A HREF="#Parent">Parent&nbsp;Concepts</A> |
-<A HREF="#Child">Child&nbsp;Concepts</A> |
-<A HREF="#Broader">Broader&nbsp;Concepts</A> |
-<A HREF="#Narrower">Narrower&nbsp;Concepts</A> |
-<A HREF="#Sibling">Sibling&nbsp;Concepts</A> |
-<A HREF="#Other">Other&nbsp;Relationships</A>
-</TD>
-</TR>
+<table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
+  <TR>
+    <TD class="subtab" align="center"><b>
+      <A HREF="#Parent">Parents</A> |
+      <A HREF="#Child">Children</A> |
+      <A HREF="#Broader">Broader</A> |
+      <A HREF="#Narrower">Narrower</A> |
+      <A HREF="#Sibling">Siblings</A> |
+      <A HREF="#Other">Other</A>
+    </TD>
+  </TR>
 </table>
 
   <p>
@@ -84,12 +84,12 @@
       } else {
     %>
         <b><a name="Parent"><%=label%><a></b>
-  <table class="dataTable" width=1000>
+  <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
-        </a>      
+        </a>
     </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -109,7 +109,7 @@
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
-        </a>              
+        </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -152,8 +152,8 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }        
-        
+        }
+
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -170,13 +170,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }
@@ -199,9 +199,14 @@
       } else {
     %>
         <b><a name="Child"><%=label%><a></b>
-  <table class="dataTable" width=1000>
-    <th class="dataTableHeader" scope="col" align="left">Relationship</th>
-          <th class="dataTableHeader" scope="col" align="left">
+  <table class="dataTable">
+    <th class="dataTableHeader" scope="col" align="left">Relationship
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+        </a>
+    </th>
+    <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort1.compareTo("rela") == 0) {
               %>
@@ -216,6 +221,11 @@
               <%
               }
               %>
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+        </a>
+
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -258,7 +268,7 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }             
+        }
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -275,13 +285,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }
@@ -304,9 +314,14 @@
       } else {
     %>
         <b><a name="Broader"><%=label%><a></b>
-  <table class="dataTable" width=1000>
-    <th class="dataTableHeader" scope="col" align="left">Relationship</th>
-          <th class="dataTableHeader" scope="col" align="left">
+  <table class="dataTable">
+    <th class="dataTableHeader" scope="col" align="left">Relationship
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+        </a>
+    </th>
+    <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort2.compareTo("rela") == 0) {
               %>
@@ -321,6 +336,11 @@
               <%
               }
               %>
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+        </a>
+
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -363,7 +383,7 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }             
+        }
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -380,13 +400,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }
@@ -409,9 +429,14 @@
       } else {
     %>
         <b><a name="Narrower"><%=label%><a></b>
-  <table class="dataTable" width=1000>
-    <th class="dataTableHeader" scope="col" align="left">Relationship</th>
-          <th class="dataTableHeader" scope="col" align="left">
+  <table class="dataTable">
+    <th class="dataTableHeader" scope="col" align="left">Relationship
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+        </a>
+    </th>
+    <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort3.compareTo("rela") == 0) {
               %>
@@ -426,6 +451,10 @@
               <%
               }
               %>
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+        </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -468,7 +497,7 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }             
+        }
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -485,13 +514,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }
@@ -509,14 +538,19 @@
       if (sibling_vec.size() <= 0)
       {
     %>
-        <b><a name="Sibling"><%=label%><a> <i>(none)</i>
+        <b><a name="Sibling"><%=label%><a></b> <i>(none)</i>
     <%
       } else {
     %>
         <b><a name="Sibling"><%=label%><a>
-  <table class="dataTable" width=1000>
-    <th class="dataTableHeader" scope="col" align="left">Relationship</th>
-          <th class="dataTableHeader" scope="col" align="left">
+  <table class="dataTable">
+    <th class="dataTableHeader" scope="col" align="left">Relationship
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+        </a>
+    </th>
+    <th class="dataTableHeader" scope="col" align="left">
               <%
               if (sort4.compareTo("rela") == 0) {
               %>
@@ -531,6 +565,10 @@
               <%
               }
               %>
+         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+        </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -573,7 +611,7 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }             
+        }
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -590,13 +628,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }
@@ -614,14 +652,18 @@
       if (other_vec.size() <= 0)
       {
     %>
-        <b><a name="Other"><%=label%><a> <i>(none)</i>
+        <b><a name="Other"><%=label%><a></b> <i>(none)</i>
     <%
       } else {
     %>
         <b><a name="Other"><%=label%><a>
-  <table class="dataTable" width=1000>
+  <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
-    
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+        </a>
+    </th>
     </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -638,6 +680,10 @@
               <%
               }
               %>
+         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+        </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -680,7 +726,7 @@
         String rel_display_value = relationship_name;
         if (DataUtils.containsAllUpperCaseChars(relationship_name)) {
             rel_display_value = "";
-        }             
+        }
         String target_concept_name = (String) ret_vec.elementAt(1);
         String target_concept_code = (String) ret_vec.elementAt(2);
         String rel_sab = (String) ret_vec.elementAt(3);
@@ -697,13 +743,13 @@
     n2++;
     %>
           <td width=100><%=rel_value%></td>
-          <td width=300><%=rel_display_value%></td>
-          <td width=500>
-      <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
-        <%=target_concept_name%>
-      </a>
+          <td width=180><%=rel_display_value%></td>
+          <td>
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+              <%=target_concept_name%>
+            </a>
           </td>
-          <td width=100><%=rel_sab%></td>
+          <td width=85><%=rel_sab%></td>
         </tr>
     <%
     }

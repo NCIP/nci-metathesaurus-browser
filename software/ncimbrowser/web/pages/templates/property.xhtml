@@ -136,7 +136,7 @@
     }
   }
 %>
-<h2>Term and Properties</h2>
+<p class="textsubtitle-blue">Terms and Properties</p>
 <%
 if (!bool_obj.equals(Boolean.TRUE) ||
   (concept_status != null &&
@@ -268,108 +268,37 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 </p>
 <p>
 
-<!--
+  <%
 
-<b>Synonyms &amp; Abbreviations:&nbsp;</b>
-      <table class="dataTable" border="0">
-        <tr>
-          <th class="dataTableHeader" scope="col" align="left">
-              <%
-              String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));
-              if (sort_by == null) {
-                  sort_by = "name";
-              }
-              if (sort_by.compareTo("name") == 0) {
-              %>
-                 Term
-              <%
-              } else {
-              %>
-              <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=curr_concept_code%>&&sortBy=name">Term</a>
-              <%
-              }
-              %>
-          </th>
-          <th class="dataTableHeader" scope="col" align="left">
-              <%
-              if (sort_by != null && sort_by.compareTo("source") == 0) {
-              %>
-                 Source
-              <%
-              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
-              %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=curr_concept_code%>&&sortBy=source">Source</a>
-              <%
-              }
-              %>
-          </th>
-          <th class="dataTableHeader" scope="col" align="left">
-              <%
-              if (sort_by != null && sort_by.compareTo("type") == 0) {
-              %>
-                 Type
-              <%
-              } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
-              %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=curr_concept_code%>&&sortBy=type">Type</a>
-              <%
-              }
-              %>
-              <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-                <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-              </a>
-          </th>
-          <th class="dataTableHeader" scope="col" align="left">
-              <%
-              if (sort_by != null && sort_by.compareTo("code") == 0) {
-              %>
-                 Code
-              <%
-              } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
-              %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=curr_concept_code%>&&sortBy=code">Code</a>
-              <%
-              }
-              %>
-          </th>
-        </tr>
+  boolean has_external_source_codes = false;
+  int n = 0;
+  for (int i=0; i<external_source_codes.size(); i++) {
+    String propName = (String) external_source_codes.elementAt(i);
+    String propName_label = (String) external_source_codes_label.elementAt(i);
+    String prop_url = (String) external_source_codes_url.elementAt(i);
+    String prop_linktext = (String) external_source_codes_linktext.elementAt(i);
 
-        <%
-          Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
-          Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
-          if (synonyms == null) {
-              synonyms = new DataUtils().getSynonyms(concept_syn);
-          }
-          synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
-          for (int n=0; n<synonyms.size(); n++)
-          {
-            String s = (String) synonyms.elementAt(n);
-            Vector synonym_data = DataUtils.parseData(s, "|");
-            String term_name = (String) synonym_data.elementAt(0);
-            String term_type = (String) synonym_data.elementAt(1);
-            String term_source = (String) synonym_data.elementAt(2);
-            String term_source_code = (String) synonym_data.elementAt(3);
-            String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
-        %>
-            <tr class="<%=rowColor%>">
-              <td class="dataCellText"><%=term_name%></td>
-              <td class="dataCellText"><%=term_source%></td>
-              <td class="dataCellText"><%=term_type%></td>
-              <td class="dataCellText"><%=term_source_code%></td>
-            </tr>
-        <%
-          }
-        %>
-      </table>
-</p>
+    displayed_properties.add(propName);
+    Vector value_vec = (Vector) hmap.get(propName);
 
--->
+    if (value_vec != null && value_vec.size() > 0) {
+       has_external_source_codes = true;
+       break;
+    }
+  }
+
+
+  if (!has_external_source_codes) {
+  %>
+      <b>External Source Codes:&nbsp;</b> <i>(none)</i>
+  <%
+  } else {
+  %>
 
   <b>External Source Codes:&nbsp;</b>
   <table class="datatable">
     <%
-      int n = 0;
+      n = 0;
       for (int i=0; i<external_source_codes.size(); i++) {
         String propName = (String) external_source_codes.elementAt(i);
         String propName_label = (String) external_source_codes_label.elementAt(i);
@@ -378,6 +307,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
         displayed_properties.add(propName);
         Vector value_vec = (Vector) hmap.get(propName);
+
         if (value_vec != null && value_vec.size() > 0) {
           for (int j=0; j<value_vec.size(); j++) {
             String value = (String) value_vec.elementAt(j);
@@ -413,6 +343,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     }
     %>
     </table>
+
+    <%
+    }
+    %>
+
 </p>
 
 <!--
@@ -472,19 +407,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 </p>
 -->
 <p>
-  <b>Additional Concept Data:&nbsp;</b>
-  <table class="datatable">
+
     <%
       String concept_name = curr_concept.getEntityDescription().getContent();
       concept_name = concept_name.replaceAll(" ", "_");
-
-      //String concept_name_prop_name = "CONCEPT_NAME";
       String concept_name_label = "Concept Name:";
-      //Vector concept_name_value_vec = (Vector) hmap.get(concept_name_prop_name);
-
-      //if (concept_name_value_vec != null) {
-      //  concept_name = (String) concept_name_value_vec.elementAt(0);
-      //}
 
       String primitive = null;
       String primitive_prop_name = "primitive";
@@ -501,12 +428,18 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       String kind_prop_name = "Kind";
       String kind_label = "Kind:";
     %>
-    <!--
-    <tr class="dataRowDark">
-      <td><i><%=concept_name_label%></i></td>
-      <td><i><%=concept_name%></i></td>
-    </tr>
-    -->
+
+  <%
+  if (primitive == null) {
+  %>
+      <b>Additional Concept Data:&nbsp;</b> <i>(none)</i>
+  <%
+  } else {
+  %>
+
+
+  <table class="datatable">
+
     <%
     if (primitive != null) {
     %>
@@ -518,6 +451,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     }
     %>
   </table>
+
+    <%
+    }
+    %>
+
 </p>
 <%
   String requestURL = request.getRequestURL().toString();

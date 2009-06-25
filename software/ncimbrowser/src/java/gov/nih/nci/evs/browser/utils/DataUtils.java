@@ -122,6 +122,8 @@ import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
+import gov.nih.nci.evs.browser.utils.test.DBG;
+
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 
 
@@ -178,7 +180,7 @@ public class DataUtils {
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
     static SortOptionList sortByCode_ = Constructors.createSortOptionList(new String[] {"code"});
 
-    int maxReturn = 5000;
+    //int maxReturn = 5000;
     Connection con;
     Statement stmt;
     ResultSet rs;
@@ -789,9 +791,10 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             NameAndValueList nameAndValueList_qualifier = null;
             cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
 
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    false, true, 1, 1, new LocalNameList(), null, null, maxReturn);
+                    false, true, 1, 1, new LocalNameList(), null, null, maxToReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -1391,10 +1394,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
 			}
 
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, new LocalNameList(), null, null, 1024);
-                    true, false, 1, 1, noopList_, null, null, null, -1, false);
+                    //true, false, 1, 1, noopList_, null, null, null, -1, false);
+                    true, false, 1, 1, noopList_, null, null, null, maxToReturn, false);
+
+
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2056,7 +2062,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
     {
-        //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
         HashMap hmap = new HashMap();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -2073,7 +2078,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             if (sab != null) {
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
 			}
-
 /*
  ResolvedConceptReferenceList 	resolveAsList(ConceptReference graphFocus, boolean resolveForward, boolean resolveBackward, int resolveCodedEntryDepth,
  int resolveAssociationDepth, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes,
@@ -2081,10 +2085,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
+
+            int maxToReturn = NCImBrowserProperties.maxToReturn;
+
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, new LocalNameList(), null, null, 1024);
-                    true, false, 1, 1, null, propertyTypes, null, null, -1, false);
+                    //true, false, 1, 1, null, propertyTypes, null, null, -1, false);
+                    true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2124,6 +2131,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	}
 
 
+    // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
@@ -2133,12 +2141,35 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
+
+		long ms = System.currentTimeMillis(), delay=0;
+        String action = "Retrieving distance-one relationships from the server";
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+		DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
 		HashSet rel_hset = new HashSet();
+
+		long ms_categorization_delay = 0;
+		long ms_categorization;
+
+		long ms_find_highest_rank_atom_delay = 0;
+		long ms_find_highest_rank_atom;
+
+		long ms_remove_RO_delay = 0;
+		long ms_remove_RO;
+
+		long ms_all_delay = 0;
+		long ms_all;
+
+		ms_all = System.currentTimeMillis();
+
 		while (it.hasNext())
 		{
+			ms_categorization = System.currentTimeMillis();
 			String rel = (String) it.next();
 			String category = "Other";
 			if (parent_asso_vec.contains(rel)) category = "Parent";
@@ -2146,43 +2177,37 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			else if (bt_vec.contains(rel)) category = "Broader";
 			else if (nt_vec.contains(rel)) category = "Narrower";
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
 			Vector v = (Vector) hmap.get(rel);
 
+            // For each related concept:
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
 				Concept c = ac.getReferencedEntry();
 				if (!hset.contains(c.getEntityCode())) {
 					hset.add(c.getEntityCode());
+					// Find the highest ranked atom data
+					ms_find_highest_rank_atom = System.currentTimeMillis();
 					String t = findRepresentativeTerm(c, sab);
+					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+
 					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
 					w.add(t);
 
+                    // Temporarily save non-RO other relationships
 					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
 						if (rel_hset.contains(c.getEntityCode())) {
 							rel_hset.add(c.getEntityCode());
 						}
 					}
-					/*
-					Vector synonyms = getSynonyms(c, sab);
-					for (int j=0; j<synonyms.size(); j++) {
-						//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
-						String t = (String) synonyms.elementAt(j);
-						t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
-						w.add(t);
-
-						if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-							if (rel_hset.contains(c.getEntityCode())) {
-								rel_hset.add(c.getEntityCode());
-							}
-						}
-					}
-					*/
 			    }
 			}
 		}
 
         Vector u = new Vector();
+        // Remove redundant RO relationships
 		for (int i=0; i<w.size(); i++) {
 			String s = (String) w.elementAt(i);
 			Vector<String> v = parseData(s, "|");
@@ -2199,10 +2224,31 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 		    }
 		}
+		ms_all_delay = System.currentTimeMillis() - ms_all;
 
-		//SortUtils.quickSort(w);
-		//return w;
+		action = "categorizing relationships into six categories";
+		Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+		DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
+
+		action = "finding highest ranked atoms";
+		Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+		DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
+
+		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
+		action = "removing redundant RO relationships";
+		Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+        DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
+
+        // Initial sort (refer to sortSynonymData method for sorting by a specific column)
+
+		long ms_sort_delay = System.currentTimeMillis();
 		SortUtils.quickSort(u);
+		action = "initial sorting";
+		delay = System.currentTimeMillis() - ms_sort_delay;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+
+		DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 		return u;
 
      }
@@ -2296,7 +2342,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
     public static Vector sortRelationshipData(Vector relationships, String sortBy) {
-		if (sortBy == null) sortBy = "name";
+        if (sortBy == null) sortBy = "name";
 		HashMap hmap = new HashMap();
 		Vector key_vec = new Vector();
 		String delim = "  ";
@@ -2361,11 +2407,13 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
 
-		long ms = System.currentTimeMillis();
+		long ms = System.currentTimeMillis(), delay=0;
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
@@ -2405,7 +2453,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 			}
 		}
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
 		// Remove redundant RO relationships
 		ms = System.currentTimeMillis();
@@ -2443,7 +2493,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 		rel_hmap.put("Other", w3);
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
         ms = System.currentTimeMillis();
         action = "Sorting relationships by sort options (columns)";
@@ -2466,7 +2518,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				rel_hmap.put(category, w);
 			}
 		}
-		System.out.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms));
+        delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 		return rel_hmap;
 	}
 

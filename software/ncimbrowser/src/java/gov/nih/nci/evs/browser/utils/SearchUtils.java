@@ -1033,7 +1033,6 @@ public class SearchUtils {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
-		Utils.StopWatch stopWatch = new Utils.StopWatch();
 
 		boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
@@ -1041,34 +1040,8 @@ public class SearchUtils {
 			return new Vector();
 		}
 
-
         matchText = matchText.trim();
-        if (matchAlgorithm.compareToIgnoreCase("exactMatch") == 0)
-        {
-			/*
-			//KLO 032409
-			if (!isNumber(matchText)) {
-				if (nonAlphabetic(matchText) || matchText.indexOf(".") != -1 || matchText.indexOf("/") != -1)
-				{
-					return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
-				}
-		    }
-		    if (containsSpecialChars(matchText))
-		    {
-				return searchByName(scheme, version, matchText, "RegExp", maxToReturn);
-			}
-			*/
-		}
-
-		else if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
-		{
-		    /*
-			matchText = "^" + matchText;
-			matchAlgorithm = "RegExp";
-			preprocess = false;
-			*/
-		}
-		else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+        if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
 		{
 			/*
 			//matchText = replaceSpecialCharsWithBlankChar(matchText);
@@ -1087,26 +1060,20 @@ public class SearchUtils {
             if (containsSpecialChars(matchText)) {
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
-				preprocess = false;
 		    } else if (matchText.indexOf(" ") != -1) {
+				// multiple tokens case:
 				matchText = preprocessContains(matchText);
 				matchAlgorithm = "RegExp";
-				preprocess = false;
-				//KLO 051209
 			} else if (matchText.indexOf(" ") == -1) {
+				// single token case:
 				matchText = delim + matchText + delim;
 				matchAlgorithm = "RegExp";
-				preprocess = false;
 			}
 		}
-		if (matchAlgorithm.compareToIgnoreCase("RegExp") == 0 && preprocess)
-		{
-			matchText = preprocessRegExp(matchText);
-		}
 
-         CodedNodeSet cns = null;
-         ResolvedConceptReferencesIterator iterator = null;
-         try {
+        CodedNodeSet cns = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
             if (lbSvc == null)
@@ -1144,13 +1111,14 @@ public class SearchUtils {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
+
+				System.out.println("resolveConcepts? " + resolveConcepts);
+
                 try {
-                    stopWatch.start();
-					long ms = System.currentTimeMillis();
+					long ms = System.currentTimeMillis(), delay = 0;
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-					Debug.println("cns.resolve delay ---- Run time (ms): " + (System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    DBG.debugDetails("* cns.resolve: " + stopWatch.getResult() + " [CodedNodeSet.resolve]");
-                    DBG.debugTabbedValue("cns.resolve", stopWatch.formatInSec());
+					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+                    DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
@@ -1165,9 +1133,10 @@ public class SearchUtils {
 			return null;
 		}
 
+		System.out.println("apply_sort_score? " + apply_sort_score);
+
         if (apply_sort_score)
         {
-                stopWatch.start();
                 long ms = System.currentTimeMillis();
                 try {
 					if (sort_by_pt_only) {
@@ -1180,23 +1149,21 @@ public class SearchUtils {
 
                 }
                 Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-                //SearchUtilsTest.debugDetails("* sortByScore: " + stopWatch.getResult());
-                //SearchUtilsTest.debugTabbedValue("sortByScore", stopWatch.formatInSec());
         }
 
         Vector v = null;
         if (iterator != null) {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
-            stopWatch.start();
-			long ms = System.currentTimeMillis();
+			long ms = System.currentTimeMillis(), delay = 0;
 			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
-			Debug.println("resolveIterator delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-			DBG.debugDetails("* resolveIterator: " + stopWatch.getResult());
-			DBG.debugTabbedValue("resolveIterator", stopWatch.formatInSec());
+			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
+			DBG.debugDetails(delay, "resolveIterator", "searchByName");
         }
 
         if (v == null || v.size() == 0) {
+			System.out.println("** No match -- trying matching by code " );
+
 			v = new Vector();
 			// add exact match for CUI and source code, if there is any (simple search case):
 			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
@@ -1214,14 +1181,6 @@ public class SearchUtils {
 					v.add(c);
 				}
 			}
-
-			if (v != null && v.size() > 0)
-			{
-				if(!apply_sort_score)
-				{
-					SortUtils.quickSort(v);
-				}
-			}
 	    }
 
 	    if (v == null || v.size() == 0) {
@@ -1234,6 +1193,10 @@ public class SearchUtils {
 			}
 		}
 
+		if(!apply_sort_score)
+		{
+			v = SortUtils.quickSort(v);
+		}
         return v;
     }
 
@@ -1491,21 +1454,16 @@ public class SearchUtils {
         // Score all items ...
 
         int knt = 0, nloops = 0;
-        Utils.StopWatch stopWatchTotal = new Utils.StopWatch();
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
-        long duration = 0, callingToSortNextTime = 0, sortingTime = 0;
+        long msTotal = System.currentTimeMillis(), msTotal_toSortNext = 0, msTotal_sorted = 0;
         while (toSort.hasNext()) {
             ++nloops;
             // Working in chunks of 100.
-            stopWatch.start();
-            long ms = System.currentTimeMillis();
+            long ms = System.currentTimeMillis(), delay = 0;
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
-            Debug.println("Run time (ms): toSort.next() method call took " + (System.currentTimeMillis() - ms) + " millisec.");
-            duration = stopWatch.getDuration();
-            DBG.debugDetails("" + nloops + ") toSort.next(500): " + stopWatch.getResult(duration) + " [ResolvedConceptReferencesIterator.next]");
-            callingToSortNextTime += duration;
+            Debug.println("Run time (ms): toSort.next() method call took " + (delay = System.currentTimeMillis() - ms) + " millisec.");
+            DBG.debugDetails("" + nloops + ") toSort.next(500): " + Utils.timeToString(delay) + " [ResolvedConceptReferencesIterator.next]");
+            msTotal_toSortNext += delay;
 
-            stopWatch.start();
             ms = System.currentTimeMillis();
 
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
@@ -1552,25 +1510,19 @@ public class SearchUtils {
 
             knt = knt + num_concepts;
             //if (knt > 1000) break;
-            Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (System.currentTimeMillis() - ms) + " millisec.");
-            duration = stopWatch.getDuration();
-            DBG.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + stopWatch.getResult(duration));
-            sortingTime += duration;
+            Debug.println("" + knt + " completed.  Run time (ms): Assigning scores to " + num_concepts + " concepts took " + (delay = System.currentTimeMillis() - ms) + " millisec.");
+            DBG.debugDetails("" + nloops + ") Sorted [" + knt + " concepts]: " + Utils.timeToString(delay));
+            msTotal_sorted += delay;
         }
         if (DBG.isPerformanceTesting()) {
-            duration = stopWatchTotal.getDuration();
+            long duration = System.currentTimeMillis() - msTotal;
             long avgDuration = duration/nloops;
             DBG.debugDetails("* Summary of toSort/Sorted calls:");
-            DBG.debugDetails("  * Run Time: " + stopWatchTotal.getResult(duration));
-            DBG.debugTabbedValue("Run Time", stopWatchTotal.formatInSec(duration));
-            DBG.debugDetails("  * Iterations: " + nloops);
-            DBG.debugTabbedValue("Iterations", Integer.toString(nloops));
-            DBG.debugDetails("  * Average: " + stopWatchTotal.getResult(avgDuration));
-            DBG.debugTabbedValue("Average", stopWatchTotal.formatInSec(avgDuration));
-            DBG.debugDetails("  * toSort.next: " + stopWatchTotal.getResult(callingToSortNextTime));
-            DBG.debugTabbedValue("toSort.next", stopWatchTotal.formatInSec(callingToSortNextTime));
-            DBG.debugDetails("  * sorting: " + stopWatchTotal.getResult(sortingTime));
-            DBG.debugTabbedValue("sorting", stopWatchTotal.formatInSec(sortingTime));
+            DBG.debugDetails(duration, "Run Time", "sortByScore");
+            DBG.debugDetails("Iterations", nloops);
+            DBG.debugDetails(avgDuration, "Average", "sortByScore");
+            DBG.debugDetails(msTotal_toSortNext, "Total toSort.next time", "sortByScore");
+            DBG.debugDetails(msTotal_sorted, "Total sorted time", "sortByScore");
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);

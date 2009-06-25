@@ -11,8 +11,8 @@ public class SearchUtilsTest extends SearchUtils {
     private boolean _displayConcepts = false;
     private boolean _displayResults = true;
 
-    public SearchUtilsTest(String url) {
-        super(url);
+    public SearchUtilsTest() {
+        super(null);
     }
     
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
@@ -27,63 +27,63 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
             DBG.debug("  * maxToReturn = " + maxToReturn);
         }
-        DBG.debugDetails("* Search Details: " + matchAlgorithm + " " + matchText);
+        DBG.debug(DBG.isDisplayDetails(), "* Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, maxToReturn);
     }
     
-    public void search(String scheme, String version, String matchText,
+    public void searchByNameTest(String scheme, String version, String matchText,
         String source, String matchAlgorithm, int maxToReturn) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<Concept> v = searchByName(scheme, version, matchText,
+        Vector<Concept> vector = searchByName(scheme, version, matchText,
             source, matchAlgorithm, maxToReturn);
         long duration = stopWatch.getDuration();
 
-        if (_displayConcepts && v.size() > 0) {
+        if (_displayConcepts && vector.size() > 0) {
             DBG.debug("* List of concepts:");
-            for (int i = 0; i < v.size(); i++) {
+            for (int i = 0; i < vector.size(); i++) {
                 int j = i + 1;
-                Concept ce = v.elementAt(i);
+                Concept ce = vector.elementAt(i);
                 DBG.debug("  " + j + ") " + ce.getEntityCode() + " "
                     + ce.getEntityDescription().getContent());
             }
         }
         if (_displayResults) {
             DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
-            DBG.debug("  * Number of concepts: " + v.size());
-            DBG.debug("  * Total runtime: " + stopWatch.getResult(duration));
+            DBG.debug("  * Number of concepts: " + vector.size());
+            DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
         }
         if (DBG.isDisplayTabDelimitedFormat()) {
             int i=0;
             DBG.debugTabbedValue(i++, "* Tabbed", "");
             DBG.debugTabbedValue(i++, "Keyword", matchText);
             DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-            DBG.debugTabbedValue(i++, "Hits", Integer.toString(v.size()));
+            DBG.debugTabbedValue(i++, "Hits", vector.size());
             DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
             DBG.displayTabbedValues();
         }
     }
     
-    private void promptSearch() {
-        boolean isOn = false;
+    private void prompt() {
+        boolean isTrue = false;
         
-        DBG.debug("* Prompt:");
+        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
         _suppressOtherMessages = Prompt.prompt(
             "  * Suppress other debugging messages", _suppressOtherMessages);
         Debug.setDisplay(!_suppressOtherMessages);
         _displayParameters = Prompt.prompt("  * Display parameters",
             _displayParameters);
-        isOn = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
-        DBG.setDisplayDetails(isOn);
+        isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+        DBG.setDisplayDetails(isTrue);
         _displayConcepts = Prompt.prompt("  * Display concepts", _displayConcepts);
         _displayResults = Prompt.prompt("  * Display results", _displayResults);
-        isOn = Prompt.prompt("  * Display tab delimited",
+        isTrue = Prompt.prompt("  * Display tab delimited",
             DBG.isDisplayTabDelimitedFormat());
-        DBG.setDisplayTabDelimitedFormat(isOn);
+        DBG.setDisplayTabDelimitedFormat(isTrue);
     }
 
-    private void testSearch() {
+    private void runTest() {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
@@ -112,9 +112,11 @@ public class SearchUtilsTest extends SearchUtils {
             "injury"
         };
         
-        matchAlgorithm = "exactMatch";
+//        matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
-        promptSearch();
+        
+        DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
+        prompt();
         
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
@@ -122,22 +124,16 @@ public class SearchUtilsTest extends SearchUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            search(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+            searchByNameTest(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
         }
         DBG.debug("* Done");
     }
-
-    public static void main(String[] args) {
+    
+    private static void parse(String[] args) {
         String prevArg = "";
-        String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
-            if (arg.equals("-url")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-url")) {
-                url = arg;
-                prevArg = "";
-            } else if (arg.equals("-propertyFile")) {
+            if (arg.equals("-propertyFile")) {
                 prevArg = arg;
             } else if (prevArg.equals("-propertyFile")) {
                 System.setProperty(
@@ -145,12 +141,16 @@ public class SearchUtilsTest extends SearchUtils {
                 prevArg = "";
             }
         }
+    }
 
+    public static void main(String[] args) {
+        parse(args);
+        
         DBG.setPerformanceTesting(true);
-        SearchUtilsTest test = new SearchUtilsTest(url);
+        SearchUtilsTest test = new SearchUtilsTest();
         boolean isContinue = true;
         do {
-            test.testSearch();
+            test.runTest();
             DBG.debug("");
             DBG.debug(Utils.SEPARATOR);
             isContinue = Prompt.prompt("Rerun", isContinue);

@@ -1,7 +1,8 @@
 package gov.nih.nci.evs.browser.utils.test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import gov.nih.nci.evs.browser.utils.*;
+
+import java.util.*;
 
 public class DBG {
     private static boolean _isPerformanceTesting = false;
@@ -48,6 +49,28 @@ public class DBG {
             debug("  " + text);
     }
     
+    public static void debugDetails(String name, String value) {
+        debugDetails("* " + name + " = " + value);
+        debugTabbedValue(name, value);
+    }
+
+    public static void debugDetails(String name, int value) {
+        debugDetails(name, Integer.toString(value));
+    }
+    
+    public static void debugDetails(long timeMS, String text, 
+        String additionalText) {
+        if (_displayDetails) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("* " + text + ": ");
+            buffer.append(Utils.timeToString(timeMS));
+            if (additionalText != null && additionalText.length() > 0)
+                buffer.append(" [" + additionalText+ "]");
+            debugDetails(buffer.toString());
+        }
+        debugTabbedValue(text, Utils.timeInSec(timeMS));
+    }
+    
     public static void clearTabbbedValues() {
         _tabList = new ArrayList<String>();
     }
@@ -74,6 +97,14 @@ public class DBG {
         debugTabbedValue(-1, name, value);
     }
 
+    public static void debugTabbedValue(int index, String name, int value) {
+        debugTabbedValue(index, name, Integer.toString(value));
+    }
+    
+    public static void debugTabbedValue(String name, int value) {
+        debugTabbedValue(-1, name, value);
+    }
+
     public static void displayTabbedValues() {
         if (! _displayTabDelimitedFormat || _tabList == null || _tabList.size() <= 0)
             return;
@@ -85,5 +116,13 @@ public class DBG {
             buffer.append(value);
         }
         debug(buffer.toString());
+    }
+    
+    public static void debugVector(String indent, String text, Vector<?> vector) {
+        debug(indent + text);
+        Object[] list = vector.toArray();
+        for (int i=0; i<list.length; ++i)
+            debug(indent + "  " + (i+1) + ") " + list[i].toString());
+        debug(indent + "  * Total: " + list.length);
     }
 }

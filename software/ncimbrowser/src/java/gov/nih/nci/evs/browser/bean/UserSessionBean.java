@@ -140,6 +140,11 @@ public class UserSessionBean extends Object
         if (matchtype == null) matchtype = "string";
 
         String source = (String) request.getParameter("source");
+        if (source == null) {
+			source = "ALL";
+		}
+		//request.getSession().setAttribute("source", source);
+		setSelectedSource(source);
 
         if (NCImBrowserProperties.debugOn) {
             try {
@@ -190,10 +195,8 @@ public class UserSessionBean extends Object
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
-        request.getSession().setAttribute("source", source);
 
-        //setSelectedMatchType(matchtype);
-        setSelectedSource(source);
+
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -203,8 +206,6 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
-        //request.getSession().setAttribute("type", "properties");
-
 
         if (v != null && v.size() > 1)
         {
@@ -212,7 +213,7 @@ public class UserSessionBean extends Object
             String match_size = Integer.toString(v.size());
             request.getSession().setAttribute("match_size", match_size);
             request.getSession().setAttribute("page_string", "1");
-            request.getSession().setAttribute("selectedResultsPerPage", "50");
+            //request.getSession().setAttribute("selectedResultsPerPage", "50");
             request.getSession().setAttribute("new_search", Boolean.TRUE);
             return "search_results";
         }
@@ -224,6 +225,9 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("code", c.getEntityCode());
             request.getSession().setAttribute("concept", c);
             request.getSession().setAttribute("type", "properties");
+
+            request.getSession().setAttribute("new_search", Boolean.TRUE);
+
             return "concept_details";
         }
         String message = "No match found.";
@@ -236,48 +240,55 @@ public class UserSessionBean extends Object
 
 
 
-    private String selectedResultsPerPage = null;
-    private List resultsPerPageList = null;
+	private String selectedResultsPerPage = null;
+	private List resultsPerPageList = null;
 
-    public List getResultsPerPageList() {
-        resultsPerPageList = new ArrayList();
-        resultsPerPageList.add(new SelectItem("10"));
-        resultsPerPageList.add(new SelectItem("25"));
-        resultsPerPageList.add(new SelectItem("50"));
-        resultsPerPageList.add(new SelectItem("75"));
-        resultsPerPageList.add(new SelectItem("100"));
-        resultsPerPageList.add(new SelectItem("250"));
-        resultsPerPageList.add(new SelectItem("500"));
+	public List getResultsPerPageList() {
+		resultsPerPageList = new ArrayList();
+		resultsPerPageList.add(new SelectItem("10"));
+		resultsPerPageList.add(new SelectItem("25"));
+		resultsPerPageList.add(new SelectItem("50"));
+		resultsPerPageList.add(new SelectItem("75"));
+		resultsPerPageList.add(new SelectItem("100"));
+		resultsPerPageList.add(new SelectItem("250"));
+		resultsPerPageList.add(new SelectItem("500"));
 
-        selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2)).getLabel(); // default to 50
-        return resultsPerPageList;
-    }
+		selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2))
+				.getLabel(); // default to 50
+		return resultsPerPageList;
+	}
 
-    public void setSelectedResultsPerPage(String selectedResultsPerPage) {
-        this.selectedResultsPerPage = selectedResultsPerPage;
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        request.getSession().setAttribute("selectedResultsPerPage", selectedResultsPerPage);
-    }
+	public void setSelectedResultsPerPage(String selectedResultsPerPage) {
+		if (selectedResultsPerPage == null)
+			return;
+		this.selectedResultsPerPage = selectedResultsPerPage;
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedResultsPerPage",
+				selectedResultsPerPage);
+	}
 
-    public String getSelectedResultsPerPage() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String s = (String) request.getSession().getAttribute("selectedResultsPerPage");
-        if (s != null) {
-            this.selectedResultsPerPage = s;
-	    }
-	    return this.selectedResultsPerPage;
-    }
+	public String getSelectedResultsPerPage() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
+		String s = (String) request.getSession().getAttribute(
+				"selectedResultsPerPage");
+		if (s != null) {
+			this.selectedResultsPerPage = s;
+		} else {
+			this.selectedResultsPerPage = "50";
+			request.getSession().setAttribute("selectedResultsPerPage", "50");
+		}
+		return this.selectedResultsPerPage;
+	}
 
-
-    public void resultsPerPageChanged(ValueChangeEvent event) {
-        if (event.getNewValue() == null)
-        {
+	public void resultsPerPageChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) {
 			return;
 		}
-        String newValue = (String) event.getNewValue();
-        setSelectedResultsPerPage(newValue);
-    }
-
+		String newValue = (String) event.getNewValue();
+		setSelectedResultsPerPage(newValue);
+	}
 
     public String linkAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -348,18 +359,17 @@ public class UserSessionBean extends Object
     // source
     ////////////////////////////////////////////////////////////////
 
-	private String selectedSource = null;
+	private String selectedSource = "ALL";
 	private List sourceList = null;
 	private Vector<String> sourceListData = null;
 
 
 	public List getSourceList() {
+		if (sourceList != null) return sourceList;
 		String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
 		sourceList = new ArrayList();
-		if (sourceListData == null) return sourceList;
-
 		for (int i=0; i<sourceListData.size(); i++) {
 			String t = (String) sourceListData.elementAt(i);
 			sourceList.add(new SelectItem(t));
@@ -368,9 +378,11 @@ public class UserSessionBean extends Object
 	}
 
 	public void setSelectedSource(String selectedSource) {
-		this.selectedSource = selectedSource;
+		if (selectedSource == null) return;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().removeAttribute("selectedSource");
 		request.getSession().setAttribute("selectedSource", selectedSource);
+		this.selectedSource = selectedSource;
 	}
 
 
@@ -385,9 +397,11 @@ public class UserSessionBean extends Object
 	}
 
 	public void sourceSelectionChanged(ValueChangeEvent event) {
-		if (event.getNewValue() == null) return;
-		String source = (String) event.getNewValue();
-		setSelectedSource(source);
+		if (event.getNewValue() != null) {
+			String source = (String) event.getNewValue();
+			System.out.println("==================== sourceSelectionChanged to: " + source);
+			setSelectedSource(source);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////
