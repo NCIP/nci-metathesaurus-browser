@@ -139,6 +139,13 @@ public class UserSessionBean extends Object
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null) matchtype = "string";
 
+        String rankingStr = (String) request.getParameter("ranking");
+        boolean ranking = rankingStr != null && rankingStr.equals("on");
+        SortByScore sortByScore = new SortByScore();
+        if (ranking)
+            sortByScore.setType(SortByScore.Type.ALL);
+        else sortByScore.setType(SortByScore.Type.FALSE);
+
         String source = (String) request.getParameter("source");
         if (source == null) {
 			source = "ALL";
@@ -152,8 +159,8 @@ public class UserSessionBean extends Object
                 System.out.println("* criteria: " + matchText);
                 System.out.println("* matchType: " + matchtype);
                 System.out.println("* source: " + source);
-                System.out.println("* sort.by.score: " + NCImBrowserProperties.
-                    getProperty(NCImBrowserProperties.SORT_BY_SCORE));
+                System.out.println("* ranking: " + ranking);
+                System.out.println("* sort.by.score: " + sortByScore);
             } catch (Exception e) {
             }
         }
@@ -191,7 +198,7 @@ public class UserSessionBean extends Object
 		}
 		*/
 
-		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortByScore, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
