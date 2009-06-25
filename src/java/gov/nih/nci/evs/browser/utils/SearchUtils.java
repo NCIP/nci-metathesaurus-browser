@@ -1143,6 +1143,9 @@ public class SearchUtils {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
                 if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
+
+System.out.println("** resolveConcepts? " + resolveConcepts);
+
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
@@ -1161,6 +1164,8 @@ public class SearchUtils {
 			e.printStackTrace();
 			return null;
 		}
+
+System.out.println("** apply_sort_score? " + apply_sort_score);
 
         if (apply_sort_score)
         {
@@ -1189,6 +1194,8 @@ public class SearchUtils {
         }
 
         if (v == null || v.size() == 0) {
+			System.out.println("** No match -- trying matching by code " );
+
 			v = new Vector();
 			// add exact match for CUI and source code, if there is any (simple search case):
 			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
@@ -1206,14 +1213,6 @@ public class SearchUtils {
 					v.add(c);
 				}
 			}
-
-			if (v != null && v.size() > 0)
-			{
-				if(!apply_sort_score)
-				{
-					SortUtils.quickSort(v);
-				}
-			}
 	    }
 
 	    if (v == null || v.size() == 0) {
@@ -1226,6 +1225,10 @@ public class SearchUtils {
 			}
 		}
 
+		if(!apply_sort_score)
+		{
+			v = SortUtils.quickSort(v);
+		}
         return v;
     }
 
