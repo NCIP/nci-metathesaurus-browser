@@ -11,6 +11,12 @@ public class SortByScore {
     public SortByScore() {
     }
     
+    public SortByScore(boolean isRanking) {
+        if (isRanking)
+            setType(Type.ALL);
+        else setType(Type.FALSE);
+    }
+    
     public SortByScore(SortByScore.Type type) {
         setType(type);
     }
