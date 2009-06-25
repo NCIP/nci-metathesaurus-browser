@@ -4,7 +4,9 @@
     if (match_text == null) match_text = "";
     String ranking_str = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("ranking"));
     boolean is_ranking = true;
-    if (ranking_str == null || ranking_str.equalsIgnoreCase("false"))
+    if (ranking_str == null) // Set default for first time.
+      is_ranking = true;
+    else if (ranking_str.equalsIgnoreCase("false"))
       is_ranking = false;
     String check_ranking = is_ranking ? "checked" : "";
   %>
