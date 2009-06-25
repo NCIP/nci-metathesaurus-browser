@@ -210,25 +210,59 @@ public class SearchUtils {
         this.url = url;
         initializeSortParameters();
     }
+    
+    public static class SortByScore {
+        public enum TYPE { FALSE, TRUE, ALL };
+        public TYPE type = TYPE.TRUE;
+        public boolean sort_by_pt_only = true;
+        public boolean apply_sort_score = true;
+
+        public SortByScore() {
+            try {
+                String value = NCImBrowserProperties.getProperty(
+                    NCImBrowserProperties.SORT_BY_SCORE);
+                if (value == null)
+                    return;  // Use default values
+                parse(TYPE.valueOf(value.toUpperCase()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        public SortByScore(SortByScore.TYPE type) {
+            parse(type);
+        }
+        
+        private void parse(SortByScore.TYPE type) {
+            this.type = type;
+            switch (type) {
+            case FALSE:
+                sort_by_pt_only = true;
+                apply_sort_score = false;
+                break;
+            case ALL:
+                sort_by_pt_only = false;
+                apply_sort_score = true;
+                break;
+            default: //TRUE 
+                sort_by_pt_only = true;
+                apply_sort_score = true;
+                break;
+            }
+        }
+        
+        public String toString() {
+            return type.name() + "(" +
+                "sort_by_pt_only: " + sort_by_pt_only +
+                ", apply_sort_score: " + apply_sort_score + ")";
+        }
+    }
 
     private void initializeSortParameters() {
 		doubleMetaphone = new DoubleMetaphone();
-        try {
-            NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
-            String sort_str = properties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
-            sort_by_pt_only = true;
-            apply_sort_score = true;
-            if (sort_str != null) {
-				if (sort_str.compareTo("false") == 0) {
-					apply_sort_score = false;
-				} else if (sort_str.compareToIgnoreCase("all") == 0) {
-					sort_by_pt_only = false;
-				}
-		    }
-
-        } catch (Exception ex) {
-
-        }
+        SortByScore sortByScore = new SortByScore();
+        sort_by_pt_only = sortByScore.sort_by_pt_only;
+        apply_sort_score = sortByScore.apply_sort_score;
 	}
 
 
