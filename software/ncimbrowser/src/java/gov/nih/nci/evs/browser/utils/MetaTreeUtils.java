@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Vector;
+
 
 import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
 import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
@@ -54,6 +56,7 @@ import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.commonTypes.EntityDescription;
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 
 
 
@@ -72,13 +75,7 @@ public class MetaTreeUtils {
 	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 	private static String NCI_SOURCE = "NCI";
 
-	public static void main(String[] args) throws Exception {
-		MetaTreeUtils getRoots = new MetaTreeUtils();
 
-		Long startTime = System.currentTimeMillis();
-		getRoots.getRoots("NCI");
-		System.out.println("Call took: " + (System.currentTimeMillis() - startTime) + "ms");
-	}
 
 	public MetaTreeUtils(){
 		init();
@@ -773,9 +770,13 @@ public class MetaTreeUtils {
     }
 
 ////////////////////////
-
-
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab)
+	{
+		return getSubconcepts(scheme, version, code, sab, true);
+	}
+
+
+	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
 	{
         HashMap hmap = new HashMap();
         TreeItem ti = null;
@@ -784,7 +785,7 @@ public class MetaTreeUtils {
         Set<String> codesToExclude = Collections.EMPTY_SET;
         boolean fwd = true;
         String[] associationsToNavigate = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
-        boolean associationsNavigatedFwd = true;
+        //boolean associationsNavigatedFwd = true;
 
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
@@ -836,12 +837,7 @@ public class MetaTreeUtils {
 							// entry with a '+' to indicate it can be expanded.
 							if (!codesToExclude.contains(branchItemCode)) {
 								ti.expandable = true;
-								/*
-								TreeItem childItem =
-									new TreeItem(branchItemCode,
-										branchItemNode.getEntityDescription().getContent(),
-										getAtomText(branchItemNode, sab));
-								*/
+
 								TreeItem childItem =
 									new TreeItem(branchItemCode,
 										branchItemNode.getEntityDescription().getContent());
@@ -928,5 +924,277 @@ public class MetaTreeUtils {
 			}
         }
     }
+
+
+    public static void dumpTreeItems(HashMap hmap) {
+        try {
+            Set keyset = hmap.keySet();
+            Object[] objs = keyset.toArray();
+            String code = (String) objs[0];
+            TreeItem ti = (TreeItem) hmap.get(code);
+            for (String association : ti.assocToChildMap.keySet()) {
+				System.out.println("\nassociation: " + association);
+                List<TreeItem> children = ti.assocToChildMap.get(association);
+                for (TreeItem childItem : children) {
+                    System.out.println("Code: " + childItem.code);
+                    System.out.println("Name: " + childItem.text);
+                    int knt = 0;
+                    if (childItem.expandable)
+                    {
+                        knt = 1;
+                    }
+                    System.out.println("Number of children: " + knt);
+                    System.out.println("\n");
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    public void run(String scheme, String version, String code) {
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        ResolvedConceptReference rcr = null;
+        try {
+			rcr = resolveConcept(scheme, csvt, code);
+		} catch (Exception ex) {
+
+		}
+        if (rcr == null) {
+            Util_displayMessage("Unable to resolve a concept for CUI = '" + code + "'");
+            System.exit(1);
+        }
+
+        String name = null;
+        try {
+			name = getCodeDescription(rcr);
+		} catch (Exception ex) {
+			name = "Unknown";
+		}
+        System.out.println("Coding scheme: " + scheme);
+        System.out.println("code: " + code);
+        System.out.println("name: " + name);
+
+		String sab = "NCI";
+		//boolean associationsNavigatedFwd = true;
+
+		Long startTime = System.currentTimeMillis();
+		HashMap hmap1 = getSubconcepts(scheme, version, code, sab, true);
+		System.out.println("Call getSubconcepts true took: " + (System.currentTimeMillis() - startTime) + "ms");
+		dumpTreeItems(hmap1);
+
+		startTime = System.currentTimeMillis();
+		HashMap hmap2 = getSubconcepts(scheme, version, code, sab, false);
+		System.out.println("Call getSubconcepts false took: " + (System.currentTimeMillis() - startTime) + "ms");
+		dumpTreeItems(hmap2);
+
+	}
+
+
+    protected boolean hasChildren(String sab, AssociationList childAssociationList) {
+		for (Association child : childAssociationList.getAssociation()) {
+			AssociatedConceptList branchItemList = child.getAssociatedConcepts();
+			for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
+				if (isValidForSAB(branchItemNode, sab)) {
+					return true;
+				}
+			}
+		}
+		return false;
+    }
+
+
+	protected String getDisplayRef(ResolvedConceptReference ref){
+		return "[" + ref.getEntityDescription().getContent() + "(" + ref.getConceptCode() + ")]";
+	}
+
+	public HashMap getSubconcepts(String scheme, String version, String code, String sab, String asso_name, boolean associationsNavigatedFwd) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+		Vector w = new Vector();
+
+        long ms = System.currentTimeMillis();
+
+        Set<String> codesToExclude = Collections.EMPTY_SET;
+        boolean fwd = true;
+
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+			String name = getCodeDescription(lbSvc, scheme, csvt, code);
+
+			System.out.println("\n******************************************** scheme: " + name);
+
+			System.out.println("name: " + name);
+			System.out.println("code: " + code);
+			System.out.println("sab: " + sab);
+			System.out.println("asso_name: " + asso_name + "\n");
+
+			ti = new TreeItem(code, name);
+			ti.expandable = false;
+
+			CodedNodeGraph cng = null;
+			ResolvedConceptReferenceList branch = null;
+			cng = lbSvc.getNodeGraph(scheme, null, null);
+			NameAndValueList nvl = null;
+			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
+			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{asso_name}), nvl);
+/*
+			branch = cng.resolveAsList(
+					Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, !associationsNavigatedFwd,
+					Integer.MAX_VALUE, 2,
+					null, new PropertyType[] { PropertyType.PRESENTATION },
+					sortByCode_, null, -1, true);
+*/
+			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
+//			                           true, true, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
+			                           associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
+			                           null, null, -1);
+
+			for (ResolvedConceptReference node : branch.getResolvedConceptReference()) {
+
+				AssociationList childAssociationList =
+					associationsNavigatedFwd ? node.getSourceOf()
+						: node.getTargetOf();
+
+				//AssociationList childAssociationList = node.getTargetOf();
+				//if (associationsNavigatedFwd) childAssociationList = node.getSourceOf();
+
+				// Process each association defining children ...
+				for (Association child : childAssociationList.getAssociation()) {
+					String childNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
+					// Each association may have multiple children ...
+					AssociatedConceptList branchItemList = child.getAssociatedConcepts();
+					for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
+						if (isValidForSAB(branchItemNode, sab)) {
+							String branchItemCode = branchItemNode.getCode();
+							// Add here if not in the list of excluded codes.
+							// This is also where we look to see if another level
+							// was indicated to be available. If so, mark the
+							// entry with a '+' to indicate it can be expanded.
+							if (!codesToExclude.contains(branchItemCode)) {
+
+								if (!hset.contains(branchItemCode)) {
+									hset.add(branchItemCode);
+
+									ti.expandable = true;
+
+									TreeItem childItem =
+										new TreeItem(branchItemCode,
+											branchItemNode.getEntityDescription().getContent());
+
+									AssociationList grandchildBranch =
+										associationsNavigatedFwd ? branchItemNode.getSourceOf()
+											: branchItemNode.getTargetOf();
+
+									if (grandchildBranch != null) {
+										//childItem.expandable = true;
+										boolean retval = hasChildren(sab, grandchildBranch);
+										if (retval) childItem.expandable = true;
+									}
+									ti.addChild(childNavText, childItem);
+								}
+							}
+						}
+					}
+				}
+     		}
+
+			hmap.put(code, ti);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		return hmap;
+	}
+
+	protected String getAssociationSourceString(AssociatedConcept ac){
+		String sources = "";
+		NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
+		int knt = 0;
+		for (int i=0; i<nvl.length; i++) {
+            NameAndValue nv = nvl[i];
+            if (nv.getContent().compareToIgnoreCase("Source") == 0) {
+				knt++;
+				if (knt == 1) {
+					sources = sources + nv.getName();
+				} else {
+					sources = sources + " ;" + nv.getName();
+				}
+		    }
+		}
+		return sources;
+	}
+
+	protected Vector getAssociationSources(AssociatedConcept ac){
+		Vector sources = new Vector();
+		NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
+		for (int i=0; i<nvl.length; i++) {
+            NameAndValue nv = nvl[i];
+            if (nv.getContent().compareToIgnoreCase("Source") == 0) {
+				sources.add(nv.getName());
+		    }
+		}
+		return sources;
+	}
+
+
+	public static void main(String[] args) throws Exception {
+		MetaTreeUtils test = new MetaTreeUtils();
+
+		String scheme = "NCI MetaThesaurus";
+		String version = null;
+		String code = "C1325880";//"C0001206";
+		boolean associationsNavigatedFwd = true;
+		String sab = "NCI";
+
+		/*
+        test.run(scheme, version, code);
+
+
+        System.out.println("\n==============================================================");
+
+        code = "C1154313";
+        test.run(scheme, version, code);
+        */
+
+
+        HashMap new_map = null;
+        code = "C1154313";
+
+        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
+        test.dumpTreeItems(new_map);
+
+        code = "CL354459";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
+        test.dumpTreeItems(new_map);
+
+        code = "CL354459";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
+        test.dumpTreeItems(new_map);
+
+        code = "C0031308";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
+        test.dumpTreeItems(new_map);
+
+        code = "C0031308";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
+        test.dumpTreeItems(new_map);
+
+        code = "C0007581";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
+        test.dumpTreeItems(new_map);
+
+        code = "C0007581";
+        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
+        test.dumpTreeItems(new_map);
+	}
 
 }
