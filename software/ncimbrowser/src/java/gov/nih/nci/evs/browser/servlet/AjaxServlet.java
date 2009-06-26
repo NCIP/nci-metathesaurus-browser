@@ -179,6 +179,7 @@ public final class AjaxServlet extends HttpServlet {
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
                 JSONObject json = new JSONObject();
+
                 try {
                     // testing
                     //JSONArray rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true);
@@ -203,6 +204,7 @@ public final class AjaxServlet extends HttpServlet {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 response.getWriter().write(json.toString());
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
