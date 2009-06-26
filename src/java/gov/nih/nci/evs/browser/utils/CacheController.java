@@ -181,7 +181,8 @@ public class CacheController
             if (scheme.compareTo("NCI Thesaurus") == 0) {
             	map = new TreeUtils().getSubconcepts(scheme, version, code);
 			} else {
-				map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE);
+				//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE);
+				map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
 			}
             nodeArray = HashMap2JSONArray(map);
 
@@ -309,7 +310,6 @@ public class CacheController
                 List<TreeItem> children = ti.assocToChildMap.get(association);
                 //Collections.sort(children);
                 for (TreeItem childItem : children) {
-                    //printTree(childItem, focusCode, depth + 1);
                     JSONObject nodeObject = new JSONObject();
                     nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                     nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
