@@ -1030,12 +1030,7 @@ public class MetaTreeUtils {
 			lbscm.setLexBIGService(lbSvc);
 			String name = getCodeDescription(lbSvc, scheme, csvt, code);
 
-			System.out.println("\n******************************************** scheme: " + name);
-
-			System.out.println("name: " + name);
-			System.out.println("code: " + code);
-			System.out.println("sab: " + sab);
-			System.out.println("asso_name: " + asso_name + "\n");
+			System.out.println("Find subconcepts for: " + name + " (" + code + ")");
 
 			ti = new TreeItem(code, name);
 			ti.expandable = false;
@@ -1046,13 +1041,7 @@ public class MetaTreeUtils {
 			NameAndValueList nvl = null;
 			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
 			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{asso_name}), nvl);
-/*
-			branch = cng.resolveAsList(
-					Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, !associationsNavigatedFwd,
-					Integer.MAX_VALUE, 2,
-					null, new PropertyType[] { PropertyType.PRESENTATION },
-					sortByCode_, null, -1, true);
-*/
+
 			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
 //			                           true, true, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
 			                           associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
