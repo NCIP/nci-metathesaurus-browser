@@ -296,6 +296,10 @@ public class MetaTreeUtils {
     public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
             CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel) throws LBException {
         if (sab == null) sab = NCI_SOURCE;
+
+System.out.println("getTreePathData: code " + cui);
+System.out.println("getTreePathData: sab " + sab);
+
         HashMap hmap = new HashMap();
         long ms = System.currentTimeMillis();
 
@@ -305,7 +309,6 @@ public class MetaTreeUtils {
             return null;
         }
 
-        //TreeItem ti = new TreeItem("<Start>", "Start of Tree", null);
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
         int pathsResolved = 0;
         try {
@@ -347,7 +350,7 @@ public class MetaTreeUtils {
      *
      * @param ti
      */
-    protected void printTree(TreeItem ti, String focusCode, int depth) {
+    public void printTree(TreeItem ti, String focusCode, int depth) {
         StringBuffer indent = new StringBuffer();
         for (int i = 0; i < depth * 2; i++)
             indent.append("| ");
@@ -480,145 +483,7 @@ public class MetaTreeUtils {
         }
     }
 
-    /**
-     * Build and returns tree items that represent the root
-     * and core concepts of resolved paths for printing.
-     * @throws LBException
-     */
-    protected TreeItem[] buildPathsToRoot(ResolvedConceptReference rcr,
-            String scheme, CodingSchemeVersionOrTag csvt,
-            String sab, int maxLevel) throws LBException {
 
-        // Create a starting point for tree building.
-        TreeItem ti =
-            new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(),
-                getAtomText(rcr, sab));
-
-        // Maintain root tree items.
-        Set<TreeItem> rootItems = new HashSet<TreeItem>();
-
-        // Natural flow of hierarchy relations moves forward
-        // from tree root to leaves.  Build the paths to root here
-        // by processing upstream (child to parent) relationships.
-        buildPathsToUpperNodes(
-            ti, rcr, scheme, csvt, sab,
-            new HashMap<String, TreeItem>(),
-            rootItems, maxLevel, 0);
-
-        // Return root items discovered during child to parent
-        // processing.
-        return rootItems.toArray(new TreeItem[rootItems.size()]);
-    }
-
-    /**
-     * Add all hierarchical paths to root that start from the
-     * referenced concept and move backward in the tree. If
-     * the natural flow of relations is thought of moving from tree
-     * root to leaves, this method processes nodes in the
-     * reverse direction (from child to parent).
-     * @throws LBException
-     */
-    protected void buildPathsToUpperNodes(TreeItem ti, ResolvedConceptReference rcr,
-            String scheme, CodingSchemeVersionOrTag csvt,
-            String sab, Map<String, TreeItem> code2Tree,
-            Set<TreeItem> roots, int maxLevel, int currLevel)
-        throws LBException {
-
-        if (maxLevel != -1 && currLevel >= maxLevel) return;
-
-        // Only need to process a code once ...
-        if (code2Tree.containsKey(rcr.getCode()))
-            return;
-
-        // Cache for future reference.
-        code2Tree.put(rcr.getCode(), ti);
-
-        // UMLS relations can be defined with forward direction
-        // being parent to child or child to parent on a source
-        // by source basis.  Iterate twice to ensure completeness;
-        // once navigating child to parent relations forward
-        // and once navigating parent to child relations
-        // backward.  Both have the net effect of navigating
-        // from the bottom of the hierarchy to the top.
-        boolean isRoot = true;
-        for (int i = 0; i <= 1; i++) {
-           boolean fwd = i < 1;
-           String[] upstreamAssoc = fwd ? hierAssocToParentNodes_ : hierAssocToChildNodes_;
-
-            // Define a code graph for all relationships tagged with
-            // the specified sab.
-            CodedNodeGraph graph = getLexBIGService().getNodeGraph(scheme, csvt, null);
-            graph.restrictToAssociations(
-                ConvenienceMethods.createNameAndValueList(upstreamAssoc),
-                ConvenienceMethods.createNameAndValueList(sab, "Source"));
-
-            // Resolve one hop, retrieving presentations for
-            // comparison of source assignments.
-            ResolvedConceptReference[] refs = graph.resolveAsList(
-                rcr, fwd, !fwd, Integer.MAX_VALUE, 1,
-                null, new PropertyType[] { PropertyType.PRESENTATION },
-                sortByCode_, null, -1).getResolvedConceptReference();
-
-            // Create a new tree item for each upstream node, add the current
-            // tree item as a child, and recurse to go higher (if available).
-            if (refs.length > 0) {
-
-                // Each associated concept represents an upstream branch.
-                AssociationList aList = fwd ? refs[0].getSourceOf() : refs[0].getTargetOf();
-                for (Association assoc : aList.getAssociation()) {
-
-                    // Go through the concepts one by one, adding the
-                    // current tree item as a child of a new tree item
-                    // representing the upstream node. If a tree item
-                    // already exists for the parent, we reuse it to
-                    // keep a single branch per parent.
-                    for (AssociatedConcept refParent : assoc.getAssociatedConcepts().getAssociatedConcept())
-                        if (isValidForSAB(refParent, sab)) {
-
-                            // Fetch the term for this context ...
-                            Presentation[] sabMatch = getSourcePresentations(refParent, sab);
-                            if (sabMatch.length > 0) {
-
-                                // We need to take into account direction of
-                                // navigation on each pass to get the right label.
-                                String directionalName = getDirectionalLabel(scheme, csvt, assoc, !fwd);
-
-                                // Check for a previously registered item for the
-                                // parent.  If found, re-use it.  Otherwise, create
-                                // a new parent tree item.
-                                String parentCode = refParent.getCode();
-                                TreeItem tiParent = code2Tree.get(parentCode);
-                                if (tiParent == null) {
-
-                                    // Create a new tree item.
-                                    tiParent =
-                                        new TreeItem(parentCode, refParent.getEntityDescription().getContent(),
-                                            getAtomText(refParent, sab));
-
-                                    // Add immediate children of the parent code with an
-                                    // indication of sub-nodes (+).  Codes already
-                                    // processed as part of the path are ignored since
-                                    // they are handled through recursion.
-                                    String[] downstreamAssoc = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
-                                    addChildren(tiParent, scheme, csvt, sab, parentCode, code2Tree.keySet(),
-                                            downstreamAssoc, fwd);
-
-                                    // Try to go higher through recursion.
-                                    buildPathsToUpperNodes(tiParent, refParent,
-                                        scheme, csvt, sab, code2Tree, roots, maxLevel, currLevel+1);
-                                }
-
-                                // Add the child
-                                tiParent.addChild(directionalName, ti);
-                                isRoot = false;
-                            }
-                        }
-                }
-            }
-        }
-        if (isRoot)
-            roots.add(ti);
-    }
 
     /**
      * Returns a resolved concept for the specified code and
@@ -936,15 +801,15 @@ public class MetaTreeUtils {
 				System.out.println("\nassociation: " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
                 for (TreeItem childItem : children) {
-                    System.out.println("Code: " + childItem.code);
-                    System.out.println("Name: " + childItem.text);
+                    System.out.println(childItem.text + "(" + childItem.code + ")");
                     int knt = 0;
                     if (childItem.expandable)
                     {
                         knt = 1;
-                    }
-                    System.out.println("Number of children: " + knt);
-                    System.out.println("\n");
+                        System.out.println("\tnode.expandable");
+                    } else {
+						System.out.println("\tnode.NOT expandable");
+					}
                 }
             }
         } catch (Exception e) {
@@ -993,18 +858,6 @@ public class MetaTreeUtils {
 	}
 
 
-    protected boolean hasChildren(String sab, AssociationList childAssociationList) {
-		for (Association child : childAssociationList.getAssociation()) {
-			AssociatedConceptList branchItemList = child.getAssociatedConcepts();
-			for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
-				if (isValidForSAB(branchItemNode, sab)) {
-					return true;
-				}
-			}
-		}
-		return false;
-    }
-
 
 	protected String getDisplayRef(ResolvedConceptReference ref){
 		return "[" + ref.getEntityDescription().getContent() + "(" + ref.getConceptCode() + ")]";
@@ -1030,7 +883,12 @@ public class MetaTreeUtils {
 			lbscm.setLexBIGService(lbSvc);
 			String name = getCodeDescription(lbSvc, scheme, csvt, code);
 
-			System.out.println("Find subconcepts for: " + name + " (" + code + ")");
+			System.out.println("\n******************************************** scheme: " + name);
+
+			System.out.println("name: " + name);
+			System.out.println("code: " + code);
+			System.out.println("sab: " + sab);
+			System.out.println("asso_name: " + asso_name + "\n");
 
 			ti = new TreeItem(code, name);
 			ti.expandable = false;
@@ -1041,7 +899,13 @@ public class MetaTreeUtils {
 			NameAndValueList nvl = null;
 			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
 			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{asso_name}), nvl);
-
+/*
+			branch = cng.resolveAsList(
+					Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, !associationsNavigatedFwd,
+					Integer.MAX_VALUE, 2,
+					null, new PropertyType[] { PropertyType.PRESENTATION },
+					sortByCode_, null, -1, true);
+*/
 			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
 //			                           true, true, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
 			                           associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
@@ -1084,11 +948,10 @@ public class MetaTreeUtils {
 											: branchItemNode.getTargetOf();
 
 									if (grandchildBranch != null) {
-										//childItem.expandable = true;
-										boolean retval = hasChildren(sab, grandchildBranch);
-										if (retval) childItem.expandable = true;
+										childItem.expandable = true;
 									}
 									ti.addChild(childNavText, childItem);
+
 								}
 							}
 						}
@@ -1135,6 +998,211 @@ public class MetaTreeUtils {
 	}
 
 
+
+    /**
+     * Build and returns tree items that represent the root
+     * and core concepts of resolved paths for printing.
+     * @throws LBException
+     */
+    protected TreeItem[] buildPathsToRoot(ResolvedConceptReference rcr,
+            String scheme, CodingSchemeVersionOrTag csvt,
+            String sab, int maxLevel) throws LBException {
+
+System.out.println("buildPathsToRoot: code " + rcr.getCode() + " " + rcr.getEntityDescription().getContent());
+System.out.println("buildPathsToRoot: sab " + sab);
+
+
+        // Create a starting point for tree building.
+        TreeItem ti =
+            new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(),
+                getAtomText(rcr, sab));
+
+        // Maintain root tree items.
+        Set<TreeItem> rootItems = new HashSet<TreeItem>();
+
+        // Natural flow of hierarchy relations moves forward
+        // from tree root to leaves.  Build the paths to root here
+        // by processing upstream (child to parent) relationships.
+        buildPathsToUpperNodes(
+            ti, rcr, scheme, csvt, sab,
+            new HashMap<String, TreeItem>(),
+            rootItems, maxLevel, 0);
+
+        // Return root items discovered during child to parent
+        // processing.
+        return rootItems.toArray(new TreeItem[rootItems.size()]);
+    }
+
+
+    protected boolean hasChildren(TreeItem tiParent, String code) {
+		boolean retval = false;
+		if (tiParent == null) return false;
+		if (tiParent.assocToChildMap == null) return false;
+
+        for (String association : tiParent.assocToChildMap.keySet()) {
+            List<TreeItem> children = tiParent.assocToChildMap.get(association);
+            for (int i=0; i<children.size(); i++) {
+                TreeItem childItem = (TreeItem) children.get(i);
+                if (childItem.code.compareTo(code) == 0) return true;
+			}
+		}
+		return false;
+	}
+
+    /**
+     * Add all hierarchical paths to root that start from the
+     * referenced concept and move backward in the tree. If
+     * the natural flow of relations is thought of moving from tree
+     * root to leaves, this method processes nodes in the
+     * reverse direction (from child to parent).
+     * @throws LBException
+     */
+    protected void buildPathsToUpperNodes(TreeItem ti, ResolvedConceptReference rcr,
+            String scheme, CodingSchemeVersionOrTag csvt,
+            String sab, Map<String, TreeItem> code2Tree,
+            Set<TreeItem> roots, int maxLevel, int currLevel)
+        throws LBException {
+
+        if (maxLevel != -1 && currLevel >= maxLevel) return;
+
+System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.getEntityDescription().getContent());
+//System.out.println("buildPathsToUpperNodes: sab " + sab);
+
+
+        // Only need to process a code once ...
+        if (code2Tree.containsKey(rcr.getCode()))
+            return;
+
+        // Cache for future reference.
+        code2Tree.put(rcr.getCode(), ti);
+
+        // UMLS relations can be defined with forward direction
+        // being parent to child or child to parent on a source
+        // by source basis.  Iterate twice to ensure completeness;
+        // once navigating child to parent relations forward
+        // and once navigating parent to child relations
+        // backward.  Both have the net effect of navigating
+        // from the bottom of the hierarchy to the top.
+        boolean isRoot = true;
+        for (int i = 0; i <= 1; i++) {
+           boolean fwd = i < 1;
+           String[] upstreamAssoc = fwd ? hierAssocToParentNodes_ : hierAssocToChildNodes_;
+
+            // Define a code graph for all relationships tagged with
+            // the specified sab.
+            CodedNodeGraph graph = getLexBIGService().getNodeGraph(scheme, csvt, null);
+            graph.restrictToAssociations(
+                ConvenienceMethods.createNameAndValueList(upstreamAssoc),
+                ConvenienceMethods.createNameAndValueList(sab, "Source"));
+
+            // Resolve one hop, retrieving presentations for
+            // comparison of source assignments.
+            ResolvedConceptReference[] refs = graph.resolveAsList(
+                rcr, fwd, !fwd, Integer.MAX_VALUE, 1,
+                null, new PropertyType[] { PropertyType.PRESENTATION },
+                sortByCode_, null, -1).getResolvedConceptReference();
+
+            // Create a new tree item for each upstream node, add the current
+            // tree item as a child, and recurse to go higher (if available).
+            if (refs.length > 0) {
+
+                // Each associated concept represents an upstream branch.
+                AssociationList aList = fwd ? refs[0].getSourceOf() : refs[0].getTargetOf();
+                for (Association assoc : aList.getAssociation()) {
+
+                    // Go through the concepts one by one, adding the
+                    // current tree item as a child of a new tree item
+                    // representing the upstream node. If a tree item
+                    // already exists for the parent, we reuse it to
+                    // keep a single branch per parent.
+                    for (AssociatedConcept refParent : assoc.getAssociatedConcepts().getAssociatedConcept())
+                        if (isValidForSAB(refParent, sab)) {
+
+                            // Fetch the term for this context ...
+                            Presentation[] sabMatch = getSourcePresentations(refParent, sab);
+                            if (sabMatch.length > 0) {
+
+                                // We need to take into account direction of
+                                // navigation on each pass to get the right label.
+                                String directionalName = getDirectionalLabel(scheme, csvt, assoc, !fwd);
+
+                                // Check for a previously registered item for the
+                                // parent.  If found, re-use it.  Otherwise, create
+                                // a new parent tree item.
+                                String parentCode = refParent.getCode();
+                                TreeItem tiParent = code2Tree.get(parentCode);
+                                if (tiParent == null) {
+
+                                    // Create a new tree item.
+                                    tiParent =
+                                        new TreeItem(parentCode, refParent.getEntityDescription().getContent(),
+                                            getAtomText(refParent, sab));
+
+                                    // Add immediate children of the parent code with an
+                                    // indication of sub-nodes (+).  Codes already
+                                    // processed as part of the path are ignored since
+                                    // they are handled through recursion.
+                                    String[] downstreamAssoc = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
+
+ System.out.println("addChildren parentCode " + parentCode);
+
+                                    addChildren(tiParent, scheme, csvt, sab, parentCode, code2Tree.keySet(),
+                                            downstreamAssoc, fwd);
+
+                                    // Try to go higher through recursion.
+                                    buildPathsToUpperNodes(tiParent, refParent,
+                                        scheme, csvt, sab, code2Tree, roots, maxLevel, currLevel+1);
+                                }
+
+                                // Add the child (eliminate redundancy -- e.g., hasSubtype and CHD)
+                                //if (!hasChildren(tiParent, ti.code)) {
+									tiParent.addChild(directionalName, ti);
+									//KLO
+									tiParent.expandable = true;
+							    //}
+							    isRoot = false;
+                            }
+                        }
+                }
+            }
+        }
+        if (isRoot)
+            roots.add(ti);
+    }
+
+
+
+    public void dumpTree(HashMap hmap, String focusCode, int level) {
+        try {
+            Set keyset = hmap.keySet();
+            Object[] objs = keyset.toArray();
+            String code = (String) objs[0];
+            TreeItem ti = (TreeItem) hmap.get(code);
+            for (String association : ti.assocToChildMap.keySet()) {
+				System.out.println("\nassociation: " + association);
+                List<TreeItem> children = ti.assocToChildMap.get(association);
+                for (TreeItem childItem : children) {
+                    System.out.println(childItem.text + "(" + childItem.code + ")");
+                    int knt = 0;
+                    if (childItem.expandable)
+                    {
+                        knt = 1;
+                        System.out.println("\tnode.expandable");
+
+                        printTree(childItem, focusCode, level);
+
+
+                    } else {
+						System.out.println("\tnode.NOT expandable");
+					}
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+
 	public static void main(String[] args) throws Exception {
 		MetaTreeUtils test = new MetaTreeUtils();
 
@@ -1158,6 +1226,7 @@ public class MetaTreeUtils {
         HashMap new_map = null;
         code = "C1154313";
 
+/*
         new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
         test.dumpTreeItems(new_map);
 
@@ -1184,6 +1253,16 @@ public class MetaTreeUtils {
         code = "C0007581";
         new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
         test.dumpTreeItems(new_map);
+ */
+        //Cell Aging (CUI C0007581)
+        code = "C0007581";
+        new_map = test.getTreePathData(scheme, version, sab, code, -1);
+        test.dumpTreeItems(new_map);
+
+        test.dumpTree(new_map, code, 5);
+
+
+
 	}
 
 }
