@@ -407,14 +407,19 @@ public class CacheController
 
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
     {
+
+System.out.println("CacheController getPathsToRoots " + ontology_display_name);
+System.out.println("CacheController getPathsToRoots node_id " + node_id);
+System.out.println("CacheController getPathsToRoots maxLevel " + maxLevel);
+
+
         JSONArray rootsArray = null;
         if (maxLevel == -1) {
+System.out.println("CacheController getRootConcepts ");
+
             rootsArray = getRootConcepts(ontology_display_name, version, false);
             try {
                 MetaTreeUtils util = new MetaTreeUtils();
-
-                System.out.println("CacheController MetaTreeUtils.getTreePathData ");
-
                 HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
                 Set keyset = hmap.keySet();
                 Object[] objs = keyset.toArray();
@@ -432,20 +437,44 @@ public class CacheController
         else {
             try {
                 MetaTreeUtils util = new MetaTreeUtils();
+
+ System.out.println("CacheController MetaTreeUtils.getTreePathData ... ");
+
                 //HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
-                  HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, maxLevel);
+                  //HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, maxLevel);
+                  //?????????????????
+                  HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, -1);
+
+
                 Object[] objs = hmap.keySet().toArray();
                 String code = (String) objs[0];
+
+ System.out.println("CacheController MetaTreeUtils.getTreePathData .code .. " + code);
+
                 TreeItem ti = (TreeItem) hmap.get(code);
                 List list = util.getTopNodes(ti);
+  System.out.println("CacheController MetaTreeUtils.getTreePathData .getTopNodes .. " + list.size());
+
+
                 rootsArray = list2JSONArray(list);
+
+ System.out.println("CacheController MetaTreeUtils.getTreePathData rootsArray... " + rootsArray.length());
+
+
                 //Set keyset = hmap.keySet();
                 //Object[] objs = keyset.toArray();
                 //String code = (String) objs[0];
                 //TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
 
                 //JSONArray nodesArray = getNodesArray(ti);
+
+System.out.println("CacheController MetaTreeUtils.getTreePathData calling getNodesArray... " );
+
+
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+System.out.println("CacheController MetaTreeUtils.getTreePathData calling replaceJSONObjects... " );
+
+
                 replaceJSONObjects(rootsArray, nodesArray);
             }
             catch (Exception e) {
