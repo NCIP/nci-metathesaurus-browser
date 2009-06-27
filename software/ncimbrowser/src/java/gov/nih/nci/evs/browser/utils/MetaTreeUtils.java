@@ -318,7 +318,7 @@ public class MetaTreeUtils {
                 ti.addChild("CHD", rootItem);
 			}
         } finally {
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+            System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
         }
         hmap.put(cui, ti);
@@ -1253,7 +1253,7 @@ public class MetaTreeUtils {
         //Cell Aging (CUI C0007581)
         code = "C0007581";
         new_map = test.getTreePathData(scheme, version, sab, code, -1);
-        test.dumpTreeItems(new_map);
+        //test.dumpTreeItems(new_map);
 
         test.dumpTree(new_map, code, 5);
 
