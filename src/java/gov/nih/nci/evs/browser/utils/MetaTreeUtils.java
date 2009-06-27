@@ -58,6 +58,7 @@ import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.commonTypes.EntityDescription;
 import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 
+import org.LexGrid.concepts.Concept;
 
 
 
@@ -296,10 +297,6 @@ public class MetaTreeUtils {
     public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
             CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel) throws LBException {
         if (sab == null) sab = NCI_SOURCE;
-
-System.out.println("getTreePathData: code " + cui);
-System.out.println("getTreePathData: sab " + sab);
-
         HashMap hmap = new HashMap();
         long ms = System.currentTimeMillis();
 
@@ -309,6 +306,7 @@ System.out.println("getTreePathData: sab " + sab);
             return null;
         }
 
+        // Dummy root (place holder)
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
         int pathsResolved = 0;
         try {
@@ -316,8 +314,9 @@ System.out.println("getTreePathData: sab " + sab);
             // to the focus code ...
             TreeItem[] pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
             pathsResolved = pathsFromRoot.length;
-            for (TreeItem rootItem : pathsFromRoot)
+            for (TreeItem rootItem : pathsFromRoot) {
                 ti.addChild("CHD", rootItem);
+			}
         } finally {
             System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
@@ -776,7 +775,6 @@ System.out.println("getTreePathData: sab " + sab);
 				EntityDescription entityDescription = new EntityDescription();
 				entityDescription.setContent(ti.text);
 				rcr.setEntityDescription(entityDescription);
-				//System.out.println("Root: " + ti.text);
 				list.add(rcr);
 		    }
 		}
@@ -882,14 +880,6 @@ System.out.println("getTreePathData: sab " + sab);
 					.getGenericExtension("LexBIGServiceConvenienceMethods");
 			lbscm.setLexBIGService(lbSvc);
 			String name = getCodeDescription(lbSvc, scheme, csvt, code);
-
-			System.out.println("\n******************************************** scheme: " + name);
-
-			System.out.println("name: " + name);
-			System.out.println("code: " + code);
-			System.out.println("sab: " + sab);
-			System.out.println("asso_name: " + asso_name + "\n");
-
 			ti = new TreeItem(code, name);
 			ti.expandable = false;
 
@@ -1008,10 +998,6 @@ System.out.println("getTreePathData: sab " + sab);
             String scheme, CodingSchemeVersionOrTag csvt,
             String sab, int maxLevel) throws LBException {
 
-System.out.println("buildPathsToRoot: code " + rcr.getCode() + " " + rcr.getEntityDescription().getContent());
-System.out.println("buildPathsToRoot: sab " + sab);
-
-
         // Create a starting point for tree building.
         TreeItem ti =
             new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(),
@@ -1035,7 +1021,6 @@ System.out.println("buildPathsToRoot: sab " + sab);
 
 
     protected boolean hasChildren(TreeItem tiParent, String code) {
-		boolean retval = false;
 		if (tiParent == null) return false;
 		if (tiParent.assocToChildMap == null) return false;
 
@@ -1064,10 +1049,6 @@ System.out.println("buildPathsToRoot: sab " + sab);
         throws LBException {
 
         if (maxLevel != -1 && currLevel >= maxLevel) return;
-
-System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.getEntityDescription().getContent());
-//System.out.println("buildPathsToUpperNodes: sab " + sab);
-
 
         // Only need to process a code once ...
         if (code2Tree.containsKey(rcr.getCode()))
@@ -1143,9 +1124,6 @@ System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.g
                                     // processed as part of the path are ignored since
                                     // they are handled through recursion.
                                     String[] downstreamAssoc = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
-
- System.out.println("addChildren parentCode " + parentCode);
-
                                     addChildren(tiParent, scheme, csvt, sab, parentCode, code2Tree.keySet(),
                                             downstreamAssoc, fwd);
 
@@ -1155,11 +1133,11 @@ System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.g
                                 }
 
                                 // Add the child (eliminate redundancy -- e.g., hasSubtype and CHD)
-                                //if (!hasChildren(tiParent, ti.code)) {
+                                if (!hasChildren(tiParent, ti.code)) {
 									tiParent.addChild(directionalName, ti);
 									//KLO
 									tiParent.expandable = true;
-							    //}
+							    }
 							    isRoot = false;
                             }
                         }
@@ -1191,6 +1169,26 @@ System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.g
 
                         printTree(childItem, focusCode, level);
 
+                        List list = getTopNodes(childItem);
+						for (int i=0; i<list.size(); i++) {
+							  Object obj = list.get(i);
+							  String nd_code = "";
+							  String nd_name = "";
+							  if (obj instanceof ResolvedConceptReference)
+							  {
+								  ResolvedConceptReference node = (ResolvedConceptReference) list.get(i);
+								  nd_code = node.getConceptCode();
+								  nd_name = node.getEntityDescription().getContent();
+							  }
+							  else if (obj instanceof Concept) {
+								  Concept node = (Concept) list.get(i);
+								  nd_code = node.getEntityCode();
+								  nd_name = node.getEntityDescription().getContent();
+							  }
+							  System.out.println("TOP NODE: " + nd_name + " (" + nd_code + ")" );
+						}
+
+
 
                     } else {
 						System.out.println("\tnode.NOT expandable");
@@ -1214,8 +1212,6 @@ System.out.println("buildPathsToUpperNodes: code " + rcr.getCode() + " " + rcr.g
 
 		/*
         test.run(scheme, version, code);
-
-
         System.out.println("\n==============================================================");
 
         code = "C1154313";
