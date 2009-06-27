@@ -354,14 +354,14 @@
       if (childNodes.length > 0) {
           expand = true;
       }
-      var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand);
+      var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand); 
       if (nodeInfo.ontology_node_id == ontology_node_id) {
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      if (nodeInfo.ontology_node_child_count > 0) {
+      //if (nodeInfo.ontology_node_child_count > 0) {
            //newNode.setDynamicLoad(loadNodeData);
-      }
+      //}
 
       tree.draw();
       for (var i=0; i < childNodes.length; i++) {
