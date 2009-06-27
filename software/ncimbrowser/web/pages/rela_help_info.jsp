@@ -1,14 +1,20 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.List"%>
 <%@ page import="java.util.Vector"%>
+
+<%@ page import="gov.nih.nci.evs.browser.common.Constants"%>
+<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils"%>
+
 <%
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>Relationship Attribute Help Informaton</title>
+    <title>Relationship Help Informaton</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -23,45 +29,6 @@
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <%
-          Vector abbr_vec = new Vector();
-          Vector def_vec = new Vector();
-          abbr_vec.add("AOD2000");
-          abbr_vec.add("AOT2003");
-          abbr_vec.add("BioC_0812D");
-          abbr_vec.add("CBO2007_06");
-          abbr_vec.add("CCS2005");
-          abbr_vec.add("CDC_0812D");
-          abbr_vec.add("CDISC_0812D");
-          abbr_vec.add("CDT5");
-          abbr_vec.add("COH_0812D");
-          abbr_vec.add("COSTAR_89-95");
-          abbr_vec.add("CRCH_0812D");
-          abbr_vec.add("CSP2006");
-          abbr_vec.add("CST95");
-          abbr_vec.add("CTCAE_0812D");
-          abbr_vec.add("DTP_0812D");
-          abbr_vec.add("DXP94");
-          abbr_vec.add("ELC2001");
-
-          def_vec.add("Alcohol and Other Drug Thesaurus, 2000");
-          def_vec.add("Authorized Osteopathic Thesaurus, 2003");
-          def_vec.add("Based on BioCarta online maps of molecular relationships, adapted for NCI use., 0812D");
-          def_vec.add("Cerner Clinical Bioinformatics Ontology, June 2007");
-          def_vec.add("Clinical Classifications Software, 2005");
-          def_vec.add("U.S. Centers for Disease Control and Prevention, 0812D");
-          def_vec.add("Clinical Data Interchange Standards Consortium, 0812D");
-          def_vec.add("Current Dental Terminology 2005 (CDT-5), 5");
-          def_vec.add("City of Hope, 0812D");
-          def_vec.add("COSTAR, 1989-1995");
-          def_vec.add("US State Department country code");
-          def_vec.add("Cancer Research Center of Hawaii, 0812D");
-          def_vec.add("CRISP Thesaurus, 2006");
-          def_vec.add("COSTART, 1995");
-          def_vec.add("Common Terminology Criteria for Adverse Events, 0812D");
-          def_vec.add("Cancer Therapy Evaluation Program (CTEP), 2004");
-          def_vec.add("Division of Cancer Prevention Program, 0812D");
-        %>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
         <tr>
           <td valign="top">
@@ -78,7 +45,7 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
-                <b>Source Help Information</b>
+                <b>Relationship Attribute Help Information</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
@@ -92,36 +59,37 @@
             <tr class="textbody"><td align="left">
             
 <p>            
-The NCI Metathesaurus includes the following sources,
-with the NCI Local Sources and Sub-Sources shown in red.
+Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
+1.	Relationship (REL): A Metathesaurus relationship code, providing a consistent set of codes for all relationships from all sources.
+2.	Relationship Attribute (RELA): The more specific codes, when available, used by individual sources to represent relationships.
+These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources. 
 </p>
 <p>
-Certain vocabularies, such as ICD-10 and ICD-O3,
-are made available, by permission, for NON-COMMERCIAL USE ONLY.  
-</p>
-<p>
-MedDRA License Agreement.  The Medical Dictionary for Regulatory Activities (MedDRA) terminology is a licensed terminology.  
-The use of MedDRA from this NCI website is licensed for NCI employees and contractors performing work for NCI.  
-All other use is prohibited.  Users who are NOT NCI employees or contractors performing work for NCI must subscribe to 
-MedDRA from the MedDRA MSSO.  For questions regarding MedDRA, please contact the MSSO at mssohelp@ngc.com, or visit 
-the MSSO website at www.meddramsso.com, or write the MSSO at 12011 Sunset Hills Road Reston Virginia, 20190-3285 or phone 877.258.8280.
-</p>      
-
+The Relationship Attribute (RELA) categories in NCIm are taken from individual sources, which define their meanings.  
+Below is a chart showing all REL and RELA pairs found in the December 2008 version of NCIm, grouped as above by browser category:</p>
             
             </td></tr>
           </table>
           <br/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
+             <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
+             <th class="dataTableHeader" scope="col" align="left">REL Code</th>
+             <th class="dataTableHeader" scope="col" align="left">Relationship Attribute (RELA)</th>
+         
             <%
-              for (int n=0; n<abbr_vec.size(); n++) {
-              String abbr = (String) abbr_vec.elementAt(n);
-              String def = (String) def_vec.elementAt(n);
-              String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+              List list = Constants.RELA;
+              for (int n=0; n<list.size(); n++) {
+                 String t = (String) list.get(n);
+                 Vector v = DataUtils.parseData(t, "\t");
+                 String col1 = (String) v.elementAt(0);
+                 String col2 = (String) v.elementAt(1);
+                 String col3 = (String) v.elementAt(2);
+                 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             %>
               <tr class="<%=rowColor%>">
-                <td><%=abbr%></td>
-                <td>&nbsp;</td>
-                <td><%=def%></td>
+                <td><%=col1%></td>
+                <td><%=col2%></td>
+                <td><%=col3%></td>
               </tr>
             <%
               }
