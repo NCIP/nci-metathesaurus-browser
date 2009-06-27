@@ -352,7 +352,7 @@
       var childNodes = nodeInfo.children_nodes;
 
       if (childNodes.length > 0) {
-        expand = true;
+          expand = true;
       }
       var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand);
       if (nodeInfo.ontology_node_id == ontology_node_id) {
@@ -360,13 +360,13 @@
       }
 
       if (nodeInfo.ontology_node_child_count > 0) {
-           newNode.setDynamicLoad(loadNodeData);
+           //newNode.setDynamicLoad(loadNodeData);
       }
 
       tree.draw();
       for (var i=0; i < childNodes.length; i++) {
-  var childnodeInfo = childNodes[i];
-  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+          var childnodeInfo = childNodes[i];
+          addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
 
     }

@@ -52,8 +52,7 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
  */
 
 public class RemoteServerUtil {
-
-    private static boolean debug = true;
+    private static boolean debug = false;
     private static String _serviceInfo = "EvsServiceInfo";
     private Properties systemProperties = null;
     private static String serviceURL = null;
