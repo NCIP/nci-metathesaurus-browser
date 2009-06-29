@@ -40,13 +40,15 @@ public class MailUtils extends Object {
 
     public static boolean isValidEmailAddress(String text) {
         int posOfAtChar = text.indexOf('@');
-        int posOfDotChar = text.indexOf('.');
+        int posOfDotChar = text.lastIndexOf('.');
 
         if (posOfAtChar <= 0 || posOfDotChar <= 0)
             return false;
         if (posOfAtChar > posOfDotChar)
             return false;
-        if (posOfAtChar == posOfDotChar-1)
+        if (posOfAtChar == posOfDotChar - 1)
+            return false;
+        if (posOfDotChar == text.length() - 1)
             return false;
         return true;
     }
