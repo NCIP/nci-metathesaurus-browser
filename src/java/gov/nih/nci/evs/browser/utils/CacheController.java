@@ -91,6 +91,9 @@ public class CacheController
   public static final String ONTOLOGY_NODE_PARENT_ASSOC = "ontology_node_parent_assoc";
   public static final String ONTOLOGY_NODE_CHILD_COUNT = "ontology_node_child_count";
   public static final String ONTOLOGY_NODE_DEFINITION = "ontology_node_definition";
+
+  public static final String ONTOLOGY_NODE_EXPANDABLE = "ontology_node_expandable";
+
   public static final String CHILDREN_NODES = "children_nodes";
   public static final String NCI_SOURCE = "NCI";
 
@@ -164,6 +167,9 @@ public class CacheController
 
     public JSONArray getSubconcepts(String scheme, String version, String code, boolean fromCache)
     {
+System.out.println("getSubconcepts: " + scheme);
+System.out.println("getSubconcepts: code " + code);
+
         HashMap map = null;
         String key = scheme + "$" + version + "$" + code;
         JSONArray nodeArray = null;
@@ -177,13 +183,8 @@ public class CacheController
         }
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getSubconcepts " );
-            if (scheme.compareTo("NCI Thesaurus") == 0) {
-            	map = new TreeUtils().getSubconcepts(scheme, version, code);
-			} else {
-				//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE);
-				map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
-			}
+            System.out.println("Not in cache -- calling getSubconcepts..." );
+			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
             nodeArray = HashMap2JSONArray(map);
 
             if (fromCache) {
@@ -289,6 +290,9 @@ public class CacheController
 
 
     private JSONArray HashMap2JSONArray(HashMap hmap) {
+
+System.out.println("Calling HashMap2JSONArray");
+
         JSONObject json = new JSONObject();
         JSONArray nodesArray = null;
         try {
@@ -296,14 +300,20 @@ public class CacheController
             Set keyset = hmap.keySet();
             Object[] objs = keyset.toArray();
             String code = (String) objs[0];
+
+System.out.println("Calling HashMap2JSONArray code " + code);
+
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
                 List<TreeItem> children = ti.assocToChildMap.get(association);
-                //Collections.sort(children);
                 for (TreeItem childItem : children) {
                     JSONObject nodeObject = new JSONObject();
                     nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                     nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
+
+ System.out.println("Calling HashMap2JSONArray childItem.text " + childItem.text);
+
+
                     int knt = 0;
                     if (childItem.expandable)
                     {
@@ -353,58 +363,6 @@ public class CacheController
     }
 
 
-/*
-    public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
-    {
-        JSONArray rootsArray = null;
-        if (maxLevel == -1) {
-            rootsArray = getRootConcepts(ontology_display_name, version, false);
-            try {
-                TreeUtils util = new TreeUtils();
-
-                System.out.println("CacheController TreeUtils.getTreePathData ");
-
-                HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id);
-                Set keyset = hmap.keySet();
-                Object[] objs = keyset.toArray();
-                String code = (String) objs[0];
-                TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
-                JSONArray nodesArray = getNodesArray(node_id, ti);
-                replaceJSONObjects(rootsArray, nodesArray);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return rootsArray;
-        }
-        else {
-            try {
-                TreeUtils util = new TreeUtils();
-                HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
-                Object[] objs = hmap.keySet().toArray();
-                String code = (String) objs[0];
-                TreeItem ti = (TreeItem) hmap.get(code);
-                List list = util.getTopNodes(ti);
-                rootsArray = list2JSONArray(list);
-
-                //Set keyset = hmap.keySet();
-                //Object[] objs = keyset.toArray();
-                //String code = (String) objs[0];
-                //TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
-
-                //JSONArray nodesArray = getNodesArray(ti);
-                JSONArray nodesArray = getNodesArray(node_id, ti);
-                replaceJSONObjects(rootsArray, nodesArray);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return rootsArray;
-
-        }
-    }
-*/
-
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
     {
         JSONArray rootsArray = null;
@@ -429,11 +387,12 @@ public class CacheController
         else {
             try {
                 MetaTreeUtils util = new MetaTreeUtils();
-                  HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, maxLevel);
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, maxLevel);
 
                 Object[] objs = hmap.keySet().toArray();
                 String code = (String) objs[0];
                 TreeItem ti = (TreeItem) hmap.get(code);
+
                 List list = util.getTopNodes(ti);
                 rootsArray = list2JSONArray(list);
                 //Set keyset = hmap.keySet();
@@ -452,9 +411,7 @@ public class CacheController
             catch (Exception e) {
                 e.printStackTrace();
             }
-
             return rootsArray;
-
         }
     }
 
@@ -559,13 +516,21 @@ public class CacheController
                     if (childItem.expandable)
                     {
                         knt = 1;
-                    }
+					}
+
                     JSONObject nodeObject = new JSONObject();
                     try {
                         nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                         nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                         nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                         nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
+/*
+                        if (childItem.expandable) {
+							nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 1);
+						} else {
+							nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 0);
+						}
+*/
                         nodesArray.put(nodeObject);
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -590,6 +555,13 @@ public class CacheController
                             nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                             nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                             nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
+/*
+							if (childItem.expandable) {
+								nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 1);
+							} else {
+								nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 0);
+							}
+*/
                             nodesArray.put(nodeObject);
                         } catch (Exception ex) {
 
