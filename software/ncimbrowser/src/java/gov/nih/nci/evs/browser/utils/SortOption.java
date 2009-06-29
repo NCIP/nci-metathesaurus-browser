@@ -2,22 +2,22 @@ package gov.nih.nci.evs.browser.utils;
 
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
-public class SortByScore {
+public class SortOption {
     public enum Type { FALSE, TRUE, ALL };
     private Type type = Type.TRUE;
     private boolean sort_by_pt_only = true;
     private boolean apply_sort_score = true;
 
-    public SortByScore() {
+    public SortOption() {
     }
     
-    public SortByScore(boolean isRanking) {
+    public SortOption(boolean isRanking) {
         if (isRanking)
             setType(Type.ALL);
         else setType(Type.FALSE);
     }
     
-    public SortByScore(SortByScore.Type type) {
+    public SortOption(SortOption.Type type) {
         setType(type);
     }
     
@@ -34,7 +34,7 @@ public class SortByScore {
         return type;
     }
     
-    public void setType(SortByScore.Type type) {
+    public void setType(SortOption.Type type) {
         this.type = type;
         switch (type) {
         case FALSE:
