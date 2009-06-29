@@ -473,8 +473,9 @@ public class MetaTreeUtils {
                             AssociationList grandchildBranch =
                                 associationsNavigatedFwd ? branchItemNode.getSourceOf()
                                     : branchItemNode.getTargetOf();
-                            if (grandchildBranch != null)
+                            if (grandchildBranch != null) {
                                 childItem.expandable = true;
+							}
                             ti.addChild(childNavText, childItem);
                         }
                     }
@@ -938,10 +939,21 @@ public class MetaTreeUtils {
 											: branchItemNode.getTargetOf();
 
 									if (grandchildBranch != null) {
-										childItem.expandable = true;
+
+										for (Association grandchild : grandchildBranch.getAssociation()) {
+											//String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
+											// Each association may have multiple children ...
+											AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
+											for (AssociatedConcept grandchildbranchItemNode : grandchildbranchItemList.getAssociatedConcept()) {
+												if (isValidForSAB(grandchildbranchItemNode, sab)) {
+													childItem.expandable = true;
+													break;
+												}
+											}
+										}
+										//childItem.expandable = true;
 									}
 									ti.addChild(childNavText, childItem);
-
 								}
 							}
 						}
