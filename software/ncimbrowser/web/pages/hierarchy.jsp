@@ -233,6 +233,13 @@
       rootDescDiv.render();
     }
 
+    function showPageRenderingAction() {
+      rootDescDiv.setBody("<span class='instruction_text'>(Note: This tree only shows partial hierarchy.)</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>(      Redering page. Please wait...)</span>");
+      rootDescDiv.show();
+      rootDescDiv.render();
+    }
+
     function showTreeLoadingStatus() {
       treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Building tree ...</span>");
       treeStatusDiv.show();
@@ -352,9 +359,14 @@
       var childNodes = nodeInfo.children_nodes;
 
       if (childNodes.length > 0) {
+      //if (nodeInfo.ontology_node_child_count > 0) {
           expand = true;
       }
+      
+      //alert(nodeInfo.ontology_node_name + " " + nodeInfo.ontology_node_child_count);
+            
       var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand); 
+      
       if (nodeInfo.ontology_node_id == ontology_node_id) {
           newNode.labelStyle = "ygtvlabel_highlight";
       }
@@ -364,9 +376,11 @@
       //}
 
       tree.draw();
-      for (var i=0; i < childNodes.length; i++) {
-          var childnodeInfo = childNodes[i];
-          addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+      if (childNodes.length > 0) {
+	      for (var i=0; i < childNodes.length; i++) {
+		  var childnodeInfo = childNodes[i];
+		  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+	      }
       }
 
     }
