@@ -445,6 +445,9 @@ public class CacheController
 
                 JSONArray nodesArray = getNodesArray(node_id, ti);
                 replaceJSONObjects(rootsArray, nodesArray);
+
+//System.out.println( rootsArray.toString() );
+
             }
             catch (Exception e) {
                 e.printStackTrace();
