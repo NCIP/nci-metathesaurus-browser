@@ -5,6 +5,7 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js" ></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js" ></script>
@@ -289,7 +290,7 @@
         failure:responseFailure
       };
 
-      var ontology_display_name = "NCI MetaThesaurus";
+      var ontology_display_name = "<%=Constants.CODING_SCHEME_NAME%>";
       var cObj = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=expand_tree&ontology_node_id=' +id+'&ontology_display_name='+ontology_display_name,callback);
     }
 
@@ -359,30 +360,22 @@
       var childNodes = nodeInfo.children_nodes;
 
       if (childNodes.length > 0) {
-      //if (nodeInfo.ontology_node_child_count > 0) {
           expand = true;
       }
-      
-      //alert(nodeInfo.ontology_node_name + " " + nodeInfo.ontology_node_child_count);
-            
       var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand); 
-      
       if (nodeInfo.ontology_node_id == ontology_node_id) {
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      //if (nodeInfo.ontology_node_child_count > 0) {
+      if (nodeInfo.ontology_node_child_count > 0) {
            //newNode.setDynamicLoad(loadNodeData);
-      //}
-
-      tree.draw();
-      if (childNodes.length > 0) {
-	      for (var i=0; i < childNodes.length; i++) {
-		  var childnodeInfo = childNodes[i];
-		  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
-	      }
       }
 
+      tree.draw();
+      for (var i=0; i < childNodes.length; i++) {
+  var childnodeInfo = childNodes[i];
+  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+      }
     }
     YAHOO.util.Event.addListener(window, "load", init);
 
