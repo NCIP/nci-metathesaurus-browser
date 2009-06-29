@@ -320,6 +320,9 @@
               showPartialHierarchy();
               for (var i=0; i < respObj.root_nodes.length; i++) {
                 var nodeInfo = respObj.root_nodes[i];
+                
+                //alert("root: " + nodeInfo.ontology_node_name);
+                
                 //var expand = false;
                 addTreeBranch(ontology_node_id, root, nodeInfo);
               }
@@ -351,6 +354,7 @@
 
       }
     }
+    
 
     function addTreeBranch(ontology_node_id, rootNode, nodeInfo) {
       var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
@@ -373,8 +377,8 @@
 
       tree.draw();
       for (var i=0; i < childNodes.length; i++) {
-  var childnodeInfo = childNodes[i];
-  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+	  var childnodeInfo = childNodes[i];
+	  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
     }
     YAHOO.util.Event.addListener(window, "load", init);
