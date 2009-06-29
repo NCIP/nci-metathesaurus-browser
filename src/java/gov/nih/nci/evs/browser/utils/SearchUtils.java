@@ -1006,12 +1006,12 @@ public class SearchUtils {
          return null;
     }
 
-    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortByScore sortByScore, int maxToReturn) {
-		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortByScore, maxToReturn);
+    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
+		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortOption, maxToReturn);
 	}
 
 
-    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, SortByScore sortByScore, int maxToReturn) {
+    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1092,7 +1092,7 @@ public class SearchUtils {
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
-                if (sortByScore.isApplySortScore() && !sortByScore.isSortByPtOnly()) resolveConcepts = true;
+                if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
 
 				System.out.println("resolveConcepts? " + resolveConcepts);
 
@@ -1115,14 +1115,14 @@ public class SearchUtils {
 			return null;
 		}
 
-		System.out.println("sortByScore: " + sortByScore);
-		System.out.println("apply_sort_score? " + sortByScore.isApplySortScore());
+		System.out.println("sortOption: " + sortOption);
+		System.out.println("apply_sort_score? " + sortOption.isApplySortScore());
 
-        if (sortByScore.isApplySortScore())
+        if (sortOption.isApplySortScore())
         {
                 long ms = System.currentTimeMillis();
                 try {
-					if (sortByScore.isSortByPtOnly()) {
+					if (sortOption.isSortByPtOnly()) {
 					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
 					} else {
                         iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
@@ -1139,7 +1139,7 @@ public class SearchUtils {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			long ms = System.currentTimeMillis(), delay = 0;
-			v = resolveIterator( iterator, maxToReturn, null, sortByScore.isSortByPtOnly());
+			v = resolveIterator( iterator, maxToReturn, null, sortOption.isSortByPtOnly());
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
 			DBG.debugDetails(delay, "resolveIterator", "searchByName");
         }
@@ -1171,11 +1171,11 @@ public class SearchUtils {
 			{
 		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
 		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
-				return searchByName(scheme, version, matchText0, "startsWith", sortByScore, maxToReturn);
+				return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
 			}
 		}
 
-		if(!sortByScore.isApplySortScore())
+		if(!sortOption.isApplySortScore())
 		{
 			v = SortUtils.quickSort(v);
 		}
@@ -1190,11 +1190,11 @@ public class SearchUtils {
         String matchText = "breast canser";
         matchText = "dog";
         String matchAlgorithm = "DoubleMetaphoneLuceneQuery";
-        SortByScore sortByScore = new SortByScore(SortByScore.Type.ALL);
+        SortOption sortOption = new SortOption(SortOption.Type.ALL);
         int maxToReturn = 200;
 
         long ms = System.currentTimeMillis();
-        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, sortByScore, maxToReturn);
+        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, sortOption, maxToReturn);
         System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
         if (v != null)
         {

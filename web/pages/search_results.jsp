@@ -85,10 +85,10 @@
               <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
               
           <%
-          String sortByScoreType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortByScoreType"));
-          if (sortByScoreType == null)
-              sortByScoreType = "false";
-          if (sortByScoreType.compareToIgnoreCase("all") == 0) {
+          String sortOptionType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
+          if (sortOptionType == null)
+              sortOptionType = "false";
+          if (sortOptionType.compareToIgnoreCase("all") == 0) {
           %>
 		  <th class="dataTableHeader" scope="col" align="left">Concept</th>
 		  <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
