@@ -366,13 +366,15 @@
       if (childNodes.length > 0) {
           expand = true;
       }
+      
       var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand); 
+      
       if (nodeInfo.ontology_node_id == ontology_node_id) {
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
       if (childNodes.length == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-          newNode.setDynamicLoad(loadNodeData); // delay loading
+          newNode.setDynamicLoad(loadNodeData); 
       } else {
 	  for (var i=0; i < childNodes.length; i++) {
 	     var childnodeInfo = childNodes[i];
