@@ -442,11 +442,17 @@ public class MetaTreeUtils {
         cng = cng.restrictToAssociations(
                 Constructors.createNameAndValueList(associationsToNavigate),
                 ConvenienceMethods.createNameAndValueList(sab, "Source"));
+        /*
         ResolvedConceptReferenceList branch = cng.resolveAsList(
                 focus, associationsNavigatedFwd, !associationsNavigatedFwd,
                 Integer.MAX_VALUE, 2,
                 null, new PropertyType[] { PropertyType.PRESENTATION },
                 sortByCode_, null, -1, true);
+        */// testing
+
+		ResolvedConceptReferenceList branch = cng.resolveAsList(focus,
+				associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, noopList_, null, null, null,
+				-1, true);
 
         // The resolved branch will be represented by the first node in
         // the resolved list. The node will be subdivided by source or
@@ -707,8 +713,8 @@ public class MetaTreeUtils {
 			ResolvedConceptReferenceList branch = cng.resolveAsList(
 					focus, associationsNavigatedFwd, !associationsNavigatedFwd,
 					Integer.MAX_VALUE, 2,
-					null, new PropertyType[] { PropertyType.PRESENTATION },
-					sortByCode_, null, -1, true);
+					//null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1, true);
+					null, null, sortByCode_, null, -1, true);
 
 			// The resolved branch will be represented by the first node in
 			// the resolved list. The node will be subdivided by source or
@@ -955,7 +961,8 @@ public class MetaTreeUtils {
 			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
 			                           associationsNavigatedFwd, !associationsNavigatedFwd,
 			                           Integer.MAX_VALUE, 2,
-			                           null, new PropertyType[] { PropertyType.PRESENTATION },
+			                           //null, new PropertyType[] { PropertyType.PRESENTATION },
+			                           null, null,
 			                           null, null, -1);
 
 			for (ResolvedConceptReference node : branch.getResolvedConceptReference()) {
@@ -1276,8 +1283,8 @@ public class MetaTreeUtils {
             // comparison of source assignments.
             ResolvedConceptReference[] refs = graph.resolveAsList(
                 rcr, fwd, !fwd, Integer.MAX_VALUE, 1,
-                null, new PropertyType[] { PropertyType.PRESENTATION },
-                sortByCode_, null, -1).getResolvedConceptReference();
+                //null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1).getResolvedConceptReference();
+                null, null, sortByCode_, null, -1).getResolvedConceptReference();
 
             // Create a new tree item for each upstream node, add the current
             // tree item as a child, and recurse to go higher (if available).
