@@ -627,6 +627,8 @@ public class MetaTreeUtils {
      * @return true if a qualifier exists; false otherwise.
      */
     protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
+
+
         for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
             if ("Source".equalsIgnoreCase(qualifier.getContent())
                     && sab.equalsIgnoreCase(qualifier.getName()))
@@ -890,16 +892,10 @@ public class MetaTreeUtils {
 			NameAndValueList nvl = null;
 			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
 			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{asso_name}), nvl);
-/*
-			branch = cng.resolveAsList(
-					Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, !associationsNavigatedFwd,
-					Integer.MAX_VALUE, 2,
-					null, new PropertyType[] { PropertyType.PRESENTATION },
-					sortByCode_, null, -1, true);
-*/
 			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
-//			                           true, true, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
-			                           associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, new PropertyType[] { PropertyType.PRESENTATION },
+			                           associationsNavigatedFwd, !associationsNavigatedFwd,
+			                           Integer.MAX_VALUE, 2,
+			                           null, new PropertyType[] { PropertyType.PRESENTATION },
 			                           null, null, -1);
 
 			for (ResolvedConceptReference node : branch.getResolvedConceptReference()) {
@@ -908,15 +904,15 @@ public class MetaTreeUtils {
 					associationsNavigatedFwd ? node.getSourceOf()
 						: node.getTargetOf();
 
-				//AssociationList childAssociationList = node.getTargetOf();
-				//if (associationsNavigatedFwd) childAssociationList = node.getSourceOf();
-
 				// Process each association defining children ...
 				for (Association child : childAssociationList.getAssociation()) {
 					String childNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
 					// Each association may have multiple children ...
 					AssociatedConceptList branchItemList = child.getAssociatedConcepts();
 					for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
+
+						//System.out.println("AssociatedConcept: " + branchItemNode.getConceptCode());
+
 						if (isValidForSAB(branchItemNode, sab)) {
 							String branchItemCode = branchItemNode.getCode();
 							// Add here if not in the list of excluded codes.
@@ -928,11 +924,10 @@ public class MetaTreeUtils {
 								if (!hset.contains(branchItemCode)) {
 									hset.add(branchItemCode);
 
-									ti.expandable = true;
-
 									TreeItem childItem =
-										new TreeItem(branchItemCode,
-											branchItemNode.getEntityDescription().getContent());
+										new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
+
+									childItem.expandable = false;
 
 									AssociationList grandchildBranch =
 										associationsNavigatedFwd ? branchItemNode.getSourceOf()
@@ -941,19 +936,26 @@ public class MetaTreeUtils {
 									if (grandchildBranch != null) {
 
 										for (Association grandchild : grandchildBranch.getAssociation()) {
+
+											java.lang.String association_name = grandchild.getAssociationName();
+											//System.out.println("association_name: " + association_name);
+
 											//String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
 											// Each association may have multiple children ...
 											AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
 											for (AssociatedConcept grandchildbranchItemNode : grandchildbranchItemList.getAssociatedConcept()) {
+
+												//System.out.println("\tgrandchildbranchItemNode AssociatedConcept: " + grandchildbranchItemNode.getConceptCode());
+
 												if (isValidForSAB(grandchildbranchItemNode, sab)) {
 													childItem.expandable = true;
 													break;
 												}
 											}
 										}
-										//childItem.expandable = true;
 									}
 									ti.addChild(childNavText, childItem);
+									ti.expandable = true;
 								}
 							}
 						}
@@ -961,6 +963,7 @@ public class MetaTreeUtils {
 				}
      		}
 
+            //System.out.println("\t*** Is " + ti.text + "( " + ti.code + ") expandable?: " + ti.expandable);
 			hmap.put(code, ti);
 		} catch (Exception ex) {
 			ex.printStackTrace();
