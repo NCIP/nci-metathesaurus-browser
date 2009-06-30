@@ -502,6 +502,7 @@ public class MetaTreeUtils {
 								}
 							}
                             ti.addChild(childNavText, childItem);
+                            ti.expandable = true;
                         }
                     }
             }
@@ -668,6 +669,7 @@ public class MetaTreeUtils {
 	}
 
 
+
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
 	{
         HashMap hmap = new HashMap();
@@ -737,9 +739,35 @@ public class MetaTreeUtils {
 								AssociationList grandchildBranch =
 									associationsNavigatedFwd ? branchItemNode.getSourceOf()
 										: branchItemNode.getTargetOf();
+								/*
 								if (grandchildBranch != null)
 									childItem.expandable = true;
+								*/
+
+									if (grandchildBranch != null) {
+
+										for (Association grandchild : grandchildBranch.getAssociation()) {
+
+											java.lang.String association_name = grandchild.getAssociationName();
+											//System.out.println("association_name: " + association_name);
+
+											//String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
+											// Each association may have multiple children ...
+											AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
+											for (AssociatedConcept grandchildbranchItemNode : grandchildbranchItemList.getAssociatedConcept()) {
+
+												//System.out.println("\tgrandchildbranchItemNode AssociatedConcept: " + grandchildbranchItemNode.getConceptCode());
+
+												if (isValidForSAB(grandchildbranchItemNode, sab)) {
+													childItem.expandable = true;
+													break;
+												}
+											}
+										}
+									}
+
 								ti.addChild(childNavText, childItem);
+								ti.expandable = true;
 							}
 						}
 				    }
@@ -752,6 +780,7 @@ public class MetaTreeUtils {
 		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
     }
+
 
     ///////////////////////////////////////////////////////
     // Helper Methods
