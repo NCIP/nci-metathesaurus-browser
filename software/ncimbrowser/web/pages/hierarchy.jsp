@@ -371,7 +371,7 @@
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      if (childNodes.length == 0) {
+      if (childNodes.length == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
           newNode.setDynamicLoad(loadNodeData);
       } else {
 	  for (var i=0; i < childNodes.length; i++) {
