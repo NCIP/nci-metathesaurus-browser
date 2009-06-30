@@ -181,7 +181,10 @@ public class CacheController
         if (nodeArray == null)
         {
             System.out.println("Not in cache -- calling getSubconcepts..." );
-			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
+			//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
+
+			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
+
             nodeArray = HashMap2JSONArray(map);
 
 //System.out.println(nodeArray.toString());
