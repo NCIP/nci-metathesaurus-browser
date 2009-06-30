@@ -206,6 +206,9 @@ public final class AjaxServlet extends HttpServlet {
                     e.printStackTrace();
                 }
 
+
+System.out.println(json.toString());
+
                 response.getWriter().write(json.toString());
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
