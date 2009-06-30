@@ -466,10 +466,15 @@ public class MetaTreeUtils {
                         // was indicated to be available. If so, mark the
                         // entry with a '+' to indicate it can be expanded.
                         if (!codesToExclude.contains(branchItemCode)) {
+							/*
                             TreeItem childItem =
-                                new TreeItem(branchItemCode,
-                                    branchItemNode.getEntityDescription().getContent(),
-                                    getAtomText(branchItemNode, sab));
+                                new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent(), getAtomText(branchItemNode, sab));
+
+                            */
+
+                            TreeItem childItem =
+                                new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
+
                             AssociationList grandchildBranch =
                                 associationsNavigatedFwd ? branchItemNode.getSourceOf()
                                     : branchItemNode.getTargetOf();
