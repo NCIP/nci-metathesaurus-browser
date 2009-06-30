@@ -167,9 +167,6 @@ public class CacheController
 
     public JSONArray getSubconcepts(String scheme, String version, String code, boolean fromCache)
     {
-System.out.println("getSubconcepts: " + scheme);
-System.out.println("getSubconcepts: code " + code);
-
         HashMap map = null;
         String key = scheme + "$" + version + "$" + code;
         JSONArray nodeArray = null;
@@ -186,6 +183,8 @@ System.out.println("getSubconcepts: code " + code);
             System.out.println("Not in cache -- calling getSubconcepts..." );
 			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
             nodeArray = HashMap2JSONArray(map);
+
+//System.out.println(nodeArray.toString());
 
             if (fromCache) {
                 try {
@@ -290,9 +289,6 @@ System.out.println("getSubconcepts: code " + code);
 
 
     private JSONArray HashMap2JSONArray(HashMap hmap) {
-
-System.out.println("Calling HashMap2JSONArray");
-
         JSONObject json = new JSONObject();
         JSONArray nodesArray = null;
         try {
@@ -300,9 +296,6 @@ System.out.println("Calling HashMap2JSONArray");
             Set keyset = hmap.keySet();
             Object[] objs = keyset.toArray();
             String code = (String) objs[0];
-
-System.out.println("Calling HashMap2JSONArray code " + code);
-
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
                 List<TreeItem> children = ti.assocToChildMap.get(association);
@@ -310,10 +303,6 @@ System.out.println("Calling HashMap2JSONArray code " + code);
                     JSONObject nodeObject = new JSONObject();
                     nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                     nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
-
- System.out.println("Calling HashMap2JSONArray childItem.text " + childItem.text);
-
-
                     int knt = 0;
                     if (childItem.expandable)
                     {
@@ -524,13 +513,7 @@ System.out.println("Calling HashMap2JSONArray code " + code);
                         nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                         nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                         nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
-/*
-                        if (childItem.expandable) {
-							nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 1);
-						} else {
-							nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 0);
-						}
-*/
+
                         nodesArray.put(nodeObject);
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -555,13 +538,7 @@ System.out.println("Calling HashMap2JSONArray code " + code);
                             nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                             nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                             nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
-/*
-							if (childItem.expandable) {
-								nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 1);
-							} else {
-								nodeObject.put(ONTOLOGY_NODE_EXPANDABLE, 0);
-							}
-*/
+
                             nodesArray.put(nodeObject);
                         } catch (Exception ex) {
 
