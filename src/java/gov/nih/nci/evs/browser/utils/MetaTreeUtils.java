@@ -890,6 +890,12 @@ public class MetaTreeUtils {
 	}
 
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab, String asso_name, boolean associationsNavigatedFwd) {
+		String[] asso_names = new String[]{asso_name};
+		return getSubconcepts(scheme, version, code, sab, asso_names, associationsNavigatedFwd);
+	}
+
+
+	public HashMap getSubconcepts(String scheme, String version, String code, String sab, String[] asso_names, boolean associationsNavigatedFwd) {
 		HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
@@ -916,7 +922,7 @@ public class MetaTreeUtils {
 			cng = lbSvc.getNodeGraph(scheme, null, null);
 			NameAndValueList nvl = null;
 			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
-			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{asso_name}), nvl);
+			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(asso_names), nvl);
 			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
 			                           associationsNavigatedFwd, !associationsNavigatedFwd,
 			                           Integer.MAX_VALUE, 2,
@@ -996,6 +1002,7 @@ public class MetaTreeUtils {
 		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
 	}
+
 
 	protected String getAssociationSourceString(AssociatedConcept ac){
 		String sources = "";
