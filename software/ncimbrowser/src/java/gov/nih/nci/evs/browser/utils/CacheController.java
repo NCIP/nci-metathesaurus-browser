@@ -231,6 +231,9 @@ public class CacheController
                 CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
                 if (version != null) csvt.setVersion(version);
                 list = new DataUtils().getSourceHierarchyRoots(scheme, csvt, "NCI");
+
+                SortUtils.quickSort(list);
+
                 nodeArray = list2JSONArray(list);
 
                 if (fromCache)
@@ -302,6 +305,9 @@ public class CacheController
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
                 List<TreeItem> children = ti.assocToChildMap.get(association);
+
+                SortUtils.quickSort(children);
+
                 for (TreeItem childItem : children) {
                     JSONObject nodeObject = new JSONObject();
                     nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
