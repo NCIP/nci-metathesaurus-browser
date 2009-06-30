@@ -371,15 +371,15 @@
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      if (nodeInfo.ontology_node_child_count > 0) {
-           //newNode.setDynamicLoad(loadNodeData);
+      if (childNodes.length == 0) {
+          newNode.setDynamicLoad(loadNodeData);
+      } else {
+	  for (var i=0; i < childNodes.length; i++) {
+	     var childnodeInfo = childNodes[i];
+	     addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+	  }      
       }
-
       tree.draw();
-      for (var i=0; i < childNodes.length; i++) {
-	  var childnodeInfo = childNodes[i];
-	  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
-      }
     }
     YAHOO.util.Event.addListener(window, "load", init);
 
