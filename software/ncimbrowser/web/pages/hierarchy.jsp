@@ -372,7 +372,7 @@
       }
 
       if (childNodes.length == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-          newNode.setDynamicLoad(loadNodeData);
+          newNode.setDynamicLoad(loadNodeData); // delay loading
       } else {
 	  for (var i=0; i < childNodes.length; i++) {
 	     var childnodeInfo = childNodes[i];
