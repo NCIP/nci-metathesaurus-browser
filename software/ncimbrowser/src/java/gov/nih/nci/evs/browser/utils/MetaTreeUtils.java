@@ -475,6 +475,8 @@ public class MetaTreeUtils {
                             TreeItem childItem =
                                 new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
 
+                            childItem.expandable = false;
+
                             AssociationList grandchildBranch =
                                 associationsNavigatedFwd ? branchItemNode.getSourceOf()
                                     : branchItemNode.getTargetOf();
