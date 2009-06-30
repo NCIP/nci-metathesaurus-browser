@@ -1046,9 +1046,8 @@ public class MetaTreeUtils {
             String sab, int maxLevel) throws LBException {
 
         // Create a starting point for tree building.
-        TreeItem ti =
-            new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(),
-                getAtomText(rcr, sab));
+        //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
+        TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
 
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
@@ -1287,9 +1286,8 @@ public class MetaTreeUtils {
 									if (tiParent == null) {
 
 										// Create a new tree item.
-										tiParent =
-											new TreeItem(parentCode, refParent.getEntityDescription().getContent(),
-												getAtomText(refParent, sab));
+										//tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent(), getAtomText(refParent, sab));
+										tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent());//, getAtomText(refParent, sab));
 
 										// Add immediate children of the parent code with an
 										// indication of sub-nodes (+).  Codes already
