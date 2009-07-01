@@ -464,10 +464,10 @@ public class MetaTreeUtils {
             // Process each association defining children ...
             for (Association child : childAssociationList.getAssociation()) {
                 String childNavText = getDirectionalLabel(scheme, csvt, child, associationsNavigatedFwd);
-
                 // Each association may have multiple children ...
                 AssociatedConceptList branchItemList = child.getAssociatedConcepts();
                 for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept())
+
                     if (isValidForSAB(branchItemNode, sab)) {
                         String branchItemCode = branchItemNode.getCode();
 
@@ -487,25 +487,12 @@ public class MetaTreeUtils {
 
                             childItem.expandable = false;
 
-                            AssociationList grandchildBranch =
-                                associationsNavigatedFwd ? branchItemNode.getSourceOf()
-                                    : branchItemNode.getTargetOf();
+                            AssociationList grandchildBranch = associationsNavigatedFwd ?
+                                branchItemNode.getSourceOf() : branchItemNode.getTargetOf();
 
-                            /*
+
                             if (grandchildBranch != null) {
                                childItem.expandable = true;
-							}
-							*/
-                            if (grandchildBranch != null) {
-								for (Association grandchild : grandchildBranch.getAssociation()) {
-									AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
-									for (AssociatedConcept grandchildbranchItemNode : grandchildbranchItemList.getAssociatedConcept()) {
-										if (isValidForSAB(grandchildbranchItemNode, sab)) {
-											childItem.expandable = true;
-											break;
-										}
-									}
-								}
 							}
                             ti.addChild(childNavText, childItem);
                             ti.expandable = true;
