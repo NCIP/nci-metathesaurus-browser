@@ -374,7 +374,7 @@
       }
 
       newNode.isLeaf = false;
-      if (nodeInfo.ontology_node_child_count == 0) {// && nodeInfo.ontology_node_id != ontology_node_id) {
+      if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
           newNode.isLeaf = true;
       } else if (childNodes.length == 0) {
           newNode.setDynamicLoad(loadNodeData); 

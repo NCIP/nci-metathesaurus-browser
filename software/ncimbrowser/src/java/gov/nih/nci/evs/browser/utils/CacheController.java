@@ -375,6 +375,7 @@ public class CacheController
                 TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
 
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
             catch (Exception e) {
@@ -401,6 +402,7 @@ public class CacheController
                 //JSONArray nodesArray = getNodesArray(ti);
 
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
 
 //System.out.println( rootsArray.toString() );
@@ -598,5 +600,6 @@ public class CacheController
         }
         return nodesArray;
     }
+
 }
 
