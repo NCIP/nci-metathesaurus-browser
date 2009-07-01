@@ -320,6 +320,7 @@ public class MetaTreeUtils {
             pathsResolved = pathsFromRoot.length;
             for (TreeItem rootItem : pathsFromRoot) {
                 ti.addChild("CHD", rootItem);
+
 			}
         } finally {
             System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
@@ -661,6 +662,21 @@ public class MetaTreeUtils {
 		return getSubconcepts(scheme, version, code, sab, true);
 	}
 
+
+	public int getSubconceptCount(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
+	{
+		HashMap hmap = getSubconcepts(scheme, version, code, sab, associationsNavigatedFwd);
+		Set keyset = hmap.keySet();
+		Object[] objs = keyset.toArray();
+		String id = (String) objs[0];
+		int knt = 0;
+		TreeItem ti = (TreeItem) hmap.get(id);
+		for (String association : ti.assocToChildMap.keySet()) {
+			List<TreeItem> children = ti.assocToChildMap.get(association);
+			knt = knt + children.size();
+		}
+		return knt;
+	}
 
 
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
