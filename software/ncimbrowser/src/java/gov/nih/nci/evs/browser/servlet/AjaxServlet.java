@@ -201,15 +201,13 @@ public final class AjaxServlet extends HttpServlet {
                         rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
                     }
 
-  System.out.println( rootsArray );
+  //System.out.println( rootsArray );
 
                     json.put("root_nodes", rootsArray);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
-//System.out.println(json.toString());
 
                 response.getWriter().write(json.toString());
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );

@@ -317,11 +317,13 @@ public class MetaTreeUtils {
             // Identify the set of all codes on path from root
             // to the focus code ...
             TreeItem[] pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
+
             pathsResolved = pathsFromRoot.length;
             for (TreeItem rootItem : pathsFromRoot) {
                 ti.addChild("CHD", rootItem);
 
 			}
+
         } finally {
             System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
@@ -663,9 +665,9 @@ public class MetaTreeUtils {
 	}
 
 
-	public int getSubconceptCount(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
+	public int getSubconceptCount(String scheme, String version, String code, String sab)
 	{
-		HashMap hmap = getSubconcepts(scheme, version, code, sab, associationsNavigatedFwd);
+		HashMap hmap = getSubconcepts(scheme, null, code, sab, "PAR", false);
 		Set keyset = hmap.keySet();
 		Object[] objs = keyset.toArray();
 		String id = (String) objs[0];
@@ -1087,6 +1089,8 @@ public class MetaTreeUtils {
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
+
+
 
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
