@@ -200,6 +200,9 @@ public final class AjaxServlet extends HttpServlet {
 						System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
                         rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
                     }
+
+  System.out.println( rootsArray );
+
                     json.put("root_nodes", rootsArray);
                 }
                 catch (Exception e) {

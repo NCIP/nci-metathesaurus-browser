@@ -273,9 +273,6 @@
             var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
             if (respObj.nodes[i].ontology_node_child_count > 0) {
                newNode.setDynamicLoad(loadNodeData);
-            // testing   
-            } else {
-               newNode.setDynamicLoad(loadNodeData);
             }
           }
         }
@@ -377,7 +374,7 @@
       }
 
       newNode.isLeaf = false;
-      if (nodeInfo.ontology_node_child_count == 0) {
+      if (nodeInfo.ontology_node_child_count == 0) {// && nodeInfo.ontology_node_id != ontology_node_id) {
           newNode.isLeaf = true;
       } else if (childNodes.length == 0) {
           newNode.setDynamicLoad(loadNodeData); 
