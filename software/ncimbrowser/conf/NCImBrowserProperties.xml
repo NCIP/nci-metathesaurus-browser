@@ -2280,7 +2280,11 @@
                  <key>NCIM_BUILD_INFO</key>
                  <value>@ncim.build.info@</value>
         </ConfigurableItem>
-
+        
+        <ConfigurableItem>
+                 <key>TERM_SUGGESTION_APPLIATION_URL</key>
+                 <value>@term.suggestion.application.url@</value>
+        </ConfigurableItem>
     </ConfigurableItems>
 
 </root>
