@@ -469,6 +469,20 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   <a href=javascript:bookmark('<%= url %>','<%= bookmark_title %>')>
     <i><%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%></i>
   </a>
+  
+<%
+    //NCImBrowserProperties properties = null;
+    properties = NCImBrowserProperties.getInstance();
+    //String term_suggestion_application_url = properties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLIATION_URL);
+    String tg_dictionary = "NCI%20MetaThesaurus";
+    //if (syns != null && syns.size() > 0) {
+    //   tg_dictionary = "NCI%20Thesaurus";
+    //}
+%>
+<p>
+   Click
+   <a href="<%=term_suggestion_application_url%>?dictionary=<%=tg_dictionary%>&code=<%=concept_id%>" target="_blank" alt="Term Suggestion">here</a>
+   &nbsp;to suggest any change to this concept.
 <%
 }
 %>
