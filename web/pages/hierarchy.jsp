@@ -373,7 +373,7 @@
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      newNode.isLeaf = false;
+      //newNode.isLeaf = false;
       if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
           newNode.isLeaf = true;
       } else if (childNodes.length == 0) {
