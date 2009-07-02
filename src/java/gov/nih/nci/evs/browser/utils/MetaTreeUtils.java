@@ -434,6 +434,11 @@ public class MetaTreeUtils {
             String sab, String branchRootCode, Set<String> codesToExclude,
             String[] associationsToNavigate, boolean associationsNavigatedFwd) throws LBException {
 
+
+
+ System.out.println("********** AddChildren to parent: " + branchRootCode);
+
+
         LexBIGService lbsvc = getLexBIGService();
 
         // Resolve the next branch, representing children of the given
@@ -474,6 +479,7 @@ public class MetaTreeUtils {
                     if (isValidForSAB(branchItemNode, sab)) {
                         String branchItemCode = branchItemNode.getCode();
 
+
                         // Add here if not in the list of excluded codes.
                         // This is also where we look to see if another level
                         // was indicated to be available. If so, mark the
@@ -488,6 +494,7 @@ public class MetaTreeUtils {
                             TreeItem childItem =
                                 new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
 
+
                             childItem.expandable = false;
 
                             AssociationList grandchildBranch = associationsNavigatedFwd ?
@@ -495,8 +502,11 @@ public class MetaTreeUtils {
 
 
                             if (grandchildBranch != null) {
-                               childItem.expandable = true;
+                                childItem.expandable = true;
 							}
+
+ System.out.println("********** AddChildren " + branchItemCode + " " + branchItemNode.getEntityDescription().getContent() + " to " + ti.text);
+
                             ti.addChild(childNavText, childItem);
                             ti.expandable = true;
                         }
@@ -1091,7 +1101,6 @@ public class MetaTreeUtils {
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
 
 
-
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
 
@@ -1276,7 +1285,6 @@ public class MetaTreeUtils {
 
         for (int i = 0; i <= 1; i++) {
            boolean fwd = i < 1;
-
            String[] upstreamAssoc = fwd ? hierAssocToParentNodes_ : hierAssocToChildNodes_;
 
             // Define a code graph for all relationships tagged with
@@ -1295,6 +1303,7 @@ public class MetaTreeUtils {
 
             // Create a new tree item for each upstream node, add the current
             // tree item as a child, and recurse to go higher (if available).
+
             if (refs.length > 0) {
 
                 // Each associated concept represents an upstream branch.
@@ -1307,8 +1316,8 @@ public class MetaTreeUtils {
                     // already exists for the parent, we reuse it to
                     // keep a single branch per parent.
                     for (AssociatedConcept refParent : assoc.getAssociatedConcepts().getAssociatedConcept())
+                    {
                         if (isValidForSAB(refParent, sab)) {
-
                             // Fetch the term for this context ...
                             Presentation[] sabMatch = getSourcePresentations(refParent, sab);
                             if (sabMatch.length > 0) {
@@ -1316,12 +1325,10 @@ public class MetaTreeUtils {
                                 // We need to take into account direction of
                                 // navigation on each pass to get the right label.
                                 String directionalName = getDirectionalLabel(scheme, csvt, assoc, !fwd);
-
                                 // Check for a previously registered item for the
                                 // parent.  If found, re-use it.  Otherwise, create
                                 // a new parent tree item.
                                 String parentCode = refParent.getCode();
-
                                 String link = rcr.getConceptCode() + "|" + parentCode;
                                 if (!visited_links.contains(link)) {
                                     visited_links.add(link);
@@ -1354,10 +1361,12 @@ public class MetaTreeUtils {
 										//KLO
 										tiParent.expandable = true;
 									}
-								}
-								isRoot = false;
+
+								    isRoot = false;
+							    }
                             }
                         }
+					}
                 }
             }
         }
