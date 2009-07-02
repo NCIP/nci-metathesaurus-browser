@@ -2282,7 +2282,7 @@
         </ConfigurableItem>
         
         <ConfigurableItem>
-                 <key>TERM_SUGGESTION_APPLIATION_URL</key>
+                 <key>TERM_SUGGESTION_APPLICATION_URL</key>
                  <value>@term.suggestion.application.url@</value>
         </ConfigurableItem>
     </ConfigurableItems>
