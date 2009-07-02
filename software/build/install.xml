@@ -252,6 +252,7 @@
             <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
             <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
             <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
+            <filter token="term.suggestion.application.url" value="${term.suggestion.application.url}"/>
             <filter token="ncim.build.info" value="Built: ${BUILD_DATE}"/>
             <filter token="ncit.url" value="${ncit.url}"/>
         </filterset>
