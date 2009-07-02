@@ -1,4 +1,12 @@
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
+<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
+
+<%
+    NCImBrowserProperties properties = null;
+    properties = NCImBrowserProperties.getInstance();
+    String term_suggestion_application_url = properties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLIATION_URL);
+%>
+
 <div class="global-nav">
   <a href="<%= request.getContextPath() %>">Home</a>
 
@@ -12,7 +20,6 @@
         </a>  
   | <a href="<%= request.getContextPath() %>/pages/help.jsf">Help</a>
   &nbsp;&nbsp;
-  <a href="<%= request.getContextPath() %>/pages/termsuggestion.jsf">Term Suggestion</a>
+  <a href="<%=term_suggestion_application_url%>" target="_blank" alt="Term Suggestion">Term Suggestion</a>
  
-
 </div>
