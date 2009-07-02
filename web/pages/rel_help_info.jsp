@@ -75,7 +75,7 @@ The Relationship (REL) codes in NCIm are listed below, grouped by the broader ca
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
              <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
              <th class="dataTableHeader" scope="col" align="left">REL Code</th>
-             <th class="dataTableHeader" scope="col" align="left">Relationship Attribute (RELA)</th>
+             <th class="dataTableHeader" scope="col" align="left">Description</th>
             <%
               List list = Constants.REL;
               for (int n=0; n<list.size(); n++) {
