@@ -58,14 +58,20 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
             
-<p>            
+<p> 
 Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
-1.	Relationship (REL): A Metathesaurus relationship code, providing a consistent set of codes for all relationships from all sources.
-2.	Relationship Attribute (RELA): The more specific codes, when available, used by individual sources to represent relationships.
+<ul>
+<li>
+<b>Relationship (REL)</b>: A Metathesaurus relationship label, providing a consistent set of codes for all relationships from all sources.
+</li>
+<li>
+<b>Relationship Attribute (RELA)</b>: The more specific label, when available, used by individual sources to represent relationships.
+</li>
+</ul>
 These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources. 
 </p>
 <p>
-The Relationship (REL) codes in NCIm are listed below, grouped by the broader categories used to report them in the initial release of the NCIm Browser:
+<b>The Relationship (REL)</b> labels in NCIm are listed below, grouped by the broader categories used to report them in the initial release of the NCIm Browser:
 </p>
 
             
