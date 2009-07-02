@@ -58,28 +58,72 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
             
-<p>            
+<p> 
 Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
-1.	Relationship (REL): A Metathesaurus relationship code, providing a consistent set of codes for all relationships from all sources.
-2.	Relationship Attribute (RELA): The more specific codes, when available, used by individual sources to represent relationships.
+<ul>
+<li>
+<b>Relationship (REL)</b>: A Metathesaurus relationship label, providing a consistent set of codes for all relationships from all sources.
+</li>
+<li>
+<b>Relationship Attribute (RELA)</b>: The more specific label, when available, used by individual sources to represent relationships.
+</li>
+</ul>
 These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources. 
 </p>
 <p>
-The Relationship Attribute (RELA) categories in NCIm are taken from individual sources, which define their meanings.  
-Below is a chart showing all REL and RELA pairs found in the December 2008 version of NCIm, grouped as above by browser category:</p>
-            
+<b>The Relationship (REL)</b> labels in NCIm are listed below, grouped by the broader categories used to report them in the initial release of the NCIm Browser:
+</p>            
             </td></tr>
           </table>
           <br/>
+          
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
              <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
              <th class="dataTableHeader" scope="col" align="left">REL Code</th>
              <th class="dataTableHeader" scope="col" align="left">Description</th>
          
             <%
-              List list = Constants.RELA;
+              List list = Constants.REL;
               for (int n=0; n<list.size(); n++) {
                  String t = (String) list.get(n);
+                 Vector v = DataUtils.parseData(t, "\t");
+                 String col1 = (String) v.elementAt(0);
+                 String col2 = (String) v.elementAt(1);
+                 String col3 = (String) v.elementAt(2);
+                 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+            %>
+              <tr class="<%=rowColor%>">
+                <td><%=col1%></td>
+                <td><%=col2%></td>
+                <td><%=col3%></td>
+              </tr>
+            <%
+              }
+            %>
+          </table>
+          <br/>
+
+          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+            <tr class="textbody"><td align="left">
+            
+
+<p>
+<b>The Relationship Attribute (RELA)</b> categories in NCIm are taken from individual sources, which define their meanings.  
+Below is a chart showing all REL and RELA pairs found in the December 2008 version of NCIm, grouped as above by browser category:
+</p>            
+            </td></tr>
+          </table>
+          <br/>
+          
+          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+             <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
+             <th class="dataTableHeader" scope="col" align="left">REL Code</th>
+             <th class="dataTableHeader" scope="col" align="left">Description</th>
+         
+            <%
+              List list2 = Constants.RELA;
+              for (int n=0; n<list2.size(); n++) {
+                 String t = (String) list2.get(n);
                  Vector v = DataUtils.parseData(t, "\t");
                  String col1 = (String) v.elementAt(0);
                  String col2 = (String) v.elementAt(1);

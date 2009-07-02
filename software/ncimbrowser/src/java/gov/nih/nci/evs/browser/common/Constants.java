@@ -22,16 +22,16 @@ public class Constants {
 	static public final String EMPTY = "";
 
     static public final List<String> REL = Arrays.asList(new String[] {
-		"Parent	PAR	Concept subsumes current concept as a subtype, part, or otherwise.",
-		"Child	CHD	Concept is subsumed by current concept as its subtype, part, or otherwise.",
-		"Broader	RB	Concept is broader than current concept in some less specific way.",
-		"Narrower	RN	Concept is narrower than current concept in some less specific way.",
-		"Sibling	SIB	Concept is subsumed by a parent shared with the current concept.",
-		"Other	AQ	[None]",
-		"Other	QB	[None]",
-		"Other	RO	Concept is related in some other way.",
-		"Other	RQ	[None]",
-		"Other	SY	[None]"
+			"Parent	PAR	Concept subsumes current concept as a subtype, part, or otherwise.",
+			"Child	CHD	Concept is subsumed by current concept as its subtype, part, or otherwise.",
+			"Broader	RB	Concept is broader than current concept in some less specific way.",
+			"Narrower	RN	Concept is narrower than current concept in some less specific way.",
+			"Sibling	SIB	Concept is subsumed by a parent shared with the current concept.",
+			"Other	AQ	Concept is an allowable qualifier of the current concept.",
+			"Other	QB	Concept is qualified by the current concept.",
+			"Other	RO	Concept is related in some other way.",
+			"Other	RQ	Concept is related and possibly synonymous with the current concept.",
+			"Other	SY	Concept is synonymous with the current concept."
         });
 
     static public final List<String> RELA = Arrays.asList(new String[] {
