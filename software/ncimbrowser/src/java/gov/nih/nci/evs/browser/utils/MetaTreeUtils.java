@@ -434,11 +434,6 @@ public class MetaTreeUtils {
             String sab, String branchRootCode, Set<String> codesToExclude,
             String[] associationsToNavigate, boolean associationsNavigatedFwd) throws LBException {
 
-
-
- System.out.println("********** AddChildren to parent: " + branchRootCode);
-
-
         LexBIGService lbsvc = getLexBIGService();
 
         // Resolve the next branch, representing children of the given
@@ -504,8 +499,6 @@ public class MetaTreeUtils {
                             if (grandchildBranch != null) {
                                 childItem.expandable = true;
 							}
-
- System.out.println("********** AddChildren " + branchItemCode + " " + branchItemNode.getEntityDescription().getContent() + " to " + ti.text);
 
                             ti.addChild(childNavText, childItem);
                             ti.expandable = true;
@@ -672,6 +665,21 @@ public class MetaTreeUtils {
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab)
 	{
 		return getSubconcepts(scheme, version, code, sab, true);
+	}
+
+	public int getSubconceptCount(String scheme, String version, String code, String sab, String asso_name, boolean direction)
+	{
+		HashMap hmap = getSubconcepts(scheme, null, code, sab, asso_name, direction);
+		Set keyset = hmap.keySet();
+		Object[] objs = keyset.toArray();
+		String id = (String) objs[0];
+		int knt = 0;
+		TreeItem ti = (TreeItem) hmap.get(id);
+		for (String association : ti.assocToChildMap.keySet()) {
+			List<TreeItem> children = ti.assocToChildMap.get(association);
+			knt = knt + children.size();
+		}
+		return knt;
 	}
 
 
@@ -1099,6 +1107,17 @@ public class MetaTreeUtils {
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
+
+int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "PAR", false);
+//	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
+
+
+ti.expandable = false;
+if (count > 0) {
+	ti.expandable = true;
+}
+
+System.out.println("*** " + ti.text + " expandable: " + ti.expandable);
 
 
         // Maintain root tree items.
