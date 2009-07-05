@@ -376,10 +376,12 @@ public class UserSessionBean extends Object
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
 		sourceList = new ArrayList();
-		for (int i=0; i<sourceListData.size(); i++) {
-			String t = (String) sourceListData.elementAt(i);
-			sourceList.add(new SelectItem(t));
-		}
+		if (sourceListData != null) {
+			for (int i=0; i<sourceListData.size(); i++) {
+				String t = (String) sourceListData.elementAt(i);
+				sourceList.add(new SelectItem(t));
+			}
+	    }
 		return sourceList;
 	}
 

@@ -91,7 +91,6 @@ public class MetadataUtils {
 		return v;
 	}
 
-
 	/**
 	 * Gets all of the Metadata Properties from a given Coding Scheme.
 	 *
@@ -187,12 +186,14 @@ public class MetadataUtils {
 	}
 
     public Vector getMetadataForCodingSchemes(String propertyName) {
-		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 		String codingSchemeName = Constants.CODING_SCHEME_NAME;
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
 		String version = null;
 		Vector versions = getAvailableCodingSchemeVersions(lbSvc, codingSchemeName);
 		version = (String) versions.elementAt(0);
+
+		//String urn = "urn:oid:2.16.840.1.113883.3.26.1.2";//urn:oid:2.16.840.1.113883.3.26.1.2
 		MetadataPropertyList mdpl = getMetadataPropertyList(lbSvc, codingSchemeName, version, null);
 		return getMetadataForCodingSchemes(mdpl, propertyName);
 	}
@@ -201,15 +202,20 @@ public class MetadataUtils {
     public Vector getMetadataForCodingSchemes(MetadataPropertyList mdpl, String propertyName) {
 		Vector v = new Vector();
 		Vector codingSchemeNames = getMetadataCodingSchemeNames(mdpl);
+
+		System.out.println("getMetadataCodingSchemeNames returns " + codingSchemeNames.size() );
+
 		int knt = 0;
 		for (int k=0; k<codingSchemeNames.size(); k++) {
 			String codingSchemeName = (String) codingSchemeNames.elementAt(k);
+
 			String propertyValue = getEntityDescriptionForCodingScheme(mdpl, codingSchemeName, propertyName);
 			v.add(codingSchemeName + "|" + propertyValue);
 	    }
 	    v = SortUtils.quickSort(v);
 		return v;
 	}
+
 
     public String getEntityDescriptionForCodingScheme(MetadataPropertyList mdpl, String codingSchemeName, String propertyName) {
 		try {
@@ -221,18 +227,20 @@ public class MetadataUtils {
 			//'codingSchemeURI', 'representsVersion', etc... so you can pick out which ones
 			//you'd like to use.
 			for(MetadataProperty prop : properties){
+				//System.out.println("\tProperty Name: " + prop.getName() + "\n\tProperty Value: " + prop.getValue());
 				if (prop.getName().compareTo(propertyName) == 0) {
 					return prop.getValue();
 				}
-				//serviceMetadata_vec.add(prop);
 			}
-			//return serviceMetadata_vec;
 		} catch (Exception ex) {
-			System.out.println("getEntityDescriptionForCodingScheme throws exception???? " );
+			//System.out.println("getEntityDescriptionForCodingScheme throws exception???? " );
+			System.out.println("WARNING: Unable to retrieve metadata for source " + codingSchemeName + " please consult your system administrator." );
 			//ex.printStackTrace();
 		}
 		return null;
+
 	}
+
 
 	/**
 	 * Simple example to demonstrate extracting a specific Coding Scheme's Metadata.
@@ -267,8 +275,9 @@ public class MetadataUtils {
         test.getMetadataForCodingSchemes(mdpl, propertyName);
 
         propertyName = "formalName";
-        Vector w = test.getMetadataForCodingSchemes(mdpl, propertyName);
+        test.getMetadataForCodingSchemes(mdpl, propertyName);
     }
+
 }
 
 

@@ -573,13 +573,18 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             //RemoteServerUtil rsu = new RemoteServerUtil();
             //EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            if (lbSvc == null) return null;
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) return null;
             sourceListData = new Vector<String>();
+
+            if (scheme.getMappings() == null) return null;
            	sourceListData.add("ALL");
 
             //Insert your code here
             SupportedSource[] sources = scheme.getMappings().getSupportedSource();
+            if (sources == null) return null;
+
             for (int i=0; i<sources.length; i++)
             {
                 SupportedSource source = sources[i];
