@@ -376,15 +376,20 @@
       //newNode.isLeaf = false;
       if (nodeInfo.ontology_node_id == ontology_node_id) {
          newNode.isLeaf = true;
-         if (nodeInfo.ontology_node_child_count > 0) newNode.isLeaf = false; 
-         newNode.setDynamicLoad(loadNodeData); 
-      }
-   
-      if (nodeInfo.ontology_node_id != ontology_node_id) {
-	      if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-		  newNode.isLeaf = true;
-	      } else if (childNodes.length == 0) {
-		  newNode.setDynamicLoad(loadNodeData); 
+         if (nodeInfo.ontology_node_child_count > 0) {
+             newNode.isLeaf = false; 
+             newNode.setDynamicLoad(loadNodeData); 
+         } else {
+             tree.draw();
+         }
+         
+      } else {
+   	      if (nodeInfo.ontology_node_id != ontology_node_id) {
+		      if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
+			  newNode.isLeaf = true;
+		      } else if (childNodes.length == 0) {
+			  newNode.setDynamicLoad(loadNodeData); 
+		      }
 	      }
       }
       
