@@ -76,7 +76,7 @@
         String nci_src_name = "NCI";
         %>
         <tr>
-           <td styleClass="textbody">
+           <td class="textbody">
            Select source: &nbsp;
         <%
           for (int n=0; n<src_vec.size(); n++)
@@ -86,15 +86,15 @@
                   if (neighborhood_sab.compareTo(nci_src_name) == 0) {
                   %>
                      <b><%=nci_src_name%>&nbsp;</b>
-                  <%   
+                  <%
                   } else {
               %>
-		<a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
-		   <%=s%>
-		</a>&nbsp;
-		<%
-		  }
-	      }
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+       <%=s%>
+    </a>&nbsp;
+    <%
+      }
+        }
           }
           for (int n=0; n<src_vec.size(); n++)
           {
@@ -103,16 +103,16 @@
                    if (neighborhood_sab.compareTo(s) == 0) {
                   %>
                      <b><%=s%>&nbsp;</b>
-                  <%   
-                  } else {             
-              
+                  <%
+                  } else {
+
               %>
-		<a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
-		   <%=s%>
-		</a>&nbsp;
-		<%
-		  }
-	      }
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+       <%=s%>
+    </a>&nbsp;
+    <%
+      }
+        }
           }
         }
         %>
@@ -235,7 +235,7 @@ if (neighborhood_atoms.size() == 0) {
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
-        </a>                 
+        </a>
               <%
               } else {
               %>
@@ -244,7 +244,7 @@ if (neighborhood_atoms.size() == 0) {
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
-        </a>                  
+        </a>
               <%
               }
               %>
@@ -257,7 +257,7 @@ if (neighborhood_atoms.size() == 0) {
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
-        </a>                 
+        </a>
               <%
               } else {
               %>
@@ -265,7 +265,7 @@ if (neighborhood_atoms.size() == 0) {
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
-        </a>             
+        </a>
               <%
               }
               %>
@@ -303,7 +303,7 @@ if (neighborhood_atoms.size() == 0) {
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-        </a>                 
+        </a>
           </th>
 
           <th class="dataTableHeader" scope="col" align="left">
@@ -314,7 +314,7 @@ if (neighborhood_atoms.size() == 0) {
            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
       <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-          </a>                 
+          </a>
               <%
               } else if ((sort_by2 == null) || (sort_by2 != null  && sort_by.compareTo("type") != 0)) {
               %>
@@ -322,7 +322,7 @@ if (neighborhood_atoms.size() == 0) {
            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
       <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
-          </a>              
+          </a>
               <%
               }
               %>
