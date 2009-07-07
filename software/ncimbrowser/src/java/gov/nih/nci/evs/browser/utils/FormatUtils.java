@@ -37,6 +37,10 @@ import java.util.*;
 
 public class FormatUtils
 {
+
+   static final String ncit_url = "http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&";
+
+
    public FormatUtils()
    {
 
@@ -108,6 +112,9 @@ public class FormatUtils
 				 text = text.substring(1, text.length());
 				 text = text.trim();
 			 }
+			 if (hyperlinktext.compareTo("NCI Thesaurus") == 0) {
+				 str = replaceBrowserURL(str);
+			 }
 			 link = createHyperLink(str, text);
 		 }
 
@@ -146,6 +153,20 @@ public class FormatUtils
 	  t = replaceHyperlinks(s, target, "NCI Thesaurus");
 	  return t;
    }
+
+   public static String replaceBrowserURL(String url) {
+/*
+http://ncit.nci.nih.gov/ConceptReport.jsp?dictionary=NCI%20Thesaurus&code=C1723
+http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&code=C1723
+*/
+       int n = url.indexOf("code=");
+       if (n != -1) {
+		   String t = url.substring(n, url.length());
+		   return ncit_url + t;
+	   }
+	   return url;
+   }
+
 
    public static void main(String argv[])
    {
