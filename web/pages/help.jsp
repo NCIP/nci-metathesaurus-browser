@@ -75,6 +75,10 @@
             <li><b>Begins With</b> can be selected to find all terms or codes that start with the words or characters you enter.
             <li><b>Contains</b> will search for what you enter anywhere within a term or code (e.g.,
             <i>carcinoma</i> will match <i>adenocarcinoma</i>).
+            <li><b>Rank (Slow)</b> sorts results from best match to weakest if the check box is selected.  For example, a <b>Contains</b>
+            search on <i>melanocyte</i> returns <i>melanocyte</i> at the top, followed by concepts with two word matches (e.g.,
+            <i>Spindle Melanocyte</i>), followed by concepts whose terms have more non-<i>melanocyte</i> content.It is off by
+            default due to poor performance.
             <li>Concept Unique Identifiers (CUIs) and codes from individual sources will only match if they exactly match what you enter, even if you select <b>Begins With</b> or <b>Contains</b>.
             <li>Search is not case sensitive (e.g., aids will match <i>aids</i>,
             <i>Aids</i>, and <i>AIDS</i>).
@@ -96,9 +100,11 @@
           is shown directly without first listing results.) Some details:
           <ul>
             <li>All matching concepts are returned.
-            <li>Results are listed from best match to weakest. For example, a <b>Contains</b> search on <i>melanocyte</i> returns
-            <i>melanocyte</i> at the top, followed by concepts with two word matches (e.g., <i>Spindle Melanocyte</i>), followed
-            by concepts whose terms have more non-<i>melanocyte</i> content.
+            <li>Results are listed alphabetically unless the <b>Rank</b> option is selected.
+            <li>If <b>Rank</b> is selected, results are listed from best match to weakest. For example, a <b>Contains</b> search on
+            <i>melanocyte</i> returns <i>melanocyte</i> at the top, followed by concepts with two word matches (e.g.,
+            <i>Spindle Melanocyte</i>), followed by concepts whose terms have more non-<i>melanocyte</i> content.  An additional
+            column displays the semantic type(s) assigned to each concept.
             <li>The match will often be to synonyms or codes only visible on the concept details page (e.g.,
             searching <b>Begins With</b> <i>melanoma</i> will show <i>Corneal Melanoma</i> in the results list because that
             concept contains a synonym of <i>Melanoma of the Cornea</i>.) A future release will show these matches in the
@@ -122,7 +128,10 @@
               <li><b>Relationships</b>: Shows how other concepts are directly related to this concept as parents, children,
               or in other ways.
               <li><b>Synonym Details</b>: For each term or abbreviation, shows its source, term type, and code.
-              <li><b>By Source</b>: Shows concept information one source at a time. NCI Thesaurus content is shown if available, otherwise the initial source is chosen alphabetically. To view concepts by a different source, select on the link for that source at the top of the page. NOTE: Select the ? icon next to the Source header to view a list of the source abbreviations and full names.
+              <li><b>By Source</b>: Shows concept information one source at a time. NCI Thesaurus content is shown if available,
+              otherwise the initial source is chosen alphabetically. To view concept information from a different source, select
+              on the link for that source at the top of the page. NOTE: Select the ? icon next to the Source header to view a list
+              of the source abbreviations and full names.
               <li><b>View All</b>: Combines all of the above information on a single page.
             </ul>
             <li><b>In NCIt Hierarchy</b>: Click the button to see where the concept is found within the NCIt hierarchy as
@@ -161,18 +170,23 @@
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
           </tr></table>
-          [To be completed closer to release: ] There are important known issues in data, functionality and documentation
-          that we are working to address for release 2.  These include the following:
+          There are important known issues in data, functionality and documentation that we are working to address for release 2.
+          These include the following:
           <ul>
-            <li><b>Data</b>: NCI Metathesaurus data was significantly abbreviated in the LexEVS 5.0 implementation.
-            Of particular importance,
+            <li><b>Data</b>: NCI Metathesaurus data were significantly abbreviated in the LexEVS 5.0 implementation. Of particular
+            importance,
             <ul>
-              <li>Relationships ...[to be written]
-              <li>&nbsp;
+              <li>Relationship data are not consistently stored and linked, and are represented incompletely as described in the
+              browser’s <a href="<%= request.getContextPath() %>/pages/rela_help_info.jsf">Relationship Attribute Help</a>.
+              This also made it impossible to reliably display individual source hierarchies within their broader NCIm context.
+              <li>Other source specific concept data were also only partly loaded.
             </ul>
-            These problems should be fixed with the LexEVS 5.1 release in Fall 2009.
-            <li><b>Functionality</b>: The default scoring for search matches will continue to be improved, and some
-            user-settable options should be part of the forthcoming Advanced Search page.
+            <br>These problems should be fixed with the LexEVS 5.1 release in late 2009.<br><br>
+            <li><b>Functionality</b>: Performance problems have been partly designed around but are still an important issue that
+            we intend to fix.  The ranking of search results best matches first could not achieve acceptable performance and was
+            made a user option with warning attached.  The Relationship and By Source tabs are also too slow. User-settable options
+            and the ability to search other concept data and relationships are needed, and should be part of forthcoming browser
+            releases.
             <li><b>Documentation</b>: Online and standalone documentation are still under development.
           </ul>
           Please report any bugs or suggestions using the browser’s <a href="contact_us.jsf">Contact Us</a> page.
