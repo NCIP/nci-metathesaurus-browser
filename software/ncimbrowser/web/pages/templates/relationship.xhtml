@@ -1,4 +1,5 @@
 <%
+  String entry_type_rel = type;
   if (type.compareTo("relationship") == 0 || type.compareTo("all") == 0)
   {
     Concept concept_curr = (Concept) request.getSession().getAttribute("concept");
@@ -100,7 +101,7 @@
               } else {
                   sort0 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -120,7 +121,7 @@
               } else {
                   sort0 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -136,7 +137,7 @@
               } else {
                   sort0 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
@@ -215,7 +216,7 @@
               } else {
                   sort1 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -236,7 +237,7 @@
               } else {
                   sort1 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -252,7 +253,7 @@
               } else {
                   sort1 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
@@ -330,7 +331,7 @@
               } else {
                   sort2 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -351,7 +352,7 @@
               } else {
                   sort2 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -367,7 +368,7 @@
               } else {
                   sort2 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
@@ -445,7 +446,7 @@
               } else {
                   sort3 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -465,7 +466,7 @@
               } else {
                   sort3 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -481,7 +482,7 @@
               } else {
                   sort3 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
@@ -559,7 +560,7 @@
               } else {
                   sort4 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -579,7 +580,7 @@
               } else {
                   sort4 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -595,7 +596,7 @@
               } else {
                   sort4 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
@@ -674,7 +675,7 @@
               } else {
                   sort5 = "rela";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Attribute
                 </a>
               <%
@@ -694,7 +695,7 @@
               } else {
                   sort5 = "name";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Name
                 </a>
               <%
@@ -710,7 +711,7 @@
               } else {
                   sort5 = "source";
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=relationship&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Source
                 </a>
               <%
