@@ -95,7 +95,6 @@ if (isNew == null)
 
 request.getSession().setAttribute("type", type);
 
-
             if (type == null) {
                 type = "properties";
             }
