@@ -11,7 +11,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-  <title>NCI MetaThesaurus</title>
+  <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -42,7 +42,7 @@
           {
               page_string = page_number;
           }
-          
+
           request.getSession().setAttribute("new_search", Boolean.FALSE);
           int page_num = Integer.parseInt(page_string);
           int next_page_num = page_num + 1;
@@ -83,19 +83,19 @@
           <tr>
             <td class="textbody">
               <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
-              
+
           <%
           String sortOptionType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
           if (sortOptionType == null)
               sortOptionType = "false";
           if (sortOptionType.compareToIgnoreCase("all") == 0) {
           %>
-		  <th class="dataTableHeader" scope="col" align="left">Concept</th>
-		  <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
-          <%		  
-          } 
-          %>              
-              
+      <th class="dataTableHeader" scope="col" align="left">Concept</th>
+      <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
+          <%
+          }
+          %>
+
                 <%
                   for (int i=istart; i<iend; i++) {
                     if (i >= 0 && i<v.size()) {
