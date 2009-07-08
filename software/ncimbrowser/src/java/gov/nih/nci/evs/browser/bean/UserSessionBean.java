@@ -139,6 +139,12 @@ public class UserSessionBean extends Object
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null) matchtype = "string";
 
+        String rankingStr = (String) request.getParameter("ranking");
+        boolean ranking = rankingStr != null && rankingStr.equals("on");
+        SortOption sortOption = new SortOption(ranking);
+        request.getSession().setAttribute("ranking", Boolean.toString(ranking));
+        request.getSession().setAttribute("sortOptionType", sortOption.getType().name());
+
         String source = (String) request.getParameter("source");
         if (source == null) {
 			source = "ALL";
@@ -152,8 +158,8 @@ public class UserSessionBean extends Object
                 System.out.println("* criteria: " + matchText);
                 System.out.println("* matchType: " + matchtype);
                 System.out.println("* source: " + source);
-                System.out.println("* sort.by.score: " + NCImBrowserProperties.
-                    getProperty(NCImBrowserProperties.SORT_BY_SCORE));
+                System.out.println("* ranking: " + ranking);
+                System.out.println("* sortOption: " + sortOption);
             } catch (Exception e) {
             }
         }
@@ -191,7 +197,7 @@ public class UserSessionBean extends Object
 		}
 		*/
 
-		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
@@ -370,10 +376,12 @@ public class UserSessionBean extends Object
 		String version = null;
 		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
 		sourceList = new ArrayList();
-		for (int i=0; i<sourceListData.size(); i++) {
-			String t = (String) sourceListData.elementAt(i);
-			sourceList.add(new SelectItem(t));
-		}
+		if (sourceListData != null) {
+			for (int i=0; i<sourceListData.size(); i++) {
+				String t = (String) sourceListData.elementAt(i);
+				sourceList.add(new SelectItem(t));
+			}
+	    }
 		return sourceList;
 	}
 

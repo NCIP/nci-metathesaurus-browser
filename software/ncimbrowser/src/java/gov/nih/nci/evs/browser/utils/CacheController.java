@@ -91,6 +91,9 @@ public class CacheController
   public static final String ONTOLOGY_NODE_PARENT_ASSOC = "ontology_node_parent_assoc";
   public static final String ONTOLOGY_NODE_CHILD_COUNT = "ontology_node_child_count";
   public static final String ONTOLOGY_NODE_DEFINITION = "ontology_node_definition";
+
+  public static final String ONTOLOGY_NODE_EXPANDABLE = "ontology_node_expandable";
+
   public static final String CHILDREN_NODES = "children_nodes";
   public static final String NCI_SOURCE = "NCI";
 
@@ -177,13 +180,14 @@ public class CacheController
         }
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getSubconcepts " );
-            if (scheme.compareTo("NCI Thesaurus") == 0) {
-            	map = new TreeUtils().getSubconcepts(scheme, version, code);
-			} else {
-				map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE);
-			}
+            System.out.println("Not in cache -- calling getSubconcepts..." );
+			//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
+
+			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
+
             nodeArray = HashMap2JSONArray(map);
+
+//System.out.println(nodeArray.toString());
 
             if (fromCache) {
                 try {
@@ -193,10 +197,6 @@ public class CacheController
 
                 }
             }
-        }
-        else
-        {
-            System.out.println("Retrieved from cache." );
         }
         return nodeArray;
     }
@@ -231,6 +231,9 @@ public class CacheController
                 CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
                 if (version != null) csvt.setVersion(version);
                 list = new DataUtils().getSourceHierarchyRoots(scheme, csvt, "NCI");
+
+                SortUtils.quickSort(list);
+
                 nodeArray = list2JSONArray(list);
 
                 if (fromCache)
@@ -241,10 +244,6 @@ public class CacheController
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }
-        else
-        {
-            System.out.println("Retrieved from cache." );
         }
         return nodeArray;
     }
@@ -266,12 +265,11 @@ public class CacheController
                           code = node.getConceptCode();
                           name = node.getEntityDescription().getContent();
                       }
-                      else if (obj instanceof ResolvedConceptReference) {
+                      else if (obj instanceof Concept) {
                           Concept node = (Concept) list.get(i);
                           code = node.getEntityCode();
                           name = node.getEntityDescription().getContent();
                       }
-
                       ResolvedConceptReference node = (ResolvedConceptReference) list.get(i);
                       int childCount = 1;
                       try {
@@ -307,9 +305,10 @@ public class CacheController
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
                 List<TreeItem> children = ti.assocToChildMap.get(association);
-                //Collections.sort(children);
+
+                SortUtils.quickSort(children);
+
                 for (TreeItem childItem : children) {
-                    //printTree(childItem, focusCode, depth + 1);
                     JSONObject nodeObject = new JSONObject();
                     nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                     nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
@@ -352,10 +351,6 @@ public class CacheController
                 ex.printStackTrace();
             }
         }
-        else
-        {
-            System.out.println("Retrieved from cache." );
-        }
         return nodeArray;
     }
 
@@ -366,58 +361,6 @@ public class CacheController
     }
 
 
-/*
-    public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
-    {
-        JSONArray rootsArray = null;
-        if (maxLevel == -1) {
-            rootsArray = getRootConcepts(ontology_display_name, version, false);
-            try {
-                TreeUtils util = new TreeUtils();
-
-                System.out.println("CacheController TreeUtils.getTreePathData ");
-
-                HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id);
-                Set keyset = hmap.keySet();
-                Object[] objs = keyset.toArray();
-                String code = (String) objs[0];
-                TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
-                JSONArray nodesArray = getNodesArray(node_id, ti);
-                replaceJSONObjects(rootsArray, nodesArray);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return rootsArray;
-        }
-        else {
-            try {
-                TreeUtils util = new TreeUtils();
-                HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
-                Object[] objs = hmap.keySet().toArray();
-                String code = (String) objs[0];
-                TreeItem ti = (TreeItem) hmap.get(code);
-                List list = util.getTopNodes(ti);
-                rootsArray = list2JSONArray(list);
-
-                //Set keyset = hmap.keySet();
-                //Object[] objs = keyset.toArray();
-                //String code = (String) objs[0];
-                //TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
-
-                //JSONArray nodesArray = getNodesArray(ti);
-                JSONArray nodesArray = getNodesArray(node_id, ti);
-                replaceJSONObjects(rootsArray, nodesArray);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return rootsArray;
-
-        }
-    }
-*/
-
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
     {
         JSONArray rootsArray = null;
@@ -425,15 +368,14 @@ public class CacheController
             rootsArray = getRootConcepts(ontology_display_name, version, false);
             try {
                 MetaTreeUtils util = new MetaTreeUtils();
-
-                System.out.println("CacheController MetaTreeUtils.getTreePathData ");
-
                 HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
                 Set keyset = hmap.keySet();
                 Object[] objs = keyset.toArray();
                 String code = (String) objs[0];
                 TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
+
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
             catch (Exception e) {
@@ -444,27 +386,32 @@ public class CacheController
         else {
             try {
                 MetaTreeUtils util = new MetaTreeUtils();
-                HashMap hmap = util.getTreePathData(ontology_display_name, null, null, node_id, maxLevel);
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, "NCI", node_id, maxLevel);
+
                 Object[] objs = hmap.keySet().toArray();
                 String code = (String) objs[0];
                 TreeItem ti = (TreeItem) hmap.get(code);
+
                 List list = util.getTopNodes(ti);
                 rootsArray = list2JSONArray(list);
-
                 //Set keyset = hmap.keySet();
                 //Object[] objs = keyset.toArray();
                 //String code = (String) objs[0];
                 //TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
 
                 //JSONArray nodesArray = getNodesArray(ti);
+
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
+
+//System.out.println( rootsArray.toString() );
+
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
             return rootsArray;
-
         }
     }
 
@@ -482,12 +429,14 @@ public class CacheController
             try {
                 JSONObject node = nodesArray.getJSONObject(i);
                 node_id = (String) node.get(ONTOLOGY_NODE_ID);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
             if (obj_id.compareTo(node_id) == 0) {
                 try {
+
                     nodesArray.put(i, obj);
                     break;
                 } catch (Exception ex) {
@@ -567,13 +516,15 @@ public class CacheController
                     if (childItem.expandable)
                     {
                         knt = 1;
-                    }
+					}
+
                     JSONObject nodeObject = new JSONObject();
                     try {
                         nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                         nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                         nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                         nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
+
                         nodesArray.put(nodeObject);
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -598,6 +549,7 @@ public class CacheController
                             nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
                             nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                             nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
+
                             nodesArray.put(nodeObject);
                         } catch (Exception ex) {
 
@@ -648,7 +600,6 @@ public class CacheController
         }
         return nodesArray;
     }
-
 
 }
 

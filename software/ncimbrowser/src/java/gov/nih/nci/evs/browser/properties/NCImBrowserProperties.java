@@ -66,6 +66,9 @@ public class NCImBrowserProperties {
         public static final String TERMINOLOGY_SUBSET_DOWNLOAD_URL= "TERMINOLOGY_SUBSET_DOWNLOAD_URL";
         public static final String NCIM_BUILD_INFO = "NCIM_BUILD_INFO";
 
+        public static final String TERM_SUGGESTION_APPLICATION_URL= "TERM_SUGGESTION_APPLICATION_URL";
+
+
         private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
         private static NCImBrowserProperties NCImBrowserProperties = null;
@@ -82,6 +85,7 @@ public class NCImBrowserProperties {
         private static String mail_smtp_server = null;
         private static String ncicb_contact_url = null;
         private static String terminology_subset_download_url = null;
+        private static String term_suggestion_application_url = null;
 
         /**
          * Private constructor for singleton pattern.
@@ -120,6 +124,7 @@ public class NCImBrowserProperties {
                         ncicb_contact_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.NCICB_CONTACT_URL);
                         mail_smtp_server = NCImBrowserProperties.getProperty(NCImBrowserProperties.MAIL_SMTP_SERVER);
                         terminology_subset_download_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
+                        term_suggestion_application_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLICATION_URL);
                     }
                 }
             }

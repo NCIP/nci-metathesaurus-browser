@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Arrays;
 
 import javax.faces.model.SelectItem;
+import org.apache.commons.lang.StringUtils;
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
@@ -572,13 +573,18 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             //RemoteServerUtil rsu = new RemoteServerUtil();
             //EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            if (lbSvc == null) return null;
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) return null;
             sourceListData = new Vector<String>();
+
+            if (scheme.getMappings() == null) return null;
            	sourceListData.add("ALL");
 
             //Insert your code here
             SupportedSource[] sources = scheme.getMappings().getSupportedSource();
+            if (sources == null) return null;
+
             for (int i=0; i<sources.length; i++)
             {
                 SupportedSource source = sources[i];
@@ -1356,6 +1362,18 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	}
 
 
+
+    protected String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm, String scheme, CodingSchemeVersionOrTag csvt,
+            Association assoc, boolean navigatedFwd) throws LBException {
+
+        String assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(assoc.getAssociationName(), scheme, csvt)
+                : lbscm.getAssociationReverseName(assoc.getAssociationName(), scheme, csvt);
+        if (StringUtils.isBlank(assocLabel))
+            assocLabel = (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
+        return assocLabel;
+    }
+
+
     public HashMap getRelationshipHashMap(String scheme, String version, String code, String sab)
     {
         //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -1385,10 +1403,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
         HashMap map = new HashMap();
         try {
-            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
-            //ResolvedConceptReferenceList branch = cng.resolveAsList(focus, associationsNavigatedFwd,
-            //      !associationsNavigatedFwd, -1, 2, noopList_, null, null, null, -1, false);
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+
+            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             if (sab != null) {
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
@@ -1397,10 +1417,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             int maxToReturn = NCImBrowserProperties.maxToReturn;
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, noopList_, null, null, null, -1, false);
                     true, false, 1, 1, noopList_, null, null, null, maxToReturn, false);
-
-
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -1414,13 +1431,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     for (int i = 0; i < associations.length; i++) {
                         Association assoc = associations[i];
                         String associationName = assoc.getAssociationName();
-                        //System.out.println("\t" + assoc.getAssociationName());
-
-                        boolean isRole = false;
-                        if (list.contains(associationName))
-                        {
-                            isRole = true;
-                        }
 
                         AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
@@ -1449,7 +1459,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     }
                 }
             }
-
 
             if (roleList.size() > 0) {
                 SortUtils.quickSort(roleList);
@@ -2090,7 +2099,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
             matches = cng.resolveAsList(
                     ConvenienceMethods.createConceptReference(code, scheme),
-                    //true, false, 1, 1, null, propertyTypes, null, null, -1, false);
                     true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
@@ -2113,6 +2121,48 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 								v.add(ac);
 							}
 						}
+						hmap.put(associationName, v);
+                    }
+                }
+            }
+
+            /////////////////////////////////////////////////////////////////////////////
+            // KLO
+
+			NameAndValueList nvl = null;
+			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
+			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToParentNodes_), nvl);
+			matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
+			                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
+
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                Enumeration<ResolvedConceptReference> refEnum =
+                    matches .enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = refEnum.nextElement();
+                    AssociationList sourceof = ref.getTargetOf();
+                    Association[] associations = sourceof.getAssociation();
+
+                    for (int i = 0; i < associations.length; i++) {
+                        Association assoc = associations[i];
+                        String associationName = assoc.getAssociationName();
+
+//System.out.println("Reverse traversal associationName " + associationName);
+
+                        Vector v = new Vector();
+                        AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+                        for (int j = 0; j < acl.length; j++) {
+                            AssociatedConcept ac = acl[j];
+                            if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+								v.add(ac);
+							}
+						}
+// patch
+//System.out.println("inverse_associationName " + v.size());
+if (associationName.compareTo("PAR") == 0) {
+	associationName = "CHD";
+}
 						hmap.put(associationName, v);
                     }
                 }
@@ -2152,6 +2202,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		Set keyset = hmap.keySet();
 		Iterator it = keyset.iterator();
 		HashSet rel_hset = new HashSet();
+
+		HashSet hasSubtype_hset = new HashSet();
 
 		long ms_categorization_delay = 0;
 		long ms_categorization;
@@ -2202,6 +2254,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 							rel_hset.add(c.getEntityCode());
 						}
 					}
+
+					if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
+						if (hasSubtype_hset.contains(c.getEntityCode())) {
+							hasSubtype_hset.add(c.getEntityCode());
+						}
+					}
 			    }
 			}
 		}
@@ -2224,6 +2282,25 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 				}
 		    }
 		}
+
+        // Remove redundant CHD relationships
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("CHD") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
+
 		ms_all_delay = System.currentTimeMillis() - ms_all;
 
 		action = "categorizing relationships into six categories";
@@ -2242,6 +2319,9 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         // Initial sort (refer to sortSynonymData method for sorting by a specific column)
 
 		long ms_sort_delay = System.currentTimeMillis();
+
+        u = removeRedundantRecords(u);
+
 		SortUtils.quickSort(u);
 		action = "initial sorting";
 		delay = System.currentTimeMillis() - ms_sort_delay;
@@ -2389,6 +2469,39 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 	}
 
 
+    public void removeRedundantRecords(HashMap hmap) {
+		Set keyset = hmap.keySet();
+		Iterator it = keyset.iterator();
+		while (it.hasNext())
+		{
+			String rel = (String) it.next();
+			Vector v = (Vector) hmap.get(rel);
+			HashSet hset = new HashSet();
+			Vector u = new Vector();
+			for (int k=0; k<v.size(); k++) {
+				String t = (String) v.elementAt(k);
+				if (!hset.contains(t)) {
+					u.add(t);
+					hset.add(t);
+				}
+			}
+			hmap.put(rel, u);
+		}
+	}
+
+    public Vector removeRedundantRecords(Vector v) {
+		HashSet hset = new HashSet();
+		Vector u = new Vector();
+		for (int k=0; k<v.size(); k++) {
+			String t = (String) v.elementAt(k);
+			if (!hset.contains(t)) {
+				u.add(t);
+				hset.add(t);
+			}
+		}
+		return u;
+	}
+
 	public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
@@ -2459,7 +2572,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 		// Remove redundant RO relationships
 		ms = System.currentTimeMillis();
-		action = "Removing redundant RO relationships";
+		action = "Removing redundant RO and CHD relationships";
 
 		HashSet other_hset = new HashSet();
 		Vector w2 = (Vector) rel_hmap.get("Other");
@@ -2493,6 +2606,42 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 			}
 		}
 		rel_hmap.put("Other", w3);
+
+
+		other_hset = new HashSet();
+		w2 = (Vector) rel_hmap.get("Child");
+		for (int k=0; k<w2.size(); k++) {
+			String s = (String) w2.elementAt(k);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			String t = name + "|" + target_code + "|" + src;
+			if (rel.compareTo("CHD") != 0 && !other_hset.contains(t)) {
+				other_hset.add(t);
+			}
+		}
+		w3 = new Vector();
+		for (int k=0; k<w2.size(); k++) {
+			String s = (String) w2.elementAt(k);
+			Vector ret_vec = DataUtils.parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			if (rel.compareTo("CHD") != 0) {
+				w3.add(s);
+			} else {
+				String t = name + "|" + target_code + "|" + src;
+				if (!other_hset.contains(t)) {
+					w3.add(s);
+				}
+			}
+		}
+		rel_hmap.put("Child", w3);
+
+
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -2521,6 +2670,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+
+        removeRedundantRecords(rel_hmap);
 		return rel_hmap;
 	}
 

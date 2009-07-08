@@ -55,9 +55,16 @@ Redeploy:   ant deploy:hot
 --------------------------------------
 URLs
 --------------------------------------
-Local:	http://localhost:19280/ncimbrowser
-DEV:	http://ncim-dev.nci.nih.gov/
-QA:	http://ncim-qa.nci.nih.gov/
+Local:  http://localhost:19280/ncimbrowser
+DEV:    http://ncim-dev.nci.nih.gov/
+QA: http://ncim-qa.nci.nih.gov/
+
+--------------------------------------
+Load balancing
+--------------------------------------
+F5 BIGIP
+========
+Enable persistence checking on the F5 Bigip box so a user is always returned to the same node.
 
 --------------------------------------
 Trouble shooting

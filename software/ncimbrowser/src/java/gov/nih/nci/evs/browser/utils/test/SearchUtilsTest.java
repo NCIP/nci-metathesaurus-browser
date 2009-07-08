@@ -17,7 +17,7 @@ public class SearchUtilsTest extends SearchUtils {
     
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
-        int maxToReturn) {
+        SortOption sortOption, int maxToReturn) {
         if (_displayParameters) {
             DBG.debug("* Search parameters:");
             DBG.debug("  * scheme = " + scheme);
@@ -25,19 +25,21 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debug("  * matchText = " + matchText);
             DBG.debug("  * source = " + source);
             DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
+            DBG.debug("  * sortOption = " + sortOption);
             DBG.debug("  * maxToReturn = " + maxToReturn);
         }
         DBG.debug(DBG.isDisplayDetails(), "* Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
-            matchAlgorithm, maxToReturn);
+            matchAlgorithm, sortOption, maxToReturn);
     }
     
     public void searchByNameTest(String scheme, String version, String matchText,
-        String source, String matchAlgorithm, int maxToReturn) {
+        String source, String matchAlgorithm, SortOption sortOption,
+        int maxToReturn) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Concept> vector = searchByName(scheme, version, matchText,
-            source, matchAlgorithm, maxToReturn);
+            source, matchAlgorithm, sortOption, maxToReturn);
         long duration = stopWatch.getDuration();
 
         if (_displayConcepts && vector.size() > 0) {
@@ -88,6 +90,7 @@ public class SearchUtilsTest extends SearchUtils {
         String version = null;
         String matchAlgorithm = "contains";
         String source = null;
+        SortOption sortOption = new SortOption(SortOption.Type.ALL);
         int maxToReturn = -1;
         String[] matchTexts = new String[] { 
             "100",
@@ -124,7 +127,8 @@ public class SearchUtilsTest extends SearchUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            searchByNameTest(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+            searchByNameTest(scheme, version, matchText, source, matchAlgorithm, 
+                sortOption, maxToReturn);
         }
         DBG.debug("* Done");
     }

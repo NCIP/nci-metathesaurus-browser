@@ -79,16 +79,23 @@ public class Utils {
     }
     
     public static String[] toStrings(String value, String delimiter, 
-        boolean includeDelimiter) {
+        boolean includeDelimiter, boolean trim) {
         StringTokenizer tokenizer = new StringTokenizer(
             value, delimiter, includeDelimiter);
         ArrayList<String> list = new ArrayList<String>();
         while (tokenizer.hasMoreElements()) {
-            String s = tokenizer.nextToken().trim();
+            String s = tokenizer.nextToken();
+            if (trim)
+                s = s.trim();
             if (s.length() > 0)
                 list.add(s);
         }
         return list.toArray(new String[list.size()]);
+    }
+    
+    public static String[] toStrings(String value, String delimiter, 
+        boolean includeDelimiter) {
+        return toStrings(value, delimiter, includeDelimiter, true);
     }
     
     public static void debug(String msg, String[] list) {

@@ -52,7 +52,7 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
  */
 
 public class RemoteServerUtil {
-    
+    private static boolean debug = false;
     private static String _serviceInfo = "EvsServiceInfo";
     private Properties systemProperties = null;
     private static String serviceURL = null;
@@ -90,17 +90,17 @@ public class RemoteServerUtil {
                 String lg_config_file = properties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
                 System.setProperty(NCImBrowserProperties.LG_CONFIG_FILE,lg_config_file);
 
-                if (NCImBrowserProperties.debugOn) {
-                    Debug.println(Utils.SEPARATOR);
-                    Debug.println("LexBIGService(local): new LexBIGServiceImpl();");
-                    Debug.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
+                if (debug) {
+                    System.out.println(Utils.SEPARATOR);
+                    System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
+                    System.out.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
                 }
                 LexBIGService lbSvc = new LexBIGServiceImpl();
                 return lbSvc;
             }
-            if (NCImBrowserProperties.debugOn) {
-                Debug.println(Utils.SEPARATOR);
-                Debug.println("LexBIGService(remote): " + serviceUrl);
+            if (debug) {
+                System.out.println(Utils.SEPARATOR);
+                System.out.println("LexBIGService(remote): " + serviceUrl);
             }
             LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
             return (LexBIGService) lexevsService;

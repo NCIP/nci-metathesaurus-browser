@@ -179,9 +179,6 @@ public class SearchUtils {
 	private int penalty_multiplier_1 = 1;
 	private int penalty_multiplier_2 = 2;
 
-    private boolean apply_sort_score = false;
-    private boolean sort_by_pt_only = true;
-
     public CodingSchemeRenderingList csrl = null;
     private Vector supportedCodingSchemes = null;
     private static HashMap codingSchemeMap = null;
@@ -210,25 +207,10 @@ public class SearchUtils {
         this.url = url;
         initializeSortParameters();
     }
+    
 
     private void initializeSortParameters() {
 		doubleMetaphone = new DoubleMetaphone();
-        try {
-            NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
-            String sort_str = properties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
-            sort_by_pt_only = true;
-            apply_sort_score = true;
-            if (sort_str != null) {
-				if (sort_str.compareTo("false") == 0) {
-					apply_sort_score = false;
-				} else if (sort_str.compareToIgnoreCase("all") == 0) {
-					sort_by_pt_only = false;
-				}
-		    }
-
-        } catch (Exception ex) {
-
-        }
 	}
 
 
@@ -1024,12 +1006,12 @@ public class SearchUtils {
          return null;
     }
 
-    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, int maxToReturn) {
-		return searchByName(scheme, version, matchText, null, matchAlgorithm, maxToReturn);
+    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
+		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortOption, maxToReturn);
 	}
 
 
-    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
+    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1110,7 +1092,7 @@ public class SearchUtils {
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 boolean resolveConcepts = false;
-                if (apply_sort_score && !sort_by_pt_only) resolveConcepts = true;
+                if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
 
 				System.out.println("resolveConcepts? " + resolveConcepts);
 
@@ -1133,13 +1115,14 @@ public class SearchUtils {
 			return null;
 		}
 
-		System.out.println("apply_sort_score? " + apply_sort_score);
+		System.out.println("sortOption: " + sortOption);
+		System.out.println("apply_sort_score? " + sortOption.isApplySortScore());
 
-        if (apply_sort_score)
+        if (sortOption.isApplySortScore())
         {
                 long ms = System.currentTimeMillis();
                 try {
-					if (sort_by_pt_only) {
+					if (sortOption.isSortByPtOnly()) {
 					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
 					} else {
                         iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
@@ -1156,7 +1139,7 @@ public class SearchUtils {
 			//testing KLO
 			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
 			long ms = System.currentTimeMillis(), delay = 0;
-			v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+			v = resolveIterator( iterator, maxToReturn, null, sortOption.isSortByPtOnly());
 			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
 			DBG.debugDetails(delay, "resolveIterator", "searchByName");
         }
@@ -1188,12 +1171,11 @@ public class SearchUtils {
 			{
 		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
 		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
-				return searchByName(scheme, version, matchText0, "startsWith",
-						maxToReturn);
+				return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
 			}
 		}
 
-		if(!apply_sort_score)
+		if(!sortOption.isApplySortScore())
 		{
 			v = SortUtils.quickSort(v);
 		}
@@ -1208,10 +1190,11 @@ public class SearchUtils {
         String matchText = "breast canser";
         matchText = "dog";
         String matchAlgorithm = "DoubleMetaphoneLuceneQuery";
+        SortOption sortOption = new SortOption(SortOption.Type.ALL);
         int maxToReturn = 200;
 
         long ms = System.currentTimeMillis();
-        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
+        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, sortOption, maxToReturn);
         System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
         if (v != null)
         {
