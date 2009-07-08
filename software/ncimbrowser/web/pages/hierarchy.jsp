@@ -21,7 +21,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-  <title>NCI MetaThesaurus Hierarchy</title>
+  <title>NCI Metathesaurus Hierarchy</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
 
@@ -320,9 +320,9 @@
               showPartialHierarchy();
               for (var i=0; i < respObj.root_nodes.length; i++) {
                 var nodeInfo = respObj.root_nodes[i];
-                
+
                 //alert("root: " + nodeInfo.ontology_node_name);
-                
+
                 //var expand = false;
                 addTreeBranch(ontology_node_id, root, nodeInfo);
               }
@@ -354,7 +354,7 @@
 
       }
     }
-    
+
 
 
 
@@ -374,15 +374,25 @@
       }
 
       //newNode.isLeaf = false;
-      if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-          newNode.isLeaf = true;
-      } else if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id == ontology_node_id) {   
-          //newNode.isLeaf = true;
-          newNode.setDynamicLoad(loadNodeData); 
-      } else if (childNodes.length == 0) {
-          newNode.setDynamicLoad(loadNodeData); 
+      if (nodeInfo.ontology_node_id == ontology_node_id) {
+         newNode.isLeaf = true;
+         if (nodeInfo.ontology_node_child_count > 0) {
+             newNode.isLeaf = false;
+             newNode.setDynamicLoad(loadNodeData);
+         } else {
+             tree.draw();
+         }
+
+      } else {
+          if (nodeInfo.ontology_node_id != ontology_node_id) {
+          if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
+        newNode.isLeaf = true;
+          } else if (childNodes.length == 0) {
+        newNode.setDynamicLoad(loadNodeData);
+          }
+        }
       }
-      
+
       tree.draw();
       for (var i=0; i < childNodes.length; i++) {
   var childnodeInfo = childNodes[i];

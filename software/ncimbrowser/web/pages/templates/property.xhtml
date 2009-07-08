@@ -204,6 +204,10 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         value = value_wo_qualifier;
         if (qualifier.compareTo("") != 0) {
             propName_label = qualifier + " " + propName_label2;
+            
+            if (qualifier.indexOf("PDQ") != -1) {
+                value = FormatUtils.reformatPDQDefinition(value);
+            }
         }
           }
 

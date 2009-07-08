@@ -17,26 +17,26 @@
 
   <navigation-rule>
     <from-view-id>/pages/home.jsp</from-view-id>
-    <navigation-case> 
+    <navigation-case>
        <description>message</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
-    
-    <navigation-case> 
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
+    </navigation-case>
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -51,31 +51,31 @@
        <from-outcome>error</from-outcome>
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
-  
+
   </navigation-rule>
 
   <navigation-rule>
     <from-view-id>/pages/contact_us.jsp</from-view-id>
-    <navigation-case> 
+    <navigation-case>
        <description>message</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
-    
-    <navigation-case> 
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
+    </navigation-case>
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -90,26 +90,26 @@
        <from-outcome>error</from-outcome>
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
-  
+
   </navigation-rule>
-  
-  
+
+
   <navigation-rule>
     <from-view-id>/pages/search_results.jsp</from-view-id>
-    
-    <navigation-case> 
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>    
+    </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>Match</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
+    </navigation-case>
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -124,24 +124,24 @@
        <from-outcome>error</from-outcome>
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
-    
+
   </navigation-rule>
-  
+
   <navigation-rule>
     <from-view-id>/pages/concept_details.jsp</from-view-id>
-    <navigation-case> 
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>Match</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
+    </navigation-case>
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -163,77 +163,38 @@
        <from-outcome>neighborhood</from-outcome>
        <to-view-id>/pages/neighborhood.jsp</to-view-id>
     </navigation-case>
-    
-    <navigation-case> 
+
+    <navigation-case>
        <description>search_results</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
-    </navigation-case>
-    
-  </navigation-rule>
-  
-  <navigation-rule>
-    <from-view-id>/pages/subset.jsp</from-view-id>
-    <navigation-case> 
-       <description>message</description>
-       <from-action>#{userSessionBean.searchAction}</from-action>
-       <from-outcome>message</from-outcome>
-       <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>
-    
-    <navigation-case> 
-       <description>Search</description>
-       <from-action>#{userSessionBean.searchAction}</from-action>
-       <from-outcome>search_results</from-outcome>
-       <to-view-id>/pages/search_results.jsp</to-view-id>
-    </navigation-case>
-
-    <navigation-case> 
-       <description>concept_details</description>
-       <from-action>#{userSessionBean.searchAction}</from-action>
-       <from-outcome>concept_details</from-outcome>
-       <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
-
-    <navigation-case>
-       <description>contact_us_message</description>
-       <from-action>#{userSessionBean.contactUs}</from-action>
-       <from-outcome>message</from-outcome>
-       <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>
-
-    <navigation-case>
-       <description>contact_us_error</description>
-       <from-action>#{userSessionBean.contactUs}</from-action>
-       <from-outcome>error</from-outcome>
-       <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
 
   </navigation-rule>
 
   <navigation-rule>
     <from-view-id>/pages/help.jsp</from-view-id>
-    <navigation-case> 
+    <navigation-case>
        <description>message</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
-    
-    <navigation-case> 
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
+    </navigation-case>
 
     <navigation-case>
        <description>contact_us_message</description>
@@ -241,7 +202,7 @@
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
-    
+
     <navigation-case>
        <description>contact_us_error</description>
        <from-action>#{userSessionBean.contactUs}</from-action>
@@ -251,84 +212,84 @@
 
   </navigation-rule>
 
-  <navigation-rule>      
+  <navigation-rule>
     <from-view-id>/atoms.jsp</from-view-id>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>   
-    
-    <navigation-case> 
+    </navigation-case>
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>  
-  </navigation-rule>  
-  
-  
-  
-  <navigation-rule>      
+    </navigation-case>
+  </navigation-rule>
+
+
+
+  <navigation-rule>
     <from-view-id>/pages/neighborhood_atoms.jsp</from-view-id>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>  
-    
-    <navigation-case> 
+    </navigation-case>
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>  
-  </navigation-rule>  
-    
-  <navigation-rule>      
+    </navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
     <from-view-id>/pages/neighborhood.jsp</from-view-id>
 
-    <navigation-case> 
+    <navigation-case>
        <description>concept_details</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>concept_details</from-outcome>
        <to-view-id>/pages/concept_details.jsp</to-view-id>
-    </navigation-case>  
-    
-    <navigation-case> 
+    </navigation-case>
+
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
        <to-view-id>/pages/search_results.jsp</to-view-id>
     </navigation-case>
 
-    <navigation-case> 
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
-    </navigation-case>  
-  </navigation-rule>      
+    </navigation-case>
+  </navigation-rule>
 
-<!--    
+<!--
 <managed-bean>
   <managed-bean-name>DataUtils</managed-bean-name>
   <managed-bean-class>gov.nih.nci.evs.browser.bean.DataUtils</managed-bean-class>
@@ -341,6 +302,6 @@
   <managed-bean-class>gov.nih.nci.evs.browser.bean.UserSessionBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
 </managed-bean>
- 
+
 
 </faces-config>
