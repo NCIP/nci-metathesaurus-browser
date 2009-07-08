@@ -12,7 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>NCI MetaThesaurus History</title>
+    <title>NCI Metathesaurus History</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -24,9 +24,9 @@
 
     String dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
     dictionary = HTTPUtils.cleanXSS(dictionary);
-    
-System.out.println("concept_history.jsp " + dictionary);    
-    
+
+System.out.println("concept_history.jsp " + dictionary);
+
     String vers = null;
     String ltag = null;
     Concept concept = (Concept) request.getSession().getAttribute("concept");
@@ -52,10 +52,10 @@ System.out.println("concept_history.jsp " + dictionary);
   <%
     } else {
       Vector rows = HistoryUtils.getEditActions(dictionary, vers, ltag, code);
-      
-System.out.println("concept_history.jsp rows " + rows.size());    
-      
-      
+
+System.out.println("concept_history.jsp rows " + rows.size());
+
+
       String concept_name = concept.getEntityDescription().getContent();
       Vector headers = HistoryUtils.getTableHeader();
   %>
