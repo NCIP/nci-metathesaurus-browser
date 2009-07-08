@@ -138,8 +138,6 @@
             presented through NCIm concepts. Concepts are often found in several different places. The focus concept will
             be bold, underlined, and colored red.  This function only appears in concepts with NCIt content.  Hierarchy
             displays from other sources will be provided in a later browser release.
-            <li><b>History</b>: Click the button to view a history of edit actions on this concept, including dates and
-            reference concepts involved in actions that split or merge concepts.
          </ul>
         </p>
         <p class="textbody">
@@ -179,9 +177,10 @@
               <li>Relationship data are not consistently stored and linked, and are represented incompletely as described in the
               browser’s <a href="<%= request.getContextPath() %>/pages/rela_help_info.jsf">Relationship Attribute Help</a>.
               This also made it impossible to reliably display individual source hierarchies within their broader NCIm context.
+              <li>The display of history data has been postponed until the next release.
               <li>Other source specific concept data were also only partly loaded.
             </ul>
-            <br>These problems should be fixed with the LexEVS 5.1 release in late 2009.<br><br>
+            These problems should be fixed with the LexEVS 5.1 release in late 2009.<br>
             <li><b>Functionality</b>: Performance problems have been partly designed around but are still an important issue that
             we intend to fix.  The ranking of search results best matches first could not achieve acceptable performance and was
             made a user option with warning attached.  The Relationship and By Source tabs are also too slow. User-settable options
