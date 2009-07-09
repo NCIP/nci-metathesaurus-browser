@@ -15,6 +15,7 @@
     <title>NCI Metathesaurus History</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+    <link rel="icon" href="/ncimbrowser/favicon.ico" type="image/x-icon">
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
