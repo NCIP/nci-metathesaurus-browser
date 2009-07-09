@@ -14,6 +14,7 @@
     <title>Source Help Informaton</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+    <link rel="icon" href="/ncimbrowser/favicon.ico" type="image/x-icon">
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
@@ -54,27 +55,27 @@
           <hr/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
-            
-<p>            
+
+<p>
 The NCI Metathesaurus includes the following sources.
 Certain vocabularies, such as ICD10,
-is made available, by permission, for NON-COMMERCIAL USE ONLY.  
+is made available, by permission, for NON-COMMERCIAL USE ONLY.
 </p>
 <p>
-MedDRA License Agreement.  The Medical Dictionary for Regulatory Activities (MedDRA) terminology is a licensed terminology.  
-The use of MedDRA from this NCI website is licensed for NCI employees and contractors performing work for NCI.  
-All other use is prohibited.  Users who are NOT NCI employees or contractors performing work for NCI must subscribe to 
-MedDRA from the MedDRA MSSO.  For questions regarding MedDRA, please contact the MSSO at mssohelp@ngc.com, or visit 
+MedDRA License Agreement.  The Medical Dictionary for Regulatory Activities (MedDRA) terminology is a licensed terminology.
+The use of MedDRA from this NCI website is licensed for NCI employees and contractors performing work for NCI.
+All other use is prohibited.  Users who are NOT NCI employees or contractors performing work for NCI must subscribe to
+MedDRA from the MedDRA MSSO.  For questions regarding MedDRA, please contact the MSSO at mssohelp@ngc.com, or visit
 the MSSO website at www.meddramsso.com, or write the MSSO at 12011 Sunset Hills Road Reston Virginia, 20190-3285 or phone 877.258.8280.
-</p>      
-           
+</p>
+
             </td></tr>
           </table>
           <br/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <%
               String propertyName = "formalName";
-              Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(propertyName); 
+              Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(propertyName);
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
                  Vector w = DataUtils.parseData(t, "|");

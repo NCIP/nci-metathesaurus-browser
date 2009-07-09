@@ -17,6 +17,7 @@
     <title>Relationship Help Informaton</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+    <link rel="icon" href="/ncimbrowser/favicon.ico" type="image/x-icon">
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
@@ -57,8 +58,8 @@
           <hr/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
-            
-<p> 
+
+<p>
 Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
 <ul>
 <li>
@@ -68,20 +69,20 @@ Relationship information in the NCI Metathesaurus is represented by two intercon
 <b>Relationship Attribute (RELA)</b>: The more specific label, when available, used by individual sources to represent relationships.
 </li>
 </ul>
-These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources. 
+These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources.
 </p>
 <p>
 <b>The Relationship (REL)</b> labels in NCIm are listed below, grouped by the broader categories used to report them in the initial release of the NCIm Browser:
-</p>            
+</p>
             </td></tr>
           </table>
           <br/>
-          
+
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
              <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
              <th class="dataTableHeader" scope="col" align="left">REL Code</th>
              <th class="dataTableHeader" scope="col" align="left">Description</th>
-         
+
             <%
               List list = Constants.REL;
               for (int n=0; n<list.size(); n++) {
@@ -105,21 +106,21 @@ These data are not consistently stored and linked in the current LexBIG database
 
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
-            
+
 
 <p>
-<b>The Relationship Attribute (RELA)</b> categories in NCIm are taken from individual sources, which define their meanings.  
+<b>The Relationship Attribute (RELA)</b> categories in NCIm are taken from individual sources, which define their meanings.
 Below is a chart showing all REL and RELA pairs found in the December 2008 version of NCIm, grouped as above by browser category:
-</p>            
+</p>
             </td></tr>
           </table>
           <br/>
-          
+
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
              <th class="dataTableHeader" scope="col" align="left">Browser Category</th>
              <th class="dataTableHeader" scope="col" align="left">REL Code</th>
              <th class="dataTableHeader" scope="col" align="left">Description</th>
-         
+
             <%
               List list2 = Constants.RELA;
               for (int n=0; n<list2.size(); n++) {
