@@ -17,7 +17,7 @@
       if (data_type == null) data_type = "properties";
 
      %>
-     <td align="left" valign="top" width="600" height="21">
+     <td width="134" height="21">
      <%
         if (data_type == null) {
           %>
@@ -43,7 +43,10 @@
             </a>
           <%
         }
-
+          %>
+      </td>
+      <td width="102" height="21">
+        <%
           if (data_type == null ||
             (data_type != null && data_type.compareTo("relationship") != 0)) {
         %>
@@ -62,78 +65,91 @@
             title="Relationships" />
         <%
           }
-            if (data_type == null ||
-              (data_type != null && data_type.compareTo("synonym") != 0)) {
-          %>
-          <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
-            <img name="sdTab"
-              src="<%=request.getContextPath() %>/images/tab_sd.gif"
-              width="119" height="21" border="0" alt="Synonym Details"
-              title="Synonym Details" />
-          </a>
-          <%
-            } else {
-          %>
-            <img name="sdTab"
-              src="<%=request.getContextPath() %>/images/tab_sd_clicked.gif"
-              width="119" height="21" border="0" alt="Synonym Details"
-              title="Synonym Details" />
-          <%
-            }
-            if (data_type == null ||
-              (data_type != null && data_type.compareTo("sources") != 0)) {
-          %>
-          <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=sources">
-            <img name="sourceTab"
-              src="<%=request.getContextPath() %>/images/tab_sou.gif"
-              width="83" height="21" border="0" alt="Sources"
-              title="Sources" />
-          </a>
-          <%
-            } else {
-          %>
-            <img name="sourceTab"
-              src="<%=request.getContextPath() %>/images/tab_sou_clicked.gif"
-              width="83" height="21" border="0" alt="Sources"
-              title="Sources" />
-          <%
-            }
-            if (data_type == null ||
-              (data_type != null && data_type.compareTo("all") != 0)) {
-          %>
-            <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=all">
-              <img name="vaTab"
-                src="<%=request.getContextPath() %>/images/tab_va.gif"
-                width="71" height="21" border="0" alt="View All"
-                title="View All" />
-            </a>
-          <%
-            } else {
-          %>
+        %>
+        </td>
+        <td width="119" height="21">
+        <%
+          if (data_type == null ||
+            (data_type != null && data_type.compareTo("synonym") != 0)) {
+        %>
+        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
+          <img name="sdTab"
+            src="<%=request.getContextPath() %>/images/tab_sd.gif"
+            width="119" height="21" border="0" alt="Synonym Details"
+            title="Synonym Details" />
+        </a>
+        <%
+          } else {
+        %>
+          <img name="sdTab"
+            src="<%=request.getContextPath() %>/images/tab_sd_clicked.gif"
+            width="119" height="21" border="0" alt="Synonym Details"
+            title="Synonym Details" />
+        <%
+          }
+        %>
+        </td>
+        <td width="71" height="21">
+        <%
+          if (data_type == null ||
+            (data_type != null && data_type.compareTo("sources") != 0)) {
+        %>
+        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=sources">
+          <img name="sourceTab"
+            src="<%=request.getContextPath() %>/images/tab_sou.gif"
+            width="83" height="21" border="0" alt="Sources"
+            title="Sources" />
+        </a>
+        <%
+          } else {
+        %>
+          <img name="sourceTab"
+            src="<%=request.getContextPath() %>/images/tab_sou_clicked.gif"
+            width="71" height="21" border="0" alt="Sources"
+            title="Sources" />
+        <%
+          }
+        %>
+        </td>
+        <td width="71" height="21">
+        <%
+          if (data_type == null ||
+            (data_type != null && data_type.compareTo("all") != 0)) {
+        %>
+          <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=all">
             <img name="vaTab"
-              src="<%=request.getContextPath() %>/images/tab_va_clicked.gif"
+              src="<%=request.getContextPath() %>/images/tab_va.gif"
               width="71" height="21" border="0" alt="View All"
               title="View All" />
-          <%
-          }
-          %>
-          </td>
-          <td align="right" valign="top">&nbsp;
+          </a>
+        <%
+          } else {
+        %>
+          <img name="vaTab"
+            src="<%=request.getContextPath() %>/images/tab_va_clicked.gif"
+            width="71" height="21" border="0" alt="View All"
+            title="View All" />
+        <%
+        }
+        %>
+        </td>
+        <td align="right" valign="top">
     <%
         if (sources_typelinks.contains("NCI")) {
     %>
-    
-        <a class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-        <img name="Hierarchy"
-          src="<%=request.getContextPath() %>/images/Hierarchy_button.gif"
-          width="91px" height="17px" border="0" alt="View in NCIt Hierarchy"
-          title="View in NCIt Hierarchy"/>
-        </a>
-       
+          <a class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          <img name="Hierarchy"
+            src="<%=request.getContextPath() %>/images/Hierarchy_button.gif"
+            width="91px" height="17px" border="0" alt="View in NCIt Hierarchy"
+            title="View in NCIt Hierarchy"/>
+          </a>
     <%
+        } else {
+          %>
+            &nbsp;
+          <%
         }
     %>
-          </td> 
-    
+        </td>
   </tr>
 </table>
