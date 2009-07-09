@@ -259,15 +259,16 @@ String tg_dictionary = "NCI%20MetaThesaurus";
 
           %>
       <div class="texttitle-blue">
-      
-	  <table border="0" width="700px"><tr>
-	    <td><div><%=name%> (CUI <%=code%>)</div></td>
-	    <td><div>
-   <a href="<%=term_suggestion_application_url%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
-   </div></td>
-	  </tr></table>     
-      
-          
+
+      <table border="0" width="700px">
+        <tr>
+          <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
+          <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
+             <a href="<%=term_suggestion_application_url%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+          </td>
+        </tr>
+      </table>
+
       </div>
 
       <hr>
