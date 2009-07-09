@@ -250,7 +250,7 @@ request.getSession().setAttribute("type", type);
         }
      }
 
-
+String tg_dictionary = "NCI%20MetaThesaurus";
           if (c != null) {
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
@@ -259,7 +259,15 @@ request.getSession().setAttribute("type", type);
 
           %>
       <div class="texttitle-blue">
-          <%=name%> (CUI <%=code%>)
+      
+	  <table border="0" width="700px"><tr>
+	    <td><div><%=name%> (CUI <%=code%>)</div></td>
+	    <td><div>
+   <a href="<%=term_suggestion_application_url%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+   </div></td>
+	  </tr></table>     
+      
+          
       </div>
 
       <hr>
