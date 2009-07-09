@@ -24,7 +24,7 @@
   <title>NCI Metathesaurus Hierarchy</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
-
+  <link rel="icon" href="/ncimbrowser/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/fonts.css" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/grids.css" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/code.css" />
