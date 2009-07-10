@@ -25,8 +25,15 @@ public class HTTPUtils {
 			value = URLDecoder.decode(value, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// Do nothing, just use the input
-		}
-
+        } catch (IllegalArgumentException e) {
+            // Do nothing, just use the input
+            // Note: The following exception was triggered:
+            //   java.lang.IllegalArgumentException: URLDecoder: Illegal hex
+            //     characters in escape (%) pattern - For input string: "^&"
+            //   when QA entered:
+            //     ~!@#$%^&*()_+-={}|:”<>?[]\;’,./-+/*&&()||==`”%”!\’=    
+        }
+        
 		// Remove XSS attacks
 		value = replaceAll(value,"<\\s*script\\s*>.*</\\s*script\\s*>", "");		
 		value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
