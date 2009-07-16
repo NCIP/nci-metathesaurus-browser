@@ -289,19 +289,28 @@
     </navigation-case>
   </navigation-rule>
 
-<!--
-<managed-bean>
-  <managed-bean-name>DataUtils</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.browser.bean.DataUtils</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean>
--->
+  <navigation-rule>
+    <from-view-id>/pages/error_handler.jsp</from-view-id>
 
-<managed-bean>
-  <managed-bean-name>userSessionBean</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.browser.bean.UserSessionBean</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean>
+    <navigation-case>
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
 
+    <navigation-case>
+       <description>concept_details</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>concept_details</from-outcome>
+       <to-view-id>/pages/concept_details.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+
+  <managed-bean>
+    <managed-bean-name>userSessionBean</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.browser.bean.UserSessionBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
 
 </faces-config>
