@@ -176,7 +176,10 @@
             importance,
             <ul>
               <li>Relationship data are not consistently stored and linked, and are represented incompletely as described in the
-              browser’s <a href="<%= request.getContextPath() %>/pages/rela_help_info.jsf">Relationship Attribute Help</a>.
+              browser’s
+              <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
+                      '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              Relationship Attribute Help</a>.
               This also made it impossible to reliably display individual source hierarchies within their broader NCIm context.
               <li>The display of history data has been postponed until the next release.
               <li>Other source specific concept data were also only partly loaded.
