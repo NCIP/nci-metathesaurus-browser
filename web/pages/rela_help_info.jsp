@@ -85,12 +85,16 @@ These data are not consistently stored and linked in the current LexBIG database
 
             <%
               List list = Constants.REL;
+              String col1 = null;
+              String col2 = null;
+              String col3 = null;
               for (int n=0; n<list.size(); n++) {
                  String t = (String) list.get(n);
                  Vector v = DataUtils.parseData(t, "\t");
-                 String col1 = (String) v.elementAt(0);
-                 String col2 = (String) v.elementAt(1);
-                 String col3 = (String) v.elementAt(2);
+                 int size = v.size();
+                 if (size > 0) col1 = (String) v.elementAt(0);
+                 if (size > 1) col2 = (String) v.elementAt(1);
+                 if (size > 2) col3 = (String) v.elementAt(2);
                  String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             %>
               <tr class="<%=rowColor%>">
@@ -126,9 +130,10 @@ Below is a chart showing all REL and RELA pairs found in the December 2008 versi
               for (int n=0; n<list2.size(); n++) {
                  String t = (String) list2.get(n);
                  Vector v = DataUtils.parseData(t, "\t");
-                 String col1 = (String) v.elementAt(0);
-                 String col2 = (String) v.elementAt(1);
-                 String col3 = (String) v.elementAt(2);
+                 int size = v.size();
+                 if (size > 0) col1 = (String) v.elementAt(0);
+                 if (size > 1) col2 = (String) v.elementAt(1);
+                 if (size > 2) col3 = (String) v.elementAt(2);
                  String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             %>
               <tr class="<%=rowColor%>">
