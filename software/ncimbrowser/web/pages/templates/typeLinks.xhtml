@@ -35,7 +35,7 @@
           <%
         } else if (data_type.compareTo("properties") != 0) {
           %>
-            <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=properties">
+            <a id="a_tpTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=properties">
               <img name="tpTab"
                 src="<%=request.getContextPath() %>/images/tab_tp.gif"
                 width="134" height="21" border="0" alt="Terms &amp; Properties"
@@ -50,7 +50,7 @@
           if (data_type == null ||
             (data_type != null && data_type.compareTo("relationship") != 0)) {
         %>
-        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=relationship">
+        <a id="a_relTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=relationship">
           <img name="relTab"
             src="<%=request.getContextPath() %>/images/tab_rel.gif"
             width="102" height="21" border="0" alt="Relationships"
@@ -72,7 +72,7 @@
           if (data_type == null ||
             (data_type != null && data_type.compareTo("synonym") != 0)) {
         %>
-        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
+        <a id="a_synTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
           <img name="sdTab"
             src="<%=request.getContextPath() %>/images/tab_sd.gif"
             width="119" height="21" border="0" alt="Synonym Details"
@@ -94,7 +94,7 @@
           if (data_type == null ||
             (data_type != null && data_type.compareTo("sources") != 0)) {
         %>
-        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=sources">
+        <a id="a_srcTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=sources">
           <img name="sourceTab"
             src="<%=request.getContextPath() %>/images/tab_sou.gif"
             width="83" height="21" border="0" alt="Sources"
@@ -116,7 +116,7 @@
           if (data_type == null ||
             (data_type != null && data_type.compareTo("all") != 0)) {
         %>
-          <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=all">
+          <a id="a_allTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=all">
             <img name="vaTab"
               src="<%=request.getContextPath() %>/images/tab_va.gif"
               width="71" height="21" border="0" alt="View All"
