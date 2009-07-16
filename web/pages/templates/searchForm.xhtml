@@ -2,9 +2,29 @@
 function cursor_wait() {
    document.body.style.cursor = 'wait';
 }
+
+function disableAnchor(){
+
+  var obj1 = document.getElementById("a_tpTab");
+  if (obj1 != null) obj1.removeAttribute('href');
+
+  var obj2 = document.getElementById("a_relTab");
+  if (obj2 != null) obj2.removeAttribute('href');
+
+  var obj3 = document.getElementById("a_synTab");
+  if (obj3 != null) obj3.removeAttribute('href');
+
+  var obj4 = document.getElementById("a_srcTab");
+  if (obj4 != null) obj4.removeAttribute('href');
+
+  var obj5 = document.getElementById("a_allTab");
+  if (obj5 != null) obj5.removeAttribute('href');
+
+}
+
 </script>
 
-<FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" >
+<FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   <%
     String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     if (match_text == null) match_text = "";
