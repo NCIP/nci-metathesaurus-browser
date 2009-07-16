@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
-<!DOCTYPE web-app PUBLIC 
-  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   "http://java.sun.com/dtd/web-app_2_3.dtd">
-<web-app> 
+<web-app>
 
     <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
@@ -23,27 +23,29 @@
         <servlet-class>gov.nih.nci.evs.browser.servlet.AjaxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    
 
     <servlet-mapping>
          <servlet-name>ajax</servlet-name>
          <url-pattern>/ajax</url-pattern>
-    </servlet-mapping>  
-   
- 
+    </servlet-mapping>
+
     <!-- Faces Servlet -->
+
     <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup> 1 </load-on-startup>
+         <servlet-name>Faces Servlet</servlet-name>
+         <servlet-class>gov.nih.nci.evs.browser.servlet.AFacesServlet</servlet-class>
+         <init-param>
+           <param-name>errorPage</param-name>
+           <param-value>/pages/error_handler.jsf</param-value>
+         </init-param>
+         <load-on-startup>-1</load-on-startup>
     </servlet>
 
-
     <!-- Faces Servlet Mapping -->
+
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
 
-    
 </web-app>
