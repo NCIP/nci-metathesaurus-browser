@@ -124,9 +124,10 @@ public class UserSessionBean extends Object
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         String matchText = (String) request.getParameter("matchText");
-        matchText = matchText.trim();
+
+        if (matchText != null) matchText = matchText.trim();
         //[#19965] Error message is not displayed when Search Criteria is not proivded
-        if (matchText.length() == 0)
+        if (matchText == null || matchText.length() == 0)
         {
             String message = "Please enter a search string.";
             request.getSession().setAttribute("message", message);
@@ -147,10 +148,10 @@ public class UserSessionBean extends Object
 
         String source = (String) request.getParameter("source");
         if (source == null) {
-			source = "ALL";
-		}
-		//request.getSession().setAttribute("source", source);
-		setSelectedSource(source);
+            source = "ALL";
+        }
+        //request.getSession().setAttribute("source", source);
+        setSelectedSource(source);
 
         if (NCImBrowserProperties.debugOn) {
             try {
@@ -179,25 +180,25 @@ public class UserSessionBean extends Object
 
         /*
         if (matchtype.compareToIgnoreCase("CUI") == 0) {
-			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
-			Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText, source);
-			if (c != null) {
-				v = new Vector<org.LexGrid.concepts.Concept>();
-				v.add(c);
-			}
-		}
-		else if (matchtype.compareToIgnoreCase("Code") == 0) { // source code
-			boolean searchInactive = true;
+            //Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
+            Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText, source);
+            if (c != null) {
+                v = new Vector<org.LexGrid.concepts.Concept>();
+                v.add(c);
+            }
+        }
+        else if (matchtype.compareToIgnoreCase("Code") == 0) { // source code
+            boolean searchInactive = true;
             v = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
-												   source, matchText,
-												   maxToReturn, searchInactive);
-		} else { // String
+                                                   source, matchText,
+                                                   maxToReturn, searchInactive);
+        } else { // String
             //v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
             v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
-		}
-		*/
+        }
+        */
 
-		v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
+        v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
@@ -238,63 +239,63 @@ public class UserSessionBean extends Object
         }
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
-			message = "No match found. Please try 'Beings With' or 'Contains' search instead.";
-		}
+            message = "No match found. Please try 'Beings With' or 'Contains' search instead.";
+        }
         request.getSession().setAttribute("message", message);
         return "message";
     }
 
 
 
-	private String selectedResultsPerPage = null;
-	private List resultsPerPageList = null;
+    private String selectedResultsPerPage = null;
+    private List resultsPerPageList = null;
 
-	public List getResultsPerPageList() {
-		resultsPerPageList = new ArrayList();
-		resultsPerPageList.add(new SelectItem("10"));
-		resultsPerPageList.add(new SelectItem("25"));
-		resultsPerPageList.add(new SelectItem("50"));
-		resultsPerPageList.add(new SelectItem("75"));
-		resultsPerPageList.add(new SelectItem("100"));
-		resultsPerPageList.add(new SelectItem("250"));
-		resultsPerPageList.add(new SelectItem("500"));
+    public List getResultsPerPageList() {
+        resultsPerPageList = new ArrayList();
+        resultsPerPageList.add(new SelectItem("10"));
+        resultsPerPageList.add(new SelectItem("25"));
+        resultsPerPageList.add(new SelectItem("50"));
+        resultsPerPageList.add(new SelectItem("75"));
+        resultsPerPageList.add(new SelectItem("100"));
+        resultsPerPageList.add(new SelectItem("250"));
+        resultsPerPageList.add(new SelectItem("500"));
 
-		selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2))
-				.getLabel(); // default to 50
-		return resultsPerPageList;
-	}
+        selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2))
+                .getLabel(); // default to 50
+        return resultsPerPageList;
+    }
 
-	public void setSelectedResultsPerPage(String selectedResultsPerPage) {
-		if (selectedResultsPerPage == null)
-			return;
-		this.selectedResultsPerPage = selectedResultsPerPage;
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
-		request.getSession().setAttribute("selectedResultsPerPage",
-				selectedResultsPerPage);
-	}
+    public void setSelectedResultsPerPage(String selectedResultsPerPage) {
+        if (selectedResultsPerPage == null)
+            return;
+        this.selectedResultsPerPage = selectedResultsPerPage;
+        HttpServletRequest request = (HttpServletRequest) FacesContext
+                .getCurrentInstance().getExternalContext().getRequest();
+        request.getSession().setAttribute("selectedResultsPerPage",
+                selectedResultsPerPage);
+    }
 
-	public String getSelectedResultsPerPage() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
-		String s = (String) request.getSession().getAttribute(
-				"selectedResultsPerPage");
-		if (s != null) {
-			this.selectedResultsPerPage = s;
-		} else {
-			this.selectedResultsPerPage = "50";
-			request.getSession().setAttribute("selectedResultsPerPage", "50");
-		}
-		return this.selectedResultsPerPage;
-	}
+    public String getSelectedResultsPerPage() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext
+                .getCurrentInstance().getExternalContext().getRequest();
+        String s = (String) request.getSession().getAttribute(
+                "selectedResultsPerPage");
+        if (s != null) {
+            this.selectedResultsPerPage = s;
+        } else {
+            this.selectedResultsPerPage = "50";
+            request.getSession().setAttribute("selectedResultsPerPage", "50");
+        }
+        return this.selectedResultsPerPage;
+    }
 
-	public void resultsPerPageChanged(ValueChangeEvent event) {
-		if (event.getNewValue() == null) {
-			return;
-		}
-		String newValue = (String) event.getNewValue();
-		setSelectedResultsPerPage(newValue);
-	}
+    public void resultsPerPageChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null) {
+            return;
+        }
+        String newValue = (String) event.getNewValue();
+        setSelectedResultsPerPage(newValue);
+    }
 
     public String linkAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -365,100 +366,100 @@ public class UserSessionBean extends Object
     // source
     ////////////////////////////////////////////////////////////////
 
-	private String selectedSource = "ALL";
-	private List sourceList = null;
-	private Vector<String> sourceListData = null;
+    private String selectedSource = "ALL";
+    private List sourceList = null;
+    private Vector<String> sourceListData = null;
 
 
-	public List getSourceList() {
-		if (sourceList != null) return sourceList;
-		String codingSchemeName = Constants.CODING_SCHEME_NAME;
-		String version = null;
-		sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
-		sourceList = new ArrayList();
-		if (sourceListData != null) {
-			for (int i=0; i<sourceListData.size(); i++) {
-				String t = (String) sourceListData.elementAt(i);
-				sourceList.add(new SelectItem(t));
-			}
-	    }
-		return sourceList;
-	}
+    public List getSourceList() {
+        if (sourceList != null) return sourceList;
+        String codingSchemeName = Constants.CODING_SCHEME_NAME;
+        String version = null;
+        sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+        sourceList = new ArrayList();
+        if (sourceListData != null) {
+            for (int i=0; i<sourceListData.size(); i++) {
+                String t = (String) sourceListData.elementAt(i);
+                sourceList.add(new SelectItem(t));
+            }
+        }
+        return sourceList;
+    }
 
-	public void setSelectedSource(String selectedSource) {
-		if (selectedSource == null) return;
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		request.getSession().removeAttribute("selectedSource");
-		request.getSession().setAttribute("selectedSource", selectedSource);
-		this.selectedSource = selectedSource;
-	}
+    public void setSelectedSource(String selectedSource) {
+        if (selectedSource == null) return;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request.getSession().removeAttribute("selectedSource");
+        request.getSession().setAttribute("selectedSource", selectedSource);
+        this.selectedSource = selectedSource;
+    }
 
 
-	public String getSelectedSource() {
-		if (selectedSource == null) {
-			sourceList = getSourceList();
-			if (sourceList != null && sourceList.size() > 0) {
-				this.selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
-			}
-	    }
-		return this.selectedSource;
-	}
+    public String getSelectedSource() {
+        if (selectedSource == null) {
+            sourceList = getSourceList();
+            if (sourceList != null && sourceList.size() > 0) {
+                this.selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+            }
+        }
+        return this.selectedSource;
+    }
 
-	public void sourceSelectionChanged(ValueChangeEvent event) {
-		if (event.getNewValue() != null) {
-			String source = (String) event.getNewValue();
-			System.out.println("==================== sourceSelectionChanged to: " + source);
-			setSelectedSource(source);
-		}
-	}
+    public void sourceSelectionChanged(ValueChangeEvent event) {
+        if (event.getNewValue() != null) {
+            String source = (String) event.getNewValue();
+            System.out.println("==================== sourceSelectionChanged to: " + source);
+            setSelectedSource(source);
+        }
+    }
 
-	//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 /*
 
-	private String selectedMatchType = null;
-	private List matchTypeList = null;
-	private Vector<String> matchTypeListData = null;
+    private String selectedMatchType = null;
+    private List matchTypeList = null;
+    private Vector<String> matchTypeListData = null;
 
 
-	public List getMatchTypeList() {
-		String codingSchemeName = "NCI MetaThesaurus";
-		String version = null;
-		matchTypeListData = DataUtils.getMatchTypeListData(codingSchemeName, version);
-		matchTypeList = new ArrayList();
-		for (int i=0; i<matchTypeListData.size(); i++) {
-			String t = (String) matchTypeListData.elementAt(i);
-			matchTypeList.add(new SelectItem(t));
-		}
-		return matchTypeList;
-	}
+    public List getMatchTypeList() {
+        String codingSchemeName = "NCI MetaThesaurus";
+        String version = null;
+        matchTypeListData = DataUtils.getMatchTypeListData(codingSchemeName, version);
+        matchTypeList = new ArrayList();
+        for (int i=0; i<matchTypeListData.size(); i++) {
+            String t = (String) matchTypeListData.elementAt(i);
+            matchTypeList.add(new SelectItem(t));
+        }
+        return matchTypeList;
+    }
 
-	public void setSelectedMatchType(String selectedMatchType) {
-		this.selectedMatchType = selectedMatchType;
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    public void setSelectedMatchType(String selectedMatchType) {
+        this.selectedMatchType = selectedMatchType;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
 System.out.println("************* setSelectedMatchType selectedMatchType");
 
-		request.getSession().setAttribute("selectedMatchType", selectedMatchType);
-	}
+        request.getSession().setAttribute("selectedMatchType", selectedMatchType);
+    }
 
-	public String getSelectedMatchType() {
-		if (selectedMatchType == null) {
-			matchTypeList = getMatchTypeList();
-			if (matchTypeList != null && matchTypeList.size() > 0) {
-				this.selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
-			}
-	    }
+    public String getSelectedMatchType() {
+        if (selectedMatchType == null) {
+            matchTypeList = getMatchTypeList();
+            if (matchTypeList != null && matchTypeList.size() > 0) {
+                this.selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
+            }
+        }
 
 System.out.println("************* getSelectedMatchType selectedMatchType");
 
-		return this.selectedMatchType;
-	}
+        return this.selectedMatchType;
+    }
 
-	public void matchTypeSelectionChanged(ValueChangeEvent event) {
-		if (event.getNewValue() == null) return;
-		String matchType = (String) event.getNewValue();
-		setSelectedMatchType(matchType);
-	}
+    public void matchTypeSelectionChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null) return;
+        String matchType = (String) event.getNewValue();
+        setSelectedMatchType(matchType);
+    }
 
 */
 
@@ -466,52 +467,52 @@ System.out.println("************* getSelectedMatchType selectedMatchType");
     // concept sources
     ////////////////////////////////////////////////////////////////
 
-	private String selectedConceptSource = null;
-	private List conceptSourceList = null;
-	private Vector<String> conceptSourceListData = null;
+    private String selectedConceptSource = null;
+    private List conceptSourceList = null;
+    private Vector<String> conceptSourceListData = null;
 
 
-	public List getConceptSourceList() {
-		String codingSchemeName = Constants.CODING_SCHEME_NAME;
-		String version = null;
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    public List getConceptSourceList() {
+        String codingSchemeName = Constants.CODING_SCHEME_NAME;
+        String version = null;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String code = (String) request.getSession().getAttribute("code");
-		conceptSourceListData = DataUtils.getSources(codingSchemeName, version, null, code);
-		conceptSourceList = new ArrayList();
-		if (conceptSourceListData == null) return conceptSourceList;
+        conceptSourceListData = DataUtils.getSources(codingSchemeName, version, null, code);
+        conceptSourceList = new ArrayList();
+        if (conceptSourceListData == null) return conceptSourceList;
 
-		for (int i=0; i<conceptSourceListData.size(); i++) {
-			String t = (String) conceptSourceListData.elementAt(i);
-			conceptSourceList.add(new SelectItem(t));
-		}
-		return conceptSourceList;
-	}
+        for (int i=0; i<conceptSourceListData.size(); i++) {
+            String t = (String) conceptSourceListData.elementAt(i);
+            conceptSourceList.add(new SelectItem(t));
+        }
+        return conceptSourceList;
+    }
 
-	public void setSelectedConceptSource(String selectedConceptSource) {
-		this.selectedConceptSource = selectedConceptSource;
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		request.getSession().setAttribute("selectedConceptSource", selectedConceptSource);
-	}
+    public void setSelectedConceptSource(String selectedConceptSource) {
+        this.selectedConceptSource = selectedConceptSource;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request.getSession().setAttribute("selectedConceptSource", selectedConceptSource);
+    }
 
 
-	public String getSelectedConceptSource() {
-		if (selectedConceptSource == null) {
-			conceptSourceList = getConceptSourceList();
-			if (conceptSourceList != null && conceptSourceList.size() > 0) {
-				this.selectedConceptSource = ((SelectItem) conceptSourceList.get(0)).getLabel();
-			}
-	    }
-		return this.selectedConceptSource;
-	}
+    public String getSelectedConceptSource() {
+        if (selectedConceptSource == null) {
+            conceptSourceList = getConceptSourceList();
+            if (conceptSourceList != null && conceptSourceList.size() > 0) {
+                this.selectedConceptSource = ((SelectItem) conceptSourceList.get(0)).getLabel();
+            }
+        }
+        return this.selectedConceptSource;
+    }
 
-	public void conceptSourceSelectionChanged(ValueChangeEvent event) {
-		if (event.getNewValue() == null) return;
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		request.getSession().removeAttribute("neighborhood_synonyms");
-		request.getSession().removeAttribute("neighborhood_atoms");
-		String source = (String) event.getNewValue();
-		setSelectedConceptSource(source);
-	}
+    public void conceptSourceSelectionChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null) return;
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request.getSession().removeAttribute("neighborhood_synonyms");
+        request.getSession().removeAttribute("neighborhood_atoms");
+        String source = (String) event.getNewValue();
+        setSelectedConceptSource(source);
+    }
 
     public String viewNeighborhoodAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
