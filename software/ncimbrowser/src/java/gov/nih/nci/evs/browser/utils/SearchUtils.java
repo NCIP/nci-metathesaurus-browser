@@ -1150,9 +1150,19 @@ public class SearchUtils {
 			v = new Vector();
 			// add exact match for CUI and source code, if there is any (simple search case):
 			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
+			/*
 			Concept c = getConceptByCode(scheme, version, null, matchText0, source);
 			if (c != null) {
 				v.add(c);
+			}
+			*/
+
+			Vector w = searchByCode(scheme, version, matchText0, source, "LuceneQuery");
+			if (w.size() > 0) {
+				for (int k=0; k<w.size(); k++) {
+					Concept con = (Concept) w.elementAt(k);
+					v.add(con);
+				}
 			}
 
 			boolean searchInactive = true;
@@ -1160,7 +1170,7 @@ public class SearchUtils {
 												   source, matchText0, maxToReturn, searchInactive);
 			if (u != null) {
 				for (int j=0; j<u.size(); j++) {
-					c = (Concept) u.elementAt(j);
+					Concept c = (Concept) u.elementAt(j);
 					v.add(c);
 				}
 			}
@@ -1846,6 +1856,40 @@ public class SearchUtils {
 		int m2 = text.length() - (n + target.length());
 		int score = max_str_length - penalty_multiplier_2 * m2 - penalty_multiplier_1 * m1;
 		return Math.max(0, score);
+	}
+
+
+	public Vector searchByCode(String scheme, String version, String matchText, String source, String matchAlgorithm) {
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		Vector v = new Vector();
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		if (version != null) versionOrTag.setVersion(version);
+		CodedNodeSet cns = null;
+		try {
+			cns = lbs.getNodeSet(scheme, versionOrTag, null);
+			if (source != null) cns = restrictToSource(cns, source);
+			CodedNodeSet.PropertyType[] propertyTypes = null;
+			LocalNameList sourceList = null;
+			LocalNameList contextList = null;
+			NameAndValueList qualifierList = null;
+			cns = cns.restrictToMatchingProperties(ConvenienceMethods.createLocalNameList(new String[]{"conceptCode"}),
+					  propertyTypes, sourceList, contextList,
+					  qualifierList,matchText, matchAlgorithm, null);
+
+			ResolvedConceptReference[] list = null;
+			try {
+				list = cns.resolveToList(null, null, null, 500).getResolvedConceptReference();
+
+				for(ResolvedConceptReference ref : list) {
+					v.add(ref.getReferencedEntry());
+				}
+			} catch (Exception ex) {
+				System.out.println("WARNING: searchByCode throws exception.");
+			}
+		} catch (Exception ex) {
+			System.out.println("WARNING: searchByCode throws exception.");
+		}
+        return v;
 	}
 
 /////////////////////////////////////////////////////////////////
