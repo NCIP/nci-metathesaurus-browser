@@ -207,7 +207,7 @@ public class SearchUtils {
         this.url = url;
         initializeSortParameters();
     }
-    
+
 
     private void initializeSortParameters() {
 		doubleMetaphone = new DoubleMetaphone();
@@ -1171,7 +1171,9 @@ public class SearchUtils {
 			{
 		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
 		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
-				return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
+                //KLO 071709
+				//return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
+                return searchByName(scheme, version, matchText0, source, "startsWith", sortOption, maxToReturn);
 			}
 		}
 
