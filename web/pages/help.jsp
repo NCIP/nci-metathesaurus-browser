@@ -191,6 +191,7 @@
             and the ability to search other concept data and relationships are needed, and should be part of forthcoming browser
             releases.
             <li><b>Documentation</b>: Online and standalone documentation are still under development.
+            <li>For the latest updates of known issues, <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.0+Release+Notes" target="_blank" alt="NCI Metathesaurus Browser 1.0 Release Notes">(see NCI Metathesaurus Browser 1.0 Release Notes)</a>
           </ul>
           Please report any bugs or suggestions using the browser’s <a href="contact_us.jsf">Contact Us</a> page.
         </p>
