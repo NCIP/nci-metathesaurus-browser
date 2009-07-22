@@ -191,9 +191,10 @@
             and the ability to search other concept data and relationships are needed, and should be part of forthcoming browser
             releases.
             <li><b>Documentation</b>: Online and standalone documentation are still under development.
-            <li>For the latest updates of known issues, <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.0+Release+Notes" target="_blank" alt="NCI Metathesaurus Browser 1.0 Release Notes">(see NCI Metathesaurus Browser 1.0 Release Notes)</a>
+            <li>For the latest updates of known issues, <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.0+Release+Notes" target="_blank" alt="NCI Metathesaurus Browser 1.0 Release Notes"> see NCI Metathesaurus Browser 1.0 Release Notes</a>.
           </ul>
-          Please report any bugs or suggestions using the browser’s <a href="contact_us.jsf">Contact Us</a> page.
+          Please report any bugs or suggestions using the browser’s <a href="contact_us.jsf">Contact Us</a> page.<br>
+          Suggestions to add a new concept or make changes to an existing concept can also be made using the <b>Term Suggestion</b> link below the Search box or the <b>Suggest changes to this concept</b> link in the upper right of all concept details pages.
         </p>
         <p class="textbody">
           <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
