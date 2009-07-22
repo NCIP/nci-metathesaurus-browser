@@ -36,35 +36,55 @@
           <div class="pagecontent">
             <div class="texttitle-blue">Contact Us</div>
             <hr></hr>
-            <p><b>If you would like information immediately, please call:</b></p>
             <p>
-            &nbsp;&nbsp;&nbsp;&nbsp;<b>1-800-4-CANCER (1-800-422-6237)</b><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<i>9:00 a.m. to 4:30 p.m. local time, Monday through Friday</i><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;TTY 1-800-332-8615<br/>
+              <b>You can request help or make suggestions by filling out the online form below, or by
+              using any one of these contact points:</b>
             </p>
+            <table class="textbody">
+              <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>Telephone:</td>
+                <td>301.451.4384 or Toll-Free: 888.478.4423</td>
+              </tr>
+              <tr>
+                <td/>
+                <td>Email:</td>
+                <td><a href="mailto:ncicb@pop.nci.nih.gov">ncicb@pop.nci.nih.gov</a></td>
+              </tr>
+              <tr>
+                <td/>
+                <td>Web Page:</td>
+                <td><a href="http://ncicb.nci.nih.gov/support" target="_blank" alt="NCICB Support">http://ncicb.nci.nih.gov/support</a></td>
+              </tr>
+            </table>
             <p>
-              <b>
-                The email contact point for questions or suggestions on NCIt
-                content, browsers, distribution files, or other issues is:
-                <br/><br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="mailto:NCIThesaurus@mail.nih.gov">NCIThesaurus@mail.nih.gov</a>
-                <br/><br/>
-              </b>
+              Telephone support is available Monday to Friday, 8 am – 8 pm
+              Eastern Time, excluding government holidays. You may leave a
+              message, send an email, or submit a support request via the Web
+              at any time.  Please include:
+              <ul>
+                <li>Your contact information;</li>
+                <li>Reference to the NCIm Browser; and</li>
+                <li>A detailed description of your problem or suggestion.</li>
+              </ul>
+
               For questions related to NCI’s Cancer.gov Web site,
               see the
-              <a href="http://www.cancer.gov/help" target="_blank" alt="Cancer.gov help">Cancer.gov help page</a>. &nbsp;
+              <a href="http://www.cancer.gov/help" target="_blank" alt="Cancer.gov help">
+                Cancer.gov help page</a>. &nbsp;
               For help and other questions concerning NCI Enterprise Vocabulary
               Services (EVS),
-              see the <a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Web site</a>.
+              see the <a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">
+                EVS Web site</a>.
             </p>
-
             <%
               String color = "";
               if (error)
                 color = "style=\"color:#FF0000;\"";
             %>
-            <p><b <%= color %>>You must fill in every box below.</b>
+            <p><b <%= color %>>Online Form</b></p>
+            <p <%= color %>>
+            To use this web form, please fill in every box below and then click on “Submit”.
               <%
                 if (errorMsg != null && errorMsg.length() > 0) {
                     errorMsg = errorMsg.replaceAll("&lt;br/&gt;", "\n");
@@ -82,22 +102,17 @@
             <form method="post">
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Enter the subject of your email:</i>
+                <i>Subject of your email:</i>
               </p>
               <input CLASS="input.formField" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Enter your message:<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;Please include all pertinent details within the contact message box.<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;We do not open attachments to e-mail messages.
-                </i>
+                <i>Detailed description of your problem or suggestion (no attachments):</i>
               </p>
               <TEXTAREA Name="message" alt="Message" rows="4" cols="75"><%= message %></TEXTAREA>
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Enter your e-mail address:<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;For example, jdoe@yahoo.com
-                </i>
+                <i>Enter your e-mail address:</i>
               </p>
               <input CLASS="input.formField" size="100" name="emailaddress" alt="Email Address" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
               <br/><br/>
