@@ -14,7 +14,8 @@ public class SearchUtilsTest extends SearchUtils {
     public SearchUtilsTest() {
         super(null);
     }
-    
+
+/*
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         SortOption sortOption, int maxToReturn) {
@@ -32,14 +33,17 @@ public class SearchUtilsTest extends SearchUtils {
         return super.searchByName(scheme, version, matchText, source,
             matchAlgorithm, sortOption, maxToReturn);
     }
-    
+
+
     public void searchByNameTest(String scheme, String version, String matchText,
         String source, String matchAlgorithm, SortOption sortOption,
         int maxToReturn) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
+
         Vector<Concept> vector = searchByName(scheme, version, matchText,
             source, matchAlgorithm, sortOption, maxToReturn);
+
         long duration = stopWatch.getDuration();
 
         if (_displayConcepts && vector.size() > 0) {
@@ -66,10 +70,11 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.displayTabbedValues();
         }
     }
-    
+*/
+
     private void prompt() {
         boolean isTrue = false;
-        
+
         DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
         _suppressOtherMessages = Prompt.prompt(
             "  * Suppress other debugging messages", _suppressOtherMessages);
@@ -92,7 +97,7 @@ public class SearchUtilsTest extends SearchUtils {
         String source = null;
         SortOption sortOption = new SortOption(SortOption.Type.ALL);
         int maxToReturn = -1;
-        String[] matchTexts = new String[] { 
+        String[] matchTexts = new String[] {
             "100",
             "bone",
             "blood",
@@ -114,25 +119,27 @@ public class SearchUtilsTest extends SearchUtils {
             "gland",
             "injury"
         };
-        
+
 //        matchAlgorithm = "exactMatch";
         matchTexts = new String[] { "cell" };
-        
+
         DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
         prompt();
-        
+
         for (int i = 0; i < matchTexts.length; ++i) {
             String matchText = matchTexts[i];
             if (DBG.isDisplayDetails()) {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            searchByNameTest(scheme, version, matchText, source, matchAlgorithm, 
+            /*
+            searchByNameTest(scheme, version, matchText, source, matchAlgorithm,
                 sortOption, maxToReturn);
+            */
         }
         DBG.debug("* Done");
     }
-    
+
     private static void parse(String[] args) {
         String prevArg = "";
         for (int i = 0; i < args.length; ++i) {
@@ -149,7 +156,7 @@ public class SearchUtilsTest extends SearchUtils {
 
     public static void main(String[] args) {
         parse(args);
-        
+
         DBG.setPerformanceTesting(true);
         SearchUtilsTest test = new SearchUtilsTest();
         boolean isContinue = true;

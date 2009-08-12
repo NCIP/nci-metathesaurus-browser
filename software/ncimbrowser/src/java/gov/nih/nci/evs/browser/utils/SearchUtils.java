@@ -141,7 +141,6 @@ import org.LexGrid.concepts.Entity;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
 
-
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -1006,6 +1005,7 @@ public class SearchUtils {
          return null;
     }
 
+/*
     public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortOption, maxToReturn);
 	}
@@ -1025,19 +1025,6 @@ public class SearchUtils {
         matchText = matchText.trim();
         if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
 		{
-			/*
-			//matchText = replaceSpecialCharsWithBlankChar(matchText);
-			if (matchText.indexOf(" ") != -1) {
-				matchText = preprocessContains(matchText);
-				matchAlgorithm = "RegExp";
-				preprocess = false;
-		    } else {
-				String delim = ".*";
-				matchText = delim + matchText + delim;
-				matchAlgorithm = "RegExp";
-				preprocess = false;
-			}
-			*/
             String delim = ".*";
             if (containsSpecialChars(matchText)) {
 				matchText = delim + matchText + delim;
@@ -1148,15 +1135,6 @@ public class SearchUtils {
 			System.out.println("** No match -- trying matching by code " );
 
 			v = new Vector();
-			// add exact match for CUI and source code, if there is any (simple search case):
-			//Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText0, source);
-			/*
-			Concept c = getConceptByCode(scheme, version, null, matchText0, source);
-			if (c != null) {
-				v.add(c);
-			}
-			*/
-
 			Vector w = searchByCode(scheme, version, matchText0, source, "LuceneQuery");
 			if (w.size() > 0) {
 				for (int k=0; k<w.size(); k++) {
@@ -1193,9 +1171,237 @@ public class SearchUtils {
 		}
         return v;
     }
+*/
 
 
+    // V5.1 Implementation
+    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
+		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortOption, maxToReturn);
+	}
 
+
+    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
+		String matchText0 = matchText;
+		String matchAlgorithm0 = matchAlgorithm;
+		matchText0 = matchText0.trim();
+
+		boolean preprocess = true;
+        if (matchText == null || matchText.length() == 0)
+        {
+			//return new Vector();
+			return null;
+		}
+
+        matchText = matchText.trim();
+        if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+		{
+			/*
+            String delim = ".*";
+            if (containsSpecialChars(matchText)) {
+				matchText = delim + matchText + delim;
+				matchAlgorithm = "RegExp";
+		    } else if (matchText.indexOf(" ") != -1) {
+				// multiple tokens case:
+				matchText = preprocessContains(matchText);
+				matchAlgorithm = "RegExp";
+			} else if (matchText.indexOf(" ") == -1) {
+				// single token case:
+				matchText = delim + matchText + delim;
+				matchAlgorithm = "RegExp";
+			}
+			*/
+			matchAlgorithm = "subString";
+		}
+		System.out.println("algorithm" + matchAlgorithm);
+
+        CodedNodeSet cns = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc = null");
+                return null;
+            }
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (version != null) versionOrTag.setVersion(version);
+
+            //cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+            cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
+
+            if (cns == null)
+            {
+                System.out.println("cns = null");
+                return null;
+            }
+
+            //LocalNameList contextList = null;
+            try {
+				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
+				cns = restrictToSource(cns, source);
+            } catch (Exception ex) {
+                return null;
+            }
+
+/*
+            LocalNameList restrictToProperties = new LocalNameList();
+            SortOptionList sortCriteria = null;
+                //Constructors.createSortOptionList(new String[]{"matchToQuery"});
+            try {
+                // resolve nothing unless sort_by_pt_only is set to false
+                boolean resolveConcepts = false;
+                if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
+
+				System.out.println("resolveConcepts? " + resolveConcepts);
+
+                try {
+					long ms = System.currentTimeMillis(), delay = 0;
+                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+                    DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
+
+                }  catch (Exception e) {
+                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
+
+*/
+
+            LocalNameList restrictToProperties = new LocalNameList();
+            boolean resolveConcepts = true;
+            SortOptionList sortCriteria = null;
+
+            if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) {
+				System.out.println("*** Sort by Lucene score...");
+				sortCriteria = Constructors.createSortOptionList(new String[]{"matchToQuery"});
+
+            } else {
+                sortCriteria = Constructors.createSortOptionList(new String[] { "entityDescription" }); //code
+                System.out.println("*** Sort alphabetically...");
+                resolveConcepts = false;
+			}
+            try {
+                // resolve nothing unless sort_by_pt_only is set to false
+                //boolean resolveConcepts = false;
+                //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
+
+				//System.out.println("resolveConcepts? " + resolveConcepts);
+
+                try {
+					long ms = System.currentTimeMillis(), delay = 0;
+                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
+                    DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
+
+                }  catch (Exception e) {
+                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+/*
+		System.out.println("sortOption: " + sortOption);
+		System.out.println("apply_sort_score? " + sortOption.isApplySortScore());
+
+        if (sortOption.isApplySortScore())
+        {
+                long ms = System.currentTimeMillis();
+                try {
+					if (sortOption.isSortByPtOnly()) {
+					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
+					} else {
+                        iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
+					}
+
+                } catch (Exception ex) {
+
+                }
+                Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
+        }
+
+        Vector v = null;
+        if (iterator != null) {
+			//testing KLO
+			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
+			long ms = System.currentTimeMillis(), delay = 0;
+			v = resolveIterator( iterator, maxToReturn, null, sortOption.isSortByPtOnly());
+			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
+			DBG.debugDetails(delay, "resolveIterator", "searchByName");
+        }
+*/
+        if (iterator == null) {
+			iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
+		} else {
+			try {
+				int size = iterator.numberRemaining();
+				if (size == 0) {
+					iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
+				}
+			} catch (Exception e) {
+
+			}
+		}
+
+
+/*      to be modified (search by source code, or code)
+        if (v == null || v.size() == 0) {
+			System.out.println("** No match -- trying matching by code " );
+
+			v = new Vector();
+			Vector w = searchByCode(scheme, version, matchText0, source, "LuceneQuery");
+			if (w.size() > 0) {
+				for (int k=0; k<w.size(); k++) {
+					Concept con = (Concept) w.elementAt(k);
+					v.add(con);
+				}
+			}
+
+			boolean searchInactive = true;
+			Vector u = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
+												   source, matchText0, maxToReturn, searchInactive);
+			if (u != null) {
+				for (int j=0; j<u.size(); j++) {
+					Concept c = (Concept) u.elementAt(j);
+					v.add(c);
+				}
+			}
+	    }
+
+	    if (v == null || v.size() == 0) {
+		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
+			{
+		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
+		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
+                //KLO 071709
+				//return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
+                return searchByName(scheme, version, matchText0, source, "startsWith", sortOption, maxToReturn);
+			}
+		}
+
+		if(!sortOption.isApplySortScore())
+		{
+			v = SortUtils.quickSort(v);
+		}
+        return v;
+*/
+        return iterator;
+    }
+
+/*
     public void testSearchByName() {
         String scheme = "NCI Thesaurus";
         String version = null;
@@ -1219,6 +1425,7 @@ public class SearchUtils {
             }
         }
     }
+*/
 
     protected static List<String> toWords(String s, String delimitRegex, boolean removeStopWords, boolean removeDuplicates) {
         String[] words = s.split(delimitRegex);
@@ -1892,6 +2099,52 @@ public class SearchUtils {
         return v;
 	}
 
+
+	public ResolvedConceptReferencesIterator matchConceptCode(String scheme, String version, String matchText, String source, String matchAlgorithm) {
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		Vector v = new Vector();
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		if (version != null) versionOrTag.setVersion(version);
+		CodedNodeSet cns = null;
+		ResolvedConceptReferencesIterator iterator = null;
+		try {
+			cns = lbs.getNodeSet(scheme, versionOrTag, null);
+			if (source != null) cns = restrictToSource(cns, source);
+			CodedNodeSet.PropertyType[] propertyTypes = null;
+			LocalNameList sourceList = null;
+			LocalNameList contextList = null;
+			NameAndValueList qualifierList = null;
+			cns = cns.restrictToMatchingProperties(ConvenienceMethods.createLocalNameList(new String[]{"conceptCode"}),
+					  propertyTypes, sourceList, contextList,
+					  qualifierList,matchText, matchAlgorithm, null);
+
+            LocalNameList restrictToProperties = new LocalNameList();
+            SortOptionList sortCriteria = null;
+            try {
+                boolean resolveConcepts = true;
+                try {
+					long ms = System.currentTimeMillis(), delay = 0;
+                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+
+                    int size = iterator.numberRemaining();
+                    System.out.println("cns.resolve size: " + size);
+
+                }  catch (Exception e) {
+                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
+
+		} catch (Exception ex) {
+			System.out.println("WARNING: searchByCode throws exception.");
+		}
+        return iterator;
+	}
+
+
 /////////////////////////////////////////////////////////////////
     public static void main(String[] args)
     {
@@ -1903,6 +2156,6 @@ public class SearchUtils {
          }
 
          SearchUtils test = new SearchUtils(url);
-         test.testSearchByName();
+         //test.testSearchByName();
     }
 }

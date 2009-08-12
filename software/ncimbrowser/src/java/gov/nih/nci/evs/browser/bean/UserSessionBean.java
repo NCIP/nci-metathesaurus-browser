@@ -34,6 +34,8 @@ import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import gov.nih.nci.evs.browser.utils.*;
 
 import gov.nih.nci.evs.browser.common.Constants;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -142,6 +144,7 @@ public class UserSessionBean extends Object
 
         String rankingStr = (String) request.getParameter("ranking");
         boolean ranking = rankingStr != null && rankingStr.equals("on");
+
         SortOption sortOption = new SortOption(ranking);
         request.getSession().setAttribute("ranking", Boolean.toString(ranking));
         request.getSession().setAttribute("sortOptionType", sortOption.getType().name());
@@ -198,12 +201,11 @@ public class UserSessionBean extends Object
         }
         */
 
-        v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
+        //v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
+        ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
-
-
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -213,30 +215,56 @@ public class UserSessionBean extends Object
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
+        //if (v != null && v.size() > 1)
+        if (iterator != null) {
 
-        if (v != null && v.size() > 1)
-        {
-            request.getSession().setAttribute("search_results", v);
-            String match_size = Integer.toString(v.size());
-            request.getSession().setAttribute("match_size", match_size);
-            request.getSession().setAttribute("page_string", "1");
-            //request.getSession().setAttribute("selectedResultsPerPage", "50");
-            request.getSession().setAttribute("new_search", Boolean.TRUE);
-            return "search_results";
-        }
-        else if (v != null && v.size() == 1)
-        {
-            request.getSession().setAttribute("singleton", "true");
-            request.getSession().setAttribute("dictionary", Constants.CODING_SCHEME_NAME);
-            Concept c = (Concept) v.elementAt(0);
-            request.getSession().setAttribute("code", c.getEntityCode());
-            request.getSession().setAttribute("concept", c);
-            request.getSession().setAttribute("type", "properties");
+            IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("iteratorBean");
 
-            request.getSession().setAttribute("new_search", Boolean.TRUE);
+            if (iteratorBean == null) {
+				iteratorBean = new IteratorBean(iterator);
+            	FacesContext.getCurrentInstance().getExternalContext()
+                   .getSessionMap().put("iteratorBean", iteratorBean);
+			} else {
+				iteratorBean.setIterator(iterator);
+			}
 
-            return "concept_details";
-        }
+			int size = iteratorBean.getSize();
+
+			if (size > 1) {
+
+				request.getSession().setAttribute("search_results", v);
+
+				String match_size = Integer.toString(size);;//Integer.toString(v.size());
+				request.getSession().setAttribute("match_size", match_size);
+				request.getSession().setAttribute("page_string", "1");
+
+				request.getSession().setAttribute("new_search", Boolean.TRUE);
+				return "search_results";
+		    } else if (size == 1) {
+				request.getSession().setAttribute("singleton", "true");
+				request.getSession().setAttribute("dictionary", Constants.CODING_SCHEME_NAME);
+				//Concept c = (Concept) v.elementAt(0);
+				int pageNumber = 1;
+				List list = iteratorBean.getData(1);
+				ResolvedConceptReference ref = (ResolvedConceptReference) list.get(0);
+
+				Concept c = null;
+				if (ref == null) {
+					System.out.println("************ ref = NULL???");
+				} else {
+					c = ref.getReferencedEntry();
+				}
+
+				request.getSession().setAttribute("code", c.getEntityCode());
+				request.getSession().setAttribute("concept", c);
+				request.getSession().setAttribute("type", "properties");
+
+				request.getSession().setAttribute("new_search", Boolean.TRUE);
+				return "concept_details";
+		    }
+		}
+
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
             message = "No match found. Please try 'Beings With' or 'Contains' search instead.";
