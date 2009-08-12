@@ -89,7 +89,7 @@ public class RemoteServerUtil {
         url = "http://cbvapp-q1014.nci.nih.gov:19180/lexevsapi50";
 
         url = "http://lexevsapi.nci.nih.gov/lexevsapi50";
-
+        url = "http://ncias-d177-v.nci.nih.gov:19280/lexevsapi51";
 
         return createLexBIGService(url);
     }

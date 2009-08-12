@@ -36,8 +36,8 @@ public class RegExpTest {
 
 	private String searchText = "11: 107384855-107482789";
     private Vector searchText_vec = null;
-    private String codingSchemeName = "NCI Thesaurus";
-    //private String codingSchemeName = "NCI MetaThesaurus";
+    //private String codingSchemeName = "NCI Thesaurus";
+    private String codingSchemeName = "NCI MetaThesaurus";
     private String algorithm = "exactMatch";
 
     private void initializeTestCases(File inputfile) {
@@ -84,7 +84,9 @@ searchText_vec.add("(10^-6m)3");
 		searchText_vec.add("D&C");
 		searchText_vec.add("(2S)-N-(3-(4-Carbamimidoylbenzamido)propyl)-1-{2,4-dichloro-3-((2,4-dimethyl-8-quinolyloxy)methyl)phenylsulfonyl}pyrrolidine-2-carboxamide");
 */
-searchText_vec.add("adverse");
+//searchText_vec.add("adverse");
+searchText_vec.add("blood");
+searchText_vec.add("cell");
 	}
 
 /*
@@ -200,7 +202,8 @@ searchText_vec.add("adverse");
 		outfilename = args[1];
 		File infile = new File(infilename);
 		File outfile = new File(outfilename);
-		test.initializeTestCases(infile);
+		//test.initializeTestCases(infile);
+		test.initializeTestCases();
 
 		test.testIterator(outfile);
 	}
