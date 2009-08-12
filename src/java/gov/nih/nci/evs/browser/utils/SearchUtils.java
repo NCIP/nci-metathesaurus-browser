@@ -1212,7 +1212,7 @@ public class SearchUtils {
 			*/
 			matchAlgorithm = "subString";
 		}
-		System.out.println("algorithm" + matchAlgorithm);
+		System.out.println("algorithm: " + matchAlgorithm);
 
         CodedNodeSet cns = null;
         ResolvedConceptReferencesIterator iterator = null;
