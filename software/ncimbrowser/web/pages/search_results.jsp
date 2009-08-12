@@ -2,10 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
+<%@ page import="java.util.List"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
+<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
+<%@ page import="javax.faces.context.FacesContext" %>
+<%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -30,13 +34,18 @@
       <!-- Page content -->
       <div class="pagecontent">
         <%
-          Vector v = (Vector) request.getSession().getAttribute("search_results");
+          String page_string = null;
+          IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("iteratorBean");
+       
+          //Vector v = (Vector) request.getSession().getAttribute("search_results");
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
           String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
-          String page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
+          
+          page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
+          
           Boolean new_search = (Boolean) request.getSession().getAttribute("new_search");
           String page_number = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("page_number"));
-          //String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("selectedResultsPerPage"));
           String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedResultsPerPage"));
 
           if (page_number != null && new_search == Boolean.FALSE)
@@ -55,13 +64,23 @@
           }
           int iend = page_num * page_size;
           int istart = iend - page_size;
+          
+          int size = iteratorBean.getSize();
+          /*
           if (iend > v.size()) iend = v.size();
           int num_pages = v.size() / page_size;
           if (num_pages * page_size < v.size()) num_pages++;
+          */
+
+          if (iend > size) iend = size;
+          int num_pages = size / page_size;
+          if (num_pages * page_size < size) num_pages++;
+     
           String istart_str = Integer.toString(istart+1);
           String iend_str = Integer.toString(iend);
           String prev_page_num_str = Integer.toString(prev_page_num);
           String next_page_num_str = Integer.toString(next_page_num);
+          
         %>
         <table width="700px">
 
@@ -96,26 +115,39 @@
           <%
           }
           %>
-
                 <%
-                  for (int i=istart; i<iend; i++) {
-                    if (i >= 0 && i<v.size()) {
-                      Concept c = (Concept) v.elementAt(i);
-                      String code = c.getEntityCode();
-                      String name = c.getEntityDescription().getContent();
-                      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
+                  List list = iteratorBean.getData(istart, iend);
+                  //int max = iteratorBean.getSize();
+                  //for (int i=istart; i<iend; i++) {
+                  //  if (i >= 0 && i<v.size()) {
+                  
+                  for (int i=0; i<list.size(); i++) {
+                      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+                      //Concept c = (Concept) v.elementAt(i);
+                      
+                      Concept c = rcr.getReferencedEntry();
+                      //String code = c.getEntityCode();
+                      //String name = c.getEntityDescription().getContent();
+
+                      String code = rcr.getConceptCode();
+                      String name = rcr.getEntityDescription().getContent();
+                                            
                       String semantic_type = "";
-                      if (semantic_types != null && semantic_types.size() > 0) {
-                          for (int j=0; j<semantic_types.size(); j++) {
-                              String t = (String) semantic_types.elementAt(j);
-                              if (j == 0) {
-                                  semantic_type = semantic_type + t;
-                              } else {
-                                  semantic_type = semantic_type + "&nbsp;" + t;
-                              }
-                              if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-                          }
+                      if (c != null) {
+			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      
+			      if (semantic_types != null && semantic_types.size() > 0) {
+				  for (int j=0; j<semantic_types.size(); j++) {
+				      String t = (String) semantic_types.elementAt(j);
+				      if (j == 0) {
+					  semantic_type = semantic_type + t;
+				      } else {
+					  semantic_type = semantic_type + "&nbsp;" + t;
+				      }
+				      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+				  }
+			      }
                       }
+                                            
 
                       if (i % 2 == 0) {
                         %>
@@ -135,7 +167,7 @@
                           </td>
                         </tr>
                       <%
-                    }
+
                   }
                 %>
               </table>
