@@ -252,11 +252,18 @@ public class UserSessionBean extends Object
 				Concept c = null;
 				if (ref == null) {
 					System.out.println("************ ref = NULL???");
+					String msg = "Error: Null ResolvedConceptReference encountered.";
+					request.getSession().setAttribute("message", msg);
+					return "message";
+
 				} else {
 					c = ref.getReferencedEntry();
+					if (c == null) {
+						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, ref.getConceptCode());
+					}
 				}
 
-				request.getSession().setAttribute("code", c.getEntityCode());
+				request.getSession().setAttribute("code", ref.getConceptCode());
 				request.getSession().setAttribute("concept", c);
 				request.getSession().setAttribute("type", "properties");
 
