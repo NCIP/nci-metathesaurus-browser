@@ -26,6 +26,8 @@ public class Constants {
     static public final String FALSE = "false";
     static public final String EMPTY = "";
 
+    static public final int DEFAULT_PAGE_SIZE = 50;
+
     static public final List<String> REL = Arrays.asList(new String[] {
             "Parent\tPAR\tConcept subsumes current concept as a subtype, part, or otherwise.",
             "Child\tCHD\tConcept is subsumed by current concept as its subtype, part, or otherwise.",
