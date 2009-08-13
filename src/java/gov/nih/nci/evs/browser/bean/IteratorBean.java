@@ -1,11 +1,14 @@
 package gov.nih.nci.evs.browser.bean;
 
+
 import java.io.*;
 import java.util.*;
 
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.concepts.Concept;
+
+import gov.nih.nci.evs.browser.common.Constants;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -41,7 +44,7 @@ import org.LexGrid.concepts.Concept;
 
 public class IteratorBean extends Object {
 
-    static int DEFAULT_PAGE_SIZE = 25;
+    //static int DEFAULT_PAGE_SIZE = 50;
     static int DEFAULT_MAX_RETURN = 100;
     ResolvedConceptReferencesIterator iterator = null;
     int size = 0;
@@ -88,7 +91,7 @@ public class IteratorBean extends Object {
 			for (int i=0; i<size; i++) {
 			    list.add(null);
 			}
-			this.pageSize = DEFAULT_PAGE_SIZE;
+			this.pageSize = Constants.DEFAULT_PAGE_SIZE;
 			this.numberOfPages = size / pageSize;
 			if (this.pageSize * this.numberOfPages < size) {
 				this.numberOfPages = this.numberOfPages + 1;
