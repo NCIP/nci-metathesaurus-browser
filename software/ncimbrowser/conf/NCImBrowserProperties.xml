@@ -2257,11 +2257,6 @@
         </ConfigurableItem>
 
         <ConfigurableItem>
-                 <key>SORT_BY_SCORE</key>
-                 <value>@sort.by.score@</value>
-        </ConfigurableItem>
-
-        <ConfigurableItem>
                  <key>MAIL_SMTP_SERVER</key>
                  <value>@mail.smtp.server@</value>
         </ConfigurableItem>

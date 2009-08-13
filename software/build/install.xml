@@ -248,7 +248,6 @@
             <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
             <filter token="maximum.return" value="${maximum.return}"/>
             <filter token="maximum.tree.level" value="${maximum.tree.level}"/>
-            <filter token="sort.by.score" value="${sort.by.score}"/>
             <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
             <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
             <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>

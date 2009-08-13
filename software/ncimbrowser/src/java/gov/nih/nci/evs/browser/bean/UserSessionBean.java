@@ -144,11 +144,12 @@ public class UserSessionBean extends Object
 
         String rankingStr = (String) request.getParameter("ranking");
         boolean ranking = rankingStr != null && rankingStr.equals("on");
-
+/*
         SortOption sortOption = new SortOption(ranking);
         request.getSession().setAttribute("ranking", Boolean.toString(ranking));
         request.getSession().setAttribute("sortOptionType", sortOption.getType().name());
-
+*/
+        request.getSession().setAttribute("ranking", Boolean.toString(ranking));
         String source = (String) request.getParameter("source");
         if (source == null) {
             source = "ALL";
@@ -163,7 +164,7 @@ public class UserSessionBean extends Object
                 System.out.println("* matchType: " + matchtype);
                 System.out.println("* source: " + source);
                 System.out.println("* ranking: " + ranking);
-                System.out.println("* sortOption: " + sortOption);
+               // System.out.println("* sortOption: " + sortOption);
             } catch (Exception e) {
             }
         }
@@ -202,7 +203,7 @@ public class UserSessionBean extends Object
         */
 
         //v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
-        ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
+        ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
         //request.getSession().setAttribute("matchtype", matchtype);
