@@ -10,38 +10,38 @@ import org.LexGrid.LexBIG.Utility.Iterators.*;
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 
 public class RegExpTest {
-    private LexBIGService lbs = RemoteServerUtil.createLexBIGService();
-    private Vector<String> searchTexts = new Vector<String>();
-    private String codingSchemeName = "NCI MetaThesaurus"; //"NCI Thesaurus"
-    private String algorithm = "exactMatch";
+    private LexBIGService _lbs = RemoteServerUtil.createLexBIGService();
+    private Vector<String> _searchTexts = new Vector<String>();
+    private String _codingSchemeName = "NCI MetaThesaurus"; //"NCI Thesaurus"
+    private String _algorithm = "exactMatch";
     
     public RegExpTest() {
         initializeTestCases();
     }
 
     private void initializeTestCases() {
-        searchTexts = new Vector<String>();
-        searchTexts.add("blood");
-        searchTexts.add("cell");
+        _searchTexts = new Vector<String>();
+        _searchTexts.add("blood");
+        _searchTexts.add("cell");
     }
 
     public void testIterator() throws Exception {
-        for (int i = 0; i < searchTexts.size(); i++) {
-            String t = (String) searchTexts.elementAt(i);
+        for (int i = 0; i < _searchTexts.size(); i++) {
+            String t = (String) _searchTexts.elementAt(i);
             System.out.println("---------------------------------------------");
-            System.out.println("* codingSchemeName: " + codingSchemeName);
+            System.out.println("* codingSchemeName: " + _codingSchemeName);
             System.out.println("* Search string: " + t);
 
             CodedNodeSet cns = null;
             try {
-                cns = lbs.getCodingSchemeConcepts(codingSchemeName, null);
+                cns = _lbs.getCodingSchemeConcepts(_codingSchemeName, null);
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
             System.out.println("* cns: " + (cns == null ? "null" : "not null"));
 
             cns = cns.restrictToMatchingDesignations(t,
-                SearchDesignationOption.ALL, algorithm, null);
+                SearchDesignationOption.ALL, _algorithm, null);
             ResolvedConceptReferencesIterator itr = null;
             int cnt = 0;
             try {
@@ -70,15 +70,15 @@ public class RegExpTest {
     }
 
     public void testList() throws Exception {
-        for (int i = 0; i < searchTexts.size(); i++) {
-            String t = (String) searchTexts.elementAt(i);
+        for (int i = 0; i < _searchTexts.size(); i++) {
+            String t = (String) _searchTexts.elementAt(i);
             System.out.println("---------------------------------------------");
             System.out.println("* Search string: " + t);
 
-            CodedNodeSet cns = lbs.getCodingSchemeConcepts(codingSchemeName,
+            CodedNodeSet cns = _lbs.getCodingSchemeConcepts(_codingSchemeName,
                 null);
             cns = cns.restrictToMatchingDesignations(t,
-                SearchDesignationOption.ALL, algorithm, null);
+                SearchDesignationOption.ALL, _algorithm, null);
             ResolvedConceptReference[] list = null;
             int cnt = 0;
             try {
