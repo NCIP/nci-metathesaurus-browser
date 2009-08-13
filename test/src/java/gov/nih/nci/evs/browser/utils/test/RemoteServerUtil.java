@@ -43,7 +43,7 @@ import org.LexGrid.LexBIG.Impl.*;
  */
 
 public class RemoteServerUtil {
-    private static String serviceURL = null;
+    private static String _serviceURL = null;
 
     public static LexBIGService createLexBIGService() {
         String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
@@ -73,6 +73,6 @@ public class RemoteServerUtil {
     }
 
     public static String getServiceURL() {
-        return serviceURL;
+        return _serviceURL;
     }
 }
