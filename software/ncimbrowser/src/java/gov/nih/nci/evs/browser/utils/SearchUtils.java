@@ -1175,12 +1175,12 @@ public class SearchUtils {
 
 
     // V5.1 Implementation
-    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
-		return searchByName(scheme, version, matchText, null, matchAlgorithm, sortOption, maxToReturn);
+    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String matchAlgorithm, boolean ranking, int maxToReturn) {
+		return searchByName(scheme, version, matchText, null, matchAlgorithm, ranking, maxToReturn);
 	}
 
 
-    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, SortOption sortOption, int maxToReturn) {
+    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, boolean ranking, int maxToReturn) {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1275,9 +1275,12 @@ public class SearchUtils {
 
             LocalNameList restrictToProperties = new LocalNameList();
             boolean resolveConcepts = true;
+            if (!ranking) resolveConcepts = false;
+
             SortOptionList sortCriteria = null;
 
-            if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) {
+            //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) {
+		    if (ranking){
 				System.out.println("*** Sort by Lucene score...");
 				sortCriteria = Constructors.createSortOptionList(new String[]{"matchToQuery"});
 
@@ -1589,6 +1592,8 @@ public class SearchUtils {
      * @return Iterator over sorted references.
      * @throws LBException
      */
+
+     /*
     protected ResolvedConceptReferencesIterator sortByScore(String searchTerm, ResolvedConceptReferencesIterator toSort, int maxToReturn) throws LBException {
         // Determine the set of individual words to compare against.
         List<String> compareWords = toScoreWords(searchTerm);
@@ -1680,13 +1685,7 @@ public class SearchUtils {
                 Presentation[] allTermsForConcept = ce.getPresentation();
                 for (Presentation p : allTermsForConcept) {
 					float score = (float) 0.0;
-					/*
-					if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") != 0) {
-                        score = score(p.getValue().getContent(), compareWords);
-					} else {
-						score = score(p.getValue().getContent(), compareWords, compareCodes, target, true);
-					}
-					*/
+
 					if (algorithm.compareTo("contains") == 0 || algorithm.compareTo("RegExp") == 0) {
                         score = score_contains(p.getValue().getContent(), searchTerm);
                         //score = score(p.getValue().getContent(), compareWords);
@@ -1795,13 +1794,6 @@ public class SearchUtils {
                 String code = ref.getConceptCode();
                 String name = ref.getEntityDescription().getContent();
                 float score = (float) 0.0;//score(name, compareWords, true, i);
-                /*
-				if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
-					score = score(name, compareWords, compareCodes, target, true);
-				} else {
-					score = score(name, compareWords);
-				}
-				*/
 
 				if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0) {
 					score = score(name, compareWords, compareCodes, target, true);
@@ -1821,6 +1813,7 @@ public class SearchUtils {
         return new ScoredIterator(scoredResult.values(), maxToReturn);
     }
 
+*/
     /**
      * Returns a score providing a relative comparison of the given
      * text against a set of keywords.
