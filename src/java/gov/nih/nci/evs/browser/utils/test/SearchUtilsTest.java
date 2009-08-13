@@ -95,7 +95,7 @@ public class SearchUtilsTest extends SearchUtils {
         String version = null;
         String matchAlgorithm = "contains";
         String source = null;
-        SortOption sortOption = new SortOption(SortOption.Type.ALL);
+        //SortOption sortOption = new SortOption(SortOption.Type.ALL);
         int maxToReturn = -1;
         String[] matchTexts = new String[] {
             "100",
