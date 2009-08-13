@@ -297,6 +297,16 @@ public class UserSessionBean extends Object
 
         selectedResultsPerPage = ((SelectItem) resultsPerPageList.get(2))
                 .getLabel(); // default to 50
+
+        for (int i=0; i<selectedResultsPerPage.length(); i++) {
+			SelectItem item = (SelectItem) resultsPerPageList.get(i);
+			String label = item.getLabel();
+			int k = Integer.parseInt(label);
+			if (k == Constants.DEFAULT_PAGE_SIZE) {
+				selectedResultsPerPage = label;
+				break;
+			}
+		}
         return resultsPerPageList;
     }
 
