@@ -4,7 +4,7 @@
 cd ..
 set cp=.
 foreach jar (../lib/*.jar)
-  set cp="$cp":"$jar"
+  set cp="$cp":$jar
 end
 setenv CLASSPATH $cp
 
