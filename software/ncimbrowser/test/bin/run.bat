@@ -7,7 +7,7 @@ cd ..
 set cp=.
 set cp=%cp%;..\conf
 set cp=%cp%;classes
-for %%x in (..\lib\*.jar ..\..\..\software\test\lib\*.jar) do (
+for %%x in (..\lib\*.jar lib\*.jar) do (
   set cp=!cp!;%%x
 )
 set CLASSPATH=%cp%
