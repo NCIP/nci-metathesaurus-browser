@@ -13,7 +13,7 @@ for %%x in (..\lib\*.jar lib\*.jar) do (
 set CLASSPATH=%cp%
 
 set java=java
-set class=gov.nih.nci.evs.browser.utils.test.ResolveConceptIteratorTest
+set class=gov.nih.nci.evs.browser.utils.test.Main
 set args=
 
 rem -------------------------------------------------------------------------------------
