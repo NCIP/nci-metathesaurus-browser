@@ -10,7 +10,7 @@ for %%x in (..\lib\*.jar) do (
 )
 set CLASSPATH=%cp%
 
-set javac=%JAVA_HOME%\bin\javac.exe
+set javac=%JAVA_HOME%\bin\javac
 
 rem -------------------------------------------------------------------------------------
 @echo on
