@@ -6,7 +6,7 @@ set cp=.
 set cp="$cp":../conf
 set cp="$cp":classes
 foreach jar (../lib/*.jar lib/*.jar)
-  set cp="$cp":"$jar"
+  set cp="$cp":$jar
 end
 setenv CLASSPATH $cp
 
