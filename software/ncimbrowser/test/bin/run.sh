@@ -8,7 +8,6 @@ set cp="$cp":classes
 foreach jar (../lib/*.jar lib/*.jar)
   set cp="$cp":"$jar"
 end
-echo $cp
 setenv CLASSPATH $cp
 
 #----------------------------------------------------------------------------------------
