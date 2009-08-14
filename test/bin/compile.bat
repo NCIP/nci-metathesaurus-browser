@@ -10,12 +10,12 @@ for %%x in (..\lib\*.jar) do (
 )
 set CLASSPATH=%cp%
 
-set javac=C:\Progra~1\Java\jdk1.5.0_14\bin\javac.exe
+set javac=%JAVA_HOME%\bin\javac.exe
 
 rem -------------------------------------------------------------------------------------
 @echo on
 mkdir .\classes
-%javac% -d .\classes src/java/gov/nih/nci/evs/browser/utils/test/*.java
+"%javac%" -d .\classes src/java/gov/nih/nci/evs/browser/utils/test/*.java
 
 @echo off
 rem -------------------------------------------------------------------------------------
