@@ -20,6 +20,10 @@ if "%1" == "deploy" (
     ant deploy:hot
     goto DONE
 )
+if "%1" == "install" (
+    ant deploy:local:install
+    goto DONE
+)
 if "%1" == "clean" (
     if exist ..\target\*.* (
        rmdir /Q /S ..\target
