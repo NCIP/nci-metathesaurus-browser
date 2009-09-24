@@ -1175,6 +1175,11 @@ public class SearchUtils {
 
 
     // V5.1 Implementation
+    public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
+        return searchByName(scheme, version, matchText, source, matchAlgorithm, true, maxToReturn);
+	}
+
+
     public ResolvedConceptReferencesIterator searchByName(String scheme, String version, String matchText, String matchAlgorithm, boolean ranking, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, ranking, maxToReturn);
 	}
