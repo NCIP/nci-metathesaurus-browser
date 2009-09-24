@@ -32,7 +32,7 @@ package gov.nih.nci.evs.browser.utils;
   *
  */
 
-import gov.nih.nci.evs.browser.common.Constants;
+//import gov.nih.nci.evs.browser.common.Constants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,9 +76,9 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
 
 public class MetadataUtils {
 
-	private final String codingSchemeNameProperty = "codingScheme";
+	private static final String codingSchemeNameProperty = "codingScheme";
 
-	private Vector getMetadataCodingSchemeNames(MetadataPropertyList mdpl){
+	private static Vector getMetadataCodingSchemeNames(MetadataPropertyList mdpl){
 		//List<MetadataProperty> metaDataProperties = new ArrayList<MetadataProperty>();
         Vector v = new Vector();
 		Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
@@ -98,7 +98,7 @@ public class MetadataUtils {
 	 * @param codingScheme The Coding Scheme to restrict to
 	 * @return All of the Metadata Properties associated with the given Coding Scheme.
 	 */
-	private List<MetadataProperty> getMetadataForCodingScheme(MetadataPropertyList mdpl, String codingScheme){
+	private static List<MetadataProperty> getMetadataForCodingScheme(MetadataPropertyList mdpl, String codingScheme){
 		List<MetadataProperty> metaDataProperties = new ArrayList<MetadataProperty>();
 
 		Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
@@ -121,21 +121,30 @@ public class MetadataUtils {
 	}
 
 
-    public MetadataPropertyList getMetadataPropertyList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
+    public static MetadataPropertyList getMetadataPropertyList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
 
         LexBIGServiceMetadata smd = null;
         MetadataPropertyList mdpl = null;
         try {
 			smd = lbSvc.getServiceMetadata();
+			if (smd == null) return null;
 			acsvr.setCodingSchemeURN(urn);
 			acsvr.setCodingSchemeVersion(version);
-			smd = smd.restrictToCodingScheme(acsvr);
+
+			try {
+				smd = smd.restrictToCodingScheme(acsvr);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				System.out.println("smd.restrictToCodingScheme(acsvr) failed???");
+				return null;
+			}
 
 			try {
 				mdpl = smd.resolve();
 			} catch (Exception ex) {
 				ex.printStackTrace();
+				System.out.println("smd.resolve() failed???");
 				return null;
 			}
 
@@ -162,7 +171,7 @@ public class MetadataUtils {
 		return mdpl;
 	}
 
- 	public Vector<String> getAvailableCodingSchemeVersions(LexBIGService lbSvc, String codingSchemeName) //CodingScheme cs)
+ 	public static Vector<String> getAvailableCodingSchemeVersions(LexBIGService lbSvc, String codingSchemeName) //CodingScheme cs)
 	{
 		Vector<String> v = new Vector<String>();
 		try {
@@ -185,8 +194,8 @@ public class MetadataUtils {
 		return v;
 	}
 
-    public Vector getMetadataForCodingSchemes(String propertyName) {
-		String codingSchemeName = Constants.CODING_SCHEME_NAME;
+    public static Vector getMetadataForCodingSchemes(String codingSchemeName, String propertyName) {
+		//String codingSchemeName = Constants.CODING_SCHEME_NAME;
 		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
 		String version = null;
@@ -199,7 +208,7 @@ public class MetadataUtils {
 	}
 
 
-    public Vector getMetadataForCodingSchemes(MetadataPropertyList mdpl, String propertyName) {
+    public static Vector getMetadataForCodingSchemes(MetadataPropertyList mdpl, String propertyName) {
 		Vector v = new Vector();
 		Vector codingSchemeNames = getMetadataCodingSchemeNames(mdpl);
 
@@ -217,7 +226,7 @@ public class MetadataUtils {
 	}
 
 
-    public String getEntityDescriptionForCodingScheme(MetadataPropertyList mdpl, String codingSchemeName, String propertyName) {
+    public static String getEntityDescriptionForCodingScheme(MetadataPropertyList mdpl, String codingSchemeName, String propertyName) {
 		try {
 			List<MetadataProperty> properties = getMetadataForCodingScheme(mdpl, codingSchemeName);
 			if (properties == null) return null;
@@ -241,6 +250,24 @@ public class MetadataUtils {
 
 	}
 
+    public static Vector getMetadataNameValuePairs(String codingSchemeName, String version, String urn) {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		MetadataPropertyList mdpl = getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
+		return getMetadataNameValuePairs(mdpl);
+
+	}
+
+	public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl){
+		if (mdpl == null) return null;
+		Vector v = new Vector();
+		Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
+		while(metaItr.hasNext()){
+			MetadataProperty property = metaItr.next();
+			String t = property.getName() + "|" + property.getValue();
+            v.add(t);
+		}
+		return SortUtils.quickSort(v);
+	}
 
 	/**
 	 * Simple example to demonstrate extracting a specific Coding Scheme's Metadata.
@@ -252,7 +279,7 @@ public class MetadataUtils {
 		MetadataUtils test = new MetadataUtils();
 		String serviceUrl = "http://ncias-d177-v.nci.nih.gov:19280/lexevsapi50";
 		//serviceUrl = "http://cbvapp-d1007.nci.nih.gov:19080/lexevsapi50";
-		//serviceUrl = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+		serviceUrl = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
 		//serviceUrl = "http://lexevsapi-dev.nci.nih.gov/lexevsapi50";
 
 		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(serviceUrl);
@@ -264,18 +291,37 @@ public class MetadataUtils {
 		} else {
 			System.out.println("Connected to " + serviceUrl);
 		}
-
+/*
 		String codingSchemeName = "NCI MetaThesaurus";
 		String urn = "urn:oid:2.16.840.1.113883.3.26.1.2";//urn:oid:2.16.840.1.113883.3.26.1.2
 		String version = "200812";
 		urn = null;
 
-		MetadataPropertyList mdpl = test.getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
+formalname Zebrafish  version: 1.2
+Zebrafish http://ncicb.nci.nih.gov/xmlns/zebrafish.owl#
+*/
+
+		String codingSchemeName = "Zebrafish";
+		String urn = "http://ncicb.nci.nih.gov/xmlns/zebrafish.owl#";
+		String version = "1.2";
+
+
+        //Vector v = test.getMetadataNameValuePairs(codingSchemeName, version, urn);
+        Vector v = test.getMetadataNameValuePairs(codingSchemeName, version, null);
+        for (int i=0; i<v.size(); i++) {
+			String t = (String) v.elementAt(i);
+			System.out.println(t);
+		}
+
+		//MetadataPropertyList mdpl = test.getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
+
+/*
         String propertyName = "entityDescription";
         test.getMetadataForCodingSchemes(mdpl, propertyName);
 
         propertyName = "formalName";
         test.getMetadataForCodingSchemes(mdpl, propertyName);
+ */
     }
 
 }
