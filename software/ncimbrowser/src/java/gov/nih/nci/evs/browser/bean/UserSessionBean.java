@@ -144,11 +144,7 @@ public class UserSessionBean extends Object
 
         String rankingStr = (String) request.getParameter("ranking");
         boolean ranking = rankingStr != null && rankingStr.equals("on");
-/*
-        SortOption sortOption = new SortOption(ranking);
-        request.getSession().setAttribute("ranking", Boolean.toString(ranking));
-        request.getSession().setAttribute("sortOptionType", sortOption.getType().name());
-*/
+
         request.getSession().setAttribute("ranking", Boolean.toString(ranking));
         String source = (String) request.getParameter("source");
         if (source == null) {
@@ -181,26 +177,6 @@ public class UserSessionBean extends Object
         }
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
-
-        /*
-        if (matchtype.compareToIgnoreCase("CUI") == 0) {
-            //Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText);
-            Concept c = DataUtils.getConceptByCode(scheme, version, null, matchText, source);
-            if (c != null) {
-                v = new Vector<org.LexGrid.concepts.Concept>();
-                v.add(c);
-            }
-        }
-        else if (matchtype.compareToIgnoreCase("Code") == 0) { // source code
-            boolean searchInactive = true;
-            v = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
-                                                   source, matchText,
-                                                   maxToReturn, searchInactive);
-        } else { // String
-            //v = new SearchUtils().searchByName(scheme, version, matchText, matchAlgorithm, maxToReturn);
-            v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
-        }
-        */
 
         //v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
         ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
