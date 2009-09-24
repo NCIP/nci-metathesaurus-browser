@@ -1373,6 +1373,17 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return assocLabel;
     }
 
+    public LexBIGServiceConvenienceMethods createLexBIGServiceConvenienceMethods(LexBIGService lbSvc) {
+		LexBIGServiceConvenienceMethods lbscm = null;
+		try {
+			lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+				.getGenericExtension("LexBIGServiceConvenienceMethods");
+		    lbscm.setLexBIGService(lbSvc);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return lbscm;
+	}
 
     public HashMap getRelationshipHashMap(String scheme, String version, String code, String sab)
     {
@@ -1403,11 +1414,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
         HashMap map = new HashMap();
         try {
-
+		    //LexBIGServiceConvenienceMethods lbscm = createLexBIGServiceConvenienceMethods(lbSvc);
+/*
 			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
 					.getGenericExtension("LexBIGServiceConvenienceMethods");
 			lbscm.setLexBIGService(lbSvc);
-
+*/
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             if (sab != null) {
@@ -1431,7 +1443,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     for (int i = 0; i < associations.length; i++) {
                         Association assoc = associations[i];
                         String associationName = assoc.getAssociationName();
-
+						//String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
                         AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
@@ -2083,6 +2095,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
         HashMap map = new HashMap();
         try {
+		    //LexBIGServiceConvenienceMethods lbscm = createLexBIGServiceConvenienceMethods(lbSvc);
+
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
             if (sab != null) {
 				cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
@@ -2113,6 +2127,8 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     for (int i = 0; i < associations.length; i++) {
                         Association assoc = associations[i];
                         String associationName = assoc.getAssociationName();
+                        //String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
+
                         Vector v = new Vector();
                         AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
@@ -2147,6 +2163,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
                     for (int i = 0; i < associations.length; i++) {
                         Association assoc = associations[i];
                         String associationName = assoc.getAssociationName();
+                        //String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
 
 //System.out.println("Reverse traversal associationName " + associationName);
 
@@ -2158,11 +2175,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 								v.add(ac);
 							}
 						}
-// patch
-//System.out.println("inverse_associationName " + v.size());
-if (associationName.compareTo("PAR") == 0) {
-	associationName = "CHD";
-}
+						// patch
+						//System.out.println("inverse_associationName " + v.size());
+						if (associationName.compareTo("PAR") == 0) {
+							associationName = "CHD";
+						}
 						hmap.put(associationName, v);
                     }
                 }
