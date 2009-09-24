@@ -1193,26 +1193,14 @@ public class SearchUtils {
 		}
 
         matchText = matchText.trim();
-        if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+        if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
 		{
-			/*
-            String delim = ".*";
-            if (containsSpecialChars(matchText)) {
-				matchText = delim + matchText + delim;
-				matchAlgorithm = "RegExp";
-		    } else if (matchText.indexOf(" ") != -1) {
-				// multiple tokens case:
-				matchText = preprocessContains(matchText);
-				matchAlgorithm = "RegExp";
-			} else if (matchText.indexOf(" ") == -1) {
-				// single token case:
-				matchText = delim + matchText + delim;
-				matchAlgorithm = "RegExp";
-			}
-			*/
-			matchAlgorithm = "subString";
+			//No literalStartsWith support
 		}
-		System.out.println("algorithm: " + matchAlgorithm);
+        else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
+		{
+			matchAlgorithm = "literalSubString";
+		}
 
         CodedNodeSet cns = null;
         ResolvedConceptReferencesIterator iterator = null;
