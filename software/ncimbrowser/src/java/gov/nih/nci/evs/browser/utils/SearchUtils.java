@@ -1347,6 +1347,11 @@ public class SearchUtils {
 				if (size == 0) {
 					iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
 				}
+				size = iterator.numberRemaining();
+				if (size == 0) {
+			        iterator = findConceptWithSourceCodeMatching(scheme, version,
+												   source, matchText0, maxToReturn, true);
+				}
 			} catch (Exception e) {
 
 			}
@@ -1367,7 +1372,7 @@ public class SearchUtils {
 			}
 
 			boolean searchInactive = true;
-			Vector u = new SearchUtils().findConceptWithSourceCodeMatching(scheme, version,
+			Vector u = findConceptWithSourceCodeMatching(scheme, version,
 												   source, matchText0, maxToReturn, searchInactive);
 			if (u != null) {
 				for (int j=0; j<u.size(); j++) {
@@ -1934,6 +1939,7 @@ public class SearchUtils {
 		 }
    }
 
+/*
    public Vector findConceptWithSourceCodeMatching(String scheme, String version,
 												   String sourceAbbr, String code,
 												   int maxToReturn, boolean searchInactive)
@@ -2007,6 +2013,84 @@ public class SearchUtils {
 		}
 		return null;
     }
+*/
+
+   public ResolvedConceptReferencesIterator findConceptWithSourceCodeMatching(String scheme, String version,
+												   String sourceAbbr, String code,
+												   int maxToReturn, boolean searchInactive)
+   {
+	    if (sourceAbbr == null || code == null) return null;
+        ResolvedConceptReferencesIterator matchIterator = null;
+
+		LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		versionOrTag.setVersion(version);
+
+		if (lbSvc == null)
+		{
+			System.out.println("lbSvc = null");
+			return null;
+		}
+
+	    LocalNameList contextList = null;
+        NameAndValueList qualifierList = null;
+
+ 		Vector<String> v = null;
+
+		if (code != null && code.compareTo("") != 0)
+		{
+			qualifierList = new NameAndValueList();
+			NameAndValue nv = new NameAndValue();
+			nv.setName("source-code");
+			nv.setContent(code);
+			qualifierList.addNameAndValue(nv);
+		}
+
+        LocalNameList propertyLnL = null;
+     // sourceLnL
+        Vector<String> w2 = new Vector<String>();
+        w2.add(sourceAbbr);
+        LocalNameList sourceLnL = vector2LocalNameList(w2);
+        if (sourceAbbr.compareTo("*") == 0 || sourceAbbr.compareToIgnoreCase("ALL") == 0)
+        {
+			sourceLnL = null;
+		}
+
+		SortOptionList sortCriteria = null;//Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+		try {
+			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
+			if (cns == null)
+			{
+				System.out.println("lbSvc.getCodingSchemeConceptsd returns null");
+				return null;
+			}
+			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
+
+            if (cns != null) {
+				boolean activeOnly = !searchInactive;
+				cns = restrictToActiveStatus(cns, activeOnly);
+
+				try {
+					matchIterator = cns.resolve(sortCriteria, null,null);//ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
+				} catch (Exception ex) {
+
+				}
+				/*
+				if (matchIterator != null) {
+					v = resolveIterator(	matchIterator, maxToReturn);
+					return v;
+				}
+				*/
+		    }
+
+		} catch (Exception e) {
+			 //getLogger().error("ERROR: Exception in findConceptWithSourceCodeMatching.");
+			 return null;
+		}
+		return matchIterator;
+    }
+
 
 
 ///////////////////////////////////
