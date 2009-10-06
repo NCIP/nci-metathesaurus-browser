@@ -27,7 +27,13 @@
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
+
+<%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
+<%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>NCI Metathesaurus</title>
@@ -129,12 +135,27 @@ request.getSession().setAttribute("type", type);
 
         request.getSession().setAttribute("type", type);
 
-  boolean searchInactive = true;
-  sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
-  sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
-  int maxToReturn = 100;
-  Vector u = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
-        if (u != null && u.size() > 1) {
+	  boolean searchInactive = true;
+	  sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
+	  sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
+	  int maxToReturn = 100;
+	  ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
+          IteratorBean iteratorBean = new IteratorBean(iterator);
+          iteratorBean.setIterator(iterator);
+/*
+         IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("iteratorBean");
+
+         if (iteratorBean == null) {
+		iteratorBean = new IteratorBean(iterator);
+            	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBean", iteratorBean);
+         } else {
+		iteratorBean.setIterator(iterator);
+	 }
+*/	 
+ 	 int size = iteratorBean.getSize();
+	 if (size > 1) {
+
             multipleCUIs = true;
     %>
 
@@ -159,42 +180,43 @@ request.getSession().setAttribute("type", type);
         <td class="textbody">
           <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
       <%
-        for (int i=0; i<u.size(); i++) {
-            c = (Concept) u.elementAt(i);
-            code = c.getEntityCode();
-            name = c.getEntityDescription().getContent();
-            Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
-            String semantic_type = "";
-            if (semantic_types != null && semantic_types.size() > 0) {
-          for (int j=0; j<semantic_types.size(); j++) {
-              String t = (String) semantic_types.elementAt(j);
-              semantic_type = semantic_type + t;
-              if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-          }
-            }
+      
+        
+	  List list = iteratorBean.getData(0, 100);
+	  for (int i=0; i<list.size(); i++) {
+	       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+	       c = rcr.getReferencedEntry();
+	       code = rcr.getConceptCode();
+	       name = rcr.getEntityDescription().getContent();
 
-            if (i % 2 == 0) {
-        %>
-          <tr class="dataRowDark">
-        <%
-            } else {
-        %>
-          <tr class="dataRowLight">
-        <%
-            }
-            %>
-          <td class="dataCellText">
-          <!--
-            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-           -->
-            <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
-          </td>
-          <td class="dataCellText">
-              <%=semantic_type%>
-          </td>
-        </tr>
+               Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
+               String semantic_type = "";
+               if (semantic_types != null && semantic_types.size() > 0) {
+		  for (int j=0; j<semantic_types.size(); j++) {
+		      String t = (String) semantic_types.elementAt(j);
+		      semantic_type = semantic_type + t;
+		      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+		  }
+               }
+		    if (i % 2 == 0) {
+		%>
+		  <tr class="dataRowDark">
+		<%
+		    } else {
+		%>
+		  <tr class="dataRowLight">
+		<%
+		    }
+		    %>
+		  <td class="dataCellText">
+		    <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
+		  </td>
+		  <td class="dataCellText">
+		      <%=semantic_type%>
+		  </td>
+		</tr>
             <%
-         }
+          }
       %>
           </table>
         </td>
@@ -210,7 +232,7 @@ request.getSession().setAttribute("type", type);
     if (singleton != null && singleton.compareTo("true") == 0) {
       dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));
       if (dictionary == null) {
-  dictionary = Constants.CODING_SCHEME_NAME;
+          dictionary = Constants.CODING_SCHEME_NAME;
       }
       code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
     } else {
