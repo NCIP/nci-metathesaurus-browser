@@ -117,21 +117,11 @@
           %>
                 <%
                   List list = iteratorBean.getData(istart, iend);
-                  //int max = iteratorBean.getSize();
-                  //for (int i=istart; i<iend; i++) {
-                  //  if (i >= 0 && i<v.size()) {
-                  
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-                      //Concept c = (Concept) v.elementAt(i);
-                      
                       Concept c = rcr.getReferencedEntry();
-                      //String code = c.getEntityCode();
-                      //String name = c.getEntityDescription().getContent();
-
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
-                                            
                       String semantic_type = "";
                       if (c != null) {
 			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      

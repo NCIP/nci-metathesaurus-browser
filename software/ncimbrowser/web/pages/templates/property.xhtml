@@ -15,7 +15,6 @@
     propertytypes.add("PRESENTATION");
     propertytypes.add("DEFINITION");
     propertytypes.add("GENERIC");
-    //propertytypes.add("INSTRUCTION");
     propertytypes.add("COMMENT");
 
     Vector additionalproperties = new Vector();
@@ -23,11 +22,12 @@
     additionalproperties.add("primitive");
     Concept curr_concept = (Concept) request.getSession().getAttribute("concept");
     String curr_concept_code = curr_concept.getEntityCode();
+    
     Boolean bool_obj = curr_concept.isIsActive();
     String isActive = bool_obj.toString();
 
     // to be modified
-    String concept_status = null;//curr_concept.getConceptStatus();
+    String concept_status = curr_concept.getStatus();
 
     if (concept_status != null) {
       concept_status = concept_status.replaceAll("_", " ");
@@ -43,12 +43,9 @@
 
       for (int j=0; j<propertynames.size(); j++) {
         String propertyname = (String) propertynames.elementAt(j);
-
-
         if (!hset.contains(propertyname)) {
           hset.add(propertyname);
-          propertyvalues = DataUtils.getPropertyValues(
-            curr_concept, propertytype, propertyname);
+          propertyvalues = DataUtils.getPropertyValues(curr_concept, propertytype, propertyname);
 
           if (propertyvalues != null) {
              if (propertyname.compareToIgnoreCase("definition") != 0) {
@@ -58,18 +55,25 @@
                 Vector new_propertyvalues = new Vector();
                 for (int k=0; k<propertyvalues.size(); k++) {
                     String definition_str = (String) propertyvalues.elementAt(k);
-        Vector def_data = DataUtils.parseData(definition_str, "|");
-        String def_description = (String) def_data.elementAt(0);
-        String def_source = (String) def_data.elementAt(1);
-        if (def_source.compareTo("NCI") == 0) {
-           new_propertyvalues.add(def_description + "|" + "NCIt");
-        }
-                }
+                    Vector def_data = DataUtils.parseData(definition_str, "|");
+		    String def_description = (String) def_data.elementAt(0);
+		    String def_source = "";
+		    if (def_data.size() > 1) {
+		    	def_source = (String) def_data.elementAt(1);
+		    }
+		    if (def_source.compareTo("NCI") == 0) {
+		    new_propertyvalues.add(def_description + "|" + "NCIt");
+		}
+            }
                 for (int k=0; k<propertyvalues.size(); k++) {
                     String definition_str = (String) propertyvalues.elementAt(k);
         Vector def_data = DataUtils.parseData(definition_str, "|");
         String def_description = (String) def_data.elementAt(0);
-        String def_source = (String) def_data.elementAt(1);
+        
+        String def_source = "";
+        if (def_data.size() > 1) {
+           def_source = (String) def_data.elementAt(1);
+        }
         if (def_source.compareTo("NCI") != 0) new_propertyvalues.add(definition_str);
                 }
                 hmap.put(propertyname, new_propertyvalues);
@@ -81,6 +85,7 @@
 
     propertyvalues = new Vector();
     String concept_id = curr_concept.getEntityCode();
+    
     propertyvalues.add(concept_id);
     hmap.put("Code", propertyvalues);
 
@@ -97,6 +102,7 @@
      nci_code_vec.add(term_source_code);
      hmap.put("NCIt Code", nci_code_vec);
   }
+
 
     Vector displayed_properties = new Vector();
     Vector properties_to_display = new Vector();
@@ -135,6 +141,7 @@
       external_source_codes_linktext.add(displayItem.getHyperlinkText());
     }
   }
+  
 %>
 <p class="textsubtitle-blue">Terms and Properties</p>
 <%
@@ -153,6 +160,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 }
 %>
 <%
+
   for (int i=0; i<properties_to_display.size(); i++) {
     String propName = (String) properties_to_display.elementAt(i);
     String propName_label = (String) properties_to_display_label.elementAt(i);
@@ -188,6 +196,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 <%
       }
     } else if (propName_label.indexOf("Synonym") == -1) {
+    
+    
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
 
@@ -231,6 +241,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(see Synonym Details)</a>
 <table class="datatable">
 <%
+
   for (int i=0; i<properties_to_display.size(); i++) {
     String propName = (String) properties_to_display.elementAt(i);
     String propName_label = (String) properties_to_display_label.elementAt(i);
@@ -302,6 +313,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   <b>External Source Codes:&nbsp;</b>
   <table class="datatable">
     <%
+    
       n = 0;
       for (int i=0; i<external_source_codes.size(); i++) {
         String propName = (String) external_source_codes.elementAt(i);
@@ -359,6 +371,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   <b>Other Properties:</b>
   <table class="datatable">
     <%
+    
       Set keyset = hmap.keySet();
       Iterator iterator = keyset.iterator();
       n = 0;
