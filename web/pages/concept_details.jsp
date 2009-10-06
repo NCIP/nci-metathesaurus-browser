@@ -53,6 +53,19 @@ if (concept_details_obj == null) {
     concept_details_code = concept_details_c.getEntityCode();
 }
 
+
+String active_code = (String) request.getSession().getAttribute("active_code");
+if (active_code == null) {
+    request.getSession().setAttribute("active_code", concept_details_code);
+} else {
+   if (active_code.compareTo(concept_details_code) != 0) {
+       request.getSession().removeAttribute("AssociationTargetHashMap");
+       request.getSession().setAttribute("active_code", concept_details_code);
+   }
+}
+
+
+
 String concept_details_type = (String) request.getSession().getAttribute("type");
 Boolean isNew = (Boolean) request.getSession().getAttribute("new_search");
 request.getSession().removeAttribute("new_search");
