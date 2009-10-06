@@ -971,7 +971,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         }
         return association_vec;
     }
-
+/*
     public static String getVocabularyVersionByTag(String codingSchemeName, String ltag)
     {
          if (codingSchemeName == null) return null;
@@ -1004,6 +1004,52 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
              e.printStackTrace();
          }
          System.out.println("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
+         return null;
+     }
+*/
+
+    public static String getVocabularyVersionByTag(String codingSchemeName, String ltag)
+    {
+         if (codingSchemeName == null) return null;
+         String version = null;
+         int knt = 0;
+         try {
+             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+             CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
+             CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
+             for (int i=0; i<csra.length; i++)
+             {
+                CodingSchemeRendering csr = csra[i];
+                CodingSchemeSummary css = csr.getCodingSchemeSummary();
+                if (css.getFormalName().compareTo(codingSchemeName) == 0 || css.getLocalName().compareTo(codingSchemeName) == 0)
+                {
+					version = css.getRepresentsVersion();
+					knt++;
+
+                    if (ltag == null) return css.getRepresentsVersion();
+                    RenderingDetail rd = csr.getRenderingDetail();
+                    CodingSchemeTagList cstl = rd.getVersionTags();
+                    java.lang.String[] tags = cstl.getTag();
+
+                    for (int j=0; j<tags.length; j++)
+                    {
+                        String version_tag = (String) tags[j];
+
+                        if (version_tag.compareToIgnoreCase(ltag) == 0)
+                        {
+                            return css.getRepresentsVersion();
+                        }
+                    }
+                }
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         System.out.println("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
+         if (ltag.compareToIgnoreCase("PRODUCTION") == 0 & knt == 1) {
+			 System.out.println("\tUse " + version + " as default.");
+			 return version;
+		 }
          return null;
      }
 
