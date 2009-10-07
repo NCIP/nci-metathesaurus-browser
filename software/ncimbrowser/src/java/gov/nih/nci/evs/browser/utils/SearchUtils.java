@@ -194,6 +194,9 @@ public class SearchUtils {
 
     private DoubleMetaphone doubleMetaphone = null;
 
+    public static final String CONTAIN_SEARCH_ALGORITHM = "literalSubString";//"subString";
+
+
     //==================================================================================
 
     public SearchUtils()
@@ -1251,7 +1254,7 @@ public class SearchUtils {
 		}
         else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
 		{
-			matchAlgorithm = "literalSubString";
+			matchAlgorithm = CONTAIN_SEARCH_ALGORITHM;
 		}
 
         CodedNodeSet cns = null;
