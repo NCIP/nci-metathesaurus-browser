@@ -75,7 +75,7 @@ the MSSO website at www.meddramsso.com, or write the MSSO at 12011 Sunset Hills 
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <%
               String propertyName = "formalName";
-              Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(propertyName);
+              Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(Constants.CODING_SCHEME_NAME, propertyName);
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
                  Vector w = DataUtils.parseData(t, "|");
