@@ -11,6 +11,8 @@
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
+<%@ page import="java.io.*" %>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -34,6 +36,8 @@
       <!-- Page content -->
       <div class="pagecontent">
         <%
+          long ms = System.currentTimeMillis();
+        
           String page_string = null;
           IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("iteratorBean");
@@ -116,13 +120,16 @@
           }
           %>
                 <%
+                  long ms0 = System.currentTimeMillis();
                   List list = iteratorBean.getData(istart, iend);
+                  System.out.println("iteratorBean.getData Run time (ms): " + (System.currentTimeMillis() - ms0));
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
                       Concept c = rcr.getReferencedEntry();
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
                       String semantic_type = "";
+                      
                       if (c != null) {
 			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      
 			      if (semantic_types != null && semantic_types.size() > 0) {
@@ -137,7 +144,6 @@
 				  }
 			      }
                       }
-                                            
 
                       if (i % 2 == 0) {
                         %>
@@ -166,6 +172,11 @@
         </table>
         <%@ include file="/pages/templates/pagination.xhtml" %>
         <%@ include file="/pages/templates/nciFooter.html" %>
+        
+        <%
+        System.out.println("Page rendering Run time (ms): " + (System.currentTimeMillis() - ms));
+        %>
+        
       </div>
       <!-- end Page content -->
     </div>
