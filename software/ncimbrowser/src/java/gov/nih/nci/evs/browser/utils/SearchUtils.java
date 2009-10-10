@@ -1316,9 +1316,13 @@ public class SearchUtils {
 
 */
 
-            LocalNameList restrictToProperties = new LocalNameList();
-            boolean resolveConcepts = true;
-            if (!ranking) resolveConcepts = false;
+            LocalNameList restrictToProperties = null;//new LocalNameList();
+
+            //boolean resolveConcepts = true; // Semantic_Type is no longer required.
+            //if (!ranking) resolveConcepts = false;
+
+            boolean resolveConcepts = false;
+            System.out.println("*** resolveConcepts: " + resolveConcepts);
 
             SortOptionList sortCriteria = null;
 
@@ -1343,7 +1347,7 @@ public class SearchUtils {
 					long ms = System.currentTimeMillis(), delay = 0;
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
+                    //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
 
                 }  catch (Exception e) {
                     System.out.println("ERROR: cns.resolve throws exceptions.");
