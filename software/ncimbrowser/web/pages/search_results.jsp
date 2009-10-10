@@ -37,6 +37,7 @@
       <div class="pagecontent">
         <%
           long ms = System.currentTimeMillis();
+          long iterator_delay; 
         
           String page_string = null;
           IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
@@ -122,14 +123,15 @@
                 <%
                   long ms0 = System.currentTimeMillis();
                   List list = iteratorBean.getData(istart, iend);
-                  System.out.println("iteratorBean.getData Run time (ms): " + (System.currentTimeMillis() - ms0));
+                  iterator_delay = System.currentTimeMillis() - ms0;
+                  System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
                       Concept c = rcr.getReferencedEntry();
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
                       String semantic_type = "";
-                      
+                      /*
                       if (c != null) {
 			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      
 			      if (semantic_types != null && semantic_types.size() > 0) {
@@ -144,6 +146,7 @@
 				  }
 			      }
                       }
+                      */
 
                       if (i % 2 == 0) {
                         %>
@@ -174,7 +177,8 @@
         <%@ include file="/pages/templates/nciFooter.html" %>
         
         <%
-        System.out.println("Page rendering Run time (ms): " + (System.currentTimeMillis() - ms));
+        long pageRenderingDelay = System.currentTimeMillis() - ms - iterator_delay;
+        System.out.println("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator delay.)");
         %>
         
       </div>
