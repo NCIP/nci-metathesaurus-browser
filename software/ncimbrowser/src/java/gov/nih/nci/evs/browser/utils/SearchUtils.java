@@ -194,7 +194,7 @@ public class SearchUtils {
 
     private DoubleMetaphone doubleMetaphone = null;
 
-    public static final String CONTAIN_SEARCH_ALGORITHM = "literalSubString";//"subString";
+    public static final String CONTAIN_SEARCH_ALGORITHM = "nonLeadingWildcardLiteralSubString";// "literalSubString";//"subString";
 
 
     //==================================================================================
@@ -1328,7 +1328,7 @@ public class SearchUtils {
 
             //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) {
 		    if (ranking){
-				System.out.println("*** Sort by Lucene score...");
+				//System.out.println("*** Sort by Lucene score...");
 				sortCriteria = Constructors.createSortOptionList(new String[]{"matchToQuery"});
 
             } else {
@@ -1406,6 +1406,8 @@ public class SearchUtils {
 			        iterator = findConceptWithSourceCodeMatching(scheme, version,
 												   source, matchText0, maxToReturn, true);
 				}
+				size = iterator.numberRemaining();
+
 			} catch (Exception e) {
 
 			}

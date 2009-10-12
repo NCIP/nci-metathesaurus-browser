@@ -184,6 +184,7 @@ public class UserSessionBean extends Object
         ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 
         request.getSession().setAttribute("vocabulary", scheme);
+        request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
         //request.getSession().setAttribute("matchtype", matchtype);
 
         request.getSession().removeAttribute("neighborhood_synonyms");
