@@ -71,11 +71,6 @@
           int istart = iend - page_size;
           
           int size = iteratorBean.getSize();
-          /*
-          if (iend > v.size()) iend = v.size();
-          int num_pages = v.size() / page_size;
-          if (num_pages * page_size < v.size()) num_pages++;
-          */
 
           if (iend > size) iend = size;
           int num_pages = size / page_size;
@@ -127,7 +122,7 @@
                   System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-                      Concept c = rcr.getReferencedEntry();
+                      // Concept c = rcr.getReferencedEntry();
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
                       String semantic_type = "";
@@ -178,7 +173,7 @@
         
         <%
         long pageRenderingDelay = System.currentTimeMillis() - ms - iterator_delay;
-        System.out.println("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator delay.)");
+        System.out.println("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator next call delay.)");
         %>
         
       </div>
