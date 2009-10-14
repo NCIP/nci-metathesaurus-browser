@@ -256,6 +256,7 @@ public class DataUtils {
     static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other"};
 
     private static String SOURCE = "source";
+    static String[] META_ASSOCIATIONS = new String[] {"AQ", "CHD", "RB", "RO", "RQ", "SIB", "SY"};
 
 
     //==================================================================================
@@ -2215,13 +2216,15 @@ System.out.println("(*) getRelationshipHashMap =================================
             if (source != null) {
 				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 				cng = cng.restrictToAssociations(
-					        Constructors.createNameAndValueList(
-							new String[]{"AQ", "CHD", "RB", "RO", "RQ", "SIB", "SY"}),
+					        Constructors.createNameAndValueList(META_ASSOCIATIONS),
 							//nvlst,
 							Constructors.createNameAndValueList("source", source));
 			}
 
-			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, null, null, -1);
+            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+            propertyTypes[0] = PropertyType.PRESENTATION;
+
+			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2264,7 +2267,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 							null);
 			}
 
-			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, null, null, -1);
+			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2304,8 +2307,8 @@ System.out.println("(*) getRelationshipHashMap =================================
 	}
 
 
-
-    public HashMap getAssociatedConceptsHashMap2(String scheme, String version, String code, String sab)
+/*
+    public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
     {
         HashMap hmap = new HashMap();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -2334,18 +2337,15 @@ System.out.println("(*) getRelationshipHashMap =================================
             propertyTypes[0] = PropertyType.PRESENTATION;
 
             int maxToReturn = NCImBrowserProperties.maxToReturn;
-/*
-            matches = cng.resolveAsList(
-                    ConvenienceMethods.createConceptReference(code, scheme),
-                    true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-*/
 
-/*
-		    matches = cng.resolveAsList(ConvenienceMethods
-				.createConceptReference(code, scheme),
-			   //true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, false);
-			   true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, true);
-*/
+            //matches = cng.resolveAsList(
+            //        ConvenienceMethods.createConceptReference(code, scheme),
+            //        true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
+
+		    //matches = cng.resolveAsList(ConvenienceMethods
+			//	.createConceptReference(code, scheme),
+			     //true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, false);
+			//   true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, true);
 
 System.out.println("Calling cng.resolveAsList ...");
 
@@ -2407,11 +2407,11 @@ if (sourceof == null) {
 
  //CodedNodeGraph restrictToAssociations(NameAndValueList association, NameAndValueList associationQualifiers)
 
-/*
-			matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
+
+			//matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
+			   //                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
 			//                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-			                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-*/
+
             matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme), false, true, 1, 1, null, null, null, -1);
 
 
@@ -2468,6 +2468,7 @@ if (sourceof == null) {
         }
         return hmap;
     }
+*/
 
     private String findRepresentativeTerm(Concept c, String sab) {
 		Vector synonyms = getSynonyms(c, sab);
