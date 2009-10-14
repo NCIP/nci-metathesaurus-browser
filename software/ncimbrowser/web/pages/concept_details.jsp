@@ -290,8 +290,8 @@ String tg_dictionary = "NCI%20MetaThesaurus";
           if (c != null) {
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
- request.getSession().setAttribute("Concept", c);
- request.getSession().setAttribute("code", c.getEntityCode());
+	 request.getSession().setAttribute("Concept", c);
+	 request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
       <div class="texttitle-blue">
