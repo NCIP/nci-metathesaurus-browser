@@ -116,6 +116,14 @@
        </DisplayItem>
 
        <DisplayItem>
+            <propertyName>presentation</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+       
+       <DisplayItem>
             <propertyName>CAS_Registry</propertyName>
             <itemLabel>CAS Registry Number</itemLabel>
             <url>http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno=</url>
