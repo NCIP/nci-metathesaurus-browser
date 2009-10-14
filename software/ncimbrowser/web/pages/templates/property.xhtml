@@ -243,15 +243,25 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(see Synonym Details)</a>
 <table class="datatable">
 <%
-
+  HashSet presentation_hset = new HashSet();
+  presentation_hset.add("textualPresentation");
+  presentation_hset.add("Display_Name");
+  presentation_hset.add("Preferred_Name");
+  presentation_hset.add("FULL_SYN");
+  presentation_hset.add("textualPresentation");
+  presentation_hset.add("Synonym");
+  presentation_hset.add("presentation");
+ 
   for (int i=0; i<properties_to_display.size(); i++) {
     String propName = (String) properties_to_display.elementAt(i);
     String propName_label = (String) properties_to_display_label.elementAt(i);
 
-    if (propName.compareTo("textualPresentation") == 0) {
+    //if (propName.compareTo("textualPresentation") == 0) {
+    if (presentation_hset.contains(propName)) {
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
       value_vec = SortUtils.quickSort(value_vec);
+      
       if (value_vec != null && value_vec.size() > 0) {
         HashSet hset2 = new HashSet();
         int row=0;
@@ -261,7 +271,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
           if (n != -1) value = value.substring(0, n);
           String valueLC = value.toLowerCase();
           if (hset2.contains(valueLC))
-            continue;
+             continue;
           hset2.add(valueLC);
           if ((row++) % 2 == 0) {
             %>
