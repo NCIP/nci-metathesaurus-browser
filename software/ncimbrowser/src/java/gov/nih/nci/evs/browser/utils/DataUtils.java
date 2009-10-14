@@ -1311,27 +1311,50 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             if (property_name.compareTo(p.getPropertyName()) == 0)
             {
                 String t = p.getValue().getContent();
-
-
-System.out.println(property_name + ": " + p.getValue().getContent());
+//System.out.println(property_name + ": " + p.getValue().getContent());
 
 
                 Source[] sources = p.getSource();
                 if (sources != null && sources.length > 0) {
 
-System.out.println("sources.length: " + sources.length);
+//System.out.println("sources.length: " + sources.length);
 
                     Source src = sources[0];
                     t = t + "|" + src.getContent();
-                }
+                } else {
+					if (property_name.compareToIgnoreCase("definition") == 0) {
+						System.out.println("*** WARNING: " + property_name + " with no source data: " + p.getValue().getContent());
+						PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+						if (qualifiers != null && qualifiers.length > 0)
+						{
+							System.out.println(property_name + " qualifiers.length: " + qualifiers.length);
+							for (int j=0; j<qualifiers.length; j++)
+							{
+								PropertyQualifier q = qualifiers[j];
+								String qualifier_name = q.getPropertyQualifierName();
+								String qualifier_value = q.getValue().getContent();
+								System.out.println("\t*** qualifier_name: " + qualifier_name);
+								System.out.println("\t*** qualifier_value: " + qualifier_value);
+								if (qualifier_name.compareTo("source") == 0)
+								{
+									t = t + "|" + qualifier_value;
+									System.out.println("*** SOURCE: " + qualifier_value);
+									break;
+								}
+							}
+						} else {
+							System.out.println("*** SOURCE NOT FOUND IN qualifiers neither. ");
+						}
+					}
+				}
                 v.add(t);
 
 
-System.out.println(t + ": " + t);
+//System.out.println(property_name + ": " + t);
 
             }
 
-System.out.println("\n");
+//System.out.println("\n");
         }
         return v;
     }
@@ -2775,8 +2798,7 @@ if (sourceof == null) {
 	}
 
 	public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
-
-System.out.println("(*) DataUtils	getAssociationTargetHashMap *****************************");
+        System.out.println("(*) DataUtils	getAssociationTargetHashMap *****************************");
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
