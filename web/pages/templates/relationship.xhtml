@@ -42,11 +42,14 @@
     if (sort5 == null) sort5 = defaultSortOption;
 
     DataUtils util = new DataUtils();
-    HashMap hmap = (HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
+    
+    HashMap hmap = null;//(HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
     if (hmap == null) {
       hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
       request.getSession().setAttribute("AssociationTargetHashMap", hmap);
     }
+    
+    
     Vector superconcept_vec = (Vector) hmap.get("Parent");
     Vector subconcept_vec = (Vector) hmap.get("Child");
     Vector broader_vec = (Vector) hmap.get("Broader");
