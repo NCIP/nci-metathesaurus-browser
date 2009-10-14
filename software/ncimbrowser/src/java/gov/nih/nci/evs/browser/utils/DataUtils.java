@@ -2164,8 +2164,14 @@ System.out.println("(*) getRelationshipHashMap =================================
 	}
 */
 
-
+ //ResolvedConceptReferenceList resolveAsList(ConceptReference graphFocus, boolean resolveForward, boolean resolveBackward, int resolveCodedEntryDepth, int resolveAssociationDepth, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes, SortOptionList sortOptions, int maxToReturn)
 	public static HashMap getAssociatedConceptsHashMap(String codingSchemeName, String vers, String code, String source)
+	{
+		return getAssociatedConceptsHashMap(codingSchemeName, vers, code, source, 1);
+	}
+
+
+	public static HashMap getAssociatedConceptsHashMap(String codingSchemeName, String vers, String code, String source, int resolveCodedEntryDepth)
 	{
 		HashMap hmap = new HashMap();
         try {
@@ -2192,7 +2198,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 							Constructors.createNameAndValueList("source", source));
 			}
 
-			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, 1, 1, null, null, null, -1);
+			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, null, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2214,9 +2220,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 									AssociatedConcept ac = acl[j];
 									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 										v.add(ac);
-										//hmap.put(associationName, v);
 									}
-									//System.out.println(ac.getCode());
 								}
 								hmap.put(associationName, v);
 							}
@@ -2228,9 +2232,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 			cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
 
             if (source != null) {
-				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 				cng = cng.restrictToAssociations(
-					        //Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToParentNodes_),
 					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
 							Constructors.createNameAndValueList("source", source));
 			} else {
@@ -2239,7 +2241,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 							null);
 			}
 
-			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, 1, 1, null, null, null, -1);
+			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, null, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2260,15 +2262,8 @@ System.out.println("(*) getRelationshipHashMap =================================
 									AssociatedConcept ac = acl[j];
 									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 										v.add(ac);
-										//hmap.put(associationName, v);
 									}
-									//System.out.println(ac.getCode());
 								}
-								/*
-								if (associationName.compareTo("PAR") == 0) {
-									associationName = "CHD";
-								}
-								*/
 								if (associationName.compareTo("CHD") == 0) {
 									associationName = "PAR";
 								}
@@ -2803,7 +2798,7 @@ System.out.println("(*) DataUtils	getAssociationTargetHashMap ******************
 		long ms = System.currentTimeMillis(), delay=0;
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
-		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null);
+		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -2827,7 +2822,7 @@ System.out.println("(*) DataUtils	getAssociationTargetHashMap ******************
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
-				Concept c = ac.getReferencedEntry();
+				//Concept c = ac.getReferencedEntry();
                 String source = "unspecified";
 
 				for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
@@ -2838,7 +2833,8 @@ System.out.println("(*) DataUtils	getAssociationTargetHashMap ******************
 						if (w == null) {
 							w = new Vector();
 						}
-						String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
+						//String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
+						String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 						if (!w.contains(str)) {
 							w.add(str);
 						    rel_hmap.put(category, w);
@@ -2855,7 +2851,8 @@ System.out.println("(*) DataUtils	getAssociationTargetHashMap ******************
 						if (w == null) {
 							w = new Vector();
 						}
-						String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
+						//String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
+						String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 						if (!w.contains(str)) {
 							w.add(str);
 						    rel_hmap.put(category, w);
