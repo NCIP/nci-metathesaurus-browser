@@ -1240,7 +1240,7 @@ public class SearchUtils {
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
 
-		boolean preprocess = true;
+		//boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
         {
 			//return new Vector();
@@ -1282,8 +1282,29 @@ public class SearchUtils {
 
             //LocalNameList contextList = null;
             try {
-				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
-				cns = restrictToSource(cns, source);
+				 if (source != null && source.compareToIgnoreCase("ALL") != 0) {
+					 cns = cns.restrictToMatchingProperties(null,
+									new PropertyType[]{PropertyType.PRESENTATION},
+									Constructors.createLocalNameList(source),
+									null,
+									null,
+									matchText,
+									matchAlgorithm,
+									null);
+				 } else {
+					 cns = cns.restrictToMatchingProperties(null,
+									new PropertyType[]{PropertyType.PRESENTATION},
+									null,
+									null,
+									null,
+									matchText,
+									matchAlgorithm,
+									null);
+
+				 }
+
+				//cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
+				//cns = restrictToSource(cns, source);
             } catch (Exception ex) {
                 return null;
             }
