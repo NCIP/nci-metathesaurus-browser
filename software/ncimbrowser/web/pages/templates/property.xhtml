@@ -176,18 +176,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         String value = (String) value_vec.elementAt(0);
         String value_wo_qualifier = value;
 
-//System.out.println("(**) property.html value " + value);          
-//System.out.println("(**) property.html propName_label " + propName_label);          
-
         int n = value.indexOf("|");
 
         if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
           value_wo_qualifier = value.substring(0, n);
           qualifier = value.substring(n+1, value.length());
-          
-//System.out.println("(*) property.html value_wo_qualifier " + value_wo_qualifier);          
-//System.out.println("(*) property.html qualifier " + qualifier);          
-          
           
           value = value_wo_qualifier;
           if (qualifier.compareTo("") != 0) {
@@ -216,18 +209,9 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
           String value_wo_qualifier = value;
           int n = value.indexOf("|");
 
-System.out.println("(**) property.html value " + value);          
-System.out.println("(**) property.html propName_label " + propName_label);          
-
           if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
               value_wo_qualifier = value.substring(0, n);
         qualifier = value.substring(n+1, value.length());
-        
-        
-System.out.println("(**) property.html value_wo_qualifier " + value_wo_qualifier);          
-System.out.println("(**) property.html qualifier " + qualifier);          
-      
-        
         
         value = value_wo_qualifier;
         if (qualifier.compareTo("") != 0) {
