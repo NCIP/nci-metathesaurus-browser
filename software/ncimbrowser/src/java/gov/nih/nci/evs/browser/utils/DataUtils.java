@@ -2248,6 +2248,8 @@ System.out.println("(*) getRelationshipHashMap =================================
 										v.add(ac);
 									}
 								}
+
+								System.out.println("(*) associationName " + associationName + " " + v.size());
 								hmap.put(associationName, v);
 							}
 					    }
@@ -2479,6 +2481,9 @@ if (sourceof == null) {
 
     // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+
+System.out.println("(*) getNeighborhoodSynonyms ...");
+
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
         Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
