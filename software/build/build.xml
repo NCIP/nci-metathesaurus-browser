@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-templage verison 1.1.0 -->
+<!-- bda-build-templage verison 1.2.2 -->
 
 <project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
@@ -153,7 +153,6 @@
     <!-- Task definitions -->
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.classpath" />
     <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda-utils.classpath"/>
-
     <!-- Includes- include BDA marcos -->
     <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
     <!-- Start logging -->
@@ -265,7 +264,7 @@
                 <property name="commonlibrary.dir" value="" />
         </ant>
         <!--
-        <ant inheritAll="false" inheritRefs="false" antfile="${bda-blueprints-webapp.build.file}" target="ivy-clean" dir="${bda-blueprints-webapp.base.dir}" />
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="ivy-clean" dir="${bda-blueprints-webapp.base.dir}" />
         -->
     </target>
 
@@ -680,6 +679,25 @@
             src.java.dir="${ncimbrowser-webapp.base.dir}/src/java"
             uml.source.path="ncimbrowser.classpath.ref"
             />
+    </target>
+
+    <target name="findfiles">
+            <exec executable="sh" failonerror="true">
+                    <arg line=" -c 'find /local/AnthillPro/work/ncit-autodeploy.trunk.dev/trunk/software/target/bda-utils  -maxdepth 2 -ls'"/>
+            </exec>
+    </target>
+
+    <target name="printfile">
+            <loadfile
+                    property="file.contents"
+                    srcFile="/local/AnthillPro/work/ncit-autodeploy.trunk.dev/trunk/software/build/build.xml">
+                    <filterchain>
+                            <linecontainsregexp>
+                                    <regexp pattern=".*"/>
+                            </linecontainsregexp>
+                    </filterchain>
+            </loadfile>
+            <echo message="${file.contents}"/>
     </target>
 
 </project>
