@@ -41,7 +41,9 @@ public class BySourceTest extends DataUtils {
             DBG.debugVector("", "* List:", vector);
 
         Concept concept = getConceptByCode(scheme, version, null, code);
-        String conceptName = concept.getEntityDescription().getContent();
+        String conceptName = "";
+        if (concept != null)
+            conceptName = concept.getEntityDescription().getContent();
         if (_displayResults) {
             DBG.debug("* Result: " + code + " (" + conceptName + ")");
             DBG.debug("  * sab: " + sab);
