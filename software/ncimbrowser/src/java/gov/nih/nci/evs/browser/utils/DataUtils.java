@@ -145,6 +145,10 @@ import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.common.Constants;
 
+import org.LexGrid.relations.AssociationQualification;
+
+
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -2249,7 +2253,6 @@ System.out.println("(*) getRelationshipHashMap =================================
 									}
 								}
 
-								System.out.println("(*) associationName " + associationName + " " + v.size());
 								hmap.put(associationName, v);
 							}
 					    }
@@ -2308,6 +2311,147 @@ System.out.println("(*) getRelationshipHashMap =================================
 		return hmap;
 	}
 
+
+	public static HashMap getRelatedConceptsHashMap(String codingSchemeName, String vers, String code, String source)
+	{
+		return getRelatedConceptsHashMap(codingSchemeName, vers, code, source, 1);
+	}
+
+
+	public static HashMap getRelatedConceptsHashMap(String codingSchemeName, String vers, String code, String source, int resolveCodedEntryDepth)
+	{
+		HashMap hmap = new HashMap();
+        try {
+			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
+            lbscm.setLexBIGService(lbSvc);
+
+			if (lbSvc == null)
+			{
+				System.out.println("lbSvc == null???");
+				return hmap;
+			}
+
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			if (vers != null) versionOrTag.setVersion(vers);
+			CodedNodeGraph cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
+
+            if (source != null) {
+				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
+				cng = cng.restrictToAssociations(
+					        Constructors.createNameAndValueList(META_ASSOCIATIONS),
+							//nvlst,
+							Constructors.createNameAndValueList("source", source));
+			}
+
+            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+            propertyTypes[0] = PropertyType.PRESENTATION;
+
+			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                Enumeration<ResolvedConceptReference> refEnum =
+                    matches .enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = refEnum.nextElement();
+                    AssociationList sourceof = ref.getSourceOf();
+                    if (sourceof != null ) {
+						Association[] associations = sourceof.getAssociation();
+                        if (associations != null) {
+							for (int i = 0; i < associations.length; i++) {
+								Association assoc = associations[i];
+                                String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
+								Vector v = new Vector();
+								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+								for (int j = 0; j < acl.length; j++) {
+									AssociatedConcept ac = acl[j];
+									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
+											String qualifier_name = qual.getName();
+											String qualifier_value = qual.getContent();
+											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
+												associationName = qualifier_value; // replace associationName by Rela value
+												break;
+											}
+										}
+										Vector w = null;
+										if (hmap.containsKey(associationName)) {
+											w = (Vector) hmap.get(associationName);
+										} else {
+											w = new Vector();
+										}
+										w.add(ac);
+										hmap.put(associationName, w);
+									}
+								}
+							}
+					    }
+				    }
+				}
+			}
+
+			cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
+
+            if (source != null) {
+				cng = cng.restrictToAssociations(
+					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+							Constructors.createNameAndValueList("source", source));
+			} else {
+				cng = cng.restrictToAssociations(
+					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+							null);
+			}
+
+			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+
+            if (matches.getResolvedConceptReferenceCount() > 0) {
+                Enumeration<ResolvedConceptReference> refEnum =
+                    matches .enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = refEnum.nextElement();
+                    AssociationList sourceof = ref.getTargetOf();
+                    if (sourceof != null ) {
+						Association[] associations = sourceof.getAssociation();
+                        if (associations != null) {
+							for (int i = 0; i < associations.length; i++) {
+								Association assoc = associations[i];
+                                String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
+								Vector v = new Vector();
+								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+								for (int j = 0; j < acl.length; j++) {
+									AssociatedConcept ac = acl[j];
+									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
+											String qualifier_name = qual.getName();
+											String qualifier_value = qual.getContent();
+											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
+												associationName = qualifier_value; // replace associationName by Rela value
+												break;
+											}
+										}
+										Vector w = null;
+										if (hmap.containsKey(associationName)) {
+											w = (Vector) hmap.get(associationName);
+										} else {
+											w = new Vector();
+										}
+										w.add(ac);
+										hmap.put(associationName, w);
+									}
+								}
+							}
+					    }
+				    }
+				}
+			}
+
+		} catch (Exception ex) {
+
+		}
+		return hmap;
+	}
 
 /*
     public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
@@ -2495,6 +2639,163 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 
 		long ms = System.currentTimeMillis(), delay=0;
         String action = "Retrieving distance-one relationships from the server";
+		//HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		HashMap hmap = getRelatedConceptsHashMap(scheme, version, code, sab);
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+		DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+
+		Set keyset = hmap.keySet();
+		Iterator it = keyset.iterator();
+		HashSet rel_hset = new HashSet();
+
+		HashSet hasSubtype_hset = new HashSet();
+
+		long ms_categorization_delay = 0;
+		long ms_categorization;
+
+		long ms_find_highest_rank_atom_delay = 0;
+		long ms_find_highest_rank_atom;
+
+		long ms_remove_RO_delay = 0;
+		long ms_remove_RO;
+
+		long ms_all_delay = 0;
+		long ms_all;
+
+		ms_all = System.currentTimeMillis();
+
+		while (it.hasNext())
+		{
+			ms_categorization = System.currentTimeMillis();
+			String rel = (String) it.next();
+			String category = "Other";
+			if (parent_asso_vec.contains(rel)) category = "Parent";
+			else if (child_asso_vec.contains(rel)) category = "Child";
+			else if (bt_vec.contains(rel)) category = "Broader";
+			else if (nt_vec.contains(rel)) category = "Narrower";
+			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
+			Vector v = (Vector) hmap.get(rel);
+
+            // For each related concept:
+			for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				EntityDescription ed = ac.getEntityDescription();
+				Concept c = ac.getReferencedEntry();
+				if (!hset.contains(c.getEntityCode())) {
+					hset.add(c.getEntityCode());
+					// Find the highest ranked atom data
+					ms_find_highest_rank_atom = System.currentTimeMillis();
+					String t = findRepresentativeTerm(c, sab);
+					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+
+					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+					w.add(t);
+
+                    // Temporarily save non-RO other relationships
+					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+						if (rel_hset.contains(c.getEntityCode())) {
+							rel_hset.add(c.getEntityCode());
+						}
+					}
+
+					if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
+						if (hasSubtype_hset.contains(c.getEntityCode())) {
+							hasSubtype_hset.add(c.getEntityCode());
+						}
+					}
+			    }
+			}
+		}
+
+        Vector u = new Vector();
+        // Remove redundant RO relationships
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("RO") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
+
+        // Remove redundant CHD relationships
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("CHD") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
+
+		ms_all_delay = System.currentTimeMillis() - ms_all;
+
+		action = "categorizing relationships into six categories";
+		Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+		DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
+
+		action = "finding highest ranked atoms";
+		Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+		DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
+
+		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
+		action = "removing redundant RO relationships";
+		Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+        DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
+
+        // Initial sort (refer to sortSynonymData method for sorting by a specific column)
+
+		long ms_sort_delay = System.currentTimeMillis();
+
+        u = removeRedundantRecords(u);
+
+		SortUtils.quickSort(u);
+		action = "initial sorting";
+		delay = System.currentTimeMillis() - ms_sort_delay;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+
+		DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
+		return u;
+
+     }
+
+
+/*
+	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
+
+System.out.println("(*) getNeighborhoodSynonyms ...");
+
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+
+		Vector w = new Vector();
+		HashSet hset = new HashSet();
+
+		long ms = System.currentTimeMillis(), delay=0;
+        String action = "Retrieving distance-one relationships from the server";
 		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
@@ -2633,6 +2934,7 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 		return u;
 
      }
+     */
 
      public static String getRelationshipCode(String id) {
 		 if (id.compareTo("Parent") == 0) return "1";
@@ -2826,7 +3128,8 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 		long ms = System.currentTimeMillis(), delay=0;
 		String action = "Retrieving all relationships from the server";
 		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
-		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
+		//HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
+		HashMap hmap = getRelatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
