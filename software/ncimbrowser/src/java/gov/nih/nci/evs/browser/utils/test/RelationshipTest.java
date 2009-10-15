@@ -50,7 +50,9 @@ public class RelationshipTest extends DataUtils {
         }
 
         Concept concept = getConceptByCode(scheme, version, null, code);
-        String conceptName = concept.getEntityDescription().getContent();
+        String conceptName = "";
+        if (concept != null) 
+            conceptName = concept.getEntityDescription().getContent();
         if (_displayResults) {
             DBG.debug("* Result: " + code + " (" + conceptName + ")");
             DBG.debug("  * Hits: " + count);
@@ -115,7 +117,8 @@ public class RelationshipTest extends DataUtils {
             "C0175677", // Injury
         };
 
-//        codes = new String[] { "C0017636" };
+        // codes = new String[] { "C0017636" };
+        // codes = new String[] { "CL342077" };
 
         DBG.debug("* codes: " + Utils.toString(codes));
         prompt();

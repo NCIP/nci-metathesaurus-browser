@@ -38,7 +38,7 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-        int which = 1;
+        int which = 2;
         
         switch (which) {
         case 0: prompt(args); break;
