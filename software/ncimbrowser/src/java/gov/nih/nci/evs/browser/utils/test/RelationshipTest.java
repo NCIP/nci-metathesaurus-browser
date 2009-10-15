@@ -69,22 +69,32 @@ public class RelationshipTest extends DataUtils {
         }
     }
 
-    private void prompt() {
+    private void prompt(String[] codes) {
         boolean isTrue = false;
         
-        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
-        _suppressOtherMessages = Prompt.prompt(
-            "  * Suppress other debugging messages", _suppressOtherMessages);
-        Debug.setDisplay(!_suppressOtherMessages);
-        _displayParameters = Prompt.prompt("  * Display parameters",
-            _displayParameters);
-        isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
-        DBG.setDisplayDetails(isTrue);
-        _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
-        _displayResults = Prompt.prompt("  * Display results", _displayResults);
-        isTrue = Prompt.prompt("  * Display tab delimited",
-            DBG.isDisplayTabDelimitedFormat());
-        DBG.setDisplayTabDelimitedFormat(isTrue);
+        while (true) {
+            DBG.debug("* codes: " + Utils.toString(codes));
+            DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
+            _suppressOtherMessages = Prompt.prompt(
+                "  * Suppress other debugging messages", _suppressOtherMessages);
+            Debug.setDisplay(!_suppressOtherMessages);
+            _displayParameters = Prompt.prompt("  * Display parameters",
+                _displayParameters);
+            isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+            DBG.setDisplayDetails(isTrue);
+            _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
+            _displayResults = Prompt.prompt("  * Display results", _displayResults);
+            isTrue = Prompt.prompt("  * Display tab delimited",
+                DBG.isDisplayTabDelimitedFormat());
+            DBG.setDisplayTabDelimitedFormat(isTrue);
+            
+            boolean changeSettings = false;
+            changeSettings = Prompt.prompt("  # Change Settings", changeSettings);
+            if (! changeSettings)
+                break;
+            DBG.debug("");
+            DBG.debug(Utils.SEPARATOR);
+        }
     }
 
     public void runTest() {
@@ -115,13 +125,14 @@ public class RelationshipTest extends DataUtils {
             "C0033684", // Proteins
             "C1285092", // Gland
             "C0175677", // Injury
+            "C0439793", // Severities
         };
 
         // codes = new String[] { "C0017636" };
         // codes = new String[] { "CL342077" };
+        // codes = new String[] { "C0439793" };
 
-        DBG.debug("* codes: " + Utils.toString(codes));
-        prompt();
+        prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
             String code = codes[i];
             if (DBG.isDisplayDetails()) {
