@@ -66,24 +66,34 @@ public class BySourceTest extends DataUtils {
         }
     }
 
-    private void prompt() {
+    private void prompt(String[] codes) {
         boolean isTrue = false;
-        
-        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
-        _suppressOtherMessages = Prompt.prompt(
-            "  * Suppress other debugging messages", _suppressOtherMessages);
-        Debug.setDisplay(!_suppressOtherMessages);
-        _displayParameters = Prompt.prompt("  * Display parameters",
-            _displayParameters);
-        isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
-        DBG.setDisplayDetails(isTrue);
-        _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
-        _displayResults = Prompt.prompt("  * Display results", _displayResults);
-        isTrue = Prompt.prompt("  * Display tab delimited",
-            DBG.isDisplayTabDelimitedFormat());
-        DBG.setDisplayTabDelimitedFormat(isTrue);
-        _sab = Prompt.prompt("  * Source", _sab);
-        _sortBy = Prompt.prompt("  * Sort By", _sortBy);
+
+        while (true) {
+            DBG.debug("* codes: " + Utils.toString(codes));
+            DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
+            _suppressOtherMessages = Prompt.prompt(
+                "  * Suppress other debugging messages", _suppressOtherMessages);
+            Debug.setDisplay(!_suppressOtherMessages);
+            _displayParameters = Prompt.prompt("  * Display parameters",
+                _displayParameters);
+            isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+            DBG.setDisplayDetails(isTrue);
+            _displayRelationships = Prompt.prompt("  * Display relationships", _displayRelationships);
+            _displayResults = Prompt.prompt("  * Display results", _displayResults);
+            isTrue = Prompt.prompt("  * Display tab delimited",
+                DBG.isDisplayTabDelimitedFormat());
+            DBG.setDisplayTabDelimitedFormat(isTrue);
+            _sab = Prompt.prompt("  * Source", _sab);
+            _sortBy = Prompt.prompt("  * Sort By", _sortBy);
+            
+            boolean changeSettings = false;
+            changeSettings = Prompt.prompt("  # Change Settings", changeSettings);
+            if (! changeSettings)
+                break;
+            DBG.debug("");
+            DBG.debug(Utils.SEPARATOR);
+        }
     }
 
     public void runTest() {
@@ -118,8 +128,7 @@ public class BySourceTest extends DataUtils {
 //        codes = new String[] { "C0439793" }; // Severity (Worst Case)
         _sab = "SNOMEDCT";
 
-        DBG.debug("* codes: " + Utils.toString(codes));
-        prompt();
+        prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
             String code = codes[i];
             if (DBG.isDisplayDetails()) {
