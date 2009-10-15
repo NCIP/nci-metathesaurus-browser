@@ -353,9 +353,11 @@ if (neighborhood_atoms.size() == 0) {
         String cui = (String) synonym_data.elementAt(4);
         String rel = (String) synonym_data.elementAt(5);
         String rel_display_value = rel;
+        
         if (DataUtils.containsAllUpperCaseChars(rel)) {
             rel_display_value = "";
         }
+        
         String rel_type = (String) synonym_data.elementAt(6);
         String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
     %>
