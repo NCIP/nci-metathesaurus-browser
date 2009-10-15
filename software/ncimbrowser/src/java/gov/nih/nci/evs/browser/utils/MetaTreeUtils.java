@@ -10,6 +10,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import java.io.*;
+import java.util.*;
+
 
 import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
 import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
@@ -119,6 +122,10 @@ public class MetaTreeUtils {
 		ResolvedConceptReferenceList rcrl = new ResolvedConceptReferenceList();
 		ResolvedConceptReference root = resolveReferenceGraphForward(getCodingSchemeRoot(sab));
 		AssociationList assocList = root.getSourceOf();
+		if (assocList == null) {
+			System.out.println("(*) getSourceRoots returns assocList == null???");
+		}
+
 		for(Association assoc : assocList.getAssociation()){
 			for(AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept()){
 				if(this.isSabQualifiedAssociation(ac, sab)){
@@ -153,7 +160,7 @@ public class MetaTreeUtils {
 	 */
 	private ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
 		CodedNodeSet cns = lbs.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
-		cns.restrictToProperties(null, new PropertyType[] {PropertyType.PRESENTATION}, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
+		cns = cns.restrictToProperties(null, new PropertyType[] {PropertyType.PRESENTATION}, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
 		ResolvedConceptReference[] refs = cns.resolveToList(null, null, new PropertyType[] {PropertyType.PRESENTATION}, -1).getResolvedConceptReference();
 
 		if(refs.length > 1){
@@ -174,7 +181,9 @@ public class MetaTreeUtils {
      */
     private ResolvedConceptReference resolveReferenceGraphForward(ResolvedConceptReference ref) throws Exception {
         CodedNodeGraph cng = lbs.getNodeGraph(NCI_META_THESAURUS, null, null);
-        cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD", "hasSubtype"}), null);
+        //cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD", "hasSubtype"}), null);
+        cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD"}), null);
+        //cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, SOURCE));
         ResolvedConceptReference[] refs = cng.resolveAsList(ref, true, false, 1, 1, null, null, null, -1).getResolvedConceptReference();
         return refs[0];
     }
@@ -189,8 +198,7 @@ public class MetaTreeUtils {
     private boolean isSabQualifiedAssociation(AssociatedConcept ac, String sab){
     	NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
     	for(NameAndValue nv : nvl){
-    		if(nv.getName().equals(sab) &&
-    				nv.getContent().equals("Source")){
+    		if(nv.getName().equals("source") && nv.getContent().equals(sab)){
     			return true;
     		}
     	}
@@ -396,7 +404,8 @@ public class MetaTreeUtils {
         // Resolve neighboring concepts with associations
         // qualified by the SAB.
         CodedNodeGraph neighborsBySource = getLexBIGService().getNodeGraph(scheme, csvt, null);
-        neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+        //neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
+        neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList("source", sab));
         ResolvedConceptReferenceList nodes = neighborsBySource.resolveAsList(
             rcr, true, true, Integer.MAX_VALUE, 1,
             null, new PropertyType[] { PropertyType.PRESENTATION },
@@ -444,7 +453,8 @@ public class MetaTreeUtils {
         ConceptReference focus = Constructors.createConceptReference(branchRootCode, scheme);
         cng = cng.restrictToAssociations(
                 Constructors.createNameAndValueList(associationsToNavigate),
-                ConvenienceMethods.createNameAndValueList(sab, "Source"));
+                //ConvenienceMethods.createNameAndValueList(sab, "Source"));
+                ConvenienceMethods.createNameAndValueList("source", sab));
         /*
         ResolvedConceptReferenceList branch = cng.resolveAsList(
                 focus, associationsNavigatedFwd, !associationsNavigatedFwd,
@@ -557,8 +567,15 @@ public class MetaTreeUtils {
     protected String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm, String scheme, CodingSchemeVersionOrTag csvt,
             Association assoc, boolean navigatedFwd) throws LBException {
 
-        String assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(assoc.getAssociationName(), scheme, csvt)
-                : lbscm.getAssociationReverseName(assoc.getAssociationName(), scheme, csvt);
+        String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
+
+        //String assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(assoc.getAssociationName(), scheme, csvt)
+        //        : lbscm.getAssociationReverseName(assoc.getAssociationName(), scheme, csvt);
+
+        String assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(associationName, scheme, csvt)
+                : lbscm.getAssociationReverseName(associationName, scheme, csvt);
+
+
         if (StringUtils.isBlank(assocLabel))
             assocLabel = (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
         return assocLabel;
@@ -655,8 +672,8 @@ public class MetaTreeUtils {
 
 
         for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
-            if ("Source".equalsIgnoreCase(qualifier.getContent())
-                    && sab.equalsIgnoreCase(qualifier.getName()))
+            if ("source".equalsIgnoreCase(qualifier.getName())
+                    && sab.equalsIgnoreCase(qualifier.getContent()))
                 return true;
         return false;
     }
@@ -732,7 +749,7 @@ public class MetaTreeUtils {
 			ConceptReference focus = Constructors.createConceptReference(code, scheme);
 			cng = cng.restrictToAssociations(
 					Constructors.createNameAndValueList(associationsToNavigate),
-					ConvenienceMethods.createNameAndValueList(sab, "Source"));
+					ConvenienceMethods.createNameAndValueList("source", sab));
 			ResolvedConceptReferenceList branch = cng.resolveAsList(
 					focus, associationsNavigatedFwd, !associationsNavigatedFwd,
 					Integer.MAX_VALUE, 2,
@@ -976,23 +993,184 @@ public class MetaTreeUtils {
 			ti.expandable = false;
 
 			CodedNodeGraph cng = null;
+			/*
 			ResolvedConceptReferenceList branch = null;
 			cng = lbSvc.getNodeGraph(scheme, null, null);
 			NameAndValueList nvl = null;
-			if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
+			//if (sab != null) nvl = ConvenienceMethods.createNameAndValueList("source", sab);
+			if (sab != null) nvl = Constructors.createNameAndValueList("source", sab);
+				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
+			*/
+
+
+
+			cng = lbSvc.getNodeGraph(scheme, null, null);
+
+            if (sab != null) {
+				cng = cng.restrictToAssociations(
+					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+							Constructors.createNameAndValueList("source", sab));
+			} else {
+				cng = cng.restrictToAssociations(
+					        Constructors.createNameAndValueList(hierAssocToChildNodes_),
+							null);
+			}
+
+            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+            propertyTypes[0] = PropertyType.PRESENTATION;
+
+            //int resolveCodedEntryDepth = 0;
+            ResolvedConceptReferenceList branch = null;
+			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), !associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertyTypes, null, -1);
+
+            if (branch.getResolvedConceptReferenceCount() > 0) {
+                Enumeration<ResolvedConceptReference> refEnum =
+                    branch.enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = refEnum.nextElement();
+                    //AssociationList childAssociationList = ref.getTargetOf();
+                    AssociationList childAssociationList = ref.getSourceOf();
+
+					if (childAssociationList == null) {
+						System.out.println("getSubconcepts childAssociationList == null???");
+						return hmap;
+					}
+
+					// Process each association defining children ...
+					for (Association child : childAssociationList.getAssociation()) {
+						String childNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
+						// Each association may have multiple children ...
+						AssociatedConceptList branchItemList = child.getAssociatedConcepts();
+						for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
+
+							//System.out.println("AssociatedConcept: " + branchItemNode.getConceptCode());
+
+							if (isValidForSAB(branchItemNode, sab)) {
+								String branchItemCode = branchItemNode.getCode();
+								// Add here if not in the list of excluded codes.
+								// This is also where we look to see if another level
+								// was indicated to be available. If so, mark the
+								// entry with a '+' to indicate it can be expanded.
+								if (!codesToExclude.contains(branchItemCode)) {
+
+									if (!hset.contains(branchItemCode)) {
+										hset.add(branchItemCode);
+
+										TreeItem childItem =
+											new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
+
+										childItem.expandable = false;
+/*
+										AssociationList grandchildBranch =
+											associationsNavigatedFwd ? branchItemNode.getSourceOf()
+												: branchItemNode.getTargetOf();
+*/
+                                        AssociationList grandchildBranch = branchItemNode.getSourceOf();
+										if (grandchildBranch != null) {
+
+											for (Association grandchild : grandchildBranch.getAssociation()) {
+
+												java.lang.String association_name = grandchild.getAssociationName();
+												//System.out.println("association_name: " + association_name);
+
+												//String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
+												// Each association may have multiple children ...
+												AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
+												for (AssociatedConcept grandchildbranchItemNode : grandchildbranchItemList.getAssociatedConcept()) {
+
+													//System.out.println("\tgrandchildbranchItemNode AssociatedConcept: " + grandchildbranchItemNode.getConceptCode());
+
+													if (isValidForSAB(grandchildbranchItemNode, sab)) {
+														childItem.expandable = true;
+														break;
+													}
+												}
+											}
+										}
+										ti.addChild(childNavText, childItem);
+										ti.expandable = true;
+									}
+								}
+							}
+						}
+					}
+				}
+     		}
+			hmap.put(code, ti);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		return hmap;
+	}
+
+
+
+/*
+	public HashMap getSubconcepts(String scheme, String version, String code, String sab, String[] asso_names, boolean associationsNavigatedFwd) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+		Vector w = new Vector();
+
+        long ms = System.currentTimeMillis();
+
+        Set<String> codesToExclude = Collections.EMPTY_SET;
+        boolean fwd = true;
+
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+			String name = getCodeDescription(lbSvc, scheme, csvt, code);
+			ti = new TreeItem(code, name);
+			ti.expandable = false;
+
+			CodedNodeGraph cng = null;
+			ResolvedConceptReferenceList branch = null;
+			cng = lbSvc.getNodeGraph(scheme, null, null);
+			NameAndValueList nvl = null;
+			//if (sab != null) nvl = ConvenienceMethods.createNameAndValueList("source", sab);
+			if (sab != null) nvl = Constructors.createNameAndValueList("source", sab);
+				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(asso_names), nvl);
-			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
-			                           associationsNavigatedFwd, !associationsNavigatedFwd,
-			                           Integer.MAX_VALUE, 2,
-			                           //null, new PropertyType[] { PropertyType.PRESENTATION },
-			                           null, null,
-			                           null, null, -1);
+
+            //CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+            //propertyTypes[0] = PropertyType.PRESENTATION;
+
+            CodedNodeSet.PropertyType[] propertyTypes = null;
+
+System.out.println("associationsNavigatedFwd: " + associationsNavigatedFwd);
+
+			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, !associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertyTypes, null, -1);
+
+
+			//cng = cng.restrictToAssociations(Constructors.createNameAndValueList(asso_names), nvl);
+			//branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
+			//                           associationsNavigatedFwd, !associationsNavigatedFwd,
+			//                           Integer.MAX_VALUE, 2,
+			//                           null, null,
+			//                           null, null, -1);
+
+            if (branch == null) {
+System.out.println("getSubconcepts branch == null???");
+                return hmap;
+			} else {
+System.out.println("getSubconcepts branch != NULL " + branch.getResolvedConceptReferenceCount());
+			}
 
 			for (ResolvedConceptReference node : branch.getResolvedConceptReference()) {
 
-				AssociationList childAssociationList =
-					associationsNavigatedFwd ? node.getSourceOf()
-						: node.getTargetOf();
+				AssociationList childAssociationList = associationsNavigatedFwd ? node.getSourceOf(): node.getTargetOf();
+
+				if (childAssociationList == null) {
+					System.out.println("getSubconcepts childAssociationList == null???");
+                	return hmap;
+				}
 
 				// Process each association defining children ...
 				for (Association child : childAssociationList.getAssociation()) {
@@ -1061,7 +1239,7 @@ public class MetaTreeUtils {
 		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
 	}
-
+*/
 
 	protected String getAssociationSourceString(AssociatedConcept ac){
 		String sources = "";
@@ -1069,12 +1247,12 @@ public class MetaTreeUtils {
 		int knt = 0;
 		for (int i=0; i<nvl.length; i++) {
             NameAndValue nv = nvl[i];
-            if (nv.getContent().compareToIgnoreCase("Source") == 0) {
+            if (nv.getName().compareToIgnoreCase("source") == 0) {
 				knt++;
 				if (knt == 1) {
-					sources = sources + nv.getName();
+					sources = sources + nv.getContent();
 				} else {
-					sources = sources + " ;" + nv.getName();
+					sources = sources + " ;" + nv.getContent();
 				}
 		    }
 		}
@@ -1086,8 +1264,8 @@ public class MetaTreeUtils {
 		NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
 		for (int i=0; i<nvl.length; i++) {
             NameAndValue nv = nvl[i];
-            if (nv.getContent().compareToIgnoreCase("Source") == 0) {
-				sources.add(nv.getName());
+            if (nv.getName().compareToIgnoreCase("source") == 0) {
+				sources.add(nv.getContent());
 		    }
 		}
 		return sources;
@@ -1311,7 +1489,7 @@ System.out.println("*** " + ti.text + " expandable: " + ti.expandable);
             CodedNodeGraph graph = getLexBIGService().getNodeGraph(scheme, csvt, null);
             graph.restrictToAssociations(
                 ConvenienceMethods.createNameAndValueList(upstreamAssoc),
-                ConvenienceMethods.createNameAndValueList(sab, "Source"));
+                ConvenienceMethods.createNameAndValueList("source", sab));
 
             // Resolve one hop, retrieving presentations for
             // comparison of source assignments.
