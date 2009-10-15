@@ -29,9 +29,7 @@ public class HTTPUtils {
             // Do nothing, just use the input
             // Note: The following exception was triggered:
             //   java.lang.IllegalArgumentException: URLDecoder: Illegal hex
-            //     characters in escape (%) pattern - For input string: "^&"
-            //   when QA entered:
-            //     ~!@#$%^&*()_+-={}|:”<>?[]\;’,./-+/*&&()||==`”%”!\’=    
+            //     characters in escape (%) pattern - For input string: "^&".
         }
         
 		// Remove XSS attacks

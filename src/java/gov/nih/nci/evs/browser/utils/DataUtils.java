@@ -2626,7 +2626,7 @@ if (sourceof == null) {
     // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
 
-System.out.println("(*) getNeighborhoodSynonyms ...");
+Debug.println("(*) getNeighborhoodSynonyms ...");
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
