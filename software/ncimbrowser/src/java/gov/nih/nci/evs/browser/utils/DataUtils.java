@@ -2405,39 +2405,42 @@ System.out.println("(*) getRelationshipHashMap =================================
                                 String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
                                 String associationName0 = associationName;
 
-								String directionalLabel = associationName;
-								boolean navigatedFwd = false;
-								try {
-									directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
-									System.out.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
-								} catch (Exception e) {
-									System.out.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
-								}
+                                if (associationName.compareTo("CHD") == 0 || associationName.compareTo("RB") == 0) {
 
-								Vector v = new Vector();
-								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-								for (int j = 0; j < acl.length; j++) {
-									AssociatedConcept ac = acl[j];
-									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
-											String qualifier_name = qual.getName();
-											String qualifier_value = qual.getContent();
-											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
-												associationName = qualifier_value; // replace associationName by Rela value
-												break;
-											}
-										}
-										Vector w = null;
-										if (hmap.containsKey(directionalLabel + "|" + associationName)) {
-											w = (Vector) hmap.get(directionalLabel + "|" + associationName);
-										} else {
-											w = new Vector();
-										}
-										w.add(ac);
-										//hmap.put(associationName, w);
-										hmap.put(directionalLabel + "|" + associationName, w);
+									String directionalLabel = associationName;
+									boolean navigatedFwd = false;
+									try {
+										directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
+										System.out.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+									} catch (Exception e) {
+										System.out.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
 									}
-								}
+
+									Vector v = new Vector();
+									AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+									for (int j = 0; j < acl.length; j++) {
+										AssociatedConcept ac = acl[j];
+										if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+											for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
+												String qualifier_name = qual.getName();
+												String qualifier_value = qual.getContent();
+												if (qualifier_name.compareToIgnoreCase("rela") == 0) {
+													associationName = qualifier_value; // replace associationName by Rela value
+													break;
+												}
+											}
+											Vector w = null;
+											if (hmap.containsKey(directionalLabel + "|" + associationName)) {
+												w = (Vector) hmap.get(directionalLabel + "|" + associationName);
+											} else {
+												w = new Vector();
+											}
+											w.add(ac);
+											//hmap.put(associationName, w);
+											hmap.put(directionalLabel + "|" + associationName, w);
+										}
+									}
+							    }
 							}
 					    }
 				    }
