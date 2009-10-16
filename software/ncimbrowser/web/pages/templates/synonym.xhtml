@@ -75,10 +75,10 @@
         <%
           Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
           Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
-          if (synonyms == null) {
+          //if (synonyms == null) {
               synonyms = new DataUtils().getSynonyms(concept_syn);
-              request.getSession().setAttribute("synonyms", synonyms);
-          }
+          //    request.getSession().setAttribute("synonyms", synonyms);
+          //}
           synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           for (int n=0; n<synonyms.size(); n++)
           {
