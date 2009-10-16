@@ -252,10 +252,10 @@ public class DataUtils {
     public String NCIMBuildInfo = null;
 
     static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
-    static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
+    static String[] hierAssocToChildNodes_ = new String[] { "CHD", "inverse_isa" };
     static String[] assocToSiblingNodes_ = new String[] { "SIB" };
-    static String[] assocToBTNodes_ = new String[] { "RB", "BT" };
-    static String[] assocToNTNodes_ = new String[] { "RN", "NT" };
+    static String[] assocToBTNodes_ = new String[] { "RB" };
+    static String[] assocToNTNodes_ = new String[] { "RN" };
 
     static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other"};
 
@@ -1470,13 +1470,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
 
 
-    protected String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm, String scheme, CodingSchemeVersionOrTag csvt,
+    protected static String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm, String scheme, CodingSchemeVersionOrTag csvt,
             Association assoc, boolean navigatedFwd) throws LBException {
 
         String assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(assoc.getAssociationName(), scheme, csvt)
                 : lbscm.getAssociationReverseName(assoc.getAssociationName(), scheme, csvt);
         if (StringUtils.isBlank(assocLabel))
             assocLabel = (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
+
         return assocLabel;
     }
 
@@ -2218,10 +2219,8 @@ System.out.println("(*) getRelationshipHashMap =================================
 			CodedNodeGraph cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
 
             if (source != null) {
-				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 				cng = cng.restrictToAssociations(
 					        Constructors.createNameAndValueList(META_ASSOCIATIONS),
-							//nvlst,
 							Constructors.createNameAndValueList("source", source));
 			}
 
@@ -2317,7 +2316,6 @@ System.out.println("(*) getRelationshipHashMap =================================
 		return getRelatedConceptsHashMap(codingSchemeName, vers, code, source, 1);
 	}
 
-
 	public static HashMap getRelatedConceptsHashMap(String codingSchemeName, String vers, String code, String source, int resolveCodedEntryDepth)
 	{
 		HashMap hmap = new HashMap();
@@ -2337,17 +2335,15 @@ System.out.println("(*) getRelationshipHashMap =================================
 			CodedNodeGraph cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
 
             if (source != null) {
-				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 				cng = cng.restrictToAssociations(
 					        Constructors.createNameAndValueList(META_ASSOCIATIONS),
-							//nvlst,
 							Constructors.createNameAndValueList("source", source));
 			}
 
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
 
-			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2362,6 +2358,17 @@ System.out.println("(*) getRelationshipHashMap =================================
 							for (int i = 0; i < associations.length; i++) {
 								Association assoc = associations[i];
                                 String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
+                                String associationName0 = associationName;
+
+								String directionalLabel = associationName;
+								boolean navigatedFwd = true;
+								try {
+									directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
+									System.out.println("(*) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+								} catch (Exception e) {
+									System.out.println("(*) getDirectionalLabel throws exceptions: " + directionalLabel);
+								}
+
 								Vector v = new Vector();
 								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
 								for (int j = 0; j < acl.length; j++) {
@@ -2376,13 +2383,59 @@ System.out.println("(*) getRelationshipHashMap =================================
 											}
 										}
 										Vector w = null;
-										if (hmap.containsKey(associationName)) {
-											w = (Vector) hmap.get(associationName);
+										if (hmap.containsKey(directionalLabel + "|" + associationName)) {
+											w = (Vector) hmap.get(directionalLabel + "|" + associationName);
 										} else {
 											w = new Vector();
 										}
 										w.add(ac);
-										hmap.put(associationName, w);
+										hmap.put(directionalLabel + "|" + associationName, w);
+									}
+								}
+							}
+					    }
+				    }
+
+                    sourceof = ref.getTargetOf();
+                    if (sourceof != null ) {
+						Association[] associations = sourceof.getAssociation();
+                        if (associations != null) {
+							for (int i = 0; i < associations.length; i++) {
+								Association assoc = associations[i];
+                                String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
+                                String associationName0 = associationName;
+
+								String directionalLabel = associationName;
+								boolean navigatedFwd = false;
+								try {
+									directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
+									System.out.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+								} catch (Exception e) {
+									System.out.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
+								}
+
+								Vector v = new Vector();
+								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+								for (int j = 0; j < acl.length; j++) {
+									AssociatedConcept ac = acl[j];
+									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
+											String qualifier_name = qual.getName();
+											String qualifier_value = qual.getContent();
+											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
+												associationName = qualifier_value; // replace associationName by Rela value
+												break;
+											}
+										}
+										Vector w = null;
+										if (hmap.containsKey(directionalLabel + "|" + associationName)) {
+											w = (Vector) hmap.get(directionalLabel + "|" + associationName);
+										} else {
+											w = new Vector();
+										}
+										w.add(ac);
+										//hmap.put(associationName, w);
+										hmap.put(directionalLabel + "|" + associationName, w);
 									}
 								}
 							}
@@ -2391,6 +2444,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 				}
 			}
 
+/*
 			cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
 
             if (source != null) {
@@ -2403,7 +2457,8 @@ System.out.println("(*) getRelationshipHashMap =================================
 							null);
 			}
 
-			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+//			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2418,10 +2473,20 @@ System.out.println("(*) getRelationshipHashMap =================================
 							for (int i = 0; i < associations.length; i++) {
 								Association assoc = associations[i];
                                 String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
+								String associationName0 = associationName;
 								Vector v = new Vector();
 								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
 								for (int j = 0; j < acl.length; j++) {
 									AssociatedConcept ac = acl[j];
+
+boolean isTarget = false;
+									if (ac.getEntityDescription().getContent().compareTo(target) == 0) {
+
+System.out.println("(***) target: " + target);
+isTarget = true;
+
+									}
+
 									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
 											String qualifier_name = qual.getName();
@@ -2437,6 +2502,11 @@ System.out.println("(*) getRelationshipHashMap =================================
 										} else {
 											w = new Vector();
 										}
+
+										if (isTarget) {
+											System.out.println("(**) target: " + target + " associationName0: " + associationName0 + " rela: " + associationName);
+										}
+
 										w.add(ac);
 										hmap.put(associationName, w);
 									}
@@ -2445,7 +2515,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 					    }
 				    }
 				}
-			}
+*/
 
 		} catch (Exception ex) {
 
@@ -2623,6 +2693,19 @@ if (sourceof == null) {
 	}
 
 
+    String getAssociationDirectionalName(LexBIGServiceConvenienceMethods lbscm, String scheme, CodingSchemeVersionOrTag csvt,
+           String associationName, boolean navigatedFwd) {
+        String assocLabel = null;
+        try {
+        	assocLabel = navigatedFwd ? lbscm.getAssociationForwardName(associationName, scheme, csvt)
+                : lbscm.getAssociationReverseName(associationName, scheme, csvt);
+		} catch (Exception ex) {
+
+		}
+        return assocLabel;
+    }
+
+
     // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
 
@@ -2668,7 +2751,11 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 		while (it.hasNext())
 		{
 			ms_categorization = System.currentTimeMillis();
-			String rel = (String) it.next();
+			String rel_rela = (String) it.next();
+			Vector u = DataUtils.parseData(rel_rela, "|");
+			String rel = (String) u.elementAt(0);
+			String rela = (String) u.elementAt(1);
+
 			String category = "Other";
 			if (parent_asso_vec.contains(rel)) category = "Parent";
 			else if (child_asso_vec.contains(rel)) category = "Child";
@@ -2677,7 +2764,8 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
 			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
-			Vector v = (Vector) hmap.get(rel);
+			//Vector v = (Vector) hmap.get(rel);
+			Vector v = (Vector) hmap.get(rel_rela);
 
             // For each related concept:
 			for (int i=0; i<v.size(); i++) {
@@ -2691,7 +2779,8 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 					String t = findRepresentativeTerm(c, sab);
 					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
 
-					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+					//t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+					t = t + "|" + c.getEntityCode() + "|" + rela + "|" + category;
 					w.add(t);
 
                     // Temporarily save non-RO other relationships
@@ -3142,14 +3231,19 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 		action = "Categorizing relationships into six categories; finding source data for each relationship";
 		while (it.hasNext())
 		{
-			String rel = (String) it.next();
+			String rel_rela = (String) it.next();
+			Vector u = DataUtils.parseData(rel_rela, "|");
+			String rel = (String) u.elementAt(0);
+			String rela = (String) u.elementAt(1);
+
 			String category = "Other";
 			if (parent_asso_vec.contains(rel)) category = "Parent";
 			else if (child_asso_vec.contains(rel)) category = "Child";
 			else if (bt_vec.contains(rel)) category = "Broader";
 			else if (nt_vec.contains(rel)) category = "Narrower";
 			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
-			Vector v = (Vector) hmap.get(rel);
+			Vector v = (Vector) hmap.get(rel_rela);
+
 			for (int i=0; i<v.size(); i++) {
 				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 				EntityDescription ed = ac.getEntityDescription();
@@ -3164,8 +3258,9 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 						if (w == null) {
 							w = new Vector();
 						}
-						//String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
-						String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+						//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+						String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+
 						if (!w.contains(str)) {
 							w.add(str);
 						    rel_hmap.put(category, w);
@@ -3182,8 +3277,8 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 						if (w == null) {
 							w = new Vector();
 						}
-						//String str = rel + "|" + c.getEntityDescription().getContent() + "|" + c.getEntityCode() + "|" + source;
-						String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+						//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+						String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 						if (!w.contains(str)) {
 							w.add(str);
 						    rel_hmap.put(category, w);
@@ -3211,8 +3306,6 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 			String s = (String) w2.elementAt(k);
 
 			//System.out.println("(*) getAssociationTargetHashMap s " + s);
-
-
 			Vector ret_vec = DataUtils.parseData(s, "|");
 			String rel = (String) ret_vec.elementAt(0);
 			String name = (String) ret_vec.elementAt(1);
@@ -3220,10 +3313,7 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 			String src = (String) ret_vec.elementAt(3);
 			String t = name + "|" + target_code + "|" + src;
 			if (rel.compareTo("RO") != 0 && !other_hset.contains(t)) {
-
 				//System.out.println("(*) getAssociationTargetHashMap other_hset.add " + t);
-
-
 				other_hset.add(t);
 			}
 		}
