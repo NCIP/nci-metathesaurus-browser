@@ -1338,7 +1338,7 @@ public class SearchUtils {
 */
 
             LocalNameList restrictToProperties = null;//new LocalNameList();
-
+            LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
             //boolean resolveConcepts = true; // Semantic_Type is no longer required.
             //if (!ranking) resolveConcepts = false;
 
@@ -1357,6 +1357,10 @@ public class SearchUtils {
                 System.out.println("*** Sort alphabetically...");
                 resolveConcepts = false;
 			}
+
+			resolveConcepts = true;
+			LocalNameList filterOptions = null;
+			CodedNodeSet.PropertyType[] propertyTypes = null;
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 //boolean resolveConcepts = false;
@@ -1364,9 +1368,13 @@ public class SearchUtils {
 
 				//System.out.println("resolveConcepts? " + resolveConcepts);
 
+ //ResolvedConceptReferencesIterator resolve(SortOptionList sortOptions, LocalNameList filterOptions, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes, boolean resolveObjects)
+
+
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
-                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
+                    //iterator = cns.resolve(sortCriteria, propertyNames, restrictToProperties, null, resolveConcepts);
+                    iterator = cns.resolve(sortCriteria, filterOptions, propertyNames, propertyTypes, resolveConcepts);
 					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
                     //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
 
