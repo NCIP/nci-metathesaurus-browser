@@ -105,10 +105,12 @@
               <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width=1000>
 
           <%
-          String sortOptionType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
-          if (sortOptionType == null)
-              sortOptionType = "false";
-          if (sortOptionType.compareToIgnoreCase("all") == 0) {
+          //String sortOptionType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
+          //if (sortOptionType == null)
+          //    sortOptionType = "false";
+          //if (sortOptionType.compareToIgnoreCase("all") == 0) {
+          boolean showSemanticType = true;
+          if (showSemanticType) {
           %>
       <th class="dataTableHeader" scope="col" align="left">Concept</th>
       <th class="dataTableHeader" scope="col" align="left">Semantic Type</th>
@@ -122,11 +124,11 @@
                   System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-                      // Concept c = rcr.getReferencedEntry();
+                      Concept c = rcr.getReferencedEntry();
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
                       String semantic_type = "";
-                      /*
+                      
                       if (c != null) {
 			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      
 			      if (semantic_types != null && semantic_types.size() > 0) {
@@ -141,7 +143,7 @@
 				  }
 			      }
                       }
-                      */
+                      
 
                       if (i % 2 == 0) {
                         %>
