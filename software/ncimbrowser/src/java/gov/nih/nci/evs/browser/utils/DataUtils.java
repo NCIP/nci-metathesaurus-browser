@@ -2326,7 +2326,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 
 			if (lbSvc == null)
 			{
-				System.out.println("lbSvc == null???");
+				Debug.println("lbSvc == null???");
 				return hmap;
 			}
 
@@ -2364,9 +2364,9 @@ System.out.println("(*) getRelationshipHashMap =================================
 								boolean navigatedFwd = true;
 								try {
 									directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
-									System.out.println("(*) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+									Debug.println("(*) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
 								} catch (Exception e) {
-									System.out.println("(*) getDirectionalLabel throws exceptions: " + directionalLabel);
+								    Debug.println("(*) getDirectionalLabel throws exceptions: " + directionalLabel);
 								}
 
 								Vector v = new Vector();
@@ -2411,9 +2411,9 @@ System.out.println("(*) getRelationshipHashMap =================================
 									boolean navigatedFwd = false;
 									try {
 										directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
-										System.out.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+										Debug.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
 									} catch (Exception e) {
-										System.out.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
+									    Debug.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
 									}
 
 									Vector v = new Vector();
