@@ -57,16 +57,37 @@
             <tr class="textbody"><td align="left">
 
 <p>
-The NCI Metathesaurus includes the following sources.
-Certain vocabularies, such as ICD10,
-is made available, by permission, for NON-COMMERCIAL USE ONLY.
-</p>
-<p>
-MedDRA License Agreement.  The Medical Dictionary for Regulatory Activities (MedDRA) terminology is a licensed terminology.
-The use of MedDRA from this NCI website is licensed for NCI employees and contractors performing work for NCI.
-All other use is prohibited.  Users who are NOT NCI employees or contractors performing work for NCI must subscribe to
-MedDRA from the MedDRA MSSO.  For questions regarding MedDRA, please contact the MSSO at mssohelp@ngc.com, or visit
-the MSSO website at www.meddramsso.com, or write the MSSO at 12011 Sunset Hills Road Reston Virginia, 20190-3285 or phone 877.258.8280.
+The NCI Metathesaurus (NCIm) includes the sources listed below,
+some of which are proprietary and included, by permission, for non-commercial use only.
+<ul>
+  <li>
+    NCIm is built using the National Library of Medicine's UMLS Metathesaurus, use of which is restricted
+    under the UMLS license agreement
+    (see <a href="http://www.nlm.nih.gov/research/umls/license.html" target="_blank">
+    http://www.nlm.nih.gov/research/umls/license.html</a>).
+  </li>
+  <li>
+    The World Health Organization allows use of ICD-10 and ICD-O-3 in NCI Enterprise Vocabulary Services, but
+    requires licensing for other purposes
+    (see <a href="http://www.who.int/classifications/icd/en/" target="_blank">http://www.who.int/classifications/icd/en/</a>).
+  </li>
+  <li>
+    The Medical Dictionary for Regulatory Activities (MedDRA) terminology is licensed for NCI work and may be
+    viewed on NCI browsers. All other uses are prohibited, unless covered by separate subscription to MedDRA
+    from the MedDRA MSSO
+    (see <a href="http://www.meddramsso.com" target="_blank">http://www.meddramsso.com</a>
+    or contact at mssohelp@ngc.com, 877.258.8280, or 12011 Sunset Hills Road Reston Virginia, 20190-3285).
+  </li>
+</ul>
+The current version of NCIm is built using UMLS Metathesaurus, 2007AC and National Cancer Institute Thesaurus, 2008_12D.
+
+
+
+
+
+
+
+
 </p>
             </td></tr>
           </table>
