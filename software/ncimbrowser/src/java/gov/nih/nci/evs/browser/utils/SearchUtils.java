@@ -1259,19 +1259,20 @@ public class SearchUtils {
 
         CodedNodeSet cns = null;
         ResolvedConceptReferencesIterator iterator = null;
+
+		CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+		propertyTypes[0] = PropertyType.PRESENTATION;
+
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-
             if (lbSvc == null)
             {
                 System.out.println("lbSvc = null");
                 return null;
             }
-
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
             if (version != null) versionOrTag.setVersion(version);
 
-            //cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
             cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
 
             if (cns == null)
@@ -1282,6 +1283,16 @@ public class SearchUtils {
 
             //LocalNameList contextList = null;
             try {
+				LocalNameList sourceList = null;
+				if (source != null && source.compareToIgnoreCase("ALL") != 0) {
+					sourceList = new LocalNameList();
+					sourceList.addEntry(source);
+				}
+
+				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
+				cns = cns.restrictToProperties(null, propertyTypes, sourceList, null, null);
+
+/*
 				 if (source != null && source.compareToIgnoreCase("ALL") != 0) {
 					 cns = cns.restrictToMatchingProperties(null,
 									new PropertyType[]{PropertyType.PRESENTATION},
@@ -1302,7 +1313,7 @@ public class SearchUtils {
 									null);
 
 				 }
-
+*/
 				//cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
 				//cns = restrictToSource(cns, source);
             } catch (Exception ex) {
@@ -1341,7 +1352,7 @@ public class SearchUtils {
             LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
             //boolean resolveConcepts = true; // Semantic_Type is no longer required.
             //if (!ranking) resolveConcepts = false;
-
+/*
             boolean resolveConcepts = false;
             System.out.println("*** resolveConcepts: " + resolveConcepts);
 
@@ -1357,19 +1368,18 @@ public class SearchUtils {
                 System.out.println("*** Sort alphabetically...");
                 resolveConcepts = false;
 			}
-
-			resolveConcepts = true;
+*/
+            SortOptionList sortCriteria = null;
+			boolean resolveConcepts = true;
 			LocalNameList filterOptions = null;
-			CodedNodeSet.PropertyType[] propertyTypes = null;
+			propertyTypes = null;
+			//CodedNodeSet.PropertyType[] propertyTypes = null;
             try {
                 // resolve nothing unless sort_by_pt_only is set to false
                 //boolean resolveConcepts = false;
                 //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
 
 				//System.out.println("resolveConcepts? " + resolveConcepts);
-
- //ResolvedConceptReferencesIterator resolve(SortOptionList sortOptions, LocalNameList filterOptions, LocalNameList propertyNames, CodedNodeSet.PropertyType[] propertyTypes, boolean resolveObjects)
-
 
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
