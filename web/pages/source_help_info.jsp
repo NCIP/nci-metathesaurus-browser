@@ -68,12 +68,6 @@ All other use is prohibited.  Users who are NOT NCI employees or contractors per
 MedDRA from the MedDRA MSSO.  For questions regarding MedDRA, please contact the MSSO at mssohelp@ngc.com, or visit
 the MSSO website at www.meddramsso.com, or write the MSSO at 12011 Sunset Hills Road Reston Virginia, 20190-3285 or phone 877.258.8280.
 </p>
-<p>
-The current version of the NCI Metathesaurus, based on the UMLS build <a
-href="http://gforge.nci.nih.gov/docman/view.php/129/5384/vocabulary_changes.doc">UMLS Metathesaurus,
-2007AC</a>, covers up to National Cancer Institute Thesaurus, 2008_12D.
-</p>
-
             </td></tr>
           </table>
           <br/>
