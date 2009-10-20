@@ -182,13 +182,9 @@ public class CacheController
         {
             System.out.println("Not in cache -- calling getSubconcepts..." );
 			//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
-
 			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
 
             nodeArray = HashMap2JSONArray(map);
-
-//System.out.println(nodeArray.toString());
-
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
@@ -404,9 +400,6 @@ public class CacheController
                 JSONArray nodesArray = getNodesArray(node_id, ti);
                 //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
-
-//System.out.println( rootsArray.toString() );
-
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -459,36 +452,6 @@ public class CacheController
         }
     }
 
-/*
-    private JSONArray getNodesArray(String node_id, TreeItem ti) {
-        JSONArray nodesArray = new JSONArray();
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
-            SortUtils.quickSort(children);
-            for (int i=0; i<children.size(); i++) {
-                TreeItem childItem = (TreeItem) children.get(i);
-                int knt = 0;
-                if (childItem.expandable)
-                {
-                    knt = 1;
-                }
-                JSONObject nodeObject = new JSONObject();
-                try {
-                    nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
-                    nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
-                    nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
-                    nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
-                    nodesArray.put(nodeObject);
-                } catch (Exception ex) {
-
-                }
-            }
-        }
-        return nodesArray;
-    }
-*/
-
-
     private int findFocusNodePosition(String node_id, List<TreeItem> children) {
         for (int i=0; i<children.size(); i++) {
             TreeItem childItem = (TreeItem) children.get(i);
@@ -496,8 +459,6 @@ public class CacheController
         }
         return -1;
     }
-
-
 
     private JSONArray getNodesArray(String node_id, TreeItem ti) {
         JSONArray nodesArray = new JSONArray();
