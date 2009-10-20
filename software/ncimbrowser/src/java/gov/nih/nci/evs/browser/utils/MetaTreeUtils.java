@@ -72,7 +72,8 @@ public class MetaTreeUtils {
     static String[] hierAssociationToParentNodes_ = new String[] { "PAR" };
 
 
-    static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
+    //static String[] hierAssocToChildNodes_ = new String[] { "CHD", "hasSubtype" };
+    static String[] hierAssocToChildNodes_ = new String[] { "CHD" };
     static SortOptionList sortByCode_ = Constructors.createSortOptionList(new String[] {"code"});
 
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
@@ -231,9 +232,7 @@ public class MetaTreeUtils {
 
         String scheme = css.getCodingSchemeURI();
         */
-
         String scheme = "NCI MetaThesaurus";
-
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         //csvt.setVersion(css.getRepresentsVersion());
 
@@ -329,7 +328,6 @@ public class MetaTreeUtils {
             pathsResolved = pathsFromRoot.length;
             for (TreeItem rootItem : pathsFromRoot) {
                 ti.addChild("CHD", rootItem);
-
 			}
 
         } finally {
@@ -405,7 +403,7 @@ public class MetaTreeUtils {
         // qualified by the SAB.
         CodedNodeGraph neighborsBySource = getLexBIGService().getNodeGraph(scheme, csvt, null);
         //neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
-        neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList("source", sab));
+        neighborsBySource = neighborsBySource.restrictToAssociations(null, Constructors.createNameAndValueList("source", sab));
         ResolvedConceptReferenceList nodes = neighborsBySource.resolveAsList(
             rcr, true, true, Integer.MAX_VALUE, 1,
             null, new PropertyType[] { PropertyType.PRESENTATION },
@@ -474,47 +472,51 @@ public class MetaTreeUtils {
         for (ResolvedConceptReference node : branch.getResolvedConceptReference()) {
             AssociationList childAssociationList = associationsNavigatedFwd ? node.getSourceOf() : node.getTargetOf();
 
+            if (childAssociationList != null) {
+
             // Process each association defining children ...
-            for (Association child : childAssociationList.getAssociation()) {
-                String childNavText = getDirectionalLabel(scheme, csvt, child, associationsNavigatedFwd);
-                // Each association may have multiple children ...
-                AssociatedConceptList branchItemList = child.getAssociatedConcepts();
-                for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept())
+				for (Association child : childAssociationList.getAssociation()) {
+					String childNavText = getDirectionalLabel(scheme, csvt, child, associationsNavigatedFwd);
+					// Each association may have multiple children ...
+					AssociatedConceptList branchItemList = child.getAssociatedConcepts();
+					for (AssociatedConcept branchItemNode : branchItemList.getAssociatedConcept()) {
 
-                    if (isValidForSAB(branchItemNode, sab)) {
-                        String branchItemCode = branchItemNode.getCode();
-
-
-                        // Add here if not in the list of excluded codes.
-                        // This is also where we look to see if another level
-                        // was indicated to be available. If so, mark the
-                        // entry with a '+' to indicate it can be expanded.
-                        if (!codesToExclude.contains(branchItemCode)) {
-							/*
-                            TreeItem childItem =
-                                new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent(), getAtomText(branchItemNode, sab));
-
-                            */
-
-                            TreeItem childItem =
-                                new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
+						if (isValidForSAB(branchItemNode, sab)) {
+							String branchItemCode = branchItemNode.getCode();
 
 
-                            childItem.expandable = false;
+							// Add here if not in the list of excluded codes.
+							// This is also where we look to see if another level
+							// was indicated to be available. If so, mark the
+							// entry with a '+' to indicate it can be expanded.
+							if (!codesToExclude.contains(branchItemCode)) {
+								/*
+								TreeItem childItem =
+									new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent(), getAtomText(branchItemNode, sab));
 
-                            AssociationList grandchildBranch = associationsNavigatedFwd ?
-                                branchItemNode.getSourceOf() : branchItemNode.getTargetOf();
+								*/
+
+								TreeItem childItem =
+									new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
 
 
-                            if (grandchildBranch != null) {
-                                childItem.expandable = true;
+								childItem.expandable = false;
+
+								AssociationList grandchildBranch = associationsNavigatedFwd ?
+									branchItemNode.getSourceOf() : branchItemNode.getTargetOf();
+
+
+								if (grandchildBranch != null) {
+									childItem.expandable = true;
+								}
+
+								ti.addChild(childNavText, childItem);
+								ti.expandable = true;
 							}
-
-                            ti.addChild(childNavText, childItem);
-                            ti.expandable = true;
-                        }
-                    }
-            }
+						}
+					}
+				}
+			}
         }
     }
 
@@ -530,7 +532,7 @@ public class MetaTreeUtils {
             throws LBException {
 
         CodedNodeSet cns = getLexBIGService().getCodingSchemeConcepts(scheme, csvt);
-        cns.restrictToMatchingProperties(ConvenienceMethods.createLocalNameList("conceptCode"),
+        cns = cns.restrictToMatchingProperties(ConvenienceMethods.createLocalNameList("conceptCode"),
             null, code, "exactMatch", null);
         ResolvedConceptReferenceList cnsList = cns.resolveToList(
             null, null,  new PropertyType[] { PropertyType.PRESENTATION },
@@ -687,8 +689,14 @@ public class MetaTreeUtils {
 	public int getSubconceptCount(String scheme, String version, String code, String sab, String asso_name, boolean direction)
 	{
 		HashMap hmap = getSubconcepts(scheme, null, code, sab, asso_name, direction);
+		if (hmap == null) return 0;
+
 		Set keyset = hmap.keySet();
 		Object[] objs = keyset.toArray();
+
+		if (objs.length == 0) return 0;
+
+
 		String id = (String) objs[0];
 		int knt = 0;
 		TreeItem ti = (TreeItem) hmap.get(id);
@@ -702,7 +710,10 @@ public class MetaTreeUtils {
 
 	public int getSubconceptCount(String scheme, String version, String code, String sab)
 	{
-		HashMap hmap = getSubconcepts(scheme, null, code, sab, "PAR", false);
+		//HashMap hmap = getSubconcepts(scheme, null, code, sab, "PAR", false);
+
+		HashMap hmap = getSubconcepts(scheme, null, code, sab, "CHD", true);
+
 		Set keyset = hmap.keySet();
 		Object[] objs = keyset.toArray();
 		String id = (String) objs[0];
@@ -793,10 +804,7 @@ public class MetaTreeUtils {
 									if (grandchildBranch != null) {
 
 										for (Association grandchild : grandchildBranch.getAssociation()) {
-
 											java.lang.String association_name = grandchild.getAssociationName();
-											//System.out.println("association_name: " + association_name);
-
 											//String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt, child, associationsNavigatedFwd);
 											// Each association may have multiple children ...
 											AssociatedConceptList grandchildbranchItemList = grandchild.getAssociatedConcepts();
@@ -1001,9 +1009,6 @@ public class MetaTreeUtils {
 			if (sab != null) nvl = Constructors.createNameAndValueList("source", sab);
 				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
 			*/
-
-
-
 			cng = lbSvc.getNodeGraph(scheme, null, null);
 
             if (sab != null) {
@@ -1033,7 +1038,7 @@ public class MetaTreeUtils {
                     AssociationList childAssociationList = ref.getSourceOf();
 
 					if (childAssociationList == null) {
-						System.out.println("getSubconcepts childAssociationList == null???");
+						System.out.println("getSubconcepts childAssociationList == null??? ");
 						return hmap;
 					}
 
@@ -1061,11 +1066,7 @@ public class MetaTreeUtils {
 											new TreeItem(branchItemCode, branchItemNode.getEntityDescription().getContent());
 
 										childItem.expandable = false;
-/*
-										AssociationList grandchildBranch =
-											associationsNavigatedFwd ? branchItemNode.getSourceOf()
-												: branchItemNode.getTargetOf();
-*/
+
                                         AssociationList grandchildBranch = branchItemNode.getSourceOf();
 										if (grandchildBranch != null) {
 
@@ -1285,18 +1286,16 @@ System.out.println("getSubconcepts branch != NULL " + branch.getResolvedConceptR
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
+//int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "PAR", false);
 
-int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "PAR", false);
+int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "CHD", true);
+
 //	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
-
 
 ti.expandable = false;
 if (count > 0) {
 	ti.expandable = true;
 }
-
-System.out.println("*** " + ti.text + " expandable: " + ti.expandable);
-
 
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
@@ -1486,13 +1485,15 @@ System.out.println("*** " + ti.text + " expandable: " + ti.expandable);
 
             // Define a code graph for all relationships tagged with
             // the specified sab.
+
             CodedNodeGraph graph = getLexBIGService().getNodeGraph(scheme, csvt, null);
-            graph.restrictToAssociations(
+            graph = graph.restrictToAssociations(
                 ConvenienceMethods.createNameAndValueList(upstreamAssoc),
                 ConvenienceMethods.createNameAndValueList("source", sab));
 
             // Resolve one hop, retrieving presentations for
             // comparison of source assignments.
+
             ResolvedConceptReference[] refs = graph.resolveAsList(
                 rcr, fwd, !fwd, Integer.MAX_VALUE, 1,
                 //null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1).getResolvedConceptReference();
@@ -1500,76 +1501,83 @@ System.out.println("*** " + ti.text + " expandable: " + ti.expandable);
 
             // Create a new tree item for each upstream node, add the current
             // tree item as a child, and recurse to go higher (if available).
-
             if (refs.length > 0) {
 
                 // Each associated concept represents an upstream branch.
                 AssociationList aList = fwd ? refs[0].getSourceOf() : refs[0].getTargetOf();
-                for (Association assoc : aList.getAssociation()) {
-
-                    // Go through the concepts one by one, adding the
-                    // current tree item as a child of a new tree item
-                    // representing the upstream node. If a tree item
-                    // already exists for the parent, we reuse it to
-                    // keep a single branch per parent.
-                    for (AssociatedConcept refParent : assoc.getAssociatedConcepts().getAssociatedConcept())
-                    {
-                        if (isValidForSAB(refParent, sab)) {
-                            // Fetch the term for this context ...
-                            Presentation[] sabMatch = getSourcePresentations(refParent, sab);
-                            if (sabMatch.length > 0) {
-
-                                // We need to take into account direction of
-                                // navigation on each pass to get the right label.
-                                String directionalName = getDirectionalLabel(scheme, csvt, assoc, !fwd);
-                                // Check for a previously registered item for the
-                                // parent.  If found, re-use it.  Otherwise, create
-                                // a new parent tree item.
-                                String parentCode = refParent.getCode();
-                                String link = rcr.getConceptCode() + "|" + parentCode;
-                                if (!visited_links.contains(link)) {
-                                    visited_links.add(link);
-									TreeItem tiParent = code2Tree.get(parentCode);
-									if (tiParent == null) {
-
-										// Create a new tree item.
-										//tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent(), getAtomText(refParent, sab));
-										tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent());//, getAtomText(refParent, sab));
-
-										// Add immediate children of the parent code with an
-										// indication of sub-nodes (+).  Codes already
-										// processed as part of the path are ignored since
-										// they are handled through recursion.
-
-										String[] downstreamAssoc = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
-										addChildren(tiParent, scheme, csvt, sab, parentCode, code2Tree.keySet(),
-												downstreamAssoc, fwd);
 
 
-										// Try to go higher through recursion.
-										buildPathsToUpperNodes(tiParent, refParent,
-											scheme, csvt, sab, code2Tree, roots, visited_links, maxLevel, currLevel+1);
+                if (aList != null) {
 
+					for (Association assoc : aList.getAssociation()) {
+
+
+
+						// Go through the concepts one by one, adding the
+						// current tree item as a child of a new tree item
+						// representing the upstream node. If a tree item
+						// already exists for the parent, we reuse it to
+						// keep a single branch per parent.
+						for (AssociatedConcept refParent : assoc.getAssociatedConcepts().getAssociatedConcept())
+						{
+							if (isValidForSAB(refParent, sab)) {
+								// Fetch the term for this context ...
+								Presentation[] sabMatch = getSourcePresentations(refParent, sab);
+								if (sabMatch.length > 0) {
+
+									// We need to take into account direction of
+									// navigation on each pass to get the right label.
+									String directionalName = getDirectionalLabel(scheme, csvt, assoc, !fwd);
+									// Check for a previously registered item for the
+									// parent.  If found, re-use it.  Otherwise, create
+									// a new parent tree item.
+									String parentCode = refParent.getCode();
+									String link = rcr.getConceptCode() + "|" + parentCode;
+									if (!visited_links.contains(link)) {
+										visited_links.add(link);
+										TreeItem tiParent = code2Tree.get(parentCode);
+										if (tiParent == null) {
+
+											// Create a new tree item.
+											//tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent(), getAtomText(refParent, sab));
+											tiParent = new TreeItem(parentCode, refParent.getEntityDescription().getContent());//, getAtomText(refParent, sab));
+
+											// Add immediate children of the parent code with an
+											// indication of sub-nodes (+).  Codes already
+											// processed as part of the path are ignored since
+											// they are handled through recursion.
+
+											String[] downstreamAssoc = fwd ? hierAssocToChildNodes_ : hierAssocToParentNodes_;
+											addChildren(tiParent, scheme, csvt, sab, parentCode, code2Tree.keySet(),
+													downstreamAssoc, fwd);
+
+
+											// Try to go higher through recursion.
+											buildPathsToUpperNodes(tiParent, refParent,
+												scheme, csvt, sab, code2Tree, roots, visited_links, maxLevel, currLevel+1);
+
+										}
+
+										// Add the child (eliminate redundancy -- e.g., hasSubtype and CHD)
+										if (!hasChildren(tiParent, ti.code)) {
+											tiParent.addChild(directionalName, ti);
+											//KLO
+											tiParent.expandable = true;
+										}
+
+										isRoot = false;
 									}
-
-									// Add the child (eliminate redundancy -- e.g., hasSubtype and CHD)
-									if (!hasChildren(tiParent, ti.code)) {
-										tiParent.addChild(directionalName, ti);
-										//KLO
-										tiParent.expandable = true;
-									}
-
-								    isRoot = false;
-							    }
-                            }
-                        }
+								}
+							}
+						}
 					}
-                }
-            }
+				}
+
+		    }
         }
         if (maxLevel != -1 && currLevel == maxLevel) isRoot = true;
         if (isRoot) {
-			System.out.println("================ Adding " + ti.code + " " + ti.text + " to roots.");
+			//System.out.println("================ Adding " + ti.code + " " + ti.text + " to roots.");
             roots.add(ti);
 		}
     }

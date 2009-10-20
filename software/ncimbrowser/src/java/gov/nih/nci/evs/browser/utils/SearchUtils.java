@@ -1314,8 +1314,6 @@ public class SearchUtils {
 
 				 }
 */
-				//cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
-				//cns = restrictToSource(cns, source);
             } catch (Exception ex) {
                 return null;
             }

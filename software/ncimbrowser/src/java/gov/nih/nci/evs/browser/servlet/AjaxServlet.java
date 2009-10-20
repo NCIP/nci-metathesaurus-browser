@@ -174,7 +174,6 @@ public final class AjaxServlet extends HttpServlet {
         }
 
         else if (action.equals("search_tree")) {
-
             if (node_id != null && ontology_display_name != null) {
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
@@ -189,9 +188,7 @@ public final class AjaxServlet extends HttpServlet {
                     try {
                         max_tree_level_str = NCImBrowserProperties.getInstance().getProperty(NCImBrowserProperties.MAXIMUM_TREE_LEVEL);
                         maxLevel = Integer.parseInt(max_tree_level_str);
-
                     } catch (Exception ex) {
-
                     }
 
                     JSONArray rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true, maxLevel);
@@ -200,9 +197,6 @@ public final class AjaxServlet extends HttpServlet {
 						System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
                         rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
                     }
-
-  //System.out.println( rootsArray );
-
                     json.put("root_nodes", rootsArray);
                 }
                 catch (Exception e) {
