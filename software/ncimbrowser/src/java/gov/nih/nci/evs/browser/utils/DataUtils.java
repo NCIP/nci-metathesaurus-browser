@@ -2341,7 +2341,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
 
-// check completeness -- to be implemented
 			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
 if (matches != null) {
 	java.lang.Boolean incomplete = matches.getIncomplete();
@@ -2377,23 +2376,27 @@ if (matches != null) {
 								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
 								for (int j = 0; j < acl.length; j++) {
 									AssociatedConcept ac = acl[j];
+									String asso_label = associationName;
+									String qualifier_name = null;
+									String qualifier_value = null;
 									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
-											String qualifier_name = qual.getName();
-											String qualifier_value = qual.getContent();
+											qualifier_name = qual.getName();
+											qualifier_value = qual.getContent();
 											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
-												associationName = qualifier_value; // replace associationName by Rela value
+												asso_label = qualifier_value; // replace associationName by Rela value
 												break;
 											}
 										}
 										Vector w = null;
-										if (hmap.containsKey(directionalLabel + "|" + associationName)) {
-											w = (Vector) hmap.get(directionalLabel + "|" + associationName);
+										String asso_key = directionalLabel + "|" + asso_label;
+										if (hmap.containsKey(asso_key)) {
+											w = (Vector) hmap.get(asso_key);
 										} else {
 											w = new Vector();
 										}
 										w.add(ac);
-										hmap.put(directionalLabel + "|" + associationName, w);
+										hmap.put(asso_key, w);
 									}
 								}
 							}
@@ -2424,24 +2427,31 @@ if (matches != null) {
 									AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
 									for (int j = 0; j < acl.length; j++) {
 										AssociatedConcept ac = acl[j];
+										String asso_label = associationName;
+                                        String qualifier_name = null;
+                                        String qualifier_value = null;
 										if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 											for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
-												String qualifier_name = qual.getName();
-												String qualifier_value = qual.getContent();
+												qualifier_name = qual.getName();
+												qualifier_value = qual.getContent();
+
 												if (qualifier_name.compareToIgnoreCase("rela") == 0) {
-													associationName = qualifier_value; // replace associationName by Rela value
+													//associationName = qualifier_value; // replace associationName by Rela value
+													asso_label = qualifier_value;
 													break;
 												}
 											}
+
 											Vector w = null;
-											if (hmap.containsKey(directionalLabel + "|" + associationName)) {
-												w = (Vector) hmap.get(directionalLabel + "|" + associationName);
+
+                                            String asso_key = directionalLabel + "|" + asso_label;
+											if (hmap.containsKey(asso_key)) {
+												w = (Vector) hmap.get(asso_key);
 											} else {
 												w = new Vector();
 											}
 											w.add(ac);
-											//hmap.put(associationName, w);
-											hmap.put(directionalLabel + "|" + associationName, w);
+											hmap.put(asso_key, w);
 										}
 									}
 							    }
@@ -2759,51 +2769,59 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 		{
 			ms_categorization = System.currentTimeMillis();
 			String rel_rela = (String) it.next();
-			Vector u = DataUtils.parseData(rel_rela, "|");
-			String rel = (String) u.elementAt(0);
-			String rela = (String) u.elementAt(1);
 
-			String category = "Other";
-			if (parent_asso_vec.contains(rel)) category = "Parent";
-			else if (child_asso_vec.contains(rel)) category = "Child";
-			else if (bt_vec.contains(rel)) category = "Broader";
-			else if (nt_vec.contains(rel)) category = "Narrower";
-			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+			if (rel_rela.compareTo(INCOMPLETE) != 0) {
 
-			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
-			//Vector v = (Vector) hmap.get(rel);
-			Vector v = (Vector) hmap.get(rel_rela);
+				Vector u = DataUtils.parseData(rel_rela, "|");
+				String rel = (String) u.elementAt(0);
+				String rela = (String) u.elementAt(1);
 
-            // For each related concept:
-			for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				EntityDescription ed = ac.getEntityDescription();
-				Concept c = ac.getReferencedEntry();
-				if (!hset.contains(c.getEntityCode())) {
-					hset.add(c.getEntityCode());
-					// Find the highest ranked atom data
-					ms_find_highest_rank_atom = System.currentTimeMillis();
-					String t = findRepresentativeTerm(c, sab);
-					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
-					//t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
-					t = t + "|" + c.getEntityCode() + "|" + rela + "|" + category;
-					w.add(t);
+				ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
+				//Vector v = (Vector) hmap.get(rel);
+				//Vector v = (Vector) hmap.get(rel_rela);
 
-                    // Temporarily save non-RO other relationships
-					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-						if (rel_hset.contains(c.getEntityCode())) {
-							rel_hset.add(c.getEntityCode());
+				Object obj = hmap.get(rel_rela);
+				if (obj != null) {
+					Vector v = (Vector) obj;
+				// For each related concept:
+					for (int i=0; i<v.size(); i++) {
+						AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+						EntityDescription ed = ac.getEntityDescription();
+						Concept c = ac.getReferencedEntry();
+						if (!hset.contains(c.getEntityCode())) {
+							hset.add(c.getEntityCode());
+							// Find the highest ranked atom data
+							ms_find_highest_rank_atom = System.currentTimeMillis();
+							String t = findRepresentativeTerm(c, sab);
+							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+
+							//t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
+							t = t + "|" + c.getEntityCode() + "|" + rela + "|" + category;
+							w.add(t);
+
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+								if (rel_hset.contains(c.getEntityCode())) {
+									rel_hset.add(c.getEntityCode());
+								}
+							}
+
+							if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
+								if (hasSubtype_hset.contains(c.getEntityCode())) {
+									hasSubtype_hset.add(c.getEntityCode());
+								}
+							}
 						}
 					}
-
-					if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
-						if (hasSubtype_hset.contains(c.getEntityCode())) {
-							hasSubtype_hset.add(c.getEntityCode());
-						}
-					}
-			    }
-			}
+				}
+		    }
 		}
 
         Vector u = new Vector();
@@ -3268,6 +3286,8 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 
+//System.out.println(str);
+
 							if (!w.contains(str)) {
 								w.add(str);
 								rel_hmap.put(category, w);
@@ -3278,22 +3298,6 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 
 
 							// 5.0
-						} else if (SOURCE.equalsIgnoreCase(qualifier.getContent())) {
-							source = qualifier.getName();
-							w = (Vector) rel_hmap.get(category);
-							if (w == null) {
-								w = new Vector();
-							}
-							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-							if (!w.contains(str)) {
-								w.add(str);
-								rel_hmap.put(category, w);
-							}
-
-						//System.out.println("---------- qualifier name: " + qualifier.getName());
-						//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
-
 						}
 					}
 				}
