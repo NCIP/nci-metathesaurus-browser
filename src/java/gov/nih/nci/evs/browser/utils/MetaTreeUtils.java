@@ -84,6 +84,8 @@ public class MetaTreeUtils {
 	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 	private static String NCI_SOURCE = "NCI";
 
+	private static boolean RESOLVE_CONCEPT = true;
+
 	public MetaTreeUtils(){
 		init();
 	}
@@ -124,17 +126,30 @@ public class MetaTreeUtils {
 		if (assocList != null) {
 			for(Association assoc : assocList.getAssociation()){
 				for(AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept()){
-					if(this.isSabQualifiedAssociation(ac, sab)){
-						ResolvedConceptReference r = new ResolvedConceptReference();
-						EntityDescription entityDescription = new EntityDescription();
-						entityDescription.setContent(ac.getEntityDescription().getContent());
-						r.setEntityDescription(entityDescription);
-						r.setCode(ac.getCode());
-						rcrl.addResolvedConceptReference(r);
+					if (RESOLVE_CONCEPT) {
+						if(this.isSabQualifiedAssociation(ac, sab)){
+							ResolvedConceptReference r = new ResolvedConceptReference();
+							EntityDescription entityDescription = new EntityDescription();
+							entityDescription.setContent(ac.getEntityDescription().getContent());
+							r.setEntityDescription(entityDescription);
+							r.setCode(ac.getCode());
+							rcrl.addResolvedConceptReference(r);
+						}
+				    } else {
+
+							ResolvedConceptReference r = new ResolvedConceptReference();
+							EntityDescription entityDescription = new EntityDescription();
+							entityDescription.setContent(ac.getEntityDescription().getContent());
+							r.setEntityDescription(entityDescription);
+							r.setCode(ac.getCode());
+							rcrl.addResolvedConceptReference(r);
+
 					}
 				}
 			}
-	    }
+	    } else {
+System.out.println("getSourceRoots assocList == null???");
+		}
 		return rcrl;
 	}
 
@@ -157,8 +172,13 @@ public class MetaTreeUtils {
 	 */
 	private ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
 		CodedNodeSet cns = lbs.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
-		cns = cns.restrictToProperties(null, new PropertyType[] {PropertyType.PRESENTATION}, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
-		ResolvedConceptReference[] refs = cns.resolveToList(null, null, new PropertyType[] {PropertyType.PRESENTATION}, -1).getResolvedConceptReference();
+
+		PropertyType[] propertytypes = null;
+		if (RESOLVE_CONCEPT) {
+			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+		}
+		cns = cns.restrictToProperties(null, propertytypes, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
+		ResolvedConceptReference[] refs = cns.resolveToList(null, null, propertytypes, -1).getResolvedConceptReference();
 
 		if(refs.length > 1){
 			throw new LBException("Found more than one Root for SAB: " + sab);
@@ -471,13 +491,21 @@ public class MetaTreeUtils {
 							null);
 			}
 
+/*
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
+*/
+		CodedNodeSet.PropertyType[] propertytypes = null;
+		if (RESOLVE_CONCEPT) {
+			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+		}
+
+
 
             //int resolveCodedEntryDepth = 0;
             ResolvedConceptReferenceList branch = null;
 			//branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), !associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertyTypes, null, -1);
-			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertyTypes, null, -1);
+			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertytypes, null, -1);
 
             if (branch.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum = branch.enumerateResolvedConceptReference();
@@ -778,11 +806,17 @@ public class MetaTreeUtils {
 					Constructors.createNameAndValueList(associationsToNavigate),
 					ConvenienceMethods.createNameAndValueList("source", sab));
 
+		CodedNodeSet.PropertyType[] propertytypes = null;
+		if (RESOLVE_CONCEPT) {
+			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+		}
+
 			ResolvedConceptReferenceList branch = cng.resolveAsList(
 					focus, associationsNavigatedFwd, !associationsNavigatedFwd,
 					Integer.MAX_VALUE, 2,
-					//null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1, true);
-					null, null, sortByCode_, null, -1, true);
+					//null, propertytypes, sortByCode_, null, -1, true);
+					null, propertytypes, sortByCode_, null, -1, RESOLVE_CONCEPT);
+
 
 			// The resolved branch will be represented by the first node in
 			// the resolved list. The node will be subdivided by source or
@@ -1053,13 +1087,18 @@ public class MetaTreeUtils {
 					        Constructors.createNameAndValueList(hierAssocToChildNodes_),
 							null);
 			}
-
+/*
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
+*/
+		CodedNodeSet.PropertyType[] propertytypes = null;
+		if (RESOLVE_CONCEPT) {
+			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+		}
 
             //int resolveCodedEntryDepth = 0;
             ResolvedConceptReferenceList branch = null;
-			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), !associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertyTypes, null, -1);
+			branch = cng.resolveAsList(Constructors.createConceptReference(code, scheme), !associationsNavigatedFwd, associationsNavigatedFwd, Integer.MAX_VALUE, 2, null, propertytypes, null, -1);
 
             if (branch.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
