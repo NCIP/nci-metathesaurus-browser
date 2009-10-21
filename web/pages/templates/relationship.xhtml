@@ -62,8 +62,19 @@
 
 %>
 <p class="textsubtitle-blue">Relationships with other NCI MetaThesaurus Concepts:</p>
-
 <P/>
+<%
+Object incomplete_obj = hmap.get(DataUtils.INCOMPLETE);
+if (incomplete_obj != null) {
+    String incomplete = (String) incomplete_obj;
+    if (incomplete.compareToIgnoreCase("true") == 0) {
+%>
+<p class="textbodyred">(WARNING: The relationship list shown below is incomplete.)</p>
+<P/>
+<%
+    } 
+}
+%>
 <table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
   <TR>
     <TD class="subtab" align="center"><b>
