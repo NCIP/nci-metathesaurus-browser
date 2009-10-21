@@ -928,7 +928,7 @@ public class MetaTreeUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("\tdumpTreeItem throws exception ?????????????????????????????");
+            System.out.println("\tdumpTreeItem throws exception.");
         }
     }
 
@@ -1071,7 +1071,6 @@ public class MetaTreeUtils {
                     AssociationList childAssociationList = ref.getSourceOf();
 
 					if (childAssociationList == null) {
-						System.out.println("getSubconcepts childAssociationList == null??? ");
 						return hmap;
 					}
 
@@ -1179,14 +1178,11 @@ public class MetaTreeUtils {
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
 
-int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "CHD", true);
-
-System.out.println(rcr.getEntityDescription().getContent() + " # subconcept: " + count);
-
-ti.expandable = false;
-if (count > 0) {
-	ti.expandable = true;
-}
+		int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "CHD", true);
+		ti.expandable = false;
+		if (count > 0) {
+			ti.expandable = true;
+		}
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
 
@@ -1276,8 +1272,8 @@ if (count > 0) {
 
             ResolvedConceptReference[] refs = graph.resolveAsList(
                 rcr, fwd, !fwd, Integer.MAX_VALUE, 1,
-                //null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1).getResolvedConceptReference();
-                null, null, sortByCode_, null, -1).getResolvedConceptReference();
+                null, new PropertyType[] { PropertyType.PRESENTATION }, sortByCode_, null, -1).getResolvedConceptReference();
+                //null, null, sortByCode_, null, -1).getResolvedConceptReference();
 
             // Create a new tree item for each upstream node, add the current
             // tree item as a child, and recurse to go higher (if available).
