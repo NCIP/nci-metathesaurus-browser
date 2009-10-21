@@ -13,6 +13,7 @@ if "%1" == "" (
     echo   upgrade      -- Build and upgrade application
     echo   install      -- Builds, installs JBoss locally
     echo   dev          -- Builds, upgrades JBoss on DEV
+    echo   qa           -- Builds, upgrades JBoss on QA
     echo   deploy       -- Redeploy application
     goto DONE
 )
@@ -41,7 +42,10 @@ if "%1" == "clean" (
 )
 if "%1" == "dev" (
     ant -Dproperties.file=C:\SVN-Projects\ncim-properties\properties\dev-upgrade.properties deploy:remote:upgrade
-    rem ant -Dproperties.file=C:\@\src\browsers\ncim.properties\dev-upgrade.properties deploy:remote:upgrade
+    goto DONE
+)
+if "%1" == "qa" (
+    ant -Dproperties.file=C:\SVN-Projects\ncim-properties\properties\qa-upgrade.properties deploy:remote:upgrade
     goto DONE
 )
 
