@@ -473,6 +473,7 @@ public class CacheController
             if (children.size() <= cut_off) {
                 for (int i=0; i<children.size(); i++) {
                     TreeItem childItem = (TreeItem) children.get(i);
+
                     int knt = 0;
                     if (childItem.expandable)
                     {
@@ -483,6 +484,7 @@ public class CacheController
                     try {
                         nodeObject.put(ONTOLOGY_NODE_ID, childItem.code);
                         nodeObject.put(ONTOLOGY_NODE_NAME, childItem.text);
+
                         nodeObject.put(ONTOLOGY_NODE_CHILD_COUNT, knt);
                         nodeObject.put(CHILDREN_NODES, getNodesArray(node_id, childItem));
 
