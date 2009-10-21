@@ -190,11 +190,11 @@
 
       if (ontology_node_id == null || ontology_node_id == "null")
       {
-        buildTree(ontology_node_id, ontology_display_name);
+          buildTree(ontology_node_id, ontology_display_name);
       }
       else
       {
-                          searchTree(ontology_node_id, ontology_display_name);
+          searchTree(ontology_node_id, ontology_display_name);
       }
     }
 
@@ -359,6 +359,9 @@
 
 
     function addTreeBranch(ontology_node_id, rootNode, nodeInfo) {
+    
+      //alert("addTreeBranch root: " + nodeInfo.ontology_node_name);
+    
       var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
       var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
 
@@ -394,9 +397,15 @@
       }
 
       tree.draw();
+      
+      //alert("addTreeBranch childNodes.length: " + childNodes.length);
+      
       for (var i=0; i < childNodes.length; i++) {
-  var childnodeInfo = childNodes[i];
-  addTreeBranch(ontology_node_id, newNode, childnodeInfo);
+          var childnodeInfo = childNodes[i];
+          
+          //alert("addTreeBranch childnode: " + childnodeInfo.ontology_node_name);
+          
+          addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
     }
     YAHOO.util.Event.addListener(window, "load", init);
