@@ -84,8 +84,6 @@ public class MetaTreeUtils {
 	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 	private static String NCI_SOURCE = "NCI";
 
-
-
 	public MetaTreeUtils(){
 		init();
 	}
@@ -701,14 +699,17 @@ public class MetaTreeUtils {
 
 	public int getSubconceptCount(String scheme, String version, String code, String sab, String asso_name, boolean direction)
 	{
-		HashMap hmap = getSubconcepts(scheme, null, code, sab, asso_name, direction);
+		//HashMap hmap = getSubconcepts(scheme, null, code, sab, asso_name, direction);
+		HashMap hmap = getSubconcepts(scheme, version, code, sab, hierAssocToParentNodes_, false);
+
 		if (hmap == null) return 0;
 
 		Set keyset = hmap.keySet();
 		Object[] objs = keyset.toArray();
 
-		if (objs.length == 0) return 0;
-
+		if (objs.length == 0) {
+			return 0;
+		}
 
 		String id = (String) objs[0];
 		int knt = 0;
@@ -729,6 +730,8 @@ public class MetaTreeUtils {
 
 		Set keyset = hmap.keySet();
 		Object[] objs = keyset.toArray();
+		if (objs.length == 0) return 0;
+
 		String id = (String) objs[0];
 		int knt = 0;
 		TreeItem ti = (TreeItem) hmap.get(id);
@@ -1175,17 +1178,15 @@ public class MetaTreeUtils {
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
-//int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "PAR", false);
 
 int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "CHD", true);
 
-//	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
+System.out.println(rcr.getEntityDescription().getContent() + " # subconcept: " + count);
 
 ti.expandable = false;
 if (count > 0) {
 	ti.expandable = true;
 }
-
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
 
