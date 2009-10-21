@@ -1495,10 +1495,6 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 
     public HashMap getRelationshipHashMap(String scheme, String version, String code, String sab)
     {
-
-System.out.println("(*) getRelationshipHashMap =======================================");
-
-
         //EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -2364,7 +2360,6 @@ System.out.println("(*) getRelationshipHashMap =================================
 								boolean navigatedFwd = true;
 								try {
 									directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
-									Debug.println("(*) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
 								} catch (Exception e) {
 								    Debug.println("(*) getDirectionalLabel throws exceptions: " + directionalLabel);
 								}
@@ -2411,7 +2406,7 @@ System.out.println("(*) getRelationshipHashMap =================================
 									boolean navigatedFwd = false;
 									try {
 										directionalLabel = getDirectionalLabel(lbscm, codingSchemeName, versionOrTag, assoc, navigatedFwd);
-										Debug.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
+										//Debug.println("(**) directionalLabel: associationName " + associationName + "   directionalLabel: " + directionalLabel);
 									} catch (Exception e) {
 									    Debug.println("(**) getDirectionalLabel throws exceptions: " + directionalLabel);
 									}
@@ -3198,8 +3193,7 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 	}
 
 	public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
-        Debug.println("(*) DataUtils	getAssociationTargetHashMap *****************************");
-
+        Debug.println("(*) DataUtils getAssociationTargetHashMap ");
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
         Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
