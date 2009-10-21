@@ -216,6 +216,8 @@ public class DataUtils {
 
     private static String[] ASSOCIATION_NAMES = null;
 
+    public  static String INCOMPLETE = "INCOMPLETE";
+
 
     //==================================================================================
     // For customized query use
@@ -2339,7 +2341,14 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
 
+// check completeness -- to be implemented
 			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+if (matches != null) {
+	java.lang.Boolean incomplete = matches.getIncomplete();
+	System.out.println("(*) Number of matches: " +  matches.getResolvedConceptReferenceCount());
+	System.out.println("(*) Incomplete? " +  incomplete);
+	hmap.put(INCOMPLETE, incomplete.toString());
+}
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -3229,65 +3238,66 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 		while (it.hasNext())
 		{
 			String rel_rela = (String) it.next();
-			Vector u = DataUtils.parseData(rel_rela, "|");
-			String rel = (String) u.elementAt(0);
-			String rela = (String) u.elementAt(1);
+			if (rel_rela.compareTo(INCOMPLETE) != 0) {
+				Vector u = DataUtils.parseData(rel_rela, "|");
+				String rel = (String) u.elementAt(0);
+				String rela = (String) u.elementAt(1);
 
-			String category = "Other";
-			if (parent_asso_vec.contains(rel)) category = "Parent";
-			else if (child_asso_vec.contains(rel)) category = "Child";
-			else if (bt_vec.contains(rel)) category = "Broader";
-			else if (nt_vec.contains(rel)) category = "Narrower";
-			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
-			Vector v = (Vector) hmap.get(rel_rela);
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+				Vector v = (Vector) hmap.get(rel_rela);
 
-			for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				EntityDescription ed = ac.getEntityDescription();
-				//Concept c = ac.getReferencedEntry();
-                String source = "unspecified";
+				for (int i=0; i<v.size(); i++) {
+					AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+					EntityDescription ed = ac.getEntityDescription();
+					//Concept c = ac.getReferencedEntry();
+					String source = "unspecified";
 
-				for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
-					//if ("Source".equalsIgnoreCase(qualifier.getName())) {
-					if (SOURCE.equalsIgnoreCase(qualifier.getName())) {
-						source = qualifier.getContent();
-						w = (Vector) rel_hmap.get(category);
-						if (w == null) {
-							w = new Vector();
+					for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
+						//if ("Source".equalsIgnoreCase(qualifier.getName())) {
+						if (SOURCE.equalsIgnoreCase(qualifier.getName())) {
+							source = qualifier.getContent();
+							w = (Vector) rel_hmap.get(category);
+							if (w == null) {
+								w = new Vector();
+							}
+							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+
+							if (!w.contains(str)) {
+								w.add(str);
+								rel_hmap.put(category, w);
+							}
+
+						//System.out.println("---------- qualifier name: " + qualifier.getName());
+						//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
+
+
+							// 5.0
+						} else if (SOURCE.equalsIgnoreCase(qualifier.getContent())) {
+							source = qualifier.getName();
+							w = (Vector) rel_hmap.get(category);
+							if (w == null) {
+								w = new Vector();
+							}
+							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
+							if (!w.contains(str)) {
+								w.add(str);
+								rel_hmap.put(category, w);
+							}
+
+						//System.out.println("---------- qualifier name: " + qualifier.getName());
+						//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
+
 						}
-						//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-						String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-
-						if (!w.contains(str)) {
-							w.add(str);
-						    rel_hmap.put(category, w);
-						}
-
-					//System.out.println("---------- qualifier name: " + qualifier.getName());
-					//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
-
-
-						// 5.0
-					} else if (SOURCE.equalsIgnoreCase(qualifier.getContent())) {
-						source = qualifier.getName();
-						w = (Vector) rel_hmap.get(category);
-						if (w == null) {
-							w = new Vector();
-						}
-						//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-						String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-						if (!w.contains(str)) {
-							w.add(str);
-						    rel_hmap.put(category, w);
-						}
-
-					//System.out.println("---------- qualifier name: " + qualifier.getName());
-					//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
-
 					}
-
 				}
-			}
+		    }
 		}
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
@@ -3405,6 +3415,8 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
         removeRedundantRecords(rel_hmap);
+        String incomplete = (String) hmap.get(INCOMPLETE);
+        if (incomplete != null) rel_hmap.put(INCOMPLETE, incomplete);
 		return rel_hmap;
 	}
 
