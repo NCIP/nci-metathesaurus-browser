@@ -80,11 +80,12 @@ public class MetaTreeUtils {
     LexBIGServiceConvenienceMethods lbscm_ = null;
     LexBIGService lbsvc_ = null;
 
-	private LexBIGService lbs;
+	//private LexBIGService lbs;
+
 	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 	private static String NCI_SOURCE = "NCI";
 
-	private static boolean RESOLVE_CONCEPT = true;
+	private static boolean RESOLVE_CONCEPT = false;//true;
 
 	public MetaTreeUtils(){
 		init();
@@ -92,7 +93,7 @@ public class MetaTreeUtils {
 
 	private void init(){
 		//lbs = LexBIGServiceImpl.defaultInstance();
-		lbs = RemoteServerUtil.createLexBIGService();
+		//lbs = RemoteServerUtil.createLexBIGService();
 	}
 
     ///////////////////
@@ -107,6 +108,30 @@ public class MetaTreeUtils {
 	 */
 
 
+    public static List getSourceHierarchyRoots(
+        String scheme,
+        CodingSchemeVersionOrTag csvt,
+        String sab) throws LBException
+    {
+		ArrayList list = new ArrayList();
+        ResolvedConceptReferenceList rcrl = null;
+        try {
+           rcrl = getSourceRoots(sab);
+		   for (int i=0; i<rcrl.getResolvedConceptReferenceCount(); i++)
+		   {
+			   ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
+			   list.add(rcr);
+		   }
+		   SortUtils.quickSort(list);
+		   return list;
+	    } catch (Exception ex) {
+
+		}
+		return new ArrayList();
+    }
+
+/*
+
 	public void getRoots(String sab) throws Exception {
 		ResolvedConceptReference root = resolveReferenceGraphForward(getCodingSchemeRoot(sab));
 		AssociationList assocList = root.getSourceOf();
@@ -118,7 +143,9 @@ public class MetaTreeUtils {
 			}
 		}
 	}
+*/
 
+/*
 	public ResolvedConceptReferenceList getSourceRoots(String sab) throws Exception {
 		ResolvedConceptReferenceList rcrl = new ResolvedConceptReferenceList();
 		ResolvedConceptReference root = resolveReferenceGraphForward(getCodingSchemeRoot(sab));
@@ -143,16 +170,41 @@ public class MetaTreeUtils {
 							r.setEntityDescription(entityDescription);
 							r.setCode(ac.getCode());
 							rcrl.addResolvedConceptReference(r);
-
 					}
 				}
 			}
-	    } else {
-System.out.println("getSourceRoots assocList == null???");
-		}
+	    }
 		return rcrl;
 	}
+*/
 
+	public static ResolvedConceptReferenceList getSourceRoots(String sab) throws Exception {
+		ResolvedConceptReferenceList rcrl = new ResolvedConceptReferenceList();
+		ResolvedConceptReference root = null;
+		try {
+			ResolvedConceptReference ref = getCodingSchemeRoot(sab);
+		    root = resolveReferenceGraphForward(ref);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return rcrl;
+		}
+		AssociationList assocList = root.getSourceOf();
+		if (assocList != null) {
+			for(Association assoc : assocList.getAssociation()){
+				for(AssociatedConcept ac : assoc.getAssociatedConcepts().getAssociatedConcept()){
+					if(isSabQualifiedAssociation(ac, sab)){
+						ResolvedConceptReference r = new ResolvedConceptReference();
+						EntityDescription entityDescription = new EntityDescription();
+						entityDescription.setContent(ac.getEntityDescription().getContent());
+						r.setEntityDescription(entityDescription);
+						r.setCode(ac.getCode());
+						rcrl.addResolvedConceptReference(r);
+					}
+				}
+			}
+	    }
+		return rcrl;
+	}
 
 	/**
 	 * Displays the root node.
@@ -170,13 +222,14 @@ System.out.println("getSourceRoots assocList == null???");
 	 * @return
 	 * @throws LBException
 	 */
-	private ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
-		CodedNodeSet cns = lbs.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
+	private static ResolvedConceptReference getCodingSchemeRoot(String sab) throws LBException {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
 
 		PropertyType[] propertytypes = null;
-		if (RESOLVE_CONCEPT) {
-			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
-		}
+		//if (RESOLVE_CONCEPT) {
+		propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+		//}
 		cns = cns.restrictToProperties(null, propertytypes, Constructors.createLocalNameList("SRC"), null, Constructors.createNameAndValueList("source-code", "V-"+sab));
 		ResolvedConceptReference[] refs = cns.resolveToList(null, null, propertytypes, -1).getResolvedConceptReference();
 
@@ -196,8 +249,9 @@ System.out.println("getSourceRoots assocList == null???");
      * @return
      * @throws Exception
      */
-    private ResolvedConceptReference resolveReferenceGraphForward(ResolvedConceptReference ref) throws Exception {
-        CodedNodeGraph cng = lbs.getNodeGraph(NCI_META_THESAURUS, null, null);
+    private static ResolvedConceptReference resolveReferenceGraphForward(ResolvedConceptReference ref) throws Exception {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        CodedNodeGraph cng = lbSvc.getNodeGraph(NCI_META_THESAURUS, null, null);
         //cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD", "hasSubtype"}), null);
         cng = cng.restrictToAssociations(Constructors.createNameAndValueList(new String[]{"CHD"}), null);
         //cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, SOURCE));
@@ -212,7 +266,7 @@ System.out.println("getSourceRoots assocList == null???");
      * @param sourceCodingScheme
      * @return
      */
-    private boolean isSabQualifiedAssociation(AssociatedConcept ac, String sab){
+    private static boolean isSabQualifiedAssociation(AssociatedConcept ac, String sab){
     	NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
     	for(NameAndValue nv : nvl){
     		if(nv.getName().equals("source") && nv.getContent().equals(sab)){
@@ -806,17 +860,16 @@ System.out.println("getSourceRoots assocList == null???");
 					Constructors.createNameAndValueList(associationsToNavigate),
 					ConvenienceMethods.createNameAndValueList("source", sab));
 
-		CodedNodeSet.PropertyType[] propertytypes = null;
-		if (RESOLVE_CONCEPT) {
-			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
-		}
+			CodedNodeSet.PropertyType[] propertytypes = null;
+			if (RESOLVE_CONCEPT) {
+				propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+			}
 
 			ResolvedConceptReferenceList branch = cng.resolveAsList(
 					focus, associationsNavigatedFwd, !associationsNavigatedFwd,
 					Integer.MAX_VALUE, 2,
 					//null, propertytypes, sortByCode_, null, -1, true);
 					null, propertytypes, sortByCode_, null, -1, RESOLVE_CONCEPT);
-
 
 			// The resolved branch will be represented by the first node in
 			// the resolved list. The node will be subdivided by source or
@@ -1068,33 +1121,22 @@ System.out.println("getSourceRoots assocList == null???");
 			ti.expandable = false;
 
 			CodedNodeGraph cng = null;
-			/*
-			ResolvedConceptReferenceList branch = null;
-			cng = lbSvc.getNodeGraph(scheme, null, null);
-			NameAndValueList nvl = null;
-			//if (sab != null) nvl = ConvenienceMethods.createNameAndValueList("source", sab);
-			if (sab != null) nvl = Constructors.createNameAndValueList("source", sab);
-				//NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
-			*/
 			cng = lbSvc.getNodeGraph(scheme, null, null);
 
             if (sab != null) {
 				cng = cng.restrictToAssociations(
-					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+					        Constructors.createNameAndValueList(hierAssocToChildNodes_),
 							Constructors.createNameAndValueList("source", sab));
 			} else {
 				cng = cng.restrictToAssociations(
 					        Constructors.createNameAndValueList(hierAssocToChildNodes_),
 							null);
 			}
-/*
-            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
-            propertyTypes[0] = PropertyType.PRESENTATION;
-*/
-		CodedNodeSet.PropertyType[] propertytypes = null;
-		if (RESOLVE_CONCEPT) {
-			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
-		}
+
+			CodedNodeSet.PropertyType[] propertytypes = null;
+			if (RESOLVE_CONCEPT) {
+				propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+			}
 
             //int resolveCodedEntryDepth = 0;
             ResolvedConceptReferenceList branch = null;
@@ -1426,9 +1468,6 @@ System.out.println("getSourceRoots assocList == null???");
 							  }
 							  System.out.println("TOP NODE: " + nd_name + " (" + nd_code + ")" );
 						}
-
-
-
                     } else {
 						System.out.println("\tnode.NOT expandable");
 					}
