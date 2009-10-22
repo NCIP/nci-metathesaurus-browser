@@ -187,7 +187,6 @@ public class DataUtils {
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
     static SortOptionList sortByCode_ = Constructors.createSortOptionList(new String[] {"code"});
 
-    //int maxReturn = 5000;
     Connection con;
     Statement stmt;
     ResultSet rs;
@@ -1334,18 +1333,18 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 						PropertyQualifier[] qualifiers = p.getPropertyQualifier();
 						if (qualifiers != null && qualifiers.length > 0)
 						{
-							System.out.println(property_name + " qualifiers.length: " + qualifiers.length);
+							//System.out.println(property_name + " qualifiers.length: " + qualifiers.length);
 							for (int j=0; j<qualifiers.length; j++)
 							{
 								PropertyQualifier q = qualifiers[j];
 								String qualifier_name = q.getPropertyQualifierName();
 								String qualifier_value = q.getValue().getContent();
-								System.out.println("\t*** qualifier_name: " + qualifier_name);
-								System.out.println("\t*** qualifier_value: " + qualifier_value);
+								//System.out.println("\t*** qualifier_name: " + qualifier_name);
+								//System.out.println("\t*** qualifier_value: " + qualifier_value);
 								if (qualifier_name.compareTo("source") == 0)
 								{
 									t = t + "|" + qualifier_value;
-									System.out.println("*** SOURCE: " + qualifier_value);
+									//System.out.println("*** SOURCE: " + qualifier_value);
 									break;
 								}
 							}
@@ -1355,13 +1354,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 					}
 				}
                 v.add(t);
-
-
-//System.out.println(property_name + ": " + t);
-
             }
-
-//System.out.println("\n");
         }
         return v;
     }
@@ -2314,6 +2307,7 @@ System.out.println("WARNING: property_type not found -- " + property_type);
 		return getRelatedConceptsHashMap(codingSchemeName, vers, code, source, 1);
 	}
 
+
 	public static HashMap getRelatedConceptsHashMap(String codingSchemeName, String vers, String code, String source, int resolveCodedEntryDepth)
 	{
 		HashMap hmap = new HashMap();
@@ -2342,10 +2336,11 @@ System.out.println("WARNING: property_type not found -- " + property_type);
             propertyTypes[0] = PropertyType.PRESENTATION;
 
 			ResolvedConceptReferenceList matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
+
 if (matches != null) {
 	java.lang.Boolean incomplete = matches.getIncomplete();
-	System.out.println("(*) Number of matches: " +  matches.getResolvedConceptReferenceCount());
-	System.out.println("(*) Incomplete? " +  incomplete);
+	//System.out.println("(*) Number of matches: " +  matches.getResolvedConceptReferenceCount());
+	//System.out.println("(*) Incomplete? " +  incomplete);
 	hmap.put(INCOMPLETE, incomplete.toString());
 }
 
@@ -2461,78 +2456,6 @@ if (matches != null) {
 				}
 			}
 
-/*
-			cng = lbSvc.getNodeGraph(codingSchemeName, null, null);
-
-            if (source != null) {
-				cng = cng.restrictToAssociations(
-					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
-							Constructors.createNameAndValueList("source", source));
-			} else {
-				cng = cng.restrictToAssociations(
-					        Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
-							null);
-			}
-
-//			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), false, true, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
-			matches = cng.resolveAsList(Constructors.createConceptReference(code, codingSchemeName), true, false, resolveCodedEntryDepth, 1, null, propertyTypes, null, -1);
-
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
-                    matches .enumerateResolvedConceptReference();
-
-                while (refEnum.hasMoreElements()) {
-                    ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList sourceof = ref.getTargetOf();
-                    if (sourceof != null ) {
-						Association[] associations = sourceof.getAssociation();
-                        if (associations != null) {
-							for (int i = 0; i < associations.length; i++) {
-								Association assoc = associations[i];
-                                String associationName = lbscm.getAssociationNameFromAssociationCode(codingSchemeName, versionOrTag, assoc.getAssociationName());
-								String associationName0 = associationName;
-								Vector v = new Vector();
-								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-								for (int j = 0; j < acl.length; j++) {
-									AssociatedConcept ac = acl[j];
-
-boolean isTarget = false;
-									if (ac.getEntityDescription().getContent().compareTo(target) == 0) {
-
-System.out.println("(***) target: " + target);
-isTarget = true;
-
-									}
-
-									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-										for(NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()){
-											String qualifier_name = qual.getName();
-											String qualifier_value = qual.getContent();
-											if (qualifier_name.compareToIgnoreCase("rela") == 0) {
-												associationName = qualifier_value; // replace associationName by Rela value
-												break;
-											}
-										}
-										Vector w = null;
-										if (hmap.containsKey(associationName)) {
-											w = (Vector) hmap.get(associationName);
-										} else {
-											w = new Vector();
-										}
-
-										if (isTarget) {
-											System.out.println("(**) target: " + target + " associationName0: " + associationName0 + " rela: " + associationName);
-										}
-
-										w.add(ac);
-										hmap.put(associationName, w);
-									}
-								}
-							}
-					    }
-				    }
-				}
-*/
 
 		} catch (Exception ex) {
 
@@ -2540,172 +2463,13 @@ isTarget = true;
 		return hmap;
 	}
 
-/*
-    public HashMap getAssociatedConceptsHashMap(String scheme, String version, String code, String sab)
-    {
-        HashMap hmap = new HashMap();
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm = createLexBIGServiceConvenienceMethods(lbSvc);
 
-        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-        if (version != null) csvt.setVersion(version);
-
-        // Perform the query ...
-        ResolvedConceptReferenceList matches = null;
-
-        List list = new ArrayList();//getSupportedRoleNames(lbSvc, scheme, version);
-        HashMap map = new HashMap();
-        try {
-            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-            if (sab != null) {
-				//testing KLO
-				//cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(sab, "Source"));
-
-				NameAndValueList nvlst = Constructors.createNameAndValueList(getAllAssociationNames());
-
-				//cng = cng.restrictToAssociations(null, Constructors.createNameAndValueList(SOURCE, sab));
-				cng = cng.restrictToAssociations(nvlst, Constructors.createNameAndValueList(SOURCE, sab));
-			}
-            CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
-            propertyTypes[0] = PropertyType.PRESENTATION;
-
-            int maxToReturn = NCImBrowserProperties.maxToReturn;
-
-            //matches = cng.resolveAsList(
-            //        ConvenienceMethods.createConceptReference(code, scheme),
-            //        true, false, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-
-		    //matches = cng.resolveAsList(ConvenienceMethods
-			//	.createConceptReference(code, scheme),
-			     //true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, false);
-			//   true, false, 1, 1, noopList_, propertyTypes, null, null, maxToReturn, true);
-
-System.out.println("Calling cng.resolveAsList ...");
-
-            matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme), true, false, 1, 1, null, null, null, -1);
-
-if (matches != null) {
-	System.out.println("(*) matches: " + matches.getResolvedConceptReferenceCount());
-}
-
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
-                    matches .enumerateResolvedConceptReference();
-
-                while (refEnum.hasMoreElements()) {
-                    ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList sourceof = ref.getSourceOf();
-
-if (sourceof == null) {
- 	System.out.println("(*) getSourceOf returns null???: " );
-} else {
-	System.out.println("(*) getSourceOf returns OK " );
-}
-
-                    if (sourceof != null ) {
-						Association[] associations = sourceof.getAssociation();
-                        if (associations != null) {
-							for (int i = 0; i < associations.length; i++) {
-								Association assoc = associations[i];
-                                String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
-
-   	System.out.println("(*) associationName: " + associationName);
-
-
-								Vector v = new Vector();
-								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-								for (int j = 0; j < acl.length; j++) {
-									AssociatedConcept ac = acl[j];
-									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-										v.add(ac);
-									}
-								}
-
-								hmap.put(associationName, v);
-							}
-					    }
-				    }
-                }
-            }
-
-            /////////////////////////////////////////////////////////////////////////////
-            // KLO
-
-			NameAndValueList nvl = null;
-			//if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(sab, "Source");
-			//if (sab != null) nvl = ConvenienceMethods.createNameAndValueList(SOURCE, sab);
-			if (sab != null) nvl = Constructors.createNameAndValueList(SOURCE, sab);
-			cng = cng.restrictToAssociations(Constructors.createNameAndValueList(MetaTreeUtils.hierAssocToParentNodes_), nvl);
-
-
- //CodedNodeGraph restrictToAssociations(NameAndValueList association, NameAndValueList associationQualifiers)
-
-
-			//matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme),
-			   //                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-			//                            false, true, 1, 1, null, propertyTypes, null, null, maxToReturn, false);
-
-            matches = cng.resolveAsList(Constructors.createConceptReference(code, scheme), false, true, 1, 1, null, null, null, -1);
-
-
-if (matches != null) {
-	System.out.println("(**) matches: " + matches.getResolvedConceptReferenceCount());
-}
-
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
-                    matches .enumerateResolvedConceptReference();
-
-                while (refEnum.hasMoreElements()) {
-                    ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList sourceof = ref.getTargetOf();
-
-if (sourceof == null) {
- 	System.out.println("(**) getTargetOf returns null???: " );
-} else {
-	System.out.println("(*) getTargetOf returns OK " );
-}
-
-                    if (sourceof != null) {
-						Association[] associations = sourceof.getAssociation();
-                        if (associations != null) {
-							for (int i = 0; i < associations.length; i++) {
-								Association assoc = associations[i];
-								//String associationName = assoc.getAssociationName();
-								String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
-
-   	System.out.println("(**) associationName: " + associationName);
-
-								Vector v = new Vector();
-								AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-								for (int j = 0; j < acl.length; j++) {
-									AssociatedConcept ac = acl[j];
-									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-										v.add(ac);
-									}
-								}
-								// patch
-								//System.out.println("inverse_associationName " + v.size());
-								if (associationName.compareTo("PAR") == 0) {
-									associationName = "CHD";
-								}
-								hmap.put(associationName, v);
-							}
-					    }
-				    }
-                }
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return hmap;
-    }
-*/
 
     private String findRepresentativeTerm(Concept c, String sab) {
 		Vector synonyms = getSynonyms(c, sab);
-		if(synonyms == null || synonyms.size() == 0) return null;
+		if(synonyms == null || synonyms.size() == 0) {
+			return null;
+		}
 		return NCImBrowserProperties.getHighestTermGroupRank(synonyms);
 	}
 
@@ -2892,163 +2656,6 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 		return u;
 
      }
-
-
-/*
-	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
-
-System.out.println("(*) getNeighborhoodSynonyms ...");
-
-        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
-        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
-        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
-        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
-        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
-
-		Vector w = new Vector();
-		HashSet hset = new HashSet();
-
-		long ms = System.currentTimeMillis(), delay=0;
-        String action = "Retrieving distance-one relationships from the server";
-		HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
-		delay = System.currentTimeMillis() - ms;
-		Debug.println("Run time (ms) for " + action + " " + delay);
-		DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
-
-		Set keyset = hmap.keySet();
-		Iterator it = keyset.iterator();
-		HashSet rel_hset = new HashSet();
-
-		HashSet hasSubtype_hset = new HashSet();
-
-		long ms_categorization_delay = 0;
-		long ms_categorization;
-
-		long ms_find_highest_rank_atom_delay = 0;
-		long ms_find_highest_rank_atom;
-
-		long ms_remove_RO_delay = 0;
-		long ms_remove_RO;
-
-		long ms_all_delay = 0;
-		long ms_all;
-
-		ms_all = System.currentTimeMillis();
-
-		while (it.hasNext())
-		{
-			ms_categorization = System.currentTimeMillis();
-			String rel = (String) it.next();
-			String category = "Other";
-			if (parent_asso_vec.contains(rel)) category = "Parent";
-			else if (child_asso_vec.contains(rel)) category = "Child";
-			else if (bt_vec.contains(rel)) category = "Broader";
-			else if (nt_vec.contains(rel)) category = "Narrower";
-			else if (sibling_asso_vec.contains(rel)) category = "Sibling";
-
-			ms_categorization_delay = ms_categorization_delay + (System.currentTimeMillis() - ms_categorization);
-			Vector v = (Vector) hmap.get(rel);
-
-            // For each related concept:
-			for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				EntityDescription ed = ac.getEntityDescription();
-				Concept c = ac.getReferencedEntry();
-				if (!hset.contains(c.getEntityCode())) {
-					hset.add(c.getEntityCode());
-					// Find the highest ranked atom data
-					ms_find_highest_rank_atom = System.currentTimeMillis();
-					String t = findRepresentativeTerm(c, sab);
-					ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
-
-					t = t + "|" + c.getEntityCode() + "|" + rel + "|" + category;
-					w.add(t);
-
-                    // Temporarily save non-RO other relationships
-					if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-						if (rel_hset.contains(c.getEntityCode())) {
-							rel_hset.add(c.getEntityCode());
-						}
-					}
-
-					if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
-						if (hasSubtype_hset.contains(c.getEntityCode())) {
-							hasSubtype_hset.add(c.getEntityCode());
-						}
-					}
-			    }
-			}
-		}
-
-        Vector u = new Vector();
-        // Remove redundant RO relationships
-		for (int i=0; i<w.size(); i++) {
-			String s = (String) w.elementAt(i);
-			Vector<String> v = parseData(s, "|");
-
-			if (v.size() >=5) {
-				String associationName = v.elementAt(5);
-				if (associationName.compareTo("RO") != 0) {
-					u.add(s);
-				} else {
-					String associationTargetCode = v.elementAt(4);
-					if (!rel_hset.contains(associationTargetCode)) {
-						u.add(s);
-					}
-				}
-		    }
-		}
-
-        // Remove redundant CHD relationships
-		for (int i=0; i<w.size(); i++) {
-			String s = (String) w.elementAt(i);
-			Vector<String> v = parseData(s, "|");
-
-			if (v.size() >=5) {
-				String associationName = v.elementAt(5);
-				if (associationName.compareTo("CHD") != 0) {
-					u.add(s);
-				} else {
-					String associationTargetCode = v.elementAt(4);
-					if (!rel_hset.contains(associationTargetCode)) {
-						u.add(s);
-					}
-				}
-		    }
-		}
-
-		ms_all_delay = System.currentTimeMillis() - ms_all;
-
-		action = "categorizing relationships into six categories";
-		Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
-		DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
-
-		action = "finding highest ranked atoms";
-		Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
-		DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
-
-		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
-		action = "removing redundant RO relationships";
-		Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
-        DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
-
-        // Initial sort (refer to sortSynonymData method for sorting by a specific column)
-
-		long ms_sort_delay = System.currentTimeMillis();
-
-        u = removeRedundantRecords(u);
-
-		SortUtils.quickSort(u);
-		action = "initial sorting";
-		delay = System.currentTimeMillis() - ms_sort_delay;
-		Debug.println("Run time (ms) for " + action + " " + delay);
-        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
-
-		DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
-		return u;
-
-     }
-     */
 
      public static String getRelationshipCode(String id) {
 		 if (id.compareTo("Parent") == 0) return "1";
@@ -3272,7 +2879,6 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 				for (int i=0; i<v.size(); i++) {
 					AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 					EntityDescription ed = ac.getEntityDescription();
-					//Concept c = ac.getReferencedEntry();
 					String source = "unspecified";
 
 					for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
@@ -3285,19 +2891,10 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 							}
 							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
-
-//System.out.println(str);
-
 							if (!w.contains(str)) {
 								w.add(str);
 								rel_hmap.put(category, w);
 							}
-
-						//System.out.println("---------- qualifier name: " + qualifier.getName());
-						//System.out.println("---------- qualifier content/value: " + qualifier.getContent());
-
-
-							// 5.0
 						}
 					}
 				}
@@ -3324,7 +2921,6 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 			String src = (String) ret_vec.elementAt(3);
 			String t = name + "|" + target_code + "|" + src;
 			if (rel.compareTo("RO") != 0 && !other_hset.contains(t)) {
-				//System.out.println("(*) getAssociationTargetHashMap other_hset.add " + t);
 				other_hset.add(t);
 			}
 		}
@@ -3341,15 +2937,11 @@ System.out.println("(*) getNeighborhoodSynonyms ...");
 			} else { //RO
 				String t = name + "|" + target_code + "|" + src;
 				if (!other_hset.contains(t)) {
-
-					//System.out.println("(*) getAssociationTargetHashMap w3.add " + s);
-
 					w3.add(s);
 				}
 			}
 		}
 		rel_hmap.put("Other", w3);
-
 
 		other_hset = new HashSet();
 		w2 = (Vector) rel_hmap.get("Child");
