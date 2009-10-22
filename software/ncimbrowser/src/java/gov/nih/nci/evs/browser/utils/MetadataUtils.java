@@ -82,6 +82,7 @@ public class MetadataUtils {
 			String value = (String) v2.get(i);
 			w.add(name + "|" + value);
 		}
+		w = SortUtils.quickSort(w);
 		return w;
 	}
 
