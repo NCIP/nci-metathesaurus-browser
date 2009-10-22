@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-templage verison 1.2.2 -->
+<!-- bda-build-templage verison 1.5.13 -->
 
 <project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
@@ -55,6 +55,7 @@
     <!-- added for remote deployments since file is copied to root of install dir -->
     <basename property="properties.file.name" file="${properties.file}" />
     <!-- BDA standard structure -->
+    <property name="project.name" value="ncimbrowser"/>
     <property name="build.dir" location="." />
     <property name="software.dir" location=".." />
     <property name="common.dir" location="${software.dir}/common" />
@@ -161,6 +162,8 @@
         <format property="install.time" pattern="yyyy-MM-dd-HH-mm" />
     </tstamp>
     <record name="${log.dir}/install-${install.time}.log" action="start" />
+
+    <jboss-version/>
 
     <!--============================-->
     <!-- usage: show build targets  -->

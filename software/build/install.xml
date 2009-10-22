@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-template version 1.2.2 -->
+<!-- bda-build-template version 1.5.13 -->
 
 <project name="ncimbrowser-installer" default="upgrade" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant"
@@ -113,6 +113,7 @@
         </condition>
         <echo message="application.base.path=${application.base.path}"/>
         <property name="jboss.home" value="${application.base.path}/${jboss.relative.path}"/>
+        <jboss-version/>
         <!-- Set application.data.path based on platform -->
         <condition property="application.data.path" value="${application.data.path.linux}">
             <or>
@@ -163,6 +164,7 @@
         <math result="jboss.ssl.port" operand1="${jboss.server.port}" operation="+" operand2="363" datatype="int"/>
         <property name="jboss.ssl.enable" value="false"/>
         <property name="jboss.home" value="${application.base.path}/${jboss.relative.path}"/>
+        <jboss-version/>
         <property name="jboss.application.url" value="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"/>
         <available file="${jboss.home}/server/${jboss.server.name}/conf/jboss-service.xml" property="jboss.exists"/>
         <basename file="${jboss.ssl.keystore.location}" property="jboss.ssl.keystore.file"/>
@@ -188,14 +190,14 @@
         -->
 
         <!--OS Temp dir -->
-        <condition property="os.temp.dir" value="/tmp">
+        <condition property="os.temp.dir" value="/tmp/${project.name}">
             <or>
                 <os family="unix" />
                 <os family="mac" />
             </or>
         </condition>
 
-        <condition property="os.temp.dir" value="c:/temp">
+        <condition property="os.temp.dir" value="c:/temp/${project.name}">
             <os family="windows" />
         </condition>
         <!-- Copy files to ensure values containing variables are expanded, such properties are stored in embedded.filterset and then copy with filter files -->
@@ -699,6 +701,7 @@
 
     <target name="upgrade:jboss:init:prep" depends="upgrade:common:init:prep" unless="install.running">
         <property name="jboss.home" value="${application.base.path}/${jboss.relative.path}"/>
+        <jboss-version/>
         <if>
             <equals arg1="${jboss.ncicb-standard.port-config}" arg2="true"/>
             <then>
