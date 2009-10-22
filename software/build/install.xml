@@ -86,7 +86,7 @@
     <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
 
     <!-- Start logging -->
-    <property name="install-logs.dir" location="${application.data.path}/change-logs"/>
+    <property name="install-logs.dir" location="${log.dir}"/>
     <mkdir dir="${install-logs.dir}"/>
     <tstamp>
         <format property="install.time" pattern="yyyy-MM-dd-HH-mm" />
