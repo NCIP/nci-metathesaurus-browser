@@ -11,7 +11,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>Source Help Informaton</title>
+    <title>NCIm Sources</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
@@ -43,7 +43,7 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
-                <b>Source Help Information</b>
+                <b>NCIm Sources</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
@@ -79,15 +79,6 @@ some of which are proprietary and included, by permission, for non-commercial us
     or contact at mssohelp@ngc.com, 877.258.8280, or 12011 Sunset Hills Road Reston Virginia, 20190-3285).
   </li>
 </ul>
-The current version of NCIm is built using UMLS Metathesaurus, 2007AC and National Cancer Institute Thesaurus, 2008_12D.
-
-
-
-
-
-
-
-
 </p>
             </td></tr>
           </table>
