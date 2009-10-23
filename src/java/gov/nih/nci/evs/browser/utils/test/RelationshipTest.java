@@ -115,7 +115,7 @@ public class RelationshipTest extends DataUtils {
             "C0017337", // Gene
             "C0027651", // Neoplasms
             "C0441800", // Grade
-            "CL342077", // Cell
+         // "CL342077", // Cell
             "C1516728", // Common Terminology Criteria for Adverse Events
             "C0007097", // Carcinoma
             "C0021311", // Infection 
@@ -125,7 +125,7 @@ public class RelationshipTest extends DataUtils {
             "C0033684", // Proteins
             "C1285092", // Gland
             "C0175677", // Injury
-            "C0439793", // Severities
+            "C0439793", // Severities (Worst Case)
 
             //Note: List from Brian Carlsen with >10K relationships
             "C0001688", // aspects of adverse effects
