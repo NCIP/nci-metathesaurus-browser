@@ -6,6 +6,7 @@ set cp=.
 foreach jar (../lib/*.jar)
   set cp="$cp":$jar
 end
+set cp="$cp":../build/web/WEB-INF/classes
 setenv CLASSPATH $cp
 
 #----------------------------------------------------------------------------------------
