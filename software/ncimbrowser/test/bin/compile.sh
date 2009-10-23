@@ -13,5 +13,6 @@ setenv CLASSPATH $cp
 set javac=$JAVA_HOME/bin/javac
 
 #----------------------------------------------------------------------------------------
+rm -fr classes
 mkdir -p classes
 $javac -d classes src/java/gov/nih/nci/evs/browser/utils/test/*.java
