@@ -3,16 +3,18 @@ package gov.nih.nci.evs.browser.utils.test;
 import java.util.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-public class Main {
+public class Test {
     private static String INDENT = "  ";
+    
+    public Test(int choice, String[] args) {
+        args = parse(args);
+        if (choice > 0)
+            run(choice, args);
+        else prompt(args);
+    }
     
     private void println(String text) {
         System.out.println(text);
-    }
-    
-    public Main(String[] args) {
-        args = parse(args);
-        prompt(args);
     }
     
     private String[] parse(String[] args) {
@@ -73,6 +75,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main(args);
+        new Test(3, args);
     }
 }
