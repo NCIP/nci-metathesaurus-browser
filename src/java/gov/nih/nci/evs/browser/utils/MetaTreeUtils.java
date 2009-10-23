@@ -549,12 +549,10 @@ public class MetaTreeUtils {
             CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
             propertyTypes[0] = PropertyType.PRESENTATION;
 */
-		CodedNodeSet.PropertyType[] propertytypes = null;
-		if (RESOLVE_CONCEPT) {
-			propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
-		}
-
-
+			CodedNodeSet.PropertyType[] propertytypes = null;
+			if (RESOLVE_CONCEPT) {
+				propertytypes = new PropertyType[] {PropertyType.PRESENTATION};
+			}
 
             //int resolveCodedEntryDepth = 0;
             ResolvedConceptReferenceList branch = null;
@@ -764,13 +762,16 @@ public class MetaTreeUtils {
      * @return true if a qualifier exists; false otherwise.
      */
     protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
-
-
-        for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue())
+        /*
+        for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
             if ("source".equalsIgnoreCase(qualifier.getName())
                     && sab.equalsIgnoreCase(qualifier.getContent()))
                 return true;
+		}
+		//System.out.println("(*) isValidForSAB returns false " + ac.getEntityDescription().getContent());
         return false;
+        */
+        return true;
     }
 
 ////////////////////////
@@ -1421,7 +1422,6 @@ public class MetaTreeUtils {
 						}
 					}
 				}
-
 		    }
         }
         if (maxLevel != -1 && currLevel == maxLevel) isRoot = true;

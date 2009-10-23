@@ -26,6 +26,11 @@ public class Constants {
     static public final String FALSE = "false";
     static public final String EMPTY = "";
 
+    static public final String EXTERNAL_TERM_TYPE = "External";
+    static public final String EXTERNAL_TERM_SOURCE = "Other";
+    static public final String EXTERNAL_TERM_SOURCE_CODE = "N/A";
+
+
     static public final int DEFAULT_PAGE_SIZE = 50;
 
     static public final List<String> REL = Arrays.asList(new String[] {
