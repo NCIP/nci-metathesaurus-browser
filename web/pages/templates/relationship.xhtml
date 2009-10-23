@@ -45,7 +45,8 @@
     
     HashMap hmap = null;//(HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
     if (hmap == null) {
-      hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
+      //hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
+      hmap = util.getAssociationTargetHashMap(code_curr, sort_option);
       request.getSession().setAttribute("AssociationTargetHashMap", hmap);
     }
     
