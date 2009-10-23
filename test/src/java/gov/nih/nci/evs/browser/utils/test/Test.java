@@ -1,53 +1,14 @@
 package gov.nih.nci.evs.browser.utils.test;
 
-import java.util.*;
 import gov.nih.nci.evs.browser.utils.*;
+import gov.nih.nci.evs.browser.utils.test.*;
 
-public class Test {
-    private static String INDENT = "  ";
-    
+public class Test extends TestBase {
     public Test(int choice, String[] args) {
-        args = parse(args);
-        if (choice > 0)
-            run(choice, args);
-        else prompt(args);
+        super(choice, args);
     }
-    
-    private void println(String text) {
-        System.out.println(text);
-    }
-    
-    private String[] parse(String[] args) {
-        String prevArg = "";
-        ArrayList<String> newArgs = new ArrayList<String>();
-        for (int i = 0; i < args.length; ++i) {
-            String arg = args[i];
-            if (arg.equals("-propertyFile")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-propertyFile")) {
-                System.setProperty(
-                    "gov.nih.nci.evs.browser.NCImBrowserProperties", arg);
-                prevArg = "";
-            } else {
-                newArgs.add(arg);
-            }
-        }
-        return newArgs.toArray(new String[newArgs.size()]);
-    }
-    
-    public void prompt(String[] args) {
-        int choice = 1;
-        while (true) {
-            choice = prompt(choice);
-            if (choice == 0)
-                break;
-            if (! run(choice, args))
-                println("Invalid choice.  Try again.");
-        }
-        println("Quit");
-    }
-    
-    private int prompt(int choice) {
+
+    protected int prompt(int choice) {
         println(Utils.SEPARATOR);
         println("Main Menu:");
         println(INDENT + "1) " + "RegExpTest");
@@ -59,7 +20,7 @@ public class Test {
         return choice;
     }
     
-    private boolean run(int choice, String[] args) {
+    protected boolean run(int choice, String[] args) {
         boolean returnValue = true;
         try {
             switch (choice) {
