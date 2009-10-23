@@ -14,7 +14,9 @@ setenv CLASSPATH $cp
 #----------------------------------------------------------------------------------------
 set java=$JAVA_HOME/bin/java
 set class=gov.nih.nci.evs.browser.utils.test.Main
-set args=-propertyFile C:/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml
+# set args=(-propertyFile /home/evsuser/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml)
+set args=(-propertyFile /local/home/jboss45c/evs/ncim-webapp/conf/NCImBrowserProperties.xml)
+
 
 #----------------------------------------------------------------------------------------
 $java $class $args
