@@ -101,6 +101,7 @@ public class BySourceTest extends DataUtils {
         String version = null;
         
         String[] codes = new String[] { 
+/*
             "C0017636", // Glioblastoma 
             "C1704407", // Arabic numeral 100
             "C0391978", // Bone Tissue
@@ -111,7 +112,7 @@ public class BySourceTest extends DataUtils {
             "C0017337", // Gene
             "C0027651", // Neoplasms
             "C0441800", // Grade
-            "CL342077", // Cell
+         // "CL342077", // Cell
             "C1516728", // Common Terminology Criteria for Adverse Events
             "C0007097", // Carcinoma
             "C0021311", // Infection 
@@ -121,11 +122,39 @@ public class BySourceTest extends DataUtils {
             "C0033684", // Proteins
             "C1285092", // Gland
             "C0175677", // Injury
-            "C0439793", // Severity (Worst Case)
+            "C0439793", // Severities (Worst Case)
+
+            //Note: List from Brian Carlsen with >10K relationships
+            "C0001688", // aspects of adverse effects
+            "C0005768", // In Blood
+            "C0007807", // In Cerebrospinal Fluid
+            "C0008903", // Taxonomic
+            "C0013182", // Drug Allergy
+            "C0013557", // Economic
+            "C0017399", // genetic aspects
+            "C0019665", // Historical aspects qualifier
+            "C0022189", // isolation & purification analysis
+            "C0025520", // metabolic aspects
+            "C0031843", // physiological aspects
+            "C0034526", // aspects of radiation effects
+            "C0038137", // standards characteristics
+            "C0042037", // In Urine
+            "C0079107", // chemical aspects
+            "C0229671", // Serum
+         // "C0439793", // Severities
+            "C0441987", // Side
+            "C0549179", // Priority
+*/
+            "C0565958", // Episodicities
+            "C0587266", // Surgical access values
+            "C0750729", // Course
+            "C0991511", // Injectable Solution
+            "C0993159", // Oral tablet
+            "C1522005", // immunology aspects
         };
 
 //        codes = new String[] { "C0017636" };
-//        codes = new String[] { "C0439793" }; // Severity (Worst Case)
+//        codes = new String[] { "C0439793" }; // Severities (Worst Case)
         _sab = "SNOMEDCT";
 
         prompt(codes);
