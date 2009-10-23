@@ -2835,8 +2835,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 		long ms = System.currentTimeMillis(), delay=0;
 		String action = "Retrieving all relationships from the server";
-		// Retrieve all relationships from the server (a HashMap with key: associationName, value: vector<AssociatedConcept>)
-		//HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
 		HashMap hmap = getRelatedConceptsHashMap(scheme, version, code, null, 0); // resolveCodedEntryDepth = 0;
 		delay = System.currentTimeMillis() - ms;
 		Debug.println("Run time (ms) for " + action + " " + delay);
@@ -2876,7 +2874,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							if (w == null) {
 								w = new Vector();
 							}
-							//String str = rel + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 							String str = rela + "|" + ac.getEntityDescription().getContent() + "|" + ac.getCode() + "|" + source;
 							if (!w.contains(str)) {
 								w.add(str);
@@ -3010,7 +3007,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 
 	public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
-        //Debug.println("(*) DataUtils getAssociationTargetHashMap ");
+        Debug.println("(*) DataUtils getAssociationTargetHashMap ");
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+		par_chd_assoc_list.add("RB");
+
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
         Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
@@ -3027,9 +3028,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 		Vector w = new Vector();
 
-		long ms = System.currentTimeMillis(), delay=0;
-		String action = "Retrieving all relationships from the server";
+		long ms0 = System.currentTimeMillis(), delay=0;
+		String action0 = "Retrieving all relationships from the server";
 
+        long ms;
+        String action = null;
 		Map<String,List<RelationshipTabResults>> map = null;
 		Map<String,List<RelationshipTabResults>> map2 = null;
 
@@ -3037,31 +3040,29 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		MetaBrowserService mbs = null;
 		try {
 			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
-
-			System.out.println("\nCUI: " + CUI);
-			System.out.println("\n\nCount: " + mbs.getCount(CUI, null, Direction.SOURCEOF)); // outbound
-
-			System.out.println("Getting " + SOURCE_OF);
-		   // long ms = System.currentTimeMillis();
+		    ms = System.currentTimeMillis();
+		    action = "Retrieving " + SOURCE_OF;
+		    ms = System.currentTimeMillis();
 			map = mbs.getRelationshipsDisplay(CUI, null, Direction.SOURCEOF);
-			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+			delay = System.currentTimeMillis() - ms;
+			Debug.println("Run time (ms) for " + action + " " + delay);
+			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
-			System.out.println("\n\nGetting " + TARGET_OF);
-		   // ms = System.currentTimeMillis();
+		    ms = System.currentTimeMillis();
+		    action = "Retrieving " + TARGET_OF;
+		    ms = System.currentTimeMillis();
 			map2 = mbs.getRelationshipsDisplay(CUI, null, Direction.TARGETOF);
-			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
-
+			delay = System.currentTimeMillis() - ms;
+			Debug.println("Run time (ms) for " + action + " " + delay);
+			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 		} catch (Exception ex) {
-
+            ex.printStackTrace();
+            return null;
 		}
 
-		//delay = System.currentTimeMillis() - ms;
-		//Debug.println("Run time (ms) for " + action + " " + delay);
-        //System.out.println(delay, action, "getAssociationTargetHashMap");
-
 		// Categorize relationships into six categories and find association source data
-		//long ms = System.currentTimeMillis();
-		//String action = "Categorizing relationships into six categories; finding source data for each relationship";
+		ms = System.currentTimeMillis();
+		action = "Categorizing relationships into six categories; finding source data for each relationship";
 
 		for(String rel : map.keySet()){
 			List<RelationshipTabResults> relations = map.get(rel);
@@ -3074,20 +3075,22 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
 				for(RelationshipTabResults result : relations) {
-				    String rela = result.getRela();
 				    String code = result.getCui();
-				    String source = result.getSource();
-				    String name = result.getName();
+                    if (code.indexOf("@") == -1) {
+						String rela = result.getRela();
+						String source = result.getSource();
+						String name = result.getName();
 
-					w = (Vector) rel_hmap.get(category);
-					if (w == null) {
-						w = new Vector();
-					}
-					String str = rela + "|" + name + "|" + code + "|" + source;
-					if (!w.contains(str)) {
-						w.add(str);
-						rel_hmap.put(category, w);
-					}
+						w = (Vector) rel_hmap.get(category);
+						if (w == null) {
+							w = new Vector();
+						}
+						String str = rela + "|" + name + "|" + code + "|" + source;
+						if (!w.contains(str)) {
+							w.add(str);
+							rel_hmap.put(category, w);
+						}
+				    }
 				}
 			}
 		}
@@ -3103,28 +3106,30 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
 				for(RelationshipTabResults result : relations) {
-				    String rela = result.getRela();
 				    String code = result.getCui();
-				    String source = result.getSource();
-				    String name = result.getName();
+                    if (code.indexOf("@") == -1) {
+						String rela = result.getRela();
+						String source = result.getSource();
+						String name = result.getName();
 
-					w = (Vector) rel_hmap.get(category);
-					if (w == null) {
-						w = new Vector();
-					}
-					String str = rela + "|" + name + "|" + code + "|" + source;
-					if (!w.contains(str)) {
-						w.add(str);
-						rel_hmap.put(category, w);
-					}
+						w = (Vector) rel_hmap.get(category);
+						if (w == null) {
+							w = new Vector();
+						}
+						String str = rela + "|" + name + "|" + code + "|" + source;
+						if (!w.contains(str)) {
+							w.add(str);
+							rel_hmap.put(category, w);
+						}
+				    }
 				}
 			}
 		}
 
 
 		// Remove redundant RO relationships
-		//ms = System.currentTimeMillis();
-		//action = "Removing redundant RO and CHD relationships";
+		ms = System.currentTimeMillis();
+		action = "Removing redundant RO and CHD relationships";
 
 		HashSet other_hset = new HashSet();
 		Vector w2 = (Vector) rel_hmap.get("Other");
@@ -3191,12 +3196,12 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			}
 		}
 		rel_hmap.put("Child", w3);
-		//delay = System.currentTimeMillis() - ms;
-		//Debug.println("Run time (ms) for " + action + " " + delay);
-        //System.out.println(delay, action, "getAssociationTargetHashMap");
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
-        //ms = System.currentTimeMillis();
-        //action = "Sorting relationships by sort options (columns)";
+        ms = System.currentTimeMillis();
+        action = "Sorting relationships by sort options (columns)";
 
         // Sort relationships by sort options (columns)
         if (sort_option == null) {
@@ -3215,9 +3220,9 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				rel_hmap.put(category, w);
 			}
 		}
-        //delay = System.currentTimeMillis() - ms;
-		//Debug.println("Run time (ms) for " + action + " " + delay);
-        //System.out.println(delay, action, "getAssociationTargetHashMap");
+        delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
         removeRedundantRecords(rel_hmap);
         String incomplete = (String) rel_hmap.get(INCOMPLETE);
