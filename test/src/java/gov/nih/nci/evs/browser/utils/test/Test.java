@@ -1,7 +1,6 @@
 package gov.nih.nci.evs.browser.utils.test;
 
 import gov.nih.nci.evs.browser.utils.*;
-import gov.nih.nci.evs.browser.utils.test.*;
 
 public class Test extends TestBase {
     public Test(int choice, String[] args) {
@@ -31,6 +30,7 @@ public class Test extends TestBase {
             }
             println("");
         } catch (Exception e) {
+            println(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
         return returnValue;
     }
