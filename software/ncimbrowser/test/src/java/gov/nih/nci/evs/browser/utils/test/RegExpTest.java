@@ -6,8 +6,9 @@ import org.LexGrid.LexBIG.DataModel.Core.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
-
 import org.LexGrid.LexBIG.DataModel.Collections.*;
+
+import gov.nih.nci.evs.browser.utils.*;
 
 public class RegExpTest {
     private LexBIGService _lbs = RemoteServerUtil.createLexBIGService();

@@ -7,6 +7,8 @@ import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
 import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
 
+import gov.nih.nci.evs.browser.utils.*;
+
 public class ResolveConceptIteratorTest {
     private final String SEPARATOR = 
         "---------------------------------------------------------------------";

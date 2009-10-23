@@ -42,7 +42,7 @@ import org.LexGrid.LexBIG.Impl.*;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. <!-- LICENSE_TEXT_END -->
  */
 
-public class RemoteServerUtil {
+public class RemoteServerUtilTest {
     private static String _serviceURL = null;
 
     public static LexBIGService createLexBIGService() {
