@@ -363,6 +363,12 @@ public class MetaTreeUtils {
 
     public HashMap getTreePathData(String scheme, String version, String sab, String code, int maxLevel) throws LBException {
 		if (sab == null) sab = NCI_SOURCE;
+
+System.out.println("(*) MetaTreeUtils.getTreePathData code " + code);
+System.out.println("(*) MetaTreeUtils.getTreePathData sab " + sab);
+System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
+
+
 		LexBIGService lbsvc = RemoteServerUtil.createLexBIGService();
 		LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbsvc
 				.getGenericExtension("LexBIGServiceConvenienceMethods");
@@ -1256,6 +1262,9 @@ public class MetaTreeUtils {
             String scheme, CodingSchemeVersionOrTag csvt,
             String sab, int maxLevel) throws LBException {
 
+System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel);
+
+
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
@@ -1315,7 +1324,8 @@ public class MetaTreeUtils {
             Set<TreeItem> roots, Set<String> visited_links, int maxLevel, int currLevel)
         throws LBException {
 
-        //if (maxLevel != -1 && currLevel >= maxLevel)
+System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + " currLevel " + currLevel );
+
         if (maxLevel != -1 && currLevel > maxLevel)
         {
 			return;
