@@ -8,6 +8,7 @@ set cp=.
 for %%x in (..\lib\*.jar) do (
   set cp=!cp!;%%x
 )
+set cp=%cp%;..\build\web\WEB-INF\classes
 set CLASSPATH=%cp%
 
 set javac=%JAVA_HOME%\bin\javac
