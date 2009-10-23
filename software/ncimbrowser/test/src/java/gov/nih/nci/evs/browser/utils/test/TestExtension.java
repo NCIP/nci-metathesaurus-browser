@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.browser.utils.test;
 
+import gov.nih.nci.evs.browser.utils.RemoteServerUtil;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.util.List;
@@ -18,8 +19,9 @@ public class TestExtension {
 	
 	
 	public static void main(String[] args) throws Exception {
-		LexBIGService lbs = 
-			(LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(url, "EvsServiceInfo");
+//		LexBIGService lbs = 
+//			(LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(url, "EvsServiceInfo");
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 		
 		MetaBrowserService mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
 

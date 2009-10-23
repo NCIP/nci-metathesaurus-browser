@@ -24,8 +24,8 @@ public class Main {
     public static void main(String[] args) throws Exception 
     {
         args = parse(args);
-        //RegExpTest.main(args);
-        ResolveConceptIteratorTest.main(args);
-        //TestExtension.main(args);
+        // RegExpTest.main(args);
+        // ResolveConceptIteratorTest.main(args);
+        TestExtension.main(args);
     }
 }
