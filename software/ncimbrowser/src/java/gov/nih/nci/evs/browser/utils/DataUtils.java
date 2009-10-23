@@ -2412,7 +2412,6 @@ if (matches != null) {
 											}
 
 											Vector w = null;
-
                                             String asso_key = directionalLabel + "|" + asso_label;
 											if (hmap.containsKey(asso_key)) {
 												w = (Vector) hmap.get(asso_key);
@@ -2429,8 +2428,6 @@ if (matches != null) {
 				    }
 				}
 			}
-
-
 		} catch (Exception ex) {
 
 		}
@@ -2442,7 +2439,9 @@ if (matches != null) {
     private String findRepresentativeTerm(Concept c, String sab) {
 		Vector synonyms = getSynonyms(c, sab);
 		if(synonyms == null || synonyms.size() == 0) {
-			return null;
+			//return null;
+			//t = term_name + "|" + term_type + "|" + term_source + "|" + term_source_code;
+			return c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
 		}
 		return NCImBrowserProperties.getHighestTermGroupRank(synonyms);
 	}
@@ -2464,7 +2463,7 @@ if (matches != null) {
     // Method for populating By Source tab relationships table
 	public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
 
-Debug.println("(*) getNeighborhoodSynonyms ...");
+Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
@@ -2856,7 +2855,6 @@ Debug.println("(*) getNeighborhoodSynonyms ...");
 					String source = "unspecified";
 
 					for (NameAndValue qualifier : ac.getAssociationQualifiers().getNameAndValue()) {
-						//if ("Source".equalsIgnoreCase(qualifier.getName())) {
 						if (SOURCE.equalsIgnoreCase(qualifier.getName())) {
 							source = qualifier.getContent();
 							w = (Vector) rel_hmap.get(category);
