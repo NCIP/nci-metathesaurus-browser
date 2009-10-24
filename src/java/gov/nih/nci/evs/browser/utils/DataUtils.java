@@ -1046,9 +1046,6 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
     public static String getVocabularyVersionByTag(String codingSchemeName, String ltag)
     {
 
-System.out.println("getVocabularyVersionByTag: " + codingSchemeName);
-System.out.println("getVocabularyVersionByTag: ltag " + ltag);
-
          if (codingSchemeName == null) return null;
          String version = null;
          int knt = 0;
@@ -1065,10 +1062,12 @@ System.out.println("getVocabularyVersionByTag: ltag " + ltag);
 					version = css.getRepresentsVersion();
 					knt++;
 
-                    if (ltag == null) return css.getRepresentsVersion();
+                    if (ltag == null) return version;
                     RenderingDetail rd = csr.getRenderingDetail();
                     CodingSchemeTagList cstl = rd.getVersionTags();
                     java.lang.String[] tags = cstl.getTag();
+                    //KLO, 102409
+                    if (tags == null) return version;
 
                     if (tags != null && tags.length > 0) {
 						for (int j=0; j<tags.length; j++)
@@ -1076,7 +1075,7 @@ System.out.println("getVocabularyVersionByTag: ltag " + ltag);
 							String version_tag = (String) tags[j];
 							if (version_tag.compareToIgnoreCase(ltag) == 0)
 							{
-								return css.getRepresentsVersion();
+								return version;
 							}
 						}
 				    }
