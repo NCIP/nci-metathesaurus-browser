@@ -3005,6 +3005,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
     }
 
 
+    // For relationships tab
 	public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
         Debug.println("(*) DataUtils getAssociationTargetHashMap ");
 		List<String> par_chd_assoc_list = new ArrayList();
