@@ -51,6 +51,8 @@ public class NCImBrowserProperties {
 
         private static List displayItemList;
         private static List termGroupRankList;
+        private static HashMap termGroupRankHashMap;
+
         private static HashMap configurableItemMap;
 
         // KLO
@@ -152,6 +154,7 @@ public class NCImBrowserProperties {
         }
 
         //KLO, 052909
+        /*
         public static String getRank(String term_type, String term_source) {
             if (termGroupRankList == null || termGroupRankList.size() == 0) return "0";
 			for (int i=0; i<termGroupRankList.size(); i++) {
@@ -162,6 +165,14 @@ public class NCImBrowserProperties {
 		    }
  		    return "0";
 		}
+		*/
+
+        public static String getRank(String term_type, String term_source) {
+			String key = term_source + "$" + term_type;
+			if (termGroupRankHashMap.containsKey(key)) return (String) termGroupRankHashMap.get(key);
+			return "0";
+		}
+
 
         //KLO, 052909
         public static String getHighestTermGroupRank(Vector synonyms) {
@@ -204,8 +215,19 @@ public class NCImBrowserProperties {
 
             displayItemList = parser.getDisplayItemList();
             termGroupRankList = parser.getTermGroupRankList();
+            termGroupRankHashMap = createTermGroupRankHashMap();
             configurableItemMap = parser.getConfigurableItemMap();
         }
 
-
-    }
+        private static HashMap createTermGroupRankHashMap() throws Exception {
+			HashMap hmap = new HashMap();
+			for (int i=0; i<termGroupRankList.size(); i++) {
+				TermGroupRank tgr = (TermGroupRank) termGroupRankList.get(i);
+				String index = tgr.getIndex();
+				String source = tgr.getSource();
+				String termGroup = tgr.getTermGroup();
+				hmap.put(source + "$" + termGroup, index);
+			}
+			return hmap;
+		}
+   }
