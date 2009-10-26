@@ -91,16 +91,16 @@ public class RemoteServerUtil {
                 System.setProperty(NCImBrowserProperties.LG_CONFIG_FILE,lg_config_file);
 
                 if (debug) {
-                    System.out.println(Utils.SEPARATOR);
-                    System.out.println("LexBIGService(local): new LexBIGServiceImpl();");
-                    System.out.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
+                    Debug.println(Utils.SEPARATOR);
+                    Debug.println("LexBIGService(local): new LexBIGServiceImpl();");
+                    Debug.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
                 }
                 LexBIGService lbSvc = new LexBIGServiceImpl();
                 return lbSvc;
             }
             if (debug) {
-                System.out.println(Utils.SEPARATOR);
-                System.out.println("LexBIGService(remote): " + serviceUrl);
+                Debug.println(Utils.SEPARATOR);
+                Debug.println("LexBIGService(remote): " + serviceUrl);
             }
             LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
             return (LexBIGService) lexevsService;
