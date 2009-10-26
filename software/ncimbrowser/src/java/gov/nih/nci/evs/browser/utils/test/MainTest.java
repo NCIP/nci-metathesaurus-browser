@@ -27,7 +27,8 @@ public class MainTest {
                 switch (i) {
                 case 1: SearchUtilsTest.main(args); break;
                 case 2: RelationshipTest.main(args); break;
-                case 3: BySourceTest.main(args); break;
+                case 3: RelationshipTest2.main(args); break;
+                case 4: BySourceTest.main(args); break;
                 default: println("Invalid choice.  Try again."); break;
                 }
                 println("");
@@ -44,7 +45,8 @@ public class MainTest {
         case 0: prompt(args); break;
         case 1: SearchUtilsTest.main(args); break;
         case 2: RelationshipTest.main(args); break;
-        case 3: BySourceTest.main(args); break;
+        case 3: RelationshipTest2.main(args); break;
+        case 4: BySourceTest.main(args); break;
         }
     }
 }
