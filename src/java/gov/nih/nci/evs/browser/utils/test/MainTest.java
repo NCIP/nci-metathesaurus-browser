@@ -40,7 +40,7 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-        int which = 0;
+        int which = 3;
         
         switch (which) {
         case 0: prompt(args); break;

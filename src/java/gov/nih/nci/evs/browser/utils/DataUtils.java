@@ -3009,6 +3009,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
     // For relationships tab
 	public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
         Debug.println("(*) DataUtils getAssociationTargetHashMap ");
+        long ms, delay=0;
+        String action = null;
+
+        ms = System.currentTimeMillis();
+        action = "Initializing member variables";
 		List<String> par_chd_assoc_list = new ArrayList();
 		par_chd_assoc_list.add("CHD");
 		par_chd_assoc_list.add("RB");
@@ -3028,17 +3033,14 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		}
 
 		Vector w = new Vector();
-
-		long ms0 = System.currentTimeMillis(), delay=0;
-		String action0 = "Retrieving all relationships from the server";
-
-        long ms;
-        String action = null;
 		Map<String,List<RelationshipTabResults>> map = null;
 		Map<String,List<RelationshipTabResults>> map2 = null;
 
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 		MetaBrowserService mbs = null;
+        delay = System.currentTimeMillis() - ms;
+        Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 		try {
 			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
 		    ms = System.currentTimeMillis();
@@ -3126,7 +3128,9 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				}
 			}
 		}
-
+        delay = System.currentTimeMillis() - ms;
+        Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
 		// Remove redundant RO relationships
 		ms = System.currentTimeMillis();

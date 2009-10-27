@@ -153,9 +153,11 @@ public class RelationshipTest2 extends DataUtils {
             "C1522005", // immunology aspects
         };
 
-        // codes = new String[] { "C0017636" };
-        // codes = new String[] { "CL342077" };
-        // codes = new String[] { "C0439793" };
+        // codes = new String[] { "C0017636" }; // Glioblastoma 
+        // codes = new String[] { "CL342077" }; // Cell
+        // codes = new String[] { "C0993159" }; // Oral tablet
+        // codes = new String[] { "C0031843" }; // physiological aspects
+        // codes = new String[] { "C0439793" }; // Severities
 
         prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
