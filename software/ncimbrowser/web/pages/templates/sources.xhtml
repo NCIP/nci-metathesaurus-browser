@@ -57,6 +57,8 @@
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
   Vector neighborhood_synonyms = dataUtils.getSynonyms(concept_neighborhood, neighborhood_sab);
   Vector neighborhood_atoms = dataUtils.getNeighborhoodSynonyms(Constants.CODING_SCHEME_NAME, null, concept_neighborhood.getEntityCode(), neighborhood_sab);
+  //Vector neighborhood_atoms = dataUtils.getNeighborhoodSynonyms(concept_neighborhood.getEntityCode(), neighborhood_sab);
+
   String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sortBy"));
   if (sort_by == null) {
       sort_by = "name";
