@@ -1,6 +1,7 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test;
 
 import gov.nih.nci.evs.browser.utils.*;
+import gov.nih.nci.evs.browser.utils.test.Prompt;
 
 public class Test extends TestBase {
     public Test(int choice, String[] args) {
