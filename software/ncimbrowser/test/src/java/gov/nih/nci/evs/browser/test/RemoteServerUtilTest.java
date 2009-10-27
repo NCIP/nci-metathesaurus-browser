@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test;
 
 import gov.nih.nci.system.client.*;
 import org.LexGrid.LexBIG.caCore.interfaces.*;

@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test;
 
 import gov.nih.nci.evs.browser.utils.RemoteServerUtil;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
