@@ -3569,7 +3569,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		par_chd_assoc_list.add("RB");
 		//par_chd_assoc_list.add("RN");
 
-
         Vector ret_vec = new Vector();
 
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
@@ -3761,8 +3760,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			Vector<String> v = parseData(s, "|");
 
 			if (v.size() == 7) {
-                //System.out.println("(" + j + ") " + s);
-
 				String rel = (String) v.elementAt(6);
 				if (rel.compareTo("Child") != 0 &&  rel.compareTo("Other") != 0) {
 					u.add(s);
