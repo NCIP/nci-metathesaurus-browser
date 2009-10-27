@@ -19,6 +19,7 @@ public class MainTest {
             println(INDENT + "2) " + "RelationshipTest");
             println(INDENT + "3) " + "RelationshipTest2");
             println(INDENT + "4) " + "BySourceTest");
+            println(INDENT + "5) " + "BySourceTest2");
             println(INDENT + "0) " + "Quit");
             println(SEPARATOR);
             i = Prompt.prompt("Choose", i);
@@ -30,6 +31,7 @@ public class MainTest {
                 case 2: RelationshipTest.main(args); break;
                 case 3: RelationshipTest2.main(args); break;
                 case 4: BySourceTest.main(args); break;
+                case 5: BySourceTest2.main(args); break;
                 default: println("Invalid choice.  Try again."); break;
                 }
                 println("");
@@ -40,7 +42,7 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-        int which = 3;
+        int which = 5;
         
         switch (which) {
         case 0: prompt(args); break;
@@ -48,6 +50,7 @@ public class MainTest {
         case 2: RelationshipTest.main(args); break;
         case 3: RelationshipTest2.main(args); break;
         case 4: BySourceTest.main(args); break;
+        case 5: BySourceTest2.main(args); break;
         }
     }
 }
