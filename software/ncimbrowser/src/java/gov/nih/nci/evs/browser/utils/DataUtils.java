@@ -3343,6 +3343,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		   // ms = System.currentTimeMillis();
 		   // to be modified: BT and PAR only???
 			map2 = mbs.getBySourceTabDisplay(CUI, null, par_chd_assoc_list, Direction.TARGETOF);
+
 			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 		} catch (Exception ex) {
 
@@ -3405,7 +3406,54 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		}
 
 		// *** do the same for map2
+		for(String rel : map2.keySet()){
+			List<BySourceTabResults> relations = map2.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
+				for(BySourceTabResults result : relations) {
+				    String code = result.getCui();
+                    if (code.indexOf("@") == -1) {
+						// check CUI_hashmap containsKey(rel$code)???
+						if (!CUI_hashset.contains(rel + "$" + code)) {
+							String rela = result.getRela();
+							if (rela == null || rela.compareTo("null") == 0) {
+								rela = "";
+							}
+							Vector v = (Vector) cui2SynonymsMap.get(code);
+							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
+							if (top_atom == null) {
+								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
+								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+							}
+							t = t + "|" + code + "|" + rela + "|" + category;
+							w.add(t);
+							CUI_hashset.add(rel + "$" + code);
+
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+								if (rel_hset.contains(code)) {
+									rel_hset.add(code);
+								}
+							}
+
+							if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
+								if (hasSubtype_hset.contains(code)) {
+									hasSubtype_hset.add(code);
+								}
+							}
+						}
+     			    }
+				}
+			}
+		}
 
         Vector u = new Vector();
         // Remove redundant RO relationships
