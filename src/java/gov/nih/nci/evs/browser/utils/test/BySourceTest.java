@@ -101,7 +101,6 @@ public class BySourceTest extends DataUtils {
         String version = null;
         
         String[] codes = new String[] { 
-/*
             "C0017636", // Glioblastoma 
             "C1704407", // Arabic numeral 100
             "C0391978", // Bone Tissue
@@ -144,7 +143,6 @@ public class BySourceTest extends DataUtils {
          // "C0439793", // Severities
             "C0441987", // Side
             "C0549179", // Priority
-*/
             "C0565958", // Episodicities
             "C0587266", // Surgical access values
             "C0750729", // Course
