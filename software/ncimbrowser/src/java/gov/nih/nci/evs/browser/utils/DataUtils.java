@@ -155,6 +155,7 @@ import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService.Direction;
 import org.LexGrid.lexevs.metabrowser.model.RelationshipTabResults;
+import org.LexGrid.lexevs.metabrowser.model.BySourceTabResults;
 
 
 /**
@@ -3051,7 +3052,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		    ms = System.currentTimeMillis();
 		    action = "Retrieving " + TARGET_OF;
 		    ms = System.currentTimeMillis();
-			map2 = mbs.getRelationshipsDisplay(CUI, null, Direction.TARGETOF);
+			map2 = mbs.getRelationshipsDisplay(CUI, par_chd_assoc_list, Direction.TARGETOF);
 			delay = System.currentTimeMillis() - ms;
 			Debug.println("Run time (ms) for " + action + " " + delay);
 			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -3229,5 +3230,245 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
         if (incomplete != null) rel_hmap.put(INCOMPLETE, incomplete);
 		return rel_hmap;
 	}
+
+
+
+		public HashMap createCUI2SynonymsHahMap(Map<String,List<BySourceTabResults>> map, Map<String,List<BySourceTabResults>> map2) {
+			HashMap hmap = new HashMap();
+			for(String rel : map.keySet()){
+				List<BySourceTabResults> relations = map.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					for(BySourceTabResults result : relations) {
+						String rela = result.getRela();
+						String cui = result.getCui();
+						String source = result.getSource();
+						String name = result.getTerm();
+                        Vector v = null;
+						if (hmap.containsKey(cui)) {
+							v = (Vector) hmap.get(cui);
+						} else {
+							v = new Vector();
+						}
+						// check if v.contains result
+						v.add(result);
+						hmap.put(cui, v);
+					}
+				}
+			}
+			return hmap;
+		}
+
+
+		public BySourceTabResults findHighestRankedAtom(Vector<BySourceTabResults> v, String source) {
+			if (v == null) return null;
+			BySourceTabResults target = null;
+			for (int i=0; i<v.size(); i++) {
+				BySourceTabResults r = (BySourceTabResults) v.elementAt(i);
+				if (r.getSource().compareTo(source) == 0) {
+					if (target == null) {
+						target = r;
+					} else {
+						// select the higher ranked one as target
+                        String idx_target = NCImBrowserProperties.getRank(target.getType(), target.getSource());
+                        String idx_atom = NCImBrowserProperties.getRank(r.getType(), r.getSource());
+
+						if (idx_atom != null && idx_atom.compareTo(idx_target) > 0) {
+							target = r;
+						}
+					}
+				}
+			}
+			return target;
+		}
+
+	public Vector getNeighborhoodSynonyms(String CUI, String sab) {
+        Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+		par_chd_assoc_list.add("RB");
+
+        Vector ret_vec = new Vector();
+
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+
+		Vector w = new Vector();
+		HashSet hset = new HashSet();
+		HashSet rel_hset = new HashSet();
+		HashSet hasSubtype_hset = new HashSet();
+
+		long ms_categorization_delay = 0;
+		long ms_categorization;
+
+		long ms_find_highest_rank_atom_delay = 0;
+		long ms_find_highest_rank_atom;
+
+		long ms_remove_RO_delay = 0;
+		long ms_remove_RO;
+
+		long ms_all_delay = 0;
+		long ms_all;
+
+		ms_all = System.currentTimeMillis();
+
+		long ms = System.currentTimeMillis(), delay=0;
+        String action = "Retrieving distance-one relationships from the server";
+		//HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+        //HashMap hmap = getRelatedConceptsHashMap(scheme, version, code, sab);
+
+		Map<String,List<BySourceTabResults>> map = null;
+		Map<String,List<BySourceTabResults>> map2 = null;
+
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+
+			//System.out.println("\nCUI: " + CUI);
+			//System.out.println("\n\nCount: " + mbs.getCount(CUI, null, null, Direction.SOURCEOF)); // outbound
+
+			System.out.println("Getting " + SOURCE_OF);
+		   // long ms = System.currentTimeMillis();
+			map = mbs.getBySourceTabDisplay(CUI, null, null, Direction.SOURCEOF);
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+
+			System.out.println("\n\nGetting " + TARGET_OF);
+		   // ms = System.currentTimeMillis();
+		   // to be modified: BT and PAR only???
+			map2 = mbs.getBySourceTabDisplay(CUI, null, par_chd_assoc_list, Direction.TARGETOF);
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		} catch (Exception ex) {
+
+		}
+
+		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
+        HashSet CUI_hashset = new HashSet();
+
+		ms = System.currentTimeMillis();
+		action = "Categorizing relationships into six categories; finding source data for each relationship";
+
+        String t = null;
+		for(String rel : map.keySet()){
+			List<BySourceTabResults> relations = map.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+				for(BySourceTabResults result : relations) {
+				    String code = result.getCui();
+                    if (code.indexOf("@") == -1) {
+						// check CUI_hashmap containsKey(rel$code)???
+						if (!CUI_hashset.contains(rel + "$" + code)) {
+							String rela = result.getRela();
+							if (rela == null || rela.compareTo("null") == 0) {
+								rela = "";
+							}
+							Vector v = (Vector) cui2SynonymsMap.get(code);
+							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
+							if (top_atom == null) {
+								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
+								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+							}
+							t = t + "|" + code + "|" + rela + "|" + category;
+							w.add(t);
+							CUI_hashset.add(rel + "$" + code);
+
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
+								if (rel_hset.contains(code)) {
+									rel_hset.add(code);
+								}
+							}
+
+							if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
+								if (hasSubtype_hset.contains(code)) {
+									hasSubtype_hset.add(code);
+								}
+							}
+						}
+     			    }
+				}
+			}
+		}
+
+		// *** do the same for map2
+
+
+        Vector u = new Vector();
+        // Remove redundant RO relationships
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("RO") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
+
+        // Remove redundant CHD relationships
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("CHD") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
+
+		ms_all_delay = System.currentTimeMillis() - ms_all;
+
+		action = "categorizing relationships into six categories";
+		//Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+		//DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
+
+		action = "finding highest ranked atoms";
+		//Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+		//DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
+
+		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
+		action = "removing redundant RO relationships";
+		//Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+        //DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
+
+        // Initial sort (refer to sortSynonymData method for sorting by a specific column)
+
+		long ms_sort_delay = System.currentTimeMillis();
+
+        u = removeRedundantRecords(u);
+
+		SortUtils.quickSort(u);
+		action = "initial sorting";
+		delay = System.currentTimeMillis() - ms_sort_delay;
+		//Debug.println("Run time (ms) for " + action + " " + delay);
+        //DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+
+		//DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
+		return u;
+	}
+
 
 }
