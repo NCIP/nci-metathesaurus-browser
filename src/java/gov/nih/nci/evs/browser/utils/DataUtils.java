@@ -3006,6 +3006,19 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
     }
 
 
+    public Vector hashSet2Vector(HashSet hset) {
+		if (hset == null) return null;
+		Vector v = new Vector();
+		Iterator it = hset.iterator();
+		while (it.hasNext()) {
+			String t = (String) it.next();
+			v.add(t);
+		}
+		return v;
+	}
+
+
+/*
     // For relationships tab
 	public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
         Debug.println("(*) DataUtils getAssociationTargetHashMap ");
@@ -3234,8 +3247,251 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
         if (incomplete != null) rel_hmap.put(INCOMPLETE, incomplete);
 		return rel_hmap;
 	}
+*/
 
 
+    // For relationships tab
+	public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
+        Debug.println("(*) DataUtils getAssociationTargetHashMap ");
+        long ms, delay=0;
+        String action = null;
+
+        ms = System.currentTimeMillis();
+        action = "Initializing member variables";
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+		par_chd_assoc_list.add("RB");
+
+        Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
+        Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
+        Vector sibling_asso_vec = new Vector(Arrays.asList(assocToSiblingNodes_));
+        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
+        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+        Vector category_vec = new Vector(Arrays.asList(relationshipCategories_));
+
+        HashMap rel_hmap = new HashMap();
+		for (int k=0; k<category_vec.size(); k++) {
+			String  category = (String) category_vec.elementAt(k);
+			HashSet hset =  new HashSet();
+			rel_hmap.put(category, hset);
+		}
+
+		HashSet w = new HashSet();
+		Map<String,List<RelationshipTabResults>> map = null;
+		Map<String,List<RelationshipTabResults>> map2 = null;
+
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+        delay = System.currentTimeMillis() - ms;
+        Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+		    ms = System.currentTimeMillis();
+		    action = "Retrieving " + SOURCE_OF;
+		    ms = System.currentTimeMillis();
+			map = mbs.getRelationshipsDisplay(CUI, null, Direction.SOURCEOF);
+			delay = System.currentTimeMillis() - ms;
+			Debug.println("Run time (ms) for " + action + " " + delay);
+			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+
+		    ms = System.currentTimeMillis();
+		    action = "Retrieving " + TARGET_OF;
+		    ms = System.currentTimeMillis();
+			map2 = mbs.getRelationshipsDisplay(CUI, par_chd_assoc_list, Direction.TARGETOF);
+			delay = System.currentTimeMillis() - ms;
+			Debug.println("Run time (ms) for " + action + " " + delay);
+			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+		} catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+		}
+
+		// Categorize relationships into six categories and find association source data
+		ms = System.currentTimeMillis();
+		action = "Categorizing relationships into six categories; finding source data for each relationship";
+
+		for(String rel : map.keySet()){
+			List<RelationshipTabResults> relations = map.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+				for(RelationshipTabResults result : relations) {
+				    String code = result.getCui();
+                    if (code.indexOf("@") == -1) {
+						String rela = result.getRela();
+						String source = result.getSource();
+						String name = result.getName();
+
+						w = (HashSet) rel_hmap.get(category);
+						if (w == null) {
+							w = new HashSet();
+						}
+						String str = rela + "|" + name + "|" + code + "|" + source;
+						if (!w.contains(str)) {
+							w.add(str);
+							rel_hmap.put(category, w);
+						}
+				    }
+				}
+			}
+		}
+
+		for(String rel : map2.keySet()){
+			List<RelationshipTabResults> relations = map2.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+
+				for(RelationshipTabResults result : relations) {
+				    String code = result.getCui();
+                    if (code.indexOf("@") == -1) {
+						String rela = result.getRela();
+						String source = result.getSource();
+						String name = result.getName();
+
+						w = (HashSet) rel_hmap.get(category);
+						if (w == null) {
+							w = new HashSet();
+						}
+						String str = rela + "|" + name + "|" + code + "|" + source;
+						if (!w.contains(str)) {
+							w.add(str);
+							rel_hmap.put(category, w);
+						}
+				    }
+				}
+			}
+		}
+        delay = System.currentTimeMillis() - ms;
+        Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+
+		// Remove redundant RO relationships
+		ms = System.currentTimeMillis();
+		action = "Removing redundant RO and CHD relationships";
+
+		HashSet other_hset = new HashSet();
+
+		HashSet w2 = (HashSet) rel_hmap.get("Other");
+		Iterator it = w2.iterator();
+		while (it.hasNext()) {
+			String s = (String) it.next();
+
+			Vector ret_vec = parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			String t = name + "|" + target_code + "|" + src;
+			if (rel.compareTo("RO") != 0 && !other_hset.contains(t)) {
+				other_hset.add(t);
+			}
+		}
+		HashSet w3 = new HashSet();
+		w2 = (HashSet) rel_hmap.get("Other");
+		it = w2.iterator();
+		while (it.hasNext()) {
+			String s = (String) it.next();
+			Vector ret_vec = parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			if (rel.compareTo("RO") != 0) {
+				w3.add(s);
+			} else { //RO
+				String t = name + "|" + target_code + "|" + src;
+				if (!other_hset.contains(t)) {
+					w3.add(s);
+				}
+			}
+		}
+		rel_hmap.put("Other", w3);
+
+		other_hset = new HashSet();
+		w2 = (HashSet) rel_hmap.get("Child");
+
+		it = w2.iterator();
+		while (it.hasNext()) {
+			String s = (String) it.next();
+			Vector ret_vec = parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			String t = name + "|" + target_code + "|" + src;
+			if (rel.compareTo("CHD") != 0 && !other_hset.contains(t)) {
+				other_hset.add(t);
+			}
+		}
+		w3 = new HashSet();
+		w2 = (HashSet) rel_hmap.get("Child");
+
+		it = w2.iterator();
+		while (it.hasNext()) {
+			String s = (String) it.next();
+			Vector ret_vec = parseData(s, "|");
+			String rel = (String) ret_vec.elementAt(0);
+			String name = (String) ret_vec.elementAt(1);
+			String target_code = (String) ret_vec.elementAt(2);
+			String src = (String) ret_vec.elementAt(3);
+			if (rel.compareTo("CHD") != 0) {
+				w3.add(s);
+			} else {
+				String t = name + "|" + target_code + "|" + src;
+				if (!other_hset.contains(t)) {
+					w3.add(s);
+				}
+			}
+		}
+		rel_hmap.put("Child", w3);
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+
+        ms = System.currentTimeMillis();
+        action = "Sorting relationships by sort options (columns)";
+
+        HashMap new_rel_hmap = new HashMap();
+        // Sort relationships by sort options (columns)
+        if (sort_option == null) {
+			for (int k=0; k<category_vec.size(); k++) {
+				String  category = (String) category_vec.elementAt(k);
+				w =  (HashSet) rel_hmap.get(category);
+				Vector rel_v = hashSet2Vector(w);
+				SortUtils.quickSort(rel_v);
+				new_rel_hmap.put(category, rel_v);
+			}
+		} else {
+			for (int k=0; k<category_vec.size(); k++) {
+				String  category = (String) category_vec.elementAt(k);
+				w =  (HashSet) rel_hmap.get(category);
+				Vector rel_v = hashSet2Vector(w);
+				String sortOption = (String) sort_option.elementAt(k);
+
+				rel_v = sortRelationshipData(rel_v, sortOption);
+				new_rel_hmap.put(category, rel_v);
+			}
+		}
+        delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
+
+        removeRedundantRecords(new_rel_hmap);
+        String incomplete = (String) new_rel_hmap.get(INCOMPLETE);
+        if (incomplete != null) new_rel_hmap.put(INCOMPLETE, incomplete);
+		return new_rel_hmap;
+	}
 
 		public HashMap createCUI2SynonymsHahMap(Map<String,List<BySourceTabResults>> map, Map<String,List<BySourceTabResults>> map2) {
 			HashMap hmap = new HashMap();
