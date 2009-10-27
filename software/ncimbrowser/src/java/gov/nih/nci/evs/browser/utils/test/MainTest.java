@@ -17,7 +17,8 @@ public class MainTest {
             println("Main Menu:");
             println(INDENT + "1) " + "SearchUtilsTest");
             println(INDENT + "2) " + "RelationshipTest");
-            println(INDENT + "3) " + "BySourceTest");
+            println(INDENT + "3) " + "RelationshipTest2");
+            println(INDENT + "4) " + "BySourceTest");
             println(INDENT + "0) " + "Quit");
             println(SEPARATOR);
             i = Prompt.prompt("Choose", i);
@@ -39,7 +40,7 @@ public class MainTest {
     }
     
     public static void main(String[] args) {
-        int which = 3;
+        int which = 0;
         
         switch (which) {
         case 0: prompt(args); break;
