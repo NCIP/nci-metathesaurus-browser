@@ -3515,6 +3515,27 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 					}
 				}
 			}
+
+			for(String rel : map2.keySet()){
+				List<BySourceTabResults> relations = map2.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					for(BySourceTabResults result : relations) {
+						String rela = result.getRela();
+						String cui = result.getCui();
+						String source = result.getSource();
+						String name = result.getTerm();
+                        Vector v = null;
+						if (hmap.containsKey(cui)) {
+							v = (Vector) hmap.get(cui);
+						} else {
+							v = new Vector();
+						}
+						// check if v.contains result
+						v.add(result);
+						hmap.put(cui, v);
+					}
+				}
+			}
 			return hmap;
 		}
 
@@ -3546,6 +3567,8 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		List<String> par_chd_assoc_list = new ArrayList();
 		par_chd_assoc_list.add("CHD");
 		par_chd_assoc_list.add("RB");
+		//par_chd_assoc_list.add("RN");
+
 
         Vector ret_vec = new Vector();
 
@@ -3592,19 +3615,20 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 			System.out.println("Getting " + SOURCE_OF);
 		   // long ms = System.currentTimeMillis();
-			map = mbs.getBySourceTabDisplay(CUI, null, null, Direction.SOURCEOF);
+			map = mbs.getBySourceTabDisplay(CUI, sab, null, Direction.SOURCEOF);
 			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 
 			System.out.println("\n\nGetting " + TARGET_OF);
 		   // ms = System.currentTimeMillis();
 		   // to be modified: BT and PAR only???
-			map2 = mbs.getBySourceTabDisplay(CUI, null, par_chd_assoc_list, Direction.TARGETOF);
+			map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
 
 			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 		} catch (Exception ex) {
 
 		}
 
+        Vector u = new Vector();
 		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
         HashSet CUI_hashset = new HashSet();
 
@@ -3625,11 +3649,12 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				for(BySourceTabResults result : relations) {
 				    String code = result.getCui();
                     if (code.indexOf("@") == -1) {
+
 						// check CUI_hashmap containsKey(rel$code)???
 						if (!CUI_hashset.contains(rel + "$" + code)) {
 							String rela = result.getRela();
 							if (rela == null || rela.compareTo("null") == 0) {
-								rela = "";
+								rela = " ";
 							}
 							Vector v = (Vector) cui2SynonymsMap.get(code);
 							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
@@ -3640,9 +3665,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
 							}
 							t = t + "|" + code + "|" + rela + "|" + category;
+
 							w.add(t);
 							CUI_hashset.add(rel + "$" + code);
 
+/*
 							// Temporarily save non-RO other relationships
 							if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
 								if (rel_hset.contains(code)) {
@@ -3655,6 +3682,21 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 									hasSubtype_hset.add(code);
 								}
 							}
+*/
+
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
+								if (!rel_hset.contains(code)) {
+									rel_hset.add(code);
+								}
+							}
+
+							if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
+								if (!hasSubtype_hset.contains(code)) {
+									hasSubtype_hset.add(code);
+								}
+							}
+
 						}
      			    }
 				}
@@ -3674,12 +3716,13 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 				for(BySourceTabResults result : relations) {
 				    String code = result.getCui();
+
                     if (code.indexOf("@") == -1) {
 						// check CUI_hashmap containsKey(rel$code)???
 						if (!CUI_hashset.contains(rel + "$" + code)) {
 							String rela = result.getRela();
 							if (rela == null || rela.compareTo("null") == 0) {
-								rela = "";
+								rela = " ";
 							}
 							Vector v = (Vector) cui2SynonymsMap.get(code);
 							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
@@ -3694,14 +3737,14 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							CUI_hashset.add(rel + "$" + code);
 
 							// Temporarily save non-RO other relationships
-							if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-								if (rel_hset.contains(code)) {
+							if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
+								if (!rel_hset.contains(code)) {
 									rel_hset.add(code);
 								}
 							}
 
-							if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
-								if (hasSubtype_hset.contains(code)) {
+							if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
+								if (!hasSubtype_hset.contains(code)) {
 									hasSubtype_hset.add(code);
 								}
 							}
@@ -3711,14 +3754,53 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			}
 		}
 
-        Vector u = new Vector();
+        for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			int j = i+1;
+
+			Vector<String> v = parseData(s, "|");
+
+			if (v.size() == 7) {
+                //System.out.println("(" + j + ") " + s);
+
+				String rel = (String) v.elementAt(6);
+				if (rel.compareTo("Child") != 0 &&  rel.compareTo("Other") != 0) {
+					u.add(s);
+				} else if (rel.compareTo("Child") == 0) {
+					String rela = (String) v.elementAt(5);
+					if (rela.compareTo("CHD") != 0) {
+						u.add(s);
+					} else {
+						String code = (String) v.elementAt(4);
+						if (!hasSubtype_hset.contains(code)) {
+							u.add(s);
+						}
+					}
+				} else if (rel.compareTo("Other") == 0) {
+					String rela = (String) v.elementAt(5);
+					if (rela.compareTo("RO") != 0) {
+						u.add(s);
+					} else {
+						String code = (String) v.elementAt(4);
+						if (!rel_hset.contains(code)) {
+							u.add(s);
+						}
+					}
+				}
+			} else {
+			   System.out.println("(" + j + ") ??? " + s);
+			}
+		}
+
+/*
+
         // Remove redundant RO relationships
 		for (int i=0; i<w.size(); i++) {
 			String s = (String) w.elementAt(i);
 			Vector<String> v = parseData(s, "|");
 			if (v.size() >=5) {
-				String associationName = v.elementAt(5);
-				if (associationName.compareTo("RO") != 0) {
+				String rela = v.elementAt(5);
+				if (rela.compareTo("RO") != 0) {
 					u.add(s);
 				} else {
 					String associationTargetCode = v.elementAt(4);
@@ -3746,7 +3828,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				}
 		    }
 		}
-
+*/
 		ms_all_delay = System.currentTimeMillis() - ms_all;
 
 		action = "categorizing relationships into six categories";
