@@ -183,7 +183,7 @@ public class IteratorBean extends Object {
         long ms1 = System.currentTimeMillis();
 		List rcr_list = new ArrayList();
 		if (idx2 <= idx1) idx2 = idx1 + 1;
-		for (int i=idx1; i<idx2; i++) {
+		for (int i=idx1; i<idx2 && i<list.size(); i++) {
 			ResolvedConceptReference rcr = (ResolvedConceptReference) this.list.get(i);
 			rcr_list.add(rcr);
 		}
