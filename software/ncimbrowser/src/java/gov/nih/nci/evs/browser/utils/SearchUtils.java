@@ -2272,7 +2272,9 @@ public class SearchUtils {
 		ResolvedConceptReferencesIterator iterator = null;
 		try {
 			cns = lbs.getNodeSet(scheme, versionOrTag, null);
-			if (source != null) cns = restrictToSource(cns, source);
+			if (source != null && source.compareTo("ALL") != 0) {
+				cns = restrictToSource(cns, source);
+			}
 			CodedNodeSet.PropertyType[] propertyTypes = null;
 			LocalNameList sourceList = null;
 			LocalNameList contextList = null;
