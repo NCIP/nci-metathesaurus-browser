@@ -114,7 +114,6 @@ public class MetadataUtils {
 			Vector v = new Vector();
 			for(String key : map.keySet()){
 				String value = (String) map.get(key);
-				System.out.println(key + "|" + value);
 				v.add(key + "|" + value);
 			}
 			v = SortUtils.quickSort(v);
