@@ -3562,12 +3562,12 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			return target;
 		}
 
-    public Vector getNeighborhoodSynonyms(String CUI, String sab) {
+	public Vector getNeighborhoodSynonyms(String CUI, String sab) {
         Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
-        List<String> par_chd_assoc_list = new ArrayList();
-        par_chd_assoc_list.add("CHD");
-        par_chd_assoc_list.add("RB");
-        //par_chd_assoc_list.add("RN");
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+		par_chd_assoc_list.add("RB");
+		//par_chd_assoc_list.add("RN");
 
         Vector ret_vec = new Vector();
 
@@ -3577,285 +3577,296 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
         Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
         Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
 
-        Vector w = new Vector();
-        HashSet hset = new HashSet();
-        HashSet rel_hset = new HashSet();
-        HashSet hasSubtype_hset = new HashSet();
+		Vector w = new Vector();
+		HashSet hset = new HashSet();
+		HashSet rel_hset = new HashSet();
+		HashSet hasSubtype_hset = new HashSet();
 
-        long ms_categorization_delay = 0;
-        long ms_categorization;
+		long ms_categorization_delay = 0;
+		long ms_categorization;
 
-        long ms_find_highest_rank_atom_delay = 0;
-        long ms_find_highest_rank_atom;
+		long ms_find_highest_rank_atom_delay = 0;
+		long ms_find_highest_rank_atom;
 
-        long ms_remove_RO_delay = 0;
-        long ms_remove_RO;
+		long ms_remove_RO_delay = 0;
+		long ms_remove_RO;
 
-        long ms_all_delay = 0;
-        long ms_all;
+		long ms_all_delay = 0;
+		long ms_all;
 
-        ms_all = System.currentTimeMillis();
 
-        long ms = System.currentTimeMillis(), delay=0;
-        String action = "Retrieving distance-one relationships from the server";
-        //HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
+		String action_overall = "By source delay";
+		ms_all = System.currentTimeMillis();
+
+		long ms = System.currentTimeMillis(), delay=0;
+        String action = null;//"Retrieving distance-one relationships from the server";
+		//HashMap hmap = getAssociatedConceptsHashMap(scheme, version, code, sab);
         //HashMap hmap = getRelatedConceptsHashMap(scheme, version, code, sab);
 
-        Map<String,List<BySourceTabResults>> map = null;
-        Map<String,List<BySourceTabResults>> map2 = null;
+		Map<String,List<BySourceTabResults>> map = null;
+		Map<String,List<BySourceTabResults>> map2 = null;
 
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
-        MetaBrowserService mbs = null;
-        try {
-            mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
 
-            //Debug.println("\nCUI: " + CUI);
-            //Debug.println("\n\nCount: " + mbs.getCount(CUI, null, null, Direction.SOURCEOF)); // outbound
+		try {
+			action = "Retrieve data from browser extension.";
+			ms = System.currentTimeMillis();
 
-            Debug.println("Getting " + SOURCE_OF);
-           // long ms = System.currentTimeMillis();
-            map = mbs.getBySourceTabDisplay(CUI, sab, null, Direction.SOURCEOF);
-            Debug.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
 
-            Debug.println("\n\nGetting " + TARGET_OF);
-           // ms = System.currentTimeMillis();
-           // to be modified: BT and PAR only???
-            map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
+			System.out.println("Getting " + SOURCE_OF);
+		   // long ms = System.currentTimeMillis();
+			map = mbs.getBySourceTabDisplay(CUI, sab, null, Direction.SOURCEOF);
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 
-            Debug.println("Run time (ms): " + (System.currentTimeMillis() - ms));
-        } catch (Exception ex) {
+			System.out.println("\n\nGetting " + TARGET_OF);
+		   // ms = System.currentTimeMillis();
+		   // to be modified: BT and PAR only???
+			map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
 
-        }
+			System.out.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+		} catch (Exception ex) {
+
+		}
+
+		action = "Sort synonyms by CUI.";
+		ms = System.currentTimeMillis();
 
         Vector u = new Vector();
-        HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
+		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
+		System.out.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+
         HashSet CUI_hashset = new HashSet();
 
-        ms = System.currentTimeMillis();
-        action = "Categorizing relationships into six categories; finding source data for each relationship";
+		ms = System.currentTimeMillis();
+		action = "Categorizing relationships into six categories; finding source data for each relationship";
 
+        ms_find_highest_rank_atom_delay = 0;
         String t = null;
-        for(String rel : map.keySet()){
-            List<BySourceTabResults> relations = map.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                String category = "Other";
-                if (parent_asso_vec.contains(rel)) category = "Parent";
-                else if (child_asso_vec.contains(rel)) category = "Child";
-                else if (bt_vec.contains(rel)) category = "Broader";
-                else if (nt_vec.contains(rel)) category = "Narrower";
-                else if (sibling_asso_vec.contains(rel)) category = "Sibling";
+		for(String rel : map.keySet()){
+			List<BySourceTabResults> relations = map.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
-                for(BySourceTabResults result : relations) {
-                    String code = result.getCui();
+				for(BySourceTabResults result : relations) {
+				    String code = result.getCui();
                     if (code.indexOf("@") == -1) {
+						// check CUI_hashmap containsKey(rel$code)???
+						if (!CUI_hashset.contains(rel + "$" + code)) {
+							String rela = result.getRela();
+							if (rela == null || rela.compareTo("null") == 0) {
+								rela = " ";
+							}
+							Vector v = (Vector) cui2SynonymsMap.get(code);
+							ms_find_highest_rank_atom = System.currentTimeMillis();
+							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
+							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+							if (top_atom == null) {
+								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
+								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+							}
+							t = t + "|" + code + "|" + rela + "|" + category;
 
-                        // check CUI_hashmap containsKey(rel$code)???
-                        if (!CUI_hashset.contains(rel + "$" + code)) {
-                            String rela = result.getRela();
-                            if (rela == null || rela.compareTo("null") == 0) {
-                                rela = " ";
-                            }
-                            Vector v = (Vector) cui2SynonymsMap.get(code);
-                            BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
-                            if (top_atom == null) {
-                                Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
-                                t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
-                            } else {
-                                t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
-                            }
-                            t = t + "|" + code + "|" + rela + "|" + category;
+							w.add(t);
+							CUI_hashset.add(rel + "$" + code);
 
-                            w.add(t);
-                            CUI_hashset.add(rel + "$" + code);
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
+								if (!rel_hset.contains(code)) {
+									rel_hset.add(code);
+								}
+							}
 
-/*
-                            // Temporarily save non-RO other relationships
-                            if(category.compareTo("Other") == 0 && category.compareTo("RO") != 0) {
-                                if (rel_hset.contains(code)) {
-                                    rel_hset.add(code);
-                                }
-                            }
+							if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
+								if (!hasSubtype_hset.contains(code)) {
+									hasSubtype_hset.add(code);
+								}
+							}
 
-                            if(category.compareTo("Child") == 0 && category.compareTo("CHD") != 0) {
-                                if (hasSubtype_hset.contains(code)) {
-                                    hasSubtype_hset.add(code);
-                                }
-                            }
-*/
+						}
+     			    }
+				}
+			}
+		}
 
-                            // Temporarily save non-RO other relationships
-                            if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
-                                if (!rel_hset.contains(code)) {
-                                    rel_hset.add(code);
-                                }
-                            }
+		// *** do the same for map2
+		for(String rel : map2.keySet()){
+			List<BySourceTabResults> relations = map2.get(rel);
+			if (rel.compareTo(INCOMPLETE) != 0) {
+				String category = "Other";
+				if (parent_asso_vec.contains(rel)) category = "Parent";
+				else if (child_asso_vec.contains(rel)) category = "Child";
+				else if (bt_vec.contains(rel)) category = "Broader";
+				else if (nt_vec.contains(rel)) category = "Narrower";
+				else if (sibling_asso_vec.contains(rel)) category = "Sibling";
 
-                            if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
-                                if (!hasSubtype_hset.contains(code)) {
-                                    hasSubtype_hset.add(code);
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-
-        // *** do the same for map2
-        for(String rel : map2.keySet()){
-            List<BySourceTabResults> relations = map2.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                String category = "Other";
-                if (parent_asso_vec.contains(rel)) category = "Parent";
-                else if (child_asso_vec.contains(rel)) category = "Child";
-                else if (bt_vec.contains(rel)) category = "Broader";
-                else if (nt_vec.contains(rel)) category = "Narrower";
-                else if (sibling_asso_vec.contains(rel)) category = "Sibling";
-
-                for(BySourceTabResults result : relations) {
-                    String code = result.getCui();
+				for(BySourceTabResults result : relations) {
+				    String code = result.getCui();
 
                     if (code.indexOf("@") == -1) {
-                        // check CUI_hashmap containsKey(rel$code)???
-                        if (!CUI_hashset.contains(rel + "$" + code)) {
-                            String rela = result.getRela();
-                            if (rela == null || rela.compareTo("null") == 0) {
-                                rela = " ";
-                            }
-                            Vector v = (Vector) cui2SynonymsMap.get(code);
-                            BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
-                            if (top_atom == null) {
-                                Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
-                                t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
-                            } else {
-                                t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
-                            }
-                            t = t + "|" + code + "|" + rela + "|" + category;
-                            w.add(t);
-                            CUI_hashset.add(rel + "$" + code);
+						if (!CUI_hashset.contains(rel + "$" + code)) {
+							String rela = result.getRela();
+							if (rela == null || rela.compareTo("null") == 0) {
+								rela = " ";
+							}
+							Vector v = (Vector) cui2SynonymsMap.get(code);
 
-                            // Temporarily save non-RO other relationships
-                            if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
-                                if (!rel_hset.contains(code)) {
-                                    rel_hset.add(code);
-                                }
-                            }
+							ms_find_highest_rank_atom = System.currentTimeMillis();
+							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
+							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
 
-                            if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
-                                if (!hasSubtype_hset.contains(code)) {
-                                    hasSubtype_hset.add(code);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+							if (top_atom == null) {
+								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
+								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+							}
+							t = t + "|" + code + "|" + rela + "|" + category;
+							w.add(t);
+							CUI_hashset.add(rel + "$" + code);
 
+							// Temporarily save non-RO other relationships
+							if(category.compareTo("Other") == 0 && rela.compareTo("RO") != 0) {
+								if (!rel_hset.contains(code)) {
+									rel_hset.add(code);
+								}
+							}
+
+							if(category.compareTo("Child") == 0 && rela.compareTo("CHD") != 0) {
+								if (!hasSubtype_hset.contains(code)) {
+									hasSubtype_hset.add(code);
+								}
+							}
+						}
+     			    }
+				}
+			}
+		}
+
+
+		long total_categorization_delay = System.currentTimeMillis() - ms;
+		String action_atom = "Find highest rank atom delay";
+		Debug.println("Run time (ms) for " + action_atom + " " + ms_find_highest_rank_atom_delay);
+
+		long absolute_categorization_delay = total_categorization_delay - ms_find_highest_rank_atom_delay;
+        Debug.println("Run time (ms) for " + action + " " + absolute_categorization_delay);
+
+        ms_remove_RO_delay = System.currentTimeMillis();
+        action = "Remove redundant relationships";
         for (int i=0; i<w.size(); i++) {
-            String s = (String) w.elementAt(i);
-            int j = i+1;
+			String s = (String) w.elementAt(i);
+			int j = i+1;
 
-            Vector<String> v = parseData(s, "|");
+			Vector<String> v = parseData(s, "|");
 
-            if (v.size() == 7) {
-                String rel = (String) v.elementAt(6);
-                if (rel.compareTo("Child") != 0 &&  rel.compareTo("Other") != 0) {
-                    u.add(s);
-                } else if (rel.compareTo("Child") == 0) {
-                    String rela = (String) v.elementAt(5);
-                    if (rela.compareTo("CHD") != 0) {
-                        u.add(s);
-                    } else {
-                        String code = (String) v.elementAt(4);
-                        if (!hasSubtype_hset.contains(code)) {
-                            u.add(s);
-                        }
-                    }
-                } else if (rel.compareTo("Other") == 0) {
-                    String rela = (String) v.elementAt(5);
-                    if (rela.compareTo("RO") != 0) {
-                        u.add(s);
-                    } else {
-                        String code = (String) v.elementAt(4);
-                        if (!rel_hset.contains(code)) {
-                            u.add(s);
-                        }
-                    }
-                }
-            } else {
-                Debug.println("(" + j + ") ??? " + s);
-            }
-        }
+			if (v.size() == 7) {
+				String rel = (String) v.elementAt(6);
+				if (rel.compareTo("Child") != 0 &&  rel.compareTo("Other") != 0) {
+					u.add(s);
+				} else if (rel.compareTo("Child") == 0) {
+					String rela = (String) v.elementAt(5);
+					if (rela.compareTo("CHD") != 0) {
+						u.add(s);
+					} else {
+						String code = (String) v.elementAt(4);
+						if (!hasSubtype_hset.contains(code)) {
+							u.add(s);
+						}
+					}
+				} else if (rel.compareTo("Other") == 0) {
+					String rela = (String) v.elementAt(5);
+					if (rela.compareTo("RO") != 0) {
+						u.add(s);
+					} else {
+						String code = (String) v.elementAt(4);
+						if (!rel_hset.contains(code)) {
+							u.add(s);
+						}
+					}
+				}
+			} else {
+			   System.out.println("(" + j + ") ??? " + s);
+			}
+		}
+		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_remove_RO_delay));
 
 /*
 
         // Remove redundant RO relationships
-        for (int i=0; i<w.size(); i++) {
-            String s = (String) w.elementAt(i);
-            Vector<String> v = parseData(s, "|");
-            if (v.size() >=5) {
-                String rela = v.elementAt(5);
-                if (rela.compareTo("RO") != 0) {
-                    u.add(s);
-                } else {
-                    String associationTargetCode = v.elementAt(4);
-                    if (!rel_hset.contains(associationTargetCode)) {
-                        u.add(s);
-                    }
-                }
-            }
-        }
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
+			if (v.size() >=5) {
+				String rela = v.elementAt(5);
+				if (rela.compareTo("RO") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
 
         // Remove redundant CHD relationships
-        for (int i=0; i<w.size(); i++) {
-            String s = (String) w.elementAt(i);
-            Vector<String> v = parseData(s, "|");
+		for (int i=0; i<w.size(); i++) {
+			String s = (String) w.elementAt(i);
+			Vector<String> v = parseData(s, "|");
 
-            if (v.size() >=5) {
-                String associationName = v.elementAt(5);
-                if (associationName.compareTo("CHD") != 0) {
-                    u.add(s);
-                } else {
-                    String associationTargetCode = v.elementAt(4);
-                    if (!rel_hset.contains(associationTargetCode)) {
-                        u.add(s);
-                    }
-                }
-            }
-        }
-*/
-        ms_all_delay = System.currentTimeMillis() - ms_all;
+			if (v.size() >=5) {
+				String associationName = v.elementAt(5);
+				if (associationName.compareTo("CHD") != 0) {
+					u.add(s);
+				} else {
+					String associationTargetCode = v.elementAt(4);
+					if (!rel_hset.contains(associationTargetCode)) {
+						u.add(s);
+					}
+				}
+		    }
+		}
 
-        action = "categorizing relationships into six categories";
-        Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
-        DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
+		ms_all_delay = System.currentTimeMillis() - ms_all;
 
-        action = "finding highest ranked atoms";
-        Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
-        DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
+		action = "categorizing relationships into six categories";
+		//Debug.println("Run time (ms) for " + action + " " + ms_categorization_delay);
+		//DBG.debugDetails(ms_categorization_delay, action, "getNeighborhoodSynonyms");
 
-        ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
-        action = "removing redundant RO relationships";
-        Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
-        DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
+		action = "finding highest ranked atoms";
+		//Debug.println("Run time (ms) for " + action + " " + ms_find_highest_rank_atom_delay);
+		//DBG.debugDetails(ms_find_highest_rank_atom_delay, action, "getNeighborhoodSynonyms");
+
+		ms_remove_RO_delay = ms_all_delay - ms_categorization_delay - ms_find_highest_rank_atom_delay;
+		action = "removing redundant RO relationships";
+		//Debug.println("Run time (ms) for " + action + " " + ms_remove_RO_delay);
+        //DBG.debugDetails(ms_remove_RO_delay, action, "getNeighborhoodSynonyms");
 
         // Initial sort (refer to sortSynonymData method for sorting by a specific column)
-
-        long ms_sort_delay = System.currentTimeMillis();
-
+*/
+		long ms_sort_delay = System.currentTimeMillis();
         u = removeRedundantRecords(u);
+		SortUtils.quickSort(u);
+		action = "initial sorting";
+		delay = System.currentTimeMillis() - ms_sort_delay;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+		//Debug.println("Run time (ms) for " + action + " " + delay);
+        //DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
-        SortUtils.quickSort(u);
-        action = "initial sorting";
-        delay = System.currentTimeMillis() - ms_sort_delay;
-        Debug.println("Run time (ms) for " + action + " " + delay);
-        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+		//DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 
-        DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
-        return u;
-    }
+		Debug.println("Run time (ms) for " + action_overall + " " + (System.currentTimeMillis() - ms_all));
+
+		return u;
+	}
 
 
 }
