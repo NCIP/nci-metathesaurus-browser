@@ -99,10 +99,18 @@ System.out.println("set Sortby to: " + sort_by);
               if (sort_by != null && sort_by.compareTo("source") == 0) {
               %>
                  Source
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
+        </a>                 
               <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
                 <a href="<%=request.getContextPath() %>/pages/synonym.jsf?sortBy=source">Source</a>
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
+        </a>                
               <%
               }
               %>
