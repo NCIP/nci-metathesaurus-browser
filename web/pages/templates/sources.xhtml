@@ -140,8 +140,8 @@
               %>
           </th>
 
-          <th class="dataTableHeader" scope="col" align="left">
-                 Source
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
+                 Source<br>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
@@ -149,12 +149,11 @@
 
           </th>
 
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by != null && sort_by.compareTo("type") == 0) {
               %>
-                 Type
-
+                 Type<br>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
                 '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" border="0">
@@ -164,7 +163,7 @@
               <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy=type&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Type</a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy=type&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Type</a><br>
            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
       <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" border="0">
@@ -174,15 +173,15 @@
               %>
 
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by != null && sort_by.compareTo("code") == 0) {
               %>
-                 Code
+                 Code<br>
               <%
               } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy=code&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Code</a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy=code&&sortBy2=<%=sort_by2%>&&sab=<%=neighborhood_sab%>">Code</a><br>
               <%
               }
               %>
@@ -229,11 +228,11 @@ if (neighborhood_atoms.size() == 0) {
       <table class="dataTable" border="0">
 
         <tr>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by2 == null || sort_by2.compareTo("rel_type") == 0) {
               %>
-                 Relationship
+                 Relationship<br>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
@@ -241,8 +240,7 @@ if (neighborhood_atoms.size() == 0) {
               <%
               } else {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=rel_type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship
-                </a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=rel_type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Relationship</a><br>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
@@ -251,11 +249,11 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by2 == null || sort_by2.compareTo("rel") == 0) {
               %>
-                 Rel. Attribute
+                 Rel. Attribute<br>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
@@ -263,7 +261,7 @@ if (neighborhood_atoms.size() == 0) {
               <%
               } else {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Attribute</a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=rel&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Rel. Attribute</a><br>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
@@ -300,19 +298,19 @@ if (neighborhood_atoms.size() == 0) {
               %>
           </th>
 
-          <th class="dataTableHeader" scope="col" align="left">
-                 Source
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
+                 Source<br>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
         </a>
           </th>
 
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by2 != null && sort_by2.compareTo("type") == 0) {
               %>
-                 Type
+                 Type<br>
            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
       <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" border="0">
@@ -320,7 +318,7 @@ if (neighborhood_atoms.size() == 0) {
               <%
               } else if ((sort_by2 == null) || (sort_by2 != null  && sort_by.compareTo("type") != 0)) {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Type</a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=type&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Type</a><br>
            <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
       <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" border="0">
@@ -329,15 +327,15 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" valign="top">
               <%
               if (sort_by2 != null && sort_by2.compareTo("code") == 0) {
               %>
-                 Code
+                 Code<br>
               <%
               } else if ((sort_by2 == null) || sort_by2 != null && sort_by2.compareTo("code") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=code&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Code</a>
+                <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&sortBy2=code&&sortBy=<%=sort_by%>&&sab=<%=neighborhood_sab%>">Code</a><br>
               <%
               }
               %>
@@ -355,11 +353,11 @@ if (neighborhood_atoms.size() == 0) {
         String cui = (String) synonym_data.elementAt(4);
         String rel = (String) synonym_data.elementAt(5);
         String rel_display_value = rel;
-        
+
         if (DataUtils.containsAllUpperCaseChars(rel)) {
             rel_display_value = "";
         }
-        
+
         String rel_type = (String) synonym_data.elementAt(6);
         String rowColor = (i%2 == 0) ? "dataRowDark" : "dataRowLight";
     %>
