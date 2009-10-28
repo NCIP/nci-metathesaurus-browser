@@ -3601,7 +3601,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		long ms_all;
 
 
-		String action_overall = "By source delay";
+		String action_overall = "By source delay (total time)";
 		ms_all = System.currentTimeMillis();
 
 		long ms = System.currentTimeMillis(), delay=0;
@@ -3631,7 +3631,9 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
             //Debug.println("Run time (ms) " + actionTmp + " " + (System.currentTimeMillis() - msTmp));
 
-			Debug.println("Run time (ms) " + action + " " + (System.currentTimeMillis() - ms));
+			delay = System.currentTimeMillis() - ms;
+			Debug.println("Run time (ms) for " + action + " " + delay);
+			DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 		} catch (Exception ex) {
 
 		}
@@ -3641,7 +3643,9 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
         Vector u = new Vector();
 		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
-		Debug.println("Run time (ms) " + action + " " + (System.currentTimeMillis() - ms));
+		delay = System.currentTimeMillis() - ms;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+		DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
         HashSet CUI_hashset = new HashSet();
 
@@ -3761,9 +3765,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		long total_categorization_delay = System.currentTimeMillis() - ms;
 		String action_atom = "Find highest rank atom delay";
 		Debug.println("Run time (ms) for " + action_atom + " " + ms_find_highest_rank_atom_delay);
+	    DBG.debugDetails(ms_find_highest_rank_atom_delay, action_atom, "getNeighborhoodSynonyms");
 
 		long absolute_categorization_delay = total_categorization_delay - ms_find_highest_rank_atom_delay;
         Debug.println("Run time (ms) for " + action + " " + absolute_categorization_delay);
+        DBG.debugDetails(absolute_categorization_delay, action, "getNeighborhoodSynonyms");
 
         ms_remove_RO_delay = System.currentTimeMillis();
         action = "Remove redundant relationships";
@@ -3802,8 +3808,9 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			   Debug.println("(" + j + ") ??? " + s);
 			}
 		}
-		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_remove_RO_delay));
-
+        delay = System.currentTimeMillis() - ms_remove_RO_delay;
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 /*
 
         // Remove redundant RO relationships
@@ -3861,15 +3868,16 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		long ms_sort_delay = System.currentTimeMillis();
         u = removeRedundantRecords(u);
 		SortUtils.quickSort(u);
-		action = "initial sorting";
+		action = "Initial sorting";
 		delay = System.currentTimeMillis() - ms_sort_delay;
-		Debug.println("Run time (ms) for " + action + " " + delay);
 		Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
 		//DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 
-		Debug.println("Run time (ms) for " + action_overall + " " + (System.currentTimeMillis() - ms_all));
+        delay = System.currentTimeMillis() - ms_all;
+		Debug.println("Run time (ms) for " + action_overall + " " + delay);
+        DBG.debugDetails(delay, action_overall, "getNeighborhoodSynonyms");
 
 		return u;
 	}
