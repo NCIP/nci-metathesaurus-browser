@@ -3610,32 +3610,32 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		MetaBrowserService mbs = null;
 
 		try {
-			action = "Retrieve data from browser extension.";
+			action = "Retrieve data from browser extension";
 			ms = System.currentTimeMillis();
-
 			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
 
-			Debug.println("Getting " + SOURCE_OF);
-		   // long ms = System.currentTimeMillis();
+			//String actionTmp = "Getting " + SOURCE_OF;
+			//long msTmp = System.currentTimeMillis();
 			map = mbs.getBySourceTabDisplay(CUI, sab, null, Direction.SOURCEOF);
-			Debug.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+			//Debug.println("Run time (ms) " + actionTmp + " " + (System.currentTimeMillis() - msTmp));
 
-			Debug.println("\n\nGetting " + TARGET_OF);
-		   // ms = System.currentTimeMillis();
-		   // to be modified: BT and PAR only???
+			//actionTmp = "Getting " + TARGET_OF;
+			//msTmp = System.currentTimeMillis();
+			// to be modified: BT and PAR only???
 			map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
+            //Debug.println("Run time (ms) " + actionTmp + " " + (System.currentTimeMillis() - msTmp));
 
-			Debug.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+			Debug.println("Run time (ms) " + action + " " + (System.currentTimeMillis() - ms));
 		} catch (Exception ex) {
 
 		}
 
-		action = "Sort synonyms by CUI.";
+		action = "Sort synonyms by CUI";
 		ms = System.currentTimeMillis();
 
         Vector u = new Vector();
 		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
-		Debug.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+		Debug.println("Run time (ms) " + action + " " + (System.currentTimeMillis() - ms));
 
         HashSet CUI_hashset = new HashSet();
 
