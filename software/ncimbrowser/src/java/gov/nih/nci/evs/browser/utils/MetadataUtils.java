@@ -36,12 +36,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.LexGrid.LexBIG.DataModel.Collections.MetadataPropertyList;
 import org.LexGrid.LexBIG.DataModel.Core.AbsoluteCodingSchemeVersionReference;
 import org.LexGrid.LexBIG.DataModel.Core.MetadataProperty;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
+import org.LexGrid.LexBIG.Utility.Constructors;
+
 
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
@@ -98,6 +102,56 @@ public class MetadataUtils {
 		return v;
 	}
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static Vector getSourceMetaData(String uri, String version) {
+		//Map<String,String> map = test.getTtyExpandedForm("urn:oid:2.16.840.1.113883.3.26.1.2", "200904");
+		Map<String,String> map = null;
+		try {
+			map = getTtyExpandedForm(uri, version);
+			if (map == null) return null;
+			Vector v = new Vector();
+			for(String key : map.keySet()){
+				String value = (String) map.get(key);
+				System.out.println(key + "|" + value);
+				v.add(key + "|" + value);
+			}
+			v = SortUtils.quickSort(v);
+			return v;
+	    } catch (Exception ex) {
+			return null;
+		}
+	}
+
+	private static Map<String,String> getTtyExpandedForm(String uri, String version) throws Exception {
+		Map<String,String> ttys = new HashMap<String,String>();
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		LexBIGServiceMetadata lbsm = null;
+		MetadataPropertyList mdpl = null;
+		try {
+			lbsm = lbs.getServiceMetadata();
+		    lbsm = lbsm.restrictToCodingScheme(Constructors.createAbsoluteCodingSchemeVersionReference(uri, version));
+
+			mdpl = lbsm.resolve();
+		} catch (Exception e) {
+			return null;
+		}
+
+		for(int i=0;i<mdpl.getMetadataPropertyCount();i++){
+			MetadataProperty prop = mdpl.getMetadataProperty(i);
+			if(prop.getName().equals("dockey") &&
+					prop.getValue().equals("TTY")){
+				if(mdpl.getMetadataProperty(i + 2).getValue().equals("expanded_form")){
+					ttys.put(mdpl.getMetadataProperty(i + 1).getValue(),
+							mdpl.getMetadataProperty(i + 3).getValue());
+				}
+			}
+		}
+		return ttys;
+	}
+
+
 	/**
 	 * Simple example to demonstrate extracting a specific Coding Scheme's Metadata.
 	 *
@@ -124,7 +178,6 @@ public class MetadataUtils {
 		}
 
     }
-
 }
 
 
