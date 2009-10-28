@@ -1,4 +1,4 @@
-body 
+body
 {
  background-image: url(../images/background.gif);
  background-color: #ffffff;
@@ -13,7 +13,7 @@ body
  text-align: center;
 }
 
-.center-page 
+.center-page
 {
  width: 746px;
  margin-top: 0;
@@ -24,19 +24,19 @@ body
  text-align: left;
 }
 
-#message 
+#message
 {
- 
+
 }
 
-h1 
+h1
 {
  font-size: 20px;
  color: #444444;
  font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
 }
 
-h2 
+h2
 {
  font-size: 12px;
  color: #000000;
@@ -44,33 +44,33 @@ h2
  font-weight: bold;
 }
 
-h3 
+h3
 {
- 
+
 }
 
-.hide 
+.hide
 {
  display: none;
 }
 
 /* ------------- Popup styles ----------------- */
-#popupContainer 
+#popupContainer
 {
  text-align: left;
 }
 
-#popupContainer a, #popupContainer a:active, #popupContainer a:visited, #popupContainer a:hover 
+#popupContainer a, #popupContainer a:active, #popupContainer a:visited, #popupContainer a:hover
 {
- 
+
 }
 
-#popupContainer a.expandedlink, #popupContainer a:active.expandedlink, #popupContainer a:visited.expandedlink, #popupContainer a:hover.expandedlink 
+#popupContainer a.expandedlink, #popupContainer a:active.expandedlink, #popupContainer a:visited.expandedlink, #popupContainer a:hover.expandedlink
 {
  font-weight: bold;
 }
 
-#popupMainArea 
+#popupMainArea
 {
  padding-top: 0px;
  padding-right: 0;
@@ -80,7 +80,7 @@ h3
  width: 612px;
 }
 
-#popupContentArea 
+#popupContentArea
 {
  padding-top: 0px;
  padding-right: 15px;
@@ -93,7 +93,7 @@ h3
  font-size: 12px;
 }
 
-#closeWindow 
+#closeWindow
 {
  height: 10px;
  font-size: 10px;
@@ -105,20 +105,20 @@ h3
  text-align: right;
 }
 
-#closeWindow a, #closeWindow a:active, #closeWindow a:visited, #closeWindow a:hover 
+#closeWindow a, #closeWindow a:active, #closeWindow a:visited, #closeWindow a:hover
 {
  color: #2F2F5F;
  text-decoration: none;
 }
 
-.evslogobg 
+.evslogobg
 {
  background-image: url(images/evs-logo-bg);
  background-repeat: repeat-x;
  width: 100%;
 }
 
-.pagetitle 
+.pagetitle
 {
  font-size: 18px;
  font-weight: bold;
@@ -130,7 +130,7 @@ h3
  border-bottom-style: solid;
 }
 
-.ncipopupbanner 
+.ncipopupbanner
 {
  width: 100%;
  background-color: #A90101;
@@ -138,7 +138,7 @@ h3
 }
 
 /* ------------- nci banner ------------------- */
-.ncibanner 
+.ncibanner
 {
  width: 100%;
  background-color: #A90101;
@@ -148,13 +148,13 @@ h3
 }
 
 /* ---------- end nci banner ------------------ */
-.banner 
+.banner
 {
  float: left;
  width: 383px;
 }
 
-.texttitle-blue 
+.texttitle-blue
 {
  font-size: 20px;
  color: #2F2F5F;
@@ -162,7 +162,7 @@ h3
  font-weight: bold;
 }
 
-.textsubtitle-blue 
+.textsubtitle-blue
 {
  font-size: 17px;
  color: #2F2F5F;
@@ -182,7 +182,7 @@ h3
  margin-bottom: 8px;
 }
 
-.texttitle-blue-rightjust 
+.texttitle-blue-rightjust
 {
  font-size: 10px;
  color: #2F2F5F;
@@ -191,14 +191,14 @@ h3
  text-align: right;
 }
 
-.texttitle-gray 
+.texttitle-gray
 {
  font-size: 20px;
  color: #444444;
  font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
 }
 
-.textbody 
+.textbody
 {
  font-size: 12px;
  color: #444444;
@@ -206,7 +206,7 @@ h3
  text-align: left;
 }
 
-.textbodyred 
+.textbodyred
 {
  font-size: 12px;
  color: #A90101;
@@ -215,7 +215,7 @@ h3
  font-weight: bold;
 }
 
-.textbodyredregular 
+.textbodyredregular
 {
  font-size: 12px;
  color: #A90101;
@@ -223,29 +223,29 @@ h3
  font-weight: bold;
 }
 
-.datarowdark 
+.datarowdark
 {
  font-size: 12px;
  background-color: #E5E5E5;
  font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
 }
 
-.datarowlight 
+.datarowlight
 {
  font-size: 12px;
  background-color: #FFFFFF;
  font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
 }
 
-.datatable 
+.datatable
 {
  font-size: 11px;
- width: 690px;
+ width: 705px;
  margin: 0;
  padding: 0;
 }
 
-.datatableheader 
+.datatableheader
 {
  font-size: 12px;
  color: #000000;
@@ -253,14 +253,14 @@ h3
  font-weight: bold;
 }
 
-.datacelltext 
+.datacelltext
 {
  font-size: 11px;
  color: #444444;
  word-wrap: break-word;
 }
 
-.search-globalnav 
+.search-globalnav
 {
  height: 82px;
  background-color: #fef1c8;
@@ -269,20 +269,20 @@ h3
  margin-right: 0;
 }
 
-.searchbox-top 
+.searchbox-top
 {
  background-image: url(../images/search-background.gif);
  background-repeat: repeat-y;
 }
 
-.searchbox-bottom 
+.searchbox-bottom
 {
  margin-bottom: 5px;
  background-image: url(../images/search-background.gif);
  background-repeat: repeat-y;
 }
 
-.searchbox 
+.searchbox
 {
  width: 350px;
  border-left-color: #aab0ba;
@@ -295,7 +295,7 @@ h3
  background-repeat: repeat-y;
 }
 
-.searchbox-input 
+.searchbox-input
 {
  width: 252px;
  height: 21px;
@@ -304,18 +304,18 @@ h3
  font-size: 12px;
 }
 
-.searchbox-btn 
+.searchbox-btn
 {
  vertical-align: middle;
 }
 
-.search-form 
+.search-form
 {
  margin: 0;
  padding: 4px;
 }
 
-#main-area 
+#main-area
 {
  border-left-color: #adadc2;
  border-left-width: 1px;
@@ -326,14 +326,14 @@ h3
  width: 743px;
 }
 
-.bannerarea 
+.bannerarea
 {
  width: 743px;
  height: 102px;
  background-color: #fef1c8;
 }
 
-.bluebar 
+.bluebar
 {
  background-image: url(../images/quicklinks.gif);
  background-repeat: repeat-x;
@@ -341,32 +341,32 @@ h3
 }
 
 /* ------------ Quick links ------------ */
-#quicklinksholder 
+#quicklinksholder
 {
  margin-left: 570px;
  padding-top: 7px;
 }
 
-#quicklinks, #quicklinks ul 
+#quicklinks, #quicklinks ul
 {
  padding: 0;
  margin: 0;
  list-style: none;
 }
 
-#quicklinks a 
+#quicklinks a
 {
  display: block;
  width: 146px;
 }
 
-#quicklinks li 
+#quicklinks li
 {
  float: left;
  width: 146px;
 }
 
-#quicklinks li ul 
+#quicklinks li ul
 {
  position: absolute;
  background-color: #ffffff;
@@ -383,17 +383,17 @@ h3
  border-bottom-style: solid;
 }
 
-#quicklinks li:hover ul 
+#quicklinks li:hover ul
 {
  left: auto;
 }
 
-#quicklinks li:hover ul, #quicklinks li.sfhover ul 
+#quicklinks li:hover ul, #quicklinks li.sfhover ul
 {
  left: auto;
 }
 
-#quicklinks li ul li a 
+#quicklinks li ul li a
 {
  text-decoration: none;
  padding-top: 3px;
@@ -405,13 +405,13 @@ h3
  color: #444444;
 }
 
-#quicklinks li ul li a:hover 
+#quicklinks li ul li a:hover
 {
  background-color: #e5e5e5;
 }
 
 /* ----------- End quick links ------------ */
-.pagecontent 
+.pagecontent
 {
  background-image: url(../images/content-background.gif);
  background-repeat: repeat-x;
@@ -423,7 +423,7 @@ h3
  margin: 0;
 }
 
-.global-nav, .global-nav a 
+.global-nav, .global-nav a
 {
  font-weight: bold;
  font-size: 11px;
@@ -431,21 +431,21 @@ h3
 }
 
 /* ------------- Tab bar classes ------------- */
-.tabtable 
+.tabtable
 {
  width: 690px;
  padding: 0;
  margin: 0;
 }
 
-.tabtable tr td img 
+.tabtable tr td img
 {
  vertical-align: bottom;
  margin: 0;
  padding: 0;
 }
 
-.tabtablecontentcontainer 
+.tabtablecontentcontainer
 {
  border-color: #2F2F5F;
  border-width: 1px;
@@ -456,13 +456,13 @@ h3
  padding-left: 5px;
 }
 
-.tabtablecontentcontainer a 
+.tabtablecontentcontainer a
 {
  font-size: 12px;
  text-decoration: underline;
 }
 
-.subtab a:link 
+.subtab a:link
 {
  font-size: 14px;
  color: #2F2F5F;
@@ -471,7 +471,7 @@ h3
  text-decoration: underline;
 }
 
-.subtab a:visited 
+.subtab a:visited
 {
  font-size: 14px;
  color: #2F2F5F;
@@ -480,7 +480,7 @@ h3
  text-decoration: underline;
 }
 
-.subtab a:hover 
+.subtab a:hover
 {
  font-size: 13px;
  color: #2F2F5F;
@@ -489,7 +489,7 @@ h3
  text-decoration: underline;
 }
 
-.subtab a:active 
+.subtab a:active
 {
  font-size: 14px;
  color: #2F2F5F;
@@ -499,7 +499,7 @@ h3
 }
 
 /* ------------- External Footer ------------- */
-.footer 
+.footer
 {
  border-top-color: #ae0101;
  border-top-width: 5px;
@@ -516,29 +516,29 @@ h3
  text-align: center;
 }
 
-.footer ul 
+.footer ul
 {
  margin: 0;
  padding: 0;
 }
 
-.footer ul li 
+.footer ul li
 {
  display: inline;
  padding: 0;
 }
 
-.footer a, .footer a:link, .footer a:visited, .footer a:active 
+.footer a, .footer a:link, .footer a:visited, .footer a:active
 {
  color: #666;
 }
 
-.footer a:hover 
+.footer a:hover
 {
  color: #333;
 }
 
-.footer p 
+.footer p
 {
  margin: 0;
  padding-top: 14px;
@@ -547,7 +547,7 @@ h3
  padding-left: 0;
 }
 
-.footer p img 
+.footer p img
 {
  margin-top: 12px;
  margin-right: 0;
@@ -557,26 +557,26 @@ h3
 }
 
 /************************** print styles ***********************************/
-@media print 
+@media print
 {
-.print-header 
+.print-header
 {
  display: none;
 }
 
-.mainbox-top, .mainbox-bottom 
+.mainbox-top, .mainbox-bottom
 {
  display: none;
  margin-bottom: 0;
 }
 
-#main-area 
+#main-area
 {
  border-width: 0;
 }
 }
 
-.redbutton 
+.redbutton
 {
  font-size: 10px;
  background-color: #A90101;
@@ -587,7 +587,7 @@ h3
  cursor: pointer;
 }
 
-.button 
+.button
 {
  text-decoration: none;
 }
