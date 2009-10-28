@@ -3829,9 +3829,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 						}
 					}
 				} else if (rel.compareTo("Other") == 0) {
-
-System.out.println(s);
-
 					String rela = (String) v.elementAt(5);
 					if (rela.compareTo("RO") != 0) {
 						u.add(s);
