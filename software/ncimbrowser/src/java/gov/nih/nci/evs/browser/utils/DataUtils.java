@@ -3329,7 +3329,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 				for(RelationshipTabResults result : relations) {
 				    String code = result.getCui();
-                    if (code.indexOf("@") == -1) {
+                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
 						String rela = result.getRela();
 						String source = result.getSource();
 						String name = result.getName();
@@ -3360,7 +3360,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 				for(RelationshipTabResults result : relations) {
 				    String code = result.getCui();
-                    if (code.indexOf("@") == -1) {
+                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
 						String rela = result.getRela();
 						String source = result.getSource();
 						String name = result.getName();
@@ -3551,18 +3551,22 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 			BySourceTabResults target = null;
 			for (int i=0; i<v.size(); i++) {
 				BySourceTabResults r = (BySourceTabResults) v.elementAt(i);
-				if (r.getSource().compareTo(source) == 0) {
-					if (target == null) {
-						target = r;
-					} else {
-						// select the higher ranked one as target
-                        String idx_target = NCImBrowserProperties.getRank(target.getType(), target.getSource());
-                        String idx_atom = NCImBrowserProperties.getRank(r.getType(), r.getSource());
-
-						if (idx_atom != null && idx_atom.compareTo(idx_target) > 0) {
+				if (source != null) {
+					if (r.getSource().compareTo(source) == 0) {
+						if (target == null) {
 							target = r;
+						} else {
+							// select the higher ranked one as target
+							String idx_target = NCImBrowserProperties.getRank(target.getType(), target.getSource());
+							String idx_atom = NCImBrowserProperties.getRank(r.getType(), r.getSource());
+
+							if (idx_atom != null && idx_atom.compareTo(idx_target) > 0) {
+								target = r;
+							}
 						}
 					}
+			    } else {
+					return r;
 				}
 			}
 			return target;
@@ -3666,7 +3670,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 				for(BySourceTabResults result : relations) {
 				    String code = result.getCui();
-                    if (code.indexOf("@") == -1) {
+                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
 						// check CUI_hashmap containsKey(rel$code)???
 						if (!CUI_hashset.contains(rel + "$" + code)) {
 							String rela = result.getRela();
@@ -3677,6 +3681,8 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							ms_find_highest_rank_atom = System.currentTimeMillis();
 							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
 							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+
+							/*
 							if (top_atom == null) {
 								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
 								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
@@ -3686,6 +3692,22 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							t = t + "|" + code + "|" + rela + "|" + category;
 
 							w.add(t);
+							*/
+
+                            if (top_atom == null) {
+                            	for (int k=0; k<v.size(); k++) {
+									top_atom = (BySourceTabResults) v.elementAt(k);
+								    t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+								    t = t + "|" + code + "|" + top_atom.getRela() + "|" + category;
+									w.add(t);
+								}
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+								t = t + "|" + code + "|" + rela + "|" + category;
+								w.add(t);
+							}
+
+
 							CUI_hashset.add(rel + "$" + code);
 
 							// Temporarily save non-RO other relationships
@@ -3721,7 +3743,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 				for(BySourceTabResults result : relations) {
 				    String code = result.getCui();
 
-                    if (code.indexOf("@") == -1) {
+                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
 						if (!CUI_hashset.contains(rel + "$" + code)) {
 							String rela = result.getRela();
 							if (rela == null || rela.compareTo("null") == 0) {
@@ -3732,15 +3754,28 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							ms_find_highest_rank_atom = System.currentTimeMillis();
 							BySourceTabResults top_atom = findHighestRankedAtom(v, sab);
 							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay + (System.currentTimeMillis() - ms_find_highest_rank_atom);
-
+/*
 							if (top_atom == null) {
 								Concept c = getConceptByCode("NCI MetaThesaurus", null, null, code);
 								t = c.getEntityDescription().getContent() + "|" + Constants.EXTERNAL_TERM_TYPE + "|" + Constants.EXTERNAL_TERM_SOURCE + "|" + Constants.EXTERNAL_TERM_SOURCE_CODE;
 							} else {
 								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
 							}
-							t = t + "|" + code + "|" + rela + "|" + category;
-							w.add(t);
+*/
+                            if (top_atom == null) {
+                            	for (int k=0; k<v.size(); k++) {
+									top_atom = (BySourceTabResults) v.elementAt(k);
+								    t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+								    t = t + "|" + code + "|" + top_atom.getRela() + "|" + category;
+									w.add(t);
+								}
+							} else {
+								t = top_atom.getTerm() + "|" + top_atom.getType() + "|" + top_atom.getSource() + "|" + top_atom.getCode();
+								t = t + "|" + code + "|" + rela + "|" + category;
+								w.add(t);
+							}
+
+							//w.add(t);
 							CUI_hashset.add(rel + "$" + code);
 
 							// Temporarily save non-RO other relationships
