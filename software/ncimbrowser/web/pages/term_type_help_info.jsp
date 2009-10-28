@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+
 <%
   String basePath = request.getContextPath();
 %>
@@ -27,6 +29,8 @@
         <%
           Vector abbr_vec = new Vector();
           Vector def_vec = new Vector();
+          
+          /*
           abbr_vec.add("AB");
           abbr_vec.add("AD");
           abbr_vec.add("AQ<sup>*</sup>");
@@ -62,6 +66,36 @@
           def_vec.add("Preferred term");
           def_vec.add("Chemical structure name");
           def_vec.add("Synonym");
+          */
+                    
+          Vector tty_vec = (Vector) request.getSession().getAttribute("TTY");
+          if (tty_vec == null) {
+		  String uri_ver = DataUtils.getCodingSchemeURIAndVersion("NCI MetaThesaurus", null);
+		  String uri = null;
+		  String version = null;
+		  if (uri_ver != null) {
+		      Vector u = DataUtils.parseData(uri_ver);
+		      uri = (String) u.elementAt(0);
+		      version = (String) u.elementAt(1);
+
+	              System.out.println(uri);
+	              System.out.println(version);
+          
+          	      tty_vec = MetadataUtils.getSourceMetaData(uri, version);
+          	      request.getSession().setAttribute("TTY", tty_vec);
+          	  }
+          }
+      
+          if (tty_vec != null) {
+	      for (int i=0; i<tty_vec.size(); i++) {
+		  String t = (String) tty_vec.elementAt(i);
+		  Vector w = DataUtils.parseData(t);
+		  abbr_vec.add((String) w.elementAt(0));
+		  def_vec.add((String) w.elementAt(1));
+	      }
+          }
+
+          
         %>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
         <tr>
