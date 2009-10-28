@@ -3615,17 +3615,17 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
 			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
 
-			System.out.println("Getting " + SOURCE_OF);
+			Debug.println("Getting " + SOURCE_OF);
 		   // long ms = System.currentTimeMillis();
 			map = mbs.getBySourceTabDisplay(CUI, sab, null, Direction.SOURCEOF);
-			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+			Debug.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 
-			System.out.println("\n\nGetting " + TARGET_OF);
+			Debug.println("\n\nGetting " + TARGET_OF);
 		   // ms = System.currentTimeMillis();
 		   // to be modified: BT and PAR only???
 			map2 = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
 
-			System.out.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+			Debug.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
 		} catch (Exception ex) {
 
 		}
@@ -3635,7 +3635,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
         Vector u = new Vector();
 		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map, map2);
-		System.out.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
+		Debug.println(action + " Run time (ms): " + (System.currentTimeMillis() - ms));
 
         HashSet CUI_hashset = new HashSet();
 
@@ -3793,7 +3793,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 					}
 				}
 			} else {
-			   System.out.println("(" + j + ") ??? " + s);
+			   Debug.println("(" + j + ") ??? " + s);
 			}
 		}
 		Debug.println("Run time (ms) for " + action + " " + (System.currentTimeMillis() - ms_remove_RO_delay));
@@ -3858,8 +3858,8 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		action = "initial sorting";
 		delay = System.currentTimeMillis() - ms_sort_delay;
 		Debug.println("Run time (ms) for " + action + " " + delay);
-		//Debug.println("Run time (ms) for " + action + " " + delay);
-        //DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
+		Debug.println("Run time (ms) for " + action + " " + delay);
+        DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
 		//DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
 
