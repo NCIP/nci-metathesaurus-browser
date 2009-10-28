@@ -1823,6 +1823,12 @@ System.out.println("WARNING: property_type not found -- " + property_type);
         return v;
     }
 
+    public static Vector<String> parseData(String line)
+    {
+		return parseData(line, "|");
+	}
+
+
     public static Vector<String> parseData(String line, String tab)
     {
         Vector data_vec = new Vector();
@@ -3868,5 +3874,39 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		return u;
 	}
 
+
+
+    public static String getCodingSchemeURIAndVersion(String codingSchemeName, String ltag)
+    {
+         if (codingSchemeName == null) return null;
+         try {
+             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+             CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
+             CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
+             for (int i=0; i<csra.length; i++)
+             {
+                CodingSchemeRendering csr = csra[i];
+                CodingSchemeSummary css = csr.getCodingSchemeSummary();
+                if (css.getFormalName().compareTo(codingSchemeName) == 0 || css.getLocalName().compareTo(codingSchemeName) == 0)
+                {
+                    if (ltag == null) return css.getCodingSchemeURI() + "|" + css.getRepresentsVersion();
+                    RenderingDetail rd = csr.getRenderingDetail();
+                    CodingSchemeTagList cstl = rd.getVersionTags();
+                    java.lang.String[] tags = cstl.getTag();
+                    for (int j=0; j<tags.length; j++)
+                    {
+                        String version_tag = (String) tags[j];
+                        if (version_tag.compareToIgnoreCase(ltag) == 0)
+                        {
+                            return css.getCodingSchemeURI() + "|" + css.getRepresentsVersion();
+                        }
+                    }
+                }
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return null;
+     }
 
 }
