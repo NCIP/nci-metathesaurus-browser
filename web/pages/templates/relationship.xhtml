@@ -42,15 +42,15 @@
     if (sort5 == null) sort5 = defaultSortOption;
 
     DataUtils util = new DataUtils();
-    
+
     HashMap hmap = null;//(HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
     if (hmap == null) {
       //hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
       hmap = util.getAssociationTargetHashMap(code_curr, sort_option);
       request.getSession().setAttribute("AssociationTargetHashMap", hmap);
     }
-    
-    
+
+
     Vector superconcept_vec = (Vector) hmap.get("Parent");
     Vector subconcept_vec = (Vector) hmap.get("Child");
     Vector broader_vec = (Vector) hmap.get("Broader");
@@ -74,7 +74,7 @@ if (incomplete_obj != null) {
 <p class="textbodyred">(WARNING: The relationship list shown below is incomplete due to size limits.)</p>
 <P/>
 <%
-    } 
+    }
 }
 %>
 <table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
@@ -106,7 +106,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
           <th class="dataTableHeader" scope="col" align="left">
@@ -126,7 +126,7 @@ if (incomplete_obj != null) {
               %>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
@@ -152,8 +152,8 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
               <%
               } else {
                   sort0 = "source";
@@ -161,12 +161,12 @@ if (incomplete_obj != null) {
                 <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_rel%>&sort0=<%=sort0%>&sort1=<%=sort1%>&sort2=<%=sort2%>&sort3=<%=sort3%>&sort4=<%=sort4%>&sort5=<%=sort5%>">
                    Rel. Source
                 </a>
-                
+
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                
-                
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
@@ -231,7 +231,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     <th class="dataTableHeader" scope="col" align="left">
@@ -251,7 +251,7 @@ if (incomplete_obj != null) {
               %>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
 
           </th>
@@ -278,9 +278,9 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               } else {
                   sort1 = "source";
@@ -290,9 +290,9 @@ if (incomplete_obj != null) {
                 </a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
@@ -356,7 +356,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     <th class="dataTableHeader" scope="col" align="left">
@@ -376,7 +376,7 @@ if (incomplete_obj != null) {
               %>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
 
           </th>
@@ -403,9 +403,9 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               } else {
                   sort2 = "source";
@@ -415,9 +415,9 @@ if (incomplete_obj != null) {
                 </a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
@@ -481,7 +481,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     <th class="dataTableHeader" scope="col" align="left">
@@ -501,7 +501,7 @@ if (incomplete_obj != null) {
               %>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
@@ -527,9 +527,9 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               } else {
                   sort3 = "source";
@@ -539,9 +539,9 @@ if (incomplete_obj != null) {
                 </a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
@@ -605,7 +605,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     <th class="dataTableHeader" scope="col" align="left">
@@ -625,7 +625,7 @@ if (incomplete_obj != null) {
               %>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
@@ -651,9 +651,9 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               } else {
                   sort4 = "source";
@@ -663,9 +663,9 @@ if (incomplete_obj != null) {
                 </a>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-               
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
@@ -729,7 +729,7 @@ if (incomplete_obj != null) {
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     </th>
@@ -750,7 +750,7 @@ if (incomplete_obj != null) {
               %>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" border="0">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
           <th class="dataTableHeader" scope="col" align="left">
@@ -776,9 +776,9 @@ if (incomplete_obj != null) {
                  Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                 
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               } else {
                   sort5 = "source";
@@ -788,9 +788,9 @@ if (incomplete_obj != null) {
                 </a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
-                
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>
+
               <%
               }
               %>
