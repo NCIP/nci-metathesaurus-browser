@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.browser.test;
 
+import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.Prompt;
 
@@ -37,6 +38,6 @@ public class Test extends TestBase {
     }
 
     public static void main(String[] args) {
-        new Test(3, args);
+        new Test(2, args);
     }
 }
