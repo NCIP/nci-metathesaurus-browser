@@ -2821,6 +2821,7 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 	}
 
 	public HashMap getAssociationTargetHashMap(String scheme, String version, String code, Vector sort_option) {
+
         Debug.println("(*) DataUtils getAssociationTargetHashMap ");
         Vector parent_asso_vec = new Vector(Arrays.asList(hierAssocToParentNodes_));
         Vector child_asso_vec = new Vector(Arrays.asList(hierAssocToChildNodes_));
