@@ -364,6 +364,8 @@ public class MetaTreeUtils {
     public HashMap getTreePathData(String scheme, String version, String sab, String code, int maxLevel) throws LBException {
 		if (sab == null) sab = NCI_SOURCE;
 
+long ms = System.currentTimeMillis();
+
 System.out.println("(*) MetaTreeUtils.getTreePathData code " + code);
 System.out.println("(*) MetaTreeUtils.getTreePathData sab " + sab);
 System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
@@ -376,7 +378,12 @@ System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
 
-		return getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
+		HashMap map = getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
+
+System.out.println("Run time (milliseconds) getTreePathData: " + (System.currentTimeMillis() - ms) );
+
+		return map;
+
     }
 
 
@@ -1001,23 +1008,33 @@ System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
         }
     }
 
-
     public static void dumpTreeItem(TreeItem ti) {
-		System.out.println(ti.text + " (" + ti.code + ")");
+		dumpTreeItem(ti, 0);
+	}
 
+
+    public static void dumpTreeItem(TreeItem ti, int level) {
+        String indent = "";
+        for (int i=0; i<level; i++) {
+			indent = indent + "\t";
+		}
+
+		System.out.println(indent + ti.text + " (" + ti.code + ")");
+		/*
 		if (ti.expandable)
 		{
-			System.out.println("\tnode.expandable");
+			System.out.println("\t" + indent + "node.expandable");
 		} else {
-			System.out.println("\tnode.NOT expandable");
+			System.out.println("\t" + indent + "node.NOT expandable");
 		}
+		*/
 
         try {
             for (String association : ti.assocToChildMap.keySet()) {
-				System.out.println("\nAssociation: " + association);
+				System.out.println("\n" + indent + " --- " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
                 for (TreeItem childItem : children) {
-					dumpTreeItem(childItem);
+					dumpTreeItem(childItem, level+1);
                 }
             }
         } catch (Exception e) {
@@ -1046,6 +1063,8 @@ System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
                     } else {
 						System.out.println("\tnode.NOT expandable");
 					}
+
+					dumpTreeItem(childItem, 0);
                 }
             }
         } catch (Exception e) {
@@ -1541,7 +1560,13 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + "
  */
         //Cell Aging (CUI C0007581)
         code = "C0007581";
-        new_map = test.getTreePathData(scheme, version, sab, code, -1);
+
+
+        code = "C0016504";
+        //new_map = test.getTreePathData(scheme, version, sab, code, -1);
+
+        new_map = test.getTreePathData(scheme, version, sab, code, 3);
+        test.dumpTreeItems(new_map);
 
 	}
 
