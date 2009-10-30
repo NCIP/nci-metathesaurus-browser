@@ -1,5 +1,17 @@
 //function alert() {} 
 
+function goToAnchor() {
+   var qstr = location.search.replace(/\?/,"&");
+   var pair = qstr.split("&");
+
+   for (var i=1; i<pair.length; i++) {
+      var item = pair[i].split("=");
+      if (item[0] == "anchor") {
+          location.href = item[1];
+      }
+   }
+}
+
 function printPage(text){
   text=document;
   print(text);
