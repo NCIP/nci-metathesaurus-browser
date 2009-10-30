@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test.performance;
 
 public class MainTest {
     private static final String SEPARATOR = 
