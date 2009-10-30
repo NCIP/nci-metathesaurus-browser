@@ -75,7 +75,7 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
-                <b>Term Type Help Information</b>
+                <b>NCIm Term Types</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
@@ -108,12 +108,7 @@ NCI Metathesaurus Term Types use short abbreviations to code the nature of each 
             %>
           </table>
           <br/>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
-            <tr class="textbody"><td align="left">
-*Note on special rules governing NCI PT, HD, and AQ term types: Each concept should have one, and only one, term coded with one of these three values. The NCI Preferred Term is always taken from one of the NCI terms, normally that with a type of PT (Preferred Term). However, in special cases, a concept will not have a PT term, but instead, will have either an HD (Header) term or an AQ term. These tags are considered equivalent to PT by the software. This means that a concept may have only as single NCI PT, or HD, or AQ term. In those cases where multiple antiquated terms are needed for a concept which is itself coded as antiquated, one should be tagged AQ and the rest tagged AQS.
-            </td></tr>
-            <tr><td height="10px"></td></tr>
-          </table>
+
         </div>
         <!-- End of Term Type content -->
       </div>
