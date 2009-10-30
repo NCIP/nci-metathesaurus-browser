@@ -1,10 +1,9 @@
 package gov.nih.nci.evs.browser.test.performance;
 
 import java.util.*;
-
 import org.LexGrid.concepts.*;
-
 import gov.nih.nci.evs.browser.common.*;
+import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
 
