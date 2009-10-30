@@ -24,6 +24,6 @@ public class Test extends TestBase {
     }
 
     public static void main(String[] args) {
-        new Test(0, args);
+        new Test(2, args);
     }
 }

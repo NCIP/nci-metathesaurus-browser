@@ -166,24 +166,8 @@ public class BySourceTest extends DataUtils {
         }
         DBG.debug("* Done");
     }
-    
-    private static void parse(String[] args) {
-        String prevArg = "";
-        for (int i = 0; i < args.length; ++i) {
-            String arg = args[i];
-            if (arg.equals("-propertyFile")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-propertyFile")) {
-                System.setProperty(
-                    "gov.nih.nci.evs.browser.NCImBrowserProperties", arg);
-                prevArg = "";
-            }
-        }
-    }
 
     public static void main(String[] args) {
-        parse(args);
-        
         DBG.setPerformanceTesting(true);
         BySourceTest test = new BySourceTest();
         boolean isContinue = true;
