@@ -3547,8 +3547,11 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 		}
 
 
-		public BySourceTabResults findHighestRankedAtom(Vector<BySourceTabResults> v, String source) {
+		public static BySourceTabResults findHighestRankedAtom(Vector<BySourceTabResults> v, String source) {
 			if (v == null) return null;
+			if (v.size() == 0) return null;
+			if (v.size() == 1) return (BySourceTabResults) v.elementAt(0);
+
 			BySourceTabResults target = null;
 			for (int i=0; i<v.size(); i++) {
 				BySourceTabResults r = (BySourceTabResults) v.elementAt(i);
@@ -3560,7 +3563,6 @@ Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 							// select the higher ranked one as target
 							String idx_target = NCImBrowserProperties.getRank(target.getType(), target.getSource());
 							String idx_atom = NCImBrowserProperties.getRank(r.getType(), r.getSource());
-
 							if (idx_atom != null && idx_atom.compareTo(idx_target) > 0) {
 								target = r;
 							}
