@@ -3,40 +3,27 @@ package gov.nih.nci.evs.browser.test;
 import gov.nih.nci.evs.browser.test.lexevs.*;
 import gov.nih.nci.evs.browser.test.performance.*;
 import gov.nih.nci.evs.browser.test.utils.*;
-import gov.nih.nci.evs.browser.utils.*;
 
 public class Test extends TestBase {
     public Test(int choice, String[] args) {
         super(choice, args);
     }
 
-    protected int prompt(int choice) {
-        println(Utils.SEPARATOR);
-        println("Main Menu:");
+    protected void displayOptions() {
+        println(getClass().getSimpleName() + " Menu:");
         println(INDENT + "1) " + "LexEvsTest");
         println(INDENT + "2) " + "PerformanceTest");
-        println(INDENT + "0) " + "Quit");
-        println(Utils.SEPARATOR);
-        choice = Prompt.prompt("Choose", choice);
-        return choice;
     }
     
-    protected boolean run(int choice, String[] args) {
-        boolean returnValue = true;
-        try {
-            switch (choice) {
-                case 1: LexEvsTest.main(args); break;
-                case 2: PerformanceTest.main(args); break;
-                default: returnValue = false; break;
-            }
-            println("");
-        } catch (Exception e) {
-            println(e.getClass().getSimpleName() + ": " + e.getMessage());
+    protected boolean runOption(int choice, String[] args) {
+        switch (choice) {
+        case 1: LexEvsTest.main(args); return true;
+        case 2: PerformanceTest.main(args); return true;
+        default: return false;
         }
-        return returnValue;
     }
 
     public static void main(String[] args) {
-        new Test(2, args);
+        new Test(0, args);
     }
 }
