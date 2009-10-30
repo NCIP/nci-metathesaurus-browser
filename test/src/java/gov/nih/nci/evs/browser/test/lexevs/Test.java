@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.test;
+package gov.nih.nci.evs.browser.test.lexevs;
 
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;

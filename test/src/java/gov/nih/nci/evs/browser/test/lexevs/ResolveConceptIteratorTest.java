@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.test;
+package gov.nih.nci.evs.browser.test.lexevs;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
