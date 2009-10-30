@@ -1,7 +1,5 @@
 package gov.nih.nci.evs.browser.test.performance;
 
-import java.util.*;
-import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
@@ -141,23 +139,7 @@ public class SearchUtilsTest extends SearchUtils {
         DBG.debug("* Done");
     }
 
-    private static void parse(String[] args) {
-        String prevArg = "";
-        for (int i = 0; i < args.length; ++i) {
-            String arg = args[i];
-            if (arg.equals("-propertyFile")) {
-                prevArg = arg;
-            } else if (prevArg.equals("-propertyFile")) {
-                System.setProperty(
-                    "gov.nih.nci.evs.browser.NCImBrowserProperties", arg);
-                prevArg = "";
-            }
-        }
-    }
-
     public static void main(String[] args) {
-        parse(args);
-
         DBG.setPerformanceTesting(true);
         SearchUtilsTest test = new SearchUtilsTest();
         boolean isContinue = true;
