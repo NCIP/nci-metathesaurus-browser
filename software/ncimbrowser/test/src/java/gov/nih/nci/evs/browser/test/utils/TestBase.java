@@ -69,5 +69,6 @@ public abstract class TestBase {
         return returnValue;
     }
     
-    protected abstract boolean runOption(int choice, String[] args);
+    protected abstract boolean runOption(int choice, String[] args)
+        throws Exception;
 }

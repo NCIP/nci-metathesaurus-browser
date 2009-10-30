@@ -16,7 +16,7 @@ public class PerformanceTest extends TestBase {
         println(INDENT + "5) " + "BySourceTest2");
     }
     
-    protected boolean runOption(int choice, String[] args) {
+    protected boolean runOption(int choice, String[] args) throws Exception {
         switch (choice) {
         case 1: SearchUtilsTest.main(args); return true;
         case 2: RelationshipTest.main(args); return true;
