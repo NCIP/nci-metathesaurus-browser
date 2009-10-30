@@ -2,7 +2,6 @@ package gov.nih.nci.evs.browser.test.lexevs;
 
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
-import gov.nih.nci.evs.browser.utils.test.Prompt;
 
 public class Test extends TestBase {
     public Test(int choice, String[] args) {
