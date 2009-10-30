@@ -1,58 +1,46 @@
 package gov.nih.nci.evs.browser.test.performance;
 
 import gov.nih.nci.evs.browser.test.utils.*;
+import gov.nih.nci.evs.browser.utils.*;
 
-public class Test {
-    private static final String SEPARATOR = 
-        "========================================" + 
-        "========================================";
-    private static String INDENT = "  ";
-    
-    private static void println(String text) {
-        System.out.println(text);
+public class Test extends TestBase {
+    public Test(int choice, String[] args) {
+        super(choice, args);
     }
     
-    public static void prompt(String[] args) {
-        int i = 1;
-        while (true) {
-            println(SEPARATOR);
-            println("Main Menu:");
-            println(INDENT + "1) " + "SearchUtilsTest");
-            println(INDENT + "2) " + "RelationshipTest");
-            println(INDENT + "3) " + "RelationshipTest2");
-            println(INDENT + "4) " + "BySourceTest");
-            println(INDENT + "5) " + "BySourceTest2");
-            println(INDENT + "0) " + "Quit");
-            println(SEPARATOR);
-            i = Prompt.prompt("Choose", i);
-            if (i == 0)
-                break;
-            try {
-                switch (i) {
+    protected int prompt(int choice) {
+        println(Utils.SEPARATOR);
+        println("Main Menu:");
+        println(INDENT + "1) " + "SearchUtilsTest");
+        println(INDENT + "2) " + "RelationshipTest");
+        println(INDENT + "3) " + "RelationshipTest2");
+        println(INDENT + "4) " + "BySourceTest");
+        println(INDENT + "5) " + "BySourceTest2");
+        println(INDENT + "0) " + "Quit");
+        println(Utils.SEPARATOR);
+        choice = Prompt.prompt("Choose", choice);
+        return choice;
+    }
+    
+    protected boolean run(int choice, String[] args) {
+        boolean returnValue = true;
+        try {
+            switch (choice) {
                 case 1: SearchUtilsTest.main(args); break;
                 case 2: RelationshipTest.main(args); break;
                 case 3: RelationshipTest2.main(args); break;
                 case 4: BySourceTest.main(args); break;
                 case 5: BySourceTest2.main(args); break;
-                default: println("Invalid choice.  Try again."); break;
-                }
-                println("");
-            } catch (Exception e) {
+                default: returnValue = false; break;
             }
+            println("");
+        } catch (Exception e) {
+            println(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
-        println("Quit");
+        return returnValue;
     }
-    
+
     public static void main(String[] args) {
-        int which = 5;
-        
-        switch (which) {
-        case 0: prompt(args); break;
-        case 1: SearchUtilsTest.main(args); break;
-        case 2: RelationshipTest.main(args); break;
-        case 3: RelationshipTest2.main(args); break;
-        case 4: BySourceTest.main(args); break;
-        case 5: BySourceTest2.main(args); break;
-        }
-    }
+        new Test(2, args);
+    }    
 }
