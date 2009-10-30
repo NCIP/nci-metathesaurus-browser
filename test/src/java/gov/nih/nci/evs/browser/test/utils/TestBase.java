@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.browser.test.utils;
 
+import gov.nih.nci.evs.browser.utils.*;
 import java.util.*;
 
 public abstract class TestBase {
@@ -46,7 +47,27 @@ public abstract class TestBase {
         println("Quit");
     }
     
-    protected abstract int prompt(int choice);
+    private int prompt(int choice) {
+        println(Utils.SEPARATOR);
+        displayOptions();
+        println(INDENT + "0) " + "Quit");
+        println(Utils.SEPARATOR);
+        choice = Prompt.prompt("Choose", choice);
+        return choice;
+    }
     
-    protected abstract boolean run(int choice, String[] args);
+    protected abstract void displayOptions();
+
+    private boolean run(int choice, String[] args) {
+        boolean returnValue = true;
+        try {
+            returnValue = runOption(choice, args);
+            println("");
+        } catch (Exception e) {
+            println(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+        return returnValue;
+    }
+    
+    protected abstract boolean runOption(int choice, String[] args);
 }
