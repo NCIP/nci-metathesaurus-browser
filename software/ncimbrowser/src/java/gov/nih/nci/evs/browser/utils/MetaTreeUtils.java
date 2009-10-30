@@ -63,7 +63,13 @@ import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 
 import org.LexGrid.concepts.Concept;
 
-
+import java.util.Map;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService.Direction;
+import org.LexGrid.lexevs.metabrowser.model.RelationshipTabResults;
+import org.LexGrid.lexevs.metabrowser.model.BySourceTabResults;
 
 
 public class MetaTreeUtils {
@@ -88,12 +94,6 @@ public class MetaTreeUtils {
 	private static boolean RESOLVE_CONCEPT = false;//true;
 
 	public MetaTreeUtils(){
-		init();
-	}
-
-	private void init(){
-		//lbs = LexBIGServiceImpl.defaultInstance();
-		//lbs = RemoteServerUtil.createLexBIGService();
 	}
 
     ///////////////////
@@ -364,12 +364,7 @@ public class MetaTreeUtils {
     public HashMap getTreePathData(String scheme, String version, String sab, String code, int maxLevel) throws LBException {
 		if (sab == null) sab = NCI_SOURCE;
 
-long ms = System.currentTimeMillis();
-
-System.out.println("(*) MetaTreeUtils.getTreePathData code " + code);
-System.out.println("(*) MetaTreeUtils.getTreePathData sab " + sab);
-System.out.println("(*) MetaTreeUtils.getTreePathData maxLevel " + maxLevel);
-
+		long ms = System.currentTimeMillis();
 
 		LexBIGService lbsvc = RemoteServerUtil.createLexBIGService();
 		LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbsvc
@@ -394,6 +389,7 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 	}
 
 
+/*
     public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
             CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel) throws LBException {
         if (sab == null) sab = NCI_SOURCE;
@@ -404,7 +400,9 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
         if (rcr == null) {
             Util_displayMessage("Unable to resolve a concept for CUI = '" + cui + "'");
             return null;
-        }
+        } else {
+System.out.println("getTreePathData " + rcr.getEntityDescription().getContent());
+		}
 
         // Dummy root (place holder)
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
@@ -425,6 +423,59 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
         }
 
         hmap.put(cui, ti);
+
+
+        return hmap;
+    }
+*/
+
+
+    public HashMap getTreePathData(LexBIGService lbsvc, LexBIGServiceConvenienceMethods lbscm, String scheme,
+            CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel) throws LBException {
+        if (sab == null) sab = NCI_SOURCE;
+        HashMap hmap = new HashMap();
+        long ms = System.currentTimeMillis();
+
+        ResolvedConceptReference rcr = resolveConcept(scheme, csvt, cui);
+        if (rcr == null) {
+            Util_displayMessage("Unable to resolve a concept for CUI = '" + cui + "'");
+            return null;
+        } else {
+System.out.println("getTreePathData " + rcr.getEntityDescription().getContent());
+		}
+
+        // Dummy root (place holder)
+        TreeItem ti = new TreeItem("<Root>", "Root node", null);
+        int pathsResolved = 0;
+        try {
+            // Identify the set of all codes on path from root
+            // to the focus code ...
+            TreeItem[] pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
+//KLO
+            pathsResolved = pathsFromRoot.length;
+            for (TreeItem rootItem : pathsFromRoot) {
+				if (rootItem.text.compareTo("NCI Thesaurus") == 0) {
+				// rootItem is NCI Thesaurus
+					for (String assoc : rootItem.assocToChildMap.keySet()) {
+						List<TreeItem> children = rootItem.assocToChildMap.get(assoc);
+						for (TreeItem childItem : children) {
+						   ti.addChild(assoc, childItem);
+						}
+					}
+			    } else {
+					ti.addChild("CHD", rootItem);
+				}
+			}
+			ti.expandable = true;
+
+        } finally {
+            System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+                    + pathsResolved + " paths from root.");
+        }
+
+        hmap.put(cui, ti);
+
+
         return hmap;
     }
 
@@ -817,6 +868,79 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 		return knt;
 	}
 
+	public int getSubconceptCountExt(String scheme, String version, String CUI, String sab, String asso_name, boolean direction)
+	{
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add(asso_name);
+
+		Map<String,List<BySourceTabResults>> map = null;
+
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+			if (direction) {
+				map = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.SOURCEOF);
+			} else {
+				map = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
+			}
+		} catch (Exception ex) {
+            ex.printStackTrace();
+            return -1;
+		}
+		int knt = 0;
+		HashSet hset = new HashSet();
+		for(String rel : map.keySet()){
+			//System.out.println("(***) rel: " + rel);
+			List<BySourceTabResults> relations = map.get(rel);
+			for(BySourceTabResults result : relations) {
+				String code = result.getCui();
+				if (code.compareTo(CUI) != 0 && !hset.contains(code)) {
+					hset.add(code);
+				}
+				String name = result.getTerm();
+				//System.out.println("(***) subconcept: " + name + " " + code);
+				knt++;
+			}
+		}
+		return hset.size();
+	}
+
+
+	public boolean hasSubconcepts(LexBIGService lbs, MetaBrowserService mbs, String CUI, String sab, String asso_name, boolean direction)
+	{
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add(asso_name);
+
+		Map<String,List<BySourceTabResults>> map = null;
+
+		//LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		//MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+			if (direction) {
+				map = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.SOURCEOF);
+			} else {
+				map = mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list, Direction.TARGETOF);
+			}
+		} catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+		}
+
+		for(String rel : map.keySet()){
+			//System.out.println("(***) rel: " + rel);
+			List<BySourceTabResults> relations = map.get(rel);
+			for(BySourceTabResults result : relations) {
+				String code = result.getCui();
+				if (code.compareTo(CUI) != 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 	public int getSubconceptCount(String scheme, String version, String code, String sab)
 	{
@@ -841,6 +965,7 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab, boolean associationsNavigatedFwd)
 	{
+		/*
         HashMap hmap = new HashMap();
         TreeItem ti = null;
         long ms = System.currentTimeMillis();
@@ -942,6 +1067,68 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 		}
 		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
+		*/
+		return getSubconcepts(code, sab, "CHD", associationsNavigatedFwd);
+    }
+
+//KLO
+	public HashMap getSubconcepts(String code, String sab, String association, boolean associationsNavigatedFwd)
+	{
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+
+        TreeItem ti = null;
+        HashMap hmap = new HashMap();
+        long ms = System.currentTimeMillis();
+
+		try {
+			//LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+			//		.getGenericExtension("LexBIGServiceConvenienceMethods");
+			//lbscm.setLexBIGService(lbSvc);
+			String name = getCodeDescription(lbs, "NCI MetaThesaurus", null, code);
+			ti = new TreeItem(code, name);
+			ti.expandable = false;
+
+			List<String> par_chd_assoc_list = new ArrayList();
+			par_chd_assoc_list.add(association);
+
+			Map<String,List<BySourceTabResults>> map = null;
+			try {
+				mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+				if (associationsNavigatedFwd) {
+					map = mbs.getBySourceTabDisplay(code, sab, par_chd_assoc_list, Direction.SOURCEOF);
+				} else {
+					map = mbs.getBySourceTabDisplay(code, sab, par_chd_assoc_list, Direction.TARGETOF);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return hmap;
+			}
+
+			HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+			Set keyset = cui2SynonymsMap.keySet();
+			Iterator iterator = keyset.iterator();
+			while (iterator.hasNext()) {
+				String child_cui = (String) iterator.next();
+				TreeItem sub = null;
+				Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+				BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
+				//BySourceTabResults result = (BySourceTabResults) v.elementAt(0);
+				sub = new TreeItem(child_cui, result.getTerm());
+				sub.expandable = hasSubconcepts(lbs, mbs, child_cui, "NCI", association, associationsNavigatedFwd);
+				ti.addChild(association, sub);
+				ti.expandable = true;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return hmap;
+		}
+
+		hmap.put(code, ti);
+
+		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		return hmap;
     }
 
 
@@ -1020,19 +1207,11 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 		}
 
 		System.out.println(indent + ti.text + " (" + ti.code + ")");
-		/*
-		if (ti.expandable)
-		{
-			System.out.println("\t" + indent + "node.expandable");
-		} else {
-			System.out.println("\t" + indent + "node.NOT expandable");
-		}
-		*/
-
         try {
             for (String association : ti.assocToChildMap.keySet()) {
 				System.out.println("\n" + indent + " --- " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
+
                 for (TreeItem childItem : children) {
 					dumpTreeItem(childItem, level+1);
                 }
@@ -1045,16 +1224,20 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
 
 
     public static void dumpTreeItems(HashMap hmap) {
+
         try {
             Set keyset = hmap.keySet();
             Object[] objs = keyset.toArray();
             String code = (String) objs[0];
+
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
-				System.out.println("\nassociation: " + association);
+				System.out.println("\n--- " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
+
                 for (TreeItem childItem : children) {
-                    System.out.println(childItem.text + "(" + childItem.code + ")");
+                    //System.out.println(childItem.text + "(" + childItem.code + ")");
+                    /*
                     int knt = 0;
                     if (childItem.expandable)
                     {
@@ -1063,7 +1246,7 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
                     } else {
 						System.out.println("\tnode.NOT expandable");
 					}
-
+					*/
 					dumpTreeItem(childItem, 0);
                 }
             }
@@ -1281,18 +1464,19 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
             String scheme, CodingSchemeVersionOrTag csvt,
             String sab, int maxLevel) throws LBException {
 
-System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel);
-
-
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
         TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
 
-		int count = getSubconceptCount(scheme, null, rcr.getCode(), sab, "CHD", true);
-		ti.expandable = false;
-		if (count > 0) {
-			ti.expandable = true;
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+		} catch (Exception ex) {
+
 		}
+
+		ti.expandable = hasSubconcepts(lbs, mbs, rcr.getCode(), sab, "CHD", true);
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
 
@@ -1302,12 +1486,14 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel);
         // from tree root to leaves.  Build the paths to root here
         // by processing upstream (child to parent) relationships.
 
-        buildPathsToUpperNodes(
-            ti, rcr, scheme, csvt, sab,
+        //buildPathsToUpperNodes(
+		buildPathsToUpperNodesExt(lbs, mbs,
+            ti, sab,
             new HashMap<String, TreeItem>(),
-            rootItems, visited_links, maxLevel, 0);//, hierAssocToParentNodes_, false);
-
-
+            rootItems,
+            visited_links,
+            maxLevel,
+            0);//, hierAssocToParentNodes_, false);
         // Return root items discovered during child to parent
         // processing.
         return rootItems.toArray(new TreeItem[rootItems.size()]);
@@ -1337,13 +1523,14 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel);
      * @throws LBException
      */
 
+
+
+
    protected void buildPathsToUpperNodes(TreeItem ti, ResolvedConceptReference rcr,
             String scheme, CodingSchemeVersionOrTag csvt,
             String sab, Map<String, TreeItem> code2Tree,
             Set<TreeItem> roots, Set<String> visited_links, int maxLevel, int currLevel)
         throws LBException {
-
-System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + " currLevel " + currLevel );
 
         if (maxLevel != -1 && currLevel > maxLevel)
         {
@@ -1460,6 +1647,131 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + "
     }
 
 
+	public HashMap createCUI2SynonymsHahMap(Map<String,List<BySourceTabResults>> map) {
+		HashMap hmap = new HashMap();
+		for(String rel : map.keySet()){
+			List<BySourceTabResults> relations = map.get(rel);
+			for(BySourceTabResults result : relations) {
+				String rela = result.getRela();
+				String cui = result.getCui();
+				String source = result.getSource();
+				String name = result.getTerm();
+
+				Vector v = null;
+				if (hmap.containsKey(cui)) {
+					v = (Vector) hmap.get(cui);
+				} else {
+					v = new Vector();
+				}
+				v.add(result);
+				hmap.put(cui, v);
+			}
+		}
+		return hmap;
+	}
+
+
+   protected void buildPathsToUpperNodesExt(
+	        LexBIGService lbs, MetaBrowserService mbs,
+	        TreeItem ti,
+            String sab,
+            Map<String, TreeItem> code2Tree,
+            Set<TreeItem> roots,
+            Set<String> visited_links,
+            int maxLevel,
+            int currLevel)
+        throws LBException {
+
+        if (maxLevel != -1 && currLevel > maxLevel)
+        {
+			return;
+		}
+
+
+        // Only need to process a code once ...
+        if (code2Tree.containsKey(ti.code))
+            return;
+
+        // Cache for future reference.
+        code2Tree.put(ti.code, ti);
+
+        // UMLS relations can be defined with forward direction
+        // being parent to child or child to parent on a source
+        // by source basis.  Iterate twice to ensure completeness;
+        // once navigating child to parent relations forward
+        // and once navigating parent to child relations
+        // backward.  Both have the net effect of navigating
+        // from the bottom of the hierarchy to the top.
+        boolean isRoot = true;
+
+        // find parents:
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+
+		Map<String,List<BySourceTabResults>> map = null;
+
+		//LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		//MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+			map = mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list, Direction.TARGETOF);
+		} catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+		}
+
+		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+		Set keyset = cui2SynonymsMap.keySet();
+		Iterator iterator = keyset.iterator();
+
+		while (iterator.hasNext()) {
+			String parent_cui = (String) iterator.next();
+			Vector v = (Vector) cui2SynonymsMap.get(parent_cui);
+			BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
+			if (result == null) {
+			   result = (BySourceTabResults) v.elementAt(0);
+			}
+			//BySourceTabResults result = (BySourceTabResults) v.elementAt(0);
+			String link = ti.code + "|" + parent_cui;
+			if (!visited_links.contains(link)) {
+
+				visited_links.add(link);
+				TreeItem tiParent = code2Tree.get(parent_cui);
+				if (tiParent == null) {
+						tiParent = new TreeItem(parent_cui, result.getTerm());
+				}
+
+						// Add immediate children of the parent code with an
+						// indication of sub-nodes (+).  Codes already
+						// processed as part of the path are ignored since
+						// they are handled through recursion.
+
+						tiParent = addChildrenExt(lbs, mbs, tiParent, sab, parent_cui, code2Tree.keySet(), code2Tree);
+						tiParent.addChild("CHD", ti);
+
+						// Try to go higher through recursion.
+						buildPathsToUpperNodesExt(lbs, mbs, tiParent,
+							sab, code2Tree, roots, visited_links, maxLevel, currLevel+1);
+
+						code2Tree.put(parent_cui, tiParent);
+				    //}
+
+
+				//isRoot = false;
+			}
+		}
+
+		code2Tree.put(ti.code, ti);
+		isRoot = false;
+        if (maxLevel != -1 && currLevel == maxLevel) {
+			isRoot = true;
+		}
+        if (isRoot) {
+            roots.add(ti);
+		}
+    }
+
+
     public void dumpTree(HashMap hmap, String focusCode, int level) {
         try {
             Set keyset = hmap.keySet();
@@ -1513,9 +1825,47 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + "
             ) throws LBException {
         boolean associationsNavigatedFwd = true;
         String[] associationsToNavigate = new String[] {"CHD"};
-
         return addChildren(ti, scheme, csvt, sab, code, codesToExclude, associationsToNavigate, associationsNavigatedFwd );
+	}
 
+    public TreeItem addChildrenExt(LexBIGService lbs, MetaBrowserService mbs, TreeItem ti,
+            String sab, String code, Set<String> codesToExclude, Map<String, TreeItem> code2Tree
+            ) throws LBException {
+
+		List<String> par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+
+		Map<String,List<BySourceTabResults>> map = null;
+		try {
+			//mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+			map = mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list, Direction.SOURCEOF);
+		} catch (Exception ex) {
+            ex.printStackTrace();
+            return ti;
+		}
+
+		HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+		ti.expandable = false;
+		Set keyset = cui2SynonymsMap.keySet();
+		Iterator iterator = keyset.iterator();
+		while (iterator.hasNext()) {
+			String child_cui = (String) iterator.next();
+			//System.out.println("\tchild_cui: " + child_cui);
+			TreeItem sub = null;
+			if (code2Tree.containsKey(child_cui)) {
+				sub = (TreeItem) code2Tree.get(child_cui);
+			} else {
+				Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+				BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
+				//BySourceTabResults result = (BySourceTabResults) v.elementAt(0);
+				sub = new TreeItem(child_cui, result.getTerm());
+				sub.expandable = hasSubconcepts(lbs, mbs, child_cui, "NCI", "CHD", true);
+		    }
+            ti.addChild("CHD", sub);
+            ti.expandable = true;
+		}
+
+        return ti;
 	}
 
 
@@ -1530,44 +1880,25 @@ System.out.println("(*) MetaTreeUtils.buildPathsToRoot maxLevel " + maxLevel + "
 
         HashMap new_map = null;
         code = "C1154313";
+
+        code = "C0012634";
+        new_map = test.getSubconcepts(code, sab, "CHD", true);
+        test.dumpTreeItems(new_map);
 /*
-        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
-        test.dumpTreeItems(new_map);
-
-        code = "CL354459";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
-        test.dumpTreeItems(new_map);
-
-        code = "CL354459";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
-        test.dumpTreeItems(new_map);
-
-        code = "C0031308";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
-        test.dumpTreeItems(new_map);
-
-        code = "C0031308";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
-        test.dumpTreeItems(new_map);
-
-        code = "C0007581";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "PAR", false);
-        test.dumpTreeItems(new_map);
-
-        code = "C0007581";
-        new_map = test.getSubconcepts(scheme, version, code, sab, "hasSubtype", true);
-        test.dumpTreeItems(new_map);
- */
         //Cell Aging (CUI C0007581)
         code = "C0007581";
 
 
         code = "C0016504";
+
+        code = "C0025202";
+
+        //code = "C1268197";
         //new_map = test.getTreePathData(scheme, version, sab, code, -1);
 
-        new_map = test.getTreePathData(scheme, version, sab, code, 3);
+        new_map = test.getTreePathData(scheme, version, sab, code, -1);
         test.dumpTreeItems(new_map);
-
+*/
 	}
 
 }
