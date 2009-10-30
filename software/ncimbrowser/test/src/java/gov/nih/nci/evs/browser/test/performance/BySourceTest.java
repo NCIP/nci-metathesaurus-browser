@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test.performance;
 
 import java.util.*;
 
@@ -6,8 +6,9 @@ import org.LexGrid.concepts.*;
 
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.utils.*;
+import gov.nih.nci.evs.browser.utils.test.*;
 
-public class BySourceTest2 extends DataUtils {
+public class BySourceTest extends DataUtils {
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayRelationships = false;
@@ -15,21 +16,23 @@ public class BySourceTest2 extends DataUtils {
     private String _sab = "NCI";  // Source Abbreviation
     private String _sortBy = "cui";
 
-    public Vector getNeighborhoodSynonyms(String code, String sab) {
+    public Vector getNeighborhoodSynonyms(String scheme, String version, String code, String sab) {
         if (_displayParameters) {
             DBG.debug("* Search parameters:");
+            DBG.debug("  * scheme = " + scheme);
+            DBG.debug("  * version = " + version);
             DBG.debug("  * code = " + code);
             DBG.debug("  * sab = " + sab);
         }
         DBG.debug(DBG.isDisplayDetails(), "* Details: " + code);
-        return super.getNeighborhoodSynonyms(code, sab);
+        return super.getNeighborhoodSynonyms(scheme, version, code, sab);
     }
 
     public void getNeighborhoodSynonymsTest(String scheme, String version, 
         String code, String sab, String sortBy) {
         DBG.clearTabbbedValues();
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector vector = getNeighborhoodSynonyms(code, sab);
+        Vector vector = getNeighborhoodSynonyms(scheme, version, code, sab);
         long duration = stopWatch.getDuration();
         stopWatch.start();
         DataUtils.sortSynonymData(vector, sortBy);
@@ -183,7 +186,7 @@ public class BySourceTest2 extends DataUtils {
         parse(args);
         
         DBG.setPerformanceTesting(true);
-        BySourceTest2 test = new BySourceTest2();
+        BySourceTest test = new BySourceTest();
         boolean isContinue = true;
         do {
             test.runTest();

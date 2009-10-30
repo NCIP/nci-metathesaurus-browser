@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils.test;
+package gov.nih.nci.evs.browser.test.performance;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
