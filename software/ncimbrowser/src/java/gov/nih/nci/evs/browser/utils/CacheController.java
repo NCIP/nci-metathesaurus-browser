@@ -227,7 +227,7 @@ public class CacheController
                 CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
                 if (version != null) csvt.setVersion(version);
                 //list = new DataUtils().getSourceHierarchyRoots(scheme, csvt, NCI_SOURCE);
-                list = MetaTreeUtils.getSourceHierarchyRoots(scheme, csvt, NCI_SOURCE);
+                list = (new MetaTreeUtils()).getSourceHierarchyRoots(scheme, csvt, NCI_SOURCE);
                 //SortUtils.quickSort(list);
 
                 nodeArray = list2JSONArray(list);
