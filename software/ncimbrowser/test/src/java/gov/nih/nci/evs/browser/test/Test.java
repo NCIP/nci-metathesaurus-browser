@@ -15,7 +15,7 @@ public class Test extends TestBase {
         println(INDENT + "2) " + "PerformanceTest");
     }
     
-    protected boolean runOption(int choice, String[] args) {
+    protected boolean runOption(int choice, String[] args) throws Exception {
         switch (choice) {
         case 1: LexEvsTest.main(args); return true;
         case 2: PerformanceTest.main(args); return true;

@@ -15,7 +15,7 @@ public class LexEvsTest extends TestBase {
         println(INDENT + "3) " + "TestExtension");
     }
     
-    protected boolean runOption(int choice, String[] args) {
+    protected boolean runOption(int choice, String[] args) throws Exception {
         switch (choice) {
         case 1: RegExpTest.main(args); return true;
         case 2: ResolveConceptIteratorTest.main(args); return true;
