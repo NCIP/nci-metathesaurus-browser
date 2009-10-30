@@ -3,8 +3,8 @@ package gov.nih.nci.evs.browser.test.lexevs;
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-public class Test extends TestBase {
-    public Test(int choice, String[] args) {
+public class LexEvsTest extends TestBase {
+    public LexEvsTest(int choice, String[] args) {
         super(choice, args);
     }
 
@@ -37,6 +37,6 @@ public class Test extends TestBase {
     }
 
     public static void main(String[] args) {
-        new Test(2, args);
+        new LexEvsTest(2, args);
     }
 }

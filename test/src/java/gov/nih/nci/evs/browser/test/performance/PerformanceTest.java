@@ -3,8 +3,8 @@ package gov.nih.nci.evs.browser.test.performance;
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 
-public class Test extends TestBase {
-    public Test(int choice, String[] args) {
+public class PerformanceTest extends TestBase {
+    public PerformanceTest(int choice, String[] args) {
         super(choice, args);
     }
     
@@ -41,6 +41,6 @@ public class Test extends TestBase {
     }
 
     public static void main(String[] args) {
-        new Test(2, args);
+        new PerformanceTest(2, args);
     }    
 }
