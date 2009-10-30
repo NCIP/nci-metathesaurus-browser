@@ -4,6 +4,10 @@
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+
     <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
         <param-value>server</param-value>
