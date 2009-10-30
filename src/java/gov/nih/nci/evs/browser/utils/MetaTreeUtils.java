@@ -107,7 +107,7 @@ public class MetaTreeUtils {
 	 * @throws Exception
 	 */
 
-
+/*
     public static List getSourceHierarchyRoots(
         String scheme,
         CodingSchemeVersionOrTag csvt,
@@ -124,6 +124,38 @@ public class MetaTreeUtils {
 		   }
 		   SortUtils.quickSort(list);
 		   return list;
+	    } catch (Exception ex) {
+
+		}
+		return new ArrayList();
+    }
+*/
+
+    public List getSourceHierarchyRoots(
+        String scheme,
+        CodingSchemeVersionOrTag csvt,
+        String sab) throws LBException
+    {
+		try {
+			String code = "C1140168";
+			HashMap hmap = getSubconcepts(code, sab, "CHD", true);
+
+			ArrayList list = new ArrayList();
+			TreeItem ti = (TreeItem) hmap.get(code);
+			for (String assoc : ti.assocToChildMap.keySet()) {
+				List<TreeItem> roots = ti.assocToChildMap.get(assoc);
+				for (int k=0; k<roots.size(); k++) {
+					TreeItem root = roots.get(k);
+					ResolvedConceptReference rcr = new ResolvedConceptReference();
+					EntityDescription desc = new EntityDescription();
+					desc.setContent(root.text);
+					rcr.setEntityDescription(desc);
+					rcr.setCode(root.code);
+					list.add(rcr);
+			    }
+			}
+			SortUtils.quickSort(list);
+			return list;
 	    } catch (Exception ex) {
 
 		}
@@ -907,7 +939,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 	}
 
 
-	public boolean hasSubconcepts(LexBIGService lbs, MetaBrowserService mbs, String CUI, String sab, String asso_name, boolean direction)
+	public static boolean hasSubconcepts(LexBIGService lbs, MetaBrowserService mbs, String CUI, String sab, String asso_name, boolean direction)
 	{
 		List<String> par_chd_assoc_list = new ArrayList();
 		par_chd_assoc_list.add(asso_name);
@@ -1647,7 +1679,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
     }
 
 
-	public HashMap createCUI2SynonymsHahMap(Map<String,List<BySourceTabResults>> map) {
+	public static HashMap createCUI2SynonymsHahMap(Map<String,List<BySourceTabResults>> map) {
 		HashMap hmap = new HashMap();
 		for(String rel : map.keySet()){
 			List<BySourceTabResults> relations = map.get(rel);
