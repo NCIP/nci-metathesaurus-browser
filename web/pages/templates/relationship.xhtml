@@ -61,47 +61,46 @@
     String label = "";
     String rel_value = "";
 
-%>
-<p class="textsubtitle-blue">Relationships with other NCI Metathesaurus Concepts:</p>
-<P/>
+ %>
+  <p class="textsubtitle-blue">Relationships with other NCI Metathesaurus Concepts:</p>
 <%
-Object incomplete_obj = hmap.get(DataUtils.INCOMPLETE);
-String incomplete = "[Not Set]";
-if (incomplete_obj != null) {
-    incomplete = (String) incomplete_obj;
-    if (incomplete.compareToIgnoreCase("true") == 0) {
-%>
-<p class="textbodyred">(WARNING: The relationship list shown below is incomplete due to size limits.)</p>
-<P/>
+  Object incomplete_obj = hmap.get(DataUtils.INCOMPLETE);
+  String incomplete = "[Not Set]";
+  if (incomplete_obj != null) {
+      incomplete = (String) incomplete_obj;
+      if (incomplete.compareToIgnoreCase("true") == 0) {
+ %>
+  <p class="textbodyred">(WARNING: The relationship list shown below is incomplete due to size limits.)</p>
 <%
-    }
-}
+      }
+  }
 %>
-<table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
-  <TR>
-    <TD class="subtab" align="center"><b>
-      <A HREF="#Parent">Parents</A> |
-      <A HREF="#Child">Children</A> |
-      <A HREF="#Broader">Broader</A> |
-      <A HREF="#Narrower">Narrower</A> |
-      <A HREF="#Sibling">Siblings</A> |
-      <A HREF="#Other">Other</A>
-    </TD>
-  </TR>
-</table>
-
+  <table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
+    <tr>
+      <td class="subtab" align="center">
+        <b>
+          <a href="#Parent">Parents</a> |
+          <a href="#Child">Children</a> |
+          <a href="#Broader">Broader</a> |
+          <a href="#Narrower">Narrower</a> |
+          <a href="#Sibling">Siblings</a> |
+          <a href="#Other">Other</a>
+        </b>
+      </td>
+    </tr>
+  </table>
   <p>
-    <%
+<%
       label = "Parent Concepts:";
       rel_value = "Parent";
       if (superconcept_vec.size() <= 0)
       {
-    %>
-        <b><a name="Parent"><%=label%><a></b> <i>(none)</i>
-    <%
+ %>
+        <b><a name="Parent"><%=label%></a></b> <i>(none)</i>
+<%
       } else {
-    %>
-        <b><a name="Parent"><%=label%><a></b>
+ %>
+        <b><a name="Parent"><%=label%></a></b>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -223,11 +222,11 @@ if (incomplete_obj != null) {
       if (subconcept_vec.size() <= 0)
       {
     %>
-        <b><a name="Child"><%=label%><a></b> <i>(none)</i>
+        <b><a name="Child"><%=label%></a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><a name="Child"><%=label%><a></b>
+        <b><a name="Child"><%=label%></a></b>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -349,11 +348,11 @@ if (incomplete_obj != null) {
       if (broader_vec.size() <= 0)
       {
     %>
-        <b><a name="Broader"><%=label%><a></b><i>(none)</i>
+        <b><a name="Broader"><%=label%></a></b><i>(none)</i>
     <%
       } else {
     %>
-        <b><a name="Broader"><%=label%><a></b>
+        <b><a name="Broader"><%=label%></a></b>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -475,11 +474,11 @@ if (incomplete_obj != null) {
       if (narrower_vec.size() <= 0)
       {
     %>
-        <b><a name="Narrower"><%=label%><a></b> <i>(none)</i>
+        <b><a name="Narrower"><%=label%></a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><a name="Narrower"><%=label%><a></b>
+        <b><a name="Narrower"><%=label%></a></b>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -600,11 +599,11 @@ if (incomplete_obj != null) {
       if (sibling_vec.size() <= 0)
       {
     %>
-        <b><a name="Sibling"><%=label%><a></b> <i>(none)</i>
+        <b><a name="Sibling"><%=label%></a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><a name="Sibling"><%=label%><a>
+        <b><a name="Sibling"><%=label%></a>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -725,11 +724,11 @@ if (incomplete_obj != null) {
       if (other_vec.size() <= 0)
       {
     %>
-        <b><a name="Other"><%=label%><a></b> <i>(none)</i>
+        <b><a name="Other"><%=label%></a></b> <i>(none)</i>
     <%
       } else {
     %>
-        <b><a name="Other"><%=label%><a>
+        <b><a name="Other"><%=label%></a>
   <table class="dataTable">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
@@ -844,7 +843,6 @@ if (incomplete_obj != null) {
     %>
   </p>
   <%-- DEBUG: incomplete_obj: <%=incomplete_obj%> incomplete: <%=incomplete%><br/> --%>
-
 <%
 }
 %>
