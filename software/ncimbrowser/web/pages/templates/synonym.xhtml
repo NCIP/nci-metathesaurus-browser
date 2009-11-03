@@ -4,10 +4,8 @@
   {
     Concept syn_details_concept = (Concept) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
-
     %>
     <p class="textsubtitle-blue">Synonym Details</p>
-    <div>
       <table class="dataTable" border="0" width=1000>
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
@@ -79,7 +77,6 @@
               %>
           </th>
         </tr>
-
         <%
           Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
           Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
@@ -108,7 +105,6 @@
           }
         %>
       </table>
-    </div>
     <%
   }
 %>
