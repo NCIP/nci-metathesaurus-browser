@@ -46,7 +46,7 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
-                <b>Relationship Help Information</b>
+                <b>NCIm Relationships</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
@@ -58,24 +58,28 @@
           <hr/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody"><td align="left">
-
-<p>
-Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
-<ul>
-<li>
-<b>Relationship (REL)</b>: A Metathesaurus relationship label, providing a consistent set of codes for all relationships from all sources.
-</li>
-<li>
-<b>Relationship Attribute (RELA)</b>: The more specific label, when available, used by individual sources to represent relationships.
-</li>
-</ul>
-These data are not consistently stored and linked in the current LexBIG database and LexEVS 5.0 interface, so this browser release presents relationships in a smaller set of categories that can be applied fairly reliably, and presents RELA data where available with the caveat that it is seriously incomplete.  The  next browser release will completely report both sets of values, as asserted by individual sources.
-</p>
-<p>
-<b>The Relationship (REL)</b> labels in NCIm are listed below, grouped by the broader categories used to report them in the initial release of the NCIm Browser:
-</p>
-
-
+              <p>
+              Relationship information in the NCI Metathesaurus is represented by two interconnected sets of descriptions:
+              <ul>
+              <li>
+              <b>Relationship (REL)</b>: A Metathesaurus relationship label, providing a consistent set of codes for all relationships from all sources.
+              </li>
+              <li>
+              <b>Relationship Attribute (RELA)</b>: The more specific label, when available, used by individual sources to represent relationships.
+              </li>
+              </ul>
+                These relationships reflect assertions each source makes about relationships between its own terms, and occasionally
+                between its own terms and terms from other sources.  The browser Relationships tab presents these relationships at
+                the NCIm concept level: Based on all terms in the current concept, it displays relationships pointing to other NCIm
+                concepts and shows the source that asserts each  relationship.  The By Source tab shows the specific term being
+                pointed to by relationships from the selected source, including that term’s source (sometimes different), type,
+                and code.  Depending on user feedback, a future browser release may show as well the source-specific term from the
+                current concept for which the relationship was asserted.  The browser omits relationships asserted between two terms
+                in the same concept (such terms are seen together with their term types in the concept’s Synonyms listing).
+              </p>
+              <p>
+                <b>The Relationship (REL)</b>labels in NCIm are listed below, grouped by the broader categories used to report them:
+              </p>
             </td></tr>
           </table>
           <br/>
@@ -109,5 +113,6 @@ These data are not consistently stored and linked in the current LexBIG database
       </div>
   </div>
   </f:view>
+  <br>
   </body>
 </html>
