@@ -113,8 +113,7 @@
             <li>The match will often be to synonyms or codes only visible on the concept details page (e.g., searching
             <b>Begins With</b> <i>melanoma</i> will show <i>Cutaneous Melanoma</i> in the results list because that concept contains a synonym of <i>Melanoma of the Skin</i>.)
             <li>If there are too many results to show on one page, you can page through the results with a default of 50 per page. To
-            change the default number, use the <b>Show results per page</b>
-            <span style="font-family:monospace;">drop-down</span> menu at the bottom of the results page.
+            change the default number, use the <b>Show results per page</b> drop-down menu at the bottom of the results page.
             <li>Click on the name to see a concept’s details.
           </ul>
         </p>
