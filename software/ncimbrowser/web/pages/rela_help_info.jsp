@@ -46,7 +46,7 @@
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
-                <b>Relationship Attribute Help Information</b>
+                <b>NCIm Relationship Attributes</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
