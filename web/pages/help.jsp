@@ -49,7 +49,7 @@
           vocabularies with restrictions on their use
           (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
           '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-          Sources</a>).
+          NCIm Sources</a>).
           <br><br>
           <b>The NCIm Browser</b> is for the retrieval of concepts from the NCI Metathesaurus. It is designed for ease of
           use by a diverse user community. This release focuses on the data and features most users want. Future
@@ -61,7 +61,7 @@
           pointers on how to learn more about NCIm and related resources. The following typeface font conventions are used
           for describing search and the browser interface:
           <ul>
-            <li><span style="font-weight:bold;font-family:sans-serif;">Sans Serif Bold</span>: Browser links, buttons, and drop-down boxes.
+            <li><b>Bold</b>: Browser links, buttons, page tabs, and drop-down boxes.
             <li><span style="font-family:monospace;">Fixed Width:</span> Search strings
             <li><span style="font-style:italic;">Italics</span>: Concept terms
           </ul>
@@ -90,14 +90,15 @@
             in the same order you provided. For example, if you do a <b>Contains</b> search on <i>Melanoma Corneal</i>
             no results will be returned, but if you search on <i>Corneal Melanoma</i> you
             get the detail page for <i>Corneal Melanoma</i>.
-            <li><b>Source</b> <span style="font-family:monospace;">drop-down box:</span>
+            <li><b>Source</b> drop-down box:
             You can choose to limit your search to concepts with terms from a specific source. For example, if you only want to find
             <i>breast cancer</i> concepts that include terms from SNOMEDCT, you would choose
             <span style="font-family:monospace;">SNOMEDCT</span> from the <b>Source</b> box.
-            This will return concepts even if the matching terms are not from the selected source, as this is
-            helpful for users looking for source coverage of a term that may be expressed differently in that
-            source (e.g., searching for <span style="font-family:monospace;">grey</span> for source FDA will return <i>Gray color</i>
-            , even though the only FDA term is the American spelling gray).
+            This will return concepts with at least one SNOMDEDCT term and at least one term that matches your search
+            criteria, even if the matching terms are not from the selected source. This search method is helpful for
+            users looking for source coverage of a term that may be expressed differently in that source (e.g.,
+            searching for grey for source FDA will return <i>Gray color</i>, even though the only FDA term is the American
+            spelling gray).
           </ul>
           Search of other concept data, approximate matching, and other features will be added to future releases of
           this browser. Some of these features are currently available in the <a href="http://bioportal.nci.nih.gov/ncbo/faces/index.xhtml">NCI BioPortal Browser.</a>
@@ -111,7 +112,7 @@
             followed by concepts whose terms have more non-<i>melanocyte</i> content. An additional column displays the semantic type(s) assigned to each concept.
             <li>The match will often be to synonyms or codes only visible on the concept details page (e.g., searching
             <b>Begins With</b> <i>melanoma</i> will show <i>Cutaneous Melanoma</i> in the results list because that concept contains a synonym of <i>Melanoma of the Skin</i>.)
-            <li>If there are too many to show on one page, you can page through the results with a default of 50 per page. To
+            <li>If there are too many results to show on one page, you can page through the results with a default of 50 per page. To
             change the default number, use the <b>Show results per page</b>
             <span style="font-family:monospace;">drop-down</span> menu at the bottom of the results page.
             <li>Click on the name to see a concept’s details.
@@ -127,13 +128,15 @@
             <li>Tabbed information gives the concept’s meaning, labels, and direct relationships:
             <ul>
               <li><b>Terms & Properties</b>: Gives definitions, synonyms, abbreviations, codes, and other information.
-              <li><b>Relationships</b>: Shows how other concepts are directly related to this concept as parents, children,
-              or in other ways.
+              <li><b>Relationships</b>: Shows how other concepts are directly related to this concept, where a source
+              asserts that terms in those concepts are related as parents, children, or in other ways.
               <li><b>Synonym Details</b>: For each term or abbreviation, shows its source, term type, and code.
               <li><b>By Source:</b> Shows concept information one source at a time. NCI Thesaurus content is shown
               if available, otherwise the initial source is chosen alphabetically. To view concept information from
               a different source, select the link for that source at the top of the page. NOTE: Select the <b>?</b>
-              icon next to the Source header to view a list of the source abbreviations and full names.
+              icon next to the Source header to view a list of the source abbreviations and full names. The Relationships
+              section shows the specific term being pointed to by relationships from the selected source, including that
+              term’s source (sometimes different), type, and code.
               <li><b>View All</b>: Combines all of the above information on a single page.
             </ul>
             <li><b>In NCIt Hierarchy</b>: Click the button to see where the concept is found within the NCIt hierarchy as
@@ -166,31 +169,34 @@
           '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           <b>Sources</b></a>
           link at the top of the page to bring up a separate window showing the list of sources
-          included in the current release of NCI Metathesaurus.  Sources are listed alphabetically  by abbreviation, showing
-          full source names and other details. Use restrictions are described for proprietary sources.
+          included in the current release of NCI Metathesaurus.  Sources are listed alphabetically  by abbreviation,
+          showing full source names and other details. Use restrictions are described for proprietary sources.
+          This page is also displayed if you click on the <b>?</b> icon above  the source information in the
+          <b>Relationships, Synonym Details,</b> and <b>By Source</b> tabs.
         </p>
         <p class="textbody">
           <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
           </tr></table>
-          This release, based on LexEVS 5.1, addresses most known issues in data and performance.  We are still working on remaining issues of data,
-          functionality and documentation,  which include the following:
+          This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still working on
+          remaining issues of data, functionality and documentation, which include the following:
           <ul>
             <li><b>Data</b>: NCI Metathesaurus has a few remaining gaps in data, plus some issues of best interpretation and presentation. Of particular importance,
             <ul>
-              <li>o Relationship data are represented somewhat differently in different sources, and the summary labels, described in the browser’s
+              <li>Relationship data are represented somewhat differently in different sources, and the summary labels, described in the browser’s
               <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
                       '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-              Relationship Attribute Help</a>.
-              sometime appear to be inappropriate. This also complicates efforts to reliably display individual source hierarchies within their broader NCIm context.
+              Relationship Attribute Help</a>,
+              sometimes appear to be inappropriate. This also complicates efforts to reliably display individual source hierarchies within their broader NCIm context.
               <li>The display of history data has been postponed until a future release.
               <li>Some additional categories of source specific concept data are not included, but are being considered for inclusion in future releases.
             </ul>
-            <li><b>Functionality</b>: Performance has greatly improved and remaining problems have been partly designed
-            around, but there are still issues with extensive relationship and hierarchy data that we intend to fix.
-            User-settable options and the ability to search other concept data and relationships are needed, and should
-            be part of forthcoming browser releases.
+            <li><b>Functionality</b>: Performance has greatly improved, but has been partly offset by the several-fold increase in
+            data.  Search results are ranked by goodness of match, but Contains searches had to be limited to the beginning or
+            end of words to get good performance. There are still performance issues with the display of concepts having many
+            thousands of relationships, and hierarchy display is still painfully slow. User-settable options and the ability to
+            search other concept data and relationships are needed, and should be part of forthcoming browser releases.
             <li><b>Documentation</b>: Online and standalone documentation are still under development.
             <li>For the latest updates of known issues, <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.1+Release+Notes" target="_blank"> see NCI Metathesaurus Browser 1.1 Release Notes</a>.
           </ul>
