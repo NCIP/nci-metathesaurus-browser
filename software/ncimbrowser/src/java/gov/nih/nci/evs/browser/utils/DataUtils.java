@@ -674,7 +674,7 @@ LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 				ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
 				if (matches == null)
 				{
-					System.out.println("Concep not found.");
+					System.out.println("Concept not found.");
 					return null;
 				}
                 int count = matches.getResolvedConceptReferenceCount();
