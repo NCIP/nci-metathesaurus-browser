@@ -1254,7 +1254,9 @@ public class SearchUtils {
 		}
         else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
 		{
-			matchAlgorithm = CONTAIN_SEARCH_ALGORITHM;
+			//matchAlgorithm = CONTAIN_SEARCH_ALGORITHM;
+			matchAlgorithm = findBestContainsAlgorithm(matchText);
+			//System.out.println("algorithm: " + matchAlgorithm);
 		}
 
         CodedNodeSet cns = null;
@@ -2307,6 +2309,17 @@ public class SearchUtils {
 			System.out.println("WARNING: searchByCode throws exception.");
 		}
         return iterator;
+	}
+
+    private String findBestContainsAlgorithm(String matchText) {
+		if (matchText == null) return "nonLeadingWildcardLiteralSubString";
+		matchText = matchText.trim();
+		if (matchText.length() == 0) return "nonLeadingWildcardLiteralSubString"; // or null
+		if (matchText.length() > 1) return "nonLeadingWildcardLiteralSubString";
+		char ch = matchText.charAt(0);
+		if (Character.isDigit(ch)) return "literal";
+		else if (Character.isLetter(ch)) return "LuceneQuery";
+		else return "literalContains";
 	}
 
 
