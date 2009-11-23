@@ -38,9 +38,9 @@
           <A HREF="#additionalinformation">Additional Information</A>
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="introduction">Introduction</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
           4,600,000 terms from more than 70 terminologies. It contains most public domain vocabularies from
@@ -67,9 +67,9 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="searchhelp">Search</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <b>In the Search box,</b> enter all or part of what you are looking for and click the Search button.
           Some details:
@@ -118,9 +118,9 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="conceptdetails">Concept Details</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           Detailed information on the selected concept is grouped and shown on several related pages:
          <ul>
@@ -145,9 +145,9 @@
          </ul>
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="hierarchy">View NCIt Hierarchy</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           Click on the <b>View NCIt Hierarchy</b> link at the top of the page to bring up a separate window showing the
           NCI Thesaurus hierarchy as presented through NCIm concepts.  Some details:
@@ -159,9 +159,9 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="sources">Sources</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           Click on the
           <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
@@ -174,9 +174,9 @@
           <b>Relationships, Synonym Details,</b> and <b>By Source</b> tabs.
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still working on
           remaining issues of data, functionality and documentation, which include the following:
@@ -203,9 +203,9 @@
           Suggestions to add a new concept or make changes to an existing concept can also be made using the <b>Term Suggestion</b> link below the Search box or the <b>Suggest changes to this concept</b> link in the upper right of all concept details pages.
         </p>
         <p class="textbody">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="additionalinformation">Additional Information</A></h2></td>
-            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           Additional information about NCIm and EVS can be found on the <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a>
           and <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a> sites.
