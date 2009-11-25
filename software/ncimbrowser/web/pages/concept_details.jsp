@@ -286,7 +286,7 @@ request.getSession().setAttribute("type", type);
         }
      }
 
-String tg_dictionary = "NCI%20MetaThesaurus";
+String tg_dictionary = "NCI%20Metathesaurus";
           if (c != null) {
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
