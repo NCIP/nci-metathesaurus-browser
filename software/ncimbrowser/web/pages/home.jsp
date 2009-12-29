@@ -5,8 +5,10 @@
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
+  String application_version = new DataUtils().getApplicationVersion();
 %>
 <!-- Build info: <%=ncim_build_info%> -->
+<!-- Version info: <%=application_version%> -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
