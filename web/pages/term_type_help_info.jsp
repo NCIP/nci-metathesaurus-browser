@@ -29,34 +29,23 @@
         <%
           Vector abbr_vec = new Vector();
           Vector def_vec = new Vector();
-                    
-          Vector tty_vec = (Vector) request.getSession().getAttribute("TTY");
-          if (tty_vec == null) {
-		  String uri_ver = DataUtils.getCodingSchemeURIAndVersion("NCI MetaThesaurus", null);
-		  String uri = null;
-		  String version = null;
-		  if (uri_ver != null) {
-		      Vector u = DataUtils.parseData(uri_ver);
-		      uri = (String) u.elementAt(0);
-		      version = (String) u.elementAt(1);
-
-	              System.out.println(uri);
-	              System.out.println(version);
+          Vector v = (Vector) request.getSession().getAttribute("TermTypeMetaData");
+          if (v == null) {
+          	v = MetadataUtils.getTermTypeDescriptionMetaData("NCI Metathesaurus", null);
+          	if (v != null) {
+          	    request.getSession().setAttribute("TermTypeMetaData", v);
+          	} else {
+          	    v = new Vector();
+          	}
+          } 
           
-          	      tty_vec = MetadataUtils.getSourceMetaData(uri, version);
-          	      request.getSession().setAttribute("TTY", tty_vec);
-          	  }
-          }
-      
-          if (tty_vec != null) {
-	      for (int i=0; i<tty_vec.size(); i++) {
-		  String t = (String) tty_vec.elementAt(i);
-		  Vector w = DataUtils.parseData(t);
-		  abbr_vec.add((String) w.elementAt(0));
-		  def_vec.add((String) w.elementAt(1));
-	      }
-          }
-
+	  for (int i=0; i<v.size(); i++) {
+	     String t = (String) v.elementAt(i);
+	     Vector w = DataUtils.parseData(t);
+	     abbr_vec.add((String) w.elementAt(0));
+	     def_vec.add((String) w.elementAt(1));
+	  }   
+	  
           
         %>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
