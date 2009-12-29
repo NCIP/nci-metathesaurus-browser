@@ -105,8 +105,7 @@ public class MetadataUtils {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static Vector getSourceMetaData(String uri, String version) {
-		//Map<String,String> map = test.getTtyExpandedForm("urn:oid:2.16.840.1.113883.3.26.1.2", "200904");
+	public static Vector getTermTypeDescriptionMetaData(String uri, String version) {
 		Map<String,String> map = null;
 		try {
 			map = getTtyExpandedForm(uri, version);
