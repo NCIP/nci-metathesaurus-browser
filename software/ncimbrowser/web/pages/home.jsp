@@ -6,9 +6,15 @@
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
   String application_version = new DataUtils().getApplicationVersion();
+  String anthill_build_tag_built = new DataUtils().getNCITAnthillBuildTagBuilt();
+  String evs_service_url = new DataUtils().getEVSServiceURL();
 %>
-<!-- Build info: <%=ncim_build_info%> -->
-<!-- Version info: <%=application_version%> -->
+<!--
+   Build info: <%=ncim_build_info%>
+ Version info: <%=application_version%>
+          Tag: <%=anthill_build_tag_built%>
+   LexEVS URL: <%=evs_service_url%>          
+  -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>

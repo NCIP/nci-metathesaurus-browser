@@ -182,6 +182,8 @@ public class DataUtils {
 	public String terminologySubsetDownloadURL = null;
 	public String NCIMBuildInfo = null;
 	public String NCIMAppVersion = null;
+	public String NCITAnthillBuildTagBuilt = null;
+	public String EVSServiceURL = null;
 
 	static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa",
 			"branch_of", "part_of", "tributary_of" };
@@ -1738,6 +1740,46 @@ public class DataUtils {
 		return NCIMAppVersion;
 	}
 
+    public String getNCITAnthillBuildTagBuilt() {
+        if (NCITAnthillBuildTagBuilt != null) {
+            return NCITAnthillBuildTagBuilt;
+        }
+        String default_info = "N/A";
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            NCITAnthillBuildTagBuilt = properties
+                    .getProperty(NCImBrowserProperties.ANTHILL_BUILD_TAG_BUILT);
+            if (NCITAnthillBuildTagBuilt == null) {
+            	NCITAnthillBuildTagBuilt = default_info;
+            }
+        } catch (Exception ex) {
+			ex.printStackTrace();
+        }
+
+        return NCITAnthillBuildTagBuilt;
+    }	
+	
+    public String getEVSServiceURL() {
+        if (EVSServiceURL != null) {
+            return EVSServiceURL;
+        }
+        String default_info = "Local LexEVS";
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            EVSServiceURL = properties
+                    .getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+            if (EVSServiceURL == null) {
+            	EVSServiceURL = default_info;
+            }
+        } catch (Exception ex) {
+			ex.printStackTrace();
+        }
+
+        return EVSServiceURL;
+    }    
+    
 	public static Vector<String> getMatchTypeListData(String codingSchemeName,
 			String version) {
 		Vector<String> v = new Vector<String>();
