@@ -96,6 +96,7 @@
     <target name="dist" depends="-war" description="Copies WAR file to distribution folder">
 
         <echo message="Config folder: ${conf.dir}" />
+        <echo message="Tag: ${anthill.build.tag_built}" />
 
         <!-- Copy configuration and property files -->
 
@@ -104,6 +105,14 @@
             <resources>
                 <file file="${conf.dir}/cache.ccf"/>
                 <file file="${conf.dir}/ehcache.xml"/>
+            </resources>
+        </copy>
+
+        <copy todir="${dist.dir}/deploy" flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="anthill.build.tag_built" value="${anthill.build.tag_built}"/>
+            </filterset>
+            <resources>
                 <file file="${conf.dir}/${ncimbrowser-webapp.prop.file}"/>
             </resources>
         </copy>

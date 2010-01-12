@@ -60,7 +60,8 @@ public class NCImBrowserProperties {
 	public static final String NCIM_BUILD_INFO = "NCIM_BUILD_INFO";
 	public static final String NCIM_APP_VERSION = "APPLICATION_VERSION";
 	public static final String TERM_SUGGESTION_APPLICATION_URL = "TERM_SUGGESTION_APPLICATION_URL";
-
+	public static final String ANTHILL_BUILD_TAG_BUILT = "ANTHILL_BUILD_TAG_BUILT";
+	
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static NCImBrowserProperties NCImBrowserProperties = null;
