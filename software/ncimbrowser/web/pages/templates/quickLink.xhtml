@@ -1,6 +1,7 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%
   String terminology_subset_download_URL = new DataUtils().getTerminologySubsetDownloadURL();
+  String ql_ncit_url = new DataUtils().getNCItURL(); 
 %>
 <div class="bluebar">
   <div id="quicklinksholder">
@@ -14,11 +15,11 @@
         </a>
         <ul>
           <li><a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Home</a></li>
-          <li><a href="http://ncit.nci.nih.gov/" target="_blank" alt="EVS">NCI Thesaurus</a></li>
+          <li><a href="<%=ql_ncit_url%>" target="_blank" alt="EVS">NCI Thesaurus</a></li>
           <!--
           <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI MetaThesaurus">NCI MetaThesaurus</a></li>
            -->
-          <li><a href="http://bioportal.nci.nih.gov" target="_blank" alt="NCI BioPortal">NCI BioPortal</a></li>
+          <li><a href="<%=ql_ncit_url%>/start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
           <li><a href="http://www.cancer.gov/cancertopics/terminologyresources" target="_blank" alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
         </ul>
       </li>
