@@ -4,6 +4,9 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<%
+  String ncit_url = new DataUtils().getNCItURL();
+%>
 <html>
 <head>
   <title>NCI Metathesaurus</title>
@@ -101,7 +104,7 @@
             spelling gray).
           </ul>
           Search of other concept data, approximate matching, and other features will be added to future releases of
-          this browser. Some of these features are currently available in the <a href="http://bioportal.nci.nih.gov/ncbo/faces/index.xhtml">NCI BioPortal Browser.</a>
+          this browser. Some of these features are currently available in the <a href="<%=ncit_url%>/start.jsf"> NCI Term Browser</a>.
           <br><br>
           <b>Search results</b> are displayed by concept name. (If there is only one match, the concept details page
           is shown directly without first listing results.) Some details:
