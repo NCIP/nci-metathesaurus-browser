@@ -184,6 +184,7 @@ public class DataUtils {
 	public String NCIMAppVersion = null;
 	public String NCITAnthillBuildTagBuilt = null;
 	public String EVSServiceURL = null;
+	public String NCItURL = null;
 
 	static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa",
 			"branch_of", "part_of", "tributary_of" };
@@ -1778,6 +1779,25 @@ public class DataUtils {
         }
 
         return EVSServiceURL;
+    }    
+ 
+    public String getNCItURL() {
+        if (NCItURL != null) {
+            return NCItURL;
+        }
+        String default_info = "N/A";
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            NCItURL = properties
+                    .getProperty(NCImBrowserProperties.NCIT_URL);
+            if (NCItURL == null) {
+                NCItURL = default_info;
+            }
+        } catch (Exception ex) {
+
+        }
+        return NCItURL;
     }    
     
 	public static Vector<String> getMatchTypeListData(String codingSchemeName,

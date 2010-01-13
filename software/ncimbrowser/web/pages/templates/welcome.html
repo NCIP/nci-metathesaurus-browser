@@ -6,6 +6,7 @@
       "NCI MetaThesaurus", null);
   if (version == null)
     version = "";
+  String ncit_url = new DataUtils().getNCItURL(); 
 %>
 <div class="textbody">
   <table border="0" width="700px"><tr>
@@ -24,7 +25,7 @@
           <li>Maps 3,600,000 terms from 76 sources into 1,400,000 biomedical concepts that represent their meaning.
           <li>Displays preferred terms, synonyms, definitions, and other information from each source.
           <li>Links to
-            <a href="http://ncit.nci.nih.gov/" target="_blank" alt="NCI Thesaurus">NCI Thesaurus</a>
+            <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">NCI Thesaurus</a>
             and other related information sources.
           <li>Contains 20,000,000 cross-links between content elements.
           <li>Updated frequently by a team of biomedical terminology and subject matter experts.
@@ -57,14 +58,14 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="http://ncit.nci.nih.gov/ncitbrowser" target="_blank" alt="NCI Thesaurus">
+              <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">
                 <img src="<%=basePath%>/images/NCItTile.jpg"
                   width="77" height="38px" alt="NCIt" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="http://ncit.nci.nih.gov/" target="_blank" alt="NCI Thesaurus">
+              <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">
                 NCI Thesaurus</a>:
                 Reference terminology for NCI, NCI Metathesaurus and NCI informatics infrastructure.
             </td>
@@ -72,16 +73,16 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="http://bioportal.nci.nih.gov" target="_blank" alt="Bio Portal">
-                <img src="<%=basePath%>/images/EVSBioPortalTile.gif"
-                  width="77" height="38px" alt="Bio Portal" border="0"/>
+              <a href="<%=ncit_url%>/start.jsf" target="_blank" alt="NCI Term Browser">
+                <img src="<%=basePath%>/images/EVSTermsBrowserTile.gif"
+                  width="77" height="38px" alt="NCI Term Browser" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="http://bioportal.nci.nih.gov" target="_blank" alt="Bio Portal">
-                NCI BioPortal</a>:
-                NCI and other terminologies in an integrated ontology environment.
+              <a href="<%=ncit_url%>/start.jsf" target="_blank" alt="Bio Portal">
+                NCI Term Browser</a>:
+                NCI and other terminologies in an integrated ontology environment. 
             </td>
           </tr>
           <tr valign="top">
