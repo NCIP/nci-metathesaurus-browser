@@ -2288,6 +2288,11 @@
                  <key>TERM_SUGGESTION_APPLICATION_URL</key>
                  <value>@term.suggestion.application.url@</value>
         </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCIT_URL</key>
+                 <value>@ncit.url@</value>
+        </ConfigurableItem>
     </ConfigurableItems>
 
 </root>

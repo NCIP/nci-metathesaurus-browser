@@ -61,6 +61,7 @@ public class NCImBrowserProperties {
 	public static final String NCIM_APP_VERSION = "APPLICATION_VERSION";
 	public static final String TERM_SUGGESTION_APPLICATION_URL = "TERM_SUGGESTION_APPLICATION_URL";
 	public static final String ANTHILL_BUILD_TAG_BUILT = "ANTHILL_BUILD_TAG_BUILT";
+	public static final String NCIT_URL = "NCIT_URL";
 	
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
