@@ -254,7 +254,7 @@ public class UserSessionBean extends Object
 
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
-            message = "No match found. Please try 'Beings With' or 'Contains' search instead.";
+            message = "No match found. Please try 'Begins With' or 'Contains' search instead.";
         }
         request.getSession().setAttribute("message", message);
         return "message";
