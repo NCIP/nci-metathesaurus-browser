@@ -13,6 +13,7 @@
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
   </head>
   <%
     String ncicb_contact_url = new DataUtils().getNCICBContactURL();
