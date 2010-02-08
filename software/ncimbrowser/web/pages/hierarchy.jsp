@@ -170,6 +170,7 @@
       //setNodeDetails(ontology_node_id, ontology_display_name);
       //buildGraph(ontology_node_id, ontology_display_name, graph_type);
 
+      if (ontology_node_id.indexOf("|") != -1) return;
       load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=' + ontology_node_id,top.opener);
 
     }
@@ -253,6 +254,7 @@
       treeStatusDiv.render();
     }
 
+
     function loadNodeData(node, fnLoadComplete) {
       var id = node.data.id;
 
@@ -265,20 +267,56 @@
         var respObj = eval('(' + respTxt + ')');
         var fileNum = 0;
         var categoryNum = 0;
+        var pos = id.indexOf("|");
         if ( typeof(respObj.nodes) != "undefined") {
           for (var i=0; i < respObj.nodes.length; i++) {
-            var name = respObj.nodes[i].ontology_node_name;
-            var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-            var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-            var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
-            if (respObj.nodes[i].ontology_node_child_count > 0) {
-               newNode.setDynamicLoad(loadNodeData);
-            }
+		  if (pos == -1) {
+			  var name = respObj.nodes[i].ontology_node_name;
+			  var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+			  var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+			  var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
+			  if (respObj.nodes[i].ontology_node_child_count > 0) {
+			      newNode.setDynamicLoad(loadNodeData);
+			  }
+		  } else {
+
+			  if (respObj.nodes[0].ontology_node_child_count > 0) {
+			      node.setDynamicLoad(loadNodeData);
+			  }
+			  
+			  var parent = node.parent;
+			  id = id.substring(0, pos);
+			  
+			  //var bool_val = tree.removeNode(node, true);
+			  //var bool_val = tree.popNode(node);
+			  //var bool_val = tree.removeChildren(node);
+			  //node.setUpLabel(node.ontology_node_name.substring(4, node.ontology_node_name.length());
+			  
+			  node.setUpLabel(respObj.nodes[0].ontology_node_name);
+			  node.refresh();
+			  
+			  for (var i=0; i < respObj.nodes.length; i++) {
+			    var name = respObj.nodes[i].ontology_node_name;
+			    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+			    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, false);
+			    
+			    if (respObj.nodes[i].ontology_node_child_count > 0) {
+			    //   newNode.setDynamicLoad(loadNodeData);
+			    }
+			  }			  
+
+			  //parent.refresh(); 
+			  
+			  //removeNode and popNode will freeze the tree. A YUI bug???????????????????????
+			  tree.removeNode(node);
+		  }
           }
         }
         tree.draw();
         fnLoadComplete();
       }
+
 
       var responseFailure = function(o){
         alert('responseFailure: ' + o.statusText);

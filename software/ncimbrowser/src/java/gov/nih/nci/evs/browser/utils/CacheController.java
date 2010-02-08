@@ -197,6 +197,17 @@ public class CacheController
         return nodeArray;
     }
 
+
+	public JSONArray getRemainingSubconcepts(String scheme, String version, String code, String subconcept_code) {
+        HashMap map = null;
+        JSONArray nodeArray = null;
+		map = new MetaTreeUtils().getRemainingSubconcepts(scheme, version, code, NCI_SOURCE, subconcept_code);
+		nodeArray = HashMap2JSONArray(map);
+        return nodeArray;
+    }
+
+
+
     public JSONArray getRootConcepts(String scheme, String version)
     {
         return getRootConcepts(scheme, version, true);
@@ -359,7 +370,7 @@ public class CacheController
 
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, boolean fromCache, int maxLevel)
     {
-        JSONArray rootsArray = null;
+       JSONArray rootsArray = null;
         if (maxLevel == -1) {
             rootsArray = getRootConcepts(ontology_display_name, version, false);
             try {
@@ -370,8 +381,8 @@ public class CacheController
                 String code = (String) objs[0];
                 TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
 
+                //JSONArray nodesArray = getNodesArray(node_id, ti);
                 JSONArray nodesArray = getNodesArray(node_id, ti);
-                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
             catch (Exception e) {
@@ -398,6 +409,7 @@ public class CacheController
                 //JSONArray nodesArray = getNodesArray(ti);
 
                 JSONArray nodesArray = getNodesArray(node_id, ti);
+
                 //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
@@ -464,6 +476,8 @@ public class CacheController
         JSONArray nodesArray = new JSONArray();
         for (String association : ti.assocToChildMap.keySet()) {
             List<TreeItem> children = ti.assocToChildMap.get(association);
+
+            //KLO 020410
             SortUtils.quickSort(children);
 
             int cut_off = 200;
@@ -563,6 +577,7 @@ public class CacheController
         }
         return nodesArray;
     }
+
 
 }
 

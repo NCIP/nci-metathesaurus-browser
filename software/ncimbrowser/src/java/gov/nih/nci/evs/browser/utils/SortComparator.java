@@ -111,6 +111,10 @@ public class SortComparator implements Comparator<Object>{
 		// case insensitive sort
         String key1 = getKey(object1, sort_option).toLowerCase();
         String key2 = getKey(object2, sort_option).toLowerCase();
+
+        if (key1.startsWith("...")) return 1;
+        else if (key2.startsWith("...")) return -1;
+        else
         return key1.compareTo(key2);
     }
 }

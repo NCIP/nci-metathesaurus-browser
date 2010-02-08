@@ -109,9 +109,9 @@ import gov.nih.nci.evs.browser.common.Constants;
 /**
  * @author EVS Team
  * @version 1.0
- * 
+ *
  *          Modification history Initial implementation kim.ong@ngc.com
- * 
+ *
  */
 
 public class DataUtils {
@@ -1759,8 +1759,8 @@ public class DataUtils {
         }
 
         return NCITAnthillBuildTagBuilt;
-    }	
-	
+    }
+
     public String getEVSServiceURL() {
         if (EVSServiceURL != null) {
             return EVSServiceURL;
@@ -1779,8 +1779,8 @@ public class DataUtils {
         }
 
         return EVSServiceURL;
-    }    
- 
+    }
+
     public String getNCItURL() {
         if (NCItURL != null) {
             return NCItURL;
@@ -1798,8 +1798,8 @@ public class DataUtils {
 
         }
         return NCItURL;
-    }    
-    
+    }
+
 	public static Vector<String> getMatchTypeListData(String codingSchemeName,
 			String version) {
 		Vector<String> v = new Vector<String>();
@@ -3381,7 +3381,7 @@ public class DataUtils {
 							 * "|" + top_atom.getSource() + "|" +
 							 * top_atom.getCode(); } t = t + "|" + code + "|" +
 							 * rela + "|" + category;
-							 * 
+							 *
 							 * w.add(t);
 							 */
 
@@ -3623,6 +3623,200 @@ public class DataUtils {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+
+   public static String htmlEntityEncode( String s )
+   {
+       StringBuilder buf = new StringBuilder(s.length());
+       for ( int i = 0; i < s.length(); i++ )
+       {
+           char c = s.charAt( i );
+           if ( c>='a' && c<='z' || c>='A' && c<='Z' || c>='0' && c<='9' )
+           {
+               buf.append( c );
+           }
+           else
+           {
+               buf.append("&#").append((int)c).append(";");
+           }
+       }
+       return buf.toString();
+   }
+
+    // [#23318] Maintain a history of visited concepts
+    public static String getVisitedConceptLink(Vector concept_vec) {
+		StringBuffer strbuf = new StringBuffer();
+		String line = "<A href=\"#\" onmouseover=\"Tip('";
+        strbuf.append(line);
+        strbuf.append("<ul>");
+		for (int i=0; i<concept_vec.size(); i++) {
+			int j = concept_vec.size()-i-1;
+			String concept_data = (String) concept_vec.elementAt(j);
+			Vector w = DataUtils.parseData(concept_data, "|");
+			String scheme = Constants.CODING_SCHEME_NAME;
+			String code = (String) w.elementAt(0);
+			String name = (String) w.elementAt(1);
+			name = htmlEntityEncode(name);
+
+            strbuf.append("<li>");
+            line =
+               "<a href=\\'/ncimbrowser/ConceptReport.jsp?dictionary="
+               + scheme
+               + "&code="
+               + code
+               + "\\'>"
+               + name
+               + "</a><br>";
+            strbuf.append(line);
+            strbuf.append("</li>");
+		}
+		strbuf.append("</ul>");
+		line = "',";
+		strbuf.append(line);
+
+		line = "WIDTH, 300, TITLE, 'Visited Concepts', SHADOW, true, FADEIN, 300, FADEOUT, 300, STICKY, 1, CLOSEBTN, true, CLICKCLOSE, true)\"";
+		strbuf.append(line);
+
+		line = " onmouseout=UnTip() ";
+		strbuf.append(line);
+		line = ">Visited Concepts</A>";
+		strbuf.append(line);
+
+		return strbuf.toString();
+	}
+
+    //[#23463] Linking retired concept to corresponding new concept
+    public static String getReferencedCUI(String code) {
+		code = code.trim();
+		System.out.println("code Length: " + code.length() + " " + code);
+		System.out.println("scheme: " + Constants.CODING_SCHEME_NAME);
+
+		if (code.length() != 8) {
+			return null;
+		}
+
+		try {
+			Vector<String> v = HistoryUtils.getEditActions(Constants.CODING_SCHEME_NAME, null, null, code);
+			if (v != null) {
+				if (v.size() == 0) System.out.println("(*) HistoryUtils.getEditActions returns nothing");
+				for (int i=0; i<v.size(); i++) {
+					String s = (String) v.elementAt(i);
+
+					System.out.println("s: " + s);
+
+					Vector w = DataUtils.parseData(s, "|");
+					String action = (String) w.elementAt(0);
+					if (action.compareTo("merge") == 0) {
+						String date = (String) w.elementAt(1);
+						String nameAndCode = (String) w.elementAt(2);
+
+						System.out.println("(*) nameAndCode: " + nameAndCode);
+						////merge|2006-01-01|LAS17 protein, S cerevisiae (Code C1433544)
+						int idx = nameAndCode.indexOf("(Code");
+						if (idx != -1) {
+							String t = nameAndCode.substring(idx+6, nameAndCode.length()-1);
+
+							System.out.println("(*) new CUI: " + t);
+							return t;
+						}
+				    }
+				}
+			} else {
+				System.out.println("(*) HistoryUtils.getEditActions returns null");
+			}
+		} catch (Exception ex) {
+
+		}
+		return null;
+	}
+
+
+    public static HashMap getPropertyValuesForCodes(String scheme, String version, Vector codes, String propertyName) {
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc = null");
+                return null;
+            }
+
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(version);
+
+			ConceptReferenceList crefs = new ConceptReferenceList();
+			for (int i=0; i<codes.size(); i++) {
+				String code = (String) codes.elementAt(i);
+				ConceptReference cr = new ConceptReference();
+				cr.setCodingSchemeName(scheme);
+				cr.setConceptCode(code);
+				crefs.addConceptReference(cr);
+			}
+
+			CodedNodeSet cns = null;
+			try {
+				cns = lbSvc.getCodingSchemeConcepts(scheme,	versionOrTag);
+				cns = cns.restrictToCodes(crefs);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+
+		    try {
+                LocalNameList propertyNames = new LocalNameList();
+                propertyNames.addEntry(propertyName);
+                CodedNodeSet.PropertyType[] propertyTypes = null;
+
+				long ms = System.currentTimeMillis(), delay = 0;
+                SortOptionList sortOptions = null;
+                LocalNameList filterOptions = null;
+                boolean resolveObjects = true; // needs to be set to true
+                int maxToReturn = codes.size();
+
+                ResolvedConceptReferenceList rcrl = cns.resolveToList(sortOptions, filterOptions, propertyNames,
+                    propertyTypes, resolveObjects, maxToReturn);
+
+                //System.out.println("resolveToList done");
+                HashMap hmap = new HashMap();
+
+				if (rcrl == null) {
+					System.out.println("Concep not found.");
+					return null;
+				}
+
+				if (rcrl.getResolvedConceptReferenceCount() > 0) {
+                    for (int i=0; i<rcrl.getResolvedConceptReferenceCount(); i++) {
+						ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
+						Concept c = rcr.getReferencedEntry();
+						if (c == null) {
+							System.out.println("Concept is null.");
+						} else {
+							//System.out.println(c.getEntityDescription().getContent());
+							Property[] properties = c.getProperty();
+							String values = "";
+							for (int j=0; j<properties.length; j++) {
+								Property prop = properties[j];
+								values = values + prop.getValue().getContent();
+								if (j < properties.length-1) {
+									values = values + "; ";
+								}
+							}
+							hmap.put(rcr.getCode(), values);
+						}
+					}
+				}
+                return hmap;
+
+			}  catch (Exception e) {
+				System.out.println("Method: SearchUtil.searchByProperties");
+				System.out.println("* ERROR: cns.resolve throws exceptions.");
+				System.out.println("* " + e.getClass().getSimpleName() + ": " +
+					e.getMessage());
+			}
+		} catch (Exception ex) {
+            ex.printStackTrace();
 		}
 		return null;
 	}

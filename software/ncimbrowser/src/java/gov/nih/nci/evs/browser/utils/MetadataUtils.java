@@ -46,9 +46,13 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
 import org.LexGrid.LexBIG.Utility.Constructors;
 
-
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+
+import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
+
+import gov.nih.nci.evs.browser.common.*;
 
 public class MetadataUtils {
 
@@ -148,6 +152,138 @@ public class MetadataUtils {
 		}
 		return ttys;
 	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// 1.2
+
+    public static Vector getMetadataNameValuePairs(String codingSchemeName,
+        String version, String urn) {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+		if (version == null) {
+			try {
+				CodingScheme cs = lbSvc.resolveCodingScheme(codingSchemeName, null);
+				version = cs.getRepresentsVersion();
+			} catch (Exception ex) {
+
+			}
+		}
+
+		MetadataPropertyList mdpl = getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
+		return getMetadataNameValuePairs(mdpl);
+
+	}
+
+	public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl, boolean sort){
+		if (mdpl == null) return null;
+		Vector v = new Vector();
+		Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
+		while(metaItr.hasNext()){
+			MetadataProperty property = metaItr.next();
+			String t = property.getName() + "|" + property.getValue();
+            v.add(t);
+		}
+		if (sort)
+		    return SortUtils.quickSort(v);
+		return v;
+	}
+
+	public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl){
+	    return getMetadataNameValuePairs(mdpl, true);
+	}
+
+	public static Vector getMetadataValues(Vector metadata, String propertyName){
+		if (metadata == null) return null;
+		Vector w = new Vector();
+		for (int i=0; i<metadata.size(); i++) {
+			String t = (String) metadata.elementAt(i);
+			Vector u = DataUtils.parseData(t, "|");
+			String name = (String) u.elementAt(0);
+			if (name.compareTo(propertyName) == 0) {
+				String value = (String) u.elementAt(1);
+				w.add(value);
+			}
+		}
+		return w;
+	}
+
+	public static Vector getMetadataValues(String codingSchemeName, String version,
+	    String urn, String propertyName, boolean sort){
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		MetadataPropertyList mdpl = getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
+		if (mdpl == null) return null;
+
+		Vector metadata = getMetadataNameValuePairs(mdpl, sort);
+		if (metadata == null) return null;
+
+		return getMetadataValues(metadata, propertyName);
+	}
+
+    public static Vector getMetadataValues(String codingSchemeName, String version,
+        String urn, String propertyName){
+        return getMetadataValues(codingSchemeName, version,
+            urn, propertyName, true);
+    }
+
+    public static String getMetadataValue(String codingSchemeName, String version,
+        String urn, String propertyName) {
+        Vector v = getMetadataValues(codingSchemeName, version, urn, propertyName);
+        if (v == null) {
+			System.out.println("getMetadataValue returns null??? " + codingSchemeName);
+            return "";
+		}
+        int n = v.size();
+        if (n <= 0)
+            return "";
+        if (v.size() == 1)
+            return v.elementAt(0).toString();
+
+        StringBuffer buffer = new StringBuffer();
+        for (int i=0; i<n; ++i) {
+            if (i > 0)
+                buffer.append(" | ");
+            buffer.append(v.elementAt(i).toString());
+        }
+        return buffer.toString();
+    }
+
+    public Vector getSupportedVocabularyMetadataValues(String propertyName) {
+		String scheme = Constants.CODING_SCHEME_NAME;
+		String version = null;
+	    String urn = null;
+        Vector v = new Vector();
+	    Vector w = getMetadataValues(scheme, version, urn, propertyName);
+	    if (w == null || w.size() == 0) {
+		    v.add(Constants.CODING_SCHEME_NAME + "|" + propertyName + " not available");
+	    } else {
+		    String t = (String) w.elementAt(0);
+		    v.add(Constants.CODING_SCHEME_NAME + " (version: " + version + ")" + "|" + t);
+	    }
+	    return v;
+	}
+
+    public static MetadataPropertyList getMetadataPropertyList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
+		LexBIGServiceConvenienceMethods lbscm = null;
+		MetadataPropertyList mdpl = null;
+		try {
+			lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+
+			LexBIGServiceMetadata lbsm = lbSvc.getServiceMetadata();
+			lbsm = lbsm.restrictToCodingScheme(Constructors.createAbsoluteCodingSchemeVersionReference(codingSchemeName, version));
+			mdpl = lbsm.resolve();
+
+			return mdpl;
+	    } catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return mdpl;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 	/**
