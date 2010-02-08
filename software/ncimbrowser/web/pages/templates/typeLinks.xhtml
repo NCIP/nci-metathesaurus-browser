@@ -1,5 +1,9 @@
 <%
   Concept concept_typelinks = (Concept) request.getSession().getAttribute("concept");
+  if (concept_typelinks == null) {
+System.out.println("(*) concept_typelinks == null???");  
+  }
+  
   String concept_typelinks_id = concept_typelinks.getEntityCode();
 
   //request.getSession().setAttribute("code", concept_src_id);
@@ -135,7 +139,7 @@
         </td>
         <td align="right" valign="top">
     <%
-        if (sources_typelinks.contains("NCI")) {
+        if (sources_typelinks != null && sources_typelinks.contains("NCI")) {
     %>
           <a id="a_hierBut" class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           <img name="Hierarchy"

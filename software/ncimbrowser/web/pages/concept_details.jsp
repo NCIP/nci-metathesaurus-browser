@@ -45,6 +45,15 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
+
+
   <f:view>
 
 <%
@@ -253,6 +262,21 @@ request.getSession().setAttribute("type", type);
 
     c = DataUtils.getConceptByCode(dictionary, vers, ltag, code);
     if (c != null) {
+                visitedConcepts = (Vector) request.getSession()
+                    .getAttribute("visitedConcepts");
+                if (visitedConcepts == null) {
+                  visitedConcepts = new Vector();
+                }
+
+                String visitedConceptStr = code + "|" + c.getEntityDescription().getContent();
+                if (!visitedConcepts.contains(visitedConceptStr)) {
+                  visitedConcepts.add(visitedConceptStr);
+                  request.getSession().removeAttribute("visitedConcepts");
+                  request.getSession().setAttribute("visitedConcepts",
+                      visitedConcepts);
+                }        
+    
+    
       Vector synonyms = DataUtils.getSynonyms(c, "NCI");
       Boolean code_In_NCI = Boolean.FALSE;
       if (synonyms != null && synonyms.size() > 0) {
@@ -273,24 +297,32 @@ request.getSession().setAttribute("type", type);
             }
 
             name = "";
-            if (dictionary.compareTo(Constants.CODING_SCHEME_NAME) != 0) {
-               name = "ERROR: Invalid coding scheme name.";
-            } else {
-        if (c != null) {
-           request.getSession().setAttribute("concept", c);
-           request.getSession().setAttribute("code", code);
-           name = c.getEntityDescription().getContent();
+  	    if (c != null) {
+		   request.getSession().setAttribute("concept", c);
+		   request.getSession().setAttribute("code", code);
+		   name = c.getEntityDescription().getContent();
 
-        } else {
-           name = "ERROR: Invalid code.";
-        }
+	    } else {
+	       name = "ERROR: Invalid code.";
+	    }
+
+
+  String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
+  if (term_suggestion_application_url1 == null) {
+     term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
+     if (term_suggestion_application_url1 != null) {
+         request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
      }
-
-String tg_dictionary = "NCI%20Metathesaurus";
+  }
+  
+  
+  String tg_dictionary = "NCI%20Metathesaurus";
+  
           if (c != null) {
+          
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
-	 request.getSession().setAttribute("Concept", c);
+	 request.getSession().setAttribute("concept", c);
 	 request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
@@ -300,7 +332,7 @@ String tg_dictionary = "NCI%20Metathesaurus";
         <tr>
           <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
-             <a href="<%=term_suggestion_application_url%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+             <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
           </td>
         </tr>
       </table>
