@@ -36,9 +36,9 @@ import gov.nih.nci.evs.browser.bean.TermGroupRank;
 /**
  * @author EVS Team
  * @version 1.0
- * 
+ *
  *          Modification history Initial implementation kim.ong@ngc.com
- * 
+ *
  */
 
 public class NCImBrowserProperties {
@@ -62,7 +62,10 @@ public class NCImBrowserProperties {
 	public static final String TERM_SUGGESTION_APPLICATION_URL = "TERM_SUGGESTION_APPLICATION_URL";
 	public static final String ANTHILL_BUILD_TAG_BUILT = "ANTHILL_BUILD_TAG_BUILT";
 	public static final String NCIT_URL = "NCIT_URL";
-	
+
+	public static final String PAGINATION_TIME_OUT= "PAGINATION_TIME_OUT";
+	public static final String MINIMUM_SEARCH_STRING_LENGTH = "MINIMUM_SEARCH_STRING_LENGTH";
+
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static NCImBrowserProperties NCImBrowserProperties = null;
@@ -79,6 +82,9 @@ public class NCImBrowserProperties {
 	private static String terminology_subset_download_url = null;
 	private static String term_suggestion_application_url = null;
 
+	private static int    pagination_time_out = 4;
+	private static int    minimum_search_string_length = 1;
+
 	/**
 	 * Private constructor for singleton pattern.
 	 */
@@ -87,9 +93,9 @@ public class NCImBrowserProperties {
 
 	/**
 	 * Gets the single instance of NCImBrowserProperties.
-	 * 
+	 *
 	 * @return single instance of NCImBrowserProperties
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -128,6 +134,16 @@ public class NCImBrowserProperties {
 							.getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
 					term_suggestion_application_url = NCImBrowserProperties
 							.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLICATION_URL);
+
+					String pagination_time_out_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.PAGINATION_TIME_OUT);
+					if (pagination_time_out_str != null) {
+						pagination_time_out = Integer.parseInt(pagination_time_out_str);
+					}
+
+					String minimum_search_string_length_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.MINIMUM_SEARCH_STRING_LENGTH);
+					if (minimum_search_string_length_str != null) {
+						minimum_search_string_length = Integer.parseInt(minimum_search_string_length_str);
+					}
 				}
 			}
 		}
@@ -217,5 +233,14 @@ public class NCImBrowserProperties {
 		}
 		return hmap;
 	}
+
+	public static int getPaginationTimeOut() {
+		return pagination_time_out;
+	}
+
+	public static int getMinimumSearchStringLength() {
+		return minimum_search_string_length;
+	}
+
 
 }

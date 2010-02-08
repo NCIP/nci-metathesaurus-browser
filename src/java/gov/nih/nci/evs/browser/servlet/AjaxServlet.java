@@ -154,7 +154,29 @@ public final class AjaxServlet extends HttpServlet {
         long ms = System.currentTimeMillis();
 
         if (action.equals("expand_tree")) {
+System.out.println("AjaxServlet expand_tree");
             if (node_id != null && ontology_display_name != null) {
+				int pos = node_id.indexOf("|");
+				if (pos != -1) {
+					String parent_id = node_id.substring(pos+1, node_id.length());
+					node_id = node_id.substring(0, pos);
+					response.setContentType("text/html");
+					response.setHeader("Cache-Control", "no-cache");
+					JSONObject json = new JSONObject();
+					JSONArray nodesArray = null;
+					try {
+	                    nodesArray = CacheController.getInstance().getRemainingSubconcepts(ontology_display_name, null, parent_id, node_id);
+					    if (nodesArray != null)
+						{
+							json.put("nodes", nodesArray);
+						}
+					} catch (Exception e) {
+					}
+					response.getWriter().write(json.toString());
+					System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+					return;
+				}
+
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
                 JSONObject json = new JSONObject();
@@ -170,6 +192,7 @@ public final class AjaxServlet extends HttpServlet {
                 }
                 response.getWriter().write(json.toString());
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+                return;
             }
         }
 
@@ -229,6 +252,30 @@ public final class AjaxServlet extends HttpServlet {
             System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
             return;
        }
+
+/*
+        else if (action.equals("extend_branch")) {
+			 // to be implemented:
+
+            response.setContentType("text/html");
+            response.setHeader("Cache-Control", "no-cache");
+            JSONObject json = new JSONObject();
+            JSONArray nodesArray = null;//new JSONArray();
+            try {
+                nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
+                if (nodesArray != null)
+                {
+                    json.put("root_nodes", nodesArray);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            response.getWriter().write(json.toString());
+            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+            return;
+		}
+*/
    }
 
 }

@@ -13,7 +13,8 @@ public class Constants {
     static public final int MAJOR_VER = 1;
     static public final int MINOR_VER = 0;
     static public final String CONFIG_FILE = "NCImBrowserProperties.xml";
-    static public final String CODING_SCHEME_NAME = "NCI MetaThesaurus";
+    //KLO, 011210
+    static public final String CODING_SCHEME_NAME = "NCI Metathesaurus";
 
     // Application error constants
     static public final String INIT_PARAM_ERROR_PAGE = "errorPage";
@@ -30,6 +31,7 @@ public class Constants {
     static public final String EXTERNAL_TERM_SOURCE = "Other";
     static public final String EXTERNAL_TERM_SOURCE_CODE = "N/A";
 
+    static public final String ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS = "No match found. Please try 'Begins With' or 'Contains' search instead.";
 
     static public final int DEFAULT_PAGE_SIZE = 50;
 

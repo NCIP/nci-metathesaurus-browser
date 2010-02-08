@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.HashMap"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
@@ -26,6 +27,14 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
+    <script type="text/javascript"
+      src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
+
 <f:view>
   <%@ include file="/pages/templates/header.xhtml" %>
   <div class="center-page">
@@ -36,6 +45,7 @@
       <!-- Page content -->
       <div class="pagecontent">
         <%
+        
           long ms = System.currentTimeMillis();
           long iterator_delay; 
         
@@ -45,7 +55,7 @@
        
           //Vector v = (Vector) request.getSession().getAttribute("search_results");
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
-          String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
+          //String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
           
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
           
@@ -71,6 +81,7 @@
           int istart = iend - page_size;
           
           int size = iteratorBean.getSize();
+          String match_size = new Integer(size).toString();
 
           if (iend > size) iend = size;
           int num_pages = size / page_size;
@@ -122,28 +133,22 @@
                   List list = iteratorBean.getData(istart, iend);
                   iterator_delay = System.currentTimeMillis() - ms0;
                   System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
+                  
+                  
+                  Vector code_vec = new Vector();
+                  for (int k=0; k<list.size(); k++) {
+                      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
+                      code_vec.add(rcr.getConceptCode());
+                  }
+                  HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
+                  
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-                      Concept c = rcr.getReferencedEntry();
                       String code = rcr.getConceptCode();
                       String name = rcr.getEntityDescription().getContent();
                       String semantic_type = "";
-                      
-                      if (c != null) {
-			      Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");                      
-			      if (semantic_types != null && semantic_types.size() > 0) {
-				  for (int j=0; j<semantic_types.size(); j++) {
-				      String t = (String) semantic_types.elementAt(j);
-				      if (j == 0) {
-					  semantic_type = semantic_type + t;
-				      } else {
-					  semantic_type = semantic_type + "&nbsp;" + t;
-				      }
-				      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-				  }
-			      }
-                      }
-
+                      String t = (String) type_hmap.get(code);
+                      if (t != null) semantic_type = t;
                       if (i % 2 == 0) {
                         %>
                           <tr class="dataRowDark">

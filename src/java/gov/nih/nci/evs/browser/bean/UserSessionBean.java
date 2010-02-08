@@ -142,6 +142,9 @@ public class UserSessionBean extends Object
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null) matchtype = "string";
 
+        String searchTarget = (String) request.getParameter("searchTarget");
+        request.getSession().setAttribute("searchTarget", searchTarget);
+
         //Remove ranking check box (KLO, 092409)
         //String rankingStr = (String) request.getParameter("ranking");
         //boolean ranking = rankingStr != null && rankingStr.equals("on");
@@ -181,7 +184,72 @@ public class UserSessionBean extends Object
 
         //v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
         //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
-        ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+        //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
+
+
+        boolean excludeDesignation = true;
+        boolean designationOnly = false;
+
+        // check if this search has been performance previously through IteratorBeanManager
+		IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
+			.getSessionMap().get("iteratorBeanManager");
+
+		if (iteratorBeanManager == null) {
+			iteratorBeanManager = new IteratorBeanManager();
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBeanManager", iteratorBeanManager);
+		}
+
+        IteratorBean iteratorBean = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        Vector schemes = new Vector();
+        schemes.add(scheme);
+        boolean ranking = true;
+        String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
+        if (searchTarget.compareTo("names") == 0) {
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+			} else {
+       	    	ResolvedConceptReferencesIteratorWrapper wrapper =
+       	    	    new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
+       	    	iterator = wrapper.getIterator();
+       	    	if (iterator != null) {
+					iteratorBean = new IteratorBean(iterator);
+					iteratorBean.setKey(key);
+					iteratorBeanManager.addIteratorBean(iteratorBean);
+				}
+			}
+
+		} else if (searchTarget.compareTo("properties") == 0) {
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+			} else {
+                ResolvedConceptReferencesIteratorWrapper wrapper = new SearchUtils().searchByProperties(scheme, version, matchText, source, matchAlgorithm, excludeDesignation, ranking, maxToReturn);
+       	    	iterator = wrapper.getIterator();
+       	    	if (iterator != null) {
+					iteratorBean = new IteratorBean(iterator);
+					iteratorBean.setKey(key);
+					iteratorBeanManager.addIteratorBean(iteratorBean);
+				}
+			}
+
+		} else if (searchTarget.compareTo("relationships") == 0) {
+			designationOnly = true;
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+			} else {
+                ResolvedConceptReferencesIteratorWrapper wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText, source, matchAlgorithm, designationOnly, ranking, maxToReturn);
+       	    	iterator = wrapper.getIterator();
+       	    	if (iterator != null) {
+					iteratorBean = new IteratorBean(iterator);
+					iteratorBean.setKey(key);
+					iteratorBeanManager.addIteratorBean(iteratorBean);
+				}
+			}
+		}
+
 
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
@@ -198,7 +266,7 @@ public class UserSessionBean extends Object
         //if (v != null && v.size() > 1)
         if (iterator != null) {
 
-            IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
+            iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("iteratorBean");
 
             if (iteratorBean == null) {
@@ -231,7 +299,6 @@ public class UserSessionBean extends Object
 
 				Concept c = null;
 				if (ref == null) {
-					System.out.println("************ ref = NULL???");
 					String msg = "Error: Null ResolvedConceptReference encountered.";
 					request.getSession().setAttribute("message", msg);
 					return "message";
@@ -252,9 +319,26 @@ public class UserSessionBean extends Object
 		    }
 		}
 
+        //[#23463] Linking retired concept to corresponding new concept
+        // Test case: C0536142|200601|SY|||C1433544|Y|
+		String newCUI = DataUtils.getReferencedCUI(matchText);
+		System.out.println("(*) newCUI: " + newCUI);
+
+		if (newCUI != null) {
+			Concept c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, newCUI);
+			request.getSession().setAttribute("code", newCUI);
+			request.getSession().setAttribute("concept", c);
+			request.getSession().setAttribute("type", "properties");
+
+			request.getSession().setAttribute("new_search", Boolean.TRUE);
+			return "concept_details";
+		} else {
+			System.out.println("(*) newCUI == null.");
+		}
+
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
-            message = "No match found. Please try 'Begins With' or 'Contains' search instead.";
+            message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
         }
         request.getSession().setAttribute("message", message);
         return "message";

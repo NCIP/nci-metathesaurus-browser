@@ -9,6 +9,7 @@ import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.concepts.Concept;
 
 import gov.nih.nci.evs.browser.common.Constants;
+import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -43,8 +44,7 @@ import gov.nih.nci.evs.browser.common.Constants;
  */
 
 public class IteratorBean extends Object {
-    //static int DEFAULT_MAX_RETURN = 100;
-    static int DEFAULT_MAX_RETURN = 25;
+    static int DEFAULT_MAX_RETURN = 100;
     ResolvedConceptReferencesIterator iterator = null;
     int size = 0;
     List list = null;
@@ -58,6 +58,9 @@ public class IteratorBean extends Object {
     int lastResolved;
     int maxReturn = 100;
 
+    String key = null;
+    boolean timeout = false;
+
 	public IteratorBean(ResolvedConceptReferencesIterator iterator) {
 		this.iterator = iterator;
 		this.maxReturn = DEFAULT_MAX_RETURN;
@@ -65,10 +68,14 @@ public class IteratorBean extends Object {
 	}
 
 
-	public IteratorBean(ResolvedConceptReferencesIterator iterator, int maxReturn) {
+    public IteratorBean(ResolvedConceptReferencesIterator iterator, int maxReturn) {
 		this.iterator = iterator;
 		this.maxReturn = maxReturn;
 		initialize();
+	}
+
+	public int getNumberOfPages() {
+		return this.numberOfPages;
 	}
 
 
@@ -78,6 +85,14 @@ public class IteratorBean extends Object {
 		initialize();
 	}
 
+    public ResolvedConceptReferencesIterator getIterator() {
+		return this.iterator;
+	}
+
+	public boolean getTimeout() {
+		return timeout;
+	}
+
 	public void initialize() {
 		try {
 			if (iterator == null) {
@@ -85,6 +100,7 @@ public class IteratorBean extends Object {
 			} else {
 				this.size = iterator.numberRemaining();
 		    }
+
 			this.pageNumber = 1;
 			this.list = new ArrayList(size);
 			for (int i=0; i<size; i++) {
@@ -101,6 +117,10 @@ public class IteratorBean extends Object {
 		}
 	}
 
+	public int getMumberOfPages() {
+		return this.numberOfPages;
+	}
+
 	public int getSize() {
 		return this.size;
 	}
@@ -113,50 +133,23 @@ public class IteratorBean extends Object {
 		return this.pageSize;
 	}
 
+	public int getLastResolved() {
+		return this.lastResolved;
+	}
+
 	public int getStartIndex(int pageNumber) {
 		startIndex = (pageNumber-1) * pageSize;
 		if (startIndex < 0) startIndex = 0;
 		return startIndex;
 	}
 
-	public int getEndIndex(int pageNumber) {
 
-		if (size < pageSize) {
-			endIndex = size -1;
-		}  else {
-			endIndex = pageNumber * pageSize - 1;
-			if (endIndex > size) endIndex = size;
-			//if (endIndex < pageSize) endIndex = size;
-	    }
+	public int getEndIndex(int pageNumber) {
+		endIndex = pageNumber * pageSize - 1;
+		if (endIndex > (size-1)) endIndex = size-1;
 		return endIndex;
 	}
 
-/*
-	public List getData(int pageNumber) {
-		int idx1 = getStartIndex(pageNumber);
-		int idx2 = getEndIndex(pageNumber);
-		try {
-			long ms = System.currentTimeMillis();
-			System.out.println("IteratorBean pageNumber: " + pageNumber);
-			System.out.println("IteratorBean lastResolved: " + lastResolved);
-			System.out.println("IteratorBean idx1: " + idx1 + " idx2: " + idx2);
-
-			while(iterator.hasNext() && lastResolved < idx2) {
-				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
-				for(ResolvedConceptReference ref : refs) {
-					lastResolved++;
-					this.list.set(lastResolved, ref);
-				}
-			}
-
-			return getData(idx1, idx2);
-	    } catch (Exception ex) {
-			System.out.println("WARNING: getData exception thrown???");
-			ex.printStackTrace();
-			return null;
-		}
-	}
-*/
 
 	public List getData(int pageNumber) {
 		int idx1 = getStartIndex(pageNumber);
@@ -166,28 +159,47 @@ public class IteratorBean extends Object {
 
 
 	public List getData(int idx1, int idx2) {
+		System.out.println("Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
+		long ms = System.currentTimeMillis();
+		long dt = 0;
+		long total_delay = 0;
+		timeout = false;
         try {
-			long ms0 = System.currentTimeMillis();
-			while(iterator.hasNext() && lastResolved < idx2) {
+			while(iterator != null && iterator.hasNext() && lastResolved < idx2) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					lastResolved++;
 					this.list.set(lastResolved, ref);
 				}
+
+				System.out.println("Advancing iterator: " + lastResolved);
+
+				dt = System.currentTimeMillis() - ms;
+				ms = System.currentTimeMillis();
+				total_delay = total_delay + dt;
+				if (total_delay > NCImBrowserProperties.getPaginationTimeOut() * 60 * 1000) {
+					timeout = true;
+
+					System.out.println("Time out at: " + lastResolved);
+					break;
+				}
 			}
-			System.out.println("iteratorBean.getData iterator.hasNext() calls Run time (ms): " + (System.currentTimeMillis() - ms0));
 		} catch (Exception ex) {
 
 		}
 
-        long ms1 = System.currentTimeMillis();
 		List rcr_list = new ArrayList();
-		if (idx2 <= idx1) idx2 = idx1 + 1;
-		for (int i=idx1; i<idx2 && i<list.size(); i++) {
+		//KLO 012710
+		if (idx2 <= 0) idx2 = 1;
+		for (int i=idx1; i<idx2; i++) {
 			ResolvedConceptReference rcr = (ResolvedConceptReference) this.list.get(i);
 			rcr_list.add(rcr);
+			if (i > lastResolved) break;
 		}
-		System.out.println("iteratorBean.getData get from list Run time (ms): " + (System.currentTimeMillis() - ms1));
+
+		System.out.println("getData Run time (ms): "
+					+ (System.currentTimeMillis() - ms));
+
 		return rcr_list;
 	}
 
@@ -230,6 +242,15 @@ public class IteratorBean extends Object {
 			int j = i+1;
 			displayRef(osWriter, j, rcr);
 		}
+	}
+
+    public void setKey(String key) {
+		this.key = key;
+	}
+
+
+    public String getKey() {
+		return this.key;
 	}
 
 }
