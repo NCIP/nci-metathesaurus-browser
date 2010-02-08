@@ -237,7 +237,7 @@
 
     function showPageRenderingAction() {
       rootDescDiv.setBody("<span class='instruction_text'>(Note: This tree only shows partial hierarchy.)</span>");
-      rootDescDiv.setBody("<span class='instruction_text'>(      Redering page. Please wait...)</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>(      Rendering tree. Please wait...)</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
@@ -269,8 +269,10 @@
         var categoryNum = 0;
         var pos = id.indexOf("|");
         if ( typeof(respObj.nodes) != "undefined") {
-          for (var i=0; i < respObj.nodes.length; i++) {
-		  if (pos == -1) {
+        
+		if (pos == -1) {   
+
+		  for (var i=0; i < respObj.nodes.length; i++) {
 			  var name = respObj.nodes[i].ontology_node_name;
 			  var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
 			  var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
@@ -278,42 +280,35 @@
 			  if (respObj.nodes[i].ontology_node_child_count > 0) {
 			      newNode.setDynamicLoad(loadNodeData);
 			  }
-		  } else {
+		  }
 
-			  if (respObj.nodes[0].ontology_node_child_count > 0) {
-			      node.setDynamicLoad(loadNodeData);
-			  }
-			  
+		} else {
+
 			  var parent = node.parent;
 			  id = id.substring(0, pos);
-			  
+
 			  //var bool_val = tree.removeNode(node, true);
 			  //var bool_val = tree.popNode(node);
 			  //var bool_val = tree.removeChildren(node);
-			  //node.setUpLabel(node.ontology_node_name.substring(4, node.ontology_node_name.length());
-			  
-			  node.setUpLabel(respObj.nodes[0].ontology_node_name);
-			  node.refresh();
-			  
+
+			  //node.setUpLabel(respObj.nodes[0].ontology_node_name);
+			  //node.refresh();
+
 			  for (var i=0; i < respObj.nodes.length; i++) {
 			    var name = respObj.nodes[i].ontology_node_name;
 			    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
 			    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
 			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, false);
-			    
+
 			    if (respObj.nodes[i].ontology_node_child_count > 0) {
-			    //   newNode.setDynamicLoad(loadNodeData);
+				newNode.setDynamicLoad(loadNodeData);
 			    }
 			  }			  
-
-			  //parent.refresh(); 
-			  
 			  //removeNode and popNode will freeze the tree. A YUI bug???????????????????????
-			  tree.removeNode(node);
-		  }
-          }
+			  tree.removeNode(node,true);
+		}
         }
-        tree.draw();
+        //tree.draw();
         fnLoadComplete();
       }
 
@@ -343,25 +338,22 @@
 
 
     function searchTree(ontology_node_id, ontology_display_name) {
-
-      var handleBuildTreeSuccess = function(o) {
-
+        var handleBuildTreeSuccess = function(o) {
         var respTxt = o.responseText;
         var respObj = eval('(' + respTxt + ')');
         if ( typeof(respObj) != "undefined") {
           if ( typeof(respObj.root_nodes) != "undefined") {
+          
             var root = tree.getRoot();
             if (respObj.root_nodes.length == 0) {
               showEmptyRoot();
             }
             else {
+            
               showPartialHierarchy();
+              
               for (var i=0; i < respObj.root_nodes.length; i++) {
                 var nodeInfo = respObj.root_nodes[i];
-
-                //alert("root: " + nodeInfo.ontology_node_name);
-
-                //var expand = false;
                 addTreeBranch(ontology_node_id, root, nodeInfo);
               }
             }
@@ -384,12 +376,9 @@
 
       if (ontology_display_name!='') {
         resetEmptyRoot();
-
-        //showTreeLoadingStatus();
         showSearchingTreeStatus();
         var ontology_source = null;//document.pg_form.ontology_source.value;
         var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=search_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
-
       }
     }
 
@@ -397,8 +386,6 @@
 
 
     function addTreeBranch(ontology_node_id, rootNode, nodeInfo) {
-    
-      //alert("addTreeBranch root: " + nodeInfo.ontology_node_name);
     
       var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
       var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
@@ -425,24 +412,19 @@
          }
 
       } else {
-          if (nodeInfo.ontology_node_id != ontology_node_id) {
+        if (nodeInfo.ontology_node_id != ontology_node_id) {
           if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-        newNode.isLeaf = true;
+              newNode.isLeaf = true;
           } else if (childNodes.length == 0) {
-        newNode.setDynamicLoad(loadNodeData);
+              newNode.setDynamicLoad(loadNodeData);
           }
         }
       }
 
       tree.draw();
       
-      //alert("addTreeBranch childNodes.length: " + childNodes.length);
-      
       for (var i=0; i < childNodes.length; i++) {
           var childnodeInfo = childNodes[i];
-          
-          //alert("addTreeBranch childnode: " + childnodeInfo.ontology_node_name);
-          
           addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
     }
