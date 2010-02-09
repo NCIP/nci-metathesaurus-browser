@@ -285,33 +285,23 @@
 		} else {
 
 			  var parent = node.parent;
-			  id = id.substring(0, pos);
-
-			  //var bool_val = tree.removeNode(node, true);
-			  //var bool_val = tree.popNode(node);
-			  //var bool_val = tree.removeChildren(node);
-
-			  //node.setUpLabel(respObj.nodes[0].ontology_node_name);
-			  //node.refresh();
-
 			  for (var i=0; i < respObj.nodes.length; i++) {
 			    var name = respObj.nodes[i].ontology_node_name;
 			    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
 			    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, false);
+			    //var newNode = new YAHOO.widget.TextNode(newNodeData, parent, false);
+			    
+			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
 
 			    if (respObj.nodes[i].ontology_node_child_count > 0) {
 				newNode.setDynamicLoad(loadNodeData);
 			    }
 			  }			  
-			  //removeNode and popNode will freeze the tree. A YUI bug???????????????????????
 			  tree.removeNode(node,true);
 		}
         }
-        //tree.draw();
         fnLoadComplete();
       }
-
 
       var responseFailure = function(o){
         alert('responseFailure: ' + o.statusText);
