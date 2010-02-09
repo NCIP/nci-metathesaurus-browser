@@ -289,12 +289,10 @@
 			    var name = respObj.nodes[i].ontology_node_name;
 			    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
 			    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-			    //var newNode = new YAHOO.widget.TextNode(newNodeData, parent, false);
-			    
+		    
 			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
-
 			    if (respObj.nodes[i].ontology_node_child_count > 0) {
-				newNode.setDynamicLoad(loadNodeData);
+			       newNode.setDynamicLoad(loadNodeData);
 			    }
 			  }			  
 			  tree.removeNode(node,true);
@@ -410,7 +408,6 @@
           }
         }
       }
-
       tree.draw();
       
       for (var i=0; i < childNodes.length; i++) {
