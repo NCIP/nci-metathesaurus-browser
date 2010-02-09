@@ -85,9 +85,8 @@ public class MetaTreeUtils {
     LexBIGServiceConvenienceMethods lbscm_ = null;
     LexBIGService lbsvc_ = null;
 
-	//private LexBIGService lbs;
-
-	private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
+	//private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
+	private static String NCI_META_THESAURUS = "NCI Metathesaurus";
 	private static String NCI_SOURCE = "NCI";
 
 	private static boolean RESOLVE_CONCEPT = false;//true;
