@@ -182,7 +182,10 @@ public class CacheController
         {
             System.out.println("Not in cache -- calling getSubconcepts..." );
 			//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
-			map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
+			// testing KLO, 020910
+			// map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
+
+			map = new MetaTreeUtils().getRemainingSubconcepts(scheme, version, code, NCI_SOURCE, null);
 
             nodeArray = HashMap2JSONArray(map);
             if (fromCache) {

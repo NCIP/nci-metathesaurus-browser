@@ -2042,7 +2042,11 @@ KLO, 020210
 		for (int i=0; i<w.size(); i++) {
 	    //for (int i=1; i<w.size(); i++) {
 			TreeItem sub = (TreeItem) w.elementAt(i);
-			if (sub.code.compareTo(subconcept_code) == 0 && !include) include = true;
+			if (subconcept_code != null) {
+				if (sub.code.compareTo(subconcept_code) == 0 && !include) include = true;
+			} else {
+				include = true;
+			}
 			ti.expandable = true;
 			if (include) {
 				ti.addChild("CHD", sub);
