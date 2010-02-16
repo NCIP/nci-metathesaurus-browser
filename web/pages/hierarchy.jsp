@@ -327,6 +327,7 @@
 
     function searchTree(ontology_node_id, ontology_display_name) {
         var handleBuildTreeSuccess = function(o) {
+        showPageRenderingAction();
         var respTxt = o.responseText;
         var respObj = eval('(' + respTxt + ')');
         if ( typeof(respObj) != "undefined") {
