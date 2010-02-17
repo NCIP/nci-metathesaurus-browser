@@ -390,15 +390,12 @@
           newNode.labelStyle = "ygtvlabel_highlight";
       }
 
-      //newNode.isLeaf = false;
       if (nodeInfo.ontology_node_id == ontology_node_id) {
          newNode.isLeaf = true;
          if (nodeInfo.ontology_node_child_count > 0) {
              newNode.isLeaf = false;
              newNode.setDynamicLoad(loadNodeData);
-         } else {
-             tree.draw();
-         }
+         } 
 
       } else {
         if (nodeInfo.ontology_node_id != ontology_node_id) {
@@ -416,6 +413,8 @@
           addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
     }
+    
+    
     YAHOO.util.Event.addListener(window, "load", init);
 
   </script>
