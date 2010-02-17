@@ -85,7 +85,6 @@ public class MetaTreeUtils {
     LexBIGServiceConvenienceMethods lbscm_ = null;
     LexBIGService lbsvc_ = null;
 
-	//private static String NCI_META_THESAURUS = "NCI MetaThesaurus";
 	private static String NCI_META_THESAURUS = "NCI Metathesaurus";
 	private static String NCI_SOURCE = "NCI";
 
@@ -1507,7 +1506,15 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 
         // Create a starting point for tree building.
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent(), getAtomText(rcr, sab));
-        TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
+
+
+ String root_name = getAtomName(rcr.getReferencedEntry(), NCI_SOURCE, "PT");
+
+
+        //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
+        TreeItem ti = new TreeItem(rcr.getCode(), root_name);
+
+
 
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 		MetaBrowserService mbs = null;
@@ -1804,9 +1811,6 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 						sab, code2Tree, roots, visited_links, maxLevel, currLevel+1);
 
 					code2Tree.put(parent_cui, tiParent);
-				//}
-
-					//isRoot = false;
 				}
 		    } else {
 				roots.add(ti);
@@ -1947,7 +1951,7 @@ KLO, 020210
 				}
 				//BySourceTabResults result = (BySourceTabResults) v.elementAt(0);
 				sub = new TreeItem(child_cui, result.getTerm());
-				sub.expandable = hasSubconcepts(lbs, mbs, child_cui, "NCI", "CHD", true);
+				sub.expandable = hasSubconcepts(lbs, mbs, child_cui, NCI_SOURCE, "CHD", true);
 		    }
 		    w.add(sub);
 
@@ -1959,13 +1963,52 @@ KLO, 020210
 			ti.expandable = true;
 
 //To be modified...
+/*
 			if (i > 5) {
 				sub.text = "...";// + sub.text;
 				sub.code = sub.code + "|" + ti.code;
 				ti.addChild("CHD", sub);
 				break;
 			}
-			ti.addChild("CHD", sub);
+*/
+
+/*
+			if (i > 5 && w.size() > 6) {
+				sub.text = "...";// + sub.text;
+				sub.code = sub.code + "|" + ti.code;
+
+				sub.expandable = true;
+
+				ti.addChild("CHD", sub);
+				break;
+			} else if (i > 5 && w.size() == 6) {
+				//sub.text = "...";// + sub.text;
+				//sub.code = sub.code + "|" + ti.code;
+				ti.addChild("CHD", sub);
+				break;
+			}
+*/
+
+
+/*
+			if (i > 5) {
+				if (w.size() == 6) {
+					ti.addChild("CHD", sub);
+					break;
+				} else {
+					sub.text = "...";// + sub.text;
+					sub.code = sub.code + "|" + ti.code;
+					sub.expandable = true;
+					ti.addChild("CHD", sub);
+					break;
+				}
+			} else {
+			    ti.addChild("CHD", sub);
+			}
+
+*/
+
+            ti.addChild("CHD", sub);
 		}
         return ti;
 	}
@@ -2007,6 +2050,7 @@ KLO, 020210
 		Map<String,List<BySourceTabResults>> map = null;
 
 		MetaBrowserService mbs = null;
+
 		try {
 			mbs = (MetaBrowserService)lbSvc.getGenericExtension("metabrowser-extension");
 			map = mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list, Direction.SOURCEOF);
@@ -2023,9 +2067,6 @@ KLO, 020210
 		Iterator iterator = keyset.iterator();
 		while (iterator.hasNext()) {
 			String child_cui = (String) iterator.next();
-
-			//System.out.println("\tchild_cui: " + child_cui);
-
 			TreeItem sub = null;
 			Vector v = (Vector) cui2SynonymsMap.get(child_cui);
 			BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
@@ -2036,15 +2077,64 @@ KLO, 020210
 			sub.expandable = hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
 		    w.add(sub);
 		}
+
+/*
+        // testing
+		par_chd_assoc_list = new ArrayList();
+		par_chd_assoc_list.add("CHD");
+		try {
+			mbs = (MetaBrowserService)lbSvc.getGenericExtension("metabrowser-extension");
+			map = mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list, Direction.TARGETOF);
+
+		} catch (Exception ex) {
+            ex.printStackTrace();
+			hmap.put(code, ti);
+			return hmap;
+        }
+
+		cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+		//ti.expandable = false;
+		keyset = cui2SynonymsMap.keySet();
+		iterator = keyset.iterator();
+		while (iterator.hasNext()) {
+			String child_cui = (String) iterator.next();
+			TreeItem sub = null;
+			Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+			BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
+			if (result == null) {
+				result = (BySourceTabResults) v.elementAt(0);
+			}
+			sub = new TreeItem(child_cui, result.getTerm());
+			sub.expandable = hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
+		    w.add(sub);
+		}
+*/
 		w = SortUtils.quickSort(w);
 		boolean include = false;
+        int istart = 0;
+        if (subconcept_code != null) {
+			for (int i=0; i<w.size(); i++) {
+				TreeItem sub = (TreeItem) w.elementAt(i);
+				if (sub.code.compareTo(subconcept_code) == 0) {
+					istart = i;
+					break;
+				}
+			}
+		}
+
 		for (int i=0; i<w.size(); i++) {
-	    //for (int i=1; i<w.size(); i++) {
 			TreeItem sub = (TreeItem) w.elementAt(i);
+			/*
 			if (subconcept_code != null) {
 				if (sub.code.compareTo(subconcept_code) == 0 && !include) include = true;
 			} else {
 				include = true;
+			}
+			*/
+			if (subconcept_code == null) {
+				include = true;
+			} else {
+				if (i>=istart) include = true;
 			}
 			ti.expandable = true;
 			if (include) {
@@ -2053,6 +2143,38 @@ KLO, 020210
 		}
 		hmap.put(code, ti);
         return hmap;
+	}
+
+
+	protected String getAtomName(Concept ce, String sab_name, String term_type) {
+		if (ce == null) return null;
+		Property[] properties = ce.getPresentation();
+		for (int i=0; i<properties.length; i++)
+		{
+			Property property = (Property) properties[i];
+			java.lang.String name = property.getPropertyName();
+			java.lang.String prop_value = property.getValue().getContent();
+			if (property instanceof org.LexGrid.concepts.Presentation)
+			{
+				Presentation presentation = (Presentation) property;
+				java.lang.String form = presentation.getRepresentationalForm();
+				if (form != null)
+				{
+					if (form.compareTo(term_type) == 0) {
+						Source[] sources = property.getSource();
+						for (int j=0; j<sources.length; j++)
+						{
+							Source source = (Source) sources[j];
+							java.lang.String sab = source.getContent();
+							if (sab.compareTo(sab_name) == 0) {
+								return prop_value;
+							}
+						}
+				    }
+				}
+			}
+		}
+		return null;
 	}
 
 
@@ -2082,22 +2204,6 @@ KLO, 020210
 
 		}
 
-
-/*
-        //Cell Aging (CUI C0007581)
-        code = "C0007581";
-
-
-        code = "C0016504";
-
-        code = "C0025202";
-
-        //code = "C1268197";
-        //new_map = test.getTreePathData(scheme, version, sab, code, -1);
-
-        new_map = test.getTreePathData(scheme, version, sab, code, -1);
-        test.dumpTreeItems(new_map);
-*/
 	}
 
 }
@@ -2107,27 +2213,3 @@ KLO, 020210
 //cellular process (CUI C1325880)
 //Cell Aging (CUI C0007581)
 
-
-/*
---- CHD
-Biological Process (C1154313)
-
- --- CHD
-        Subcellular Process (C0230625)
-        Population Process (C1514233)
-        Organismal Process (CL014087)
-        Regulation (C1327622)
-        Multicellular Process (C1513731)
-        Cellular Process (C1325880)
-
-         --- CHD
-                Cell Defense Process (C1707327)
-                Cell Division Process (C1516346)
-                Cell Aging (C0007581) (*)
-                Cell Transit Process (C1707330)
-                Cell Movement Process (C1516355)
-                Cell Viability Process (C1516362)
-        Viral Function (CL100413)
-        Pathologic Process (C0030660)
-
-*/

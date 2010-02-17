@@ -150,9 +150,6 @@ public final class AjaxServlet extends HttpServlet {
         String node_id = request.getParameter("ontology_node_id");//DataConstants.ONTOLOGY_NODE_ID);
         String ontology_display_name = request.getParameter("ontology_display_name");//DataConstants.ONTOLOGY_DISPLAY_NAME);
        // String ontology_source = request.getParameter(DataConstants.ONTOLOGY_SOURCE);
-
-System.out.println("AjaxServlet tree action: " + action + " node: " + node_id);
-
         long ms = System.currentTimeMillis();
 
         if (action.equals("expand_tree")) {
