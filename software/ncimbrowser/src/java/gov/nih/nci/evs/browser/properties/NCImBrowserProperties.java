@@ -65,6 +65,7 @@ public class NCImBrowserProperties {
 
 	public static final String PAGINATION_TIME_OUT= "PAGINATION_TIME_OUT";
 	public static final String MINIMUM_SEARCH_STRING_LENGTH = "MINIMUM_SEARCH_STRING_LENGTH";
+    public static final String SLIDING_WINDOW_HALF_WIDTH = "SLIDING_WINDOW_HALF_WIDTH";
 
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
@@ -84,6 +85,8 @@ public class NCImBrowserProperties {
 
 	private static int    pagination_time_out = 4;
 	private static int    minimum_search_string_length = 1;
+
+    private static int    sliding_window_half_width = 5;
 
 	/**
 	 * Private constructor for singleton pattern.
@@ -143,6 +146,14 @@ public class NCImBrowserProperties {
 					String minimum_search_string_length_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.MINIMUM_SEARCH_STRING_LENGTH);
 					if (minimum_search_string_length_str != null) {
 						minimum_search_string_length = Integer.parseInt(minimum_search_string_length_str);
+					}
+
+					String sliding_window_half_width_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.SLIDING_WINDOW_HALF_WIDTH);
+					if (sliding_window_half_width_str != null) {
+						int sliding_window_halfwidth = Integer.parseInt(sliding_window_half_width_str);
+						if (sliding_window_halfwidth > 1) {
+							sliding_window_half_width = sliding_window_halfwidth;
+						}
 					}
 				}
 			}
@@ -242,5 +253,8 @@ public class NCImBrowserProperties {
 		return minimum_search_string_length;
 	}
 
+	public static int getSlidingWindowHalfWidth() {
+		return sliding_window_half_width;
+	}
 
 }

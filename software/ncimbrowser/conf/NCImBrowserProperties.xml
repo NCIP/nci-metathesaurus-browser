@@ -2302,7 +2302,12 @@
         <ConfigurableItem>
                  <key>MINIMUM_SEARCH_STRING_LENGTH</key>
                  <value>@minimum_search_string_length@</value>
-        </ConfigurableItem>        
+        </ConfigurableItem> 
+        
+        <ConfigurableItem>
+                 <key>SLIDING_WINDOW_HALF_WIDTH</key>
+                 <value>@sliding_window_half_width@</value>
+        </ConfigurableItem>
         
     </ConfigurableItems>
 
