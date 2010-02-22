@@ -1803,7 +1803,8 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 					// processed as part of the path are ignored since
 					// they are handled through recursion.
 
-					tiParent = addChildrenExt(lbs, mbs, tiParent, sab, parent_cui, code2Tree.keySet(), code2Tree);
+					//tiParent = addChildrenExt(lbs, mbs, tiParent, sab, parent_cui, code2Tree.keySet(), code2Tree);
+					tiParent = addChildrenExt(lbs, mbs, tiParent, sab, parent_cui, code2Tree.keySet(), code2Tree, ti.code);
 					tiParent.addChild("CHD", ti);
 
 					// Try to go higher through recursion.
@@ -1889,7 +1890,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 	}
 
     public TreeItem addChildrenExt(LexBIGService lbs, MetaBrowserService mbs, TreeItem ti,
-            String sab, String code, Set<String> codesToExclude, Map<String, TreeItem> code2Tree
+            String sab, String code, Set<String> codesToExclude, Map<String, TreeItem> code2Tree, String target_code
             ) throws LBException {
 
 		List<String> par_chd_assoc_list = new ArrayList();
@@ -1954,62 +1955,53 @@ KLO, 020210
 				sub.expandable = hasSubconcepts(lbs, mbs, child_cui, NCI_SOURCE, "CHD", true);
 		    }
 		    w.add(sub);
-
-            //ti.expandable = true;
 		}
 		w = SortUtils.quickSort(w);
+
+        /*
 		for (int i=0; i<w.size(); i++) {
 			TreeItem sub = (TreeItem) w.elementAt(i);
 			ti.expandable = true;
-
-//To be modified...
-/*
-			if (i > 5) {
-				sub.text = "...";// + sub.text;
-				sub.code = sub.code + "|" + ti.code;
-				ti.addChild("CHD", sub);
-				break;
-			}
-*/
-
-/*
-			if (i > 5 && w.size() > 6) {
-				sub.text = "...";// + sub.text;
-				sub.code = sub.code + "|" + ti.code;
-
-				sub.expandable = true;
-
-				ti.addChild("CHD", sub);
-				break;
-			} else if (i > 5 && w.size() == 6) {
-				//sub.text = "...";// + sub.text;
-				//sub.code = sub.code + "|" + ti.code;
-				ti.addChild("CHD", sub);
-				break;
-			}
-*/
-
-
-/*
-			if (i > 5) {
-				if (w.size() == 6) {
-					ti.addChild("CHD", sub);
-					break;
-				} else {
-					sub.text = "...";// + sub.text;
-					sub.code = sub.code + "|" + ti.code;
-					sub.expandable = true;
-					ti.addChild("CHD", sub);
-					break;
-				}
-			} else {
-			    ti.addChild("CHD", sub);
-			}
-
-*/
-
-            ti.addChild("CHD", sub);
+			ti.addChild("CHD", sub);
 		}
+		*/
+
+        // Truncate subconcept list to enhance search_tree performance
+		int target_idx = -1;
+		for (int i=0; i<w.size(); i++) {
+			TreeItem sub = (TreeItem) w.elementAt(i);
+			if (sub.code.compareTo(target_code) == 0) {
+				target_idx = i;
+				break;
+			}
+		}
+
+		for (int i=0; i<=target_idx; i++) {
+			TreeItem sub = (TreeItem) w.elementAt(i);
+			ti.expandable = true;
+			ti.addChild("CHD", sub);
+		}
+
+		if (target_idx == w.size()-1) {
+			return ti;
+		}
+
+		for (int i=target_idx+1; i<w.size(); i++) {
+			TreeItem sub = (TreeItem) w.elementAt(i);
+			if (sub.expandable) {
+				sub.text = "...";// + sub.text;
+				sub.code = sub.code + "|" + ti.code;
+				ti.expandable = true;
+				ti.addChild("CHD", sub);
+				break;
+			} else {
+				ti.expandable = true;
+				ti.addChild("CHD", sub);
+			}
+		}
+
+            //ti.addChild("CHD", sub);
+		//}
         return ti;
 	}
 
@@ -2124,13 +2116,6 @@ KLO, 020210
 
 		for (int i=0; i<w.size(); i++) {
 			TreeItem sub = (TreeItem) w.elementAt(i);
-			/*
-			if (subconcept_code != null) {
-				if (sub.code.compareTo(subconcept_code) == 0 && !include) include = true;
-			} else {
-				include = true;
-			}
-			*/
 			if (subconcept_code == null) {
 				include = true;
 			} else {
