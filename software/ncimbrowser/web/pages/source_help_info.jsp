@@ -9,7 +9,7 @@
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
   <head>
     <title>NCIm Sources</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -71,13 +71,13 @@ some of which are proprietary and included, by permission, for non-commercial us
     requires licensing for other purposes
     (see <a href="http://www.who.int/classifications/icd/en/" target="_blank">http://www.who.int/classifications/icd/en/</a>).
   </li>
-  
+
   <li>
-    The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in 
+    The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in
     NCI Enterprise Vocabulary Services, but requires licensing for other purposes
     (see <a href="http://www.ihtsdo.org/join-us/use-snomed-ct-licenses/" target="_blank">http://www.ihtsdo.org/join-us/use-snomed-ct-licenses/</a>).
   </li>
-    
+
   <li>
     The Medical Dictionary for Regulatory Activities (MedDRA) terminology is licensed for NCI work and may be
     viewed on NCI browsers. All other uses are prohibited, unless covered by separate subscription to MedDRA

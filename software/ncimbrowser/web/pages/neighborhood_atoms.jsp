@@ -27,12 +27,12 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
 <f:view>
-  <%@ include file="/pages/include/header.xhtml" %>
+  <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
-    <%@ include file="/pages/include/sub-header.xhtml" %>
+    <%@ include file="/pages/include/sub-header.jsp" %>
     <!-- Main box -->
     <div id="main-area">
-      <%@ include file="/pages/include/content-header.xhtml" %>
+      <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
 <%
@@ -128,7 +128,7 @@
         <p></p>
               <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=neighborhood_code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Return to Sources</a>
 
-        <%@ include file="/pages/include/nciFooter.html" %>
+        <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>
       <!-- end Page content -->
     </div>
