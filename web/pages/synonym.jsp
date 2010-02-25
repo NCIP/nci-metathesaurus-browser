@@ -27,7 +27,7 @@
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -46,12 +46,12 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
   <f:view>
-    <%@ include file="/pages/include/header.xhtml" %>
+    <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
-      <%@ include file="/pages/include/sub-header.xhtml" %>
+      <%@ include file="/pages/include/sub-header.jsp" %>
       <!-- Main box -->
       <div id="main-area">
-        <%@ include file="/pages/include/content-header.xhtml" %>
+        <%@ include file="/pages/include/content-header.jsp" %>
         <!-- Page content -->
         <div class="pagecontent">
           <%
@@ -79,7 +79,7 @@ System.out.println("set Sortby to: " + sort_by);
             <%=name%> (Code <%=code%>)
           </div>
           <hr>
-          <%@ include file="/pages/include/typeLinks.xhtml" %>
+          <%@ include file="/pages/include/typeLinks.jsp" %>
           <div class="tabTableContentContainer">
 
 

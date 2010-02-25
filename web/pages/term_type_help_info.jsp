@@ -8,7 +8,7 @@
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
   <head>
     <title>NCIm Term Types</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -31,22 +31,22 @@
           Vector def_vec = new Vector();
           Vector v = (Vector) request.getSession().getAttribute("TermTypeMetaData");
           if (v == null) {
-          	v = MetadataUtils.getTermTypeDescriptionMetaData("NCI Metathesaurus", null);
-          	if (v != null) {
-          	    request.getSession().setAttribute("TermTypeMetaData", v);
-          	} else {
-          	    v = new Vector();
-          	}
-          } 
-          
-	  for (int i=0; i<v.size(); i++) {
-	     String t = (String) v.elementAt(i);
-	     Vector w = DataUtils.parseData(t);
-	     abbr_vec.add((String) w.elementAt(0));
-	     def_vec.add((String) w.elementAt(1));
-	  }   
-	  
-          
+            v = MetadataUtils.getTermTypeDescriptionMetaData("NCI Metathesaurus", null);
+            if (v != null) {
+                request.getSession().setAttribute("TermTypeMetaData", v);
+            } else {
+                v = new Vector();
+            }
+          }
+
+    for (int i=0; i<v.size(); i++) {
+       String t = (String) v.elementAt(i);
+       Vector w = DataUtils.parseData(t);
+       abbr_vec.add((String) w.elementAt(0));
+       def_vec.add((String) w.elementAt(1));
+    }
+
+
         %>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
         <tr>

@@ -23,19 +23,19 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
 <f:view>
-  <%@ include file="/pages/include/header.xhtml" %>
+  <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
-    <%@ include file="/pages/include/sub-header.xhtml" %>
+    <%@ include file="/pages/include/sub-header.jsp" %>
     <!-- Main box -->
     <div id="main-area">
-      <%@ include file="/pages/include/content-header.xhtml" %>
+      <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
         <%
           String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("message"));
         %>
         <b><%=message%></b>
-        <%@ include file="/pages/include/nciFooter.html" %>
+        <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>
       <!-- end Page content -->
     </div>

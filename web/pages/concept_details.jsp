@@ -34,7 +34,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -87,12 +87,12 @@ request.getSession().removeAttribute("new_search");
 
 %>
 
-      <%@ include file="/pages/include/header.xhtml" %>
+      <%@ include file="/pages/include/header.jsp" %>
       <div class="center-page">
-        <%@ include file="/pages/include/sub-header.xhtml" %>
+        <%@ include file="/pages/include/sub-header.jsp" %>
         <!-- Main box -->
         <div id="main-area">
-    <%@ include file="/pages/include/content-header.xhtml" %>
+    <%@ include file="/pages/include/content-header.jsp" %>
 
         <!-- Page content -->
         <div class="pagecontent">
@@ -340,12 +340,12 @@ request.getSession().setAttribute("type", type);
       </div>
 
       <hr>
-      <%@ include file="/pages/include/typeLinks.xhtml" %>
+      <%@ include file="/pages/include/typeLinks.jsp" %>
       <div class="tabTableContentContainer">
-          <%@ include file="/pages/include/property.xhtml" %>
-          <%@ include file="/pages/include/relationship.xhtml" %>
-          <%@ include file="/pages/include/synonym.xhtml" %>
-          <%@ include file="/pages/include/sources.xhtml" %>
+          <%@ include file="/pages/include/property.jsp" %>
+          <%@ include file="/pages/include/relationship.jsp" %>
+          <%@ include file="/pages/include/synonym.jsp" %>
+          <%@ include file="/pages/include/sources.jsp" %>
       </div>
           <%
           } else {
@@ -359,7 +359,7 @@ request.getSession().setAttribute("type", type);
 
 request.getSession().removeAttribute("type");
           %>
-            <%@ include file="/pages/include/nciFooter.html" %>
+            <%@ include file="/pages/include/nciFooter.jsp" %>
         </div>
         <!-- end Page content -->
       </div>
