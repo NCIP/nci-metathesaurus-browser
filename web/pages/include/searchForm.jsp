@@ -1,56 +1,48 @@
 <script type="text/javascript">
-function cursor_wait() {
-   document.body.style.cursor = 'wait';
-}
-
-function disableAnchor(){
-
-  var obj1 = document.getElementById("a_tpTab");
-  if (obj1 != null) obj1.removeAttribute('href');
-
-  var obj2 = document.getElementById("a_relTab");
-  if (obj2 != null) obj2.removeAttribute('href');
-
-  var obj3 = document.getElementById("a_synTab");
-  if (obj3 != null) obj3.removeAttribute('href');
-
-  var obj4 = document.getElementById("a_srcTab");
-  if (obj4 != null) obj4.removeAttribute('href');
-
-  var obj5 = document.getElementById("a_allTab");
-  if (obj5 != null) obj5.removeAttribute('href');
-
-  var obj6 = document.getElementById("a_hierBut");
-  if (obj6 != null) obj6.removeAttribute('href');
-
-}
-
+  function cursor_wait() {
+     document.body.style.cursor = 'wait';
+  }
+  
+  function disableAnchor(){
+  
+    var obj1 = document.getElementById("a_tpTab");
+    if (obj1 != null) obj1.removeAttribute('href');
+  
+    var obj2 = document.getElementById("a_relTab");
+    if (obj2 != null) obj2.removeAttribute('href');
+  
+    var obj3 = document.getElementById("a_synTab");
+    if (obj3 != null) obj3.removeAttribute('href');
+  
+    var obj4 = document.getElementById("a_srcTab");
+    if (obj4 != null) obj4.removeAttribute('href');
+  
+    var obj5 = document.getElementById("a_allTab");
+    if (obj5 != null) obj5.removeAttribute('href');
+  
+    var obj6 = document.getElementById("a_hierBut");
+    if (obj6 != null) obj6.removeAttribute('href');
+  
+  }
 </script>
 
-<FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
-  <%
+<FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
+  onsubmit="javascript:disableAnchor();">
+<%
     String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     if (match_text == null) match_text = "";
-  %>
-  <input CLASS="searchbox-input"
-    name="matchText"
-    value="<%=match_text%>"
-    onFocus="active = true" onBlur="active = false" onkeypress="return submitEnter('search',event)"
-  />
-  <h:commandButton
-    id="search"
-    value="Search"
-    action="#{userSessionBean.searchAction}"
-    onclick="javascript:cursor_wait();"
-    image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
-    alt="Search">
-  </h:commandButton>
-  <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
-    <h:graphicImage value="/images/search-help.gif" style="border-width:0;"/>
-  </h:outputLink>
-
-
-  <%
+ %>
+  <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
+    onBlur="active = false" onkeypress="return submitEnter('search',event)" />
+    <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
+      onclick="javascript:cursor_wait();"
+      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
+      alt="Search">
+    </h:commandButton>
+    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
+      <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
+    </h:outputLink>
+<%
     String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
@@ -61,30 +53,29 @@ function disableAnchor(){
       check_b= "checked";
     else
       check_c = "checked";
-
-
-  %>
+ %>
   <table border="0" cellspacing="0" cellpadding="0">
     <tr valign="top" align="left">
-      <td align="left" class="textbody">
-        <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact Match&nbsp;
-        <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp;
-        <input type="radio" name="algorithm" value="contains" alt="Containts" <%=check_c%>>Contains
-      </td>
+      <td align="left" class="textbody"><input type="radio"
+        name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact
+      Match&nbsp; <input type="radio" name="algorithm" value="startsWith"
+        alt="Begins With" <%=check_s%>>Begins With&nbsp; <input
+        type="radio" name="algorithm" value="contains" alt="Containts"
+        <%=check_c%>>Contains</td>
     </tr>
     <tr align="left">
       <td height="1px" bgcolor="#2F2F5F"></td>
     </tr>
     <%
-      String searchTarget = (String) request.getSession().getAttribute("searchTarget");
-      String check_n = "", check_p = "" , check_r ="";
-      if (searchTarget == null || searchTarget.compareTo("names") == 0)
-        check_n = "checked";
-      else if (searchTarget.compareTo("properties") == 0)
-        check_p= "checked";
-      else
-        check_r = "checked";
-    %>
+        String searchTarget = (String) request.getSession().getAttribute("searchTarget");
+        String check_n = "", check_p = "" , check_r ="";
+        if (searchTarget == null || searchTarget.compareTo("names") == 0)
+          check_n = "checked";
+        else if (searchTarget.compareTo("properties") == 0)
+          check_p= "checked";
+        else
+          check_r = "checked";
+     %>
     <tr valign="top" align="left">
       <td align="left" class="textbody">
         <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
@@ -92,19 +83,17 @@ function disableAnchor(){
         <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
       </td>
     </tr>
+    <tr><td height="5px;"></td></tr>
+    <tr valign="top" align="left">
+      <td align="left" class="textbody">
+        <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
+          <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
+            valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
+            immediate="true">
+            <f:selectItems value="#{userSessionBean.sourceList}" />
+          </h:selectOneMenu>
+        </h:outputLabel>    
+      </td>
+    </tr>
   </table>
-  
-  <br/>
-    <h:outputLabel
-      id="sourceLabel"
-      value="Source"
-      styleClass="textbody"
-    >
-
-      <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}" valueChangeListener="#{userSessionBean.sourceSelectionChanged}" immediate="true">
-           <f:selectItems value="#{userSessionBean.sourceList}"/>
-      </h:selectOneMenu>
-
-  </h:outputLabel>
-
- </FORM>
+</FORM>
