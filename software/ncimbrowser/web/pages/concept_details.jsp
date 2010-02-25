@@ -87,12 +87,12 @@ request.getSession().removeAttribute("new_search");
 
 %>
 
-      <%@ include file="/pages/templates/header.xhtml" %>
+      <%@ include file="/pages/include/header.xhtml" %>
       <div class="center-page">
-        <%@ include file="/pages/templates/sub-header.xhtml" %>
+        <%@ include file="/pages/include/sub-header.xhtml" %>
         <!-- Main box -->
         <div id="main-area">
-    <%@ include file="/pages/templates/content-header.xhtml" %>
+    <%@ include file="/pages/include/content-header.xhtml" %>
 
         <!-- Page content -->
         <div class="pagecontent">
@@ -144,11 +144,11 @@ request.getSession().setAttribute("type", type);
 
         request.getSession().setAttribute("type", type);
 
-	  boolean searchInactive = true;
-	  sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
-	  sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
-	  int maxToReturn = 100;
-	  ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
+    boolean searchInactive = true;
+    sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
+    sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
+    int maxToReturn = 100;
+    ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
           IteratorBean iteratorBean = new IteratorBean(iterator);
           iteratorBean.setIterator(iterator);
 /*
@@ -156,14 +156,14 @@ request.getSession().setAttribute("type", type);
                 .getSessionMap().get("iteratorBean");
 
          if (iteratorBean == null) {
-		iteratorBean = new IteratorBean(iterator);
-            	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBean", iteratorBean);
+    iteratorBean = new IteratorBean(iterator);
+              FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBean", iteratorBean);
          } else {
-		iteratorBean.setIterator(iterator);
-	 }
-*/	 
- 	 int size = iteratorBean.getSize();
-	 if (size > 1) {
+    iteratorBean.setIterator(iterator);
+   }
+*/
+   int size = iteratorBean.getSize();
+   if (size > 1) {
 
             multipleCUIs = true;
     %>
@@ -189,41 +189,41 @@ request.getSession().setAttribute("type", type);
         <td class="textbody">
           <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
       <%
-      
-        
-	  List list = iteratorBean.getData(0, 100);
-	  for (int i=0; i<list.size(); i++) {
-	       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-	       c = rcr.getReferencedEntry();
-	       code = rcr.getConceptCode();
-	       name = rcr.getEntityDescription().getContent();
+
+
+    List list = iteratorBean.getData(0, 100);
+    for (int i=0; i<list.size(); i++) {
+         ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+         c = rcr.getReferencedEntry();
+         code = rcr.getConceptCode();
+         name = rcr.getEntityDescription().getContent();
 
                Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
                String semantic_type = "";
                if (semantic_types != null && semantic_types.size() > 0) {
-		  for (int j=0; j<semantic_types.size(); j++) {
-		      String t = (String) semantic_types.elementAt(j);
-		      semantic_type = semantic_type + t;
-		      if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-		  }
+      for (int j=0; j<semantic_types.size(); j++) {
+          String t = (String) semantic_types.elementAt(j);
+          semantic_type = semantic_type + t;
+          if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
+      }
                }
-		    if (i % 2 == 0) {
-		%>
-		  <tr class="dataRowDark">
-		<%
-		    } else {
-		%>
-		  <tr class="dataRowLight">
-		<%
-		    }
-		    %>
-		  <td class="dataCellText">
-		    <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
-		  </td>
-		  <td class="dataCellText">
-		      <%=semantic_type%>
-		  </td>
-		</tr>
+        if (i % 2 == 0) {
+    %>
+      <tr class="dataRowDark">
+    <%
+        } else {
+    %>
+      <tr class="dataRowLight">
+    <%
+        }
+        %>
+      <td class="dataCellText">
+        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
+      </td>
+      <td class="dataCellText">
+          <%=semantic_type%>
+      </td>
+    </tr>
             <%
           }
       %>
@@ -274,9 +274,9 @@ request.getSession().setAttribute("type", type);
                   request.getSession().removeAttribute("visitedConcepts");
                   request.getSession().setAttribute("visitedConcepts",
                       visitedConcepts);
-                }        
-    
-    
+                }
+
+
       Vector synonyms = DataUtils.getSynonyms(c, "NCI");
       Boolean code_In_NCI = Boolean.FALSE;
       if (synonyms != null && synonyms.size() > 0) {
@@ -297,14 +297,14 @@ request.getSession().setAttribute("type", type);
             }
 
             name = "";
-  	    if (c != null) {
-		   request.getSession().setAttribute("concept", c);
-		   request.getSession().setAttribute("code", code);
-		   name = c.getEntityDescription().getContent();
+        if (c != null) {
+       request.getSession().setAttribute("concept", c);
+       request.getSession().setAttribute("code", code);
+       name = c.getEntityDescription().getContent();
 
-	    } else {
-	       name = "ERROR: Invalid code.";
-	    }
+      } else {
+         name = "ERROR: Invalid code.";
+      }
 
 
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
@@ -314,16 +314,16 @@ request.getSession().setAttribute("type", type);
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
      }
   }
-  
-  
+
+
   String tg_dictionary = "NCI%20Metathesaurus";
-  
+
           if (c != null) {
-          
+
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
-	 request.getSession().setAttribute("concept", c);
-	 request.getSession().setAttribute("code", c.getEntityCode());
+   request.getSession().setAttribute("concept", c);
+   request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
       <div class="texttitle-blue">
@@ -340,12 +340,12 @@ request.getSession().setAttribute("type", type);
       </div>
 
       <hr>
-      <%@ include file="/pages/templates/typeLinks.xhtml" %>
+      <%@ include file="/pages/include/typeLinks.xhtml" %>
       <div class="tabTableContentContainer">
-          <%@ include file="/pages/templates/property.xhtml" %>
-          <%@ include file="/pages/templates/relationship.xhtml" %>
-          <%@ include file="/pages/templates/synonym.xhtml" %>
-          <%@ include file="/pages/templates/sources.xhtml" %>
+          <%@ include file="/pages/include/property.xhtml" %>
+          <%@ include file="/pages/include/relationship.xhtml" %>
+          <%@ include file="/pages/include/synonym.xhtml" %>
+          <%@ include file="/pages/include/sources.xhtml" %>
       </div>
           <%
           } else {
@@ -359,7 +359,7 @@ request.getSession().setAttribute("type", type);
 
 request.getSession().removeAttribute("type");
           %>
-            <%@ include file="/pages/templates/nciFooter.html" %>
+            <%@ include file="/pages/include/nciFooter.html" %>
         </div>
         <!-- end Page content -->
       </div>

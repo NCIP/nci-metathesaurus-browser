@@ -13,7 +13,7 @@
    Build info: <%=ncim_build_info%>
  Version info: <%=application_version%>
           Tag: <%=anthill_build_tag_built%>
-   LexEVS URL: <%=evs_service_url%>          
+   LexEVS URL: <%=evs_service_url%>
   -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -37,16 +37,16 @@
 
 
 <f:view>
-  <%@ include file="/pages/templates/header.xhtml" %>
+  <%@ include file="/pages/include/header.xhtml" %>
   <div class="center-page">
-    <%@ include file="/pages/templates/sub-header.xhtml" %>
+    <%@ include file="/pages/include/sub-header.xhtml" %>
     <!-- Main box -->
     <div id="main-area">
-      <%@ include file="/pages/templates/content-header.xhtml" %>
+      <%@ include file="/pages/include/content-header.xhtml" %>
       <!-- Page content -->
       <div class="pagecontent">
-        <%@ include file="/pages/templates/welcome.html" %>
-        <%@ include file="/pages/templates/nciFooter.html" %>
+        <%@ include file="/pages/include/welcome.html" %>
+        <%@ include file="/pages/include/nciFooter.html" %>
       </div>
       <!-- end Page content -->
     </div>
