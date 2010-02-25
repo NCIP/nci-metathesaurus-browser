@@ -19,7 +19,7 @@
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
   <head>
   <title>NCI Metathesaurus Hierarchy</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -269,34 +269,34 @@
         var categoryNum = 0;
         var pos = id.indexOf("|");
         if ( typeof(respObj.nodes) != "undefined") {
-        
-		if (pos == -1) {   
 
-		  for (var i=0; i < respObj.nodes.length; i++) {
-			  var name = respObj.nodes[i].ontology_node_name;
-			  var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-			  var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-			  var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
-			  if (respObj.nodes[i].ontology_node_child_count > 0) {
-			      newNode.setDynamicLoad(loadNodeData);
-			  }
-		  }
+    if (pos == -1) {
 
-		} else {
+      for (var i=0; i < respObj.nodes.length; i++) {
+        var name = respObj.nodes[i].ontology_node_name;
+        var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+        var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+        var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
+        if (respObj.nodes[i].ontology_node_child_count > 0) {
+            newNode.setDynamicLoad(loadNodeData);
+        }
+      }
 
-			  var parent = node.parent;
-			  for (var i=0; i < respObj.nodes.length; i++) {
-			    var name = respObj.nodes[i].ontology_node_name;
-			    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-			    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-		    
-			    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
-			    if (respObj.nodes[i].ontology_node_child_count > 0) {
-			       newNode.setDynamicLoad(loadNodeData);
-			    }
-			  }			  
-			  tree.removeNode(node,true);
-		}
+    } else {
+
+        var parent = node.parent;
+        for (var i=0; i < respObj.nodes.length; i++) {
+          var name = respObj.nodes[i].ontology_node_name;
+          var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+          var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+
+          var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
+          if (respObj.nodes[i].ontology_node_child_count > 0) {
+             newNode.setDynamicLoad(loadNodeData);
+          }
+        }
+        tree.removeNode(node,true);
+    }
         }
         fnLoadComplete();
       }
@@ -332,15 +332,15 @@
         var respObj = eval('(' + respTxt + ')');
         if ( typeof(respObj) != "undefined") {
           if ( typeof(respObj.root_nodes) != "undefined") {
-          
+
             var root = tree.getRoot();
             if (respObj.root_nodes.length == 0) {
               showEmptyRoot();
             }
             else {
-            
+
               showPartialHierarchy();
-              
+
               for (var i=0; i < respObj.root_nodes.length; i++) {
                 var nodeInfo = respObj.root_nodes[i];
                 addTreeBranch(ontology_node_id, root, nodeInfo);
@@ -375,7 +375,7 @@
 
 
     function addTreeBranch(ontology_node_id, rootNode, nodeInfo) {
-    
+
       var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
       var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
 
@@ -395,7 +395,7 @@
          if (nodeInfo.ontology_node_child_count > 0) {
              newNode.isLeaf = false;
              newNode.setDynamicLoad(loadNodeData);
-         } 
+         }
 
       } else {
         if (nodeInfo.ontology_node_id != ontology_node_id) {
@@ -407,14 +407,14 @@
         }
       }
       tree.draw();
-      
+
       for (var i=0; i < childNodes.length; i++) {
           var childnodeInfo = childNodes[i];
           addTreeBranch(ontology_node_id, newNode, childnodeInfo);
       }
     }
-    
-    
+
+
     YAHOO.util.Event.addListener(window, "load", init);
 
   </script>
