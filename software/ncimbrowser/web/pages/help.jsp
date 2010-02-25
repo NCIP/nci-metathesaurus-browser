@@ -26,12 +26,12 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
 <f:view>
-  <%@ include file="/pages/templates/header.xhtml" %>
+  <%@ include file="/pages/include/header.xhtml" %>
   <div class="center-page">
-    <%@ include file="/pages/templates/sub-header.xhtml" %>
+    <%@ include file="/pages/include/sub-header.xhtml" %>
     <!-- Main box -->
     <div id="main-area">
-      <%@ include file="/pages/templates/content-header.xhtml" %>
+      <%@ include file="/pages/include/content-header.xhtml" %>
       <!-- Page content -->
       <div class="pagecontent">
         <!-- ======================================= -->
@@ -221,7 +221,7 @@
           and <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a> sites.
         </p>
         <br>
-        <%@ include file="/pages/templates/nciFooter.html" %>
+        <%@ include file="/pages/include/nciFooter.html" %>
       </div>
       <!-- end Page content -->
     </div>

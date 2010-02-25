@@ -46,12 +46,12 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
   <f:view>
-    <%@ include file="/pages/templates/header.xhtml" %>
+    <%@ include file="/pages/include/header.xhtml" %>
     <div class="center-page">
-      <%@ include file="/pages/templates/sub-header.xhtml" %>
+      <%@ include file="/pages/include/sub-header.xhtml" %>
       <!-- Main box -->
       <div id="main-area">
-        <%@ include file="/pages/templates/content-header.xhtml" %>
+        <%@ include file="/pages/include/content-header.xhtml" %>
         <!-- Page content -->
         <div class="pagecontent">
           <%
@@ -79,7 +79,7 @@ System.out.println("set Sortby to: " + sort_by);
             <%=name%> (Code <%=code%>)
           </div>
           <hr>
-          <%@ include file="/pages/templates/typeLinks.xhtml" %>
+          <%@ include file="/pages/include/typeLinks.xhtml" %>
           <div class="tabTableContentContainer">
 
 
@@ -109,7 +109,7 @@ System.out.println("set Sortby to: " + sort_by);
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                 
+        </a>
               <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
@@ -117,7 +117,7 @@ System.out.println("set Sortby to: " + sort_by);
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" border="0">
-        </a>                
+        </a>
               <%
               }
               %>

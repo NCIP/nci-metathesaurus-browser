@@ -36,11 +36,11 @@
         src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
     <f:view>
-      <%@ include file="/pages/templates/header.xhtml" %>
+      <%@ include file="/pages/include/header.xhtml" %>
       <div class="center-page">
-        <%@ include file="/pages/templates/sub-header.xhtml" %>
+        <%@ include file="/pages/include/sub-header.xhtml" %>
         <div id="main-area">
-          <%@ include file="/pages/templates/content-header.xhtml" %>
+          <%@ include file="/pages/include/content-header.xhtml" %>
           <div class="pagecontent">
             <div class="texttitle-blue">Contact Us</div>
             <hr></hr>
@@ -134,7 +134,7 @@
               &nbsp;&nbsp;<INPUT type="reset" value="Clear" alt="Clear">
             </form>
             <a href="http://www.cancer.gov/policies/page3" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
-            <%@ include file="/pages/templates/nciFooter.html" %>
+            <%@ include file="/pages/include/nciFooter.html" %>
           </div>
           <!-- end Page content -->
         </div>

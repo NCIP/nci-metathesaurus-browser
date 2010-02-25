@@ -36,29 +36,29 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
 <f:view>
-  <%@ include file="/pages/templates/header.xhtml" %>
+  <%@ include file="/pages/include/header.xhtml" %>
   <div class="center-page">
-    <%@ include file="/pages/templates/sub-header.xhtml" %>
+    <%@ include file="/pages/include/sub-header.xhtml" %>
     <!-- Main box -->
     <div id="main-area">
-      <%@ include file="/pages/templates/content-header.xhtml" %>
+      <%@ include file="/pages/include/content-header.xhtml" %>
       <!-- Page content -->
       <div class="pagecontent">
         <%
-        
+
           long ms = System.currentTimeMillis();
-          long iterator_delay; 
-        
+          long iterator_delay;
+
           String page_string = null;
           IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("iteratorBean");
-       
+
           //Vector v = (Vector) request.getSession().getAttribute("search_results");
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
           //String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
-          
+
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
-          
+
           Boolean new_search = (Boolean) request.getSession().getAttribute("new_search");
           String page_number = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("page_number"));
           String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedResultsPerPage"));
@@ -79,19 +79,19 @@
           }
           int iend = page_num * page_size;
           int istart = iend - page_size;
-          
+
           int size = iteratorBean.getSize();
           String match_size = new Integer(size).toString();
 
           if (iend > size) iend = size;
           int num_pages = size / page_size;
           if (num_pages * page_size < size) num_pages++;
-     
+
           String istart_str = Integer.toString(istart+1);
           String iend_str = Integer.toString(iend);
           String prev_page_num_str = Integer.toString(prev_page_num);
           String next_page_num_str = Integer.toString(next_page_num);
-          
+
         %>
         <table width="700px">
 
@@ -133,15 +133,15 @@
                   List list = iteratorBean.getData(istart, iend);
                   iterator_delay = System.currentTimeMillis() - ms0;
                   System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
-                  
-                  
+
+
                   Vector code_vec = new Vector();
                   for (int k=0; k<list.size(); k++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
                       code_vec.add(rcr.getConceptCode());
                   }
                   HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
-                  
+
                   for (int i=0; i<list.size(); i++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
                       String code = rcr.getConceptCode();
@@ -174,14 +174,14 @@
             </td>
           </tr>
         </table>
-        <%@ include file="/pages/templates/pagination.xhtml" %>
-        <%@ include file="/pages/templates/nciFooter.html" %>
-        
+        <%@ include file="/pages/include/pagination.xhtml" %>
+        <%@ include file="/pages/include/nciFooter.html" %>
+
         <%
         long pageRenderingDelay = System.currentTimeMillis() - ms - iterator_delay;
         System.out.println("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator next call delay.)");
         %>
-        
+
       </div>
       <!-- end Page content -->
     </div>
