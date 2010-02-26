@@ -3,6 +3,8 @@
 @rem **** Command file to invoke build.xml ****
 @rem ******************************************
 setlocal
+set DEVPROPFILE=C:\NCI-Projects\ncim-properties\properties\dev-upgrade.properties
+set QAPROPFILE=C:\NCI-Projects\ncim-properties\properties\qa-upgrade.properties
 cls
 if "%1" == "" (
     echo.
@@ -41,11 +43,11 @@ if "%1" == "clean" (
     goto DONE
 )
 if "%1" == "dev" (
-    ant -Dproperties.file=C:\SVN-Projects\ncim-properties\properties\dev-upgrade.properties -Danthill.build.tag_built=desktop deploy:remote:upgrade
+    ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "qa" (
-    ant -Dproperties.file=C:\SVN-Projects\ncim-properties\properties\qa-upgrade.properties -Danthill.build.tag_built=desktop deploy:remote:upgrade
+    ant -Dproperties.file=%QAPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 
