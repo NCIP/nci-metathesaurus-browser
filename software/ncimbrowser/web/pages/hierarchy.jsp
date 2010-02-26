@@ -249,7 +249,7 @@
     }
 
     function showSearchingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Searching tree... Please wait.</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Retrieving data (please wait)...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
