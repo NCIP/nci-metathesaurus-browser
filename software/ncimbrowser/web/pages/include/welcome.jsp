@@ -6,7 +6,7 @@
       "NCI MetaThesaurus", null);
   if (version == null)
     version = "";
-  String ncit_url = new DataUtils().getNCItURL(); 
+  String ncit_url = new DataUtils().getNCItURL();
 %>
 <div class="textbody">
   <table border="0" width="700px"><tr>
@@ -73,16 +73,16 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="<%=ncit_url%>/start.jsf" target="_blank" alt="NCI Term Browser">
+              <a href="<%=ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="NCI Term Browser">
                 <img src="<%=basePath%>/images/EVSTermsBrowserTile.gif"
                   width="77" height="38px" alt="NCI Term Browser" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="<%=ncit_url%>/start.jsf" target="_blank" alt="Bio Portal">
+              <a href="<%=ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="Bio Portal">
                 NCI Term Browser</a>:
-                NCI and other terminologies in an integrated environment. 
+                NCI and other terminologies in an integrated environment.
             </td>
           </tr>
           <tr valign="top">

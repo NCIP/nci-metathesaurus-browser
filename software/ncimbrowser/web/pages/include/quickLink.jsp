@@ -4,8 +4,8 @@
 
 <%
   String terminology_subset_download_URL = new DataUtils().getTerminologySubsetDownloadURL();
-  String ql_ncit_url = new DataUtils().getNCItURL(); 
-  
+  String ql_ncit_url = new DataUtils().getNCItURL();
+
   String term_suggestion_application_url2 = (String) request.getSession().getAttribute("term_suggestion_application_url");
   if (term_suggestion_application_url2 == null) {
      term_suggestion_application_url2 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
@@ -15,12 +15,12 @@
   }
   String dictionaryName = Constants.CODING_SCHEME_NAME;
   String dictionary_encoded2 = dictionaryName.replaceAll(" ", "%20");
-    
+
 %>
 <div class="bluebar">
   <div id="quicklinksholder">
 
-    <ul id="quicklinks" 
+    <ul id="quicklinks"
         onmouseover="document.quicklinksimg.src='<%=basePath%>/images/quicklinks-active.gif';"
         onmouseout="document.quicklinksimg.src='<%=basePath%>/images/quicklinks-inactive.gif';">
 
@@ -35,15 +35,15 @@
           <!--
           <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI MetaThesaurus">NCI MetaThesaurus</a></li>
            -->
-           
-           
-          <li><a href="<%=ql_ncit_url%>/start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
-          
+
+
+          <li><a href="<%=ql_ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
+
             <% if (term_suggestion_application_url2 != null && term_suggestion_application_url2.length() > 0) { %>
               <li><a href="<%=term_suggestion_application_url2%>?dictionary=<%=dictionary_encoded2%>" target="_blank" alt="Term Suggestion">Term Suggestion</a></li>
-            <% } %>           
-          
-          
+            <% } %>
+
+
           <li><a href="http://www.cancer.gov/cancertopics/terminologyresources" target="_blank" alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
         </ul>
       </li>
