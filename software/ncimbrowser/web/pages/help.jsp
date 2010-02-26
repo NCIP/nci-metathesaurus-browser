@@ -111,7 +111,7 @@
             spelling gray).
           </ul>
           Search of other concept data, approximate matching, and other features will be added to future releases of
-          this browser. Some of these features are currently available in the <a href="<%=ncit_url%>/start.jsf"> NCI Term Browser</a>.
+          this browser. Some of these features are currently available in the <a href="<%=ncit_url%>/ncitbrowser/start.jsf"> NCI Term Browser</a>.
           <br><br>
           <b>Search results</b> are displayed by concept name. (If there is only one match, the concept details page
           is shown directly without first listing results.) Some details:
