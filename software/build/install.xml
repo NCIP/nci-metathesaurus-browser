@@ -294,6 +294,9 @@
             <filter token="env.LOGNAME" value="${env.LOGNAME}"/>
             <filter token="env.JAVA_HOME" value="${env.JAVA_HOME}"/>
             <filter token="project.name" value="project.name"/>
+            <filter token="pagination_time_out" value="${pagination_time_out}"/>
+            <filter token="sliding_window_half_width" value="${sliding_window_half_width}"/>
+            <filter token="minimum_search_string_length" value="${minimum_search_string_length}"/>
         </filterset>
         <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
         <mkdir dir="${application.data.path}/${ehcache.cache.path}" />
