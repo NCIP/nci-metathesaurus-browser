@@ -14,7 +14,7 @@
        <DisplayItem>
             <propertyName>NCIt Code</propertyName>
             <itemLabel>NCI Thesaurus Code</itemLabel>
-            <url>@ncit.url@/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
+            <url>@ncit.url@/ncitbrowser/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
             <hyperlinkText>see NCI Thesaurus info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
@@ -2293,7 +2293,7 @@
                  <key>NCIT_URL</key>
                  <value>@ncit.url@</value>
         </ConfigurableItem>
-        
+
         <ConfigurableItem>
                  <key>PAGINATION_TIME_OUT</key>
                  <value>@pagination_time_out@</value>
@@ -2302,13 +2302,13 @@
         <ConfigurableItem>
                  <key>MINIMUM_SEARCH_STRING_LENGTH</key>
                  <value>@minimum_search_string_length@</value>
-        </ConfigurableItem> 
-        
+        </ConfigurableItem>
+
         <ConfigurableItem>
                  <key>SLIDING_WINDOW_HALF_WIDTH</key>
                  <value>@sliding_window_half_width@</value>
         </ConfigurableItem>
-        
+
     </ConfigurableItems>
 
 </root>
