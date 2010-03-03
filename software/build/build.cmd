@@ -14,6 +14,7 @@ if "%1" == "" (
     echo   all          -- Normal build of application
     echo   upgrade      -- Build and upgrade application
     echo   install      -- Builds, installs JBoss locally
+    echo   reconfig     -- Reconfigure war file
     echo   dev          -- Builds, upgrades JBoss on DEV
     echo   qa           -- Builds, upgrades JBoss on QA
     echo   deploy       -- Redeploy application
@@ -40,6 +41,10 @@ if "%1" == "clean" (
        rmdir /Q /S ..\target
     )
     ant clean
+    goto DONE
+)
+if "%1" == "reconfig" (
+    ant -Dinstall.target=install:jboss:ncimbrowser-webapp:re-configure deploy:local:install
     goto DONE
 )
 if "%1" == "dev" (
