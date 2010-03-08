@@ -48,6 +48,6 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/xercesImpl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/extlib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="software/ncimbrowser/build/web/WEB-INF/classes"/>
 </classpath>
