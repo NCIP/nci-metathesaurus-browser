@@ -369,6 +369,7 @@
         <xmltask source="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
             dest="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}">
             <remove path="/log4j:configuration/appender[@name='TestAppender']"/>
+            <!--
             <insert path="/log4j:configuration">
                 <![CDATA[
                 <appender name="TestAppender" class="org.jboss.logging.appender.RollingFileAppender">
@@ -376,14 +377,15 @@
                     <param name="File" value="${jboss.server.log.dir}/testAppender.log"/>
                     <param name="Append" value="false"/>
                     <param name="MaxFileSize" value="${log4j.maxFileSize}"/>
-                    <!--<param name="MaxBackupIndex" value="${log4j.maxDays}"/>-->
                     <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
                     </layout>
                 </appender>
                 ]]>
             </insert>
+            -->
             <remove path="/log4j:configuration/category[@name='org.nih.nci']"/>
+            <!--
             <insert path="/log4j:configuration">
                 <![CDATA[
                 <category name="org.nih.nci">
@@ -391,6 +393,7 @@
                 </category>
                 ]]>
             </insert>
+            -->
         </xmltask>
         <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.2"/>-->
         <validate-log4j
@@ -539,18 +542,35 @@
     </target>
 
     <target name="install:jboss:ncimbrowser-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss" depends="common:jboss:init,common:init">
-        <!-- This is only required if configuration files are not externalized, below is a sample of what you may do.
+
+        <!-- This is only required if configuration files are not externalized, below is a sample of
+             what you may do. -->
+
         <delete dir="${working.dir}/ncimbrowser-webapp"/>
         <unzip src="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" dest="${working.dir}/ncimbrowser-webapp"/>
-        <copy todir="${working.dir}/ncimbrowser-webapp/WEB-INF/classes" file="${jboss-conf.dir.dest}/hibernate.cfg.xml"/>
 
+        <!-- Backup log4j.xml file -->
+        <move file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml"
+            tofile="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp"
+        />
+
+        <!-- Re-configure log4j.xml -->
+        <copy tofile="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml" filtering="true" failonerror="true">
+            <file file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp"/>
+            <filterset>
+                <filter token="search.log.file" value="${application.data.path}/${search.log.file}"/>
+            </filterset>
+        </copy>
+        <delete file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp" failonerror="false" />
+
+        <!-- Re-pack the war file -->
         <move file="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" tofile="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}.orig"/>
         <war destfile="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" compress="false" webxml="${working.dir}/ncimbrowser-webapp/WEB-INF/web.xml" >
             <fileset dir="${working.dir}/ncimbrowser-webapp">
                 <include name="*/**" />
             </fileset>
         </war>
-        -->
+
     </target>
 
     <target name="upgrade:jboss" description="Wrapper target to call all targets required to upgrade jboss container." unless="exclude.jboss" depends="upgrade:jboss:init,common:init,upgrade-ncm:jboss">
