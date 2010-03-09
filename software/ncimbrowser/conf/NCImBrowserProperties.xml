@@ -2308,7 +2308,21 @@
                  <key>SLIDING_WINDOW_HALF_WIDTH</key>
                  <value>@sliding_window_half_width@</value>
         </ConfigurableItem>
-
+        
+        <ConfigurableItem>
+                 <key>SOURCE_HIERARCHIES</key>
+                 <value>@source_hierarchies@</value>
+        </ConfigurableItem>
+        
     </ConfigurableItems>
 
+
+    <SecurityTokenHolders>
+        <SecurityTokenHolder>
+                 <name>MedDRA (Medical Dictionary for Regulatory Activities Terminology)</name>
+                 <value>@meddra_security_token@</value>
+        </SecurityTokenHolder>
+    </SecurityTokenHolders>
+    
+    
 </root>

@@ -36,7 +36,6 @@ import org.json.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 import gov.nih.nci.evs.browser.utils.TreeItem;
-import gov.nih.nci.evs.browser.utils.CacheManager;
 import gov.nih.nci.evs.browser.utils.CacheController;
 
 import java.io.IOException;
@@ -149,9 +148,8 @@ public final class AjaxServlet extends HttpServlet {
         String action = request.getParameter("action");//DataConstants.ACTION);
         String node_id = request.getParameter("ontology_node_id");//DataConstants.ONTOLOGY_NODE_ID);
         String ontology_display_name = request.getParameter("ontology_display_name");//DataConstants.ONTOLOGY_DISPLAY_NAME);
-       // String ontology_source = request.getParameter(DataConstants.ONTOLOGY_SOURCE);
+        String ontology_source = request.getParameter("ontology_source");
         long ms = System.currentTimeMillis();
-
         if (action.equals("expand_tree")) {
             if (node_id != null && ontology_display_name != null) {
 				int pos = node_id.indexOf("|");
@@ -180,7 +178,12 @@ public final class AjaxServlet extends HttpServlet {
                 JSONObject json = new JSONObject();
                 JSONArray nodesArray = null;
                 try {
-                    nodesArray = CacheController.getInstance().getSubconcepts(ontology_display_name, null, node_id);
+					if (ontology_source == null) {
+                    	nodesArray = CacheController.getInstance().getSubconcepts(ontology_display_name, null, node_id);
+					} else {
+						nodesArray = CacheController.getInstance().getSubconceptsBySource(ontology_display_name, null, node_id, ontology_source);
+					}
+
                     if (nodesArray != null)
                     {
                         json.put("nodes", nodesArray);
@@ -237,7 +240,12 @@ public final class AjaxServlet extends HttpServlet {
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;//new JSONArray();
             try {
-                nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
+				if (ontology_source == null) {
+                	nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
+				} else {
+					nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
+				}
+
                 if (nodesArray != null)
                 {
                     json.put("root_nodes", nodesArray);
@@ -250,30 +258,6 @@ public final class AjaxServlet extends HttpServlet {
             System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
             return;
        }
-
-/*
-        else if (action.equals("extend_branch")) {
-			 // to be implemented:
-
-            response.setContentType("text/html");
-            response.setHeader("Cache-Control", "no-cache");
-            JSONObject json = new JSONObject();
-            JSONArray nodesArray = null;//new JSONArray();
-            try {
-                nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
-                if (nodesArray != null)
-                {
-                    json.put("root_nodes", nodesArray);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            response.getWriter().write(json.toString());
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
-            return;
-		}
-*/
    }
 
 }
