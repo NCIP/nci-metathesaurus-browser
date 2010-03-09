@@ -181,10 +181,6 @@ public class CacheController
         if (nodeArray == null)
         {
             System.out.println("Not in cache -- calling getSubconcepts..." );
-			//map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, "PAR", false);
-			// testing KLO, 020910
-			// map = new MetaTreeUtils().getSubconcepts(scheme, version, code, NCI_SOURCE, MetaTreeUtils.hierAssocToParentNodes_, false);
-
 			map = new MetaTreeUtils().getRemainingSubconcepts(scheme, version, code, NCI_SOURCE, null);
 
             nodeArray = HashMap2JSONArray(map);
@@ -199,6 +195,8 @@ public class CacheController
         }
         return nodeArray;
     }
+
+
 
 
 	public JSONArray getRemainingSubconcepts(String scheme, String version, String code, String subconcept_code) {
@@ -257,6 +255,91 @@ public class CacheController
         }
         return nodeArray;
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Source Hierarchy
+//////////////////////
+    public JSONArray getSubconceptsBySource(String scheme, String version, String code, String sab) {
+		return getSubconceptsBySource(scheme, version, code, sab, true);
+	}
+
+    public JSONArray getSubconceptsBySource(String scheme, String version, String code, String sab, boolean fromCache)
+    {
+        HashMap map = null;
+        String key = scheme + "$" + version + "$" + sab + "$" + code;
+        JSONArray nodeArray = null;
+        if (fromCache)
+        {
+            Element element = cache.get(key);
+            if (element != null)
+            {
+                nodeArray = (JSONArray) element.getValue();
+            }
+        }
+        if (nodeArray == null)
+        {
+            System.out.println("Not in cache -- calling getSubconceptsBySource..." );
+			map = new SourceTreeUtils().getSubconcepts(scheme, version, code, sab);
+
+            nodeArray = HashMap2JSONArray(map);
+            if (fromCache) {
+                try {
+                    Element element = new Element(key, nodeArray);
+                    cache.put(element);
+                } catch (Exception ex) {
+
+                }
+            }
+        }
+        return nodeArray;
+    }
+
+
+
+    public JSONArray getRootConceptsBySource(String scheme, String version, String sab)
+    {
+        return getRootConceptsBySource(scheme, version, sab, true);
+    }
+
+
+    public JSONArray getRootConceptsBySource(String scheme, String version, String sab, boolean fromCache)
+    {
+        List list = null;//new ArrayList();
+        String key = scheme + "$" + version + "$" + sab + "$source_roots";
+        JSONArray nodeArray = null;
+
+        if (fromCache)
+        {
+            Element element = cache.get(key);
+            if (element != null) {
+                nodeArray = (JSONArray) element.getValue();
+            }
+        }
+
+        if (nodeArray == null)
+        {
+            System.out.println("Not in cache -- calling getSourceHierarchyRoots " );
+            try {
+                String tag = null;
+                CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+                if (version != null) csvt.setVersion(version);
+                list = (new SourceTreeUtils()).getSourceHierarchyRoots(scheme, csvt, sab);
+
+                nodeArray = list2JSONArray(list);
+
+                if (fromCache)
+                {
+                    Element element = new Element(key, nodeArray);
+                    cache.put(element);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return nodeArray;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
     private JSONArray list2JSONArray(List list) {

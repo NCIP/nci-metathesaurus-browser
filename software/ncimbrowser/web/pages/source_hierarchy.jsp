@@ -6,6 +6,7 @@
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js" ></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js" ></script>
@@ -111,7 +112,8 @@
         resetEmptyRoot();
 
         showTreeLoadingStatus();
-        var ontology_source = null;//document.pg_form.ontology_source.value;
+        //var ontology_source = ontology_sab;//document.pg_form.ontology_source.value;
+        var ontology_source = document.forms["pg_form"].ontology_sab.value;
         var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=build_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
 
       }
@@ -187,6 +189,7 @@
 
       tree = new YAHOO.widget.TreeView("treecontainer");
       var ontology_node_id = document.forms["pg_form"].ontology_node_id.value;
+      var ontology_sab = document.forms["pg_form"].ontology_sab.value;
       var ontology_display_name = "NCI MetaThesaurus";
 
       if (ontology_node_id == null || ontology_node_id == "null")
@@ -311,8 +314,11 @@
         failure:responseFailure
       };
 
-      var ontology_display_name = "<%=Constants.CODING_SCHEME_NAME%>";
-      var cObj = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=expand_tree&ontology_node_id=' +id+'&ontology_display_name='+ontology_display_name,callback);
+      //var ontology_display_name = "<%=Constants.CODING_SCHEME_NAME%>";
+      var ontology_display_name = document.forms["pg_form"].ontology_display_name.value;
+      var ontology_source = document.forms["pg_form"].ontology_sab.value;
+
+      var cObj = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=expand_tree&ontology_node_id=' +id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,callback);
     }
 
     function setRootDesc(rootNodeName, ontology_display_name) {
@@ -439,12 +445,44 @@
           <td valign="top"><div id="closeWindow"><a href="javascript:window.close();"><img src="<%=basePath%>/images/thesaurus_close_icon.gif" width="10" height="10" border="0" alt="Close Window" />&nbsp;CLOSE WINDOW</a></div></td>
         </tr>
         </table>
-        <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
+ 
+<%
+String ontology_sab = null;
+String ontology_formalname = null;
+Object obj = request.getSession().getAttribute("selectedSource");
+if (obj != null) {
+   ontology_sab = (String) obj; 
+   ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
+}
+        if (ontology_sab.compareTo("NCI") == 0) {
+%>        
+           <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
+<%
+        } else {
+        
+%>        
+           <div><%=ontology_formalname%></div>
+<%           
+        }
+%>        
+        
         <div id="popupContentArea">
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody">
               <td class="pageTitle" align="left">
-                NCI Thesaurus Hierarchy
+              
+<%              
+                  if (ontology_sab.compareTo("NCI") == 0) {
+%>                  
+                      NCI Thesaurus Hierarchy
+<%                      
+                  } else {
+%>                  
+                      <%=ontology_sab%> Hierarchy
+<%                      
+                  }
+%>                 
+                  
               </td>
               <td class="pageTitle" align="right">
                 <font size="1" color="red" align="right">
@@ -468,12 +506,20 @@
           <form id="pg_form">
             <%
               String ontology_node_id = HTTPUtils.cleanXSS((String)request.getParameter("code"));
+	      Object selectedSource_obj = request.getSession().getAttribute("selectedSource");
+	      if (selectedSource_obj != null) {
+	   	  ontology_sab = (String) selectedSource_obj;  
+	      }
             %>
             <input type="hidden" id="ontology_node_id" name="ontology_node_id" value="<%=ontology_node_id%>" />
             <%
               String ontology_display_name = HTTPUtils.cleanXSS((String)request.getParameter("dictionary"));
+	      if (ontology_display_name == null) ontology_display_name = Constants.CODING_SCHEME_NAME;//"NCI Metathesaurus";
+              
             %>
             <input type="hidden" id="ontology_display_name" name="ontology_display_name" value="<%=ontology_display_name%>" />
+            <input type="hidden" id="ontology_sab" name="ontology_sab" value="<%=ontology_sab%>" />
+            
           </form>
           <!-- End of Tree control content -->
         </div>
