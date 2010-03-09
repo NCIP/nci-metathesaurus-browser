@@ -517,7 +517,7 @@ public class UserSessionBean extends Object
     public void sourceSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() != null) {
             String source = (String) event.getNewValue();
-            System.out.println("==================== sourceSelectionChanged to: " + source);
+            //System.out.println("==================== sourceSelectionChanged to: " + source);
             setSelectedSource(source);
         }
     }

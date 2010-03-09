@@ -19,6 +19,11 @@ import java.util.Properties;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 
+//KLO 100709
+import gov.nih.nci.evs.security.SecurityToken;
+import gov.nih.nci.evs.browser.bean.SecurityTokenHolder;
+import java.util.List;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -54,7 +59,7 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 public class RemoteServerUtil {
     private static boolean debug = false;
     private static String _serviceInfo = "EvsServiceInfo";
-    private Properties systemProperties = null;
+    //private Properties systemProperties = null;
     private static String serviceURL = null;
 
     public RemoteServerUtil() {
@@ -63,25 +68,26 @@ public class RemoteServerUtil {
 
     public static LexBIGService createLexBIGService()
     {
-        // default URL (to be read from a property file)
-        //String url = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-        String url = "http://lexevsapi-qa.nci.nih.gov/lexevsapi50";
+        String url = "http://ncias-d177-v.nci.nih.gov:19480/lexevsapi51";
 
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
             url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+            return createLexBIGService(url);
         } catch (Exception ex) {
             // Do nothing
+            //System.out.println("WARNING: NCImBrowserProperties loading error...");
+            //System.out.println("\t-- trying to connect to " + url + " instead.");
+            ex.printStackTrace();
         }
-        return createLexBIGService(url);
+        return null;//createLexBIGService(url);
     }
 
 
     public static LexBIGService createLexBIGService(String serviceUrl)
     {
         try {
-
             NCImBrowserProperties properties = null;
             properties = NCImBrowserProperties.getInstance();
 
@@ -89,20 +95,15 @@ public class RemoteServerUtil {
             {
                 String lg_config_file = properties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
                 System.setProperty(NCImBrowserProperties.LG_CONFIG_FILE,lg_config_file);
-
-                if (debug) {
-                    Debug.println(Utils.SEPARATOR);
-                    Debug.println("LexBIGService(local): new LexBIGServiceImpl();");
-                    Debug.println("NCIM: LG_CONFIG_FILE: " + System.getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
-                }
                 LexBIGService lbSvc = new LexBIGServiceImpl();
                 return lbSvc;
             }
             if (debug) {
-                Debug.println(Utils.SEPARATOR);
-                Debug.println("LexBIGService(remote): " + serviceUrl);
+                System.out.println(Utils.SEPARATOR);
+                System.out.println("LexBIGService(remote): " + serviceUrl);
             }
             LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+            lexevsService = registerAllSecurityTokens(lexevsService);
             return (LexBIGService) lexevsService;
         }
         catch (Exception e)
@@ -111,6 +112,79 @@ public class RemoteServerUtil {
         }
         return null;
     }
+
+    //KLO 100709
+    public static LexEVSApplicationService registerAllSecurityTokens(LexEVSApplicationService lexevsService) {
+		List list = NCImBrowserProperties.getSecurityTokenList();
+		if (list == null || list.size() == 0) return lexevsService;
+		for (int i=0; i<list.size(); i++) {
+            SecurityTokenHolder holder = (SecurityTokenHolder) list.get(i);
+            lexevsService = registerSecurityToken(lexevsService, holder.getName(), holder.getValue());
+		}
+		return lexevsService;
+	}
+
+    //KLO 100709
+    public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, String token) {
+		SecurityToken securityToken = new SecurityToken();
+		securityToken.setAccessToken(token);
+		Boolean retval = null;
+		try {
+			retval = lexevsService.registerSecurityToken(codingScheme, securityToken);
+			if(retval != null && retval.equals(Boolean.TRUE))	{
+				//System.out.println("Registration of SecurityToken was successful.");
+			}
+			else {
+				System.out.println("WARNING: Registration of SecurityToken failed.");
+			}
+		} catch (Exception e) {
+			System.out.println("WARNING: Registration of SecurityToken failed.");
+		}
+		return lexevsService;
+	}
+
+
+    //KLO 100709
+    public static LexBIGService createLexBIGService(String serviceUrl, String codingScheme, String token) {
+		SecurityToken securityToken = new SecurityToken();
+		securityToken.setAccessToken(token);
+		return createLexBIGService(serviceUrl, codingScheme, securityToken);
+	}
+
+    //KLO 100709
+    public static LexBIGService createLexBIGService(String serviceUrl, String codingScheme, SecurityToken securityToken)
+    {
+        try {
+            if (serviceUrl == null || serviceUrl.compareTo("") == 0)
+            {
+                LexBIGService lbSvc = new LexBIGServiceImpl();
+                return lbSvc;
+            }
+
+            LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+
+			Boolean retval = false;
+			retval = lexevsService.registerSecurityToken(codingScheme, securityToken);
+
+			if(retval.equals(Boolean.TRUE))	{
+				//System.out.println("Registration of SecurityToken was successful.");
+			}
+			else {
+				System.out.println("WARNING: Registration of SecurityToken failed.");
+			}
+
+            System.out.println("Connected to " + serviceUrl);
+            return (LexBIGService) lexevsService;
+        }
+        catch (Exception e)
+        {
+			System.out.println("Unable to connected to " + serviceUrl);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
     public static String getServiceURL() {
         return serviceURL;

@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import org.LexGrid.LexBIG.DataModel.Collections.MetadataPropertyList;
 import org.LexGrid.LexBIG.DataModel.Core.AbsoluteCodingSchemeVersionReference;
@@ -53,14 +54,26 @@ import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 
 import gov.nih.nci.evs.browser.common.*;
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 
 public class MetadataUtils {
 
 	private static final String SOURCE_ABBREVIATION = "rsab";
 	private static final String SOURCE_DESCRIPTION = "son";
 
+	private static HashMap SAB2FormalNameHashMap = null;
+	private static HashMap localname2FormalnameHashMap = null;
+	private static HashMap SAB2DefinitionHashMap = null;
 
-	public Vector getMetadataForCodingSchemes() {
+
+	public static Vector getMetadataForCodingSchemes() {
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 		LexBIGServiceMetadata lbsm = null;
 		MetadataPropertyList mdpl = null;
@@ -283,7 +296,136 @@ public class MetadataUtils {
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+// local name to formal name mapping
 
+	public static Vector<String> parseData(String line) {
+		String tab = "|";
+		return parseData(line, tab);
+	}
+
+    public static Vector<String> parseData(String line, String tab) {
+        Vector data_vec = new Vector();
+        StringTokenizer st = new StringTokenizer(line, tab);
+        while (st.hasMoreTokens()) {
+            String value = st.nextToken();
+            if (value.compareTo("null") == 0)
+                value = " ";
+            data_vec.add(value);
+        }
+        return data_vec;
+    }
+
+    // For term browse mapping use:
+    public static HashMap getSAB2FormalNameHashMap() {
+		if (SAB2FormalNameHashMap == null) {
+			setSAB2FormalNameHashMap();
+		}
+		return SAB2FormalNameHashMap;
+	}
+
+	public static String getSABFormalName(String sab) {
+		if (SAB2FormalNameHashMap == null) {
+			getSAB2FormalNameHashMap();
+		}
+		return (String) SAB2FormalNameHashMap.get(sab);
+	}
+
+	public static String getSABDefinition(String sab) {
+		if (SAB2DefinitionHashMap == null) {
+			getSAB2FormalNameHashMap();
+		}
+		return (String) SAB2DefinitionHashMap.get(sab);
+	}
+
+
+    private static void setSAB2FormalNameHashMap() {
+		System.out.println("setSAB2FormalNameHashMap ...");
+		SAB2FormalNameHashMap = new HashMap();
+		localname2FormalnameHashMap = new HashMap();
+
+		boolean includeInactive = false;
+        try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			if (lbSvc == null) {
+				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+			}
+            CodingSchemeRenderingList csrl = null;
+            try {
+				csrl = lbSvc.getSupportedCodingSchemes();
+			} catch (LBInvocationException ex) {
+				ex.printStackTrace();
+				System.out.println("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
+                return;
+			}
+			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			for (int i=0; i<csrs.length; i++)
+			{
+				int j = i+1;
+				CodingSchemeRendering csr = csrs[i];
+				CodingSchemeSummary css = csr.getCodingSchemeSummary();
+				String formalname = css.getFormalName();
+
+				Boolean isActive = null;
+				if (csr == null) {
+					System.out.println("\tcsr == null???");
+				} else if (csr.getRenderingDetail() == null) {
+					System.out.println("\tcsr.getRenderingDetail() == null");
+				} else if (csr.getRenderingDetail().getVersionStatus() == null) {
+					System.out.println("\tcsr.getRenderingDetail().getVersionStatus() == null");
+				} else {
+
+					isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
+				}
+
+				String representsVersion = css.getRepresentsVersion();
+				//System.out.println("(" + j + ") " + formalname + "  version: " + representsVersion);
+				//System.out.println("\tActive? " + isActive);
+
+				if ((includeInactive && isActive == null) || (isActive != null && isActive.equals(Boolean.TRUE))
+				     || (includeInactive && (isActive != null && isActive.equals(Boolean.FALSE))))
+				{
+						CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+						vt.setVersion(representsVersion);
+
+						try {
+							CodingScheme cs = lbSvc.resolveCodingScheme(formalname, vt);
+							String [] localnames = cs.getLocalName();
+							for (int m=0; m<localnames.length; m++) {
+								String localname = localnames[m];
+								//System.out.println(localname + " --(formal name) --> " + formalname);
+								localname2FormalnameHashMap.put(localname, formalname);
+							}
+							localname2FormalnameHashMap.put(formalname, formalname);
+							System.out.println("\n");
+						} catch (Exception ex) {
+							System.out.println("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
+							System.out.println("\t\tAccess to " + formalname + " denied.");
+						}
+				} else {
+					System.out.println("\tWARNING: setCodingSchemeMap discards " + formalname);
+					System.out.println("\t\trepresentsVersion " + representsVersion);
+				}
+			}
+	    } catch (Exception e) {
+			//e.printStackTrace();
+			//return null;
+		}
+
+		Vector abbr_vec = getMetadataForCodingSchemes();
+		SAB2DefinitionHashMap = new HashMap();
+	    for (int n=0; n<abbr_vec.size(); n++) {
+		   String t = (String) abbr_vec.elementAt(n);
+		   Vector w = parseData(t, "|");
+		   String abbr = (String) w.elementAt(0);
+		   String def = (String) w.elementAt(1);
+		   if (localname2FormalnameHashMap.get(abbr) != null) {
+			   String formalname = (String) localname2FormalnameHashMap.get(abbr);
+			   SAB2FormalNameHashMap.put(abbr, formalname);
+		   }
+		   SAB2DefinitionHashMap.put(abbr, def);
+	    }
+		return;
+	}
 
 
 	/**

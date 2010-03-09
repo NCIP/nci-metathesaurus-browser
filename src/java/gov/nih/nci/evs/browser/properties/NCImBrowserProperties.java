@@ -48,6 +48,10 @@ public class NCImBrowserProperties {
 	private static HashMap termGroupRankHashMap;
 	private static HashMap configurableItemMap;
 
+	private static List securityTokenList;
+	private static HashMap securityTokenHashMap;
+
+
 	public static final String DEBUG_ON = "DEBUG_ON";
 	public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
 	public static final String LG_CONFIG_FILE = "LG_CONFIG_FILE";
@@ -67,6 +71,8 @@ public class NCImBrowserProperties {
 	public static final String MINIMUM_SEARCH_STRING_LENGTH = "MINIMUM_SEARCH_STRING_LENGTH";
     public static final String SLIDING_WINDOW_HALF_WIDTH = "SLIDING_WINDOW_HALF_WIDTH";
 
+    public static final String SOURCE_HIERARCHIES = "SOURCE_HIERARCHIES";
+
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static NCImBrowserProperties NCImBrowserProperties = null;
@@ -82,6 +88,8 @@ public class NCImBrowserProperties {
 	private static String ncicb_contact_url = null;
 	private static String terminology_subset_download_url = null;
 	private static String term_suggestion_application_url = null;
+	private static String term_browser_url = null;
+	private static String source_hierarchies = null;
 
 	private static int    pagination_time_out = 4;
 	private static int    minimum_search_string_length = 1;
@@ -155,12 +163,28 @@ public class NCImBrowserProperties {
 							sliding_window_half_width = sliding_window_halfwidth;
 						}
 					}
+					term_browser_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.NCIT_URL);
+					source_hierarchies = NCImBrowserProperties.getProperty(NCImBrowserProperties.SOURCE_HIERARCHIES);
 				}
 			}
 		}
 
 		return NCImBrowserProperties;
 	}
+
+	public static String getSourceHierarchies() {
+		return source_hierarchies;
+	}
+
+
+	public static List getSecurityTokenList() {
+		return securityTokenList;
+	}
+
+	public static HashMap getSecurityTokenHashMap() {
+		return securityTokenHashMap;
+	}
+
 
 	public static String getProperty(String key) throws Exception {
 		String ret_str = (String) configurableItemMap.get(key);
@@ -227,6 +251,9 @@ public class NCImBrowserProperties {
 		PropertyFileParser parser = new PropertyFileParser(propertyFile);
 		parser.run();
 
+        securityTokenList = parser.getSecurityTokenList();
+        securityTokenHashMap = parser.getSecurityTokenHashMap();
+
 		displayItemList = parser.getDisplayItemList();
 		termGroupRankList = parser.getTermGroupRankList();
 		termGroupRankHashMap = createTermGroupRankHashMap();
@@ -255,6 +282,10 @@ public class NCImBrowserProperties {
 
 	public static int getSlidingWindowHalfWidth() {
 		return sliding_window_half_width;
+	}
+
+	public static String getTermBrowserURL() {
+		return term_browser_url;
 	}
 
 }

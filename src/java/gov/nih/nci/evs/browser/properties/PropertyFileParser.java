@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 
 import gov.nih.nci.evs.browser.bean.DisplayItem;
 import gov.nih.nci.evs.browser.bean.TermGroupRank;
+import gov.nih.nci.evs.browser.bean.SecurityTokenHolder;
 
 
 /**
@@ -60,12 +61,20 @@ public class PropertyFileParser {
 	HashMap configurableItemMap;
 	String xmlfile;
 
+	List securityTokenList;
+	HashMap securityTokenHashMap;
+
+
 	Document dom;
 
 	public PropertyFileParser(){
 		displayItemList = new ArrayList();
 		termGroupRankList = new ArrayList();
 		configurableItemMap = new HashMap();
+
+		securityTokenList = new ArrayList();
+		securityTokenHashMap = new HashMap();
+
 	}
 
 	public PropertyFileParser(String xmlfile){
@@ -73,6 +82,10 @@ public class PropertyFileParser {
 		termGroupRankList = new ArrayList();
 		configurableItemMap = new HashMap();
 		this.xmlfile = xmlfile;
+
+		securityTokenList = new ArrayList();
+		securityTokenHashMap = new HashMap();
+
 	}
 
 	public void run() {
@@ -129,6 +142,19 @@ public class PropertyFileParser {
 				Element el = (Element) list3.item(i);
 				TermGroupRank e = getTermGroupRank(el);
 				termGroupRankList.add(e);
+			}
+		}
+
+		NodeList list5 = docEle.getElementsByTagName("SecurityTokenHolder");
+		if(list5 != null && list5.getLength() > 0) {
+			for(int i = 0 ; i < list5.getLength();i++) {
+				Element el = (Element) list5.item(i);
+				SecurityTokenHolder e = getSecurityTokenHolder(el);
+
+				if (e.getValue().indexOf("token") == -1) {
+					securityTokenList.add(e);
+					securityTokenHashMap.put(e.getName(), e.getValue());
+			    }
 			}
 		}
 	}
@@ -197,6 +223,21 @@ public class PropertyFileParser {
 		String termgroup = getTextValue(termGroupRankElement,"termgroup");
 
 		TermGroupRank item = new TermGroupRank(index,source,termgroup);
+		return item;
+	}
+
+	public List getSecurityTokenList() {
+		return this.securityTokenList;
+	}
+
+	public HashMap getSecurityTokenHashMap() {
+		return securityTokenHashMap;
+	}
+
+	private SecurityTokenHolder getSecurityTokenHolder(Element securityTokenHolder) {
+	    String name = getTextValue(securityTokenHolder,"name");
+	    String value = getTextValue(securityTokenHolder,"value");
+		SecurityTokenHolder item = new SecurityTokenHolder(name, value);
 		return item;
 	}
 

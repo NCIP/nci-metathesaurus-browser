@@ -89,11 +89,26 @@
         <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
           <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
             valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-            immediate="true">
+            immediate="true" onchange="submit()" >
             <f:selectItems value="#{userSessionBean.sourceList}" />
           </h:selectOneMenu>
-        </h:outputLabel>    
+        </h:outputLabel>
+<%
+Object obj = request.getSession().getAttribute("selectedSource");
+if (obj != null) {
+	String selectedSource = (String) obj;
+	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
+	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
+	%>
+	      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+		   View Hierarchy		 
+	      </a>         
+	<% 
+	}
+} 
+%>
       </td>
+
     </tr>
   </table>
 </FORM>
