@@ -292,7 +292,7 @@
         <!-- setting the property in the ant call overrides the property in the sub-project allowing the artifact to be produced where needed -->
         <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="${ncimbrowser-webapp.build.target}" dir="${ncimbrowser-webapp.base.dir}">
             <property name="dist.dir" value="${ncimbrowser-webapp.dist.dir}" />
-            <property name="lex.evs.api.default.url" value="${lex.evs.api.default.url}"/>
+            <property name="lex.evs.api.url" value="${lex.evs.api.url}"/>
         </ant>
     </target>
 
