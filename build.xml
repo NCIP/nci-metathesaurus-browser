@@ -17,6 +17,7 @@
     <property name="src.dir" value="${basedir}/src" />
     <property name="conf.dir" value="${basedir}/conf" />
     <property name="lib.dir" value="${basedir}/lib" />    
+    <property name="extlib.dir" value="${basedir}/extlib" />
     <property name="target.dir" value="${basedir}/target" />
     <property name="webapp.dir" value="${basedir}/web" />
     <property name="webapp.build.dir" value="${basedir}/build/web" />
@@ -28,6 +29,9 @@
 
     <path id="project.compile.classpath">
         <fileset dir="${lib.dir}">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${extlib.dir}">
             <include name="*.jar" />
         </fileset>
         <pathelement path ="${webapp.classes.dir}"/>
