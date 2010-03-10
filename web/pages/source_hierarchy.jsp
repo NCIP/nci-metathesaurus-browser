@@ -41,6 +41,8 @@
     var treeStatusDiv;
     var nodes = [];
 
+
+
     function load(url,target) {
       if (target != '')
         target.window.location.href = url;
@@ -61,6 +63,7 @@
 
       initTree();
     }
+
 
     function addTreeNode(rootNode, nodeInfo) {
       var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
