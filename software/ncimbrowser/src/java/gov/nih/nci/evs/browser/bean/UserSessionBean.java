@@ -1,10 +1,7 @@
 
 package gov.nih.nci.evs.browser.bean;
 
-import java.io.File;
-
 import gov.nih.nci.evs.browser.utils.MailUtils;
-import gov.nih.nci.evs.browser.utils.SortUtils;
 import gov.nih.nci.evs.browser.utils.SearchUtils;
 import gov.nih.nci.evs.browser.utils.Utils;
 
@@ -13,8 +10,6 @@ import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.HashSet;
-import java.util.Date;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
@@ -22,18 +17,13 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-
-import java.util.Collection;
 
 import org.LexGrid.concepts.Concept;
 
-import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import gov.nih.nci.evs.browser.utils.*;
-
 import gov.nih.nci.evs.browser.common.Constants;
+
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
@@ -71,7 +61,7 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 public class UserSessionBean extends Object
 {
-    private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
+	private static Logger logger = Logger.getLogger(UserSessionBean.class);
 
     private String selectedQuickLink = null;
     private List quickLinkList = null;
@@ -115,7 +105,6 @@ public class UserSessionBean extends Object
         quickLinkList = new ArrayList();
         quickLinkList.add(new SelectItem("Quick Links"));
         quickLinkList.add(new SelectItem("NCI Terminology Browser"));
-        //quickLinkList.add(new SelectItem(Constants.CODING_SCHEME_NAME));
         quickLinkList.add(new SelectItem("EVS Home"));
         quickLinkList.add(new SelectItem("NCI Terminology Resources"));
         return quickLinkList;
@@ -186,7 +175,6 @@ public class UserSessionBean extends Object
         //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
         //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 
-
         boolean excludeDesignation = true;
         boolean designationOnly = false;
 
@@ -250,11 +238,9 @@ public class UserSessionBean extends Object
 			}
 		}
 
-
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
-        //request.getSession().setAttribute("matchtype", matchtype);
-
+        
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -344,8 +330,6 @@ public class UserSessionBean extends Object
         return "message";
     }
 
-
-
     private String selectedResultsPerPage = null;
     private List resultsPerPageList = null;
 
@@ -408,14 +392,6 @@ public class UserSessionBean extends Object
 
     public String linkAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-/*
-        String link = (String) request.getParameter("link");
-        if (link.compareTo("NCI Terminology Browser") == 0)
-        {
-            return "nci_terminology_browser";
-        }
-        return "message";
-*/
         return "";
     }
 
@@ -470,7 +446,6 @@ public class UserSessionBean extends Object
         return "message";
     }
 
-
     ////////////////////////////////////////////////////////////////
     // source
     ////////////////////////////////////////////////////////////////
@@ -478,7 +453,6 @@ public class UserSessionBean extends Object
     private String selectedSource = "ALL";
     private List sourceList = null;
     private Vector<String> sourceListData = null;
-
 
     public List getSourceList() {
         if (sourceList != null) return sourceList;
@@ -503,7 +477,6 @@ public class UserSessionBean extends Object
         this.selectedSource = selectedSource;
     }
 
-
     public String getSelectedSource() {
         if (selectedSource == null) {
             sourceList = getSourceList();
@@ -522,56 +495,6 @@ public class UserSessionBean extends Object
         }
     }
 
-    //////////////////////////////////////////////////////////////////////
-/*
-
-    private String selectedMatchType = null;
-    private List matchTypeList = null;
-    private Vector<String> matchTypeListData = null;
-
-
-    public List getMatchTypeList() {
-        String codingSchemeName = "NCI MetaThesaurus";
-        String version = null;
-        matchTypeListData = DataUtils.getMatchTypeListData(codingSchemeName, version);
-        matchTypeList = new ArrayList();
-        for (int i=0; i<matchTypeListData.size(); i++) {
-            String t = (String) matchTypeListData.elementAt(i);
-            matchTypeList.add(new SelectItem(t));
-        }
-        return matchTypeList;
-    }
-
-    public void setSelectedMatchType(String selectedMatchType) {
-        this.selectedMatchType = selectedMatchType;
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-System.out.println("************* setSelectedMatchType selectedMatchType");
-
-        request.getSession().setAttribute("selectedMatchType", selectedMatchType);
-    }
-
-    public String getSelectedMatchType() {
-        if (selectedMatchType == null) {
-            matchTypeList = getMatchTypeList();
-            if (matchTypeList != null && matchTypeList.size() > 0) {
-                this.selectedMatchType = ((SelectItem) matchTypeList.get(0)).getLabel();
-            }
-        }
-
-System.out.println("************* getSelectedMatchType selectedMatchType");
-
-        return this.selectedMatchType;
-    }
-
-    public void matchTypeSelectionChanged(ValueChangeEvent event) {
-        if (event.getNewValue() == null) return;
-        String matchType = (String) event.getNewValue();
-        setSelectedMatchType(matchType);
-    }
-
-*/
-
     ////////////////////////////////////////////////////////////////
     // concept sources
     ////////////////////////////////////////////////////////////////
@@ -579,7 +502,6 @@ System.out.println("************* getSelectedMatchType selectedMatchType");
     private String selectedConceptSource = null;
     private List conceptSourceList = null;
     private Vector<String> conceptSourceListData = null;
-
 
     public List getConceptSourceList() {
         String codingSchemeName = Constants.CODING_SCHEME_NAME;
@@ -603,7 +525,6 @@ System.out.println("************* getSelectedMatchType selectedMatchType");
         request.getSession().setAttribute("selectedConceptSource", selectedConceptSource);
     }
 
-
     public String getSelectedConceptSource() {
         if (selectedConceptSource == null) {
             conceptSourceList = getConceptSourceList();
@@ -626,14 +547,10 @@ System.out.println("************* getSelectedMatchType selectedMatchType");
     public String viewNeighborhoodAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-        //String sab = (String) request.getParameter("selectedConceptSource");
         String sab = getSelectedConceptSource();
         String code = (String) request.getParameter("code");
-        //String message = "View Neighborhood in " + sab + " page is under construction.";
-        //request.getSession().setAttribute("message", message);
         return "neighborhood";
 
     }
-
 
 }
