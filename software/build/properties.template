@@ -57,7 +57,7 @@ jboss.server.name=The jboss server instance name, $JBOSS_HOME/server/${jboss.ser
 ##############
 ###  LDAP  ###
 ##############
-ldap.url=The fully qulified url to the ldap instance. Example: ldaps://ncids4a.nci.nih.gov:636
+#ldap.url=The fully qulified url to the ldap instance. Example: ldaps://ncids4a.nci.nih.gov:636
 ldap.basedn=The base DN to search for records. Example: ldap.basedn=ou=nci,o=nih
 ###############
 ###  Log4J  ###
