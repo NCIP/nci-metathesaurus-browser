@@ -32,6 +32,9 @@ import java.util.Map;
 import java.io.IOException;
 import java.io.Writer;
 
+import java.io.Serializable;
+
+
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its
  * external form is a string wrapped in curly braces with colons between the
@@ -85,7 +88,9 @@ import java.io.Writer;
  * @author JSON.org
  * @version 2
  */
-public class JSONObject {
+
+//KLO
+public class JSONObject implements Serializable {
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
@@ -235,7 +240,7 @@ public class JSONObject {
         	new HashMap(map);
     }
 
-    
+
     /**
      * Construct a JSONObject from an Object, using reflection to find the
      * public members. The resulting JSONObject's keys will be the strings
@@ -311,7 +316,7 @@ public class JSONObject {
      * @param key   A key string.
      * @param value An object to be accumulated under the key.
      * @return this.
-     * @throws JSONException If the key is null or if the current value 
+     * @throws JSONException If the key is null or if the current value
      * 	associated with the key is not a JSONArray.
      */
     public JSONObject append(String key, Object value)
@@ -321,7 +326,7 @@ public class JSONObject {
         if (o == null) {
             put(key, new JSONArray().put(value));
         } else if (o instanceof JSONArray) {
-            throw new JSONException("JSONObject[" + key + 
+            throw new JSONException("JSONObject[" + key +
             		"] is not a JSONArray.");
         } else {
             put(key, new JSONArray().put(o).put(value));
@@ -408,7 +413,7 @@ public class JSONObject {
         Object o = get(key);
         try {
             return o instanceof Number ?
-                ((Number)o).doubleValue() : 
+                ((Number)o).doubleValue() :
                 Double.valueOf((String)o).doubleValue();
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
@@ -622,7 +627,7 @@ public class JSONObject {
         }
     }
 
-    
+
     /**
      * Put a key/value pair in the JSONObject, where the value will be a
      * JSONArray which is produced from a Collection.
@@ -636,7 +641,7 @@ public class JSONObject {
         return this;
     }
 
-    
+
     /**
      * Get an optional double associated with a key,
      * or NaN if there is no such key or if its value is not a number.
@@ -848,7 +853,7 @@ public class JSONObject {
         return this;
     }
 
-     
+
     /**
      * Put a key/value pair in the JSONObject, where the value will be a
      * JSONObject which is produced from a Map.
@@ -861,8 +866,8 @@ public class JSONObject {
         put(key, new JSONObject(value));
         return this;
     }
-    
-    
+
+
     /**
      * Put a key/value pair in the JSONObject. If the value is null,
      * then the key will be removed from the JSONObject if it is present.
