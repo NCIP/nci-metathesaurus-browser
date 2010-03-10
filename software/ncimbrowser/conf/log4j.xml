@@ -8,7 +8,7 @@
         <param name="Threshold" value="INFO" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                value="[%c{1}] %m%n" />
+                value="%-5p %c{1} - %m%n" />
         </layout>
     </appender>
 
@@ -18,7 +18,7 @@
         <param name="Threshold" value="FATAL" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                value="%d{ABSOLUTE} | %m%n" />
+                value="%d{ABSOLUTE}|%m%n" />
         </layout>
     </appender>
 
