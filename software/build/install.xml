@@ -558,7 +558,7 @@
         <copy tofile="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml" filtering="true" failonerror="true">
             <file file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp"/>
             <filterset>
-                <filter token="search.log.file" value="${application.data.path}/${search.log.file}"/>
+                <filter token="search.log.dir" value="${application.data.path}/${search.log.dir}"/>
             </filterset>
         </copy>
         <delete file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp" failonerror="false" />
