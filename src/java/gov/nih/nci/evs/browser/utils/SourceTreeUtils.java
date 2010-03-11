@@ -233,6 +233,8 @@ public class SourceTreeUtils {
 			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
 
 			ResolvedConceptReferenceList matches = null;
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = PropertyType.PRESENTATION;
 			try {
 				CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 				NameAndValueList nameAndValueList_qualifier = null;
@@ -244,7 +246,7 @@ public class SourceTreeUtils {
 				cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
 				ConceptReference graphFocus = ConvenienceMethods
 						.createConceptReference(code, scheme);
-				matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), null, null, -1);
+				matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), propertyTypes, null, -1);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -309,7 +311,9 @@ public class SourceTreeUtils {
 	}
 
 
-    public static ArrayList getAssociatedConceptsInTree(String scheme, String version, String code, String source, boolean direction,
+    public static ArrayList getAssociatedConceptsInTree(String scheme, String version,
+                                                        String code, String source,
+                                                        boolean direction,
                                                         int resolveCodedEntryDepth,
                                                         int resolveAssociationDepth,
                                                         boolean keepLastAssociationLevelUnresolved) {
@@ -320,10 +324,6 @@ public class SourceTreeUtils {
         long ms = System.currentTimeMillis();
 		try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
-					.getGenericExtension("LexBIGServiceConvenienceMethods");
-			lbscm.setLexBIGService(lbSvc);
-
 			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
 			if (cs == null) return null;
 			Mappings mappings = cs.getMappings();
@@ -339,6 +339,8 @@ public class SourceTreeUtils {
 			if (!direction) associationsNavigatedFwd = !associationsNavigatedFwd;
 
 			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = PropertyType.PRESENTATION;
 
 			ResolvedConceptReferenceList matches = null;
 			try {
@@ -354,8 +356,13 @@ public class SourceTreeUtils {
 						.createConceptReference(code, scheme);
 
 
-				matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, resolveCodedEntryDepth, resolveAssociationDepth,
-				                            new LocalNameList(), null, null, null, -1, keepLastAssociationLevelUnresolved);
+System.out.println("getAssociatedConceptsInTree calling resolveAsList");
+				matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd,
+				                            resolveCodedEntryDepth, resolveAssociationDepth,
+				                            new LocalNameList(), propertyTypes, null, null, -1,
+				                            keepLastAssociationLevelUnresolved);
+
+System.out.println("getAssociatedConceptsInTree exiting resolveAsList");
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -363,6 +370,10 @@ public class SourceTreeUtils {
 
 			// Analyze the result ...
 			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
+
+System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptReferenceCount() " +
+    matches.getResolvedConceptReferenceCount());
+
 				ResolvedConceptReference ref =
 					(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
                 if (ref != null) {
@@ -372,6 +383,9 @@ public class SourceTreeUtils {
 					if (sourceof != null) {
 						Association[] associations = sourceof.getAssociation();
 						if (associations != null) {
+
+							System.out.println("associations.length " + associations.length);
+
 							for (int i = 0; i < associations.length; i++) {
 								Association assoc = associations[i];
 								if (assoc != null) {
@@ -381,6 +395,9 @@ public class SourceTreeUtils {
 											for (int j = 0; j < acl.length; j++) {
 												AssociatedConcept ac = acl[j];
 												if (ac != null) {
+
+													System.out.println("\t" + ac.getCode());
+
 													list.add(ac);
 											    }
 											}
@@ -432,6 +449,10 @@ public class SourceTreeUtils {
 
 			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
 			ResolvedConceptReferenceList matches = null;
+
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = PropertyType.PRESENTATION;
+
 			try {
 				CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 				NameAndValueList nameAndValueList_qualifier = null;
@@ -439,7 +460,7 @@ public class SourceTreeUtils {
 				try {
 					System.out.println("cng.resolveAsList ..." );
 				    //matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), null, null, -1);
-				    matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), null, null, 10);
+				    matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), propertyTypes, null, 10);
 
 			    } catch (Exception ex) {
 					//ex.printStackTrace();
@@ -991,7 +1012,8 @@ public class SourceTreeUtils {
 		// direction. Resolve the children as a code graph, looking 2
 		// levels deep but leaving the final level unresolved.
 
-		ArrayList branchItemList = getAssociatedConceptsInTree(scheme, csvt.getVersion(), branchRootCode, sab, true,
+		ArrayList branchItemList = getAssociatedConceptsInTree(scheme, csvt.getVersion(),
+		                                            branchRootCode, sab, true,
 		                                            1, 2, false);
 		if (branchItemList == null) {
 			return;
@@ -1011,6 +1033,15 @@ public class SourceTreeUtils {
 					String branchItemNodeName = null;
 					try {
 						branchItemNodeName = getCodeDescription(branchItemNode, sab);
+						//Check if there is an atom-to-atom relationship:
+						/*
+						String self_referential_stmt = getAtom2AtomRelationships(branchItemNode, sab);
+						if (self_referential_stmt != null) {
+							System.out.println("(*) self_referential_stmt: " + self_referential_stmt);
+							branchItemNodeName = self_referential_stmt;
+						}
+						*/
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1024,6 +1055,10 @@ public class SourceTreeUtils {
 
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
+
+					System.out.println("Adding child: " + branchItemNodeName + " " + branchItemCode);
+				} else {
+					System.out.println("(*) Excluding " + branchItemCode);
 				}
 			}
 		}
@@ -1217,6 +1252,16 @@ Associations: (C0879923)
 
 ////////////////////////////////////////////////////////////////////////////
 /*
+Logical Observation Identifiers Names and Codes (CUI C1136323)
+
+LOINCCLASSTYPES (CUI CL403889)
+
+Laboratory Class (CUI C1314970)
+
+Microbiology procedure (CUI C0085672)
+
+HTLV1 IgG Ser Ql
+
                             rela:has_expanded_form
                             self-referencing:true (*)
                             source:LNC
@@ -1544,7 +1589,10 @@ Associations: (C0879923)
 		Vector w = new Vector();
 
         long ms = System.currentTimeMillis();
-        Set<String> codesToExclude = Collections.EMPTY_SET;
+        //Set<String> codesToExclude = Collections.EMPTY_SET;
+
+        Set<String> codesToExclude = new HashSet();//Collections.EMPTY_SET;
+
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
 		try {
@@ -1559,6 +1607,9 @@ Associations: (C0879923)
 			String name = c.getEntityDescription().getContent();
 			ti = new TreeItem(code, name);
 			ti.expandable = false;
+
+			//KLO, testing
+			codesToExclude.add(code);
 
 	        addChildren(ti, scheme, csvt, sab, code, codesToExclude, asso_names, associationsNavigatedFwd);
 
