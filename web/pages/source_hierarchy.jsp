@@ -22,7 +22,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
   <head>
-  <title>NCI Metathesaurus Hierarchy</title>
+  <title>Source Hierarchy</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
@@ -193,7 +193,7 @@
       tree = new YAHOO.widget.TreeView("treecontainer");
       var ontology_node_id = document.forms["pg_form"].ontology_node_id.value;
       var ontology_sab = document.forms["pg_form"].ontology_sab.value;
-      var ontology_display_name = "NCI MetaThesaurus";
+      var ontology_display_name = "NCI Metathesaurus";
 
       if (ontology_node_id == null || ontology_node_id == "null")
       {
@@ -375,7 +375,8 @@
       if (ontology_display_name!='') {
         resetEmptyRoot();
         showSearchingTreeStatus();
-        var ontology_source = null;//document.pg_form.ontology_source.value;
+        //var ontology_source = null;//document.pg_form.ontology_source.value;
+        var ontology_source = document.forms["pg_form"].ontology_sab.value;
         var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=search_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
       }
     }
@@ -452,11 +453,18 @@
 <%
 String ontology_sab = null;
 String ontology_formalname = null;
-Object obj = request.getSession().getAttribute("selectedSource");
-if (obj != null) {
-   ontology_sab = (String) obj; 
-   ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
+ontology_sab = HTTPUtils.cleanXSS((String)request.getParameter("sab"));
+System.out.println("SAB: " + ontology_sab);
+
+if (ontology_sab == null) {
+      Object selectedSource_obj = request.getSession().getAttribute("selectedSource");
+      if (selectedSource_obj != null) {
+	  ontology_sab = (String) selectedSource_obj;  
+      }
 }
+ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);	      
+
+
         if (ontology_sab.compareTo("NCI") == 0) {
 %>        
            <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
@@ -509,10 +517,7 @@ if (obj != null) {
           <form id="pg_form">
             <%
               String ontology_node_id = HTTPUtils.cleanXSS((String)request.getParameter("code"));
-	      Object selectedSource_obj = request.getSession().getAttribute("selectedSource");
-	      if (selectedSource_obj != null) {
-	   	  ontology_sab = (String) selectedSource_obj;  
-	      }
+
             %>
             <input type="hidden" id="ontology_node_id" name="ontology_node_id" value="<%=ontology_node_id%>" />
             <%
