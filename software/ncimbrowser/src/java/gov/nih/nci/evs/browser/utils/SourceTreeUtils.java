@@ -1621,6 +1621,36 @@ HTLV1 IgG Ser Ql
 		return hmap;
 	}
 
+    public List getTopNodes(TreeItem ti) {
+		List list = new ArrayList();
+		getTopNodes(ti, list, 0, 1);
+		return list;
+	}
+
+
+    public void getTopNodes(TreeItem ti, List list, int currLevel, int maxLevel) {
+        if (list == null) list = new ArrayList();
+        if (currLevel > maxLevel) return;
+        if (ti.assocToChildMap.keySet().size() > 0) {
+			if (ti.text.compareTo("Root node") != 0)
+			{
+				ResolvedConceptReference rcr = new ResolvedConceptReference();
+				rcr.setConceptCode(ti.code);
+				EntityDescription entityDescription = new EntityDescription();
+				entityDescription.setContent(ti.text);
+				rcr.setEntityDescription(entityDescription);
+				list.add(rcr);
+		    }
+		}
+
+        for (String association : ti.assocToChildMap.keySet()) {
+            List<TreeItem> children = ti.assocToChildMap.get(association);
+            Collections.sort(children);
+            for (TreeItem childItem : children) {
+                getTopNodes(childItem, list, currLevel+1, maxLevel);
+			}
+        }
+    }
 
 	public static void main(String[] args) {
 

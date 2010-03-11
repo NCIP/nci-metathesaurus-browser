@@ -338,6 +338,58 @@ public class CacheController
         }
         return nodeArray;
     }
+
+    public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, String sab, boolean fromCache)
+    {
+        return getPathsToRoots(ontology_display_name, version, node_id, sab, fromCache, -1);
+    }
+
+
+
+    public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, String sab, boolean fromCache, int maxLevel)
+    {
+       JSONArray rootsArray = null;
+        if (maxLevel == -1) {
+            rootsArray = getRootConceptsBySource(ontology_display_name, version, sab);
+            try {
+                SourceTreeUtils util = new SourceTreeUtils();
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, sab, node_id, maxLevel);
+                Set keyset = hmap.keySet();
+                Object[] objs = keyset.toArray();
+                String code = (String) objs[0];
+                TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
+
+                JSONArray nodesArray = getNodesArray(node_id, ti);
+                replaceJSONObjects(rootsArray, nodesArray);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return rootsArray;
+        }
+        else {
+            try {
+                SourceTreeUtils util = new SourceTreeUtils();
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, sab, node_id, maxLevel);
+
+                Object[] objs = hmap.keySet().toArray();
+                String code = (String) objs[0];
+                TreeItem ti = (TreeItem) hmap.get(code);
+
+                List list = util.getTopNodes(ti);
+                rootsArray = list2JSONArray(list);
+                JSONArray nodesArray = getNodesArray(node_id, ti);
+                replaceJSONObjects(rootsArray, nodesArray);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return rootsArray;
+        }
+    }
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -467,7 +519,6 @@ public class CacheController
                 String code = (String) objs[0];
                 TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
 
-                //JSONArray nodesArray = getNodesArray(node_id, ti);
                 JSONArray nodesArray = getNodesArray(node_id, ti);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
@@ -487,16 +538,7 @@ public class CacheController
 
                 List list = util.getTopNodes(ti);
                 rootsArray = list2JSONArray(list);
-                //Set keyset = hmap.keySet();
-                //Object[] objs = keyset.toArray();
-                //String code = (String) objs[0];
-                //TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
-
-                //JSONArray nodesArray = getNodesArray(ti);
-
                 JSONArray nodesArray = getNodesArray(node_id, ti);
-
-                //JSONArray nodesArray = getNodesArray(node_id, ti, node_id);
                 replaceJSONObjects(rootsArray, nodesArray);
             }
             catch (Exception e) {
@@ -505,6 +547,12 @@ public class CacheController
             return rootsArray;
         }
     }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     private void replaceJSONObject(JSONArray nodesArray, JSONObject obj) {
         String obj_id = null;
