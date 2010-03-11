@@ -149,6 +149,9 @@ public final class AjaxServlet extends HttpServlet {
         String node_id = request.getParameter("ontology_node_id");//DataConstants.ONTOLOGY_NODE_ID);
         String ontology_display_name = request.getParameter("ontology_display_name");//DataConstants.ONTOLOGY_DISPLAY_NAME);
         String ontology_source = request.getParameter("ontology_source");
+
+        System.out.println("Searching " + ontology_source + " tree...");
+
         long ms = System.currentTimeMillis();
         if (action.equals("expand_tree")) {
             if (node_id != null && ontology_display_name != null) {
@@ -215,7 +218,12 @@ public final class AjaxServlet extends HttpServlet {
                     } catch (Exception ex) {
                     }
 
-                    JSONArray rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true, maxLevel);
+                    JSONArray rootsArray = null;
+                    if (ontology_source != null && ontology_source.compareTo("NCI") != 0) {
+                        rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
+				    } else {
+						rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true, maxLevel);
+					}
                     if (rootsArray.length() == 0)
                     {
 						System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
