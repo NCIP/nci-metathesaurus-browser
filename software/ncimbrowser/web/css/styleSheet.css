@@ -556,7 +556,23 @@ h3
  padding: 0;
 }
 
+/************************** tree icon styles ***********************************/
 
+.icon_red {
+	border: 0px;
+  	background-color: #990000; /* #A9C6A9; */
+  	background-image: url(/images/bg_rounded.gif);
+  	background-repeat: no-repeat;
+  	vertical-align:text-bottom;
+}
+
+.icon_blue {
+	border: 0px;
+  	background-color: #1B5C92;
+  	background-image: url(/images/bg_rounded.gif);
+  	background-repeat: no-repeat;
+  	vertical-align:text-bottom;
+  	
 /************************** print styles ***********************************/
 @media print
 {
