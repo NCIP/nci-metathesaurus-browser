@@ -134,8 +134,9 @@
 <%
 if (term_source != null) {
 	if (available_hierarchies != null && available_hierarchies.indexOf("|" + term_source + "|") != -1) {
+	    String cs_name = Constants.CODING_SCHEME_NAME;
 	%>
-		  <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+		  <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			<img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="tree" border="0"/>
 		  </a>                 
 	<% 
