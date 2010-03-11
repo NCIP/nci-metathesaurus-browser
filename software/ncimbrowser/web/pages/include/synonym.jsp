@@ -113,14 +113,14 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText" width=700><%=term_name%></td>
+              <td class="dataCellText" width=675><%=term_name%></td>
               <td class="dataCellText" width=100><%=term_source%></td>
               <td class="dataCellText" width=100><%=term_type%></td>
               
               <%
               if (term_browser_formalname == null) {
               %>              
-              <td class="dataCellText" width=100><%=term_source_code%></td>
+              <td class="dataCellText" width=125><%=term_source_code%></td>
               <%
               } else {     
               %>

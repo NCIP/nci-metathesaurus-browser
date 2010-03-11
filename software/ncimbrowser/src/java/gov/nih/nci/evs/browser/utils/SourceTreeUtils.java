@@ -354,26 +354,16 @@ public class SourceTreeUtils {
 				cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
 				ConceptReference graphFocus = ConvenienceMethods
 						.createConceptReference(code, scheme);
-
-
-System.out.println("getAssociatedConceptsInTree calling resolveAsList");
 				matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd,
 				                            resolveCodedEntryDepth, resolveAssociationDepth,
 				                            new LocalNameList(), propertyTypes, null, null, -1,
 				                            keepLastAssociationLevelUnresolved);
-
-System.out.println("getAssociatedConceptsInTree exiting resolveAsList");
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 
 			// Analyze the result ...
 			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
-
-System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptReferenceCount() " +
-    matches.getResolvedConceptReferenceCount());
-
 				ResolvedConceptReference ref =
 					(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
                 if (ref != null) {
@@ -383,9 +373,6 @@ System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptRefere
 					if (sourceof != null) {
 						Association[] associations = sourceof.getAssociation();
 						if (associations != null) {
-
-							System.out.println("associations.length " + associations.length);
-
 							for (int i = 0; i < associations.length; i++) {
 								Association assoc = associations[i];
 								if (assoc != null) {
@@ -395,9 +382,6 @@ System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptRefere
 											for (int j = 0; j < acl.length; j++) {
 												AssociatedConcept ac = acl[j];
 												if (ac != null) {
-
-													System.out.println("\t" + ac.getCode());
-
 													list.add(ac);
 											    }
 											}
@@ -835,10 +819,13 @@ System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptRefere
         if (rcr == null) {
             System.out.println("Unable to resolve a concept for CUI = '" + cui + "'");
             return null;
-        } else {
+        }
+        /*
+        else {
 			System.out.println("Concept found: " + rcr.getReferencedEntry().getEntityDescription().getContent()
 			   + " -- " + rcr.getCode());
 		}
+		*/
 
         ResolvedConceptReference SRC_root = getRootInSRC(scheme, csvt.getVersion(), sab);
         String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
@@ -1056,7 +1043,7 @@ System.out.println("getAssociatedConceptsInTree matches.getResolvedConceptRefere
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
 
-					System.out.println("Adding child: " + branchItemNodeName + " " + branchItemCode);
+					//System.out.println("Adding child: " + branchItemNodeName + " " + branchItemCode);
 				} else {
 					System.out.println("(*) Excluding " + branchItemCode);
 				}
