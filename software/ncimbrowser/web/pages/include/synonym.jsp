@@ -4,6 +4,7 @@
 <%
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
+  String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
   if (type.compareTo("synonym") == 0 || type.compareTo("all") == 0)
   {
     Concept syn_details_concept = (Concept) request.getSession().getAttribute("concept");
@@ -130,6 +131,17 @@
                   '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                       <%=term_source_code%>
                   </a>
+<%
+if (term_source != null) {
+	if (available_hierarchies != null && available_hierarchies.indexOf("|" + term_source + "|") != -1) {
+	%>
+		  <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+			<img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="tree" border="0"/>
+		  </a>                 
+	<% 
+	}
+} 
+%>                  
                   </td> 
               <%
               }
