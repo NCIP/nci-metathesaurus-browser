@@ -5,7 +5,6 @@
 
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out" />
-        <param name="Threshold" value="INFO" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                 value="%-5p %c{1} - %m%n" />
@@ -16,9 +15,10 @@
         <param name="DatePattern" value="'.'yyyy-MM"/>
         <param name="File" value="@search.log.dir@/ncim-search.log"/>
         <param name="Threshold" value="FATAL" />
+        <param name="Append" value="true"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                value="%d{ABSOLUTE}|%m%n" />
+                value="%d{mm-dd-yyyy HH:mm:ss}|%m%n" />
         </layout>
     </appender>
 
