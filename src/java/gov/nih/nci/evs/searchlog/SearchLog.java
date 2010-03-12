@@ -46,7 +46,6 @@ public class SearchLog {
 	 */
 	public static void destroy() {
 		if (logger != null) {			
-			LogManager.shutdown();
 			logger = null;			
 		}
 		System.out.println("Search log is shutdown.");
