@@ -541,6 +541,15 @@
     <target name="install" description="Installs and configures JBOSS and deploys application" depends="install:jboss">
     </target>
 
+    <target name="install:hot" description="Hot deploys application"
+        depends="
+        common:init,
+        install:jboss:ncimbrowser-webapp:re-configure
+        ">
+        <copy file="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}"
+             todir="${jboss.home}/server/${jboss.server.name}/deploy" />
+    </target>
+
     <target name="install:jboss:ncimbrowser-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss" depends="common:jboss:init,common:init">
 
         <!-- This is only required if configuration files are not externalized, below is a sample of
