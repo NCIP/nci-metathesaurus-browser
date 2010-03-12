@@ -626,8 +626,10 @@
         <util-dot-on-dir dot-file.dir="target/reports/ivy" />
     </target>
 
-    <target name="deploy:hot" depends="build:all" description="Hot deploys the deployment artifact">
-        <copy file="${ncimbrowser-webapp.dist.dir}/${ncimbrowser-webapp.file.name}" todir="${jboss.deploy.dir}" />
+    <target name="deploy:hot" depends="build:all,dist:installer:prep" description="Hot deploys the deployment artifact">
+        <deploy-local
+            target.name="install:hot"
+        />
     </target>
 
     <target name="deploy:hot:jsp" description="Copies all current JSP code to the deployed application for quick update">
