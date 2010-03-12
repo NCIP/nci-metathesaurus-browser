@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.searchlog;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
@@ -31,16 +32,28 @@ import org.apache.log4j.Logger;
 public class SearchLog {
 
 	static Logger logger = null;
+	public static final char SEPARATOR = '|'; 
 
 	/**
-	 * 
+	 * Constructor
 	 */
 	public SearchLog() {
 		init();
 	}
-
+	
 	/**
-	 * 
+	 * Destructor - called to release logger
+	 */
+	public static void destroy() {
+		if (logger != null) {			
+			LogManager.shutdown();
+			logger = null;			
+		}
+		System.out.println("Search log is shutdown.");
+	} 	
+	
+	/**
+	 * Initializer
 	 */
 	public static void init() {
 		if (logger == null) {
@@ -51,10 +64,12 @@ public class SearchLog {
 	/**
 	 * @param term
 	 */
-	public static void writeEntry(String term, long runtime) {
+	public static void writeEntry(String term, String type, String target,
+			String source, int count) {
 		init();
-		// "DATE|TERM|RUN TIME"
-		logger.log(SearchLevel.SEARCH_LOG_LEVEL, term + "|" + runtime);
+		// "TERM|TYPE|TARGET|SOURCE|COUNT"
+		logger.log(SearchLevel.SEARCH_LOG_LEVEL, term + SEPARATOR + type
+				+ SEPARATOR + target + SEPARATOR + source + SEPARATOR + count);
 	}
 
 }
