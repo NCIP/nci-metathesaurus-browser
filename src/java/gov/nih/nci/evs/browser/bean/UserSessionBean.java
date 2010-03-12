@@ -23,6 +23,7 @@ import org.LexGrid.concepts.Concept;
 
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.common.Constants;
+import gov.nih.nci.evs.searchlog.SearchLog;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
@@ -264,6 +265,9 @@ public class UserSessionBean extends Object
 			}
 
 			int size = iteratorBean.getSize();
+			
+            // Write a search log entry
+            SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);			
 
 			if (size > 1) {
 
