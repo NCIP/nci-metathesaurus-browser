@@ -270,7 +270,7 @@ public class SourceTreeUtils {
 										if (acl != null) {
 											for (int j = 0; j < acl.length; j++) {
 												AssociatedConcept ac = acl[j];
-												if (ac != null && ac.getConceptCode().indexOf("@") == -1) {
+												if (ac != null && !ac.getConceptCode().startsWith("@")) {
 													EntityDescription ed = ac.getEntityDescription();
 													if (ed != null) {
 														list.add(ed.getContent() + "|" + ac.getConceptCode());
@@ -295,13 +295,179 @@ public class SourceTreeUtils {
 	}
 
 
-
     public static ArrayList getSubconceptsInTree(String scheme, String version, String code, String source) {
 		return getAssociatedConceptsInTree(scheme, version, code, source, true);
 	}
 
+/*
     public static ArrayList getSuperconceptsInTree(String scheme, String version, String code, String source) {
-		return getAssociatedConceptsInTree(scheme, version, code, source, false);
+		//return getAssociatedConceptsInTree(scheme, version, code, source, false);
+
+		ArrayList list = new ArrayList();
+
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+        long ms = System.currentTimeMillis();
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
+			if (cs == null) return null;
+			Mappings mappings = cs.getMappings();
+			SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+			if (hierarchies == null || hierarchies.length == 0) return null;
+
+		    SupportedHierarchy hierarchyDefn = hierarchies[0];
+			String hier_id = hierarchyDefn.getLocalId();
+
+			String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
+
+			for (int i=0; i<associationsToNavigate.length; i++) {
+				String t = associationsToNavigate[i];
+				System.out.println(t);
+			}
+
+			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = PropertyType.PRESENTATION;
+
+			ResolvedConceptReferenceList matches = null;
+			try {
+				CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+				NameAndValueList nameAndValueList_qualifier = null;
+
+				if (source != null) {
+					nameAndValueList_qualifier = createNameAndValueList(new String[] {"source"}, new String[] {source});
+				}
+
+				cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+				ConceptReference graphFocus = ConvenienceMethods
+						.createConceptReference(code, scheme);
+				matches = cng.resolveAsList(graphFocus, false, true,
+				                            1, 1,
+				                            new LocalNameList(), propertyTypes, null, null, -1,
+				                            true);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			// Analyze the result ...
+			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
+
+				ResolvedConceptReference[] rcra = matches.getResolvedConceptReference();
+                for (int k=0; k<rcra.length; k++) {
+				    ResolvedConceptReference ref = (ResolvedConceptReference) rcra[k];
+					if (ref != null) {
+						AssociationList sourceof = ref.getTargetOf();
+						if (sourceof != null) {
+							Association[] associations = sourceof.getAssociation();
+							if (associations != null) {
+								for (int i = 0; i < associations.length; i++) {
+									Association assoc = associations[i];
+									if (assoc != null) {
+										if (assoc.getAssociatedConcepts() != null) {
+											AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+											if (acl != null) {
+												for (int j = 0; j < acl.length; j++) {
+													AssociatedConcept ac = acl[j];
+													if (ac != null && !ac.getConceptCode().startsWith("@")) {
+														list.add(ac);
+
+	System.out.println("getAssociatedConceptsInTree ac " + ac.getConceptCode());
+
+
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+				    }
+			    }
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Run time (milliseconds) getSubconcepts: "
+				+ (System.currentTimeMillis() - ms) + " to resolve ");
+		SortUtils.quickSort(list);
+		return list;
+
+	}
+	*/
+
+
+
+    public static ArrayList getSuperconceptsInTree(String scheme, String version, String code, String source) {
+
+		ArrayList list = new ArrayList();
+
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+        long ms = System.currentTimeMillis();
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
+			if (cs == null) return null;
+			Mappings mappings = cs.getMappings();
+			SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+			if (hierarchies == null || hierarchies.length == 0) return null;
+
+		    SupportedHierarchy hierarchyDefn = hierarchies[0];
+			String hier_id = hierarchyDefn.getLocalId();
+
+			String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
+/*
+			for (int i=0; i<associationsToNavigate.length; i++) {
+				String t = associationsToNavigate[i];
+				System.out.println(t);
+			}
+*/
+			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = PropertyType.PRESENTATION;
+
+			ResolvedConceptReferenceList matches = null;
+			try {
+				CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+				NameAndValueList nameAndValueList_qualifier = null;
+
+				if (source != null) {
+					nameAndValueList_qualifier = createNameAndValueList(new String[] {"source"}, new String[] {source});
+				}
+
+				cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+				ConceptReference graphFocus = ConvenienceMethods
+						.createConceptReference(code, scheme);
+				matches = cng.resolveAsList(graphFocus, false, true,
+				                            1, 1,
+				                            new LocalNameList(), propertyTypes, null, null, -1,
+				                            true);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			// Analyze the result ...
+			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
+
+				ResolvedConceptReference[] rcra = matches.getResolvedConceptReference();
+                for (int k=0; k<rcra.length; k++) {
+					ResolvedConceptReference ref = (ResolvedConceptReference) rcra[k];
+					if (ref.getConceptCode().compareTo(code) != 0) {
+				    	list.add(ref);
+				    }
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Run time (milliseconds) getSubconcepts: "
+				+ (System.currentTimeMillis() - ms) + " to resolve ");
+		SortUtils.quickSort(list);
+		return list;
+
 	}
 
 
@@ -317,6 +483,8 @@ public class SourceTreeUtils {
                                                         int resolveCodedEntryDepth,
                                                         int resolveAssociationDepth,
                                                         boolean keepLastAssociationLevelUnresolved) {
+
+
 		ArrayList list = new ArrayList();
 
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
@@ -364,33 +532,45 @@ public class SourceTreeUtils {
 
 			// Analyze the result ...
 			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
-				ResolvedConceptReference ref =
-					(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
-                if (ref != null) {
-					AssociationList sourceof = ref.getSourceOf();
-					if (!associationsNavigatedFwd) sourceof = ref.getTargetOf();
 
-					if (sourceof != null) {
-						Association[] associations = sourceof.getAssociation();
-						if (associations != null) {
-							for (int i = 0; i < associations.length; i++) {
-								Association assoc = associations[i];
-								if (assoc != null) {
-									if (assoc.getAssociatedConcepts() != null) {
-										AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-										if (acl != null) {
-											for (int j = 0; j < acl.length; j++) {
-												AssociatedConcept ac = acl[j];
-												if (ac != null) {
-													list.add(ac);
-											    }
+				ResolvedConceptReference[] rcra = matches.getResolvedConceptReference();
+
+                for (int k=0; k<rcra.length; k++) {
+
+				    //ResolvedConceptReference ref =
+					//(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+
+				     ResolvedConceptReference ref =
+					(ResolvedConceptReference) rcra[k];
+
+					if (ref != null) {
+						AssociationList sourceof = ref.getSourceOf();
+						if (!associationsNavigatedFwd) sourceof = ref.getTargetOf();
+
+						if (sourceof != null) {
+							Association[] associations = sourceof.getAssociation();
+							if (associations != null) {
+								for (int i = 0; i < associations.length; i++) {
+									Association assoc = associations[i];
+									if (assoc != null) {
+										if (assoc.getAssociatedConcepts() != null) {
+											AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+											if (acl != null) {
+												for (int j = 0; j < acl.length; j++) {
+													AssociatedConcept ac = acl[j];
+													if (ac != null && !ac.getConceptCode().startsWith("@")) {
+														list.add(ac);
+
+													}
+												}
 											}
 										}
-								    }
-							    }
+									}
+								}
 							}
 						}
 					}
+
 			    }
 			}
 		} catch (Exception ex) {
@@ -474,7 +654,7 @@ public class SourceTreeUtils {
 										if (acl != null) {
 											for (int j = 0; j < acl.length; j++) {
 												AssociatedConcept ac = acl[j];
-												if (ac != null) {
+												if (ac != null && !ac.getConceptCode().startsWith("@")) {
 													EntityDescription ed = ac.getEntityDescription();
 													if (ed != null) {
 														list.add(ed.getContent() + "|" + ac.getConceptCode());
@@ -839,6 +1019,7 @@ public class SourceTreeUtils {
             // to the focus code ...
             TreeItem[] pathsFromRoot = buildPathsToRoot(lbsvc, lbscm, rcr, scheme, csvt, sab, maxLevel);
             pathsResolved = pathsFromRoot.length;
+
             for (TreeItem rootItem : pathsFromRoot) {
 				if (rootItem.text.compareTo(rootName) == 0) {
 					for (String assoc : rootItem.assocToChildMap.keySet()) {
@@ -868,31 +1049,12 @@ public class SourceTreeUtils {
             String sab, int maxLevel) throws LBException {
 
         //String root_name = rcr.getReferencedEntry().getEntityDescription().getContent();//, NCI_SOURCE, "PT");
-
-System.out.println("SourceTreeUtils buildPathsToRoot scheme: " + scheme);
-System.out.println("SourceTreeUtils buildPathsToRoot sab: " + sab);
-System.out.println("SourceTreeUtils buildPathsToRoot maxLevel: " + maxLevel);
-
-
         String root_name = getHighestRankedAtomName(rcr.getReferencedEntry(), sab);
-
-
-System.out.println("SourceTreeUtils buildPathsToRoot root_name: " + root_name);
-
-
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
         TreeItem ti = new TreeItem(rcr.getCode(), root_name);
-
-System.out.println("SourceTreeUtils buildPathsToRoot root_code: " + rcr.getCode());
-
-
 		//LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 
 		ti.expandable = hasSubconcepts(scheme, csvt.getVersion(), rcr.getCode(), sab);
-
-System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandable);
-
-
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
         Set<String> visited_links = new HashSet<String>();
@@ -925,8 +1087,9 @@ System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandab
 		}
 
         // Only need to process a code once ...
-        if (code2Tree.containsKey(rcr.getCode()))
+        if (code2Tree.containsKey(rcr.getCode())) {
             return;
+		}
 
         // Cache for future reference.
         code2Tree.put(rcr.getCode(), ti);
@@ -948,7 +1111,8 @@ System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandab
         ArrayList acl = getSuperconceptsInTree(scheme, csvt.getVersion(), rcr.getCode(), sab);
 		if (acl != null) {
 			for (int j = 0; j < acl.size(); j++) {
-				AssociatedConcept refParent = (AssociatedConcept) acl.get(j);
+				//AssociatedConcept refParent = (AssociatedConcept) acl.get(j);
+				ResolvedConceptReference refParent = (ResolvedConceptReference) acl.get(j);
 				Presentation[] sabMatch = getSourcePresentations(refParent, sab);
 				if (sabMatch.length > 0) {
 					// We need to take into account direction of
@@ -960,7 +1124,6 @@ System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandab
 					String parentCode = refParent.getCode();
 
 					String parentName = getHighestRankedAtomName(refParent.getReferencedEntry(), sab);
-
 					String link = rcr.getConceptCode() + "|" + parentCode;
 
 					if (!visited_links.contains(link)) {
@@ -1040,7 +1203,6 @@ System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandab
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					//System.out.println("Child node: " + branchItemCode + " " + getCodeDescription(branchItemNode, sab));
 					TreeItem childItem = new TreeItem(branchItemCode, branchItemNodeName);
 					AssociationList grandchildBranch = associationsNavigatedFwd ? branchItemNode
 							.getSourceOf()
@@ -1051,8 +1213,8 @@ System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandab
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
 				} else {
-					System.out.println("(*) Excluding self-referential node: " + branchItemCode);
-					ti.text = ti.text + " (*)";
+					//System.out.println("(*) Excluding self-referential node: " + branchItemCode);
+					//ti.text = ti.text + " (*)";
 				}
 			}
 		}
@@ -1879,7 +2041,7 @@ HTLV1 IgG Ser Ql
 											if (acl != null) {
 												for (int j = 0; j < acl.length; j++) {
 													AssociatedConcept ac = acl[j];
-													if (ac != null) {
+													if (ac != null && !ac.getConceptCode().startsWith("@")) {
 														//System.out.println("\t" + ac.getCode());
 														String t = getSelfReferentialRelationship(associationName, ac, source);
 														if (t != null) {
@@ -1918,3 +2080,23 @@ HTLV1 IgG Ser Ql
 	}
 }
 
+/*
+Cartilage Diseases (CUI C0007302)
+  Tendon, ligament and cartilage disorders (CUI C0947764)
+    Musculoskeletal and connective tissue disorders (CUI C0263660)
+       Medical Dictionary for Regulatory Activities Terminology (MedDRA) (CUI C1140263)
+
+SourceTreeUtils buildPathsToRoot scheme: NCI Metathesaurus
+SourceTreeUtils buildPathsToRoot sab: MDR
+SourceTreeUtils buildPathsToRoot maxLevel: 2
+SourceTreeUtils buildPathsToRoot root_name: Cartilage disorders
+SourceTreeUtils buildPathsToRoot root_code: C0007302
+Run time (milliseconds) getSubconcepts: 858 to resolve
+SourceTreeUtils buildPathsToRoot expandable: true
+SourceTreeUtils buildPathsToUpperNodes: C0007302 Cartilage disorders
+Run time (milliseconds) getSubconcepts: 266 to resolve
+SourceTreeUtils getSuperconceptsInTree: 1
+SourceTreeUtils sabMatch.length: 6
+SourceTreeUtils parentName: Cartilage disorders C0007302
+SourceTreeUtils Run time (milliseconds): 14539 to resolve 0 paths from root.
+*/
