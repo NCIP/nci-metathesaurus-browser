@@ -221,14 +221,25 @@ public final class AjaxServlet extends HttpServlet {
                     JSONArray rootsArray = null;
                     if (ontology_source != null && ontology_source.compareTo("NCI") != 0) {
                         rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
+
+						if (rootsArray.length() == 0)
+						{
+							System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
+							rootsArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
+						}
+
+
 				    } else {
 						rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true, maxLevel);
+
+						if (rootsArray.length() == 0)
+						{
+							System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
+							rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
+						}
+
 					}
-                    if (rootsArray.length() == 0)
-                    {
-						System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
-                        rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
-                    }
+
                     json.put("root_nodes", rootsArray);
                 }
                 catch (Exception e) {

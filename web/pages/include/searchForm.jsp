@@ -99,6 +99,7 @@ if (obj != null) {
 	String selectedSource = (String) obj;
 	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
+	
 	%>
 	      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 		   View Hierarchy		 
