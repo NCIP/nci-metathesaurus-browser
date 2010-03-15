@@ -5,6 +5,9 @@
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
   String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
+  
+  String nciterm_browser_url = NCImBrowserProperties.getTermBrowserURL();
+  
   if (type.compareTo("synonym") == 0 || type.compareTo("all") == 0)
   {
     Concept syn_details_concept = (Concept) request.getSession().getAttribute("concept");
@@ -127,7 +130,7 @@
 
                   <td class="dataCellText" width=100>
                 
-                  <a href="#" onclick="javascript:window.open('<%=NCImBrowserProperties.getTermBrowserURL()%>/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
+                  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
                   '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                       <%=term_source_code%>
                   </a>
