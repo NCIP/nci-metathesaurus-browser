@@ -842,6 +842,88 @@
       }
     %>
   </p>
+  
+  
+  
+  <p>
+    <%
+      Vector sab_vec = DataUtils.getConceptSources(scheme_curr, version_curr, code_curr);
+      
+      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr,
+                                                     code_curr, sab_vec, true);
+                                                     
+      label = "Self-Referential Relationships:";
+      rel_value = "Other";
+      if (self_referential_relationships.size() <= 0)
+      {
+    %>
+        <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a> <i>(none)</i>
+    <%
+      } else {
+    %>
+        <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a>
+        
+	  <table class="dataTable">
+	    <th class="dataTableHeader" scope="col" align="left">Source AUI
+	    </th>
+	    <th class="dataTableHeader" scope="col" align="left">Source Term
+	    </th>
+	    <th class="dataTableHeader" scope="col" align="left">Relationship
+	    </th>
+	    <th class="dataTableHeader" scope="col" align="left">Target AUI
+	    </th>
+	    <th class="dataTableHeader" scope="col" align="left">Target Term
+	    </th>
+	    <th class="dataTableHeader" scope="col" align="left">Source
+	    </th>
+
+		  <%
+	      int m = 0;
+	      for (int i=0; i<self_referential_relationships.size(); i++) {
+		String s = (String) self_referential_relationships.get(i);
+		Vector ret_vec = DataUtils.parseData(s, "$");
+		String source_aui = (String) ret_vec.elementAt(0);
+		String source_term = (String) ret_vec.elementAt(1);
+		String self_rela = (String) ret_vec.elementAt(2);
+		String target_aui = (String) ret_vec.elementAt(3);
+		String target_term = (String) ret_vec.elementAt(4);
+		String rel_source = (String) ret_vec.elementAt(5);
+
+		if (m % 2 == 0) {
+		    %>
+			<tr class="dataRowDark">
+		    <%
+	        } else {
+	        %>
+		    <tr class="dataRowLight">
+	        <%
+	        }
+	        m++;
+	         %>
+		  <td width=100><%=source_aui%></td>
+		  <td width=180><%=source_term%></td>
+		  <td width=180><%=self_rela%></td>
+		  <td width=180><%=target_aui%></td>
+		  <td width=85><%=target_term%></td>
+		  <td width=85><%=rel_source%></td>
+		</tr>
+	     <%
+              }
+             %>
+         </table>
+      <%   
+      }
+      %>
+  
+  </p>
+  
+  
+  
+  
+  
+  
+  
+  
   <%-- DEBUG: incomplete_obj: <%=incomplete_obj%> incomplete: <%=incomplete%><br/> --%>
 <%
 }

@@ -3821,4 +3821,34 @@ public class DataUtils {
 		return null;
 	}
 
+
+
+    public static Vector getConceptSources(String scheme, String version, String code)
+    {
+	    Concept c = getConceptByCode(scheme, version, null, code);
+	    if (c == null) return null;
+	    Presentation[] presentations = c.getPresentation();
+	    HashSet hset = new HashSet();
+	    Vector v = new Vector();
+
+		for (int i=0; i<presentations.length; i++)
+		{
+			Presentation presentation = presentations[i];
+			//java.lang.String name = presentation.getPropertyName();
+			//java.lang.String prop_value = presentation.getValue().getContent();
+			Source[] sources = presentation.getSource();
+			for (int j=0; j<sources.length; j++)
+			{
+				Source source = (Source) sources[j];
+				java.lang.String sab = source.getContent();
+				if (!hset.contains(sab)) {
+					hset.add(sab);
+					v.add(sab);
+				}
+			}
+		}
+		hset.clear();
+		return v;
+	}
+
 }
