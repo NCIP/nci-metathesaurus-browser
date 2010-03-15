@@ -869,14 +869,30 @@ public class SourceTreeUtils {
 
         //String root_name = rcr.getReferencedEntry().getEntityDescription().getContent();//, NCI_SOURCE, "PT");
 
+System.out.println("SourceTreeUtils buildPathsToRoot scheme: " + scheme);
+System.out.println("SourceTreeUtils buildPathsToRoot sab: " + sab);
+System.out.println("SourceTreeUtils buildPathsToRoot maxLevel: " + maxLevel);
+
+
         String root_name = getHighestRankedAtomName(rcr.getReferencedEntry(), sab);
+
+
+System.out.println("SourceTreeUtils buildPathsToRoot root_name: " + root_name);
+
 
         //TreeItem ti = new TreeItem(rcr.getCode(), rcr.getEntityDescription().getContent());
         TreeItem ti = new TreeItem(rcr.getCode(), root_name);
 
+System.out.println("SourceTreeUtils buildPathsToRoot root_code: " + rcr.getCode());
+
+
 		//LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 
 		ti.expandable = hasSubconcepts(scheme, csvt.getVersion(), rcr.getCode(), sab);
+
+System.out.println("SourceTreeUtils buildPathsToRoot expandable: " + ti.expandable);
+
+
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
         Set<String> visited_links = new HashSet<String>();
@@ -1020,14 +1036,6 @@ public class SourceTreeUtils {
 					String branchItemNodeName = null;
 					try {
 						branchItemNodeName = getCodeDescription(branchItemNode, sab);
-						//Check if there is an atom-to-atom relationship:
-						/*
-						String self_referential_stmt = getAtom2AtomRelationships(branchItemNode, sab);
-						if (self_referential_stmt != null) {
-							System.out.println("(*) self_referential_stmt: " + self_referential_stmt);
-							branchItemNodeName = self_referential_stmt;
-						}
-						*/
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1043,7 +1051,8 @@ public class SourceTreeUtils {
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
 				} else {
-					System.out.println("(*) Excluding " + branchItemCode);
+					System.out.println("(*) Excluding self-referential node: " + branchItemCode);
+					ti.text = ti.text + " (*)";
 				}
 			}
 		}
