@@ -1639,481 +1639,280 @@ HTLV1 IgG Ser Ql
         }
     }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// self-referential relationships
+
+    public static String getAtomName(AssociatedConcept ac, String aui) {
+		Concept c = ac.getReferencedEntry();
+		Presentation[] presentations = c.getPresentation();
+		for (int i=0; i<presentations.length; i++) {
+			Presentation presentation = (Presentation) presentations[i];
+			java.lang.String name = presentation.getPropertyName();
+			java.lang.String prop_value = presentation.getValue().getContent();
+			PropertyQualifier[] qualifiers = presentation.getPropertyQualifier();
+			for (int j=0; j<qualifiers.length; j++)
+			{
+				String qualifierName = qualifiers[j].getPropertyQualifierName();
+				String qualifierValue = qualifiers[j].getValue().getContent();
+
+				if (qualifierName.compareTo("AUI") == 0 && qualifierValue.compareTo(aui) == 0) {
+					return prop_value;
+				}
+			}
+		}
+
+
+		return null;
+	}
+
+
+
+    public static String getSelfReferentialRelationship(String associationName, AssociatedConcept ac, String sab) {
+		Vector v = new Vector();
+		String rela = associationName;
+		String source = null;
+		String self_referencing = null;
+		String source_aui = null;
+		String target_aui = null;
+
+		String source_aui_name = null;
+		String target_aui_name = null;
+
+		for (NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue()) {
+			String qualifier_name = qual.getName();
+			String qualifier_value = qual.getContent();
+			if (qualifier_name.compareTo("source") == 0) source = qualifier_value;
+			if (qualifier_name.compareTo("self-referencing") == 0) self_referencing = qualifier_value;
+			if (qualifier_name.compareTo("source-aui") == 0) {
+				source_aui = qualifier_value;
+				source_aui_name = getAtomName(ac, source_aui);
+			}
+			if (qualifier_name.compareTo("target-aui") == 0) {
+				target_aui = qualifier_value;
+				target_aui_name = getAtomName(ac, target_aui);
+			}
+			if (qualifier_name.compareTo("rela") == 0) rela = qualifier_value;
+		}
+		if (source.compareTo(sab) == 0 && self_referencing != null && self_referencing.compareTo("true") == 0) {
+			return source_aui + "$" + source_aui_name + "$" + rela + "$" + target_aui + "$" + target_aui_name + "$"  + source + "$"  + ac.getCode() + "$" + ac.getEntityDescription().getContent();
+		}
+        return null;
+    }
+
+
+	public static ConceptReferenceList createConceptReferenceList(
+			String[] codes, String codingSchemeName) {
+		if (codes == null) {
+			return null;
+		}
+		ConceptReferenceList list = new ConceptReferenceList();
+		for (int i = 0; i < codes.length; i++) {
+			ConceptReference cr = new ConceptReference();
+			cr.setCodingSchemeName(codingSchemeName);
+			cr.setConceptCode(codes[i]);
+			list.addConceptReference(cr);
+		}
+		return list;
+	}
+
+
+    public static ArrayList getIntraCUIRelationships(String scheme, String version,
+                                                     String code, String source,
+                                                     boolean direction) {
+
+		int resolveCodedEntryDepth = 1;
+		int resolveAssociationDepth = 1;
+		boolean keepLastAssociationLevelUnresolved = false;
+
+		return getIntraCUIRelationships(scheme, version, code, source, direction,
+										resolveCodedEntryDepth,
+										resolveAssociationDepth,
+										keepLastAssociationLevelUnresolved);
+
+    }
+
+
+    public static ArrayList getIntraCUIRelationships(String scheme, String version,
+                                                        String code, String source,
+                                                        boolean direction,
+                                                        int resolveCodedEntryDepth,
+                                                        int resolveAssociationDepth,
+                                                        boolean keepLastAssociationLevelUnresolved) {
+        if (source == null) return null;
+        Vector sources = new Vector();
+        sources.add(source);
+
+        return getIntraCUIRelationships(scheme, version,  code, sources,
+                                                        direction,
+                                                        resolveCodedEntryDepth,
+                                                        resolveAssociationDepth,
+                                                        keepLastAssociationLevelUnresolved);
+	}
+
+
+
+    public static ArrayList getIntraCUIRelationships(String scheme, String version,
+                                                     String code, Vector sources,
+                                                     boolean direction) {
+
+		int resolveCodedEntryDepth = 1;
+		int resolveAssociationDepth = 1;
+		boolean keepLastAssociationLevelUnresolved = false;
+
+		return getIntraCUIRelationships(scheme, version, code, sources, direction,
+										resolveCodedEntryDepth,
+										resolveAssociationDepth,
+										keepLastAssociationLevelUnresolved);
+
+    }
+
+
+    public static ArrayList getIntraCUIRelationships(String scheme, String version,
+                                                        String code, Vector sources,
+                                                        boolean direction,
+                                                        int resolveCodedEntryDepth,
+                                                        int resolveAssociationDepth,
+                                                        boolean keepLastAssociationLevelUnresolved) {
+
+		ArrayList list = new ArrayList();
+		if (sources == null || sources.size() == 0) return list;
+
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+        long ms = System.currentTimeMillis();
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodingScheme cs = null;
+			try {
+			    cs = lbSvc.resolveCodingScheme(scheme, csvt);
+			} catch (Exception ex) {
+			    ex.printStackTrace();
+			}
+
+			if (cs == null) return null;
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+
+
+			Mappings mappings = cs.getMappings();
+			SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+			if (hierarchies == null || hierarchies.length == 0) return null;
+
+		    SupportedHierarchy hierarchyDefn = hierarchies[0];
+			String hier_id = hierarchyDefn.getLocalId();
+
+			String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
+			boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();
+
+			if (!direction) associationsNavigatedFwd = !associationsNavigatedFwd;
+
+            CodedNodeSet cns = lbSvc.getNodeSet(scheme, csvt, null);
+
+			ConceptReferenceList crefs = createConceptReferenceList(
+					new String[] { code }, scheme);
+            cns = cns.restrictToCodes(crefs);
+
+			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
+
+			ResolvedConceptReferenceList matches = null;
+
+
+			for (int k=0; k<sources.size(); k++) {
+                String source = (String) sources.elementAt(k);
+				try {
+					CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+					NameAndValueList nameAndValueList_qualifier = null;
+
+					if (source != null) {
+						nameAndValueList_qualifier = createNameAndValueList(new String[] {"source"}, new String[] {source});
+					}
+					cng = cng.restrictToTargetCodes(cns);
+					cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+					ConceptReference graphFocus = ConvenienceMethods
+							.createConceptReference(code, scheme);
+
+					CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+					propertyTypes[0] = PropertyType.PRESENTATION;
+					try {
+					matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd,
+												resolveCodedEntryDepth, resolveAssociationDepth,
+												new LocalNameList(), propertyTypes, null, null, -1,
+												keepLastAssociationLevelUnresolved);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+				// Analyze the result ...
+				if (matches == null) {
+					System.out.println("matches == null ??? ");
+					return list;
+				}
+                if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
+					ResolvedConceptReference ref =
+						(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+					if (ref != null) {
+						AssociationList sourceof = ref.getSourceOf();
+						if (!associationsNavigatedFwd) sourceof = ref.getTargetOf();
+
+						if (sourceof != null) {
+							Association[] associations = sourceof.getAssociation();
+							if (associations != null) {
+
+								System.out.println("associations.length " + associations.length);
+
+								for (int i = 0; i < associations.length; i++) {
+									Association assoc = associations[i];
+									String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
+									if (assoc != null) {
+										if (assoc.getAssociatedConcepts() != null) {
+											AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+											if (acl != null) {
+												for (int j = 0; j < acl.length; j++) {
+													AssociatedConcept ac = acl[j];
+													if (ac != null) {
+
+														System.out.println("\t" + ac.getCode());
+
+														String t = getSelfReferentialRelationship(associationName, ac, source);
+														if (t != null) {
+															System.out.println(t);
+															list.add(t);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+		    }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Run time (milliseconds) getSubconcepts: "
+				+ (System.currentTimeMillis() - ms) + " to resolve ");
+		//SortUtils.quickSort(list);
+		return list;
+	}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static void main(String[] args) {
 
 		SourceTreeUtils test = new SourceTreeUtils();
-
-/*
-		String scheme = "NCI Metathesaurus";
-		String version = null;
-		String sab = "NCI";
-		String cui = "C0007581";// Cell Aging (CUI C0007581)
-
-		int maxLevel = 5;
-
-        try {
-	        HashMap hmap = test.getTreePathData(scheme, version, sab, cui, maxLevel);
-	        dumpTreeItems(hmap);
-		} catch (Exception ex) {
-
-		}
-*/
-
 		String outputfile = "src_roots_new.out";
 		test.dumpRootConceptsBySource(outputfile);
-
-
 	}
 }
 
-
-/*
-(11) NCI Metathesaurus
-
-	RepresentsVersion: 200904
-
-	Supported Property Qualifiers:
-		(1) ATUI
-		(2) AUI
-		(3) HCD
-		(4) LUI
-		(5) METAUI
-		(6) SAUI
-		(7) SCUI
-		(8) SDUI
-		(9) STYPE
-		(10) SUI
-		(11) SUPPRESS
-		(12) mrrank
-		(13) source-code
-
-	Supported Sources: 72
-		(1) AOD
-		(2) AOT
-		(3) BioC
-		(4) CBO
-		(5) CCS
-		(6) CDC
-		(7) CDISC
-		(8) CDT
-		(9) COSTAR
-		(10) CRCH
-		(11) CSP
-		(12) CST
-		(13) CTCAE
-		(14) CTEP
-		(15) DCP
-		(16) DICOM
-		(17) DTP
-		(18) DXP
-		(19) ELC
-		(20) FDA
-		(21) GO
-		(22) HCPCS
-		(23) HL7V3.0
-		(24) HUGO
-		(25) ICD10
-		(26) ICD10AE
-		(27) ICD9CM
-		(28) ICDO
-		(29) ICH
-		(30) ICPC
-		(31) ICPC2ICD10ENG
-		(32) JAX
-		(33) KEGG
-		(34) LNC
-		(35) MCM
-		(36) MDBCAC
-		(37) MDR
-		(38) MEDLINEPLUS
-		(39) MGED
-		(40) MSH
-		(41) MTH
-		(42) MTHFDA
-		(43) MTHHH
-		(44) MTHICD9
-		(45) MTHICPC2ICD107B
-		(46) MTHICPC2ICD10AE
-		(47) MTHMST
-		(48) MTHSPL
-		(49) NCBI
-		(50) NCI
-		(51) NCI-GLOSS
-		(52) NCI-HL7
-		(53) NCIMTH
-		(54) NDFRT
-		(55) OMIM
-		(56) PDQ
-		(57) PMA
-		(58) PNDS
-		(59) QMR
-		(60) RADLEX
-		(61) RAM
-		(62) RENI
-		(63) RXNORM
-		(64) SNOMEDCT
-		(65) SPN
-		(66) SRC
-		(67) UCUM
-		(68) UMD
-		(69) USPMG
-		(70) UWDA
-		(71) VANDF
-		(72) ZFIN
-
-	Supported Entity Types: 0
-
-	Supported Associations:
-		(1) AQ
-		(2) CHD
-		(3) RB
-		(4) RO
-		(5) RQ
-		(6) SIB
-		(7) SY
-
-	Supported Association Qualifiers:
-		(1) HCD
-		(2) RG
-		(3) RUI
-		(4) SRUI
-		(5) STYPE1
-		(6) STYPE2
-		(7) SUPPRESS
-		(8) rela
-		(9) self-referencing
-		(10) source
-		(11) source-aui
-		(12) target-aui
-
-	Supported Hierarchies:
-
-		Number of Hierarchy IDs: 1
-			is_a
-
-		FormalName: NCI Metathesaurus
-
-		Version: 200904
-
-		associationsToNavigate: CHD
-
-		No of roles: 0
-
-
-
-	Supported Hierarchy Details:
-
-		Hierarchy(0) is_a
-			Association: CHD
-			Content: CHD
-			Root Code: @
-			isForwardNavigable: true
-
-		Hierarchy(1) is_a
-			Association: CHD
-			Content: CHD
-			Root Code: @@
-			isForwardNavigable: true
-
-
-Caused by: org.LexGrid.LexBIG.Exceptions.LBException: No top nodes could be loca
-ted for the supplied restriction set in the requested direction.
-        at org.LexGrid.LexBIG.Impl.dataAccess.SQLImplementedMethods.resolveRelat
-ionships(SQLImplementedMethods.java:2566)
-
-
-Number of sources: 72
-Source: AOD
-Number of roots: 1
-(1) C1140162:Alcohol and Other Drug Thesaurus
-
-Source: AOT
-Number of roots: 1
-(1) C1704485:Authorized Osteopathic Thesaurus
-
-Source: BioC
-Number of roots: 1
-(1) CL337482:Based on BioCarta online maps of molecular relationships, adapted f
-or NCI use
-
-Source: CBO
-Number of roots: 1
-(1) CL340379:Clinical Bioinformatics Ontology
-
-Source: CCS
-Number of roots: 1
-(1) C1140228:Clinical Classifications Software
-
-Source: CDC
-Number of roots: 1
-(1) CL337097:U.S. Centers for Disease Control and Prevention
-
-Source: CDISC
-Number of roots: 1
-(1) CL343444:Clinical Data Interchange Standards Consortium
-
-Source: CDT
-Number of roots: 1
-(1) CL357918:Current Dental Terminology
-
-Source: COSTAR
-Number of roots: 1
-(1) C1140299:Computer-Stored Ambulatory Records
-
-Source: CRCH
-Number of roots: 1
-(1) CL371976:Cancer Research Center of Hawaii
-
-Source: CSP
-Number of roots: 1
-(1) C1140093:CRISP Thesaurus
-
-Source: CST
-Number of roots: 1
-(1) C1140097:COSTART
-
-Source: CTCAE
-Number of roots: 1
-(1) C1516728:Common Terminology Criteria for Adverse Events
-
-Source: CTEP
-Number of roots: 1
-(1) CL324348:Cancer Therapy Evaluation Program (CTEP)
-
-Source: DCP
-Number of roots: 1
-(1) CL342698:Division of Cancer Prevention Program
-
-Source: DICOM
-Number of roots: 1
-(1) C1699030:DICOM
-
-Source: DTP
-Number of roots: 1
-(1) CL337105:NCI Developmental Therapeutics Program
-
-Source: DXP
-Number of roots: 1
-(1) C1140100:DXplain
-
-Source: ELC
-Number of roots: 1
-(1) CL337402:Expression Library Classification
-
-Source: FDA
-Number of roots: 1
-(1) CL342699:Food and Drug Administration
-
-Source: GO
-Number of roots: 1
-(1) C1138831:Gene Ontology
-
-Source: HCPCS
-Number of roots: 1
-(1) C1140148:Healthcare Common Procedure Coding System
-
-Source: HL7V3.0
-Number of roots: 1
-(1) C1553931:HL7 Vocabulary Version 3.0
-
-Source: HUGO
-Number of roots: 1
-(1) C1412043:HUGO Gene Nomenclature
-
-Source: ICD10
-Number of roots: 1
-(1) C1137110:International Statistical Classification of Diseases and Related He
-alth Problems, Tenth Revision (ICD-10)
-
-Source: ICD10AE
-Number of roots: 1
-(1) C1140178:ICD10, American English Equivalents
-
-Source: ICD9CM
-Number of roots: 1
-(1) CL387865:ICD-9-CM
-
-Source: ICDO
-Number of roots: 1
-(1) CL337403:International Classification of Disease for Oncology (ICD)
-
-Source: ICH
-Number of roots: 1
-(1) CL371980:International Conference on Harmonization
-
-Source: ICPC
-Number of roots: 1
-(1) C1140145:International Classification of Primary Care
-
-Source: ICPC2ICD10ENG
-Number of roots: 1
-(1) C1331527:ICPC2 - ICD10 Thesaurus
-
-Source: JAX
-Number of roots: 1
-(1) CL337103:NCI Mouse Terminology
-
-Source: KEGG
-Number of roots: 1
-(1) CL337101:KEGG Pathway Database
-
-Source: LNC
-Number of roots: 1
-(1) C1136323:Logical Observation Identifiers Names and Codes
-
-Source: MCM
-Number of roots: 1
-(1) C1140108:McMaster University Epidemiology Terms
-
-Source: MDBCAC
-Number of roots: 1
-(1) CL105989:Mitelman Database of Chromosome Aberrations in Cancer (MDBCAC)
-
-Source: MDR
-Number of roots: 1
-(1) C1140263:Medical Dictionary for Regulatory Activities Terminology (MedDRA)
-
-Source: MEDLINEPLUS
-Number of roots: 1
-(1) C1456590:MedlinePlus Health Topics
-
-Source: MGED
-Number of roots: 1
-(1) CL369490:The MGED Ontology
-
-Source: MSH
-Number of roots: 1
-(1) C1135584:Medical Subject Headings
-
-Source: MTH
-Number of roots: 1
-(1) C0220961:UMLS Metathesaurus
-
-Source: MTHFDA
-Number of roots: 1
-(1) C1161450:Metathesaurus FDA National Drug Code Directory
-
-Source: MTHHH
-Number of roots: 1
-(1) C1140233:Metathesaurus HCPCS Hierarchical Terms
-
-Source: MTHICD9
-Number of roots: 1
-(1) C1140259:Metathesaurus additional entry terms for ICD-9-CM
-
-Source: MTHICPC2ICD107B
-Number of roots: 1
-(1) C1331529:ICPC2 - ICD10 Thesaurus, 7-bit Equivalents
-
-Source: MTHICPC2ICD10AE
-Number of roots: 1
-(1) C1331525:ICPC2 - ICD10 Thesaurus, American English Equivalents
-
-Source: MTHMST
-Number of roots: 1
-(1) C1140292:Metathesaurus Version of Minimal Standard Terminology Digestive End
-oscopy
-
-Source: MTHSPL
-Number of roots: 1
-(1) C1812643:Metathesaurus FDA Structured Product Labels
-
-Source: NCBI
-Number of roots: 1
-(1) C0995203:NCBI Taxonomy
-
-Source: NCI
-Number of roots: 1
-(1) C1140168:NCI Thesaurus
-
-Source: NCI-GLOSS
-Number of roots: 1
-(1) CL337107:NCI-GLOSS (Cancer.gov Dictionary)
-
-Source: NCI-HL7
-Number of roots: 2
-(1) CL371978:Health Language 7
-
-(3) CL386602:Health Level 7
-
-Source: NCIMTH
-Number of roots: 1
-(1) CL356830:NCI Metathesaurus
-
-Source: NDFRT
-Number of roots: 1
-(1) C1371271:National Drug File - Reference Terminology
-
-Source: OMIM
-Number of roots: 1
-(1) C0950133:Online Mendelian Inheritance In Man
-
-Source: PDQ
-Number of roots: 1
-(1) CL033129:Physician Data Query
-
-Source: PMA
-Number of roots: 1
-(1) CL106499:Portfolio Management Application (PMA)
-
-Source: PNDS
-Number of roots: 1
-(1) C1546211:Perioperative Nursing Data Set
-
-Source: QMR
-Number of roots: 1
-(1) C1140153:Quick Medical Reference (QMR)
-
-Source: RADLEX
-Number of roots: 1
-(1) CL378800:RADLEX
-
-Source: RAM
-Number of roots: 1
-(1) C1140222:QMR clinically related terms from Randolph A. Miller
-
-Source: RENI
-Number of roots: 1
-(1) CL360522:Registry Nomenclature Information System
-
-Source: RXNORM
-Number of roots: 1
-(1) C1140284:RxNorm
-
-Source: SNOMEDCT
-Number of roots: 1
-(1) C1623497:SNOMED Clinical Terms
-
-Source: SPN
-Number of roots: 1
-(1) C1138628:Standard Product Nomenclature
-
-Source: SRC
-Number of roots: 1
-(1) C0700119:Metathesaurus Source Terminology Names
-
-Source: UCUM
-Number of roots: 1
-(1) CL371982:Unified Code for Units of Measure
-
-Source: UMD
-Number of roots: 1
-(1) C1140120:MDNS
-
-Source: USPMG
-Number of roots: 1
-(1) C1579327:USP Model Guidelines
-
-Source: UWDA
-Number of roots: 1
-(1) C0391807:root (of UWDA hierarchy)
-
-Source: VANDF
-Number of roots: 1
-(1) C1140288:Veterans Health Administration National Drug File
-
-Source: ZFIN
-Number of roots: 1
-(1) CL388550:Zebrafish Model Organism Database
-
-*/
