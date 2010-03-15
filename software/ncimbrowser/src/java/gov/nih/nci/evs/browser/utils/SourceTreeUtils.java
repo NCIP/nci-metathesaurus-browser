@@ -1042,8 +1042,6 @@ public class SourceTreeUtils {
 
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
-
-					//System.out.println("Adding child: " + branchItemNodeName + " " + branchItemCode);
 				} else {
 					System.out.println("(*) Excluding " + branchItemCode);
 				}
@@ -1255,7 +1253,6 @@ HTLV1 IgG Ser Ql
                             source-aui:A8490332    // HTLV 1 Ab.IgG:ACnc:Pt:Ser:Ord
                             target-aui:A0155015    // HTLV1 IgG Ser Ql                (extracted from Presentation data)
 
-*/
     public String getAtom2AtomRelationships(AssociatedConcept ac, String sab) {
 		Vector v = new Vector();
 		String rela = null;
@@ -1278,7 +1275,7 @@ HTLV1 IgG Ser Ql
 		}
         return null;
     }
-
+*/
 
     public String getPropertyNameByQualifierValue(AssociatedConcept ac, String qual_name, String qual_value) {
 		Concept c = ac.getReferencedEntry();
@@ -1642,6 +1639,7 @@ HTLV1 IgG Ser Ql
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // self-referential relationships
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String getAtomName(AssociatedConcept ac, String aui) {
 		Concept c = ac.getReferencedEntry();
@@ -1863,9 +1861,6 @@ HTLV1 IgG Ser Ql
 						if (sourceof != null) {
 							Association[] associations = sourceof.getAssociation();
 							if (associations != null) {
-
-								System.out.println("associations.length " + associations.length);
-
 								for (int i = 0; i < associations.length; i++) {
 									Association assoc = associations[i];
 									String associationName = lbscm.getAssociationNameFromAssociationCode(scheme, csvt, assoc.getAssociationName());
@@ -1876,12 +1871,10 @@ HTLV1 IgG Ser Ql
 												for (int j = 0; j < acl.length; j++) {
 													AssociatedConcept ac = acl[j];
 													if (ac != null) {
-
-														System.out.println("\t" + ac.getCode());
-
+														//System.out.println("\t" + ac.getCode());
 														String t = getSelfReferentialRelationship(associationName, ac, source);
 														if (t != null) {
-															System.out.println(t);
+															//System.out.println(t);
 															list.add(t);
 														}
 													}
