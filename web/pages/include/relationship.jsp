@@ -842,41 +842,32 @@
       }
     %>
   </p>
-  
-  
-  
   <p>
     <%
       Vector sab_vec = DataUtils.getConceptSources(scheme_curr, version_curr, code_curr);
-      
-      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr,
-                                                     code_curr, sab_vec, true);
-                                                     
+      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr, code_curr, sab_vec, true); 
       label = "Self-Referential Relationships:";
-      rel_value = "Other";
-      if (self_referential_relationships.size() <= 0)
+      if (self_referential_relationships != null && self_referential_relationships.size() > 0)
       {
     %>
-        <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a> <i>(none)</i>
-    <%
-      } else {
-    %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a>
-        
 	  <table class="dataTable">
+	    <th class="dataTableHeader" scope="col" align="left">Relationship
+	    </th>	  
 	    <th class="dataTableHeader" scope="col" align="left">Source AUI
 	    </th>
 	    <th class="dataTableHeader" scope="col" align="left">Source Term
-	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Relationship
 	    </th>
 	    <th class="dataTableHeader" scope="col" align="left">Target AUI
 	    </th>
 	    <th class="dataTableHeader" scope="col" align="left">Target Term
 	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Source
+	    <th class="dataTableHeader" scope="col" align="left">Rel. Source
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
+    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
+        </a>	    
 	    </th>
-
 		  <%
 	      int m = 0;
 	      for (int i=0; i<self_referential_relationships.size(); i++) {
@@ -900,12 +891,12 @@
 	        }
 	        m++;
 	         %>
+	          <td width=80><%=self_rela%></td>
 		  <td width=100><%=source_aui%></td>
-		  <td width=180><%=source_term%></td>
-		  <td width=180><%=self_rela%></td>
-		  <td width=180><%=target_aui%></td>
-		  <td width=85><%=target_term%></td>
-		  <td width=85><%=rel_source%></td>
+		  <td width=200><%=source_term%></td>
+		  <td width=100><%=target_aui%></td>
+		  <td width=200><%=target_term%></td>
+		  <td width=100><%=rel_source%></td>
 		</tr>
 	     <%
               }
@@ -914,16 +905,7 @@
       <%   
       }
       %>
-  
-  </p>
-  
-  
-  
-  
-  
-  
-  
-  
+   </p>
   <%-- DEBUG: incomplete_obj: <%=incomplete_obj%> incomplete: <%=incomplete%><br/> --%>
 <%
 }
