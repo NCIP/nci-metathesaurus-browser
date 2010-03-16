@@ -1234,13 +1234,17 @@ public class SearchUtils {
 		if (v == null) return null;
 		int maxReturn = 100;
 		Vector w = new Vector();
+		HashSet hset = new HashSet();
 		for (int i=0; i<v.size(); i++) {
 			ResolvedConceptReferencesIterator iterator = (ResolvedConceptReferencesIterator) v.elementAt(i);
 			try {
 				while(iterator != null && iterator.hasNext()) {
 					ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 					for(ResolvedConceptReference ref : refs) {
-						w.add(ref.getConceptCode());
+						if (!hset.contains(ref.getConceptCode())) {
+							w.add(ref.getConceptCode());
+							hset.add(ref.getConceptCode());
+						}
 					}
 				}
 			} catch (Exception ex) {
@@ -1281,6 +1285,7 @@ public class SearchUtils {
 		} catch (Exception ex) {
             ex.printStackTrace();
 		}
+		hset.clear();
         return matchIterator;
 
 	}
