@@ -1230,6 +1230,62 @@ public class SearchUtils {
 */
 
 
+    ResolvedConceptReferencesIterator getResolvedConceptReferencesIteratorUnion(String scheme, String version, Vector<ResolvedConceptReferencesIterator> v) {
+		if (v == null) return null;
+		int maxReturn = 100;
+		Vector w = new Vector();
+		for (int i=0; i<v.size(); i++) {
+			ResolvedConceptReferencesIterator iterator = (ResolvedConceptReferencesIterator) v.elementAt(i);
+			try {
+				while(iterator != null && iterator.hasNext()) {
+					ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
+					for(ResolvedConceptReference ref : refs) {
+						w.add(ref.getConceptCode());
+					}
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+    	}
+    	String[] codes = new String[w.size()];
+    	for (int i=0; i<w.size(); i++) {
+			String code = (String) w.elementAt(i);
+			codes[i] = code;
+		}
+
+		ResolvedConceptReferencesIterator matchIterator = null;
+
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc == null???");
+                return null;
+            }
+
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            if (version != null) versionOrTag.setVersion(version);
+
+            ConceptReferenceList crefs = createConceptReferenceList(codes, scheme);
+			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
+			cns = cns.restrictToCodes(crefs);
+			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+			cns = cns.restrictToProperties(null, types, null, null, null);
+
+			try {
+				matchIterator = cns.resolve(null,null,null);
+			} catch (Exception ex) {
+                ex.printStackTrace();
+			}
+
+		} catch (Exception ex) {
+            ex.printStackTrace();
+		}
+        return matchIterator;
+
+	}
+
+
     // V5.1 Implementation
     public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, int maxToReturn) {
         return searchByName(scheme, version, matchText, source, matchAlgorithm, true, maxToReturn);
@@ -1409,36 +1465,6 @@ public class SearchUtils {
 			return null;
 		}
 
-/*
-		System.out.println("sortOption: " + sortOption);
-		System.out.println("apply_sort_score? " + sortOption.isApplySortScore());
-
-        if (sortOption.isApplySortScore())
-        {
-                long ms = System.currentTimeMillis();
-                try {
-					if (sortOption.isSortByPtOnly()) {
-					    iterator = sortByScore(matchText0, iterator, maxToReturn, true, matchAlgorithm0);
-					} else {
-                        iterator = sortByScore(matchText0, iterator, maxToReturn, matchAlgorithm0);
-					}
-
-                } catch (Exception ex) {
-
-                }
-                Debug.println("sortByScore delay ---- Run time (ms): " + (System.currentTimeMillis() - ms));
-        }
-
-        Vector v = null;
-        if (iterator != null) {
-			//testing KLO
-			//v = resolveIterator( iterator, maxToReturn, null, sort_by_pt_only);
-			long ms = System.currentTimeMillis(), delay = 0;
-			v = resolveIterator( iterator, maxToReturn, null, sortOption.isSortByPtOnly());
-			Debug.println("resolveIterator delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms));
-			DBG.debugDetails(delay, "resolveIterator", "searchByName");
-        }
-*/
         if (iterator == null) {
 			iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
 		} else {
@@ -1452,83 +1478,26 @@ public class SearchUtils {
 			        iterator = findConceptWithSourceCodeMatching(scheme, version,
 												   source, matchText0, maxToReturn, true);
 				}
+				// Find ICD9CM concepts by code
 				size = iterator.numberRemaining();
+				if (size < 20) { // heuristic rule
+					Vector w = new Vector();
+					w.add(iterator);
+					ResolvedConceptReferencesIterator itr1 = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
+			        if (itr1 != null) w.add(itr1);
+			        ResolvedConceptReferencesIterator itr2 = findConceptWithSourceCodeMatching(scheme, version,
+												   source, matchText0, maxToReturn, true);
+					if (itr2 != null) w.add(itr2);
+                    iterator = getResolvedConceptReferencesIteratorUnion(scheme, version, w);
+				}
 
 			} catch (Exception e) {
 
 			}
 		}
-
-
-/*      to be modified (search by source code, or code)
-        if (v == null || v.size() == 0) {
-			System.out.println("** No match -- trying matching by code " );
-
-			v = new Vector();
-			Vector w = searchByCode(scheme, version, matchText0, source, "LuceneQuery");
-			if (w.size() > 0) {
-				for (int k=0; k<w.size(); k++) {
-					Concept con = (Concept) w.elementAt(k);
-					v.add(con);
-				}
-			}
-
-			boolean searchInactive = true;
-			Vector u = findConceptWithSourceCodeMatching(scheme, version,
-												   source, matchText0, maxToReturn, searchInactive);
-			if (u != null) {
-				for (int j=0; j<u.size(); j++) {
-					Concept c = (Concept) u.elementAt(j);
-					v.add(c);
-				}
-			}
-	    }
-
-	    if (v == null || v.size() == 0) {
-		    if (matchAlgorithm0.compareTo("contains") == 0) // /100{WBC} & search by code
-			{
-		        DBG.debug("NOTE: Switching from \"contains\" to \"startsWith\" search:");
-		        DBG.debug("        for matchAlgorithm=\"" + matchAlgorithm + "\", matchText=\"" + matchText + "\"");
-                //KLO 071709
-				//return searchByName(scheme, version, matchText0, "startsWith", sortOption, maxToReturn);
-                return searchByName(scheme, version, matchText0, source, "startsWith", sortOption, maxToReturn);
-			}
-		}
-
-		if(!sortOption.isApplySortScore())
-		{
-			v = SortUtils.quickSort(v);
-		}
-        return v;
-*/
         return new ResolvedConceptReferencesIteratorWrapper(iterator);
     }
 
-/*
-    public void testSearchByName() {
-        String scheme = "NCI Thesaurus";
-        String version = null;
-        String matchText = "breast canser";
-        matchText = "dog";
-        String matchAlgorithm = "DoubleMetaphoneLuceneQuery";
-        SortOption sortOption = new SortOption(SortOption.Type.ALL);
-        int maxToReturn = 200;
-
-        long ms = System.currentTimeMillis();
-        Vector<org.LexGrid.concepts.Concept> v = searchByName(scheme, version, matchText, matchAlgorithm, sortOption, maxToReturn);
-        System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
-        if (v != null)
-        {
-            System.out.println("v.size() = " + v.size());
-            for (int i=0; i<v.size(); i++)
-            {
-                int j = i + 1;
-                Concept ce = (Concept) v.elementAt(i);
-                System.out.println("(" + j + ")" + " " + ce.getEntityCode() + " " + ce.getEntityDescription().getContent());
-            }
-        }
-    }
-*/
 
     protected static List<String> toWords(String s, String delimitRegex, boolean removeStopWords, boolean removeDuplicates) {
         String[] words = s.split(delimitRegex);
