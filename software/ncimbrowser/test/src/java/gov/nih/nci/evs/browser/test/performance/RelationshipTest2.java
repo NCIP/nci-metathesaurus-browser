@@ -8,11 +8,12 @@ import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
 
 public class RelationshipTest2 extends DataUtils {
+    private int _runAmount = 1;
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayRelationships = false;
     private boolean _displayResults = true;
-
+    
     public HashMap getAssociationTargetHashMap(String CUI, Vector sort_option) {
         if (_displayParameters) {
             DBG.debug("* Search parameters:");
@@ -73,6 +74,8 @@ public class RelationshipTest2 extends DataUtils {
         while (true) {
             DBG.debug("* codes: " + Utils.toString(codes));
             DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
+            _runAmount = Prompt.prompt(
+                "  * How many concepts", _runAmount);
             _suppressOtherMessages = Prompt.prompt(
                 "  * Suppress other debugging messages", _suppressOtherMessages);
             Debug.setDisplay(!_suppressOtherMessages);
@@ -161,6 +164,8 @@ public class RelationshipTest2 extends DataUtils {
 
         prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
+            if (i >= _runAmount)
+                break;
             String code = codes[i];
             if (DBG.isDisplayDetails()) {
                 DBG.debug("");
