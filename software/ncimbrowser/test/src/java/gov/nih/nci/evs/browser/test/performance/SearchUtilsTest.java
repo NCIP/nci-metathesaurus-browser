@@ -1,5 +1,8 @@
 package gov.nih.nci.evs.browser.test.performance;
 
+import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.Utility.Iterators.*;
+
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
@@ -15,10 +18,9 @@ public class SearchUtilsTest extends SearchUtils {
         super(null);
     }
 
-/*
-    public Vector<org.LexGrid.concepts.Concept> searchByName(String scheme,
+    public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
-        SortOption sortOption, int maxToReturn) {
+        boolean ranking, int maxToReturn) {
         if (_displayParameters) {
             DBG.debug("* Search parameters:");
             DBG.debug("  * scheme = " + scheme);
@@ -26,51 +28,55 @@ public class SearchUtilsTest extends SearchUtils {
             DBG.debug("  * matchText = " + matchText);
             DBG.debug("  * source = " + source);
             DBG.debug("  * matchAlgorithm = " + matchAlgorithm);
-            DBG.debug("  * sortOption = " + sortOption);
+            DBG.debug("  * ranking = " + ranking);
             DBG.debug("  * maxToReturn = " + maxToReturn);
         }
         DBG.debug(DBG.isDisplayDetails(), "* Details: " + matchAlgorithm + " " + matchText);
         return super.searchByName(scheme, version, matchText, source,
-            matchAlgorithm, sortOption, maxToReturn);
+            matchAlgorithm, ranking, maxToReturn);
     }
 
 
     public void searchByNameTest(String scheme, String version, String matchText,
-        String source, String matchAlgorithm, SortOption sortOption,
+        String source, String matchAlgorithm, boolean ranking,
         int maxToReturn) {
-        DBG.clearTabbbedValues();
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
-
-        Vector<Concept> vector = searchByName(scheme, version, matchText,
-            source, matchAlgorithm, sortOption, maxToReturn);
-
-        long duration = stopWatch.getDuration();
-
-        if (_displayConcepts && vector.size() > 0) {
-            DBG.debug("* List of concepts:");
-            for (int i = 0; i < vector.size(); i++) {
-                int j = i + 1;
-                Concept ce = vector.elementAt(i);
-                DBG.debug("  " + j + ") " + ce.getEntityCode() + " "
-                    + ce.getEntityDescription().getContent());
+        try {
+            DBG.clearTabbbedValues();
+            Utils.StopWatch stopWatch = new Utils.StopWatch();
+    
+            ResolvedConceptReferencesIteratorWrapper wrapper = searchByName(scheme, version, matchText,
+                source, matchAlgorithm, ranking, maxToReturn);
+            ResolvedConceptReferencesIterator iterator = wrapper.getIterator();
+            int n = iterator.numberRemaining(), i=0;
+            
+            long duration = stopWatch.getDuration();
+            if (_displayConcepts && n > 0) {
+                DBG.debug("* List of concepts:");
+                while (iterator.hasNext()) {
+                    ResolvedConceptReference ref = iterator.next();
+                    String code = ref.getCode();
+                    String name = ref.getEntityDescription().getContent();
+                    DBG.debug("  " + (++i) + ") " + code + " " + name);
+                }
             }
-        }
-        if (_displayResults) {
-            DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
-            DBG.debug("  * Number of concepts: " + vector.size());
-            DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
-        }
-        if (DBG.isDisplayTabDelimitedFormat()) {
-            int i=0;
-            DBG.debugTabbedValue(i++, "* Tabbed", "");
-            DBG.debugTabbedValue(i++, "Keyword", matchText);
-            DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-            DBG.debugTabbedValue(i++, "Hits", vector.size());
-            DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
-            DBG.displayTabbedValues();
+            if (_displayResults) {
+                DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
+                DBG.debug("  * Number of concepts: " + n);
+                DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
+            }
+            if (DBG.isDisplayTabDelimitedFormat()) {
+                i=0;
+                DBG.debugTabbedValue(i++, "* Tabbed", "");
+                DBG.debugTabbedValue(i++, "Keyword", matchText);
+                DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
+                DBG.debugTabbedValue(i++, "Hits", n);
+                DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
+                DBG.displayTabbedValues();
+            }
+        } catch (Exception e) {
+            DBG.debug(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
-*/
 
     private void prompt() {
         boolean isTrue = false;
@@ -96,8 +102,8 @@ public class SearchUtilsTest extends SearchUtils {
         String scheme = "NCI MetaThesaurus";
         String version = null;
         String matchAlgorithm = "contains";
-        String source = null;
-        //SortOption sortOption = new SortOption(SortOption.Type.ALL);
+        String source = "ALL";
+        boolean ranking = true;
         int maxToReturn = -1;
         String[] matchTexts = new String[] {
             "100",
@@ -122,7 +128,7 @@ public class SearchUtilsTest extends SearchUtils {
             "injury"
         };
 
-//        matchAlgorithm = "exactMatch";
+        matchAlgorithm = "exactMatch";
 //        matchTexts = new String[] { "cell" };
 
         DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
@@ -137,10 +143,8 @@ public class SearchUtilsTest extends SearchUtils {
                 DBG.debug("");
                 DBG.debug(Utils.SEPARATOR);
             }
-            /*
             searchByNameTest(scheme, version, matchText, source, matchAlgorithm,
-                sortOption, maxToReturn);
-            */
+                ranking, maxToReturn);
         }
         DBG.debug("* Done");
     }
