@@ -3,6 +3,7 @@ package gov.nih.nci.evs.browser.test.performance;
 import java.util.*;
 import org.LexGrid.concepts.*;
 import gov.nih.nci.evs.browser.common.*;
+import gov.nih.nci.evs.browser.properties.*;
 import gov.nih.nci.evs.browser.test.utils.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
@@ -98,7 +99,7 @@ public class RelationshipTest2 extends DataUtils {
         }
     }
 
-    public void runTest() {
+    public void runTest() throws Exception {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
         Vector<String> sort_option = new Vector<String>();
@@ -162,6 +163,9 @@ public class RelationshipTest2 extends DataUtils {
         // codes = new String[] { "C0031843" }; // physiological aspects
         // codes = new String[] { "C0439793" }; // Severities
 
+        NCImBrowserProperties.getInstance();
+        DBG.debug("* EVS_SERVICE_URL: " + NCImBrowserProperties
+            .getProperty(NCImBrowserProperties.EVS_SERVICE_URL));
         prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
             if (i >= _runAmount)
@@ -176,19 +180,23 @@ public class RelationshipTest2 extends DataUtils {
         DBG.debug("* Done");
     }
 
-    public static void main(String[] args) {     
-        DBG.setPerformanceTesting(true);
-        RelationshipTest2 test = new RelationshipTest2();
-        boolean isContinue = true;
-        do {
-            test.runTest();
-            DBG.debug("");
-            DBG.debug(Utils.SEPARATOR);
-            isContinue = Prompt.prompt("Rerun", isContinue);
-            if (!isContinue)
-                break;
-        } while (isContinue);
-        DBG.debug("Done");
-        DBG.setPerformanceTesting(false);
+    public static void main(String[] args) {
+        try {
+            DBG.setPerformanceTesting(true);
+            RelationshipTest2 test = new RelationshipTest2();
+            boolean isContinue = true;
+            do {
+                test.runTest();
+                DBG.debug("");
+                DBG.debug(Utils.SEPARATOR);
+                isContinue = Prompt.prompt("Rerun", isContinue);
+                if (!isContinue)
+                    break;
+            } while (isContinue);
+            DBG.debug("Done");
+            DBG.setPerformanceTesting(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
