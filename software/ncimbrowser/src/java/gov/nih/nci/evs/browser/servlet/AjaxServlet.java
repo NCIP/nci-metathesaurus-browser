@@ -207,9 +207,6 @@ public final class AjaxServlet extends HttpServlet {
                 JSONObject json = new JSONObject();
 
                 try {
-                    // testing
-                    //JSONArray rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true);
-
                     String max_tree_level_str = null;
                     int maxLevel = -1;
                     try {

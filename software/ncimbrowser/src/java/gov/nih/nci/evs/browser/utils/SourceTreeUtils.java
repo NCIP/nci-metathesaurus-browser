@@ -1011,6 +1011,9 @@ public class SourceTreeUtils {
         String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
         String rootCode = SRC_root.getCode();
 
+System.out.println("rootName: " + rootName);
+System.out.println("rootCode: " + rootCode);
+
         // Dummy root (place holder)
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
         int pathsResolved = 0;
@@ -1020,15 +1023,29 @@ public class SourceTreeUtils {
             TreeItem[] pathsFromRoot = buildPathsToRoot(lbsvc, lbscm, rcr, scheme, csvt, sab, maxLevel);
             pathsResolved = pathsFromRoot.length;
 
+System.out.println("pathsResolved: " + pathsResolved);
+
+
             for (TreeItem rootItem : pathsFromRoot) {
+
+	System.out.println("rootItem.text: " + rootItem.text + "     code: " + rootItem.code);
+
+
 				if (rootItem.text.compareTo(rootName) == 0) {
 					for (String assoc : rootItem.assocToChildMap.keySet()) {
 						List<TreeItem> children = rootItem.assocToChildMap.get(assoc);
 						for (TreeItem childItem : children) {
+
+	System.out.println("adding CHD " + childItem.text + " under " + ti.text);
+
+
 						   ti.addChild(assoc, childItem);
 						}
 					}
 			    } else {
+
+	System.out.println("adding CHD " + rootItem.text + " under " + ti.text);
+
 					ti.addChild("CHD", rootItem);
 				}
 			}

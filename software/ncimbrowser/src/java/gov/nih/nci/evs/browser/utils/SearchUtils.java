@@ -1235,57 +1235,68 @@ public class SearchUtils {
 		int maxReturn = 100;
 		Vector w = new Vector();
 		HashSet hset = new HashSet();
+		ResolvedConceptReferencesIterator matchIterator = null;
+
 		for (int i=0; i<v.size(); i++) {
 			ResolvedConceptReferencesIterator iterator = (ResolvedConceptReferencesIterator) v.elementAt(i);
 			try {
 				while(iterator != null && iterator.hasNext()) {
-					ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
-					for(ResolvedConceptReference ref : refs) {
-						if (!hset.contains(ref.getConceptCode())) {
-							w.add(ref.getConceptCode());
-							hset.add(ref.getConceptCode());
+					ResolvedConceptReferenceList rcrl = iterator.next(maxReturn);
+					if (rcrl != null) {
+						ResolvedConceptReference[] refs = rcrl.getResolvedConceptReference();
+
+						if (refs != null) {
+							for(ResolvedConceptReference ref : refs) {
+								if (ref != null) {
+									if (!hset.contains(ref.getConceptCode())) {
+										w.add(ref.getConceptCode());
+										hset.add(ref.getConceptCode());
+									}
+								}
+							}
 						}
-					}
+				    }
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
     	}
-    	String[] codes = new String[w.size()];
-    	for (int i=0; i<w.size(); i++) {
-			String code = (String) w.elementAt(i);
-			codes[i] = code;
-		}
 
-		ResolvedConceptReferencesIterator matchIterator = null;
-
-        try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-            if (lbSvc == null)
-            {
-                System.out.println("lbSvc == null???");
-                return null;
-            }
-
-            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            if (version != null) versionOrTag.setVersion(version);
-
-            ConceptReferenceList crefs = createConceptReferenceList(codes, scheme);
-			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
-			cns = cns.restrictToCodes(crefs);
-			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
-			cns = cns.restrictToProperties(null, types, null, null, null);
-
-			try {
-				matchIterator = cns.resolve(null,null,null);
-			} catch (Exception ex) {
-                ex.printStackTrace();
+   	    if (w.size() > 0) {
+			String[] codes = new String[w.size()];
+			for (int i=0; i<w.size(); i++) {
+				String code = (String) w.elementAt(i);
+				codes[i] = code;
 			}
 
-		} catch (Exception ex) {
-            ex.printStackTrace();
-		}
-		hset.clear();
+			try {
+				LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+				if (lbSvc == null)
+				{
+					System.out.println("lbSvc == null???");
+					return null;
+				}
+
+				CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+				if (version != null) versionOrTag.setVersion(version);
+
+				ConceptReferenceList crefs = createConceptReferenceList(codes, scheme);
+				CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
+				cns = cns.restrictToCodes(crefs);
+				CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
+				cns = cns.restrictToProperties(null, types, null, null, null);
+
+				try {
+					matchIterator = cns.resolve(null,null,null);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			hset.clear();
+	    }
         return matchIterator;
 
 	}
@@ -1306,11 +1317,8 @@ public class SearchUtils {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
-
-		//boolean preprocess = true;
         if (matchText == null || matchText.length() == 0)
         {
-			//return new Vector();
 			return null;
 		}
 
@@ -1361,93 +1369,19 @@ public class SearchUtils {
 				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
 				cns = cns.restrictToProperties(null, propertyTypes, sourceList, null, null);
 
-/*
-				 if (source != null && source.compareToIgnoreCase("ALL") != 0) {
-					 cns = cns.restrictToMatchingProperties(null,
-									new PropertyType[]{PropertyType.PRESENTATION},
-									Constructors.createLocalNameList(source),
-									null,
-									null,
-									matchText,
-									matchAlgorithm,
-									null);
-				 } else {
-					 cns = cns.restrictToMatchingProperties(null,
-									new PropertyType[]{PropertyType.PRESENTATION},
-									null,
-									null,
-									null,
-									matchText,
-									matchAlgorithm,
-									null);
-
-				 }
-*/
             } catch (Exception ex) {
                 return null;
             }
-
-/*
-            LocalNameList restrictToProperties = new LocalNameList();
-            SortOptionList sortCriteria = null;
-                //Constructors.createSortOptionList(new String[]{"matchToQuery"});
-            try {
-                // resolve nothing unless sort_by_pt_only is set to false
-                boolean resolveConcepts = false;
-                if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
-
-				System.out.println("resolveConcepts? " + resolveConcepts);
-
-                try {
-					long ms = System.currentTimeMillis(), delay = 0;
-                    iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
-
-                }  catch (Exception e) {
-                    System.out.println("ERROR: cns.resolve throws exceptions.");
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
-            }
-
-*/
 
             LocalNameList restrictToProperties = null;//new LocalNameList();
             LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
             //boolean resolveConcepts = true; // Semantic_Type is no longer required.
-            //if (!ranking) resolveConcepts = false;
-/*
-            boolean resolveConcepts = false;
-            System.out.println("*** resolveConcepts: " + resolveConcepts);
 
-            SortOptionList sortCriteria = null;
-
-            //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) {
-		    if (ranking){
-				//System.out.println("*** Sort by Lucene score...");
-				sortCriteria = Constructors.createSortOptionList(new String[]{"matchToQuery"});
-
-            } else {
-                sortCriteria = Constructors.createSortOptionList(new String[] { "entityDescription" }); //code
-                System.out.println("*** Sort alphabetically...");
-                resolveConcepts = false;
-			}
-*/
             SortOptionList sortCriteria = null;
 			boolean resolveConcepts = true;
 			LocalNameList filterOptions = null;
 			propertyTypes = null;
-			//CodedNodeSet.PropertyType[] propertyTypes = null;
             try {
-                // resolve nothing unless sort_by_pt_only is set to false
-                //boolean resolveConcepts = false;
-                //if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
-
-				//System.out.println("resolveConcepts? " + resolveConcepts);
-
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
 					cns = restrictToSource(cns, source);
@@ -1485,7 +1419,7 @@ public class SearchUtils {
 				}
 				// Find ICD9CM concepts by code
 				size = iterator.numberRemaining();
-				if (size < 20) { // heuristic rule
+				if (size < 20) { // heuristic rule (if the number of matches is large, then it's less likely that the matchText is a code)
 					Vector w = new Vector();
 					w.add(iterator);
 					ResolvedConceptReferencesIterator itr1 = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
