@@ -5,6 +5,7 @@ import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.utils.test.*;
 
 public class SearchUtilsTest extends SearchUtils {
+    private int _runAmount = 1;
     private boolean _suppressOtherMessages = true;
     private boolean _displayParameters = false;
     private boolean _displayConcepts = false;
@@ -75,6 +76,8 @@ public class SearchUtilsTest extends SearchUtils {
         boolean isTrue = false;
 
         DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
+        _runAmount = Prompt.prompt(
+            "  * How many concepts", _runAmount);
         _suppressOtherMessages = Prompt.prompt(
             "  * Suppress other debugging messages", _suppressOtherMessages);
         Debug.setDisplay(!_suppressOtherMessages);
@@ -120,12 +123,15 @@ public class SearchUtilsTest extends SearchUtils {
         };
 
 //        matchAlgorithm = "exactMatch";
-        matchTexts = new String[] { "cell" };
+//        matchTexts = new String[] { "cell" };
 
         DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
+        DBG.debug("* matchAlgorithm: " + matchAlgorithm);
         prompt();
 
         for (int i = 0; i < matchTexts.length; ++i) {
+            if (i >= _runAmount)
+                break;
             String matchText = matchTexts[i];
             if (DBG.isDisplayDetails()) {
                 DBG.debug("");
