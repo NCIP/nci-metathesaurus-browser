@@ -3687,50 +3687,6 @@ public class DataUtils {
 		return strbuf.toString();
 	}
 
-    //[#23463] Linking retired concept to corresponding new concept
-    public static String getReferencedCUI(String code) {
-		code = code.trim();
-		System.out.println("code Length: " + code.length() + " " + code);
-		System.out.println("scheme: " + Constants.CODING_SCHEME_NAME);
-
-		if (code.length() != 8) {
-			return null;
-		}
-
-		try {
-			Vector<String> v = HistoryUtils.getEditActions(Constants.CODING_SCHEME_NAME, null, null, code);
-			if (v != null) {
-				if (v.size() == 0) System.out.println("(*) HistoryUtils.getEditActions returns nothing");
-				for (int i=0; i<v.size(); i++) {
-					String s = (String) v.elementAt(i);
-
-					System.out.println("s: " + s);
-
-					Vector w = DataUtils.parseData(s, "|");
-					String action = (String) w.elementAt(0);
-					if (action.compareTo("merge") == 0) {
-						String date = (String) w.elementAt(1);
-						String nameAndCode = (String) w.elementAt(2);
-
-						System.out.println("(*) nameAndCode: " + nameAndCode);
-						////merge|2006-01-01|LAS17 protein, S cerevisiae (Code C1433544)
-						int idx = nameAndCode.indexOf("(Code");
-						if (idx != -1) {
-							String t = nameAndCode.substring(idx+6, nameAndCode.length()-1);
-
-							System.out.println("(*) new CUI: " + t);
-							return t;
-						}
-				    }
-				}
-			} else {
-				System.out.println("(*) HistoryUtils.getEditActions returns null");
-			}
-		} catch (Exception ex) {
-
-		}
-		return null;
-	}
 
 
     public static HashMap getPropertyValuesForCodes(String scheme, String version, Vector codes, String propertyName) {
