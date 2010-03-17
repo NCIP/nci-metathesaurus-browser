@@ -75,24 +75,35 @@ public class SearchUtilsTest extends SearchUtils {
         }
     }
 
-    private void prompt() {
+    private void prompt(String[] matchTexts) {
         boolean isTrue = false;
 
-        DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
-        _runAmount = Prompt.prompt(
-            "  * How many concepts", _runAmount);
-        _suppressOtherMessages = Prompt.prompt(
-            "  * Suppress other debugging messages", _suppressOtherMessages);
-        Debug.setDisplay(!_suppressOtherMessages);
-        _displayParameters = Prompt.prompt("  * Display parameters",
-            _displayParameters);
-        isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
-        DBG.setDisplayDetails(isTrue);
-        _displayConcepts = Prompt.prompt("  * Display concepts", _displayConcepts);
-        _displayResults = Prompt.prompt("  * Display results", _displayResults);
-        isTrue = Prompt.prompt("  * Display tab delimited",
-            DBG.isDisplayTabDelimitedFormat());
-        DBG.setDisplayTabDelimitedFormat(isTrue);
+        while (true) {
+            DBG.debug("  * matchTexts: " + MyUtils.wrap(70, "      ", 
+                Utils.toString(matchTexts)));
+            DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
+            _runAmount = Prompt.prompt(
+                "  * How many concepts", _runAmount);
+            _suppressOtherMessages = Prompt.prompt(
+                "  * Suppress other debugging messages", _suppressOtherMessages);
+            Debug.setDisplay(!_suppressOtherMessages);
+            _displayParameters = Prompt.prompt("  * Display parameters",
+                _displayParameters);
+            isTrue = Prompt.prompt("  * Display details", DBG.isDisplayDetails());
+            DBG.setDisplayDetails(isTrue);
+            _displayConcepts = Prompt.prompt("  * Display concepts", _displayConcepts);
+            _displayResults = Prompt.prompt("  * Display results", _displayResults);
+            isTrue = Prompt.prompt("  * Display tab delimited",
+                DBG.isDisplayTabDelimitedFormat());
+            DBG.setDisplayTabDelimitedFormat(isTrue);
+            
+            boolean changeSettings = false;
+            changeSettings = Prompt.prompt("  # Change Settings", changeSettings);
+            if (! changeSettings)
+                break;
+            DBG.debug("");
+            DBG.debug(Utils.SEPARATOR);
+        }
     }
 
     private void runTest() throws Exception {
@@ -129,11 +140,16 @@ public class SearchUtilsTest extends SearchUtils {
 //        matchTexts = new String[] { "cell" };
 
         NCImBrowserProperties.getInstance();
-        DBG.debug("* EVS_SERVICE_URL: " + NCImBrowserProperties
+        DBG.debug("* Setting(s):");
+        DBG.debug("  * EVS_SERVICE_URL: " + NCImBrowserProperties
             .getProperty(NCImBrowserProperties.EVS_SERVICE_URL));
-        DBG.debug("* matchTexts: " + Utils.toString(matchTexts));
-        DBG.debug("* matchAlgorithm: " + matchAlgorithm);
-        prompt();
+        DBG.debug("  * scheme: " + scheme);
+        DBG.debug("  * version: " + version);
+        DBG.debug("  * source: " + source);
+        DBG.debug("  * matchAlgorithm: " + matchAlgorithm);
+        DBG.debug("  * ranking: " + ranking);
+        DBG.debug("  * maxToReturn: " + maxToReturn);
+        prompt(matchTexts);
 
         for (int i = 0; i < matchTexts.length; ++i) {
             if (i >= _runAmount)

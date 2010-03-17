@@ -72,7 +72,8 @@ public class BySourceTest extends DataUtils {
         boolean isTrue = false;
 
         while (true) {
-            DBG.debug("* codes: " + Utils.toString(codes));
+            DBG.debug("* codes: " + MyUtils.wrap(70, "      ", 
+                Utils.toString(codes)));
             DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
             _runAmount = Prompt.prompt(
                 "  * How many concepts", _runAmount);
@@ -160,10 +161,13 @@ public class BySourceTest extends DataUtils {
         _sab = "SNOMEDCT";
 
         NCImBrowserProperties.getInstance();
-        DBG.debug("* EVS_SERVICE_URL: " + NCImBrowserProperties
+        DBG.debug("* Setting(s):");
+        DBG.debug("  * EVS_SERVICE_URL: " + NCImBrowserProperties
             .getProperty(NCImBrowserProperties.EVS_SERVICE_URL));
-        DBG.debug("* codes: " + Utils.toString(codes));
-        DBG.debug("* sab: " + _sab);
+        DBG.debug("  * scheme: " + scheme);
+        DBG.debug("  * version: " + version);
+        DBG.debug("  * sab: " + _sab);
+        DBG.debug("  * sortBy: " + _sortBy);
         prompt(codes);
         for (int i = 0; i < codes.length; ++i) {
             if (i >= _runAmount)
