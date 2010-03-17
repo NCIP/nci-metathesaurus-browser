@@ -28,6 +28,7 @@ public class PerformanceTest extends TestBase {
     }
 
     public static void main(String[] args) {
-        new PerformanceTest(3, args);
+//        new PerformanceTest(3, args);
+        new PerformanceTest(0, args);
     }    
 }
