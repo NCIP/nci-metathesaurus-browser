@@ -79,8 +79,8 @@ public class SearchUtilsTest extends SearchUtils {
         boolean isTrue = false;
 
         while (true) {
-            DBG.debug("  * matchTexts: " + MyUtils.wrap(70, "      ", 
-                Utils.toString(matchTexts)));
+            DBG.debug(MyUtils.wrap(75, "      ", 
+                "  * matchTexts: " + Utils.toString(matchTexts)));
             DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
             _runAmount = Prompt.prompt(
                 "  * How many concepts", _runAmount);

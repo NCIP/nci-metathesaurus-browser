@@ -73,8 +73,8 @@ public class RelationshipTest2 extends DataUtils {
         boolean isTrue = false;
         
         while (true) {
-            DBG.debug("* codes: " + MyUtils.wrap(70, "      ", 
-                Utils.toString(codes)));
+            DBG.debug(MyUtils.wrap(75, "      ", 
+                "* codes: " + Utils.toString(codes)));
             DBG.debug("* Prompt (" + getClass().getSimpleName() + "):");
             _runAmount = Prompt.prompt(
                 "  * How many concepts", _runAmount);
