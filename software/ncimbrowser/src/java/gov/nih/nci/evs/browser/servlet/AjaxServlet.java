@@ -256,7 +256,7 @@ public final class AjaxServlet extends HttpServlet {
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;//new JSONArray();
             try {
-				if (ontology_source == null) {
+				if (ontology_source == null || ontology_source.compareTo("null") == 0) {
                 	nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
 				} else {
 					nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
