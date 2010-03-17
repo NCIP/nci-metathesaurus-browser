@@ -248,6 +248,14 @@
       rootDescDiv.render();
     }
 
+
+    function showNoPathFoundStatus() {
+      rootDescDiv.setBody("<span class='instruction_text'>Concept is not found in the hierarchy.</span>");
+      rootDescDiv.show();
+      rootDescDiv.render();
+    }
+    
+    
     function showTreeLoadingStatus() {
       treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Building tree ...</span>");
       treeStatusDiv.show();
@@ -255,7 +263,7 @@
     }
 
     function showSearchingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Retrieving data (please wait)...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
@@ -336,15 +344,15 @@
 
     function searchTree(ontology_node_id, ontology_display_name) {
         var handleBuildTreeSuccess = function(o) {
-        showPageRenderingAction();
+        //showPageRenderingAction();
         var respTxt = o.responseText;
         var respObj = eval('(' + respTxt + ')');
         if ( typeof(respObj) != "undefined") {
           if ( typeof(respObj.root_nodes) != "undefined") {
-
             var root = tree.getRoot();
             if (respObj.root_nodes.length == 0) {
-              showEmptyRoot();
+                //showEmptyRoot();
+                showNoPathFoundStatus();
             }
             else {
 
