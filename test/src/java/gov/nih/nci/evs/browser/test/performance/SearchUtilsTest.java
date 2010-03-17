@@ -40,42 +40,38 @@ public class SearchUtilsTest extends SearchUtils {
 
     public void searchByNameTest(String scheme, String version, String matchText,
         String source, String matchAlgorithm, boolean ranking,
-        int maxToReturn) {
-        try {
-            DBG.clearTabbbedValues();
-            Utils.StopWatch stopWatch = new Utils.StopWatch();
-    
-            ResolvedConceptReferencesIteratorWrapper wrapper = searchByName(scheme, version, matchText,
-                source, matchAlgorithm, ranking, maxToReturn);
-            ResolvedConceptReferencesIterator iterator = wrapper.getIterator();
-            int n = iterator.numberRemaining(), i=0;
-            
-            long duration = stopWatch.getDuration();
-            if (_displayConcepts && n > 0) {
-                DBG.debug("* List of concepts:");
-                while (iterator.hasNext()) {
-                    ResolvedConceptReference ref = iterator.next();
-                    String code = ref.getCode();
-                    String name = ref.getEntityDescription().getContent();
-                    DBG.debug("  " + (++i) + ") " + code + " " + name);
-                }
+        int maxToReturn) throws Exception {
+        DBG.clearTabbbedValues();
+        Utils.StopWatch stopWatch = new Utils.StopWatch();
+
+        ResolvedConceptReferencesIteratorWrapper wrapper = searchByName(scheme, version, matchText,
+            source, matchAlgorithm, ranking, maxToReturn);
+        ResolvedConceptReferencesIterator iterator = wrapper.getIterator();
+        int n = iterator.numberRemaining(), i=0;
+        
+        long duration = stopWatch.getDuration();
+        if (_displayConcepts && n > 0) {
+            DBG.debug("* List of concepts:");
+            while (iterator.hasNext()) {
+                ResolvedConceptReference ref = iterator.next();
+                String code = ref.getCode();
+                String name = ref.getEntityDescription().getContent();
+                DBG.debug("  " + (++i) + ") " + code + " " + name);
             }
-            if (_displayResults) {
-                DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
-                DBG.debug("  * Number of concepts: " + n);
-                DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
-            }
-            if (DBG.isDisplayTabDelimitedFormat()) {
-                i=0;
-                DBG.debugTabbedValue(i++, "* Tabbed", "");
-                DBG.debugTabbedValue(i++, "Keyword", matchText);
-                DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
-                DBG.debugTabbedValue(i++, "Hits", n);
-                DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
-                DBG.displayTabbedValues();
-            }
-        } catch (Exception e) {
-            DBG.debug(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+        if (_displayResults) {
+            DBG.debug("* Result: " + matchAlgorithm + " " + matchText);
+            DBG.debug("  * Number of concepts: " + n);
+            DBG.debug("  * Total run time: " + stopWatch.getResult(duration));
+        }
+        if (DBG.isDisplayTabDelimitedFormat()) {
+            i=0;
+            DBG.debugTabbedValue(i++, "* Tabbed", "");
+            DBG.debugTabbedValue(i++, "Keyword", matchText);
+            DBG.debugTabbedValue(i++, "Algorithm", matchAlgorithm);
+            DBG.debugTabbedValue(i++, "Hits", n);
+            DBG.debugTabbedValue(i++, "Run Time", stopWatch.formatInSec(duration));
+            DBG.displayTabbedValues();
         }
     }
 
