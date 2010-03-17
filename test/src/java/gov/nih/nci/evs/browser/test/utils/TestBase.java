@@ -4,9 +4,14 @@ import gov.nih.nci.evs.browser.utils.*;
 import java.util.*;
 
 public abstract class TestBase {
+    private static final String PROPERTY_FILE = 
+        "gov.nih.nci.evs.browser.NCImBrowserProperties";
+    private static String DEFAULT_PROPERTY_FILE =
+        "C:/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml";
     protected static String INDENT = "  ";
     
     public TestBase(int choice, String[] args) {
+        System.setProperty(PROPERTY_FILE, DEFAULT_PROPERTY_FILE);
         args = parse(args);
         if (choice > 0)
             run(choice, args);
@@ -25,8 +30,7 @@ public abstract class TestBase {
             if (arg.equals("-propertyFile")) {
                 prevArg = arg;
             } else if (prevArg.equals("-propertyFile")) {
-                System.setProperty(
-                    "gov.nih.nci.evs.browser.NCImBrowserProperties", arg);
+                System.setProperty(PROPERTY_FILE, arg);
                 prevArg = "";
             } else {
                 newArgs.add(arg);
