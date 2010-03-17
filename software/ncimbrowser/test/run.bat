@@ -3,7 +3,6 @@ rem ----------------------------------------------------------------------------
 setlocal enabledelayedexpansion
 set ocp=%CLASSPATH%
 
-cd ..
 set cp=.
 set cp=%cp%;..\conf
 set cp=%cp%;classes
