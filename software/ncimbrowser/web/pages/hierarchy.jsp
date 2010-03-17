@@ -171,12 +171,12 @@
       //buildGraph(ontology_node_id, ontology_display_name, graph_type);
 
       if (ontology_node_id.indexOf("|") != -1) return;
-      load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=' + ontology_node_id,top.opener);
+      load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20Metathesaurus&code=' + ontology_node_id,top.opener);
 
     }
 
     function onClickViewEntireOntology(ontology_display_name) {
-      var ontology_display_name = "NCI MetaThesaurus";//document.pg_form.ontology_display_name.value;
+      var ontology_display_name = "NCI Metathesaurus";//document.pg_form.ontology_display_name.value;
       tree = new YAHOO.widget.TreeView("treecontainer");
       tree.draw();
       resetRootDesc();
@@ -187,7 +187,7 @@
 
       tree = new YAHOO.widget.TreeView("treecontainer");
       var ontology_node_id = document.forms["pg_form"].ontology_node_id.value;
-      var ontology_display_name = "NCI MetaThesaurus";
+      var ontology_display_name = "NCI Metathesaurus";
 
       if (ontology_node_id == null || ontology_node_id == "null")
       {
