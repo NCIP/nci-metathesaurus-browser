@@ -241,7 +241,7 @@ public class UserSessionBean extends Object
 
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
-        
+
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -265,9 +265,9 @@ public class UserSessionBean extends Object
 			}
 
 			int size = iteratorBean.getSize();
-			
+
             // Write a search log entry
-            SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);			
+            SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);
 
 			if (size > 1) {
 
@@ -311,10 +311,10 @@ public class UserSessionBean extends Object
 
         //[#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
-		String newCUI = DataUtils.getReferencedCUI(matchText);
-		System.out.println("(*) newCUI: " + newCUI);
+		String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
 		if (newCUI != null) {
+			System.out.println("Searching for " + newCUI);
 			Concept c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, newCUI);
 			request.getSession().setAttribute("code", newCUI);
 			request.getSession().setAttribute("concept", c);
@@ -322,8 +322,6 @@ public class UserSessionBean extends Object
 
 			request.getSession().setAttribute("new_search", Boolean.TRUE);
 			return "concept_details";
-		} else {
-			System.out.println("(*) newCUI == null.");
 		}
 
         String message = "No match found.";
