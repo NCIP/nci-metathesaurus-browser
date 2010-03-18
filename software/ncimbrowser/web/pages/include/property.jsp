@@ -23,6 +23,11 @@
     Concept curr_concept = (Concept) request.getSession().getAttribute("concept");
     String curr_concept_code = curr_concept.getEntityCode();
     
+    String retired_cui = (String) request.getSession().getAttribute("retired_cui");
+    if (retired_cui != null) {
+        request.getSession().removeAttribute("retired_cui");
+    }
+    
     Boolean bool_obj = curr_concept.isIsActive();
     String isActive = bool_obj.toString();
 
@@ -145,6 +150,13 @@
 %>
 <p class="textsubtitle-blue">Terms and Properties</p>
 <%
+if (retired_cui != null) {
+%>
+    <p class="textbodyred"><b>Note: The CUI&nbsp;<i class="textbodyred"><%=retired_cui%></i>
+         your are searching for is obsolete.</b>
+    </p>
+<%    
+}
 if (!bool_obj.equals(Boolean.TRUE) ||
   (concept_status != null &&
     concept_status.compareToIgnoreCase("Retired Concept") == 0)) // non-active

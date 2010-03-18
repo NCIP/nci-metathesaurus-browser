@@ -2326,9 +2326,7 @@ public class SearchUtils {
                try {
 					long ms = System.currentTimeMillis(), delay = 0;
 					cns = restrictToSource(cns, source);
-
 					System.out.println("cns.resolve ...");
-
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 
                 }  catch (Exception e) {
@@ -2362,8 +2360,6 @@ public class SearchUtils {
 			}
 
 			if (iterator_size == 0) {
-
-
 				iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
 				if (iterator != null) {
 					try {
@@ -2431,7 +2427,7 @@ public class SearchUtils {
 	}
 
 
-
+/*
     public ResolvedConceptReferencesIteratorWrapper searchByAssociations(String scheme, String version, String matchText, String source, String matchAlgorithm, boolean designationOnly, boolean ranking, int maxToReturn) {
         long ms = System.currentTimeMillis();
 
@@ -2551,7 +2547,8 @@ public class SearchUtils {
         }
         return new ResolvedConceptReferencesIteratorWrapper(iterator);
     }
-/*
+*/
+
     public ResolvedConceptReferencesIteratorWrapper searchByAssociations(String scheme, String version, String matchText, String source, String matchAlgorithm, boolean designationOnly, boolean ranking, int maxToReturn) {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
@@ -2573,7 +2570,6 @@ public class SearchUtils {
         matchText = matchText.trim();
         if (matchAlgorithm.compareToIgnoreCase("contains") == 0)
 		{
-			//matchAlgorithm = Constants.CONTAIN_SEARCH_ALGORITHM; // to be replaced by literalSubString
 			matchAlgorithm = findBestContainsAlgorithm(matchText);
 		}
 
@@ -2631,12 +2627,12 @@ public class SearchUtils {
 						//CodedNodeSet cns2 = cng.toNodeList(graphFocus, resolveForward, resolveBackward, resolveAssociationDepth, maxToReturn);
 						//CodedNodeSet 	difference(CodedNodeSet codesToRemove)
 						//cns = cns2.difference(cns);
-						if (cns != null) {
-							cns = filterOutAnonymousClasses(lbSvc, scheme, cns);
+						//if (cns != null) {
+						//	cns = filterOutAnonymousClasses(lbSvc, scheme, cns);
 							if (cns != null) {
 								cns_vec.add(cns);
 							}
-						}
+						//}
 					} catch (Exception ex) {
 						//return null;
 					}
@@ -2657,7 +2653,6 @@ public class SearchUtils {
 			iterator = null;
 			if (cns_vec.size() == 0) return null;
 
-
             LocalNameList restrictToProperties = null;//new LocalNameList();
             //boolean resolveConcepts = true;
             //if (!ranking) resolveConcepts = false;
@@ -2674,7 +2669,8 @@ public class SearchUtils {
                 //resolveConcepts = false;
 			}
 			//Need to set to true to retrieve concept name
-			resolveConcepts = true;
+			//resolveConcepts = true;
+			resolveConcepts = false;
             try {
                try {
             	   boolean resolveForward = false;
@@ -2707,7 +2703,7 @@ public class SearchUtils {
         // if (iterator != null) iterator.setMessage(message);
         return new ResolvedConceptReferencesIteratorWrapper(iterator, message);
     }
-*/
+
 
     private CodedNodeSet.PropertyType[] getAllPropertypes() {
     	CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[4];

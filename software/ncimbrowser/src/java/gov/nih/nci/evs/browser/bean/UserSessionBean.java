@@ -321,6 +321,7 @@ public class UserSessionBean extends Object
 			request.getSession().setAttribute("type", "properties");
 
 			request.getSession().setAttribute("new_search", Boolean.TRUE);
+			request.getSession().setAttribute("retired_cui", matchText);
 			return "concept_details";
 		}
 
