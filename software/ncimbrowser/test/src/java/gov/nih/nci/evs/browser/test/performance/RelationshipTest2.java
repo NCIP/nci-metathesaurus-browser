@@ -169,6 +169,8 @@ public class RelationshipTest2 extends DataUtils {
         DBG.debug("* Setting(s):");
         DBG.debug("  * EVS_SERVICE_URL: " + NCImBrowserProperties
             .getProperty(NCImBrowserProperties.EVS_SERVICE_URL));
+        DBG.debug("  * LG_CONFIG_FILE: " + NCImBrowserProperties
+            .getProperty(NCImBrowserProperties.LG_CONFIG_FILE));
         DBG.debug("  * scheme: " + scheme);
         DBG.debug("  * version: " + version);
         DBG.debug("  * sort_option: " + sort_option);
