@@ -115,6 +115,7 @@ public class SearchUtilsTest extends SearchUtils {
         int maxToReturn = -1;
         String[] matchTexts = new String[] {
             "100",
+            "100",
             "bone",
             "blood",
             "allele",

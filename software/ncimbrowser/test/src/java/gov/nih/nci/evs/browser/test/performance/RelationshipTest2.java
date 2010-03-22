@@ -109,6 +109,7 @@ public class RelationshipTest2 extends DataUtils {
         
         String[] codes = new String[] { 
             "C0017636", // Glioblastoma 
+            "C0017636", // Glioblastoma 
             "C1704407", // Arabic numeral 100
             "C0391978", // Bone Tissue
             "C0005767", // Blood
