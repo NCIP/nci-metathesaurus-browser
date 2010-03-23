@@ -2313,6 +2313,11 @@
                  <key>SOURCE_HIERARCHIES</key>
                  <value>@source_hierarchies@</value>
         </ConfigurableItem>
+ 
+        <ConfigurableItem>
+                 <key>SECURED_VOCABULARIES</key>
+                 <value>@secured_vocabularies@</value>
+        </ConfigurableItem>
         
     </ConfigurableItems>
 

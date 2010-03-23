@@ -73,6 +73,8 @@ public class NCImBrowserProperties {
 
     public static final String SOURCE_HIERARCHIES = "SOURCE_HIERARCHIES";
 
+    public static final String SECURED_VOCABULARIES = "SECURED_VOCABULARIES";
+
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static NCImBrowserProperties NCImBrowserProperties = null;
@@ -90,11 +92,17 @@ public class NCImBrowserProperties {
 	private static String term_suggestion_application_url = null;
 	private static String term_browser_url = null;
 	private static String source_hierarchies = null;
+	private static String secured_vocabularies = null;
 
 	private static int    pagination_time_out = 4;
 	private static int    minimum_search_string_length = 1;
 
     private static int    sliding_window_half_width = 5;
+
+    public static final String LICENSE_PAGE_OPTION= "LICENSE_PAGE_OPTION";
+
+    private static String license_page_option = null;
+
 
 	/**
 	 * Private constructor for singleton pattern.
@@ -165,6 +173,10 @@ public class NCImBrowserProperties {
 					}
 					term_browser_url = NCImBrowserProperties.getProperty(NCImBrowserProperties.NCIT_URL);
 					source_hierarchies = NCImBrowserProperties.getProperty(NCImBrowserProperties.SOURCE_HIERARCHIES);
+					secured_vocabularies = NCImBrowserProperties.getProperty(NCImBrowserProperties.SECURED_VOCABULARIES);
+
+				    license_page_option = NCImBrowserProperties.getProperty(NCImBrowserProperties.LICENSE_PAGE_OPTION);
+
 				}
 			}
 		}
@@ -174,6 +186,10 @@ public class NCImBrowserProperties {
 
 	public static String getSourceHierarchies() {
 		return source_hierarchies;
+	}
+
+	public static String getSecuredVocabularies() {
+		return secured_vocabularies;
 	}
 
 
@@ -288,4 +304,7 @@ public class NCImBrowserProperties {
 		return term_browser_url;
 	}
 
+	public static String getLicensePageOption() {
+		return license_page_option;
+	}
 }
