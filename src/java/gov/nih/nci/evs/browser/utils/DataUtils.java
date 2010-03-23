@@ -201,8 +201,12 @@ public class DataUtils {
 	static String[] META_ASSOCIATIONS = new String[] { "AQ", "CHD", "RB", "RO",
 			"RQ", "SIB", "SY" };
 
+    public static HashMap formalName2MetadataHashMap = null;
+
+
 	public DataUtils() {
 		// Do nothing
+		formalName2MetadataHashMap = new HashMap();
 	}
 
 	public static String[] getAllAssociationNames() {
@@ -3805,6 +3809,63 @@ public class DataUtils {
 		}
 		hset.clear();
 		return v;
+	}
+
+    public static String getMetadataValue(String scheme, String propertyName) {
+		Vector v = getMetadataValues(scheme, propertyName);
+		if (v == null || v.size() == 0) return null;
+		return (String) v.elementAt(0);
+    }
+
+
+    public static Vector getMetadataValues(String scheme, String propertyName) {
+		Vector v = new Vector();
+		if (formalName2MetadataHashMap.containsKey(scheme)) {
+			Vector w = (Vector) formalName2MetadataHashMap.get(scheme);
+			for (int j=0; j<w.size(); j++) {
+				String t = (String) w.elementAt(j);
+				Vector temp_vec = DataUtils.parseData(t, "|");
+				String name = (String) temp_vec.elementAt(0);
+				String value = (String) temp_vec.elementAt(1);
+				if (name.compareTo(propertyName) == 0) {
+					v.add(value);
+				}
+			}
+			return v;
+		}
+
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		//if (version != null) versionOrTag.setVersion(version);
+
+		try {
+			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
+			if (cs != null) {
+				NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
+				if (nvList != null) {
+					Vector metadataProperties = new Vector();
+					for (int k=0; k<nvList.length; k++)
+					{
+						NameAndValue nv = (NameAndValue) nvList[k];
+						metadataProperties.add(nv.getName() + "|" + nv.getContent());
+						v.add(nv.getContent());
+					}
+					formalName2MetadataHashMap.put(scheme, metadataProperties);
+			    }
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v;
+    }
+
+    public static boolean checkIsLicensed(String sab) {
+		if (sab == null) return false;
+		String securd_vocabularies = NCImBrowserProperties.getSecuredVocabularies();
+		String target = "|" + sab + "|";
+		if (securd_vocabularies.indexOf(target) == -1) return false;
+		return true;
+
 	}
 
 }

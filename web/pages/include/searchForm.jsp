@@ -61,7 +61,8 @@
       Match&nbsp; <input type="radio" name="algorithm" value="startsWith"
         alt="Begins With" <%=check_s%>>Begins With&nbsp; <input
         type="radio" name="algorithm" value="contains" alt="Containts"
-        <%=check_c%>>Contains</td>
+        <%=check_c%>>Contains
+        </td>
     </tr>
     <tr align="left">
       <td height="1px" bgcolor="#2F2F5F"></td>
@@ -81,6 +82,7 @@
         <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
         <input type="radio" name="searchTarget" value="properties" alt="Properties" <%=check_p%>>Property&nbsp;
         <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
+        &nbsp;<font size=-4><a href="/advanced_search?">Advanced</a>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>

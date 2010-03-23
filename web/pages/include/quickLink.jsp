@@ -10,7 +10,8 @@
   if (term_suggestion_application_url2 == null) {
      term_suggestion_application_url2 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url2 != null) {
-         request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
+         //request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
+         request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url2);
      }
   }
   String dictionaryName = Constants.CODING_SCHEME_NAME;
@@ -33,7 +34,7 @@
           <li><a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Home</a></li>
           <li><a href="<%=ql_ncit_url%>" target="_blank" alt="EVS">NCI Thesaurus</a></li>
           <!--
-          <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI MetaThesaurus">NCI MetaThesaurus</a></li>
+          <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
            -->
 
 

@@ -63,6 +63,10 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
 import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
+import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
+import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
+
 public class MetadataUtils {
 
 	private static final String SOURCE_ABBREVIATION = "rsab";
@@ -426,6 +430,64 @@ public class MetadataUtils {
 	    }
 		return;
 	}
+
+	public static NameAndValue createNameAndValue(String name, String value)
+	{
+        NameAndValue nv = new NameAndValue();
+		nv.setName(name);
+		nv.setContent(value);
+		return nv;
+	}
+
+	public static NameAndValue[] getMetadataProperties(CodingScheme cs)
+	{
+        String formalName = cs.getFormalName();
+        String version = cs.getRepresentsVersion();
+		Vector<NameAndValue> v = new Vector<NameAndValue>();
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			LexBIGServiceMetadata svc = lbSvc.getServiceMetadata();
+			AbsoluteCodingSchemeVersionReferenceList acsvrl = svc.listCodingSchemes();
+			AbsoluteCodingSchemeVersionReference[] acdvra =	acsvrl.getAbsoluteCodingSchemeVersionReference();
+			for (int i=0; i<acdvra.length; i++)
+			{
+				AbsoluteCodingSchemeVersionReference acsvr = acdvra[i];
+				String urn = acsvr.getCodingSchemeURN();
+				String ver = acsvr.getCodingSchemeVersion();
+				if (urn.equals(formalName) && ver.equals(version))
+				{
+					//100807 KLO
+					svc = svc.restrictToCodingScheme(acsvr);
+					MetadataPropertyList mdpl = svc.resolve();
+					MetadataProperty[] properties = mdpl.getMetadataProperty();
+					for (int j=0; j<properties.length; j++)
+					{
+						MetadataProperty property = properties[j];
+						NameAndValue nv = createNameAndValue(property.getName(), property.getValue());
+						v.add(nv);
+					}
+				}
+			}
+
+			if (v.size() > 0)
+			{
+				NameAndValue[] nv_array = new NameAndValue[v.size()];
+				for (int i=0; i<v.size(); i++)
+				{
+					NameAndValue nv = (NameAndValue) v.elementAt(i);
+					nv_array[i] = nv;
+			    }
+			    return nv_array;
+			}
+
+	    } catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return new NameAndValue[0];
+
+	}
+
 
 
 	/**

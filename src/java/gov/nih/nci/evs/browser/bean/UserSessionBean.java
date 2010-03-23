@@ -556,4 +556,30 @@ public class UserSessionBean extends Object
 
     }
 
+   public String acceptLicenseAction() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String dictionary = (String) request.getParameter("dictionary");
+		String code = (String) request.getParameter("code");
+
+		if (dictionary != null && code != null) {
+			LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
+			if (licenseBean == null) {
+				licenseBean = new LicenseBean();
+			}
+			licenseBean.addLicenseAgreement(dictionary);
+			request.getSession().setAttribute("licenseBean", licenseBean);
+
+            //Concept c = DataUtils.getConceptByCode(dictionary, null, null, code);
+
+            request.getSession().setAttribute("term_browser_dictionary", dictionary);
+            request.getSession().setAttribute("term_source_code", code);
+
+            return "external_concept_details";
+		} else {
+			String message = "Unidentifiable vocabulary name, or code";
+			request.getSession().setAttribute("warning", message);
+			return "message";
+		}
+   }
+
 }
