@@ -560,6 +560,7 @@ public class UserSessionBean extends Object
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		String dictionary = (String) request.getParameter("dictionary");
 		String code = (String) request.getParameter("code");
+		String sab = (String) request.getParameter("sab");
 
 		if (dictionary != null && code != null) {
 			LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
@@ -568,13 +569,12 @@ public class UserSessionBean extends Object
 			}
 			licenseBean.addLicenseAgreement(dictionary);
 			request.getSession().setAttribute("licenseBean", licenseBean);
-
-            //Concept c = DataUtils.getConceptByCode(dictionary, null, null, code);
-
             request.getSession().setAttribute("term_browser_dictionary", dictionary);
             request.getSession().setAttribute("term_source_code", code);
-
-            return "external_concept_details";
+            if (sab != null) {
+			    request.getSession().setAttribute("term_source", sab);
+			}
+			return "redirect";
 		} else {
 			String message = "Unidentifiable vocabulary name, or code";
 			request.getSession().setAttribute("warning", message);
