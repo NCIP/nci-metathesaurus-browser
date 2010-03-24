@@ -21,6 +21,7 @@
   String dictionary = (String) request.getParameter("dictionary");
   String display_name = DataUtils.getMetadataValue(dictionary, "display_name");
   String code = (String) request.getParameter("code");
+  String sab = (String) request.getParameter("sab");
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
   
   String base_path = request.getContextPath();
@@ -52,6 +53,9 @@
           If and only if you agree to these terms and conditions, click the Accept button to proceed.
         </p>
           <form>
+<%          
+          if (sab != null) {
+%>          
             <h:commandButton
               id="accept"
               value="accept"
@@ -59,7 +63,19 @@
               image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
               alt="Accept">
             </h:commandButton>
-            
+<%            
+          } else {
+%>          
+            <h:commandButton
+              id="accept"
+              value="accept"
+              action="#{userSessionBean.acceptLicenseAction}"
+              image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
+              alt="Accept">
+            </h:commandButton>          
+<%        
+          }
+%>            
             &nbsp;&nbsp;
             <a href="javascript:window.close();">
               <img src="<%= request.getContextPath() %>/images/cancel.gif" border="0" alt="Cancel"/>
@@ -67,6 +83,7 @@
             
             <input type="hidden" id="dictionary" name="dictionary" value="<%=dictionary%>" />
             <input type="hidden" id="code" name="code" value="<%=code%>" />
+            <input type="hidden" id="sab" name="sab" value="<%=sab%>" />
           </form>
         <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>
