@@ -82,7 +82,7 @@
         <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
         <input type="radio" name="searchTarget" value="properties" alt="Properties" <%=check_p%>>Property&nbsp;
         <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
-        &nbsp;<font size=-4><a href="/advanced_search?">Advanced</a>
+        &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?">Advanced</a>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
