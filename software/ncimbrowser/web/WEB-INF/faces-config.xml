@@ -23,13 +23,14 @@
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
+
     <navigation-case>
        <description>message</description>
        <from-action>#{userSessionBean.acceptLicenseAction}</from-action>
-       <from-outcome>external_concept_details</from-outcome>
-       <to-view-id>/pages/external_concept_details.jsp</to-view-id>
-    </navigation-case>    
-  
+       <from-outcome>redirect</from-outcome>
+       <to-view-id>/pages/redirect.jsp</to-view-id>
+    </navigation-case>  
+    
   </navigation-rule> 
   
   
