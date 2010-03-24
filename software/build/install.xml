@@ -298,6 +298,7 @@
             <filter token="sliding_window_half_width" value="${sliding_window_half_width}"/>
             <filter token="minimum_search_string_length" value="${minimum_search_string_length}"/>
             <filter token="source_hierarchies" value="${source_hierarchies}"/>
+            <filter token="secured_vocabularies" value="${secured_vocabularies}"/>
         </filterset>
         <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
         <mkdir dir="${application.data.path}/${ehcache.cache.path}" />
