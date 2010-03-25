@@ -22,6 +22,9 @@
   String display_name = DataUtils.getMetadataValue(dictionary, "display_name");
   String code = (String) request.getParameter("code");
   String sab = (String) request.getParameter("sab");
+  
+  String type = (String) request.getParameter("type");
+  
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
   
   String base_path = request.getContextPath();
@@ -84,6 +87,7 @@
             <input type="hidden" id="dictionary" name="dictionary" value="<%=dictionary%>" />
             <input type="hidden" id="code" name="code" value="<%=code%>" />
             <input type="hidden" id="sab" name="sab" value="<%=sab%>" />
+            <input type="hidden" id="type" name="type" value="<%=type%>" />
           </form>
         <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>

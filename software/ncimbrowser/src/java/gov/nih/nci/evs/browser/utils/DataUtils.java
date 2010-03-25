@@ -3834,7 +3834,9 @@ public class DataUtils {
 			return v;
 		}
 
-		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		//LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
+
 		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 		//if (version != null) versionOrTag.setVersion(version);
 
