@@ -349,7 +349,7 @@ public class MetadataUtils {
 
 		boolean includeInactive = false;
         try {
-			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
 				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
 			}

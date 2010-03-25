@@ -66,13 +66,8 @@ public class LicenseBean extends Object {
 		String license_page_option = NCImBrowserProperties.getLicensePageOption();
 		if (license_page_option != null && license_page_option.compareToIgnoreCase("true") != 0) return true;
 		*/
-System.out.println("Checking licenseAgreementAccepted ...  " + scheme);
 
 		boolean retval = licenseAgreementHashSet.contains(scheme);
-
-System.out.println("license bean --  licenseAgreementAccepted ...  " + retval);
-
-
 		return (retval);
 	}
 

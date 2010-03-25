@@ -571,6 +571,7 @@ public class UserSessionBean extends Object
 			request.getSession().setAttribute("licenseBean", licenseBean);
             request.getSession().setAttribute("term_browser_dictionary", dictionary);
             request.getSession().setAttribute("term_source_code", code);
+
             if (sab != null) {
 			    request.getSession().setAttribute("term_source", sab);
 			}

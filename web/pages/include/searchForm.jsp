@@ -1,3 +1,7 @@
+<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
+ 
 <script type="text/javascript">
   function cursor_wait() {
      document.body.style.cursor = 'wait';
@@ -82,7 +86,7 @@
         <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
         <input type="radio" name="searchTarget" value="properties" alt="Properties" <%=check_p%>>Property&nbsp;
         <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
-        &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?">Advanced</a>
+        
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -101,17 +105,31 @@ if (obj != null) {
 	String selectedSource = (String) obj;
 	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
-	
+
+		boolean licenseAgreementAccepted = false;
+		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
+		
+		boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
+		if (licenseAgreementAccepted) {
+
 	%>
 	      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 		   View Hierarchy		 
 	      </a>         
 	<% 
+	        } else {
+        %>
+		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+		      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" border="0"/>
+		      </a>	        
+	<%         
+	        }
 	}
 } 
 %>
+          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?">Advanced Search</a>
       </td>
-
     </tr>
   </table>
 </FORM>
