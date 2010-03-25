@@ -84,7 +84,60 @@ public class RemoteServerUtil {
         return null;//createLexBIGService(url);
     }
 
+    public static LexBIGService createLexBIGService(boolean registerSecurityTokens)
+    {
+        String url = "http://ncias-d177-v.nci.nih.gov:19480/lexevsapi51";
 
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+            return createLexBIGService(url, registerSecurityTokens);
+        } catch (Exception ex) {
+            // Do nothing
+            //System.out.println("WARNING: NCImBrowserProperties loading error...");
+            //System.out.println("\t-- trying to connect to " + url + " instead.");
+            ex.printStackTrace();
+        }
+        return null;//createLexBIGService(url);
+	}
+
+
+    public static LexBIGService createLexBIGService(String serviceUrl)
+    {
+		return createLexBIGService(serviceUrl, false);
+	}
+
+
+    public static LexBIGService createLexBIGService(String serviceUrl, boolean registerSecurityTokens)
+    {
+        try {
+            NCImBrowserProperties properties = null;
+            properties = NCImBrowserProperties.getInstance();
+
+            if (serviceUrl == null || serviceUrl.compareTo("") == 0)
+            {
+                String lg_config_file = properties.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
+                System.setProperty(NCImBrowserProperties.LG_CONFIG_FILE,lg_config_file);
+                LexBIGService lbSvc = new LexBIGServiceImpl();
+                return lbSvc;
+            }
+            if (debug) {
+                System.out.println(Utils.SEPARATOR);
+                System.out.println("LexBIGService(remote): " + serviceUrl);
+            }
+            LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+            if (registerSecurityTokens) lexevsService = registerAllSecurityTokens(lexevsService);
+            return (LexBIGService) lexevsService;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+/*
     public static LexBIGService createLexBIGService(String serviceUrl)
     {
         try {
@@ -113,6 +166,7 @@ public class RemoteServerUtil {
         return null;
     }
 
+*/
     //KLO 100709
     public static LexEVSApplicationService registerAllSecurityTokens(LexEVSApplicationService lexevsService) {
 		List list = NCImBrowserProperties.getSecurityTokenList();
