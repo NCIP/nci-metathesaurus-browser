@@ -50,9 +50,11 @@ public class OntologyBean {
     public static List getRELAList() {
 		if (_rela_list != null) return _rela_list;
 		_rela_list = new ArrayList();
-		Vector rela_vec = getRELAs(codingSchemeName, null);
-		for (int k=0; k<rela_vec.size(); k++) {
-			String value = (String) rela_vec.elementAt(k);
+		if (_rela_vec == null) {
+			_rela_vec = getRELAs(codingSchemeName, null);
+		}
+		for (int k=0; k<_rela_vec.size(); k++) {
+			String value = (String) _rela_vec.elementAt(k);
 			_rela_list.add(new SelectItem(value, value));
 		}
 		return _rela_list;
@@ -116,6 +118,11 @@ public class OntologyBean {
 		return _property_type_list;
 	}
 
+ 	public static Vector getRELAs() {
+		if (_rela_vec != null) return _rela_vec;
+		return getRELAs(codingSchemeName, null);
+	}
+
 
 	public static Vector getRELAs(String scheme, String version) {
 		Vector v = new Vector();
@@ -124,11 +131,13 @@ public class OntologyBean {
 		LexBIGServiceMetadata lbsm = null;
 		try {
 			lbsm = lbs.getServiceMetadata();
+			/*
 			System.out.println("Loaded Metadata:");
 			for(AbsoluteCodingSchemeVersionReference ref : lbsm.listCodingSchemes().getAbsoluteCodingSchemeVersionReference()){
 				System.out.println("Name: " + ref.getCodingSchemeURN());
 				System.out.println("	Version: " + ref.getCodingSchemeVersion());
 			}
+			*/
 
 			lbsm = lbsm.restrictToCodingScheme(Constructors.createAbsoluteCodingSchemeVersionReference(scheme, version));
 
