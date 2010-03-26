@@ -212,7 +212,7 @@ if (showPropertyForm) {
  			    </h:commandButton>
                             </td></tr>
 
-	
+<!-- Note: Encountered a JSF Duplicated ID error - used native HTML tag to get around the problem -->	
 	
 <tr><td>
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
@@ -221,7 +221,7 @@ if (showPropertyForm) {
 <%   
    Vector association_vec = OntologyBean.getSupportedAssociationNames();
    for (int i=0; i<association_vec.size(); i++) {
-       String t = (String) association_vec.elementAt(i);
+        String t = (String) association_vec.elementAt(i);
 %>       
         <option value="<%=t%>"><%=t%></option>
 <%        
@@ -230,6 +230,29 @@ if (showPropertyForm) {
 </select>
 </h:outputLabel>  
 </td></tr>
+
+
+<tr><td>
+<h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
+
+<select id="rel_search_rela" name="rel_search_rela" size="1">
+<%  
+    String t = " ";
+%>   
+   <option value="<%=t%>"><%=t%></option>
+<% 
+   Vector rela_vec = OntologyBean.getRELAs();
+   for (int i=0; i<rela_vec.size(); i++) {
+        t = (String) rela_vec.elementAt(i);
+%>       
+        <option value="<%=t%>"><%=t%></option>
+<%        
+   }
+%>   
+</select>
+</h:outputLabel>  
+</td></tr>
+
 
 
                               <tr><td>
@@ -245,7 +268,10 @@ if (showPropertyForm) {
  				    </tr>
  				 </table>   
                              </td></tr>
-                             
+ 
+    <tr align="left">
+       <td height="1px" bgcolor="#2F2F5F"></td>
+    </tr>
                               <tr><td>
   				  <table border="0" cellspacing="0" cellpadding="0">
  				    <tr valign="top" align="left">
