@@ -111,9 +111,30 @@ public class UserSessionBean extends Object
         return quickLinkList;
     }
 
+    public String AdvancedSearchAction() {
+		return searchAction();
+	}
 
     public String searchAction() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        String searchType = (String) request.getParameter("searchType");
+        if (searchType != null) {// && searchType.compareTo("Property Search") == 0) {
+
+			String matchText = (String) request.getParameter("matchText");
+			String adv_search_source = (String) request.getParameter("adv_search_source");
+
+			System.out.println("Advanced Search: ");
+			System.out.println("searchType: " + searchType);
+
+			System.out.println("matchText: " + matchText);
+			System.out.println("adv_search_source: " + adv_search_source);
+
+			String message = searchType + " -- to be implemented.";
+			request.getSession().setAttribute("message", message);
+			return "message";
+		}
+
 
         String matchText = (String) request.getParameter("matchText");
 

@@ -379,5 +379,11 @@
     <managed-bean-class>gov.nih.nci.evs.browser.bean.IteratorBean</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
   </managed-bean>
+
+  <managed-bean>
+    <managed-bean-name>searchStatusBean</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.browser.bean.SearchStatusBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
   
 </faces-config>

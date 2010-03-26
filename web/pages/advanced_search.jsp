@@ -9,6 +9,7 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
 <%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.OntologyBean" %>
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
@@ -45,23 +46,230 @@
        <%@ include file="/pages/include/content-header-alt.jsp" %>
  
       <!-- Page content -->
+      
+      
+      
+<%
+    String adv_search_algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_algorithm"));
+    String check__e = "", check__b = "", check__s = "" , check__c ="";
+    if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
+      check__e = "checked";
+    else if (adv_search_algorithm.compareTo("startsWith") == 0)
+      check__s= "checked";
+    else if (adv_search_algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
+      check__b= "checked";
+    else
+      check__c = "checked";
+ %>      
+      
+      
       <div class="pagecontent">
           <table>
              <tr class="textbody">
-                 <td align="left">Search by a specific property -- to be implemented</td>
+                 <td align="left">
+                
+			 <FORM NAME="searchOptions" METHOD="POST" CLASS="search-form">
+			     <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
+				<h:selectOneMenu id="selectSearchOption" value="#{searchStatusBean.selectedSearchOption}" 
+				    valueChangeListener="#{searchStatusBean.searchOptionChanged}"
+				    immediate="true" onchange="submit()" >
+				  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
+				</h:selectOneMenu> 
+			     </h:outputLabel> 
+			 </form>
+			 
+                 </td>
              </tr>
 
+<%
+boolean showPropertyForm = false;
+Object AdvancedSearchOption_obj = request.getSession().getAttribute("AdvancedSearchOption");
+if (AdvancedSearchOption_obj == null) {
+showPropertyForm = true;
+} else {
+String selectSearchOption = (String) AdvancedSearchOption_obj;
+if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0 || selectSearchOption.compareTo("Property") == 0) {
+   showPropertyForm = true;
+}
+}
+    
+if (showPropertyForm) {
+%>
+
              <tr class="textbody">
-                 <td align="left">Search by a specific relationship -- to be implemented</td>
+
+                  <td>    
+ 		      <FORM NAME="searchProperty" METHOD="POST" CLASS="search-form">
+ 		      
+ 		          <input type="hidden" name="searchType" value="Property Search">
+
+                          <table>
+                          
+                             <tr><td>
+ 			    <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
+ 				onBlur="active = false" onkeypress="return submitEnter('search',event)" />
+ 
+ 			    <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.searchAction}"
+ 			      onclick="javascript:cursor_wait();"
+ 			      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
+ 			      alt="Search">
+ 			    </h:commandButton>
+                             
+                             </td></tr>
+         
+ 
+                              <tr><td>
+  
+    			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
+   				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
+   				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
+   				    immediate="true" >
+   				  <f:selectItems value="#{searchStatusBean.propertyTypeList}" />
+   				</h:selectOneMenu> 
+ 			     </h:outputLabel> 
+  
+                              </td></tr>    
+                              
+
+                             <tr><td>
+  			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
+ 				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
+ 				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
+ 				    immediate="true" >
+ 				  <f:selectItems value="#{searchStatusBean.propertyList}" />
+ 				</h:selectOneMenu> 
+ 			     </h:outputLabel> 
+ 
+                              </td></tr>                         
+ 
+       
+                             <tr><td>
+        			 <h:outputLabel id="adv_search_sourceLabel" value="Source" styleClass="textbody">
+        			  <h:selectOneMenu id="adv_search_source" value="#{searchStatusBean.selectedSource}"
+        			    valueChangeListener="#{searchStatusBean.selectedSourceChanged}"
+        			    immediate="true" >
+        			    <f:selectItems value="#{searchStatusBean.sourceList}" />
+        			  </h:selectOneMenu>
+        			</h:outputLabel>                           
+                                    
+                             </td></tr>
+
+
+                              <tr><td>
+ 
+ 				  <table border="0" cellspacing="0" cellpadding="0">
+ 				    <tr valign="top" align="left">
+ 				      <td align="left" class="textbody"><input type="radio"
+ 					name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
+ 				      Match&nbsp; <input type="radio" name="adv_search_algorithm" value="startsWith"
+ 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
+ 					type="radio" name="adv_search_algorithm" value="contains" alt="Containts"
+ 					<%=check__c%>>Contains
+ 					</td>
+ 				    </tr>
+ 				    
+ 				 </table>   
+                             </td></tr>
+                         
+                             
+                             
+                         </table>    
+		     </form> 
+		     
+		</td>             
+ 
              </tr>
              
-             <tr class="textbody">
-                 <td align="left">Search by property qualifier name and value pair -- to be implemented</td>
-             </tr>            
+<%
+} else {
+    String adv_search_direction = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_direction"));
+    String check_source = "";
+    String check_target = "";
+    if (adv_search_direction == null || adv_search_direction.compareTo("Source") == 0)
+      check_source = "checked";
+    else if (adv_search_direction.compareTo("Target") == 0)
+      check_target= "checked";
+     
+%>
 
              <tr class="textbody">
-                 <td align="left">Search by property source value -- to be implemented</td>
-             </tr> 
+
+                  <td>    
+ 		      <FORM NAME="searchRelationship" METHOD="POST" CLASS="search-form">
+ 		      
+ 		          <input type="hidden" name="searchType" value="Relationship Search">
+
+                          <table>
+                          
+                            <tr><td>
+ 			    <input CLASS="searchbox-input" name="matchText_rel" value="<%=match_text%>" onFocus="active = true"
+ 				onBlur="active = false" onkeypress="return submitEnter('search',event)" />
+ 
+ 			    <h:commandButton id="adv_search_rel" value="Search" action="#{userSessionBean.searchAction}"
+ 			      onclick="javascript:cursor_wait();"
+ 			      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
+ 			      alt="Search">
+ 			    </h:commandButton>
+                            </td></tr>
+
+	
+	
+<tr><td>
+<h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
+
+<select id="rel_search_association" name="rel_search_association" size="1">
+<%   
+   Vector association_vec = OntologyBean.getSupportedAssociationNames();
+   for (int i=0; i<association_vec.size(); i++) {
+       String t = (String) association_vec.elementAt(i);
+%>       
+        <option value="<%=t%>"><%=t%></option>
+<%        
+   }
+%>   
+</select>
+</h:outputLabel>  
+</td></tr>
+
+
+                              <tr><td>
+  				  <table border="0" cellspacing="0" cellpadding="0">
+ 				    <tr valign="top" align="left">
+ 				      <td align="left" class="textbody"><input type="radio"
+ 					name="rel_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
+ 				      Match&nbsp; <input type="radio" name="rel_search_algorithm" value="startsWith"
+ 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
+ 					type="radio" name="rel_search_algorithm" value="contains" alt="Containts"
+ 					<%=check__c%>>Contains
+ 					</td>
+ 				    </tr>
+ 				 </table>   
+                             </td></tr>
+                             
+                              <tr><td>
+  				  <table border="0" cellspacing="0" cellpadding="0">
+ 				    <tr valign="top" align="left">
+ 				      <td align="left" class="textbody"><input type="radio"
+ 					name="rel_search_direction" value="source" alt="Source" <%=check_source%>>Source
+ 				        &nbsp; <input type="radio" name="rel_search_direction" value="target"
+ 					alt="Target" <%=check_target%>>Target
+ 					</td>
+ 				    </tr>
+ 				 </table>   
+                             </td></tr>
+                             
+                             
+                         </table>    
+		     </form> 
+		     
+		</td>             
+ 
+             </tr>
+
+
+<%
+}
+%>
           </table>    
 
           <%@ include file="/pages/include/nciFooter.jsp" %>
