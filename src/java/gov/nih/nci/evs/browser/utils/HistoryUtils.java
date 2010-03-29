@@ -255,7 +255,7 @@ public class HistoryUtils {
 	   try {
 		   HistoryUtils test = new HistoryUtils();
 
-		   String scheme = "NCI MetaThesaurus";
+		   String scheme = "NCI Metathesaurus";
 		   String version = null;
 		   String code = "C0260526";
 

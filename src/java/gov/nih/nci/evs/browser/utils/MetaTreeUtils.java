@@ -335,7 +335,7 @@ public class MetaTreeUtils {
 
         String scheme = css.getCodingSchemeURI();
         */
-        String scheme = "NCI MetaThesaurus";
+        String scheme = "NCI Metathesaurus";
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         //csvt.setVersion(css.getRepresentsVersion());
 
@@ -1121,7 +1121,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 			//LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc
 			//		.getGenericExtension("LexBIGServiceConvenienceMethods");
 			//lbscm.setLexBIGService(lbSvc);
-			String name = getCodeDescription(lbs, "NCI MetaThesaurus", null, code);
+			String name = getCodeDescription(lbs, "NCI Metathesaurus", null, code);
 			ti = new TreeItem(code, name);
 			ti.expandable = false;
 
@@ -2166,7 +2166,7 @@ KLO, 020210
 	public static void main(String[] args) throws Exception {
 		MetaTreeUtils test = new MetaTreeUtils();
 
-		String scheme = "NCI MetaThesaurus";
+		String scheme = "NCI Metathesaurus";
 		String version = null;
 		String code = "C1325880";//"C0001206";
 		boolean associationsNavigatedFwd = true;

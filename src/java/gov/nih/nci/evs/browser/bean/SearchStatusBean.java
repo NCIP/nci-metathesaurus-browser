@@ -85,11 +85,16 @@ public class SearchStatusBean extends Object
     }
 
     public void searchOptionChanged(ValueChangeEvent event) {
+
+
+
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
+
+        System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        request.getSession().setAttribute("AdvancedSearchOption", newValue);
+        request.getSession().setAttribute("advancedSearchOption", newValue);
     }
 
     public List getSearchOptionList() {
@@ -229,6 +234,35 @@ public class SearchStatusBean extends Object
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
+    private String selectedRELA = null;
+    private List RELAList = null;
+
+    public void setSelectedRELA(String selectedRELA) {
+        this.selectedRELA = selectedRELA;
+    }
+
+    public String getSelectedRELA() {
+        return this.selectedRELA;
+    }
+
+    public void selectedRELAChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null) return;
+        String newValue = (String) event.getNewValue();
+
+        System.out.println("selectedRELAChanged; " + newValue);
+        setSelectedRELA(newValue);
+    }
+
+    public List getRELAList() {
+		if (RELAList == null) {
+			RELAList = OntologyBean.getRELAList();
+            if (RELAList != null && RELAList.size() > 0) {
+                this.selectedRELA = ((SelectItem) RELAList.get(0)).getLabel();
+            }
+		}
+        return RELAList;
+    }
+
 
 }
 

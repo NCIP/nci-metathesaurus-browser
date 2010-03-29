@@ -13,6 +13,10 @@ import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
+
+
 /**
  * The Class SearchByAssociationIteratorDecorator.
  * Decorates a ResolvedConceptReferencesIterator to provide
@@ -51,6 +55,10 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 	private List<ResolvedConceptReference> currentChildren = new ArrayList<ResolvedConceptReference>();
 
 
+	private NameAndValueList associationNameAndValueList;
+	private NameAndValueList associationQualifierNameAndValueList;
+
+
 	/**
 	 * Instantiates a new search by association iterator decorator.
 	 *
@@ -71,6 +79,31 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 		this.resolveBackward = resolveBackward;
 		this.resolveAssociationDepth = resolveAssociationDepth;
 		this.maxToReturn = maxToReturn;
+	    this.associationNameAndValueList = null;
+	    this.associationQualifierNameAndValueList = null;
+
+	    System.out.println("Type 1 SearchByAssociationIteratorDecorator ");
+
+	}
+
+	public SearchByAssociationIteratorDecorator(
+			ResolvedConceptReferencesIterator quickIterator,
+			boolean resolveForward,
+			boolean resolveBackward,
+			NameAndValueList associationNameAndValueList,
+			NameAndValueList associationQualifierNameAndValueList,
+			int resolveAssociationDepth,
+			int maxToReturn){
+
+		this.quickIterator = quickIterator;
+		this.resolveForward = resolveForward;
+		this.resolveBackward = resolveBackward;
+		this.resolveAssociationDepth = resolveAssociationDepth;
+		this.maxToReturn = maxToReturn;
+	    this.associationNameAndValueList = associationNameAndValueList;
+	    this.associationQualifierNameAndValueList = associationQualifierNameAndValueList;
+
+	    System.out.println("Type 2 SearchByAssociationIteratorDecorator ");
 	}
 
 	/* (non-Javadoc)
@@ -196,9 +229,33 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 				if (ref != null) {
 					//KLO
 					String formalName = ref.getCodingSchemeName();
+					/*
+
+
 					ResolvedConceptReferenceList list =
 						lbs.getNodeGraph(formalName, null, null)
 						.resolveAsList(Constructors.createConceptReference(
+								ref.getCode(),
+								ref.getCodingSchemeName()),
+								this.resolveForward,
+								this.resolveBackward,
+								0,
+								this.resolveAssociationDepth,
+								null,
+								null,
+								null,
+								this.maxToReturn);
+                    */
+
+                    CodedNodeGraph cng = lbs.getNodeGraph(formalName, null, null);
+                    // restrictToAssociations
+                    // CodedNodeGraph restrictToAssociations(NameAndValueList association, NameAndValueList associationQualifiers)
+					if (associationNameAndValueList != null) {
+						cng = cng.restrictToAssociations(associationNameAndValueList, associationQualifierNameAndValueList);
+					}
+
+					ResolvedConceptReferenceList list =
+						cng.resolveAsList(Constructors.createConceptReference(
 								ref.getCode(),
 								ref.getCodingSchemeName()),
 								this.resolveForward,

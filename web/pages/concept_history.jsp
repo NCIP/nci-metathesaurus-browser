@@ -78,7 +78,7 @@ System.out.println("concept_history.jsp rows " + rows.size());
           <td valign="top"><div id="closeWindow"><a href="javascript:window.close();"><img src="<%=basePath%>/images/thesaurus_close_icon.gif" width="10" height="10" border="0" alt="Close Window" />&nbsp;CLOSE WINDOW</a></div></td>
         </tr>
         </table>
-        <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI MetaThesaurus" title="" border="0" /></div>
+        <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Metathesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
           <!-- History content -->
           <div class="pageTitle"><b><%=concept_name%> (CUI <%=code%>)</b></div>
