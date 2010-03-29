@@ -2261,16 +2261,25 @@ public class SearchUtils {
 		LocalNameList propertyNames = null;
 		LocalNameList sourceList = null;
 		if (property_types != null || property_names != null) {
+			System.out.println("Case #1 -- property_types != null || property_names != null");
+
 			restrictToProperties = true;
 		    if (property_types != null) propertyTypes = createPropertyTypes(property_types);
 		    if (property_names != null) propertyNames = ConvenienceMethods.createLocalNameList(property_names);
 		} else {
+			System.out.println("Case #2 ");
 			propertyNames = new LocalNameList();
 			propertyTypes = getAllPropertyTypes();
 			if (excludeDesignation) {
+				System.out.println("Case #3 ");
 				propertyTypes = getAllNonPresentationPropertyTypes();
 			}
 		}
+		System.out.println("searchByProperties scheme: " + scheme);
+		System.out.println("searchByProperties matchAlgorithm: " + matchAlgorithm);
+		System.out.println("searchByProperties source: " + source);
+		System.out.println("searchByProperties excludeDesignation: " + excludeDesignation);
+
 		if (source != null) sourceList = ConvenienceMethods.createLocalNameList(new String[] {source});
 		NameAndValueList qualifierList = null;
 
@@ -2317,6 +2326,7 @@ public class SearchUtils {
 					try {
 						String language = null;
 						try {
+							System.out.println("*** restrictToMatchingProperties ...matchText " + matchText + " matchAlgorithm " + matchAlgorithm);
                             cns = cns.restrictToMatchingProperties(propertyNames, propertyTypes, matchText, matchAlgorithm, language);
 
 						} catch (Exception e) {
@@ -2324,6 +2334,7 @@ public class SearchUtils {
 							//e.printStackTrace();
 						}
 						try {
+							System.out.println("restrictToSource ...source " + source);
 							cns = restrictToSource(cns, source);
 						} catch (Exception e) {
 							System.out.println("\t(*) restrictToSource throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );

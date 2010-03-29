@@ -209,8 +209,20 @@ public class UserSessionBean extends Object
 			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
 			System.out.println("adv_search_source: " + adv_search_source);
 
+			if (adv_search_source != null && adv_search_source.compareTo("ALL") == 0) {
+				adv_search_source = null;
+			}
+
 			String property_type = (String) request.getParameter("selectPropertyType");
+			if (property_type != null && property_type.compareTo("ALL") == 0) {
+				property_type = null;
+			}
 			String property_name = (String) request.getParameter("selectProperty");
+            if (property_name != null) {
+				property_name = property_name.trim();
+				if (property_name.length() == 0) property_name = null;
+			}
+
 			System.out.println("property_type: " + property_type);
             System.out.println("property_name: " + property_name);
 
@@ -228,10 +240,14 @@ public class UserSessionBean extends Object
 				if (property_name != null) {
 					property_names = new String[] {property_name};
 				}
-                wrapper = new SearchUtils().searchByProperties(scheme, version, matchText,
+				excludeDesignation = false;
+                wrapper = new SearchUtils().searchByProperties(scheme, version,
+                                                               matchText,
 															   property_types,
 															   property_names,
-															   adv_search_source, adv_search_algorithm, excludeDesignation, ranking, maxToReturn);
+															   adv_search_source,
+															   adv_search_algorithm,
+															   excludeDesignation, ranking, maxToReturn);
       	    	if (wrapper != null) {
 					iterator = wrapper.getIterator();
 				}

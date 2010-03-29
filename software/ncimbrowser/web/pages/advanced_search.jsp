@@ -61,7 +61,7 @@
     else
       check__c = "checked";
       
-System.out.println("advanced_search_alt.JSP adv_search_algorithm: " + adv_search_algorithm);      
+System.out.println("advanced_search.JSP adv_search_algorithm: " + adv_search_algorithm);      
       
  %>      
       
@@ -78,14 +78,14 @@ check_source = "checked";
 else if (rel_search_direction.compareToIgnoreCase("target") == 0)
 check_target= "checked"; 
 
-System.out.println("advanced_search_alt.JSP rel_search_direction: " + rel_search_direction);  
+System.out.println("advanced_search.JSP rel_search_direction: " + rel_search_direction);  
 
 String advancedSearchOption = "Property";
 Object advancedSearchOption_obj = request.getSession().getAttribute("advancedSearchOption");
 if (advancedSearchOption_obj != null) {
     advancedSearchOption = (String) advancedSearchOption_obj;
 }
-System.out.println("advanced_search_alt.jsp advancedSearchOption: " + advancedSearchOption);
+System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearchOption);
 %>
 
              <tr class="textbody">
