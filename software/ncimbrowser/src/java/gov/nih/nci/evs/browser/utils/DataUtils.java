@@ -835,10 +835,12 @@ public class DataUtils {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
+		/*
 		System.out.println("Version corresponding to tag " + ltag
 				+ " is not found " + " in " + codingSchemeName);
+		*/
 		if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
 				& knt == 1) {
 			System.out.println("\tUse " + version + " as default.");
@@ -3376,7 +3378,7 @@ public class DataUtils {
 
 							/*
 							 * if (top_atom == null) { Concept c =
-							 * getConceptByCode("NCI MetaThesaurus", null, null,
+							 * getConceptByCode("NCI Metathesaurus", null, null,
 							 * code); t = c.getEntityDescription().getContent()
 							 * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
 							 * Constants.EXTERNAL_TERM_SOURCE + "|" +
@@ -3470,7 +3472,7 @@ public class DataUtils {
 									+ (System.currentTimeMillis() - ms_find_highest_rank_atom);
 							/*
 							 * if (top_atom == null) { Concept c =
-							 * getConceptByCode("NCI MetaThesaurus", null, null,
+							 * getConceptByCode("NCI Metathesaurus", null, null,
 							 * code); t = c.getEntityDescription().getContent()
 							 * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
 							 * Constants.EXTERNAL_TERM_SOURCE + "|" +

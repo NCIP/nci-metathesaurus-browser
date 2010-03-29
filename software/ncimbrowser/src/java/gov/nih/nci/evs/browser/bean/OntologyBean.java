@@ -53,6 +53,7 @@ public class OntologyBean {
 		if (_rela_vec == null) {
 			_rela_vec = getRELAs(codingSchemeName, null);
 		}
+		_rela_list.add(new SelectItem(" ", " "));
 		for (int k=0; k<_rela_vec.size(); k++) {
 			String value = (String) _rela_vec.elementAt(k);
 			_rela_list.add(new SelectItem(value, value));
@@ -220,6 +221,10 @@ public class OntologyBean {
 		return SortUtils.quickSort(v);
 	}
 
+    public static Vector getSupportedSources() {
+		CodingScheme cs = getCodingScheme(codingSchemeName, null);
+		return getSupportedSources(cs);
+	}
 
 
     private static Vector getSupportedSources(CodingScheme cs)

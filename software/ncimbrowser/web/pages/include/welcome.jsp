@@ -1,9 +1,9 @@
 <%
   String version = new DataUtils().getVocabularyVersionByTag(
-    "NCI MetaThesaurus", "PRODUCTION");
+    "NCI Metathesaurus", "PRODUCTION");
   if (version == null)
     version = new DataUtils().getVocabularyVersionByTag(
-      "NCI MetaThesaurus", null);
+      "NCI Metathesaurus", null);
   if (version == null)
     version = "";
   String ncit_url = new DataUtils().getNCItURL();
