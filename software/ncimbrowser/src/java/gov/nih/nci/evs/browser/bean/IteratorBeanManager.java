@@ -67,6 +67,47 @@ public class IteratorBeanManager extends Object {
          return key;
 	}
 
+    public String createIteratorKey(Vector schemes, String matchText, String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+		 String maxReturn_str = Integer.toString(maxReturn);
+		 String key = matchText.trim();
+		 key = key + "|" + searchTarget + "|" + matchAlgorithm;
+		 for (int i=0; i<schemes.size(); i++) {
+			 String scheme = (String) schemes.elementAt(i);
+			 key = key + "|" + scheme;
+		 }
+		 key = key + "|" + source;
+		 key = key + "|" + maxReturn_str;
+		 int randomNumber = random.nextInt();
+		 String randomNumber_str = Integer.toString(randomNumber);
+         key = key + "|" + randomNumber_str;
+         return key;
+	}
+
+
+    public String createIteratorKey(Vector schemes, String matchText, String searchTarget, String value_1, String value_2,
+                                    String source, String matchAlgorithm, int maxReturn) {
+		 String maxReturn_str = Integer.toString(maxReturn);
+		 String key = matchText.trim();
+		 key = key + "|" + searchTarget + "|" + matchAlgorithm;
+		 for (int i=0; i<schemes.size(); i++) {
+			 String scheme = (String) schemes.elementAt(i);
+			 key = key + "|" + scheme;
+		 }
+		 key = key + "|" + value_1;
+		 key = key + "|" + value_2;
+		 key = key + "|" + source;
+		 key = key + "|" + maxReturn_str;
+		 int randomNumber = random.nextInt();
+		 String randomNumber_str = Integer.toString(randomNumber);
+         key = key + "|" + randomNumber_str;
+
+
+         System.out.println(key);
+
+         return key;
+	}
+
+
 	public boolean addIteratorBean(IteratorBean bean) {
 		String key = bean.getKey();
 		if (iteratorBeanHashMap.containsKey(key)) return false;

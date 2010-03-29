@@ -60,48 +60,39 @@
       check__b= "checked";
     else
       check__c = "checked";
- %>      
       
+System.out.println("advanced_search_alt.JSP adv_search_algorithm: " + adv_search_algorithm);      
+      
+ %>      
       
       <div class="pagecontent">
           <table>
-             <tr class="textbody">
-                 <td align="left">
-                
-			 <FORM NAME="searchOptions" METHOD="POST" CLASS="search-form">
-			     <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
-				<h:selectOneMenu id="selectSearchOption" value="#{searchStatusBean.selectedSearchOption}" 
-				    valueChangeListener="#{searchStatusBean.searchOptionChanged}"
-				    immediate="true" onchange="submit()" >
-				  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
-				</h:selectOneMenu> 
-			     </h:outputLabel> 
-			 </form>
-			 
-                 </td>
-             </tr>
+
 
 <%
-boolean showPropertyForm = false;
-Object AdvancedSearchOption_obj = request.getSession().getAttribute("AdvancedSearchOption");
-if (AdvancedSearchOption_obj == null) {
-showPropertyForm = true;
-} else {
-String selectSearchOption = (String) AdvancedSearchOption_obj;
-if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0 || selectSearchOption.compareTo("Property") == 0) {
-   showPropertyForm = true;
+String rel_search_direction = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("rel_search_direction"));
+String check_source = "";
+String check_target = "";
+if (rel_search_direction == null || rel_search_direction.compareToIgnoreCase("source") == 0)
+check_source = "checked";
+else if (rel_search_direction.compareToIgnoreCase("target") == 0)
+check_target= "checked"; 
+
+System.out.println("advanced_search_alt.JSP rel_search_direction: " + rel_search_direction);  
+
+String advancedSearchOption = "Property";
+Object advancedSearchOption_obj = request.getSession().getAttribute("advancedSearchOption");
+if (advancedSearchOption_obj != null) {
+    advancedSearchOption = (String) advancedSearchOption_obj;
 }
-}
-    
-if (showPropertyForm) {
+System.out.println("advanced_search_alt.jsp advancedSearchOption: " + advancedSearchOption);
 %>
 
              <tr class="textbody">
-
                   <td>    
- 		      <FORM NAME="searchProperty" METHOD="POST" CLASS="search-form">
+ 		      <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
  		      
- 		          <input type="hidden" name="searchType" value="Property Search">
+ 		          <input type="hidden" name="searchType" value="<%=advancedSearchOption%>">
 
                           <table>
                           
@@ -117,10 +108,25 @@ if (showPropertyForm) {
                              
                              </td></tr>
          
+
+                             <tr><td>
+			     <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
+				<h:selectOneMenu id="selectSearchOption" value="#{searchStatusBean.selectedSearchOption}" 
+				    valueChangeListener="#{searchStatusBean.searchOptionChanged}"
+				    immediate="true" onchange="submit()" >
+				  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
+				</h:selectOneMenu> 
+			     </h:outputLabel> 
+			     </td></tr>
+
+<tr><td><table>
+<%
+ if (advancedSearchOption.compareTo("Property") == 0) {
+%>
  
-                              <tr><td>
-  
-    			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
+ 
+                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+      			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
    				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
    				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
    				    immediate="true" >
@@ -131,7 +137,7 @@ if (showPropertyForm) {
                               </td></tr>    
                               
 
-                             <tr><td>
+                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
   			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
  				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
  				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
@@ -141,80 +147,10 @@ if (showPropertyForm) {
  			     </h:outputLabel> 
  
                               </td></tr>                         
- 
-       
-                             <tr><td>
-        			 <h:outputLabel id="adv_search_sourceLabel" value="Source" styleClass="textbody">
-        			  <h:selectOneMenu id="adv_search_source" value="#{searchStatusBean.selectedSource}"
-        			    valueChangeListener="#{searchStatusBean.selectedSourceChanged}"
-        			    immediate="true" >
-        			    <f:selectItems value="#{searchStatusBean.sourceList}" />
-        			  </h:selectOneMenu>
-        			</h:outputLabel>                           
-                                    
-                             </td></tr>
-
-
-                              <tr><td>
- 
- 				  <table border="0" cellspacing="0" cellpadding="0">
- 				    <tr valign="top" align="left">
- 				      <td align="left" class="textbody"><input type="radio"
- 					name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
- 				      Match&nbsp; <input type="radio" name="adv_search_algorithm" value="startsWith"
- 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
- 					type="radio" name="adv_search_algorithm" value="contains" alt="Containts"
- 					<%=check__c%>>Contains
- 					</td>
- 				    </tr>
- 				    
- 				 </table>   
-                             </td></tr>
-                         
-                             
-                             
-                         </table>    
-		     </form> 
-		     
-		</td>             
- 
-             </tr>
-             
-<%
-} else {
-    String adv_search_direction = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_direction"));
-    String check_source = "";
-    String check_target = "";
-    if (adv_search_direction == null || adv_search_direction.compareTo("Source") == 0)
-      check_source = "checked";
-    else if (adv_search_direction.compareTo("Target") == 0)
-      check_target= "checked";
-     
-%>
-
-             <tr class="textbody">
-
-                  <td>    
- 		      <FORM NAME="searchRelationship" METHOD="POST" CLASS="search-form">
- 		      
- 		          <input type="hidden" name="searchType" value="Relationship Search">
-
-                          <table>
-                          
-                            <tr><td>
- 			    <input CLASS="searchbox-input" name="matchText_rel" value="<%=match_text%>" onFocus="active = true"
- 				onBlur="active = false" onkeypress="return submitEnter('search',event)" />
- 
- 			    <h:commandButton id="adv_search_rel" value="Search" action="#{userSessionBean.searchAction}"
- 			      onclick="javascript:cursor_wait();"
- 			      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
- 			      alt="Search">
- 			    </h:commandButton>
-                            </td></tr>
-
-<!-- Note: Encountered a JSF Duplicated ID error - used native HTML tag to get around the problem -->	
-	
-<tr><td>
+ <%
+ } else {
+ %> 
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
 
 <select id="rel_search_association" name="rel_search_association" size="1">
@@ -232,7 +168,7 @@ if (showPropertyForm) {
 </td></tr>
 
 
-<tr><td>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
 <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
 
 <select id="rel_search_rela" name="rel_search_rela" size="1">
@@ -251,28 +187,10 @@ if (showPropertyForm) {
 %>   
 </select>
 </h:outputLabel>  
-</td></tr>
+</td></tr> 
 
 
-
-                              <tr><td>
-  				  <table border="0" cellspacing="0" cellpadding="0">
- 				    <tr valign="top" align="left">
- 				      <td align="left" class="textbody"><input type="radio"
- 					name="rel_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
- 				      Match&nbsp; <input type="radio" name="rel_search_algorithm" value="startsWith"
- 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
- 					type="radio" name="rel_search_algorithm" value="contains" alt="Containts"
- 					<%=check__c%>>Contains
- 					</td>
- 				    </tr>
- 				 </table>   
-                             </td></tr>
- 
-    <tr align="left">
-       <td height="1px" bgcolor="#2F2F5F"></td>
-    </tr>
-                              <tr><td>
+                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
   				  <table border="0" cellspacing="0" cellpadding="0">
  				    <tr valign="top" align="left">
  				      <td align="left" class="textbody"><input type="radio"
@@ -282,8 +200,67 @@ if (showPropertyForm) {
  					</td>
  				    </tr>
  				 </table>   
+                             </td></tr>         
+                             
+                             
+
+<%                              
+} 
+%>  
+
+
+</table></td></tr>
+<tr><td>
+&nbsp;&nbsp;
+</td></tr>
+
+ 
+                              <tr><td>
+ 
+ 				  <table border="0" cellspacing="0" cellpadding="0">
+ 				    <tr valign="top" align="left">
+ 				      <td align="left" class="textbody"><input type="radio"
+ 					name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
+ 				      Match&nbsp; <input type="radio" name="adv_search_algorithm" value="startsWith"
+ 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
+ 					type="radio" name="adv_search_algorithm" value="contains" alt="Containts"
+ 					<%=check__c%>>Contains
+ 					</td>
+ 				    </tr>
+ 				    
+ 				 </table>   
                              </td></tr>
                              
+                             
+<tr><td>
+<h:outputLabel id="rel_search_source_Label" value="Source" styleClass="textbody">
+
+<select id="adv_search_source" name="adv_search_source" size="1">
+<%  
+    String t = "ALL";
+%>   
+   <option value="<%=t%>"><%=t%></option>
+<% 
+   Vector src_vec = OntologyBean.getSupportedSources();
+   for (int i=0; i<src_vec.size(); i++) {
+        t = (String) src_vec.elementAt(i);
+%>       
+        <option value="<%=t%>"><%=t%></option>
+<%        
+   }
+%>   
+</select>
+</h:outputLabel>  
+</td></tr>
+
+
+<tr><td>
+&nbsp;&nbsp;
+</td></tr>
+
+
+
+ 
                              
                          </table>    
 		     </form> 
@@ -292,10 +269,6 @@ if (showPropertyForm) {
  
              </tr>
 
-
-<%
-}
-%>
           </table>    
 
           <%@ include file="/pages/include/nciFooter.jsp" %>

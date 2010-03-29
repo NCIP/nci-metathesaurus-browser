@@ -52,7 +52,7 @@
           request.getSession().removeAttribute("neighborhood_synonyms");
   }
 
-  Vector source_vec = new DataUtils().getSources("NCI MetaThesaurus", null, null, code);
+  Vector source_vec = new DataUtils().getSources("NCI Metathesaurus", null, null, code);
 
   String neighborhood_sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedConceptSource"));
 
