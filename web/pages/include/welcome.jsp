@@ -7,6 +7,10 @@
   if (version == null)
     version = "";
   String ncit_url = new DataUtils().getNCItURL();
+  String html_compatible_description_value = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "html_compatible_description");
+  if (html_compatible_description_value == null) {
+	  html_compatible_description_value = "WARNING: html_compatible_description metadata element not found.";
+  }  
 %>
 <div class="textbody">
   <table border="0" width="700px"><tr>
@@ -17,27 +21,8 @@
   <table border="0">
     <tr>
       <td class="textbody">
-        NCI Metathesaurus (NCIm) is a wide-ranging biomedical terminology database that covers most terminologies used by
-        NCI for clinical care, translational and basic research, and public information and administrative activities.
-        <br><br>
-        <b>NCIm features:</b>
-        <ul>
-          <li>Maps 3,600,000 terms from 76 sources into 1,400,000 biomedical concepts that represent their meaning.
-          <li>Displays preferred terms, synonyms, definitions, and other information from each source.
-          <li>Links to
-            <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">NCI Thesaurus</a>
-            and other related information sources.
-          <li>Contains 20,000,000 cross-links between content elements.
-          <li>Updated frequently by a team of biomedical terminology and subject matter experts.
-        </ul>
-        NCIm contains most public domain terminologies from the National Library of Medicine's
-        <a href="http://www.nlm.nih.gov/research/umls/index.html" target="_blank">UMLS Metathesaurus</a>,
-        as well as many other biomedical terminologies created by or of interest to NCI and its partners. Some propriety
-        terminologies are included, with permission, and have restrictions on their use
-        (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-        '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-        details</a>).
-        </td>
+        <%=html_compatible_description_value%>
+      </td>
       <td valign="top">
         <table border="0">
           <tr valign="top">
