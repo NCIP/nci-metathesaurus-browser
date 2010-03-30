@@ -111,16 +111,14 @@ public class UserSessionBean extends Object
         return quickLinkList;
     }
 
-    public String AdvancedSearchAction() {
-		return searchAction();
-	}
-
     public String searchAction() {
 		ResolvedConceptReferencesIteratorWrapper wrapper = null;
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String matchText = (String) request.getParameter("matchText");
 
-        if (matchText != null) matchText = matchText.trim();
+        if (matchText != null) {
+			matchText = matchText.trim();
+		}
         //[#19965] Error message is not displayed when Search Criteria is not proivded
         if (matchText == null || matchText.length() == 0)
         {
@@ -223,8 +221,23 @@ public class UserSessionBean extends Object
 				if (property_name.length() == 0) property_name = null;
 			}
 
-			System.out.println("property_type: " + property_type);
-            System.out.println("property_name: " + property_name);
+			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
+			request.getSession().setAttribute("adv_search_source", adv_search_source);
+			if (adv_search_source == null) {
+				request.getSession().setAttribute("adv_search_source", "ALL");
+			} else {
+				request.getSession().setAttribute("adv_search_source", adv_search_source);
+			}
+			if (property_type == null) {
+				request.getSession().setAttribute("property_type", "ALL");
+			} else {
+				request.getSession().setAttribute("property_type", property_type);
+			}
+			if (property_name == null) {
+				request.getSession().setAttribute("property_name", " ");
+			} else {
+				request.getSession().setAttribute("property_name", property_name);
+			}
 
 			String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, property_type, property_name, adv_search_source, adv_search_algorithm, maxToReturn);
 
@@ -263,9 +276,21 @@ public class UserSessionBean extends Object
 			String adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
 			matchAlgorithm = adv_search_algorithm;
 			String adv_search_source = (String) request.getParameter("adv_search_source");
+			if (adv_search_source != null && adv_search_source.compareTo("ALL") == 0) {
+				adv_search_source = null;
+			}
 
             String rel_search_association = (String) request.getParameter("rel_search_association");
+            if (rel_search_association != null && rel_search_association.compareTo("ALL") == 0) {
+				rel_search_association = null;
+			}
+
             String rel_search_rela = (String) request.getParameter("rel_search_rela");
+            if (rel_search_rela != null) {
+				rel_search_rela = rel_search_rela.trim();
+				if (rel_search_rela.length() == 0) rel_search_rela = null;
+		    }
+
 			String rel_search_direction = (String) request.getParameter("rel_search_direction");
 
 			System.out.println("Advanced Search: ");
@@ -273,8 +298,6 @@ public class UserSessionBean extends Object
 			System.out.println("matchText: " + matchText);
 			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
 			System.out.println("rel_search_association: " + rel_search_association);
-			rel_search_rela = rel_search_rela.trim();
-			if (rel_search_rela.length() == 0) rel_search_rela = null;
 			System.out.println("rel_search_rela: " + rel_search_rela);
 			System.out.println("adv_search_source: " + adv_search_source);
 			System.out.println("rel_search_direction: " + rel_search_direction);
@@ -283,6 +306,24 @@ public class UserSessionBean extends Object
 				direction = true;
 			}
 
+			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
+			request.getSession().setAttribute("adv_search_source", adv_search_source);
+			if (rel_search_association == null) {
+				request.getSession().setAttribute("rel_search_association", "ALL");
+			} else {
+				request.getSession().setAttribute("rel_search_association", rel_search_association);
+			}
+			if (rel_search_rela == null) {
+				request.getSession().setAttribute("rel_search_rela", " ");
+			} else {
+				request.getSession().setAttribute("rel_search_rela", rel_search_rela);
+			}
+			request.getSession().setAttribute("rel_search_direction", rel_search_direction);
+			if (adv_search_source == null) {
+				request.getSession().setAttribute("adv_search_source", "ALL");
+			} else {
+				request.getSession().setAttribute("adv_search_source", adv_search_source);
+			}
 			String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget,
 			                                                   rel_search_association,
 			                                                   rel_search_rela,
@@ -292,19 +333,24 @@ public class UserSessionBean extends Object
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
 			} else {
+
+
 				String[] associationsToNavigate = null;
 				String[] association_qualifier_names = null;
 				String[] association_qualifier_values = null;
 
 				if (rel_search_association != null) {
 					associationsToNavigate = new String[] {rel_search_association};
+				} else {
+					System.out.println("(*) associationsToNavigate == null");
 				}
+
 				if (rel_search_rela != null) {
 					association_qualifier_names = new String[] {"RELA"};
 					association_qualifier_values = new String[] {rel_search_rela};
+				} else {
+					System.out.println("(*) qualifiers == null");
 				}
-
-System.out.println("UserSessionBean calling searchByAssociations...");
 
                 wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText,
 															   associationsToNavigate,
@@ -319,12 +365,9 @@ System.out.println("UserSessionBean calling searchByAssociations...");
 					iterator = wrapper.getIterator();
 				}
        	    	if (iterator != null) {
-System.out.println("UserSessionBean iterator != null");
 					iteratorBean = new IteratorBean(iterator);
 					iteratorBean.setKey(key);
 					iteratorBeanManager.addIteratorBean(iteratorBean);
-				} else {
-System.out.println("UserSessionBean iterator == null");
 				}
 			}
 
