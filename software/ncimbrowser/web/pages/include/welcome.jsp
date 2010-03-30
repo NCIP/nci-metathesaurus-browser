@@ -7,9 +7,9 @@
   if (version == null)
     version = "";
   String ncit_url = new DataUtils().getNCItURL();
-  String html_compatible_description_value = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "html_compatible_description");
-  if (html_compatible_description_value == null) {
-	  html_compatible_description_value = "WARNING: html_compatible_description metadata element not found.";
+  String html_compatable_description_value = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "html_compatable_description");
+  if (html_compatable_description_value == null) {
+	  html_compatable_description_value = "WARNING: html_compatable_description metadata element not found.";
   }  
 %>
 <div class="textbody">
@@ -21,7 +21,7 @@
   <table border="0">
     <tr>
       <td class="textbody">
-        <%=html_compatible_description_value%>
+        <%=html_compatable_description_value%>
       </td>
       <td valign="top">
         <table border="0">
