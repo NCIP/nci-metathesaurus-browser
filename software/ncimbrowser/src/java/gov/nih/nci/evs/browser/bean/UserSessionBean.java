@@ -348,6 +348,20 @@ public class UserSessionBean extends Object
 				if (rel_search_rela != null) {
 					association_qualifier_names = new String[] {"rela"};
 					association_qualifier_values = new String[] {rel_search_rela};
+
+					if (associationsToNavigate == null) {
+						Vector w = OntologyBean.getAssociationNames();
+						if (w == null || w.size() == 0) {
+							System.out.println("OntologyBean.getAssociationNames() returns null, or nothing???");
+						} else {
+							associationsToNavigate = new String[w.size()];
+							for (int i=0; i<w.size(); i++) {
+								String nm = (String) w.elementAt(i);
+								associationsToNavigate[i] = nm;
+							}
+					    }
+                    }
+
 				} else {
 					System.out.println("(*) qualifiers == null");
 				}
