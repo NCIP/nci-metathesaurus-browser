@@ -302,7 +302,7 @@ public class UserSessionBean extends Object
 			System.out.println("adv_search_source: " + adv_search_source);
 			System.out.println("rel_search_direction: " + rel_search_direction);
 			boolean direction = false;
-			if (rel_search_direction.compareTo("target") == 0) {
+			if (rel_search_direction.compareTo("source") == 0) {
 				direction = true;
 			}
 
