@@ -346,7 +346,7 @@ public class UserSessionBean extends Object
 				}
 
 				if (rel_search_rela != null) {
-					association_qualifier_names = new String[] {"RELA"};
+					association_qualifier_names = new String[] {"rela"};
 					association_qualifier_values = new String[] {rel_search_rela};
 				} else {
 					System.out.println("(*) qualifiers == null");
