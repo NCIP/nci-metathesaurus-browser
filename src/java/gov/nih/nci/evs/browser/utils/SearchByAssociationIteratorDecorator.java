@@ -250,6 +250,8 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
                     CodedNodeGraph cng = lbs.getNodeGraph(formalName, null, null);
                     // restrictToAssociations
                     // CodedNodeGraph restrictToAssociations(NameAndValueList association, NameAndValueList associationQualifiers)
+
+
 					if (associationNameAndValueList != null) {
 						cng = cng.restrictToAssociations(associationNameAndValueList, associationQualifierNameAndValueList);
 					}
