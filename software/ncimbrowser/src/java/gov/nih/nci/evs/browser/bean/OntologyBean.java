@@ -47,6 +47,9 @@ public class OntologyBean {
 
 	private static String codingSchemeName = "NCI Metathesaurus";
 
+//	NameAndValueList associationNameAndValueList = null;
+
+
     public static List getRELAList() {
 		if (_rela_list != null) return _rela_list;
 		_rela_list = new ArrayList();
@@ -60,6 +63,16 @@ public class OntologyBean {
 		}
 		return _rela_list;
 	}
+
+    public static Vector getAssociationNames() {
+		if (_association_name_vec != null) {
+			return _association_name_vec;
+		}
+		CodingScheme cs = getCodingScheme(codingSchemeName, null);
+		_association_name_vec = getSupportedAssociationNames(cs);
+        return _association_name_vec;
+	}
+
 
     public static List getAssociationNameList() {
 		if (_association_name_list != null) return _association_name_list;
