@@ -2321,13 +2321,19 @@
         
     </ConfigurableItems>
 
+    <MetadataElements>
+    
+        <MetadataElement>
+                 <name>html_compatible_description</name>
+        </MetadataElement>
+        
+    </MetadataElements>    
 
     <SecurityTokenHolders>
         <SecurityTokenHolder>
                  <name>MedDRA (Medical Dictionary for Regulatory Activities Terminology)</name>
                  <value>@meddra_security_token@</value>
         </SecurityTokenHolder>
-    </SecurityTokenHolders>
-    
+    </SecurityTokenHolders>    
     
 </root>
