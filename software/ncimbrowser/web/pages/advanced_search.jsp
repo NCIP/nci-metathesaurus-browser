@@ -50,6 +50,7 @@
       
       
 <%
+    String t = null;
     String adv_search_algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_algorithm"));
     String check__e = "", check__b = "", check__s = "" , check__c ="";
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
@@ -60,8 +61,6 @@
       check__b= "checked";
     else
       check__c = "checked";
-      
-System.out.println("advanced_search.JSP adv_search_algorithm: " + adv_search_algorithm);      
       
  %>      
       
@@ -78,7 +77,6 @@ check_source = "checked";
 else if (rel_search_direction.compareToIgnoreCase("target") == 0)
 check_target= "checked"; 
 
-System.out.println("advanced_search.JSP rel_search_direction: " + rel_search_direction);  
 
 String advancedSearchOption = "Property";
 Object advancedSearchOption_obj = request.getSession().getAttribute("advancedSearchOption");
@@ -154,10 +152,14 @@ System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearch
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
 
 <select id="rel_search_association" name="rel_search_association" size="1">
+<%  
+    t = "ALL";
+%>   
+   <option value="<%=t%>"><%=t%></option>
 <%   
    Vector association_vec = OntologyBean.getSupportedAssociationNames();
    for (int i=0; i<association_vec.size(); i++) {
-        String t = (String) association_vec.elementAt(i);
+         t = (String) association_vec.elementAt(i);
 %>       
         <option value="<%=t%>"><%=t%></option>
 <%        
@@ -173,7 +175,7 @@ System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearch
 
 <select id="rel_search_rela" name="rel_search_rela" size="1">
 <%  
-    String t = " ";
+    t = " ";
 %>   
    <option value="<%=t%>"><%=t%></option>
 <% 
@@ -237,7 +239,7 @@ System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearch
 
 <select id="adv_search_source" name="adv_search_source" size="1">
 <%  
-    String t = "ALL";
+    t = "ALL";
 %>   
    <option value="<%=t%>"><%=t%></option>
 <% 
