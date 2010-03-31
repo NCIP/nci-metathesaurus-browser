@@ -265,10 +265,18 @@ public final class AjaxServlet extends HttpServlet {
             response.setHeader("Cache-Control", "no-cache");
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;//new JSONArray();
+
+System.out.println("Building tree for " +  ontology_display_name);
+
+
             try {
 				if (ontology_source == null || ontology_source.compareTo("null") == 0) {
                 	nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
 				} else {
+
+System.out.println("calling getRootConceptsBySource ontology_display_name " +  ontology_display_name);
+System.out.println("calling getRootConceptsBySource ontology_source " +  ontology_source);
+
 					nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
 				}
 
