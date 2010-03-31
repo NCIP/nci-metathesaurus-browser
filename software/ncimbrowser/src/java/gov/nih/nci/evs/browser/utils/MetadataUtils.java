@@ -76,6 +76,8 @@ public class MetadataUtils {
 	private static HashMap localname2FormalnameHashMap = null;
 	private static HashMap SAB2DefinitionHashMap = null;
 
+	public static HashMap formalName2MetadataHashMap = null;
+
 
 	public static Vector getMetadataForCodingSchemes() {
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -347,6 +349,10 @@ public class MetadataUtils {
 		SAB2FormalNameHashMap = new HashMap();
 		localname2FormalnameHashMap = new HashMap();
 		boolean includeInactive = false;
+
+		if (formalName2MetadataHashMap == null) {
+		    formalName2MetadataHashMap = new HashMap();
+	    }
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
@@ -392,6 +398,20 @@ public class MetadataUtils {
 						vt.setVersion(representsVersion);
 						try {
 							CodingScheme cs = lbSvc.resolveCodingScheme(formalname, vt);
+
+							if (cs != null) {
+								NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
+								if (nvList != null) {
+									Vector metadataProperties = new Vector();
+									for (int k=0; k<nvList.length; k++)
+									{
+										NameAndValue nv = (NameAndValue) nvList[k];
+										metadataProperties.add(nv.getName() + "|" + nv.getContent());
+									}
+									formalName2MetadataHashMap.put(formalname, metadataProperties);
+								}
+							}
+
 							String [] localnames = cs.getLocalName();
 							for (int m=0; m<localnames.length; m++) {
 								String localname = localnames[m];
@@ -427,6 +447,7 @@ public class MetadataUtils {
 		   }
 		   SAB2DefinitionHashMap.put(abbr, def);
 	    }
+	    DataUtils.setFormalName2MetadataHashMap(formalName2MetadataHashMap);
 		return;
 	}
 
