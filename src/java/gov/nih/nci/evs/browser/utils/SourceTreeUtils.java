@@ -1052,6 +1052,10 @@ System.out.println("pathsResolved: " + pathsResolved);
         } finally {
             System.out.println("SourceTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
+
+            if (pathsResolved == 0) {
+				ti.text = "No path found";
+			}
         }
 
         hmap.put(cui, ti);

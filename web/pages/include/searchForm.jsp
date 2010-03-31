@@ -103,14 +103,34 @@
 Object obj = request.getSession().getAttribute("selectedSource");
 if (obj != null) {
 	String selectedSource = (String) obj;
+	
+	
+System.out.println("selectedSource: " + selectedSource);	
+	
 	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
 
+System.out.println("in available_hierarchies: " + selectedSource);	
+
 		boolean licenseAgreementAccepted = false;
 		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+		
+System.out.println("formal_name: " + formal_name);	
+		
 		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
 		
 		boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
+		
+System.out.println("isLicensed: " + isLicensed);	
+
+LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
+if (licenseBean == null) {
+    licenseBean = new LicenseBean();
+    request.getSession().setAttribute("licenseBean", licenseBean);
+}
+
+licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
+
 		if (licenseAgreementAccepted) {
 
 	%>

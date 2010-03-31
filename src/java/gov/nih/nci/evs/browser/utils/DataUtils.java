@@ -209,34 +209,82 @@ public class DataUtils {
 		formalName2MetadataHashMap = null;
 	}
 
-	public static HashMap getFormalName2MetadataHashMap() {
-        if (formalName2MetadataHashMap == null) {
-			String scheme = Constants.CODING_SCHEME_NAME;
-			formalName2MetadataHashMap = new HashMap();
+	public static void setFormalName2MetadataHashMap(HashMap hmap) {
+		formalName2MetadataHashMap = hmap;
+	}
 
-			//LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+	public static HashMap getFormalName2MetadataHashMap() {
+        if (formalName2MetadataHashMap != null) return formalName2MetadataHashMap;
+
+        try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
-			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-			//if (version != null) versionOrTag.setVersion(version);
-			try {
-				CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
-				if (cs != null) {
-					NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
-					if (nvList != null) {
-						Vector metadataProperties = new Vector();
-						for (int k=0; k<nvList.length; k++)
-						{
-							NameAndValue nv = (NameAndValue) nvList[k];
-							metadataProperties.add(nv.getName() + "|" + nv.getContent());
-						}
-						formalName2MetadataHashMap.put(scheme, metadataProperties);
-					}
-				}
-			} catch (Exception ex) {
+			if (lbSvc == null) {
+				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+			}
+            CodingSchemeRenderingList csrl = null;
+            try {
+				csrl = lbSvc.getSupportedCodingSchemes();
+			} catch (LBInvocationException ex) {
 				ex.printStackTrace();
+				System.out.println("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
+                return null;
 			}
 
-	    }
+			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			for (int i=0; i<csrs.length; i++)
+			{
+				int j = i+1;
+				CodingSchemeRendering csr = csrs[i];
+				CodingSchemeSummary css = csr.getCodingSchemeSummary();
+				String formalname = css.getFormalName();
+				System.out.println("(" + j + "): " + formalname);
+
+				Boolean isActive = null;
+				if (csr == null) {
+					System.out.println("\tcsr == null???");
+				} else if (csr.getRenderingDetail() == null) {
+					System.out.println("\tcsr.getRenderingDetail() == null");
+				} else if (csr.getRenderingDetail().getVersionStatus() == null) {
+					System.out.println("\tcsr.getRenderingDetail().getVersionStatus() == null");
+				} else {
+					isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
+				}
+
+				String representsVersion = css.getRepresentsVersion();
+				boolean includeInactive = false;
+				if ((includeInactive && isActive == null) || (isActive != null && isActive.equals(Boolean.TRUE))
+				     || (includeInactive && (isActive != null && isActive.equals(Boolean.FALSE))))
+				{
+						CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+						vt.setVersion(representsVersion);
+						try {
+							CodingScheme cs = lbSvc.resolveCodingScheme(formalname, vt);
+
+							if (cs != null) {
+								NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
+								if (nvList != null) {
+									Vector metadataProperties = new Vector();
+									for (int k=0; k<nvList.length; k++)
+									{
+										NameAndValue nv = (NameAndValue) nvList[k];
+										metadataProperties.add(nv.getName() + "|" + nv.getContent());
+									}
+									formalName2MetadataHashMap.put(formalname, metadataProperties);
+								}
+							}
+						} catch (Exception ex) {
+							System.out.println("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
+							System.out.println("\t\tAccess to " + formalname + " denied.");
+						}
+				} else {
+					System.out.println("\tWARNING: setCodingSchemeMap discards " + formalname);
+					System.out.println("\t\trepresentsVersion " + representsVersion);
+				}
+			}
+	    } catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	    return formalName2MetadataHashMap;
     }
 
@@ -3858,13 +3906,15 @@ public class DataUtils {
 	    }
 	    if (formalName2MetadataHashMap == null) return null;
 		Vector metadataProperties = (Vector) formalName2MetadataHashMap.get(scheme);
-		for (int i=0; i<metadataProperties.size(); i++) {
-			String t = (String) metadataProperties.elementAt(i);
-			Vector w = parseData(t, "|");
-			String t1 = (String) w.elementAt(0);
-			String t2 = (String) w.elementAt(1);
-			if (t1.compareTo(propertyName) == 0) v.add(t2);
-		}
+		if (metadataProperties != null) {
+			for (int i=0; i<metadataProperties.size(); i++) {
+				String t = (String) metadataProperties.elementAt(i);
+				Vector w = parseData(t, "|");
+				String t1 = (String) w.elementAt(0);
+				String t2 = (String) w.elementAt(1);
+				if (t1.compareTo(propertyName) == 0) v.add(t2);
+			}
+	    }
 		return v;
     }
 
