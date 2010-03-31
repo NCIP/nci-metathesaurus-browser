@@ -362,7 +362,6 @@ public class MetadataUtils {
 			}
 
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
-			System.out.println("setSAB2FormalNameHashMap CodingSchemeRendering length: " + csrs.length);
 			for (int i=0; i<csrs.length; i++)
 			{
 				int j = i+1;
@@ -425,7 +424,6 @@ public class MetadataUtils {
 		   if (localname2FormalnameHashMap.get(abbr) != null) {
 			   String formalname = (String) localname2FormalnameHashMap.get(abbr);
 			   SAB2FormalNameHashMap.put(abbr, formalname);
-			   System.out.println("SAB2FormalNameHashMap: key: " + abbr + " value: " + formalname);
 		   }
 		   SAB2DefinitionHashMap.put(abbr, def);
 	    }
