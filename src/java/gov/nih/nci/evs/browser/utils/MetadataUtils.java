@@ -343,10 +343,9 @@ public class MetadataUtils {
 
 
     private static void setSAB2FormalNameHashMap() {
-		System.out.println("setSAB2FormalNameHashMap ...");
+		System.out.println("MetadatUtils.setSAB2FormalNameHashMap ...");
 		SAB2FormalNameHashMap = new HashMap();
 		localname2FormalnameHashMap = new HashMap();
-
 		boolean includeInactive = false;
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
@@ -361,13 +360,16 @@ public class MetadataUtils {
 				System.out.println("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
                 return;
 			}
+
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			System.out.println("setSAB2FormalNameHashMap CodingSchemeRendering length: " + csrs.length);
 			for (int i=0; i<csrs.length; i++)
 			{
 				int j = i+1;
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
+				System.out.println("\tformalname: " + formalname);
 
 				Boolean isActive = null;
 				if (csr == null) {
@@ -411,7 +413,7 @@ public class MetadataUtils {
 				}
 			}
 	    } catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			//return null;
 		}
 
@@ -425,6 +427,7 @@ public class MetadataUtils {
 		   if (localname2FormalnameHashMap.get(abbr) != null) {
 			   String formalname = (String) localname2FormalnameHashMap.get(abbr);
 			   SAB2FormalNameHashMap.put(abbr, formalname);
+			   System.out.println("SAB2FormalNameHashMap: key: " + abbr + " value: " + formalname);
 		   }
 		   SAB2DefinitionHashMap.put(abbr, def);
 	    }

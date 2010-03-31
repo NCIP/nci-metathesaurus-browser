@@ -216,6 +216,7 @@ public final class AjaxServlet extends HttpServlet {
                     }
 
                     JSONArray rootsArray = null;
+                    /*
                     if (ontology_source != null && ontology_source.compareTo("NCI") != 0) {
                         rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
 
@@ -236,6 +237,15 @@ public final class AjaxServlet extends HttpServlet {
 						}
 
 					}
+					*/
+
+                        rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
+
+						if (rootsArray.length() == 0)
+						{
+							//System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
+							//rootsArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
+						}
 
                     json.put("root_nodes", rootsArray);
                 }

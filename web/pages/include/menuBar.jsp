@@ -5,12 +5,13 @@
     properties = NCImBrowserProperties.getInstance();
     String term_suggestion_application_url = properties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLICATION_URL);
     String tg_dictionary0 = "NCI%20Metathesaurus";
+    String menu_bar_term_source = "NCI";
 %>
 <table border="0" width="100%" class="global-nav">
   <tr>
     <td align="left">
       <a href="<%= request.getContextPath() %>">Home</a> |
-      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/hierarchy.jsf', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?&sab=<%=menu_bar_term_source%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
         View NCIt Hierarchy
       </a> |
       <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
