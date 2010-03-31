@@ -369,7 +369,7 @@ public class MetadataUtils {
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
-				//System.out.println("\tformalname: " + formalname);
+				System.out.println("(" + j + "): " + formalname);
 
 				Boolean isActive = null;
 				if (csr == null) {
@@ -391,12 +391,12 @@ public class MetadataUtils {
 				{
 						CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
 						vt.setVersion(representsVersion);
-
 						try {
 							CodingScheme cs = lbSvc.resolveCodingScheme(formalname, vt);
 							String [] localnames = cs.getLocalName();
 							for (int m=0; m<localnames.length; m++) {
 								String localname = localnames[m];
+								System.out.println("\tlocal name: " + localname);
 								localname2FormalnameHashMap.put(localname, formalname);
 							}
 							localname2FormalnameHashMap.put(formalname, formalname);
