@@ -130,7 +130,6 @@
               <%
               
               if (term_browser_formalname == null) {
-                  System.out.println("term_browser_formalname == null ???");              
               %>
               <td class="dataCellText" width=125><%=term_source_code%></td>
               <%

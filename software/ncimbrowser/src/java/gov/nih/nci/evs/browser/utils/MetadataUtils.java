@@ -369,7 +369,7 @@ public class MetadataUtils {
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
-				System.out.println("\tformalname: " + formalname);
+				//System.out.println("\tformalname: " + formalname);
 
 				Boolean isActive = null;
 				if (csr == null) {
@@ -379,7 +379,6 @@ public class MetadataUtils {
 				} else if (csr.getRenderingDetail().getVersionStatus() == null) {
 					System.out.println("\tcsr.getRenderingDetail().getVersionStatus() == null");
 				} else {
-
 					isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
 				}
 
@@ -398,7 +397,6 @@ public class MetadataUtils {
 							String [] localnames = cs.getLocalName();
 							for (int m=0; m<localnames.length; m++) {
 								String localname = localnames[m];
-								//System.out.println(localname + " --(formal name) --> " + formalname);
 								localname2FormalnameHashMap.put(localname, formalname);
 							}
 							localname2FormalnameHashMap.put(formalname, formalname);
