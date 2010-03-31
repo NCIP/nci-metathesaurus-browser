@@ -206,8 +206,39 @@ public class DataUtils {
 
 	public DataUtils() {
 		// Do nothing
-		formalName2MetadataHashMap = new HashMap();
+		formalName2MetadataHashMap = null;
 	}
+
+	public static HashMap getFormalName2MetadataHashMap() {
+        if (formalName2MetadataHashMap == null) {
+			String scheme = Constants.CODING_SCHEME_NAME;
+			formalName2MetadataHashMap = new HashMap();
+
+			//LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			//if (version != null) versionOrTag.setVersion(version);
+			try {
+				CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
+				if (cs != null) {
+					NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
+					if (nvList != null) {
+						Vector metadataProperties = new Vector();
+						for (int k=0; k<nvList.length; k++)
+						{
+							NameAndValue nv = (NameAndValue) nvList[k];
+							metadataProperties.add(nv.getName() + "|" + nv.getContent());
+						}
+						formalName2MetadataHashMap.put(scheme, metadataProperties);
+					}
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+	    }
+	    return formalName2MetadataHashMap;
+    }
 
 	public static String[] getAllAssociationNames() {
 		if (ASSOCIATION_NAMES != null)
@@ -3821,44 +3852,18 @@ public class DataUtils {
 
 
     public static Vector getMetadataValues(String scheme, String propertyName) {
-		Vector v = new Vector();
-		if (formalName2MetadataHashMap.containsKey(scheme)) {
-			Vector w = (Vector) formalName2MetadataHashMap.get(scheme);
-			for (int j=0; j<w.size(); j++) {
-				String t = (String) w.elementAt(j);
-				Vector temp_vec = DataUtils.parseData(t, "|");
-				String name = (String) temp_vec.elementAt(0);
-				String value = (String) temp_vec.elementAt(1);
-				if (name.compareTo(propertyName) == 0) {
-					v.add(value);
-				}
-			}
-			return v;
-		}
-
-		//LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
-
-		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-		//if (version != null) versionOrTag.setVersion(version);
-
-		try {
-			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
-			if (cs != null) {
-				NameAndValue[] nvList = MetadataUtils.getMetadataProperties(cs);
-				if (nvList != null) {
-					Vector metadataProperties = new Vector();
-					for (int k=0; k<nvList.length; k++)
-					{
-						NameAndValue nv = (NameAndValue) nvList[k];
-						metadataProperties.add(nv.getName() + "|" + nv.getContent());
-						v.add(nv.getContent());
-					}
-					formalName2MetadataHashMap.put(scheme, metadataProperties);
-			    }
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+        Vector v = new Vector();
+        if (formalName2MetadataHashMap == null) {
+            formalName2MetadataHashMap = getFormalName2MetadataHashMap();
+	    }
+	    if (formalName2MetadataHashMap == null) return null;
+		Vector metadataProperties = (Vector) formalName2MetadataHashMap.get(scheme);
+		for (int i=0; i<metadataProperties.size(); i++) {
+			String t = (String) metadataProperties.elementAt(i);
+			Vector w = parseData(t, "|");
+			String t1 = (String) w.elementAt(0);
+			String t2 = (String) w.elementAt(1);
+			if (t1.compareTo(propertyName) == 0) v.add(t2);
 		}
 		return v;
     }
