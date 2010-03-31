@@ -1000,12 +1000,10 @@ public class SourceTreeUtils {
             System.out.println("Unable to resolve a concept for CUI = '" + cui + "'");
             return null;
         }
-        /*
         else {
 			System.out.println("Concept found: " + rcr.getReferencedEntry().getEntityDescription().getContent()
 			   + " -- " + rcr.getCode());
 		}
-		*/
 
         ResolvedConceptReference SRC_root = getRootInSRC(scheme, csvt.getVersion(), sab);
         String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
@@ -1823,6 +1821,43 @@ HTLV1 IgG Ser Ql
 			}
         }
     }
+
+
+
+    public List getTopNodes(TreeItem ti, String sab) {
+		List list = new ArrayList();
+		getTopNodes(ti, list, 0, 1, sab);
+		return list;
+	}
+
+
+    public void getTopNodes(TreeItem ti, List list, int currLevel, int maxLevel, String sab) {
+        if (list == null) list = new ArrayList();
+        if (currLevel > maxLevel) {
+			return;
+		}
+
+        if (ti.assocToChildMap.keySet().size() > 0) {
+			if (ti.text.compareTo("Root node") != 0)
+			{
+				ResolvedConceptReference rcr = new ResolvedConceptReference();
+				rcr.setConceptCode(ti.code);
+				EntityDescription entityDescription = new EntityDescription();
+				entityDescription.setContent(ti.text);
+				rcr.setEntityDescription(entityDescription);
+				list.add(rcr);
+		    }
+		}
+
+        for (String association : ti.assocToChildMap.keySet()) {
+            List<TreeItem> children = ti.assocToChildMap.get(association);
+            Collections.sort(children);
+            for (TreeItem childItem : children) {
+                getTopNodes(childItem, list, currLevel+1, maxLevel, sab);
+			}
+        }
+    }
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

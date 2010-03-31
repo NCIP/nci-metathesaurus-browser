@@ -128,7 +128,9 @@
               <td class="dataCellText" width=100><%=term_type%></td>
 
               <%
+              
               if (term_browser_formalname == null) {
+                  System.out.println("term_browser_formalname == null ???");              
               %>
               <td class="dataCellText" width=125><%=term_source_code%></td>
               <%
@@ -189,6 +191,7 @@ if (term_source != null && isLicensed ) {
 <%          
      }
 } else {
+
 %>
                   <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/ncitbrowser/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
                   '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
