@@ -95,19 +95,23 @@ some of which are proprietary and included, by permission, for non-commercial us
               String propertyName = "son";//"formalName";
               //Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(Constants.CODING_SCHEME_NAME, propertyName);
               Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes();
+              String prev_t = "";
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
-                 Vector w = DataUtils.parseData(t, "|");
-                 String abbr = (String) w.elementAt(0);
-                 String def = (String) w.elementAt(1);
-                 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
-            %>
-              <tr class="<%=rowColor%>">
-                <td><%=abbr%></td>
-                <td>&nbsp;</td>
-                <td><%=def%></td>
-              </tr>
-            <%
+                 if (t.compareTo(prev_t) != 0) {
+			 Vector w = DataUtils.parseData(t, "|");
+			 String abbr = (String) w.elementAt(0);
+			 String def = (String) w.elementAt(1);
+			 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+		    %>
+		      <tr class="<%=rowColor%>">
+			<td><%=abbr%></td>
+			<td>&nbsp;</td>
+			<td><%=def%></td>
+		      </tr>
+		    <%
+		    prev_t = t;
+                 }
               }
             %>
           </table>
