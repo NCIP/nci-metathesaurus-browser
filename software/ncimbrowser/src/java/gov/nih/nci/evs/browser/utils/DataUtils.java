@@ -214,9 +214,17 @@ public class DataUtils {
 	}
 
 	public static HashMap getFormalName2MetadataHashMap() {
+		if (formalName2MetadataHashMap != null) return formalName2MetadataHashMap;
+		MetadataUtils.initialize();
+		return formalName2MetadataHashMap;
+	}
+
+/*
+	public static HashMap getFormalName2MetadataHashMap() {
         if (formalName2MetadataHashMap != null) return formalName2MetadataHashMap;
 
         try {
+			formalName2MetadataHashMap = new HashMap();
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
 				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
@@ -287,6 +295,7 @@ public class DataUtils {
 
 	    return formalName2MetadataHashMap;
     }
+*/
 
 	public static String[] getAllAssociationNames() {
 		if (ASSOCIATION_NAMES != null)
@@ -916,10 +925,7 @@ public class DataUtils {
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
-		/*
-		System.out.println("Version corresponding to tag " + ltag
-				+ " is not found " + " in " + codingSchemeName);
-		*/
+
 		if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
 				& knt == 1) {
 			System.out.println("\tUse " + version + " as default.");
@@ -1151,8 +1157,6 @@ public class DataUtils {
 						PropertyQualifier[] qualifiers = p
 								.getPropertyQualifier();
 						if (qualifiers != null && qualifiers.length > 0) {
-							// System.out.println(property_name +
-							// " qualifiers.length: " + qualifiers.length);
 							for (int j = 0; j < qualifiers.length; j++) {
 								PropertyQualifier q = qualifiers[j];
 								String qualifier_name = q
@@ -3901,10 +3905,16 @@ public class DataUtils {
 
     public static Vector getMetadataValues(String scheme, String propertyName) {
         Vector v = new Vector();
+        /*
         if (formalName2MetadataHashMap == null) {
-            formalName2MetadataHashMap = getFormalName2MetadataHashMap();
+            //formalName2MetadataHashMap = getFormalName2MetadataHashMap();
+            MetadataUtils.setSAB2FormalNameHashMap();
 	    }
-	    if (formalName2MetadataHashMap == null) return null;
+	    */
+	    if (formalName2MetadataHashMap == null) {
+	    	formalName2MetadataHashMap = MetadataUtils.getFormalName2MetadataHashMap();
+		}
+
 		Vector metadataProperties = (Vector) formalName2MetadataHashMap.get(scheme);
 		if (metadataProperties != null) {
 			for (int i=0; i<metadataProperties.size(); i++) {

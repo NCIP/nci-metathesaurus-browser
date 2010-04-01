@@ -100,43 +100,36 @@
           </h:selectOneMenu>
         </h:outputLabel>
 <%
+
+if (!MetadataUtils.isMetadataAvailable()) {
+    System.out.println("Retrieving metadata...");
+    MetadataUtils.initialize();
+}
+
 Object obj = request.getSession().getAttribute("selectedSource");
 if (obj != null) {
 	String selectedSource = (String) obj;
-	
-	
-System.out.println("selectedSource: " + selectedSource);	
-	
 	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
-
-System.out.println("in available_hierarchies: " + selectedSource);	
-
+                boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
 		boolean licenseAgreementAccepted = false;
 		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
-		
-System.out.println("formal_name: " + formal_name);	
-		
 		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
-		
-		boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
-		
-System.out.println("isLicensed: " + isLicensed);	
 
-LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
-if (licenseBean == null) {
-    licenseBean = new LicenseBean();
-    request.getSession().setAttribute("licenseBean", licenseBean);
-}
+		LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
+		if (licenseBean == null) {
+		    licenseBean = new LicenseBean();
+		    request.getSession().setAttribute("licenseBean", licenseBean);
+		}
 
-licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
+		licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
 
-		if (licenseAgreementAccepted) {
+		if (!isLicensed || licenseAgreementAccepted) {
 
 	%>
-	      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		   View Hierarchy		 
-	      </a>         
+		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+			      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" border="0"/>
+		      </a>         
 	<% 
 	        } else {
         %>

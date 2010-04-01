@@ -56,7 +56,7 @@ public class LicenseBean extends Object {
     }
 
     public void addLicenseAgreement(String scheme) {
-		System.out.println("LicenseBean addLicenseAgreement " +  scheme);
+		//System.out.println("LicenseBean addLicenseAgreement " +  scheme);
 		licenseAgreementHashSet.add(scheme);
 	}
 
