@@ -173,7 +173,6 @@ public class RemoteServerUtil {
 		if (list == null || list.size() == 0) return lexevsService;
 		for (int i=0; i<list.size(); i++) {
             SecurityTokenHolder holder = (SecurityTokenHolder) list.get(i);
-            System.out.println("Registering " + holder.getName() + "... ");
             lexevsService = registerSecurityToken(lexevsService, holder.getName(), holder.getValue());
 		}
 		return lexevsService;
