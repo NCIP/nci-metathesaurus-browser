@@ -78,6 +78,17 @@ public class MetadataUtils {
 
 	public static HashMap formalName2MetadataHashMap = null;
 
+    public static boolean isMetadataAvailable() {
+		if (formalName2MetadataHashMap == null) return false;
+		return true;
+	}
+
+	public static HashMap getFormalName2MetadataHashMap() {
+		if (formalName2MetadataHashMap == null) {
+			initialize();
+		}
+		return formalName2MetadataHashMap;
+	}
 
 	public static Vector getMetadataForCodingSchemes() {
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -324,28 +335,30 @@ public class MetadataUtils {
     // For term browse mapping use:
     public static HashMap getSAB2FormalNameHashMap() {
 		if (SAB2FormalNameHashMap == null) {
-			setSAB2FormalNameHashMap();
+			initialize();
 		}
 		return SAB2FormalNameHashMap;
 	}
 
 	public static String getSABFormalName(String sab) {
 		if (SAB2FormalNameHashMap == null) {
-			getSAB2FormalNameHashMap();
+			initialize();
 		}
 		return (String) SAB2FormalNameHashMap.get(sab);
 	}
 
 	public static String getSABDefinition(String sab) {
 		if (SAB2DefinitionHashMap == null) {
-			getSAB2FormalNameHashMap();
+			initialize();
 		}
 		return (String) SAB2DefinitionHashMap.get(sab);
 	}
 
 
-    private static void setSAB2FormalNameHashMap() {
-		System.out.println("MetadatUtils.setSAB2FormalNameHashMap ...");
+    public static void initialize() {
+		if (SAB2FormalNameHashMap != null) return;
+
+		System.out.println("MetadatUtils.initialize ...");
 		SAB2FormalNameHashMap = new HashMap();
 		localname2FormalnameHashMap = new HashMap();
 		boolean includeInactive = false;
@@ -353,6 +366,8 @@ public class MetadataUtils {
 		if (formalName2MetadataHashMap == null) {
 		    formalName2MetadataHashMap = new HashMap();
 	    }
+
+	    int vocabulary_count = 0;
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
@@ -374,8 +389,6 @@ public class MetadataUtils {
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
-				System.out.println("(" + j + "): " + formalname);
-
 				Boolean isActive = null;
 				if (csr == null) {
 					System.out.println("\tcsr == null???");
@@ -388,9 +401,6 @@ public class MetadataUtils {
 				}
 
 				String representsVersion = css.getRepresentsVersion();
-				//System.out.println("(" + j + ") " + formalname + "  version: " + representsVersion);
-				//System.out.println("\tActive? " + isActive);
-
 				if ((includeInactive && isActive == null) || (isActive != null && isActive.equals(Boolean.TRUE))
 				     || (includeInactive && (isActive != null && isActive.equals(Boolean.FALSE))))
 				{
@@ -408,17 +418,19 @@ public class MetadataUtils {
 										NameAndValue nv = (NameAndValue) nvList[k];
 										metadataProperties.add(nv.getName() + "|" + nv.getContent());
 									}
+									vocabulary_count++;
+									System.out.println("(" + vocabulary_count + ") " + formalname);
 									formalName2MetadataHashMap.put(formalname, metadataProperties);
 								}
-							}
 
-							String [] localnames = cs.getLocalName();
-							for (int m=0; m<localnames.length; m++) {
-								String localname = localnames[m];
-								System.out.println("\tlocal name: " + localname);
-								localname2FormalnameHashMap.put(localname, formalname);
-							}
-							localname2FormalnameHashMap.put(formalname, formalname);
+								String [] localnames = cs.getLocalName();
+								for (int m=0; m<localnames.length; m++) {
+									String localname = localnames[m];
+									System.out.println("\tlocal name: " + localname);
+									localname2FormalnameHashMap.put(localname, formalname);
+								}
+								localname2FormalnameHashMap.put(formalname, formalname);
+						    }
 							System.out.println("\n");
 						} catch (Exception ex) {
 							System.out.println("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
