@@ -126,7 +126,8 @@ public class UserSessionBean extends Object
             request.getSession().setAttribute("message", message);
             return "message";
         }
-        request.getSession().setAttribute("matchText", matchText);
+        //request.getSession().setAttribute("matchText", matchText);
+        request.setAttribute("matchText", matchText);
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
@@ -195,6 +196,7 @@ public class UserSessionBean extends Object
         schemes.add(scheme);
         boolean ranking = true;
 
+        String key = null;
 
         String searchType = (String) request.getParameter("searchType");
         if (searchType != null && searchType.compareTo("Property") == 0) {
@@ -239,7 +241,9 @@ public class UserSessionBean extends Object
 				request.getSession().setAttribute("property_name", property_name);
 			}
 
-			String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, property_type, property_name, adv_search_source, adv_search_algorithm, maxToReturn);
+			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, property_type, property_name, adv_search_source, adv_search_algorithm, maxToReturn);
+
+System.out.println("userSessionBean key:" + key);
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -324,10 +328,12 @@ public class UserSessionBean extends Object
 			} else {
 				request.getSession().setAttribute("adv_search_source", adv_search_source);
 			}
-			String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget,
+			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget,
 			                                                   rel_search_association,
 			                                                   rel_search_rela,
 			                                                   adv_search_source, adv_search_algorithm, maxToReturn);
+
+System.out.println("userSessionBean key:" + key);
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -387,7 +393,11 @@ public class UserSessionBean extends Object
 
 		} else {
 
-			String key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
+			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
+
+System.out.println("userSessionBean simple search key:" + key);
+
+
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -446,6 +456,7 @@ public class UserSessionBean extends Object
 
         //if (v != null && v.size() > 1)
         if (iterator != null) {
+			/*
             iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("iteratorBean");
 
@@ -456,6 +467,8 @@ public class UserSessionBean extends Object
 			} else {
 				iteratorBean.setIterator(iterator);
 			}
+			*/
+			request.getSession().setAttribute("key", key);
 
 			int size = iteratorBean.getSize();
             // Write a search log entry
