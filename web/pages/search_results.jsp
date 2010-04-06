@@ -59,7 +59,12 @@ String key = null;
 String randomKey = (String) request.getParameter("key");  
 IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
     .getSessionMap().get("iteratorBeanManager");
-    
+
+if (iteratorBeanManager == null) {
+    System.out.println("iteratorBeanManager == null???");
+    iteratorBeanManager = new IteratorBeanManager();
+    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBeanManager", iteratorBeanManager);
+}
 
 if (randomKey != null) {
     iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
