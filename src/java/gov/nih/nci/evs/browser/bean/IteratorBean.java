@@ -58,6 +58,8 @@ public class IteratorBean extends Object {
     int lastResolved;
     int maxReturn = 100;
 
+    String matchText = null;
+
     String key = null;
     boolean timeout = false;
 
@@ -252,5 +254,15 @@ public class IteratorBean extends Object {
     public String getKey() {
 		return this.key;
 	}
+
+    public void setMatchText(String matchText) {
+		this.matchText = matchText;
+	}
+
+
+    public String getMatchText() {
+		return this.matchText;
+	}
+
 
 }
