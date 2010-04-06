@@ -311,11 +311,9 @@ request.getSession().setAttribute("type", type);
   if (term_suggestion_application_url1 == null) {
      term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url1 != null) {
-         request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
+         request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
      }
   }
-
-
   String tg_dictionary = "NCI%20Metathesaurus";
 
           if (c != null) {
