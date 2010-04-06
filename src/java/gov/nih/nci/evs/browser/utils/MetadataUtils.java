@@ -261,20 +261,25 @@ public class MetadataUtils {
         Vector v = getMetadataValues(codingSchemeName, version, urn, propertyName);
         if (v == null) {
 			System.out.println("getMetadataValue returns null??? " + codingSchemeName);
-            return "";
+            //return "";
+            return null;
 		}
+
         int n = v.size();
         if (n <= 0)
             return "";
-        if (v.size() == 1)
+        if (v.size() == 1) {
             return v.elementAt(0).toString();
 
+
+	    }
         StringBuffer buffer = new StringBuffer();
         for (int i=0; i<n; ++i) {
             if (i > 0)
                 buffer.append(" | ");
             buffer.append(v.elementAt(i).toString());
         }
+
         return buffer.toString();
     }
 
