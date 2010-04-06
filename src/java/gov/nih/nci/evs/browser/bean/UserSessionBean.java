@@ -174,9 +174,6 @@ public class UserSessionBean extends Object
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
 
-        //v = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, sortOption, maxToReturn);
-        //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
-        //ResolvedConceptReferencesIterator iterator = new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, maxToReturn);
 
         boolean excludeDesignation = true;
         boolean designationOnly = false;
@@ -242,9 +239,6 @@ public class UserSessionBean extends Object
 			}
 
 			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, property_type, property_name, adv_search_source, adv_search_algorithm, maxToReturn);
-
-System.out.println("userSessionBean key:" + key);
-
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
@@ -271,6 +265,7 @@ System.out.println("userSessionBean key:" + key);
        	    	if (iterator != null) {
 					iteratorBean = new IteratorBean(iterator);
 					iteratorBean.setKey(key);
+					iteratorBean.setMatchText(matchText);
 					iteratorBeanManager.addIteratorBean(iteratorBean);
 				}
 			}
@@ -333,8 +328,6 @@ System.out.println("userSessionBean key:" + key);
 			                                                   rel_search_rela,
 			                                                   adv_search_source, adv_search_algorithm, maxToReturn);
 
-System.out.println("userSessionBean key:" + key);
-
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
@@ -387,6 +380,7 @@ System.out.println("userSessionBean key:" + key);
        	    	if (iterator != null) {
 					iteratorBean = new IteratorBean(iterator);
 					iteratorBean.setKey(key);
+					iteratorBean.setMatchText(matchText);
 					iteratorBeanManager.addIteratorBean(iteratorBean);
 				}
 			}
@@ -394,10 +388,6 @@ System.out.println("userSessionBean key:" + key);
 		} else {
 
 			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
-
-System.out.println("userSessionBean simple search key:" + key);
-
-
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -409,6 +399,7 @@ System.out.println("userSessionBean simple search key:" + key);
 					if (iterator != null) {
 						iteratorBean = new IteratorBean(iterator);
 						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
 						iteratorBeanManager.addIteratorBean(iteratorBean);
 					}
 				}
@@ -423,6 +414,7 @@ System.out.println("userSessionBean simple search key:" + key);
 					if (iterator != null) {
 						iteratorBean = new IteratorBean(iterator);
 						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
 						iteratorBeanManager.addIteratorBean(iteratorBean);
 					}
 				}
@@ -438,6 +430,7 @@ System.out.println("userSessionBean simple search key:" + key);
 					if (iterator != null) {
 						iteratorBean = new IteratorBean(iterator);
 						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
 						iteratorBeanManager.addIteratorBean(iteratorBean);
 					}
 				}
@@ -445,6 +438,7 @@ System.out.println("userSessionBean simple search key:" + key);
 	    }
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
+        request.setAttribute("matchText", matchText);
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -454,27 +448,15 @@ System.out.println("userSessionBean simple search key:" + key);
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
-        //if (v != null && v.size() > 1)
         if (iterator != null) {
-			/*
-            iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("iteratorBean");
-
-            if (iteratorBean == null) {
-				iteratorBean = new IteratorBean(iterator);
-            	FacesContext.getCurrentInstance().getExternalContext()
-                   .getSessionMap().put("iteratorBean", iteratorBean);
-			} else {
-				iteratorBean.setIterator(iterator);
-			}
-			*/
-			request.getSession().setAttribute("key", key);
+			request.setAttribute("matchText", matchText);
 
 			int size = iteratorBean.getSize();
             // Write a search log entry
             SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);
 
 			if (size > 1) {
+                request.setAttribute("key", key);
 
 				request.getSession().setAttribute("search_results", v);
 
