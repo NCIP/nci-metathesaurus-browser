@@ -1,6 +1,12 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
-<FORM NAME="paginationForm" METHOD="POST" action="<%=request.getContextPath() %>/pages/search_results.jsf?" >
+<%
+String randomStr = iteratorBean.getRandomNumberString();
+request.setAttribute("matchText", iteratorBean.getMatchText());
+String searchText = iteratorBean.getMatchText();
+%>
+
+<FORM NAME="paginationForm" METHOD="POST" action="<%=request.getContextPath() %>/pages/search_results.jsf?matchText=<%=searchText%>&key=<%=randomStr%>" >
   <table>
     <tr>
       <td class="textbody" align=left>
@@ -15,7 +21,7 @@
         %>
         &nbsp;
         <i>
-          <a href="<%=request.getContextPath() %>/pages/search_results.jsf?page_number=<%=prev_page_num_str%>">Prev</a>
+          <a href="<%=request.getContextPath() %>/pages/search_results.jsf?matchText=<%=searchText%>&page_number=<%=prev_page_num_str%>&key=<%=randomStr%>">Prev</a>
         </i>&nbsp;
         <%
           }
@@ -36,7 +42,7 @@
 		    String idx_str = Integer.toString(idx);
 		    if (page_num != idx) {
 		      %>
-			<a href="<%=request.getContextPath() %>/pages/search_results.jsf?page_number=<%=idx_str%>"><%=idx_str%></a>
+			<a href="<%=request.getContextPath() %>/pages/search_results.jsf?matchText=<%=searchText%>&page_number=<%=idx_str%>&key=<%=randomStr%>"><%=idx_str%></a>
 			&nbsp;
 		      <%
 		    } else {
@@ -50,7 +56,7 @@
         %>
           &nbsp;
           <i>
-            <a href="<%=request.getContextPath() %>/pages/search_results.jsf?page_number=<%=next_page_num_str%>">Next</a>
+            <a href="<%=request.getContextPath() %>/pages/search_results.jsf?matchText=<%=searchText%>&page_number=<%=next_page_num_str%>&key=<%=randomStr%>">Next</a>
           </i>
         <%
           }

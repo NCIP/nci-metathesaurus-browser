@@ -52,35 +52,30 @@
 
           String page_string = null;
           
-          /*
-          IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("iteratorBean");
-          */
 
           IteratorBean iteratorBean = null;
-          String key = (String) request.getSession().getAttribute("key");
           
-System.out.println("search_results key == " + key);          
-          
-          IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("iteratorBeanManager");
-                
- if (iteratorBeanManager == null) {
- System.out.println("search_results iteratorBeanManager == null ???");
- } else {
- 
-                
-          iteratorBean = iteratorBeanManager.getIteratorBean(key);
+String key = null;          
+String randomKey = (String) request.getParameter("key");  
+IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
+    .getSessionMap().get("iteratorBeanManager");
+    
+
+if (randomKey != null) {
+    iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
+} else {
+	key = (String) request.getAttribute("key");  
+	iteratorBean = iteratorBeanManager.getIteratorBean(key);
 }
 
-	  if (iteratorBean == null){
-	    System.out.println("iteratorBean NOT FOUND???" + key);  
-	  }
-	  
-          //String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
 
-System.out.println("matchText:" + matchText);
+	  if (iteratorBean == null) {
+	      System.out.println("iteratorBean NOT FOUND???" + key);  
+	  } else {
+	      matchText = iteratorBean.getMatchText();
+	  }
 
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
 

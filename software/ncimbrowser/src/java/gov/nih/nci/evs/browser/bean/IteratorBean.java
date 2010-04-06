@@ -63,6 +63,8 @@ public class IteratorBean extends Object {
     String key = null;
     boolean timeout = false;
 
+    public String randomNumberString = null;
+
 	public IteratorBean(ResolvedConceptReferencesIterator iterator) {
 		this.iterator = iterator;
 		this.maxReturn = DEFAULT_MAX_RETURN;
@@ -95,6 +97,11 @@ public class IteratorBean extends Object {
 		return timeout;
 	}
 
+
+	public String getRandomNumberString() {
+		return randomNumberString;
+	}
+
 	public void initialize() {
 		try {
 			if (iterator == null) {
@@ -102,6 +109,10 @@ public class IteratorBean extends Object {
 			} else {
 				this.size = iterator.numberRemaining();
 		    }
+
+		    int randomNumber = new Random().nextInt();
+		    this.randomNumberString = Integer.toString(randomNumber);
+
 
 			this.pageNumber = 1;
 			this.list = new ArrayList(size);
