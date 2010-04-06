@@ -26,7 +26,6 @@
   
     var obj6 = document.getElementById("a_hierBut");
     if (obj6 != null) obj6.removeAttribute('href');
-  
   }
 </script>
 
@@ -34,7 +33,10 @@
   onsubmit="javascript:disableAnchor();">
 <%
     //String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
-    String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
+    //String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
+    
+    String match_text = (String) request.getParameter("matchText");
+   
     if (match_text == null) match_text = "";
  %>
   <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"

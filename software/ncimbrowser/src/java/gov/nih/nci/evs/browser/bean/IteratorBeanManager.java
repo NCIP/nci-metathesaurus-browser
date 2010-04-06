@@ -112,6 +112,7 @@ public class IteratorBeanManager extends Object {
 		String key = bean.getKey();
 		if (iteratorBeanHashMap.containsKey(key)) return false;
 		iteratorBeanHashMap.put(key, bean);
+		iteratorBeanHashMap.put(bean.getRandomNumberString(), bean);
 		return true;
 	}
 
