@@ -4,6 +4,7 @@
 @rem ******************************************
 setlocal
 set DEVPROPFILE=C:\NCI-Projects\ncim-properties\properties\dev-upgrade.properties
+set CIPROPFILE=C:\NCI-Projects\ncim-properties\properties\ci-upgrade.properties
 set QAPROPFILE=C:\NCI-Projects\ncim-properties\properties\qa-upgrade.properties
 set DATAQAPROPFILE=C:\NCI-Projects\ncim-properties\properties\data-qa-upgrade.properties
 cls
@@ -51,6 +52,10 @@ if "%1" == "reconfig" (
 )
 if "%1" == "dev" (
     ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
+    goto DONE
+)
+if "%1" == "ci" (
+    ant -Dproperties.file=%CIPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "qa" (
