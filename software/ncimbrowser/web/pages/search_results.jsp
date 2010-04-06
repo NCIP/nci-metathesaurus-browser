@@ -9,6 +9,7 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
 <%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBeanManager" %>
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
@@ -50,12 +51,36 @@
           long iterator_delay;
 
           String page_string = null;
+          
+          /*
           IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("iteratorBean");
+          */
 
-          //Vector v = (Vector) request.getSession().getAttribute("search_results");
-          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
-          //String match_size = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_size"));
+          IteratorBean iteratorBean = null;
+          String key = (String) request.getSession().getAttribute("key");
+          
+System.out.println("search_results key == " + key);          
+          
+          IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("iteratorBeanManager");
+                
+ if (iteratorBeanManager == null) {
+ System.out.println("search_results iteratorBeanManager == null ???");
+ } else {
+ 
+                
+          iteratorBean = iteratorBeanManager.getIteratorBean(key);
+}
+
+	  if (iteratorBean == null){
+	    System.out.println("iteratorBean NOT FOUND???" + key);  
+	  }
+	  
+          //String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
+
+System.out.println("matchText:" + matchText);
 
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
 
