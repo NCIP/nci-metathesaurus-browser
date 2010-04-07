@@ -84,6 +84,10 @@ if (advancedSearchOption_obj != null) {
     advancedSearchOption = (String) advancedSearchOption_obj;
 }
 System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearchOption);
+match_text = (String) request.getParameter("matchText");
+System.out.println("advanced_search.jsp match_text: " + match_text);
+
+if (match_text == null) match_text = "";
 %>
 
              <tr class="textbody">
