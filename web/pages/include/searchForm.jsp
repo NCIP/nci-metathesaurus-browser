@@ -36,7 +36,6 @@
     //String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
     
     String match_text = (String) request.getParameter("matchText");
-   
     if (match_text == null) match_text = "";
  %>
   <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
@@ -144,7 +143,7 @@ if (obj != null) {
 	}
 } 
 %>
-          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?">Advanced Search</a>
+          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?matchText=<%=match_text%>">Advanced Search</a>
       </td>
     </tr>
   </table>
