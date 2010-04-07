@@ -210,12 +210,16 @@ public class IteratorBean extends Object {
 		//KLO 012710
 		if (idx2 <= 0) idx2 = 1;
 		int upper = idx2;
-		if (upper > lastResolved) upper = lastResolved;
+		/*
+		if (upper >= lastResolved) upper = lastResolved;
+		if (upper <= 0) upper = 1;
+		*/
+		if (upper > list.size()) upper = list.size();
 		for (int i=idx1; i<upper; i++) {
 			ResolvedConceptReference rcr = (ResolvedConceptReference) this.list.get(i);
 			rcr_list.add(rcr);
 			//if (i > lastResolved) break;
-			if (i >= lastResolved) break;
+			//if (i >= lastResolved) break;
 		}
 
 		System.out.println("getData Run time (ms): "
