@@ -182,7 +182,7 @@ public class IteratorBean extends Object {
 		long total_delay = 0;
 		timeout = false;
         try {
-			while(iterator != null && iterator.hasNext() && lastResolved < idx2) {
+			while(iterator != null && iterator.hasNext() && lastResolved < idx2 && lastResolved < size) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					lastResolved++;
