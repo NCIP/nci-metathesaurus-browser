@@ -209,10 +209,13 @@ public class IteratorBean extends Object {
 		List rcr_list = new ArrayList();
 		//KLO 012710
 		if (idx2 <= 0) idx2 = 1;
-		for (int i=idx1; i<idx2; i++) {
+		int upper = idx2;
+		if (upper > lastResolved) upper = lastResolved;
+		for (int i=idx1; i<upper; i++) {
 			ResolvedConceptReference rcr = (ResolvedConceptReference) this.list.get(i);
 			rcr_list.add(rcr);
-			if (i > lastResolved) break;
+			//if (i > lastResolved) break;
+			if (i >= lastResolved) break;
 		}
 
 		System.out.println("getData Run time (ms): "
