@@ -115,10 +115,14 @@ public class IteratorBean extends Object {
 
 
 			this.pageNumber = 1;
+			/*
 			this.list = new ArrayList(size);
 			for (int i=0; i<size; i++) {
 			    list.add(null);
 			}
+			*/
+			this.list = new ArrayList();
+
 			this.pageSize = Constants.DEFAULT_PAGE_SIZE;
 			this.numberOfPages = size / pageSize;
 			if (this.pageSize * this.numberOfPages < size) {
@@ -182,7 +186,8 @@ public class IteratorBean extends Object {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					lastResolved++;
-					this.list.set(lastResolved, ref);
+					//this.list.set(lastResolved, ref);
+					this.list.add(ref);
 				}
 
 				System.out.println("Advancing iterator: " + lastResolved);
