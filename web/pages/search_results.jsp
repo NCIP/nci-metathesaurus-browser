@@ -198,8 +198,8 @@ if (randomKey != null) {
                   } else {
                   %>
                        <tr>
-                       <td class="textbody"> 
-                           WARNING: Timeout occurred during processing ...
+                       <td class="textbodyred"> 
+                           WARNING: Application timeout.
  		       </td>
 		       </tr>
                   <%
