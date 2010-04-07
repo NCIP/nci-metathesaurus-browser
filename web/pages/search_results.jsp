@@ -165,34 +165,44 @@ if (randomKey != null) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
                       code_vec.add(rcr.getConceptCode());
                   }
-                  HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
+                  if (code_vec.size() > 0) {
+			  HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
-                  for (int i=0; i<list.size(); i++) {
-                      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-                      String code = rcr.getConceptCode();
-                      String name = rcr.getEntityDescription().getContent();
-                      String semantic_type = "";
-                      String t = (String) type_hmap.get(code);
-                      if (t != null) semantic_type = t;
-                      if (i % 2 == 0) {
-                        %>
-                          <tr class="dataRowDark">
-                        <%
-                      } else {
-                        %>
-                          <tr class="dataRowLight">
-                        <%
-                      }
-                      %>
-                          <td class="dataCellText" width=600>
-                            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-                          </td>
-                          <td class="dataCellText" width=400>
-                              <%=semantic_type%>
-                          </td>
-                        </tr>
-                      <%
+			  for (int i=0; i<list.size(); i++) {
+			      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+			      String code = rcr.getConceptCode();
+			      String name = rcr.getEntityDescription().getContent();
+			      String semantic_type = "";
+			      String t = (String) type_hmap.get(code);
+			      if (t != null) semantic_type = t;
+			      if (i % 2 == 0) {
+				%>
+				  <tr class="dataRowDark">
+				<%
+			      } else {
+				%>
+				  <tr class="dataRowLight">
+				<%
+			      }
+			      %>
+				  <td class="dataCellText" width=600>
+				    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+				  </td>
+				  <td class="dataCellText" width=400>
+				      <%=semantic_type%>
+				  </td>
+				</tr>
+			      <%
 
+			  } 
+                  } else {
+                  %>
+                       <tr>
+                       <td class="textbody"> 
+                           WARNING: Timeout occurred during processing ...
+ 		       </td>
+		       </tr>
+                  <%
                   }
                 %>
               </table>
