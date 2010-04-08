@@ -114,7 +114,10 @@ public class UserSessionBean extends Object
     public String searchAction() {
 		ResolvedConceptReferencesIteratorWrapper wrapper = null;
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String matchText = (String) request.getParameter("matchText");
+
+
+String matchText = (String) request.getParameter("matchText");
+System.out.println("searchAction matchText: " + matchText);
 
         if (matchText != null) {
 			matchText = matchText.trim();

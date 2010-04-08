@@ -74,6 +74,7 @@ public class SearchStatusBean extends Object
 	private static Logger logger = Logger.getLogger(SearchStatusBean.class);
 
     private String selectedSearchOption = null;
+    private String matchText = null;
     private List searchOptionList = null;
 
     public void setSelectedSearchOption(String selectedSearchOption) {
@@ -85,15 +86,15 @@ public class SearchStatusBean extends Object
     }
 
     public void searchOptionChanged(ValueChangeEvent event) {
-
-
-
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
         System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        String matchText = (String) request.getParameter("matchText");
+        setMatchText(matchText);
         request.getSession().setAttribute("advancedSearchOption", newValue);
     }
 
@@ -263,6 +264,18 @@ public class SearchStatusBean extends Object
         return RELAList;
     }
 
+////////////////////////////////////////////////////////////////////////////////////
+    public void setMatchText(String t) {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request.setAttribute("matchText", t);
+		this.matchText = t;
+
+		System.out.println("Set matchText to: " + t);
+	}
+
+    public String getMatchText() {
+		return matchText;
+	}
 
 }
 
