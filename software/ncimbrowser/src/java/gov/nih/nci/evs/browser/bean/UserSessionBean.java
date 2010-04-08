@@ -464,7 +464,7 @@ System.out.println("searchAction matchText: " + matchText);
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
-			request.setAttribute("matchText", matchText);
+			//request.setAttribute("matchText", matchText);
 
 			int size = iteratorBean.getSize();
             // Write a search log entry
