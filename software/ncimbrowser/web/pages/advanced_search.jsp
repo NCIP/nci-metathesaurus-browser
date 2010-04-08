@@ -84,8 +84,7 @@ if (advancedSearchOption_obj != null) {
     advancedSearchOption = (String) advancedSearchOption_obj;
 }
 
-String search_string = null;
-search_string = (String) request.getAttribute("matchText");
+String search_string = (String) request.getParameter("searchText");
 if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
 
 %>
