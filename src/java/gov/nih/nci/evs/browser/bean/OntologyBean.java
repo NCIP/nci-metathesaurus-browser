@@ -56,7 +56,7 @@ public class OntologyBean {
 		if (_rela_vec == null) {
 			_rela_vec = getRELAs(codingSchemeName, null);
 		}
-		_rela_list.add(new SelectItem(" ", " "));
+		_rela_list.add(new SelectItem("", ""));
 		for (int k=0; k<_rela_vec.size(); k++) {
 			String value = (String) _rela_vec.elementAt(k);
 			_rela_list.add(new SelectItem(value, value));
@@ -81,8 +81,6 @@ public class OntologyBean {
 		if (_association_name_vec == null) {
 			_association_name_vec = getSupportedAssociationNames(cs);
 		}
-		//Vector<String> associations = getSupportedAssociationNames(cs);
-
 		for (int k=0; k<_association_name_vec.size(); k++) {
 			String value = (String) _association_name_vec.elementAt(k);
 			_association_name_list.add(new SelectItem(value, value));
@@ -93,7 +91,7 @@ public class OntologyBean {
     public static List getPropertyNameList() {
 		if (_property_name_list != null) return _property_name_list;
 		_property_name_list = new ArrayList();
-		_property_name_list.add(new SelectItem(" ", " "));
+		_property_name_list.add(new SelectItem("ALL", "ALL"));
 
 		CodingScheme cs = getCodingScheme(codingSchemeName, null);
 		Vector<String> properties = getSupportedPropertyNames(cs);
