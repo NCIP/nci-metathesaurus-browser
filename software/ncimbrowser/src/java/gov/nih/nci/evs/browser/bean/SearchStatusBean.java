@@ -79,16 +79,17 @@ public class SearchStatusBean extends Object
     private List searchOptionList = null;
 
     public void setSelectedSearchOption(String selectedSearchOption) {
-        this.selectedSearchOption = selectedSearchOption;
-
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         //String matchText = (String) request.getParameter("matchText");
         //setMatchText(matchText);
+
+        // Note: Reuse previous value.
+        if (selectedSearchOption == null)
+            selectedSearchOption = (String) request.getSession().getAttribute("advancedSearchOption");
         request.getSession().setAttribute("advancedSearchOption", selectedSearchOption);
-
         System.out.println("setSelectedSearchOption " + selectedSearchOption);
-
+        this.selectedSearchOption = selectedSearchOption;
     }
 
     public String getSelectedSearchOption() {
