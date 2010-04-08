@@ -140,7 +140,8 @@ if (obj != null) {
 	}
 } 
 %>
-          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
+              &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
+     
       </td>
     </tr>
   </table>

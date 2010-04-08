@@ -133,7 +133,7 @@ System.out.println("searchAction matchText: " + matchText);
             return "message";
         }
         //request.getSession().setAttribute("matchText", matchText);
-        request.setAttribute("matchText", matchText);
+        //request.setAttribute("matchText", matchText);
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
