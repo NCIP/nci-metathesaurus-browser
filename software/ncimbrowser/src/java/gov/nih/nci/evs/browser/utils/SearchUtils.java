@@ -140,6 +140,8 @@ import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
 import org.LexGrid.concepts.Entity;
 
 import org.apache.commons.codec.language.DoubleMetaphone;
+import gov.nih.nci.evs.browser.common.Constants;
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -2640,7 +2642,7 @@ public class SearchUtils {
 	}
 
     public ResolvedConceptReferencesIteratorWrapper searchByAssociations(String scheme, String version, String matchText, String source, String matchAlgorithm, boolean designationOnly, boolean ranking, int maxToReturn) {
-        return searchByAssociations(scheme, version, matchText, null, null, null, false, source, matchAlgorithm, designationOnly, ranking, maxToReturn);
+        return searchByAssociations(scheme, version, matchText, null, null, null, Constants.SEARCH_SOURCE, source, matchAlgorithm, designationOnly, ranking, maxToReturn);
 	}
 
 /*
@@ -2650,13 +2652,13 @@ String[] associationsToNavigate,
     public ResolvedConceptReferencesIteratorWrapper searchByAssociations(String scheme, String version, String matchText,
                                                                          String[] associationsToNavigate,
                                                                          String[] association_qualifier_names, String[] association_qualifier_values,
-                                                                         boolean resolve_direction,
+                                                                         int search_direction,
                                                                          String source, String matchAlgorithm, boolean designationOnly,
                                                                          boolean ranking, int maxToReturn) {
 
 System.out.println("searchByAssociations scheme: " + scheme);
 System.out.println("searchByAssociations matchText: " + matchText);
-System.out.println("searchByAssociations resolve_direction: " + resolve_direction);
+System.out.println("searchByAssociations resolve_direction: " + search_direction);
 System.out.println("searchByAssociations source: " + source);
 
 
@@ -2734,21 +2736,6 @@ System.out.println("searchByAssociations matchAlgorithm: " + matchAlgorithm);
 							cns = cns.restrictToMatchingDesignations(matchText, null, matchAlgorithm, null);
 						}
 						cns = restrictToSource(cns, source);
-						//String associationName = null;
-
-						//int direction = RESTRICT_TARGET;
-						//CodedNodeGraph cng = getRestrictedCodedNodeGraph(lbSvc, scheme, version, associationName, cns, direction);
-						// toNode
-						/*
-						boolean resolveForward = false;
-						boolean resolveBackward = true;
-
-						if (resolve_direction) {
-							resolveForward = true;
-							resolveBackward = false;
-						}
-						*/
-
 						int resolveAssociationDepth = 1;
 						//int maxToReturn = -1;
 						ConceptReference graphFocus = null;
@@ -2800,8 +2787,17 @@ System.out.println("searchByAssociations matchAlgorithm: " + matchAlgorithm);
 			resolveConcepts = false;
             try {
                try {
-            	   boolean resolveForward = resolve_direction;
-            	   boolean resolveBackward = !resolve_direction;
+            	   boolean resolveForward = true;
+            	   boolean resolveBackward = true;
+
+				   if (search_direction == Constants.SEARCH_SOURCE) {
+            	    	resolveForward = false;
+            	    	resolveBackward = true;
+				   }
+				   else if (search_direction == Constants.SEARCH_TARGET) {
+            	    	resolveForward = true;
+            	    	resolveBackward = false;
+				   }
 
             	   int resolveAssociationDepth = 1;
                     //iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);

@@ -35,6 +35,10 @@ public class Constants {
 
     static public final int DEFAULT_PAGE_SIZE = 50;
 
+    static public final  int SEARCH_BOTH_DIRECTION = 0;
+    static public final  int SEARCH_SOURCE = 1;
+    static public final  int SEARCH_TARGET = 2;
+
     static public final List<String> REL = Arrays.asList(new String[] {
             "Parent\tPAR\tAnother concept&apos;s term subsumes a term in the current concept as a subtype, part, or otherwise.",
             "Child\tCHD\tAnother concept&apos;s term is subsumed by a term in the current concept as its subtype, part, or otherwise.",
