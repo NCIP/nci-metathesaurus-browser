@@ -83,11 +83,21 @@ Object advancedSearchOption_obj = request.getSession().getAttribute("advancedSea
 if (advancedSearchOption_obj != null) {
     advancedSearchOption = (String) advancedSearchOption_obj;
 }
-System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearchOption);
-match_text = (String) request.getParameter("matchText");
-System.out.println("advanced_search.jsp match_text: " + match_text);
 
-if (match_text == null) match_text = "";
+/*
+System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearchOption);
+String search_string = (String) request.getParameter("matchText");
+if (search_string == null) {
+    search_string = (String) request.getAttribute("matchText");
+}
+
+System.out.println("advanced_search.jsp match_text: " + search_string);
+
+if (search_string == null) search_string = "";
+*/
+
+String search_string = (String) request.getAttribute("matchText");
+if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
 %>
 
              <tr class="textbody">
@@ -99,9 +109,13 @@ if (match_text == null) match_text = "";
                           <table>
                           
                              <tr><td>
+                             <input name="matchText" value="<%=search_string%>">
+                             
+                             <!--
  			    <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
  				onBlur="active = false" onkeypress="return submitEnter('search',event)" />
- 
+                              -->
+                              
  			    <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.searchAction}"
  			      onclick="javascript:cursor_wait();"
  			      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"

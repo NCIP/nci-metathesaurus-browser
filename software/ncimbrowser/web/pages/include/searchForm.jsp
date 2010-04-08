@@ -32,8 +32,8 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
-    String match_text = (String) request.getParameter("matchText");
-    if (match_text == null) match_text = "";
+    String match_text = (String) request.getAttribute("matchText");
+    if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
  %>
   <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
@@ -140,7 +140,7 @@ if (obj != null) {
 	}
 } 
 %>
-          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?matchText=<%=match_text%>">Advanced Search</a>
+          &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
       </td>
     </tr>
   </table>
