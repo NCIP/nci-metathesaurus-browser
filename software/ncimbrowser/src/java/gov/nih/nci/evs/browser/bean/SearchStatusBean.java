@@ -67,6 +67,7 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 		  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
 		</h:selectOneMenu>
       </form>
+
 */
 
 public class SearchStatusBean extends Object
@@ -79,6 +80,15 @@ public class SearchStatusBean extends Object
 
     public void setSelectedSearchOption(String selectedSearchOption) {
         this.selectedSearchOption = selectedSearchOption;
+
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        //String matchText = (String) request.getParameter("matchText");
+        //setMatchText(matchText);
+        request.getSession().setAttribute("advancedSearchOption", selectedSearchOption);
+
+        System.out.println("setSelectedSearchOption " + selectedSearchOption);
+
     }
 
     public String getSelectedSearchOption() {
@@ -91,11 +101,7 @@ public class SearchStatusBean extends Object
 
         System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-        String matchText = (String) request.getParameter("matchText");
-        setMatchText(matchText);
-        request.getSession().setAttribute("advancedSearchOption", newValue);
     }
 
     public List getSearchOptionList() {
