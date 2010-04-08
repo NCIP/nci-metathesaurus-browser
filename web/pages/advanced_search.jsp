@@ -112,8 +112,6 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  			    </h:commandButton>
                              
                              </td></tr>
-         
-         
  
                               <tr><td>
  

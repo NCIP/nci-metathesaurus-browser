@@ -201,7 +201,19 @@ System.out.println("searchAction matchText: " + matchText);
 
         String key = null;
 
-        String searchType = (String) request.getParameter("searchType");
+
+String searchType = (String) request.getParameter("searchType");
+System.out.println("SearchUtils.java searchType: " + searchType);
+
+/*
+SearchStatusBean bean = (SearchStatusBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("SearchStatusBean");
+if (bean == null) {
+	bean = new SearchStatusBean();
+	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("SearchStatusBean", bean);
+}
+String searchType = bean.getSelectedSearchOption();
+*/
+
         if (searchType != null && searchType.compareTo("Property") == 0) {
 			String adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
 			matchAlgorithm = adv_search_algorithm;
