@@ -109,7 +109,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
                           <table>
                           
                              <tr><td>
-                             <input name="matchText" value="<%=search_string%>">
+                             <input CLASS="searchbox-input" name="matchText" value="<%=search_string%>">
                              
                              <!--
  			    <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
@@ -123,6 +123,51 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  			    </h:commandButton>
                              
                              </td></tr>
+         
+         
+ 
+                              <tr><td>
+ 
+ 				  <table border="0" cellspacing="0" cellpadding="0">
+ 				    <tr valign="top" align="left">
+ 				      <td align="left" class="textbody"><input type="radio"
+ 					name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
+ 				      Match&nbsp; <input type="radio" name="adv_search_algorithm" value="startsWith"
+ 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
+ 					type="radio" name="adv_search_algorithm" value="contains" alt="Containts"
+ 					<%=check__c%>>Contains
+ 					</td>
+ 				    </tr>
+ 				    
+ 				 </table>   
+                             </td></tr>
+                             
+                             
+<tr><td>
+<h:outputLabel id="rel_search_source_Label" value="Source" styleClass="textbody">
+
+<select id="adv_search_source" name="adv_search_source" size="1">
+<%  
+    t = "ALL";
+%>   
+   <option value="<%=t%>"><%=t%></option>
+<% 
+   Vector src_vec = OntologyBean.getSupportedSources();
+   for (int i=0; i<src_vec.size(); i++) {
+        t = (String) src_vec.elementAt(i);
+%>       
+        <option value="<%=t%>"><%=t%></option>
+<%        
+   }
+%>   
+</select>
+</h:outputLabel>  
+</td></tr>
+         
+
+<tr><td>
+&nbsp;&nbsp;
+</td></tr>         
          
 
                              <tr><td>
@@ -140,7 +185,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  if (advancedSearchOption.compareTo("Property") == 0) {
 %>
  
- 
+<!-- 
                              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
       			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
    				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
@@ -151,7 +196,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  			     </h:outputLabel> 
   
                               </td></tr>    
-                              
+-->                              
 
                              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
   			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
@@ -209,6 +254,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 </h:outputLabel>  
 </td></tr> 
 
+<!--
 
                              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
   				  <table border="0" cellspacing="0" cellpadding="0">
@@ -222,61 +268,18 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  				 </table>   
                              </td></tr>         
                              
-                             
+-->                             
 
 <%                              
 } 
 %>  
 
 
-</table></td></tr>
-<tr><td>
-&nbsp;&nbsp;
-</td></tr>
+</table>
 
- 
-                              <tr><td>
- 
- 				  <table border="0" cellspacing="0" cellpadding="0">
- 				    <tr valign="top" align="left">
- 				      <td align="left" class="textbody"><input type="radio"
- 					name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact
- 				      Match&nbsp; <input type="radio" name="adv_search_algorithm" value="startsWith"
- 					alt="Begins With" <%=check__s%>>Begins With&nbsp; <input
- 					type="radio" name="adv_search_algorithm" value="contains" alt="Containts"
- 					<%=check__c%>>Contains
- 					</td>
- 				    </tr>
- 				    
- 				 </table>   
-                             </td></tr>
-                             
-                             
-<tr><td>
-<h:outputLabel id="rel_search_source_Label" value="Source" styleClass="textbody">
-
-<select id="adv_search_source" name="adv_search_source" size="1">
-<%  
-    t = "ALL";
-%>   
-   <option value="<%=t%>"><%=t%></option>
-<% 
-   Vector src_vec = OntologyBean.getSupportedSources();
-   for (int i=0; i<src_vec.size(); i++) {
-        t = (String) src_vec.elementAt(i);
-%>       
-        <option value="<%=t%>"><%=t%></option>
-<%        
-   }
-%>   
-</select>
-</h:outputLabel>  
 </td></tr>
 
 
-<tr><td>
-&nbsp;&nbsp;
-</td></tr>
 
 
 

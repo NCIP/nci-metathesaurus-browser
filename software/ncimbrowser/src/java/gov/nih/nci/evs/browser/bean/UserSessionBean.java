@@ -115,13 +115,15 @@ public class UserSessionBean extends Object
 		ResolvedConceptReferencesIteratorWrapper wrapper = null;
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-
 String matchText = (String) request.getParameter("matchText");
 System.out.println("searchAction matchText: " + matchText);
 
         if (matchText != null) {
 			matchText = matchText.trim();
+			request.setAttribute("matchText", matchText);
 		}
+
+
         //[#19965] Error message is not displayed when Search Criteria is not proivded
         if (matchText == null || matchText.length() == 0)
         {
@@ -217,10 +219,12 @@ System.out.println("searchAction matchText: " + matchText);
 			if (property_type != null && property_type.compareTo("ALL") == 0) {
 				property_type = null;
 			}
+
 			String property_name = (String) request.getParameter("selectProperty");
             if (property_name != null) {
 				property_name = property_name.trim();
-				if (property_name.length() == 0) property_name = null;
+				//if (property_name.length() == 0) property_name = null;
+				if (property_name.compareTo("ALL") == 0) property_name = null;
 			}
 
 			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
@@ -304,7 +308,7 @@ System.out.println("searchAction matchText: " + matchText);
 			System.out.println("adv_search_source: " + adv_search_source);
 			System.out.println("rel_search_direction: " + rel_search_direction);
 			boolean direction = false;
-			if (rel_search_direction.compareTo("source") == 0) {
+			if (rel_search_direction != null && rel_search_direction.compareTo("source") == 0) {
 				direction = true;
 			}
 
