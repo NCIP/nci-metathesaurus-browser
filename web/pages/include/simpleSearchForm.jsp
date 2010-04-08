@@ -33,15 +33,10 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
-    //String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
-    String match_text = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
-    //match_text = (String) request.getParameter("matchText");
-    
+    String match_text = (String) request.getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
- %>
-  <!--
-  <input type="hidden" id="matchText" name="matchText" value="<%=match_text%>" />
-  -->
+%>
+
   <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
