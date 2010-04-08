@@ -27,6 +27,7 @@ import gov.nih.nci.evs.searchlog.SearchLog;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import gov.nih.nci.evs.browser.common.Constants;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -307,9 +308,14 @@ System.out.println("searchAction matchText: " + matchText);
 			System.out.println("rel_search_rela: " + rel_search_rela);
 			System.out.println("adv_search_source: " + adv_search_source);
 			System.out.println("rel_search_direction: " + rel_search_direction);
-			boolean direction = false;
+			//boolean direction = false;
+			int search_direction = Constants.SEARCH_BOTH_DIRECTION;
 			if (rel_search_direction != null && rel_search_direction.compareTo("source") == 0) {
-				direction = true;
+				search_direction = Constants.SEARCH_SOURCE;
+				//direction = true;
+			} else if (rel_search_direction != null && rel_search_direction.compareTo("taret") == 0) {
+				search_direction = Constants.SEARCH_TARGET;
+				//direction = true;
 			}
 
 			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
@@ -322,9 +328,9 @@ System.out.println("searchAction matchText: " + matchText);
 			if (rel_search_rela == null) {
 				request.getSession().setAttribute("rel_search_rela", " ");
 			} else {
-				request.getSession().setAttribute("rel_search_rela", rel_search_rela);
+				request.getSession().setAttribute("rel_search_rela", search_direction);
 			}
-			request.getSession().setAttribute("rel_search_direction", rel_search_direction);
+			request.getSession().setAttribute("search_direction", rel_search_direction);
 			if (adv_search_source == null) {
 				request.getSession().setAttribute("adv_search_source", "ALL");
 			} else {
@@ -333,7 +339,9 @@ System.out.println("searchAction matchText: " + matchText);
 			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget,
 			                                                   rel_search_association,
 			                                                   rel_search_rela,
-			                                                   adv_search_source, adv_search_algorithm, maxToReturn);
+			                                                   adv_search_source,
+			                                                   adv_search_algorithm,
+			                                                   maxToReturn);
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -376,7 +384,7 @@ System.out.println("searchAction matchText: " + matchText);
 															   associationsToNavigate,
 															   association_qualifier_names,
 															   association_qualifier_values,
-															   direction,
+															   search_direction,
 															   adv_search_source,
 															   adv_search_algorithm,
 															   excludeDesignation,
