@@ -84,20 +84,10 @@ if (advancedSearchOption_obj != null) {
     advancedSearchOption = (String) advancedSearchOption_obj;
 }
 
-/*
-System.out.println("advanced_search.jsp advancedSearchOption: " + advancedSearchOption);
-String search_string = (String) request.getParameter("matchText");
-if (search_string == null) {
-    search_string = (String) request.getAttribute("matchText");
-}
-
-System.out.println("advanced_search.jsp match_text: " + search_string);
-
-if (search_string == null) search_string = "";
-*/
-
-String search_string = (String) request.getAttribute("matchText");
+String search_string = null;
+search_string = (String) request.getAttribute("matchText");
 if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
+
 %>
 
              <tr class="textbody">
