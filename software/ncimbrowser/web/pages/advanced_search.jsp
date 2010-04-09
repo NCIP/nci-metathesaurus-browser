@@ -197,7 +197,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 
 <% } else { %> 
 
-<%--
+<f:subview id="tmp">
 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
 <h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
@@ -217,48 +217,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 </h:selectOneMenu> 
 </h:outputLabel>  
 </td></tr>
---%>
-
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-<h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
-<select id="rel_search_association" name="rel_search_association" size="1">
-<%  
-    t = "ALL";
-%>   
-   <option value="<%=t%>"><%=t%></option>
-<%   
-   Vector association_vec = OntologyBean.getSupportedAssociationNames();
-   for (int i=0; i<association_vec.size(); i++) {
-         t = (String) association_vec.elementAt(i);
-%>       
-        <option value="<%=t%>"><%=t%></option>
-<%        
-   }
-%>   
-</select>
-</h:outputLabel>  
-</td></tr>
-
-
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-<h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-<select id="rel_search_rela" name="rel_search_rela" size="1">
-<%  
-    t = " ";
-%>   
-   <option value="<%=t%>"><%=t%></option>
-<% 
-   Vector rela_vec = OntologyBean.getRELAs();
-   for (int i=0; i<rela_vec.size(); i++) {
-        t = (String) rela_vec.elementAt(i);
-%>       
-        <option value="<%=t%>"><%=t%></option>
-<%        
-   }
-%>   
-</select>
-</h:outputLabel>  
-</td></tr> 
+</f:subview>
 
 <!--
 
