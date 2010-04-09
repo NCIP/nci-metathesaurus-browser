@@ -174,7 +174,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
       			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
    				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
    				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
-   				    immediate="true" >
+   				    immediate="true" onchange="submit()" >
    				  <f:selectItems value="#{searchStatusBean.propertyTypeList}" />
    				</h:selectOneMenu> 
  			     </h:outputLabel> 
@@ -186,7 +186,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
   			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
  				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
  				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
- 				    immediate="true" >
+ 				    immediate="true" onchange="submit()" >
  				  <f:selectItems value="#{searchStatusBean.propertyList}" />
  				</h:selectOneMenu> 
  			     </h:outputLabel> 
