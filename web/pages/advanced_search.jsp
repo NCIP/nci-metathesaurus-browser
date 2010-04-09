@@ -192,12 +192,35 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  			     </h:outputLabel> 
  
                               </td></tr>                         
- <%
- } else {
- %> 
+
+
+
+<% } else { %> 
+
+<%--
 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
+<h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
+    valueChangeListener="#{searchStatusBean.selectedRelationshipChanged}"
+    immediate="true" onchange="submit()" >
+  <f:selectItems value="#{searchStatusBean.relationshipList}" />
+</h:selectOneMenu> 
+</h:outputLabel>  
+</td></tr>
 
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+<h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
+<h:selectOneMenu id="rel_search_rela" value="#{searchStatusBean.selectedRELA}" 
+    valueChangeListener="#{searchStatusBean.selectedRELAChanged}"
+    immediate="true" onchange="submit()" >
+  <f:selectItems value="#{searchStatusBean.RELAList}" />
+</h:selectOneMenu> 
+</h:outputLabel>  
+</td></tr>
+--%>
+
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+<h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
 <select id="rel_search_association" name="rel_search_association" size="1">
 <%  
     t = "ALL";
@@ -219,7 +242,6 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 
 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
 <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-
 <select id="rel_search_rela" name="rel_search_rela" size="1">
 <%  
     t = " ";
