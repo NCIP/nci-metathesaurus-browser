@@ -6,6 +6,7 @@
 <%@ page import="java.util.HashMap"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
 <%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
@@ -51,7 +52,7 @@
       
 <%
     String t = null;
-    String adv_search_algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_algorithm"));
+    String adv_search_algorithm = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_algorithm"));
     String check__e = "", check__b = "", check__s = "" , check__c ="";
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
       check__e = "checked";
@@ -69,7 +70,7 @@
 
 
 <%
-String rel_search_direction = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("rel_search_direction"));
+String rel_search_direction = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("rel_search_direction"));
 String check_source = "";
 String check_target = "";
 if (rel_search_direction == null || rel_search_direction.compareToIgnoreCase("source") == 0)
@@ -78,12 +79,8 @@ else if (rel_search_direction.compareToIgnoreCase("target") == 0)
 check_target= "checked"; 
 
 
-String advancedSearchOption = "Property";
-Object advancedSearchOption_obj = request.getSession().getAttribute("advancedSearchOption");
-if (advancedSearchOption_obj != null) {
-    advancedSearchOption = (String) advancedSearchOption_obj;
-}
-
+String advancedSearchOption = HTTPUtils.getSessionAttribute(
+    request, "advancedSearchOption", "Property");
 String search_string = (String) request.getParameter("searchText");
 if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
 
