@@ -74,7 +74,7 @@ public class SearchStatusBean extends Object
 {
 	private static Logger logger = Logger.getLogger(SearchStatusBean.class);
 
-    private String selectedSearchOption = null;
+    private String selectedSearchOption = "Property";
     private String matchText = null;
     private List searchOptionList = null;
 

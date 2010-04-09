@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * HTTP Utility methods
  * @author garciawa2
@@ -58,4 +60,21 @@ public class HTTPUtils {
 		
 	} 
 	
+    public static String getAttribute(HttpServletRequest request,
+        String attributeName, String defaultValue) {
+        String value = (String) request.getAttribute(attributeName);
+        return getValue(value, defaultValue);
+    }
+
+    public static String getSessionAttribute(HttpServletRequest request,
+	    String attributeName, String defaultValue) {
+	    String value = (String) request.getSession().getAttribute(attributeName);
+	    return getValue(value, defaultValue);
+	}
+	
+	public static String getValue(String value, String defaultValue) {
+	    if (value == null || value.trim().length() <= 0 || value.equals("null"))
+	        return defaultValue;
+	    return value;
+	}
 }
