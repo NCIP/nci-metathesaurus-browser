@@ -241,11 +241,44 @@ public class SearchStatusBean extends Object
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedRELA = null;
+    private String selectedRelationship = "ALL";
+    private List relationshipList = null;
+
+    public void setSelectedRelationship(String selectedRelationship) {
+        this.selectedRelationship = setSessionAttribute(
+            "advancedRelationOption", selectedRelationship);
+    }
+
+    public String getSelectedRelationship() {
+        return this.selectedRelationship;
+    }
+
+    public void selectedRelationshipChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null) return;
+        String newValue = (String) event.getNewValue();
+
+        System.out.println("selectedRelationshipChanged to " + newValue);
+        setSelectedRelationship(newValue);
+    }
+
+    public List getRelationshipList() {
+        if (relationshipList == null) {
+            relationshipList = OntologyBean.getAssociationNameList();
+            relationshipList.add(0, new SelectItem("ALL", "ALL"));
+            if (relationshipList != null && relationshipList.size() > 0) {
+                this.selectedRelationship = ((SelectItem) relationshipList.get(0)).getLabel();
+            }
+        }
+        return relationshipList;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    private String selectedRELA = "";
     private List RELAList = null;
 
     public void setSelectedRELA(String selectedRELA) {
-        this.selectedRELA = selectedRELA;
+        this.selectedRELA = setSessionAttribute(
+            "advancedRELAOption", selectedRELA);
     }
 
     public String getSelectedRELA() {
