@@ -75,6 +75,11 @@ import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.concepts.Presentation;
 
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
+import org.LexGrid.lexevs.metabrowser.MetaTree;
+import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode;
+import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.ExpandedState;
+
 
 public class CacheController
 {
@@ -394,6 +399,114 @@ public class CacheController
             return rootsArray;
         }
     }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Extension
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    public String getPathsToRootsRExt(String node_id, String sab)
+    {
+		String scheme = "NCI Metathesaurus";
+		String version = null;
+		boolean fromCache = false; // no cache PTR
+		return getPathsToRootsRExt(scheme, version, node_id, sab, fromCache);
+	}
+
+    public String getPathsToRootsRExt(String scheme, String version, String node_id, String sab, boolean fromCache)
+    {
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+		MetaBrowserService mbs = null;
+		try {
+			mbs = (MetaBrowserService) lbs.getGenericExtension("metabrowser-extension");
+
+			MetaTree tree = mbs.getMetaNeighborhood(node_id, sab);
+			MetaTreeNode focus = tree.getCurrentFocus();
+			// caching tree -- to be implemented.
+			String key = scheme + "$" + version + "$" + node_id + "$" + sab + "$path";
+			if (fromCache)
+			{
+				Element element = cache.get(key);
+				if (element != null)
+				{
+					String t = (String) element.getValue();
+					return t;
+				}
+			}
+			String t0 = tree.getJsonFromRoot(focus);
+			String t1 = "{\"root_nodes\":";
+			//String t2 = "}]}";
+
+			String t2 = "}";
+
+			if (t0 != null && fromCache) {
+			    String t = t1 + t0 + t2;
+                Element element = new Element(key, t);
+                cache.put(element);
+			}
+			if (t0 == null) return null;
+			return t1 + t0 + t2;
+		} catch (Exception ex) {
+			// to be modified
+			return "[]";
+		}
+    }
+
+/*
+    public JSONArray getPathsToRootsRExt(String ontology_display_name, String version, String node_id, String sab, boolean fromCache)
+    {
+        return getPathsToRoots(ontology_display_name, version, node_id, sab, fromCache, -1);
+	}
+*/
+
+    public JSONArray getPathsToRootsExt(String ontology_display_name, String version, String node_id, String sab, boolean fromCache, int maxLevel)
+    {
+       JSONArray rootsArray = null;
+        if (maxLevel == -1) {
+            rootsArray = getRootConceptsBySource(ontology_display_name, version, sab);
+            try {
+                SourceTreeUtils util = new SourceTreeUtils();
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, sab, node_id, maxLevel);
+                Set keyset = hmap.keySet();
+                Object[] objs = keyset.toArray();
+                String code = (String) objs[0];
+
+                TreeItem ti = (TreeItem) hmap.get(code); //TreeItem ti = new TreeItem("<Root>", "Root node");
+
+                JSONArray nodesArray = getNodesArray(node_id, ti);
+                replaceJSONObjects(rootsArray, nodesArray);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return rootsArray;
+        }
+        else {
+            try {
+                SourceTreeUtils util = new SourceTreeUtils();
+                HashMap hmap = util.getTreePathData(ontology_display_name, null, sab, node_id, maxLevel);
+
+                Object[] objs = hmap.keySet().toArray();
+                String code = (String) objs[0];
+
+                TreeItem ti = (TreeItem) hmap.get(code);
+                List list = util.getTopNodes(ti, sab);
+
+				if (list.size() == 0) {
+					System.out.println("CacheController list size  " + list.size() + " calling getRootConceptsBySource ...");
+					return getRootConceptsBySource(ontology_display_name, null, sab, true);
+				}
+
+                rootsArray = list2JSONArray(list);
+                JSONArray nodesArray = getNodesArray(node_id, ti);
+                replaceJSONObjects(rootsArray, nodesArray);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return rootsArray;
+        }
+    }
+
 
 
 

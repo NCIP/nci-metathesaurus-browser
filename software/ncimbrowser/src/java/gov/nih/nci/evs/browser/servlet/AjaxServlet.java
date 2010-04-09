@@ -204,6 +204,7 @@ public final class AjaxServlet extends HttpServlet {
             if (node_id != null && ontology_display_name != null) {
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
+/*
                 JSONObject json = new JSONObject();
 
                 try {
@@ -216,31 +217,7 @@ public final class AjaxServlet extends HttpServlet {
                     }
 
                     JSONArray rootsArray = null;
-                    /*
-                    if (ontology_source != null && ontology_source.compareTo("NCI") != 0) {
                         rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
-
-						if (rootsArray.length() == 0)
-						{
-							//System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
-							//rootsArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
-						}
-
-
-				    } else {
-						rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, true, maxLevel);
-
-						if (rootsArray.length() == 0)
-						{
-							System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConcepts...");
-							rootsArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
-						}
-
-					}
-					*/
-
-                        rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
-
 						if (rootsArray.length() == 0)
 						{
 							//System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
@@ -254,6 +231,11 @@ public final class AjaxServlet extends HttpServlet {
                 }
 
                 response.getWriter().write(json.toString());
+                System.out.println("search_tree: " + json.toString());
+*/
+                String t = CacheController.getInstance().getPathsToRootsRExt(ontology_display_name, null, node_id, ontology_source, false);
+ System.out.println("search_tree: " + t);
+                response.getWriter().write(t);
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
             }
