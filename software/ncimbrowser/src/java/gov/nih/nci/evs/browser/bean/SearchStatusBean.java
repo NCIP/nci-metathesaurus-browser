@@ -74,22 +74,24 @@ public class SearchStatusBean extends Object
 {
 	private static Logger logger = Logger.getLogger(SearchStatusBean.class);
 
+    public String setSessionAttribute(String attributeName, String value) {
+        HttpServletRequest request = HTTPUtils.getRequest();
+        // Note: Reuse previous value if null.
+        if (value == null)
+            value = (String) request.getSession().getAttribute(attributeName);
+        request.getSession().setAttribute(attributeName, value);
+        return value;
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////
+
     private String selectedSearchOption = "Property";
     private String matchText = null;
     private List searchOptionList = null;
 
     public void setSelectedSearchOption(String selectedSearchOption) {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        //String matchText = (String) request.getParameter("matchText");
-        //setMatchText(matchText);
-
-        // Note: Reuse previous value.
-        if (selectedSearchOption == null)
-            selectedSearchOption = (String) request.getSession().getAttribute("advancedSearchOption");
-        request.getSession().setAttribute("advancedSearchOption", selectedSearchOption);
-        System.out.println("setSelectedSearchOption " + selectedSearchOption);
-        this.selectedSearchOption = selectedSearchOption;
+        this.selectedSearchOption = setSessionAttribute(
+            "advancedSearchOption", selectedSearchOption);
     }
 
     public String getSelectedSearchOption() {
@@ -102,7 +104,6 @@ public class SearchStatusBean extends Object
 
         System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
-
     }
 
     public List getSearchOptionList() {
@@ -112,16 +113,14 @@ public class SearchStatusBean extends Object
         return searchOptionList;
     }
 
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////
 
-    private String selectedProperty = null;
+    private String selectedProperty = "ALL";
     private List propertyList = null;
 
     public void setSelectedProperty(String selectedProperty) {
-        this.selectedProperty = selectedProperty;
+        this.selectedProperty = setSessionAttribute(
+            "advancedPropertyOption", selectedProperty);
     }
 
     public String getSelectedProperty() {
@@ -132,7 +131,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("propertyChanged; " + newValue);
+        System.out.println("selectedPropertyChanged to " + newValue);
         setSelectedProperty(newValue);
     }
 
@@ -164,7 +163,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedSourceChanged; " + newValue);
+        System.out.println("selectedSourceChanged to " + newValue);
         setSelectedSource(newValue);
     }
 
@@ -195,7 +194,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("PropertyTypeChanged; " + newValue);
+        System.out.println("selectedPropertyTypeChanged to " + newValue);
         setSelectedPropertyType(newValue);
     }
 
@@ -226,7 +225,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedAssociationChanged; " + newValue);
+        System.out.println("selectedAssociationChanged to " + newValue);
         setSelectedAssociation(newValue);
     }
 
@@ -257,7 +256,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedRELAChanged; " + newValue);
+        System.out.println("selectedRELAChanged to " + newValue);
         setSelectedRELA(newValue);
     }
 

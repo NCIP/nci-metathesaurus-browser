@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -58,7 +59,12 @@ public class HTTPUtils {
 		string = myPattern.matcher(string).replaceAll(replaceWith);
 		return string;
 		
-	} 
+	}
+	
+	public static HttpServletRequest getRequest() {
+	    return (HttpServletRequest) FacesContext.getCurrentInstance().
+	        getExternalContext().getRequest();
+	}
 	
     public static String getAttribute(HttpServletRequest request,
         String attributeName, String defaultValue) {
