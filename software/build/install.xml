@@ -299,6 +299,7 @@
             <filter token="minimum_search_string_length" value="${minimum_search_string_length}"/>
             <filter token="source_hierarchies" value="${source_hierarchies}"/>
             <filter token="secured_vocabularies" value="${secured_vocabularies}"/>
+            <filter token="subconcept_page_size" value="${subconcept_page_size}"/>
         </filterset>
         <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
         <mkdir dir="${application.data.path}/${ehcache.cache.path}" />
