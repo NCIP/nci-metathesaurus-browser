@@ -83,6 +83,9 @@ import org.LexGrid.lexevs.metabrowser.MetaTree;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.ExpandedState;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.*;
 
 public class CacheController
 {
@@ -408,6 +411,8 @@ public class CacheController
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Extension
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private boolean isLeaf(MetaTreeNode focus) {
 		return focus.getExpandedState().equals(ExpandedState.LEAF);
 	}
@@ -516,7 +521,6 @@ public class CacheController
         TreeItem ti = null;
 
 		int max = NCImBrowserProperties.getSubconceptPageSize();
-		System.out.println("SubconceptPageSize: " + max);
 		Vector v = new Vector();
 		String childNavText = "CHD";
 		boolean hasMoreChildren = false;
@@ -536,6 +540,7 @@ public class CacheController
 
 			Iterator iterator = focus.getChildren();
 			if (iterator == null) {
+				hmap.put(ti.code, ti);
 				return hmap;
 			}
 
@@ -564,7 +569,126 @@ public class CacheController
 			ti.addChild(childNavText, childItem);
 		}
 		if (hasMoreChildren) {
-			TreeItem childItem = new TreeItem("...", "...");
+			String t = CUI + "|" + SAB + "|" + max;
+			TreeItem childItem = new TreeItem(t, "...");
+			childItem.expandable = true;
+			ti.addChild(childNavText, childItem);
+		}
+		hmap.put(ti.code, ti);
+		return hmap;
+	}
+
+
+
+
+	public static Vector<String> parseData(String line) {
+		return parseData(line, "|");
+	}
+
+	public static Vector<String> parseData(String line, String tab) {
+		Vector data_vec = new Vector();
+		StringTokenizer st = new StringTokenizer(line, tab);
+		while (st.hasMoreTokens()) {
+			String value = st.nextToken();
+			if (value.compareTo("null") == 0)
+				value = " ";
+			data_vec.add(value);
+		}
+		return data_vec;
+	}
+
+	public JSONArray getRemainingSubconcepts(String s) {
+		Vector v = parseData(s);
+		String CUI = (String) v.elementAt(0);
+		String SAB = (String) v.elementAt(1);
+		String istart_str = (String) v.elementAt(2);
+/*
+System.out.println("getRemainingSubconcepts " + s);
+System.out.println("getRemainingSubconcepts CUI " + CUI);
+System.out.println("getRemainingSubconcepts SAB " + SAB);
+System.out.println("getRemainingSubconcepts istart_str " + istart_str);
+*/
+
+		int records_to_skip = 0; // to skip
+		if (istart_str != null) {
+			records_to_skip = Integer.parseInt(istart_str);
+		}
+
+//System.out.println("getRemainingSubconcepts records_to_skip " + records_to_skip);
+
+		//code: parent CUI|SAB|n
+		HashMap hmap = getRemainingSubconcepts(CUI, SAB, records_to_skip);
+		JSONArray nodeArray = null;
+		nodeArray = HashMap2JSONArray(hmap);
+		return nodeArray;
+	}
+
+
+	public HashMap getRemainingSubconcepts(String CUI, String SAB, int records_to_skip) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+
+		int max = NCImBrowserProperties.getSubconceptPageSize();
+		Vector v = new Vector();
+		String childNavText = "CHD";
+		boolean hasMoreChildren = false;
+		int knt0 = 0;
+		try {
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			MetaBrowserService mbs = (MetaBrowserService) lbs.getGenericExtension("metabrowser-extension");
+			MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+			MetaTreeNode focus = tree.getCurrentFocus();
+            ti = new TreeItem(focus.getCui(), focus.getName());
+			if(isLeaf(focus)) {
+				ti.expandable = false;
+				hmap.put(ti.code, ti);
+				return hmap;
+			} else {
+				ti.expandable = true;
+			}
+
+			Iterator iterator = focus.getChildren();
+			if (iterator == null) {
+				hmap.put(ti.code, ti);
+				return hmap;
+			}
+
+            int knt = 0;
+            hasMoreChildren = false;
+			while (iterator.hasNext()) {
+				if (knt0 < records_to_skip) {
+					MetaTreeNode child = (MetaTreeNode) iterator.next();
+					knt0++;
+				} else {
+					knt++;
+					if (knt > max) {
+						hasMoreChildren = true;
+						break;
+					}
+					knt0++;
+					MetaTreeNode child = (MetaTreeNode) iterator.next();
+					TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+					childItem.expandable = true;
+					if(isLeaf(child)) {
+						childItem.expandable = false;
+					}
+					v.add(childItem);
+			    }
+			}
+	    } catch (Exception e) {
+
+		}
+		v = SortUtils.quickSort(v);
+		for (int i=0; i<v.size(); i++) {
+			TreeItem childItem = (TreeItem) v.elementAt(i);
+			ti.addChild(childNavText, childItem);
+		}
+
+		if (hasMoreChildren) {
+			int to_skip = records_to_skip + v.size();
+			String t = CUI + "|" + SAB + "|" + to_skip;
+			TreeItem childItem = new TreeItem(t, "...");
 			childItem.expandable = true;
 			ti.addChild(childNavText, childItem);
 		}
