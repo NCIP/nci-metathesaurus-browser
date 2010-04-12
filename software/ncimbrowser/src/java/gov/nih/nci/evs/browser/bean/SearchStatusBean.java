@@ -82,7 +82,7 @@ public class SearchStatusBean extends Object
         request.getSession().setAttribute(attributeName, value);
         return value;
     }
-    
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
     private String selectedSearchOption = "Property";
@@ -277,8 +277,7 @@ public class SearchStatusBean extends Object
     private List RELAList = null;
 
     public void setSelectedRELA(String selectedRELA) {
-        this.selectedRELA = setSessionAttribute(
-            "advancedRELAOption", selectedRELA);
+        this.selectedRELA = setSessionAttribute("advancedRELAOption", selectedRELA);
     }
 
     public String getSelectedRELA() {
@@ -311,6 +310,12 @@ public class SearchStatusBean extends Object
 
 		System.out.println("Set matchText to: " + t);
 	}
+
+
+    public HttpServletRequest getRequest() {
+        return (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    }
+
 
     public String getMatchText() {
 		return matchText;
