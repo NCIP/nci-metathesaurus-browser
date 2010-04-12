@@ -150,10 +150,16 @@ public final class AjaxServlet extends HttpServlet {
         String ontology_display_name = request.getParameter("ontology_display_name");//DataConstants.ONTOLOGY_DISPLAY_NAME);
         String ontology_source = request.getParameter("ontology_source");
 
-        System.out.println("Searching " + ontology_source + " tree...");
-
         long ms = System.currentTimeMillis();
         if (action.equals("expand_tree")) {
+/*
+System.out.println("AjaxServlet	action " + action);
+System.out.println("AjaxServlet	ontology_display_name " + ontology_display_name);
+System.out.println("AjaxServlet	node_id " + node_id);
+System.out.println("AjaxServlet	ontology_source " + ontology_source);
+*/
+			String node_id_0 = node_id;
+
             if (node_id != null && ontology_display_name != null) {
 				int pos = node_id.indexOf("|");
 				if (pos != -1) {
@@ -164,7 +170,9 @@ public final class AjaxServlet extends HttpServlet {
 					JSONObject json = new JSONObject();
 					JSONArray nodesArray = null;
 					try {
-	                    nodesArray = CacheController.getInstance().getRemainingSubconcepts(ontology_display_name, null, parent_id, node_id);
+						//KLO, 041210
+	                    //nodesArray = CacheController.getInstance().getRemainingSubconcepts(ontology_display_name, null, parent_id, node_id);
+	                    nodesArray = CacheController.getInstance().getRemainingSubconcepts(node_id_0);
 					    if (nodesArray != null)
 						{
 							json.put("nodes", nodesArray);
