@@ -2318,6 +2318,11 @@
                  <key>SECURED_VOCABULARIES</key>
                  <value>@secured_vocabularies@</value>
         </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>SUBCONCEPT_PAGE_SIZE</key>
+                 <value>@subconcept_page_size@</value>
+        </ConfigurableItem>
         
     </ConfigurableItems>
 
