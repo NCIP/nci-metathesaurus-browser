@@ -233,7 +233,7 @@ public final class AjaxServlet extends HttpServlet {
                 response.getWriter().write(json.toString());
                 System.out.println("search_tree: " + json.toString());
 */
-                String t = CacheController.getInstance().getPathsToRootsRExt(ontology_display_name, null, node_id, ontology_source, false);
+                String t = CacheController.getInstance().getPathsToRootsExt(ontology_display_name, null, node_id, ontology_source, false);
  System.out.println("search_tree: " + t);
                 response.getWriter().write(t);
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );

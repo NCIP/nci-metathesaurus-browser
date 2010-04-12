@@ -174,7 +174,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
       			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
    				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
    				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
-   				    immediate="true" onchange="submit()" >
+   				    immediate="true" >
    				  <f:selectItems value="#{searchStatusBean.propertyTypeList}" />
    				</h:selectOneMenu> 
  			     </h:outputLabel> 
@@ -186,7 +186,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
   			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
  				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
  				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
- 				    immediate="true" onchange="submit()" >
+ 				    immediate="true" >
  				  <f:selectItems value="#{searchStatusBean.propertyList}" />
  				</h:selectOneMenu> 
  			     </h:outputLabel> 
@@ -202,7 +202,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
 <h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
     valueChangeListener="#{searchStatusBean.selectedRelationshipChanged}"
-    immediate="true" onchange="submit()" >
+    immediate="true" >
   <f:selectItems value="#{searchStatusBean.relationshipList}" />
 </h:selectOneMenu> 
 </h:outputLabel>  
@@ -212,7 +212,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
 <h:selectOneMenu id="rel_search_rela" value="#{searchStatusBean.selectedRELA}" 
     valueChangeListener="#{searchStatusBean.selectedRELAChanged}"
-    immediate="true" onchange="submit()" >
+    immediate="true" >
   <f:selectItems value="#{searchStatusBean.RELAList}" />
 </h:selectOneMenu> 
 </h:outputLabel>  

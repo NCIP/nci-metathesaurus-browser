@@ -234,11 +234,15 @@ String searchType = bean.getSelectedSearchOption();
 			}
 
 			String property_name = (String) request.getParameter("selectProperty");
+
             if (property_name != null) {
 				property_name = property_name.trim();
 				//if (property_name.length() == 0) property_name = null;
 				if (property_name.compareTo("ALL") == 0) property_name = null;
 			}
+
+			System.out.println("adv_search_selected_property: " + property_name);
+
 
 			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
 			request.getSession().setAttribute("adv_search_source", adv_search_source);

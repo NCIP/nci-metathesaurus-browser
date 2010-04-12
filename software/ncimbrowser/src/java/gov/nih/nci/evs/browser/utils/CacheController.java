@@ -53,6 +53,9 @@ import java.util.Collections;
 import java.util.Map;
 
 
+import java.util.Iterator;
+import java.util.HashSet;
+
 import org.json.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
@@ -283,9 +286,10 @@ public class CacheController
         }
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getSubconceptsBySource..." );
-			map = new SourceTreeUtils().getSubconcepts(scheme, version, code, sab);
-
+            //System.out.println("Not in cache -- calling getSubconceptsBySource..." );
+            //KLO, 041210
+			//map = new SourceTreeUtils().getSubconcepts(scheme, version, code, sab);
+			map = getChildrenExt(code, sab);
             nodeArray = HashMap2JSONArray(map);
             if (fromCache) {
                 try {
@@ -404,15 +408,20 @@ public class CacheController
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Extension
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-    public String getPathsToRootsRExt(String node_id, String sab)
+    private boolean isLeaf(MetaTreeNode focus) {
+		return focus.getExpandedState().equals(ExpandedState.LEAF);
+	}
+
+
+    public String getPathsToRootsExt(String node_id, String sab)
     {
 		String scheme = "NCI Metathesaurus";
 		String version = null;
 		boolean fromCache = false; // no cache PTR
-		return getPathsToRootsRExt(scheme, version, node_id, sab, fromCache);
+		return getPathsToRootsExt(scheme, version, node_id, sab, fromCache);
 	}
 
-    public String getPathsToRootsRExt(String scheme, String version, String node_id, String sab, boolean fromCache)
+    public String getPathsToRootsExt(String scheme, String version, String node_id, String sab, boolean fromCache)
     {
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 		MetaBrowserService mbs = null;
@@ -450,13 +459,6 @@ public class CacheController
 			return "[]";
 		}
     }
-
-/*
-    public JSONArray getPathsToRootsRExt(String ontology_display_name, String version, String node_id, String sab, boolean fromCache)
-    {
-        return getPathsToRoots(ontology_display_name, version, node_id, sab, fromCache, -1);
-	}
-*/
 
     public JSONArray getPathsToRootsExt(String ontology_display_name, String version, String node_id, String sab, boolean fromCache, int maxLevel)
     {
@@ -507,12 +509,70 @@ public class CacheController
         }
     }
 
+//
+	public HashMap getChildrenExt(String CUI, String SAB) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
 
+		int max = NCImBrowserProperties.getSubconceptPageSize();
+		System.out.println("SubconceptPageSize: " + max);
+		Vector v = new Vector();
+		String childNavText = "CHD";
+		boolean hasMoreChildren = false;
+		try {
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			MetaBrowserService mbs = (MetaBrowserService) lbs.getGenericExtension("metabrowser-extension");
+			MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+			MetaTreeNode focus = tree.getCurrentFocus();
+            ti = new TreeItem(focus.getCui(), focus.getName());
+			if(isLeaf(focus)) {
+				ti.expandable = false;
+				hmap.put(ti.code, ti);
+				return hmap;
+			} else {
+				ti.expandable = true;
+			}
 
+			Iterator iterator = focus.getChildren();
+			if (iterator == null) {
+				return hmap;
+			}
+
+            int knt = 0;
+            hasMoreChildren = false;
+			while (iterator.hasNext()) {
+				knt++;
+				if (knt > max) {
+					hasMoreChildren = true;
+					break;
+				}
+				MetaTreeNode child = (MetaTreeNode) iterator.next();
+				TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+				childItem.expandable = true;
+				if(isLeaf(child)) {
+					childItem.expandable = false;
+				}
+				v.add(childItem);
+			}
+	    } catch (Exception e) {
+
+		}
+		v = SortUtils.quickSort(v);
+		for (int i=0; i<v.size(); i++) {
+			TreeItem childItem = (TreeItem) v.elementAt(i);
+			ti.addChild(childNavText, childItem);
+		}
+		if (hasMoreChildren) {
+			TreeItem childItem = new TreeItem("...", "...");
+			childItem.expandable = true;
+			ti.addChild(childNavText, childItem);
+		}
+		hmap.put(ti.code, ti);
+		return hmap;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     private JSONArray list2JSONArray(List list) {
         JSONArray nodesArray = null;

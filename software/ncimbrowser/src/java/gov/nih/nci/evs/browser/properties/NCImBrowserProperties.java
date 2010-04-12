@@ -74,6 +74,8 @@ public class NCImBrowserProperties {
     public static final String SOURCE_HIERARCHIES = "SOURCE_HIERARCHIES";
 
     public static final String SECURED_VOCABULARIES = "SECURED_VOCABULARIES";
+    public static final String SUBCONCEPT_PAGE_SIZE = "SUBCONCEPT_PAGE_SIZE";
+
 
 	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
@@ -102,6 +104,7 @@ public class NCImBrowserProperties {
     public static final String LICENSE_PAGE_OPTION= "LICENSE_PAGE_OPTION";
 
     private static String license_page_option = null;
+    private static int subconcept_page_size = 1000;
 
 
 	/**
@@ -177,6 +180,10 @@ public class NCImBrowserProperties {
 
 				    license_page_option = NCImBrowserProperties.getProperty(NCImBrowserProperties.LICENSE_PAGE_OPTION);
 
+					String subconcept_page_size_str = NCImBrowserProperties.getProperty(NCImBrowserProperties.SUBCONCEPT_PAGE_SIZE);
+					if (subconcept_page_size_str != null) {
+						subconcept_page_size = Integer.parseInt(subconcept_page_size_str);
+					}
 				}
 			}
 		}
@@ -306,5 +313,9 @@ public class NCImBrowserProperties {
 
 	public static String getLicensePageOption() {
 		return license_page_option;
+	}
+
+	public static int getSubconceptPageSize() {
+		return subconcept_page_size;
 	}
 }
