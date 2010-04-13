@@ -154,85 +154,80 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 </td></tr>         
          
 
-                             <tr><td>
-			     <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
+              <tr><td>
+			    <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
 				<h:selectOneMenu id="selectSearchOption" value="#{searchStatusBean.selectedSearchOption}" 
 				    valueChangeListener="#{searchStatusBean.searchOptionChanged}"
 				    immediate="true" onchange="submit()" >
 				  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
 				</h:selectOneMenu> 
-			     </h:outputLabel> 
-			     </td></tr>
+			    </h:outputLabel> 
+			  </td></tr>
 
-<tr><td><table>
+<tr><td>
+<table>
 <%
  if (advancedSearchOption.compareTo("Property") == 0) {
 %>
  
 <!-- 
-                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-      			     <h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
+              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+      			<h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
    				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
    				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
    				    immediate="true" >
    				  <f:selectItems value="#{searchStatusBean.propertyTypeList}" />
    				</h:selectOneMenu> 
- 			     </h:outputLabel> 
-  
-                              </td></tr>    
+ 			    </h:outputLabel> 
+              </td></tr>    
 -->                              
 
-                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-  			     <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
+              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+  			    <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
  				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
  				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
  				    immediate="true" >
  				  <f:selectItems value="#{searchStatusBean.propertyList}" />
  				</h:selectOneMenu> 
- 			     </h:outputLabel> 
- 
-                              </td></tr>                         
-
-
+ 			    </h:outputLabel> 
+              </td></tr>                         
 
 <% } else { %> 
 
-<f:subview id="tmp">
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-<h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
-<h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
-    valueChangeListener="#{searchStatusBean.selectedRelationshipChanged}"
-    immediate="true" >
-  <f:selectItems value="#{searchStatusBean.relationshipList}" />
-</h:selectOneMenu> 
-</h:outputLabel>  
-</td></tr>
-
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-<h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-<h:selectOneMenu id="rel_search_rela" value="#{searchStatusBean.selectedRELA}" 
-    valueChangeListener="#{searchStatusBean.selectedRELAChanged}"
-    immediate="true" >
-  <f:selectItems value="#{searchStatusBean.RELAList}" />
-</h:selectOneMenu> 
-</h:outputLabel>  
-</td></tr>
-</f:subview>
+           <f:subview id="tmp">
+             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+             <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
+             <h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
+                 valueChangeListener="#{searchStatusBean.selectedRelationshipChanged}"
+                 immediate="true" >
+               <f:selectItems value="#{searchStatusBean.relationshipList}" />
+             </h:selectOneMenu> 
+             </h:outputLabel>  
+             </td></tr>
+           
+             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+             <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
+             <h:selectOneMenu id="rel_search_rela" value="#{searchStatusBean.selectedRELA}" 
+                 valueChangeListener="#{searchStatusBean.selectedRELAChanged}"
+                 immediate="true" >
+               <f:selectItems value="#{searchStatusBean.RELAList}" />
+             </h:selectOneMenu> 
+             </h:outputLabel>  
+             </td></tr>
+           </f:subview>
 
 <!--
-
-                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-  				  <table border="0" cellspacing="0" cellpadding="0">
- 				    <tr valign="top" align="left">
- 				      <td align="left" class="textbody"><input type="radio"
- 					name="rel_search_direction" value="source" alt="Source" <%=check_source%>>Source
- 				        &nbsp; <input type="radio" name="rel_search_direction" value="target"
- 					alt="Target" <%=check_target%>>Target
- 					</td>
- 				    </tr>
- 				 </table>   
-                             </td></tr>         
-                             
+             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+               <table border="0" cellspacing="0" cellpadding="0">
+			     <tr valign="top" align="left">
+			       <td align="left" class="textbody"><input type="radio"
+				     name="rel_search_direction" value="source" alt="Source" <%=check_source%>>Source
+			         &nbsp; <input type="radio" name="rel_search_direction" value="target"
+				     alt="Target" <%=check_target%>>Target
+				   </td>
+			     </tr>
+			   </table>   
+             </td></tr>         
 -->                             
 
 <%                              
