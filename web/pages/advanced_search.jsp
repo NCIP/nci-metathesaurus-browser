@@ -224,16 +224,18 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
              <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
              <select id="rel_search_association" name="rel_search_association" size="1">
-             <%  
+             <%
+                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_association", "ALL"); 
                  t = "ALL";
              %>   
                 <option value="<%=t%>"><%=t%></option>
              <%   
                 Vector association_vec = OntologyBean.getSupportedAssociationNames();
                 for (int i=0; i<association_vec.size(); i++) {
-                      t = (String) association_vec.elementAt(i);
+                    t = (String) association_vec.elementAt(i);
+                    String args = t.equals(currValue) ? "selected" : "";
              %>       
-                     <option value="<%=t%>"><%=t%></option>
+                     <option value="<%=t%>" "<%=args%>"><%=t%></option>
              <%        
                 }
              %>   
@@ -246,6 +248,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
              <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
              <select id="rel_search_rela" name="rel_search_rela" size="1">
              <%  
+                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_rela", " "); 
                  t = " ";
              %>   
                 <option value="<%=t%>"><%=t%></option>
@@ -253,8 +256,9 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
                 Vector rela_vec = OntologyBean.getRELAs();
                 for (int i=0; i<rela_vec.size(); i++) {
                      t = (String) rela_vec.elementAt(i);
+                     String args = t.equals(currValue) ? "selected" : "";
              %>       
-                     <option value="<%=t%>"><%=t%></option>
+                     <option value="<%=t%>" "<%=args%>"><%=t%></option>
              <%        
                 }
              %>   
