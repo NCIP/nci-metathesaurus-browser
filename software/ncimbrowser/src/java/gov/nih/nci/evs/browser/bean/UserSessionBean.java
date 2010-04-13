@@ -344,7 +344,7 @@ String searchType = bean.getSelectedSearchOption();
 			if (rel_search_rela == null) {
 				request.getSession().setAttribute("rel_search_rela", " ");
 			} else {
-				request.getSession().setAttribute("rel_search_rela", search_direction);
+				request.getSession().setAttribute("rel_search_rela", rel_search_rela);
 			}
 			request.getSession().setAttribute("search_direction", rel_search_direction);
 			if (adv_search_source == null) {
