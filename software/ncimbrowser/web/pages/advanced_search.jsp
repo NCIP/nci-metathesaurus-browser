@@ -132,6 +132,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 
 <select id="adv_search_source" name="adv_search_source" size="1">
 <%  
+    String currValue = HTTPUtils.getSessionAttribute(request, "adv_search_source", "ALL");
     t = "ALL";
 %>   
    <option value="<%=t%>"><%=t%></option>
@@ -139,8 +140,9 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
    Vector src_vec = OntologyBean.getSupportedSources();
    for (int i=0; i<src_vec.size(); i++) {
         t = (String) src_vec.elementAt(i);
+        String args = t.equals(currValue) ? "selected" : "";
 %>       
-        <option value="<%=t%>"><%=t%></option>
+        <option value="<%=t%>" "<%=args%>"><%=t%></option>
 <%        
    }
 %>   
