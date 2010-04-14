@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.browser.bean;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -36,10 +35,9 @@ import org.LexGrid.concepts.Concept;
 /**
  * @author EVS Team
  * @version 1.0
- *
- * Modification history
- *     Initial implementation kim.ong@ngc.com
- *
+ * 
+ *          Modification history Initial implementation kim.ong@ngc.com
+ * 
  */
 
 public class IteratorBeanManager extends Object {
@@ -47,96 +45,101 @@ public class IteratorBeanManager extends Object {
     HashMap iteratorBeanHashMap = null;
     Random random = null;
 
-	public IteratorBeanManager() {
-		this.iteratorBeanHashMap = new HashMap();
-		random = new Random();
-	}
+    public IteratorBeanManager() {
+        this.iteratorBeanHashMap = new HashMap();
+        random = new Random();
+    }
 
-    public String createIteratorKey(Vector schemes, String matchText, String searchTarget, String matchAlgorithm, int maxReturn) {
-		 String maxReturn_str = Integer.toString(maxReturn);
-		 String key = matchText.trim();
-		 key = key + "|" + searchTarget + "|" + matchAlgorithm;
-		 for (int i=0; i<schemes.size(); i++) {
-			 String scheme = (String) schemes.elementAt(i);
-			 key = key + "|" + scheme;
-		 }
-		 key = key + "|" + maxReturn_str;
-		 int randomNumber = random.nextInt();
-		 String randomNumber_str = Integer.toString(randomNumber);
-         key = key + "|" + randomNumber_str;
-         return key;
-	}
+    public String createIteratorKey(Vector schemes, String matchText,
+        String searchTarget, String matchAlgorithm, int maxReturn) {
+        String maxReturn_str = Integer.toString(maxReturn);
+        String key = matchText.trim();
+        key = key + "|" + searchTarget + "|" + matchAlgorithm;
+        for (int i = 0; i < schemes.size(); i++) {
+            String scheme = (String) schemes.elementAt(i);
+            key = key + "|" + scheme;
+        }
+        key = key + "|" + maxReturn_str;
+        int randomNumber = random.nextInt();
+        String randomNumber_str = Integer.toString(randomNumber);
+        key = key + "|" + randomNumber_str;
+        return key;
+    }
 
-    public String createIteratorKey(Vector schemes, String matchText, String searchTarget, String source, String matchAlgorithm, int maxReturn) {
-		 String maxReturn_str = Integer.toString(maxReturn);
-		 String key = matchText.trim();
-		 key = key + "|" + searchTarget + "|" + matchAlgorithm;
-		 for (int i=0; i<schemes.size(); i++) {
-			 String scheme = (String) schemes.elementAt(i);
-			 key = key + "|" + scheme;
-		 }
-		 key = key + "|" + source;
-		 key = key + "|" + maxReturn_str;
-		 int randomNumber = random.nextInt();
-		 String randomNumber_str = Integer.toString(randomNumber);
-         key = key + "|" + randomNumber_str;
-         return key;
-	}
+    public String createIteratorKey(Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        String maxReturn_str = Integer.toString(maxReturn);
+        String key = matchText.trim();
+        key = key + "|" + searchTarget + "|" + matchAlgorithm;
+        for (int i = 0; i < schemes.size(); i++) {
+            String scheme = (String) schemes.elementAt(i);
+            key = key + "|" + scheme;
+        }
+        key = key + "|" + source;
+        key = key + "|" + maxReturn_str;
+        int randomNumber = random.nextInt();
+        String randomNumber_str = Integer.toString(randomNumber);
+        key = key + "|" + randomNumber_str;
+        return key;
+    }
 
+    public String createIteratorKey(Vector schemes, String matchText,
+        String searchTarget, String value_1, String value_2, String source,
+        String matchAlgorithm, int maxReturn) {
+        String maxReturn_str = Integer.toString(maxReturn);
+        String key = matchText.trim();
+        key = key + "|" + searchTarget + "|" + matchAlgorithm;
+        for (int i = 0; i < schemes.size(); i++) {
+            String scheme = (String) schemes.elementAt(i);
+            key = key + "|" + scheme;
+        }
+        key = key + "|" + value_1;
+        key = key + "|" + value_2;
+        key = key + "|" + source;
+        key = key + "|" + maxReturn_str;
+        int randomNumber = random.nextInt();
+        String randomNumber_str = Integer.toString(randomNumber);
+        key = key + "|" + randomNumber_str;
 
-    public String createIteratorKey(Vector schemes, String matchText, String searchTarget, String value_1, String value_2,
-                                    String source, String matchAlgorithm, int maxReturn) {
-		 String maxReturn_str = Integer.toString(maxReturn);
-		 String key = matchText.trim();
-		 key = key + "|" + searchTarget + "|" + matchAlgorithm;
-		 for (int i=0; i<schemes.size(); i++) {
-			 String scheme = (String) schemes.elementAt(i);
-			 key = key + "|" + scheme;
-		 }
-		 key = key + "|" + value_1;
-		 key = key + "|" + value_2;
-		 key = key + "|" + source;
-		 key = key + "|" + maxReturn_str;
-		 int randomNumber = random.nextInt();
-		 String randomNumber_str = Integer.toString(randomNumber);
-         key = key + "|" + randomNumber_str;
+        System.out.println(key);
 
+        return key;
+    }
 
-         System.out.println(key);
+    public boolean addIteratorBean(IteratorBean bean) {
+        String key = bean.getKey();
+        if (iteratorBeanHashMap.containsKey(key))
+            return false;
+        iteratorBeanHashMap.put(key, bean);
+        iteratorBeanHashMap.put(bean.getRandomNumberString(), bean);
+        return true;
+    }
 
-         return key;
-	}
+    public IteratorBean getIteratorBean(String key) {
+        if (key == null)
+            return null;
+        if (!containsIteratorBean(key))
+            return null;
+        return (IteratorBean) iteratorBeanHashMap.get(key);
+    }
 
+    public boolean containsIteratorBean(String key) {
+        if (key == null)
+            return false;
+        return iteratorBeanHashMap.containsKey(key);
+    }
 
-	public boolean addIteratorBean(IteratorBean bean) {
-		String key = bean.getKey();
-		if (iteratorBeanHashMap.containsKey(key)) return false;
-		iteratorBeanHashMap.put(key, bean);
-		iteratorBeanHashMap.put(bean.getRandomNumberString(), bean);
-		return true;
-	}
-
-	public IteratorBean getIteratorBean(String key) {
-		if (key == null) return null;
-		if (!containsIteratorBean(key)) return null;
-		return (IteratorBean) iteratorBeanHashMap.get(key);
-	}
-
-	public boolean containsIteratorBean(String key) {
-		if (key == null) return false;
-		return iteratorBeanHashMap.containsKey(key);
-	}
-
-	public Vector getKeys() {
-		if (iteratorBeanHashMap == null) return null;
-		Vector key_vec = new Vector();
-		Iterator iterator = iteratorBeanHashMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-			IteratorBean bean = (IteratorBean) iteratorBeanHashMap.get(key);
-			key_vec.add(bean.getKey());
-		}
-		return key_vec;
-	}
+    public Vector getKeys() {
+        if (iteratorBeanHashMap == null)
+            return null;
+        Vector key_vec = new Vector();
+        Iterator iterator = iteratorBeanHashMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            IteratorBean bean = (IteratorBean) iteratorBeanHashMap.get(key);
+            key_vec.add(bean.getKey());
+        }
+        return key_vec;
+    }
 
 }
