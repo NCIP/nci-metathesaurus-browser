@@ -152,12 +152,11 @@ public final class AjaxServlet extends HttpServlet {
 
         long ms = System.currentTimeMillis();
         if (action.equals("expand_tree")) {
-/*
+
 System.out.println("AjaxServlet	action " + action);
-System.out.println("AjaxServlet	ontology_display_name " + ontology_display_name);
 System.out.println("AjaxServlet	node_id " + node_id);
 System.out.println("AjaxServlet	ontology_source " + ontology_source);
-*/
+
 			String node_id_0 = node_id;
 
             if (node_id != null && ontology_display_name != null) {
@@ -179,6 +178,10 @@ System.out.println("AjaxServlet	ontology_source " + ontology_source);
 						}
 					} catch (Exception e) {
 					}
+
+
+System.out.println("(*) expand_tree: " + json.toString());
+
 					response.getWriter().write(json.toString());
 					System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
 					return;
@@ -242,7 +245,11 @@ System.out.println("AjaxServlet	ontology_source " + ontology_source);
                 System.out.println("search_tree: " + json.toString());
 */
                 String t = CacheController.getInstance().getPathsToRootsExt(ontology_display_name, null, node_id, ontology_source, false);
- System.out.println("search_tree: " + t);
+System.out.println("search_tree: " + t);
+
+ // to be modified
+ //t = t.replaceAll("5|", "0|");
+
                 response.getWriter().write(t);
                 System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
@@ -256,7 +263,7 @@ System.out.println("AjaxServlet	ontology_source " + ontology_source);
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;//new JSONArray();
 
-System.out.println("Building tree for " +  ontology_display_name);
+//System.out.println("Building tree for " +  ontology_display_name);
 
 
             try {
@@ -264,8 +271,8 @@ System.out.println("Building tree for " +  ontology_display_name);
                 	nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
 				} else {
 
-System.out.println("calling getRootConceptsBySource ontology_display_name " +  ontology_display_name);
-System.out.println("calling getRootConceptsBySource ontology_source " +  ontology_source);
+//System.out.println("calling getRootConceptsBySource ontology_display_name " +  ontology_display_name);
+//System.out.println("calling getRootConceptsBySource ontology_source " +  ontology_source);
 
 					nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
 				}

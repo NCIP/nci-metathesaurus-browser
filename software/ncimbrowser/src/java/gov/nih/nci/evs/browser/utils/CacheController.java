@@ -118,7 +118,6 @@ public class CacheController
             cacheManager.addCache(cacheName);
         }
 
-        System.out.println("cache added");
         this.cache = cacheManager.getCache(cacheName);
     }
 
@@ -236,7 +235,6 @@ public class CacheController
         {
             Element element = cache.get(key);
             if (element != null) {
-                //System.out.println("getRootConcepts fromCache element != null returning list" );
                 nodeArray = (JSONArray) element.getValue();
             }
         }
@@ -392,7 +390,6 @@ public class CacheController
                 List list = util.getTopNodes(ti, sab);
 
 				if (list.size() == 0) {
-					System.out.println("CacheController list size  " + list.size() + " calling getRootConceptsBySource ...");
 					return getRootConceptsBySource(ontology_display_name, null, sab, true);
 				}
 
@@ -499,7 +496,6 @@ public class CacheController
                 List list = util.getTopNodes(ti, sab);
 
 				if (list.size() == 0) {
-					System.out.println("CacheController list size  " + list.size() + " calling getRootConceptsBySource ...");
 					return getRootConceptsBySource(ontology_display_name, null, sab, true);
 				}
 
@@ -553,12 +549,15 @@ public class CacheController
 					break;
 				}
 				MetaTreeNode child = (MetaTreeNode) iterator.next();
-				TreeItem childItem = new TreeItem(child.getCui(), child.getName());
-				childItem.expandable = true;
-				if(isLeaf(child)) {
-					childItem.expandable = false;
+				if (!hset.contains(child.getCui())) {
+					TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+					childItem.expandable = true;
+					if(isLeaf(child)) {
+						childItem.expandable = false;
+					}
+					v.add(childItem);
+					hset.add(child.getCui());
 				}
-				v.add(childItem);
 			}
 	    } catch (Exception e) {
 
@@ -598,26 +597,35 @@ public class CacheController
 	}
 
 	public JSONArray getRemainingSubconcepts(String s) {
+		HashMap hmap = null;
 		Vector v = parseData(s);
-		String CUI = (String) v.elementAt(0);
-		String SAB = (String) v.elementAt(1);
-		String istart_str = (String) v.elementAt(2);
-/*
-System.out.println("getRemainingSubconcepts " + s);
-System.out.println("getRemainingSubconcepts CUI " + CUI);
-System.out.println("getRemainingSubconcepts SAB " + SAB);
-System.out.println("getRemainingSubconcepts istart_str " + istart_str);
-*/
+		if (v.size() == 3) {
+			String CUI = (String) v.elementAt(0);
+			String SAB = (String) v.elementAt(1);
+			String istart_str = (String) v.elementAt(2);
 
-		int records_to_skip = 0; // to skip
-		if (istart_str != null) {
-			records_to_skip = Integer.parseInt(istart_str);
+			int records_to_skip = 0; // to skip
+			if (istart_str != null) {
+				records_to_skip = Integer.parseInt(istart_str);
+			}
+			hmap = getRemainingSubconcepts(CUI, SAB, records_to_skip);
+
+		} else if (v.size() == 4) { // contains nodes_to_exclude
+			String CUI = (String) v.elementAt(0);
+			String SAB = (String) v.elementAt(1);
+			String nodes_to_exclude_str = (String) v.elementAt(2);
+			String batch_number_str = (String) v.elementAt(3);
+			int batch_number = 0; // to skip
+			if (batch_number_str != null) {
+				batch_number = Integer.parseInt(batch_number_str);
+			}
+			//code: parent CUI|SAB|n
+			hmap = getRemainingSubconcepts(CUI, SAB, nodes_to_exclude_str, batch_number);
+		} else {
+			System.out.println("WARNING: getRemainingSubconcepts invalid input string: " + s);
 		}
 
-//System.out.println("getRemainingSubconcepts records_to_skip " + records_to_skip);
-
-		//code: parent CUI|SAB|n
-		HashMap hmap = getRemainingSubconcepts(CUI, SAB, records_to_skip);
+		if (hmap == null) return null;
 		JSONArray nodeArray = null;
 		nodeArray = HashMap2JSONArray(hmap);
 		return nodeArray;
@@ -628,7 +636,6 @@ System.out.println("getRemainingSubconcepts istart_str " + istart_str);
 		HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
-
 		int max = NCImBrowserProperties.getSubconceptPageSize();
 		Vector v = new Vector();
 		String childNavText = "CHD";
@@ -668,33 +675,126 @@ System.out.println("getRemainingSubconcepts istart_str " + istart_str);
 					}
 					knt0++;
 					MetaTreeNode child = (MetaTreeNode) iterator.next();
-					TreeItem childItem = new TreeItem(child.getCui(), child.getName());
-					childItem.expandable = true;
-					if(isLeaf(child)) {
-						childItem.expandable = false;
-					}
-					v.add(childItem);
+					if (!hset.contains(child.getCui())) {
+						TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+						childItem.expandable = true;
+						if(isLeaf(child)) {
+							childItem.expandable = false;
+						}
+						v.add(childItem);
+						hset.add(child.getCui());
+				    }
 			    }
 			}
+
+			if (v.size() > 0) {
+				v = SortUtils.quickSort(v);
+				for (int i=0; i<v.size(); i++) {
+					TreeItem childItem = (TreeItem) v.elementAt(i);
+					ti.addChild(childNavText, childItem);
+				}
+			}
+
+			if (iterator.hasNext()) {
+				int to_skip = records_to_skip + v.size();
+				String t = CUI + "|" + SAB + "|" + to_skip;
+				TreeItem childItem = new TreeItem(t, "...");
+				childItem.expandable = true;
+				ti.addChild(childNavText, childItem);
+			}
+			hmap.put(ti.code, ti);
+
 	    } catch (Exception e) {
-
+            e.printStackTrace();
 		}
-		v = SortUtils.quickSort(v);
-		for (int i=0; i<v.size(); i++) {
-			TreeItem childItem = (TreeItem) v.elementAt(i);
-			ti.addChild(childNavText, childItem);
-		}
-
-		if (hasMoreChildren) {
-			int to_skip = records_to_skip + v.size();
-			String t = CUI + "|" + SAB + "|" + to_skip;
-			TreeItem childItem = new TreeItem(t, "...");
-			childItem.expandable = true;
-			ti.addChild(childNavText, childItem);
-		}
-		hmap.put(ti.code, ti);
 		return hmap;
 	}
+
+
+	public HashMap getRemainingSubconcepts(String CUI, String SAB, String nodes_to_exclude_str, int batch_number) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+
+        Vector nodes_to_exclude = parseData(nodes_to_exclude_str, "$");
+
+		int max = NCImBrowserProperties.getSubconceptPageSize();
+		int istart = batch_number * max;
+		int iend = istart + max - 1;
+		Vector v = new Vector();
+		String childNavText = "CHD";
+		boolean hasMoreChildren = false;
+		int knt0 = 0;
+		try {
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			MetaBrowserService mbs = (MetaBrowserService) lbs.getGenericExtension("metabrowser-extension");
+			MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+			MetaTreeNode focus = tree.getCurrentFocus();
+            ti = new TreeItem(focus.getCui(), focus.getName());
+			if(isLeaf(focus)) {
+				ti.expandable = false;
+				hmap.put(ti.code, ti);
+				return hmap;
+			} else {
+				ti.expandable = true;
+			}
+
+			Iterator iterator = focus.getChildren();
+			if (iterator == null) {
+				hmap.put(ti.code, ti);
+				return hmap;
+			}
+
+            int knt = 0;
+			while (iterator.hasNext()) {
+				//hasMoreChildren = true;
+				if(v.size() == max) break;
+				MetaTreeNode child = (MetaTreeNode) iterator.next();
+				if (!nodes_to_exclude.contains(child.getCui())) {
+					if (!hset.contains(child.getCui())) {
+						if (knt >= istart && knt <= iend) {
+							TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+							childItem.expandable = true;
+							if(isLeaf(child)) {
+								childItem.expandable = false;
+							}
+							v.add(childItem);
+						}
+						knt++;
+						hset.add(child.getCui());
+				    }
+				}
+
+			}
+
+			if (v.size() > 0) {
+				v = SortUtils.quickSort(v);
+				for (int i=0; i<v.size(); i++) {
+					TreeItem childItem = (TreeItem) v.elementAt(i);
+					ti.addChild(childNavText, childItem);
+				}
+			}
+
+			if (iterator.hasNext()) {
+				batch_number++;
+				String t = CUI + "|" + SAB + "|" + "|" + nodes_to_exclude_str + "|" + batch_number;
+				TreeItem childItem = new TreeItem(t, "...");
+				childItem.expandable = true;
+				ti.addChild(childNavText, childItem);
+			}
+
+			hmap.put(ti.code, ti);
+
+
+	    } catch (Exception e) {
+            e.printStackTrace();
+		}
+
+		return hmap;
+	}
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
