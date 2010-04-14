@@ -311,7 +311,6 @@
 		    }
 		}
 		tree.removeNode(node,true);
-		
 		if (parent_label == undefined) {
 		    tree.draw();
 		}		
@@ -355,7 +354,6 @@
           if ( typeof(respObj.root_nodes) != "undefined") {
             var root = tree.getRoot();
             if (respObj.root_nodes.length == 0) {
-                //showEmptyRoot();
                 showNoPathFoundStatus();
             }
             else {
@@ -387,7 +385,6 @@
       if (ontology_display_name!='') {
         resetEmptyRoot();
         showSearchingTreeStatus();
-        //var ontology_source = null;//document.pg_form.ontology_source.value;
         var ontology_source = document.forms["pg_form"].ontology_sab.value;
         var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=search_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
       }
