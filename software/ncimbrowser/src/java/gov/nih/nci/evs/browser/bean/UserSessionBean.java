@@ -7,6 +7,8 @@ import gov.nih.nci.evs.browser.utils.Utils;
 
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -483,9 +485,11 @@ String searchType = bean.getSelectedSearchOption();
 			//request.setAttribute("matchText", matchText);
 
 			int size = iteratorBean.getSize();
-            // Write a search log entry
-            SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);
-
+			
+			// Write a search log entry
+			SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget,
+					source, size, HTTPUtils.getRefererParmDecode(request));
+			
 			if (size > 1) {
 				request.getSession().setAttribute("search_results", v);
 
