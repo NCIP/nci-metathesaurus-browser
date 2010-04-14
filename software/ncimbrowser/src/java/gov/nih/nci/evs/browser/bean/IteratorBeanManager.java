@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.browser.bean;
 
+import gov.nih.nci.evs.browser.utils.SearchFields;
+
 import java.io.*;
 import java.util.*;
 
@@ -40,70 +42,50 @@ import org.LexGrid.concepts.Concept;
  * 
  */
 
-public class IteratorBeanManager extends Object {
+public class IteratorBeanManager {
+    private HashMap iteratorBeanHashMap = new HashMap();
+    private HashMap<String, SearchFields.Interface> searchFieldsHashMap = 
+        new HashMap<String, SearchFields.Interface>();
 
-    HashMap iteratorBeanHashMap = null;
-    Random random = null;
-
-    public IteratorBeanManager() {
-        this.iteratorBeanHashMap = new HashMap();
-        random = new Random();
-    }
-
-    public String createIteratorKey(Vector schemes, String matchText,
+    public String createSimpleKey(Vector schemes, String matchText,
         String searchTarget, String matchAlgorithm, int maxReturn) {
-        String maxReturn_str = Integer.toString(maxReturn);
-        String key = matchText.trim();
-        key = key + "|" + searchTarget + "|" + matchAlgorithm;
-        for (int i = 0; i < schemes.size(); i++) {
-            String scheme = (String) schemes.elementAt(i);
-            key = key + "|" + scheme;
-        }
-        key = key + "|" + maxReturn_str;
-        int randomNumber = random.nextInt();
-        String randomNumber_str = Integer.toString(randomNumber);
-        key = key + "|" + randomNumber_str;
-        return key;
+        SearchFields.Simple fields =
+            new SearchFields.Simple(schemes, matchText, searchTarget,
+                matchAlgorithm, maxReturn);
+        searchFieldsHashMap.put(fields.getKey(), fields);
+        return fields.getKey();
     }
 
-    public String createIteratorKey(Vector schemes, String matchText,
-        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
-        String maxReturn_str = Integer.toString(maxReturn);
-        String key = matchText.trim();
-        key = key + "|" + searchTarget + "|" + matchAlgorithm;
-        for (int i = 0; i < schemes.size(); i++) {
-            String scheme = (String) schemes.elementAt(i);
-            key = key + "|" + scheme;
-        }
-        key = key + "|" + source;
-        key = key + "|" + maxReturn_str;
-        int randomNumber = random.nextInt();
-        String randomNumber_str = Integer.toString(randomNumber);
-        key = key + "|" + randomNumber_str;
-        return key;
+    public String createPropertyKey(Vector schemes, String matchText,
+        String searchTarget, String propertyType, String propertyName,
+        String source, String matchAlgorithm, int maxReturn) {
+        SearchFields.Property fields =
+            new SearchFields.Property(schemes, matchText, searchTarget,
+                propertyType, propertyName, source, matchAlgorithm, maxReturn);
+        searchFieldsHashMap.put(fields.getKey(), fields);
+        return fields.getKey();
     }
 
-    public String createIteratorKey(Vector schemes, String matchText,
-        String searchTarget, String value_1, String value_2, String source,
-        String matchAlgorithm, int maxReturn) {
-        String maxReturn_str = Integer.toString(maxReturn);
-        String key = matchText.trim();
-        key = key + "|" + searchTarget + "|" + matchAlgorithm;
-        for (int i = 0; i < schemes.size(); i++) {
-            String scheme = (String) schemes.elementAt(i);
-            key = key + "|" + scheme;
-        }
-        key = key + "|" + value_1;
-        key = key + "|" + value_2;
-        key = key + "|" + source;
-        key = key + "|" + maxReturn_str;
-        int randomNumber = random.nextInt();
-        String randomNumber_str = Integer.toString(randomNumber);
-        key = key + "|" + randomNumber_str;
+    public String createRelationshipKey(Vector schemes, String matchText,
+        String searchTarget, String relSearchAssociation, String relSearchRela,
+        String source, String matchAlgorithm, int maxReturn) {
+        SearchFields.Relationship fields =
+            new SearchFields.Relationship(schemes, matchText, searchTarget,
+                relSearchAssociation, relSearchRela, source, matchAlgorithm,
+                maxReturn);
+        searchFieldsHashMap.put(fields.getKey(), fields);
+        return fields.getKey();
+    }
+    
+    public SearchFields.Interface getSearchFields(String key) {
+        return searchFieldsHashMap.get(key);
+    }
 
-        System.out.println(key);
-
-        return key;
+    public String getSearchText(String key) {
+        SearchFields.Interface fields = searchFieldsHashMap.get(key);
+        if (fields == null)
+            return "";
+        return fields.getMatchText();
     }
 
     public boolean addIteratorBean(IteratorBean bean) {

@@ -262,7 +262,9 @@ String searchType = bean.getSelectedSearchOption();
 				request.getSession().setAttribute("property_name", property_name);
 			}
 
-			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, property_type, property_name, adv_search_source, adv_search_algorithm, maxToReturn);
+			key = iteratorBeanManager.createPropertyKey(
+			    schemes, matchText, searchTarget, property_type, property_name, 
+			    adv_search_source, adv_search_algorithm, maxToReturn);
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
@@ -352,12 +354,9 @@ String searchType = bean.getSelectedSearchOption();
 			} else {
 				request.getSession().setAttribute("adv_search_source", adv_search_source);
 			}
-			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget,
-			                                                   rel_search_association,
-			                                                   rel_search_rela,
-			                                                   adv_search_source,
-			                                                   adv_search_algorithm,
-			                                                   maxToReturn);
+			key = iteratorBeanManager.createRelationshipKey(schemes, matchText, 
+			    searchTarget, rel_search_association, rel_search_rela,
+			    adv_search_source, adv_search_algorithm, maxToReturn);
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -418,7 +417,7 @@ String searchType = bean.getSelectedSearchOption();
 
 		} else {
 
-			key = iteratorBeanManager.createIteratorKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
+			key = iteratorBeanManager.createSimpleKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -467,6 +466,7 @@ String searchType = bean.getSelectedSearchOption();
 				}
 			}
 	    }
+        request.setAttribute("key", key);
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
         request.setAttribute("matchText", matchText);
@@ -487,8 +487,6 @@ String searchType = bean.getSelectedSearchOption();
             SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget, source, size);
 
 			if (size > 1) {
-                request.setAttribute("key", key);
-
 				request.getSession().setAttribute("search_results", v);
 
 				String match_size = Integer.toString(size);;//Integer.toString(v.size());

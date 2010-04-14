@@ -9,7 +9,9 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
+<%@ page import="gov.nih.nci.evs.browser.bean.BeanUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBeanManager" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.OntologyBean" %>
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
@@ -81,7 +83,10 @@ check_target= "checked";
 
 String advancedSearchOption = HTTPUtils.getSessionAttribute(
     request, "advancedSearchOption", "Property");
-String search_string = (String) request.getParameter("searchText");
+
+IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
+String searchKey = request.getParameter("searchKey");
+String search_string = iteratorBeanManager.getSearchText(searchKey);
 if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
 
 %>

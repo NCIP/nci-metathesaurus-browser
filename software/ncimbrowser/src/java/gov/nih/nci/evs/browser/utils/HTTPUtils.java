@@ -3,6 +3,7 @@ package gov.nih.nci.evs.browser.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.faces.context.FacesContext;
@@ -64,6 +65,24 @@ public class HTTPUtils {
 
   }
 
+  @SuppressWarnings("unchecked")
+  public static Object getBean(String name, String classPath) {
+      try {
+          Map<Object, Object> map =
+              FacesContext.getCurrentInstance().getExternalContext()
+                  .getSessionMap();
+
+          Object bean = map.get(name);
+          if (bean == null) {
+              Class klass = Class.forName(classPath);
+              bean = klass.newInstance();
+              map.put(name, bean);
+          }
+          return bean;
+      } catch (Exception e) {
+          return null;
+      }
+  }
   public static HttpServletRequest getRequest() {
     return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
   }
