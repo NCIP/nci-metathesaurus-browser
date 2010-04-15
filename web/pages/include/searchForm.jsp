@@ -150,4 +150,5 @@ if (obj != null) {
       </td>
     </tr>
   </table>
+  <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
 </FORM>
