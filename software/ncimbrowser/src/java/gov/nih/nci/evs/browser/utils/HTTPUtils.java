@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * HTTP Utility methods
- * 
+ *
  * @author garciawa2
- * 
+ *
  */
 public class HTTPUtils {
 
   /**
    * Remove potentially bad XSS syntax
-   * 
+   *
    * @param value
    * @return
    */
@@ -102,7 +102,7 @@ public class HTTPUtils {
       return defaultValue;
     return value;
   }
-  
+
   /**
    * @param request
    * @return
@@ -134,6 +134,29 @@ public class HTTPUtils {
       // return N/A if encoding is not supported.
     }
     return cleanXSS(refurl);
-  }  
-  
+  }
+
+	public static String convertJSPString(String t) {
+	// Convert problem characters to JavaScript Escaped values
+	  if (t == null) {
+		return "";
+	  }
+
+	  if (t.compareTo("") == 0) {
+		return "";
+	  }
+
+	  String sigleQuoteChar = "'";
+	  String doubleQuoteChar = "\"";
+
+	  String dq = "&quot;";
+
+	  t = t.replaceAll(sigleQuoteChar,"\\" + sigleQuoteChar);
+	  t = t.replaceAll(doubleQuoteChar,"\\" + dq);
+	  t = t.replaceAll("\r","\\r");  // replace CR with \r;
+	  t = t.replaceAll("\n","\\n");  // replace LF with \n;
+
+	  return t;
+	}
+
 }
