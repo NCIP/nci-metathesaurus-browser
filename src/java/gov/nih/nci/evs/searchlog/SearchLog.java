@@ -62,13 +62,20 @@ public class SearchLog {
 	/**
 	 * @param term
 	 */
-	public static void writeEntry(String term, String type, String target,
+	public static void writeEntry(String searchType, String term, String type, String target,
 			String source, int count, String referrer) {
 		init();
-		// "TERM|TYPE|TARGET|SOURCE|COUNT|REFERRER"
-		logger.log(SearchLevel.SEARCH_LOG_LEVEL, term + SEPARATOR + type
-				+ SEPARATOR + target + SEPARATOR + source + SEPARATOR + count
-				+ SEPARATOR + referrer);
+		// "SEARCH_TYPE|TERM|TYPE|TARGET|SOURCE|COUNT|REFERRER"
+		//    SEARCH_TYPE (Null=Simple, value=Advance search		 
+		
+		logger.log(SearchLevel.SEARCH_LOG_LEVEL,
+		    searchType + SEPARATOR +
+		    term + SEPARATOR +
+		    type + SEPARATOR +
+		    target + SEPARATOR +
+		    source + SEPARATOR +
+		    count	+ SEPARATOR +
+		    referrer);
 	}
 
 }
