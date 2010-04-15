@@ -48,10 +48,10 @@ public class IteratorBeanManager {
         new HashMap<String, SearchFields.Interface>();
 
     public String createSimpleKey(Vector schemes, String matchText,
-        String searchTarget, String matchAlgorithm, int maxReturn) {
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
         SearchFields.Simple fields =
             new SearchFields.Simple(schemes, matchText, searchTarget,
-                matchAlgorithm, maxReturn);
+                source, matchAlgorithm, maxReturn);
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }

@@ -59,15 +59,17 @@ public class SearchFields {
         public Vector schemes = null;
         public String matchText;
         public String searchTarget;
+        public String source;
         public String matchAlgorithm;
         public int maxReturn;
         public String key;
 
         public Base(Vector schemes, String matchText, String searchTarget,
-            String matchAlgorithm, int maxReturn) {
+            String source, String matchAlgorithm, int maxReturn) {
             this.schemes = schemes;
             this.matchText = matchText.trim();
             this.searchTarget = searchTarget;
+            this.source = source;
             this.matchAlgorithm = matchAlgorithm;
             this.maxReturn = maxReturn;
             this.key = randomKey();
@@ -91,39 +93,35 @@ public class SearchFields {
 
     public static class Simple extends Base {
         public Simple(Vector schemes, String matchText, String searchTarget,
-            String matchAlgorithm, int maxReturn) {
-            super(schemes, matchText, searchTarget, matchAlgorithm, maxReturn);
+            String source, String matchAlgorithm, int maxReturn) {
+            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
         }
     }
 
     public static class Property extends Base {
         public String propertyType;
         public String propertyName;
-        public String source;
 
         public Property(Vector schemes, String matchText, String searchTarget,
             String propertyType, String propertyName, String source,
             String matchAlgorithm, int maxReturn) {
-            super(schemes, matchText, searchTarget, matchAlgorithm, maxReturn);
+            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
             this.propertyType = propertyType;
             this.propertyName = propertyName;
-            this.source = source;
         }
     }
 
     public static class Relationship extends Base {
         public String relSearchAssociation;
         public String relSearchRela;
-        public String source;
 
         public Relationship(Vector schemes, String matchText,
             String searchTarget, String relSearchAssociation,
             String relSearchRela, String source, String matchAlgorithm,
             int maxReturn) {
-            super(schemes, matchText, searchTarget, matchAlgorithm, maxReturn);
+            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
             this.relSearchAssociation = relSearchAssociation;
             this.relSearchRela = relSearchRela;
-            this.source = source;
         }
     }
 }
