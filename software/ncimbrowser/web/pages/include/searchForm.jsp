@@ -1,5 +1,6 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
  
 <script type="text/javascript">
@@ -34,8 +35,12 @@
 <%
     String match_text = (String) request.getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
+    
+    System.out.println("searchForm: match_text " + match_text);
+    String displayed_match_text = HTTPUtils.convertJSPString(match_text); 
+    
  %>
-  <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
+  <input CLASS="searchbox-input" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
