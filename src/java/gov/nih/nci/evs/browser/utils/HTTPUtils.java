@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HTTPUtils {
 
+  private static String REFERER = "referer";
+  
   /**
    * Remove potentially bad XSS syntax
    *
@@ -133,7 +135,7 @@ public class HTTPUtils {
    * @return
    */
   public static String getRefererParmEncode(HttpServletRequest request) {
-    String iref = request.getHeader("Referer");
+    String iref = request.getHeader(REFERER);
     String referer = "N/A";
     if (iref != null)
       try {
@@ -151,9 +153,9 @@ public class HTTPUtils {
   public static String getRefererParmDecode(HttpServletRequest request) {
     String refurl = "N/A";
     try {
-      String iref = request.getParameter("referer");
+      String iref = request.getParameter(REFERER);
       if (iref != null)
-        refurl = URLDecoder.decode(request.getParameter("referer"),
+        refurl = URLDecoder.decode(request.getParameter(REFERER),
             "UTF-8");
     } catch (UnsupportedEncodingException e) {
       // return N/A if encoding is not supported.
@@ -165,7 +167,7 @@ public class HTTPUtils {
    * @param request
    */
   public static void clearRefererParm(HttpServletRequest request) {
-    request.setAttribute("referer", null);
+    request.setAttribute(REFERER, null);
   }    
   
 	/**
