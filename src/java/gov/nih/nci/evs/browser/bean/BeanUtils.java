@@ -54,4 +54,9 @@ public class BeanUtils {
         return (IteratorBeanManager) HTTPUtils.getBean("iteratorBeanManager", 
             "gov.nih.nci.evs.browser.bean.IteratorBeanManager");
     }
+
+    public static SearchStatusBean getSearchStatusBean() {
+        return (SearchStatusBean) HTTPUtils.getBean("searchStatusBean", 
+            "gov.nih.nci.evs.browser.bean.SearchStatusBean");
+    }
 }
