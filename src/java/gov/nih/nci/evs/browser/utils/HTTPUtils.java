@@ -65,6 +65,11 @@ public class HTTPUtils {
 
   }
 
+  /**
+   * @param name
+   * @param classPath
+   * @return
+   */
   @SuppressWarnings("unchecked")
   public static Object getBean(String name, String classPath) {
       try {
@@ -83,20 +88,40 @@ public class HTTPUtils {
           return null;
       }
   }
+  /**
+   * @return
+   */
   public static HttpServletRequest getRequest() {
     return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
   }
 
+  /**
+   * @param request
+   * @param attributeName
+   * @param defaultValue
+   * @return
+   */
   public static String getAttribute(HttpServletRequest request, String attributeName, String defaultValue) {
     String value = (String) request.getAttribute(attributeName);
     return getValue(value, defaultValue);
   }
 
+  /**
+   * @param request
+   * @param attributeName
+   * @param defaultValue
+   * @return
+   */
   public static String getSessionAttribute(HttpServletRequest request, String attributeName, String defaultValue) {
     String value = (String) request.getSession().getAttribute(attributeName);
     return getValue(value, defaultValue);
   }
 
+  /**
+   * @param value
+   * @param defaultValue
+   * @return
+   */
   public static String getValue(String value, String defaultValue) {
     if (value == null || value.trim().length() <= 0 || value.equals("null"))
       return defaultValue;
@@ -136,6 +161,17 @@ public class HTTPUtils {
     return cleanXSS(refurl);
   }
 
+  /**
+   * @param request
+   */
+  public static void clearRefererParm(HttpServletRequest request) {
+    request.setAttribute("referer", null);
+  }    
+  
+	/**
+	 * @param t
+	 * @return
+	 */
 	public static String convertJSPString(String t) {
 	// Convert problem characters to JavaScript Escaped values
 	  if (t == null) {
