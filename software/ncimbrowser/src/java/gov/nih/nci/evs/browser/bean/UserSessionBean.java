@@ -419,7 +419,7 @@ String searchType = bean.getSelectedSearchOption();
 
 		} else {
 
-			key = iteratorBeanManager.createSimpleKey(schemes, matchText, searchTarget, matchAlgorithm, maxToReturn);
+			key = iteratorBeanManager.createSimpleKey(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);

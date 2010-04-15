@@ -5,14 +5,9 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.HashMap"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
-
-<%@ page import="gov.nih.nci.evs.browser.bean.BeanUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBeanManager" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.OntologyBean" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.properties.*" %>
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
@@ -81,12 +76,26 @@ else if (rel_search_direction.compareToIgnoreCase("target") == 0)
 check_target= "checked"; 
 
 
-String advancedSearchOption = HTTPUtils.getSessionAttribute(
-    request, "advancedSearchOption", "Property");
-
-IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
+boolean useSessionAttributes = true;
 String searchKey = request.getParameter("searchKey");
-String search_string = iteratorBeanManager.getSearchText(searchKey);
+IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
+SearchFields.Base fields = (SearchFields.Base) iteratorBeanManager.getSearchFields(searchKey);
+
+String advancedSearchOption = "Property";
+if (useSessionAttributes) {
+  advancedSearchOption = HTTPUtils.getSessionAttribute(
+    request, "advancedSearchOption", "Property");
+} else {
+  String searchOption = (String) request.getAttribute("searchOptionChangedTo");
+  if (searchOption != null) {
+      advancedSearchOption = searchOption;
+  } else if (fields instanceof SearchFields.Relationship) {
+      advancedSearchOption = "Relationship";
+  }
+}
+
+String search_string = null;
+if (fields != null) search_string = fields.getMatchText();
 if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
 
 %>
@@ -138,6 +147,9 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 <select id="adv_search_source" name="adv_search_source" size="1">
 <%  
     String currValue = HTTPUtils.getSessionAttribute(request, "adv_search_source", "ALL");
+    if (! useSessionAttributes) {
+        currValue = (fields != null) ? fields.source : "ALL";
+    }
     t = "ALL";
 %>   
    <option value="<%=t%>"><%=t%></option>
@@ -175,6 +187,15 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 <table>
 <%
  if (advancedSearchOption.compareTo("Property") == 0) {
+     if (! useSessionAttributes) {
+         String selectedProperty = "ALL";
+         if (fields != null && fields instanceof SearchFields.Property) {
+             SearchFields.Property propFields = (SearchFields.Property) fields;
+             selectedProperty = propFields.propertyName;
+         }
+         SearchStatusBean searchStatusBean = BeanUtils.getSearchStatusBean();
+         searchStatusBean.setSelectedProperty(selectedProperty);
+     }
 %>
  
 <!-- 
@@ -233,6 +254,13 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
              <select id="rel_search_association" name="rel_search_association" size="1">
              <%
                  String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_association", "ALL"); 
+                 if (! useSessionAttributes) {
+                     currValue = "ALL";
+                     if (fields != null && fields instanceof SearchFields.Relationship) {
+                         SearchFields.Relationship relFields = (SearchFields.Relationship) fields;
+                         currValue = relFields.relSearchAssociation;
+                     }
+                 }
                  t = "ALL";
              %>   
                 <option value="<%=t%>"><%=t%></option>
@@ -255,7 +283,14 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
              <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
              <select id="rel_search_rela" name="rel_search_rela" size="1">
              <%  
-                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_rela", " "); 
+                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_rela", " ");
+                 if (! useSessionAttributes) {
+                     currValue = " ";
+                     if (fields != null && fields instanceof SearchFields.Relationship) {
+                         SearchFields.Relationship relFields = (SearchFields.Relationship) fields;
+                         currValue = relFields.relSearchRela;
+                     }
+                 }
                  t = " ";
              %>   
                 <option value="<%=t%>"><%=t%></option>

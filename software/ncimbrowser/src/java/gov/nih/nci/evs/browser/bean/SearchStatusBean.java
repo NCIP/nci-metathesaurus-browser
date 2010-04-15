@@ -104,6 +104,8 @@ public class SearchStatusBean extends Object
 
         System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
+        HttpServletRequest request = HTTPUtils.getRequest();
+        request.setAttribute("searchOptionChangedTo", newValue);
     }
 
     public List getSearchOptionList() {
