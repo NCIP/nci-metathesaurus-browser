@@ -487,8 +487,8 @@ String searchType = bean.getSelectedSearchOption();
 			int size = iteratorBean.getSize();
 			
 			// Write a search log entry
-			SearchLog.writeEntry(matchText, matchAlgorithm, searchTarget,
-					source, size, HTTPUtils.getRefererParmDecode(request));
+			SearchLog.writeEntry(iteratorBeanManager.getSearchFields(key), 
+			    size, HTTPUtils.getRefererParmDecode(request));
 			
 			if (size > 1) {
 				request.getSession().setAttribute("search_results", v);
