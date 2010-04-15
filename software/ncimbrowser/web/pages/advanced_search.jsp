@@ -8,6 +8,7 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="javax.faces.context.FacesContext" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
@@ -338,7 +339,8 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  
                              
                          </table>    
-		     </form> 
+		     <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
+         </form> 
 		     
 		</td>             
  
