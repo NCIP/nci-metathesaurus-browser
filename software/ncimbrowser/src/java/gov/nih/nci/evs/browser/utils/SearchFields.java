@@ -89,6 +89,16 @@ public class SearchFields {
             String s = Integer.toString(i);
             return s;
         }
+        
+        public String toString() {
+            return "schemes= " + schemes
+                + ", matchText=" + matchText
+                + ", searchTarget=" + searchTarget
+                + ", source=" + source
+                + ", matchAlgorithm=" + matchAlgorithm
+                + ", maxReturn=" + maxReturn
+                + ", key=" + key;
+        }
     }
 
     public static class Simple extends Base {
@@ -109,6 +119,12 @@ public class SearchFields {
             this.propertyType = propertyType;
             this.propertyName = propertyName;
         }
+
+        public String toString() {
+            return super.toString()
+                + ", propertyType=" + propertyType
+                + ", propertyName=" + propertyName;
+        }
     }
 
     public static class Relationship extends Base {
@@ -122,6 +138,12 @@ public class SearchFields {
             super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
             this.relSearchAssociation = relSearchAssociation;
             this.relSearchRela = relSearchRela;
+        }
+
+        public String toString() {
+            return super.toString()
+                + ", relSearchAssociation=" + relSearchAssociation
+                + ", relSearchRela=" + relSearchRela;
         }
     }
 }
