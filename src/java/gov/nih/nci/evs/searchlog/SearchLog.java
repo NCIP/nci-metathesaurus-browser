@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.searchlog;
 
+import gov.nih.nci.evs.browser.utils.SearchFields;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -62,19 +64,56 @@ public class SearchLog {
 	/**
 	 * @param term
 	 */
-	public static void writeEntry(String term, String type, String target,
-			String source, int count, String referrer) {
+	public static void writeEntry(SearchFields.Interface searchFields, 
+	    int count, String referrer) {
 		init();
-		// "SEARCH_TYPE|TERM|TYPE|TARGET|SOURCE|COUNT|REFERRER"
-		//    SEARCH_TYPE (Null=Simple, value=Advance search		 
-		
-		logger.log(SearchLevel.SEARCH_LOG_LEVEL,
-		    term + SEPARATOR +
-		    type + SEPARATOR +
-		    target + SEPARATOR +
-		    source + SEPARATOR +
-		    count	+ SEPARATOR +
-		    referrer);
+		if (searchFields instanceof SearchFields.Simple)
+		    writeEntry((SearchFields.Simple) searchFields, count, referrer);
+        if (searchFields instanceof SearchFields.Property)
+            writeEntry((SearchFields.Property) searchFields, count, referrer);
+        if (searchFields instanceof SearchFields.Relationship)
+            writeEntry((SearchFields.Relationship) searchFields, count, referrer);
 	}
 
+	public static void writeEntry(SearchFields.Simple fields, 
+	    int count, String referrer) {
+        // "SEARCH_TYPE|TERM|TYPE|TARGET|SOURCE|COUNT|REFERRER"
+        //    SEARCH_TYPE (Null=Simple, value=Advance search         
+        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
+            "Simple" + SEPARATOR +
+            fields.matchText + SEPARATOR +
+            fields.matchAlgorithm + SEPARATOR +
+            fields.searchTarget + SEPARATOR +
+            fields.source + SEPARATOR +
+            count + SEPARATOR +
+            referrer);
+	}
+
+    public static void writeEntry(SearchFields.Property fields, 
+        int count, String referrer) {
+        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
+            "Property" + SEPARATOR +
+            fields.matchText + SEPARATOR +
+            fields.matchAlgorithm + SEPARATOR +
+            fields.searchTarget + SEPARATOR +
+            fields.propertyType + SEPARATOR +
+            fields.propertyName + SEPARATOR +
+            fields.source + SEPARATOR +
+            count + SEPARATOR +
+            referrer);
+    }
+
+    public static void writeEntry(SearchFields.Relationship fields, 
+        int count, String referrer) {
+        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
+            "Relationship" + SEPARATOR +
+            fields.matchText + SEPARATOR +
+            fields.matchAlgorithm + SEPARATOR +
+            fields.searchTarget + SEPARATOR +
+            fields.relSearchAssociation + SEPARATOR +
+            fields.relSearchRela + SEPARATOR +
+            fields.source + SEPARATOR +
+            count + SEPARATOR +
+            referrer);
+    }
 }
