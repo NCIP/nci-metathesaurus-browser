@@ -50,12 +50,40 @@ import java.util.*;
  */
 
 public class SearchFields {
+
     public interface Interface {
+
+        // Default getters
+
         public String getKey();
+
+        public String getType();
+
         public String getMatchText();
+
+        public String getMatchAlgorithm();
+        
+        public String getSearchTarget();
+        
+        public String getSource();
+        
+        public int getMaxReturn();
+        
+        public String getPropertyType(); 
+
+        public String getPropertyName(); 
+        
+        public String getRelSearchAssociation();
+        
+        public String getRelSearchRela();
+
     }
 
-    public static class Base implements Interface {
+    /**
+     * @author dyee Class describing fields for a basic (simple) search
+     */
+    public static class Simple implements Interface {
+        public String type;
         public Vector schemes = null;
         public String matchText;
         public String searchTarget;
@@ -64,8 +92,20 @@ public class SearchFields {
         public int maxReturn;
         public String key;
 
-        public Base(Vector schemes, String matchText, String searchTarget,
+        /**
+         * Constructor
+         * 
+         * @param type
+         * @param schemes
+         * @param matchText
+         * @param searchTarget
+         * @param source
+         * @param matchAlgorithm
+         * @param maxReturn
+         */
+        public Simple(Vector schemes, String matchText, String searchTarget,
             String source, String matchAlgorithm, int maxReturn) {
+            this.type = Simple.class.getSimpleName();
             this.schemes = schemes;
             this.matchText = matchText.trim();
             this.searchTarget = searchTarget;
@@ -79,55 +119,97 @@ public class SearchFields {
             return this.key;
         }
 
+        public String getType() {
+            return this.type;
+        }
+
         public String getMatchText() {
             return this.matchText;
         }
 
+        public String getMatchAlgorithm() {
+            return this.matchAlgorithm;
+        }
+
+        public String getSearchTarget() {
+            return this.searchTarget;
+        }
+
+        public String getSource() {
+            return this.source;
+        }        
+
+        public int getMaxReturn() {
+            return this.maxReturn;
+        }         
+
+        public String getPropertyType() {
+            return null;
+        }        
+
+        public String getPropertyName() {        
+            return null;
+        }       
+        
+        public String getRelSearchAssociation() {
+            return null;
+        }        
+
+        public String getRelSearchRela() {
+            return null;
+        }         
+        
         protected String randomKey() {
             Random random = new Random();
             int i = random.nextInt();
             String s = Integer.toString(i);
             return s;
         }
-        
+
         public String toString() {
-            return "schemes= " + schemes
-                + ", matchText=" + matchText
-                + ", searchTarget=" + searchTarget
-                + ", source=" + source
-                + ", matchAlgorithm=" + matchAlgorithm
-                + ", maxReturn=" + maxReturn
-                + ", key=" + key;
+            return "schemes= " + schemes + ", matchText=" + matchText
+                + ", searchTarget=" + searchTarget + ", source=" + source
+                + ", matchAlgorithm=" + matchAlgorithm + ", maxReturn="
+                + maxReturn + ", key=" + key;
         }
     }
 
-    public static class Simple extends Base {
-        public Simple(Vector schemes, String matchText, String searchTarget,
-            String source, String matchAlgorithm, int maxReturn) {
-            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
-        }
-    }
-
-    public static class Property extends Base {
+    /**
+     * @author dyee Class describing fields for a complex property search
+     */
+    public static class Property extends Simple {
         public String propertyType;
         public String propertyName;
 
         public Property(Vector schemes, String matchText, String searchTarget,
             String propertyType, String propertyName, String source,
             String matchAlgorithm, int maxReturn) {
-            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
+            super(schemes, matchText, searchTarget, source, matchAlgorithm,
+                maxReturn);
+            this.type = Property.class.getSimpleName();
             this.propertyType = propertyType;
             this.propertyName = propertyName;
         }
 
+        public String propertyType() {
+            return this.propertyType;
+        }        
+
+        public String propertyName() {
+            return this.propertyName;
+        }        
+        
         public String toString() {
-            return super.toString()
-                + ", propertyType=" + propertyType
-                + ", propertyName=" + propertyName;
+            return super.toString() + ", propertyType=" + this.propertyType
+                + ", propertyName=" + this.propertyName;
         }
     }
 
-    public static class Relationship extends Base {
+    /**
+     * @author dyee Class describing fields for a complex relationship search
+     */
+
+    public static class Relationship extends Simple {
         public String relSearchAssociation;
         public String relSearchRela;
 
@@ -135,15 +217,24 @@ public class SearchFields {
             String searchTarget, String relSearchAssociation,
             String relSearchRela, String source, String matchAlgorithm,
             int maxReturn) {
-            super(schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
+            super(schemes, matchText, searchTarget, source, matchAlgorithm,
+                maxReturn);
+            this.type = Relationship.class.getSimpleName();
             this.relSearchAssociation = relSearchAssociation;
             this.relSearchRela = relSearchRela;
         }
 
+        public String getRelSearchAssociation() {
+            return this.relSearchAssociation;
+        }
+        
+        public String getRelSearchRela() {
+            return this.relSearchRela;
+        }         
+        
         public String toString() {
-            return super.toString()
-                + ", relSearchAssociation=" + relSearchAssociation
-                + ", relSearchRela=" + relSearchRela;
+            return super.toString() + ", relSearchAssociation="
+                + relSearchAssociation + ", relSearchRela=" + relSearchRela;
         }
     }
 }
