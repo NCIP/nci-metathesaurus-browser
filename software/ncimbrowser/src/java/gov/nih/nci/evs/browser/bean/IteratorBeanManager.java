@@ -44,14 +44,14 @@ import org.LexGrid.concepts.Concept;
 
 public class IteratorBeanManager {
     private HashMap iteratorBeanHashMap = new HashMap();
-    private HashMap<String, SearchFields.Interface> searchFieldsHashMap = 
+    private HashMap<String, SearchFields.Interface> searchFieldsHashMap =
         new HashMap<String, SearchFields.Interface>();
 
     public String createSimpleKey(Vector schemes, String matchText,
         String searchTarget, String source, String matchAlgorithm, int maxReturn) {
         SearchFields.Simple fields =
-            new SearchFields.Simple(schemes, matchText, searchTarget,
-                source, matchAlgorithm, maxReturn);
+            new SearchFields.Simple(schemes, matchText, searchTarget, source,
+                matchAlgorithm, maxReturn);
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }
@@ -76,7 +76,7 @@ public class IteratorBeanManager {
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }
-    
+
     public SearchFields.Interface getSearchFields(String key) {
         return searchFieldsHashMap.get(key);
     }
