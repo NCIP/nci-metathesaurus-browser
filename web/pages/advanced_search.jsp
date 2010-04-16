@@ -80,7 +80,7 @@ check_target= "checked";
 boolean useSessionAttributes = true;
 String searchKey = request.getParameter("searchKey");
 IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
-SearchFields.Base fields = (SearchFields.Base) iteratorBeanManager.getSearchFields(searchKey);
+SearchFields.Simple fields = (SearchFields.Simple) iteratorBeanManager.getSearchFields(searchKey);
 
 String advancedSearchOption = "Property";
 if (useSessionAttributes) {
