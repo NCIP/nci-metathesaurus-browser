@@ -143,9 +143,11 @@ if (obj != null) {
 	<%         
 	        }
 	}
-} 
+}
+String searchKey = (String) request.getAttribute("key");
+System.out.println("searchForm: searchKey=" + searchKey);
 %>
-              &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?searchKey=<%=request.getAttribute("key")%>">Advanced Search</a>
+              &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf?searchKey=<%=searchKey%>">Advanced Search</a>
      
       </td>
     </tr>
