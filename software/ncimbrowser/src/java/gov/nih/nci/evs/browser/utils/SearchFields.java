@@ -50,191 +50,123 @@ import java.util.*;
  */
 
 public class SearchFields {
+    public enum Type {
+        None, Simple, Property, Relationship
+    };
 
-    public interface Interface {
+    private String _key;
+    private Type _type = Type.None;
+    private Vector _schemes = null;
+    private String _matchText;
+    private String _searchTarget;
+    private String _source;
+    private String _matchAlgorithm;
+    private int _maxReturn;
+    private String _propertyType;
+    private String _propertyName;
+    private String _relSearchAssociation;
+    private String _relSearchRela;
 
-        // Default getters
-
-        public String getKey();
-
-        public String getType();
-
-        public String getMatchText();
-
-        public String getMatchAlgorithm();
-        
-        public String getSearchTarget();
-        
-        public String getSource();
-        
-        public int getMaxReturn();
-        
-        public String getPropertyType(); 
-
-        public String getPropertyName(); 
-        
-        public String getRelSearchAssociation();
-        
-        public String getRelSearchRela();
-
+    public SearchFields() {
+        _key = randomKey();
     }
 
-    /**
-     * @author dyee Class describing fields for a basic (simple) search
-     */
-    public static class Simple implements Interface {
-        public String type;
-        public Vector schemes = null;
-        public String matchText;
-        public String searchTarget;
-        public String source;
-        public String matchAlgorithm;
-        public int maxReturn;
-        public String key;
-
-        /**
-         * Constructor
-         * 
-         * @param type
-         * @param schemes
-         * @param matchText
-         * @param searchTarget
-         * @param source
-         * @param matchAlgorithm
-         * @param maxReturn
-         */
-        public Simple(Vector schemes, String matchText, String searchTarget,
-            String source, String matchAlgorithm, int maxReturn) {
-            this.type = Simple.class.getSimpleName();
-            this.schemes = schemes;
-            this.matchText = matchText.trim();
-            this.searchTarget = searchTarget;
-            this.source = source;
-            this.matchAlgorithm = matchAlgorithm;
-            this.maxReturn = maxReturn;
-            this.key = randomKey();
-        }
-
-        public String getKey() {
-            return this.key;
-        }
-
-        public String getType() {
-            return this.type;
-        }
-
-        public String getMatchText() {
-            return this.matchText;
-        }
-
-        public String getMatchAlgorithm() {
-            return this.matchAlgorithm;
-        }
-
-        public String getSearchTarget() {
-            return this.searchTarget;
-        }
-
-        public String getSource() {
-            return this.source;
-        }        
-
-        public int getMaxReturn() {
-            return this.maxReturn;
-        }         
-
-        public String getPropertyType() {
-            return null;
-        }        
-
-        public String getPropertyName() {        
-            return null;
-        }       
-        
-        public String getRelSearchAssociation() {
-            return null;
-        }        
-
-        public String getRelSearchRela() {
-            return null;
-        }         
-        
-        protected String randomKey() {
-            Random random = new Random();
-            int i = random.nextInt();
-            String s = Integer.toString(i);
-            return s;
-        }
-
-        public String toString() {
-            return "schemes= " + schemes + ", matchText=" + matchText
-                + ", searchTarget=" + searchTarget + ", source=" + source
-                + ", matchAlgorithm=" + matchAlgorithm + ", maxReturn="
-                + maxReturn + ", key=" + key;
-        }
+    private String randomKey() {
+        Random random = new Random();
+        int i = random.nextInt();
+        String s = Integer.toString(i);
+        return s;
     }
 
-    /**
-     * @author dyee Class describing fields for a complex property search
-     */
-    public static class Property extends Simple {
-        public String propertyType;
-        public String propertyName;
-
-        public Property(Vector schemes, String matchText, String searchTarget,
-            String propertyType, String propertyName, String source,
-            String matchAlgorithm, int maxReturn) {
-            super(schemes, matchText, searchTarget, source, matchAlgorithm,
-                maxReturn);
-            this.type = Property.class.getSimpleName();
-            this.propertyType = propertyType;
-            this.propertyName = propertyName;
-        }
-
-        public String propertyType() {
-            return this.propertyType;
-        }        
-
-        public String propertyName() {
-            return this.propertyName;
-        }        
-        
-        public String toString() {
-            return super.toString() + ", propertyType=" + this.propertyType
-                + ", propertyName=" + this.propertyName;
-        }
+    public void setSimpleFields(Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        _type = Type.Simple;
+        _schemes = schemes;
+        _matchText = matchText.trim();
+        _searchTarget = searchTarget;
+        _source = source;
+        _matchAlgorithm = matchAlgorithm;
+        _maxReturn = maxReturn;
     }
 
-    /**
-     * @author dyee Class describing fields for a complex relationship search
-     */
+    public void setPropertyFields(Vector schemes, String matchText,
+        String searchTarget, String propertyType, String propertyName,
+        String source, String matchAlgorithm, int maxReturn) {
+        _type = Type.Property;
+        _schemes = schemes;
+        _matchText = matchText.trim();
+        _searchTarget = searchTarget;
+        _propertyType = propertyType;
+        _propertyName = propertyName;
+        _source = source;
+        _matchAlgorithm = matchAlgorithm;
+        _maxReturn = maxReturn;
+    }
 
-    public static class Relationship extends Simple {
-        public String relSearchAssociation;
-        public String relSearchRela;
+    public void setRelationshipFields(Vector schemes, String matchText,
+        String searchTarget, String relSearchAssociation, String relSearchRela,
+        String source, String matchAlgorithm, int maxReturn) {
+        _type = Type.Relationship;
+        _schemes = schemes;
+        _matchText = matchText.trim();
+        _searchTarget = searchTarget;
+        _relSearchAssociation = relSearchAssociation;
+        _relSearchRela = relSearchRela;
+        _source = source;
+        _matchAlgorithm = matchAlgorithm;
+        _maxReturn = maxReturn;
+    }
 
-        public Relationship(Vector schemes, String matchText,
-            String searchTarget, String relSearchAssociation,
-            String relSearchRela, String source, String matchAlgorithm,
-            int maxReturn) {
-            super(schemes, matchText, searchTarget, source, matchAlgorithm,
-                maxReturn);
-            this.type = Relationship.class.getSimpleName();
-            this.relSearchAssociation = relSearchAssociation;
-            this.relSearchRela = relSearchRela;
-        }
+    public String getKey() {
+        return _key;
+    }
 
-        public String getRelSearchAssociation() {
-            return this.relSearchAssociation;
-        }
-        
-        public String getRelSearchRela() {
-            return this.relSearchRela;
-        }         
-        
-        public String toString() {
-            return super.toString() + ", relSearchAssociation="
-                + relSearchAssociation + ", relSearchRela=" + relSearchRela;
-        }
+    public Type getType() {
+        return _type;
+    }
+
+    public String getMatchText() {
+        return _matchText;
+    }
+
+    public String getMatchAlgorithm() {
+        return _matchAlgorithm;
+    }
+
+    public String getSearchTarget() {
+        return _searchTarget;
+    }
+
+    public String getSource() {
+        return _source;
+    }
+
+    public int getMaxReturn() {
+        return _maxReturn;
+    }
+
+    public String getPropertyType() {
+        return _propertyType;
+    }
+
+    public String getPropertyName() {
+        return _propertyName;
+    }
+
+    public String getRelSearchAssociation() {
+        return _relSearchAssociation;
+    }
+
+    public String getRelSearchRela() {
+        return _relSearchRela;
+    }
+
+    public String toString() {
+        return "key=" + _key + ", type=" + _type + ", schemes= " + _schemes
+            + ", matchText=" + _matchText + ", searchTarget=" + _searchTarget
+            + ", source=" + _source + ", matchAlgorithm=" + _matchAlgorithm
+            + ", maxReturn=" + _maxReturn + ", propertyType=" + _propertyType
+            + ", propertyName=" + _propertyName + ", relSearchAssociation="
+            + _relSearchAssociation + ", relSearchRela=" + _relSearchRela;
     }
 }

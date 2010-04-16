@@ -80,7 +80,7 @@ check_target= "checked";
 boolean useSessionAttributes = true;
 String searchKey = request.getParameter("searchKey");
 IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
-SearchFields.Simple fields = (SearchFields.Simple) iteratorBeanManager.getSearchFields(searchKey);
+SearchFields fields = (SearchFields) iteratorBeanManager.getSearchFields(searchKey);
 
 String advancedSearchOption = "Property";
 if (useSessionAttributes) {
@@ -90,7 +90,7 @@ if (useSessionAttributes) {
   String searchOption = (String) request.getAttribute("searchOptionChangedTo");
   if (searchOption != null) {
       advancedSearchOption = searchOption;
-  } else if (fields instanceof SearchFields.Relationship) {
+  } else if (fields != null && fields.getType() == SearchFields.Type.Relationship) {
       advancedSearchOption = "Relationship";
   }
 }
@@ -149,7 +149,7 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 <%  
     String currValue = HTTPUtils.getSessionAttribute(request, "adv_search_source", "ALL");
     if (! useSessionAttributes) {
-        currValue = (fields != null) ? fields.source : "ALL";
+        currValue = (fields != null) ? fields.getSource() : "ALL";
     }
     t = "ALL";
 %>   
@@ -190,10 +190,8 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
  if (advancedSearchOption.compareTo("Property") == 0) {
      if (! useSessionAttributes) {
          String selectedProperty = "ALL";
-         if (fields != null && fields instanceof SearchFields.Property) {
-             SearchFields.Property propFields = (SearchFields.Property) fields;
-             selectedProperty = propFields.propertyName;
-         }
+         if (fields != null && fields.getType() == SearchFields.Type.Property)
+             selectedProperty = fields.getPropertyName();
          SearchStatusBean searchStatusBean = BeanUtils.getSearchStatusBean();
          searchStatusBean.setSelectedProperty(selectedProperty);
      }
@@ -257,10 +255,8 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
                  String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_association", "ALL"); 
                  if (! useSessionAttributes) {
                      currValue = "ALL";
-                     if (fields != null && fields instanceof SearchFields.Relationship) {
-                         SearchFields.Relationship relFields = (SearchFields.Relationship) fields;
-                         currValue = relFields.relSearchAssociation;
-                     }
+                     if (fields != null && fields.getType() == SearchFields.Type.Relationship)
+                         currValue = fields.getRelSearchAssociation();
                  }
                  t = "ALL";
              %>   
@@ -287,10 +283,8 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
                  String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_rela", " ");
                  if (! useSessionAttributes) {
                      currValue = " ";
-                     if (fields != null && fields instanceof SearchFields.Relationship) {
-                         SearchFields.Relationship relFields = (SearchFields.Relationship) fields;
-                         currValue = relFields.relSearchRela;
-                     }
+                     if (fields != null && fields.getType() == SearchFields.Type.Relationship)
+                         currValue = fields.getRelSearchRela();
                  }
                  t = " ";
              %>   

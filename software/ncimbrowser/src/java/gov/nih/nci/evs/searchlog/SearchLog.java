@@ -65,7 +65,7 @@ public class SearchLog {
     /**
      * @param term
      */
-    public static void writeEntry(SearchFields.Interface fields, int maxReturn,
+    public static void writeEntry(SearchFields fields, int maxReturn,
         String referrer) {
         init();
 
@@ -73,13 +73,13 @@ public class SearchLog {
         // SEARCH_TYPE|TERM|ALGORITHM|TARGET|SOURCE|COUNT|PROPERTY_NAME|PROPERTY_TYPE
         // RELATIONSHIP|REL_ASSOCICATION|REL_RELA|REFERRER
 
-        logger.log(SearchLevel.SEARCH_LOG_LEVEL, fields.getType() + SEPARATOR
-            + fields.getMatchText() + SEPARATOR + fields.getMatchAlgorithm()
-            + SEPARATOR + fields.getSearchTarget() + SEPARATOR
-            + fields.getSource() + SEPARATOR + maxReturn + SEPARATOR
-            + fields.getPropertyName() + SEPARATOR + fields.getPropertyType()
-            + SEPARATOR + fields.getRelSearchAssociation() + SEPARATOR
+        logger.log(SearchLevel.SEARCH_LOG_LEVEL, fields.getType().toString()
+            + SEPARATOR + fields.getMatchText() + SEPARATOR
+            + fields.getMatchAlgorithm() + SEPARATOR + fields.getSearchTarget()
+            + SEPARATOR + fields.getSource() + SEPARATOR + maxReturn
+            + SEPARATOR + fields.getPropertyName() + SEPARATOR
+            + fields.getPropertyType() + SEPARATOR
+            + fields.getRelSearchAssociation() + SEPARATOR
             + fields.getRelSearchRela() + SEPARATOR + referrer);
     }
-
 }

@@ -44,14 +44,14 @@ import org.LexGrid.concepts.Concept;
 
 public class IteratorBeanManager {
     private HashMap iteratorBeanHashMap = new HashMap();
-    private HashMap<String, SearchFields.Interface> searchFieldsHashMap =
-        new HashMap<String, SearchFields.Interface>();
+    private HashMap<String, SearchFields> searchFieldsHashMap =
+        new HashMap<String, SearchFields>();
 
     public String createSimpleKey(Vector schemes, String matchText,
         String searchTarget, String source, String matchAlgorithm, int maxReturn) {
-        SearchFields.Simple fields =
-            new SearchFields.Simple(schemes, matchText, searchTarget, source,
-                matchAlgorithm, maxReturn);
+        SearchFields fields = new SearchFields();
+        fields.setSimpleFields(
+             schemes, matchText, searchTarget, source, matchAlgorithm, maxReturn);
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }
@@ -59,9 +59,9 @@ public class IteratorBeanManager {
     public String createPropertyKey(Vector schemes, String matchText,
         String searchTarget, String propertyType, String propertyName,
         String source, String matchAlgorithm, int maxReturn) {
-        SearchFields.Property fields =
-            new SearchFields.Property(schemes, matchText, searchTarget,
-                propertyType, propertyName, source, matchAlgorithm, maxReturn);
+        SearchFields fields = new SearchFields();
+        fields.setPropertyFields(schemes, matchText, searchTarget, 
+            propertyType, propertyName, source, matchAlgorithm, maxReturn);
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }
@@ -69,20 +69,19 @@ public class IteratorBeanManager {
     public String createRelationshipKey(Vector schemes, String matchText,
         String searchTarget, String relSearchAssociation, String relSearchRela,
         String source, String matchAlgorithm, int maxReturn) {
-        SearchFields.Relationship fields =
-            new SearchFields.Relationship(schemes, matchText, searchTarget,
-                relSearchAssociation, relSearchRela, source, matchAlgorithm,
-                maxReturn);
+        SearchFields fields = new SearchFields();
+        fields.setRelationshipFields(schemes, matchText, searchTarget, 
+            relSearchAssociation, relSearchRela, source, matchAlgorithm, maxReturn);
         searchFieldsHashMap.put(fields.getKey(), fields);
         return fields.getKey();
     }
 
-    public SearchFields.Interface getSearchFields(String key) {
+    public SearchFields getSearchFields(String key) {
         return searchFieldsHashMap.get(key);
     }
 
     public String getSearchText(String key) {
-        SearchFields.Interface fields = searchFieldsHashMap.get(key);
+        SearchFields fields = searchFieldsHashMap.get(key);
         if (fields == null)
             return "";
         return fields.getMatchText();
