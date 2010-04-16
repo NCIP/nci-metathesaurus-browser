@@ -32,88 +32,54 @@ import org.apache.log4j.Logger;
  */
 public class SearchLog {
 
-	static Logger logger = null;
-	public static final char SEPARATOR = '|'; 
+    static Logger logger = null;
+    public static final char SEPARATOR = '|';
+    public static final String UK = "Unknown";
 
-	/**
-	 * Constructor
-	 */
-	public SearchLog() {
-		init();
-	}
-	
-	/**
-	 * Destructor - called to release logger
-	 */
-	public static void destroy() {
-		if (logger != null) {			
-			logger = null;			
-		}
-		System.out.println("Search log is shutdown.");
-	} 	
-	
-	/**
-	 * Initializer
-	 */
-	public static void init() {
-		if (logger == null) {
-			logger = Logger.getLogger(SearchLog.class);
-		}
-	}
-
-	/**
-	 * @param term
-	 */
-	public static void writeEntry(SearchFields.Interface searchFields, 
-	    int count, String referrer) {
-		init();
-		if (searchFields instanceof SearchFields.Simple)
-		    writeEntry((SearchFields.Simple) searchFields, count, referrer);
-        if (searchFields instanceof SearchFields.Property)
-            writeEntry((SearchFields.Property) searchFields, count, referrer);
-        if (searchFields instanceof SearchFields.Relationship)
-            writeEntry((SearchFields.Relationship) searchFields, count, referrer);
-	}
-
-	public static void writeEntry(SearchFields.Simple fields, 
-	    int count, String referrer) {
-        // "SEARCH_TYPE|TERM|TYPE|TARGET|SOURCE|COUNT|REFERRER"
-        //    SEARCH_TYPE (Null=Simple, value=Advance search         
-        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
-            "Simple" + SEPARATOR +
-            fields.matchText + SEPARATOR +
-            fields.matchAlgorithm + SEPARATOR +
-            fields.searchTarget + SEPARATOR +
-            fields.source + SEPARATOR +
-            count + SEPARATOR +
-            referrer);
-	}
-
-    public static void writeEntry(SearchFields.Property fields, 
-        int count, String referrer) {
-        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
-            "Property" + SEPARATOR +
-            fields.matchText + SEPARATOR +
-            fields.matchAlgorithm + SEPARATOR +
-            fields.searchTarget + SEPARATOR +
-            fields.propertyType + SEPARATOR +
-            fields.propertyName + SEPARATOR +
-            fields.source + SEPARATOR +
-            count + SEPARATOR +
-            referrer);
+    /**
+     * Constructor
+     */
+    public SearchLog() {
+        init();
     }
 
-    public static void writeEntry(SearchFields.Relationship fields, 
-        int count, String referrer) {
-        logger.log(SearchLevel.SEARCH_LOG_LEVEL,
-            "Relationship" + SEPARATOR +
-            fields.matchText + SEPARATOR +
-            fields.matchAlgorithm + SEPARATOR +
-            fields.searchTarget + SEPARATOR +
-            fields.relSearchAssociation + SEPARATOR +
-            fields.relSearchRela + SEPARATOR +
-            fields.source + SEPARATOR +
-            count + SEPARATOR +
-            referrer);
+    /**
+     * Destructor - called to release logger
+     */
+    public static void destroy() {
+        if (logger != null) {
+            logger = null;
+        }
+        System.out.println("Search log is shutdown.");
     }
+
+    /**
+     * Initializer
+     */
+    public static void init() {
+        if (logger == null) {
+            logger = Logger.getLogger(SearchLog.class);
+        }
+    }
+
+    /**
+     * @param term
+     */
+    public static void writeEntry(SearchFields.Interface fields, int maxReturn,
+        String referrer) {
+        init();
+
+        // Report format:
+        // SEARCH_TYPE|TERM|ALGORITHM|TARGET|SOURCE|COUNT|PROPERTY_NAME|PROPERTY_TYPE
+        // RELATIONSHIP|REL_ASSOCICATION|REL_RELA|REFERRER
+
+        logger.log(SearchLevel.SEARCH_LOG_LEVEL, fields.getType() + SEPARATOR
+            + fields.getMatchText() + SEPARATOR + fields.getMatchAlgorithm()
+            + SEPARATOR + fields.getSearchTarget() + SEPARATOR
+            + fields.getSource() + SEPARATOR + maxReturn + SEPARATOR
+            + fields.getPropertyName() + SEPARATOR + fields.getPropertyType()
+            + SEPARATOR + fields.getRelSearchAssociation() + SEPARATOR
+            + fields.getRelSearchRela() + SEPARATOR + referrer);
+    }
+
 }
