@@ -143,14 +143,6 @@ public class OntologyBean {
 		LexBIGServiceMetadata lbsm = null;
 		try {
 			lbsm = lbs.getServiceMetadata();
-			/*
-			System.out.println("Loaded Metadata:");
-			for(AbsoluteCodingSchemeVersionReference ref : lbsm.listCodingSchemes().getAbsoluteCodingSchemeVersionReference()){
-				System.out.println("Name: " + ref.getCodingSchemeURN());
-				System.out.println("	Version: " + ref.getCodingSchemeVersion());
-			}
-			*/
-
 			lbsm = lbsm.restrictToCodingScheme(Constructors.createAbsoluteCodingSchemeVersionReference(scheme, version));
 
 			MetadataPropertyList mdpl = lbsm.resolve();
@@ -278,6 +270,7 @@ public class OntologyBean {
         return SortUtils.quickSort(v);
 	}
 
+
     public static Vector<String> getSupportedPropertyNames(CodingScheme cs)
 	{
         Vector w = getSupportedProperties(cs);
@@ -290,6 +283,13 @@ public class OntologyBean {
 		     v.add(sp.getLocalId());
 		}
         return SortUtils.quickSort(v);
+	}
+
+
+    public static Vector<String> getSupportedPropertyNames()
+	{
+		CodingScheme cs = getCodingScheme(codingSchemeName, null);
+		return getSupportedPropertyNames(cs);
 	}
 
 

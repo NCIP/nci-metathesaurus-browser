@@ -72,6 +72,11 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 public class SearchStatusBean extends Object
 {
+	public SearchStatusBean() {
+
+	}
+
+
 	private static Logger logger = Logger.getLogger(SearchStatusBean.class);
 
     public String setSessionAttribute(String attributeName, String value) {
@@ -90,8 +95,10 @@ public class SearchStatusBean extends Object
     private List searchOptionList = null;
 
     public void setSelectedSearchOption(String selectedSearchOption) {
-        this.selectedSearchOption = setSessionAttribute(
-            "advancedSearchOption", selectedSearchOption);
+        //this.selectedSearchOption = setSessionAttribute(
+        //    "advancedSearchOption", selectedSearchOption);
+
+        this.selectedSearchOption = selectedSearchOption;
     }
 
     public String getSelectedSearchOption() {
@@ -105,13 +112,33 @@ public class SearchStatusBean extends Object
         System.out.println("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
         HttpServletRequest request = HTTPUtils.getRequest();
+
         request.setAttribute("searchOptionChangedTo", newValue);
+
+
+       Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
+       SearchStatusBean bean = null;
+       if (bean_obj == null) {
+		   bean = new SearchStatusBean();
+	           FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
+
+       } else {
+		   bean = (SearchStatusBean) bean_obj;
+		   bean.setAlgorithm(this.getAlgorithm());
+       }
+       FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
+
+
+//SearchStatusBean bean = (SearchStatusBean) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
+
+//        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
     }
 
     public List getSearchOptionList() {
         searchOptionList = new ArrayList();
-        searchOptionList.add(new SelectItem("Property"));
-        searchOptionList.add(new SelectItem("Relationship"));
+        searchOptionList.add(new SelectItem("Property", "Property"));
+        searchOptionList.add(new SelectItem("Relationship", "Relationship"));
         return searchOptionList;
     }
 
@@ -121,8 +148,10 @@ public class SearchStatusBean extends Object
     private List propertyList = null;
 
     public void setSelectedProperty(String selectedProperty) {
-        this.selectedProperty = setSessionAttribute(
-            "advancedPropertyOption", selectedProperty);
+        //this.selectedProperty = setSessionAttribute(
+        //    "advancedPropertyOption", selectedProperty);
+
+        this.selectedProperty = selectedProperty;
     }
 
     public String getSelectedProperty() {
@@ -321,6 +350,15 @@ public class SearchStatusBean extends Object
 
     public String getMatchText() {
 		return matchText;
+	}
+
+    private String algorithm;
+    public void setAlgorithm(String algorithm) {
+		this.algorithm = algorithm;
+	}
+
+	public String getAlgorithm() {
+		return this.algorithm;
 	}
 
 }
