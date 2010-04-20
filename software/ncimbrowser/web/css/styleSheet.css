@@ -557,7 +557,6 @@ h3
 }
 
 /************************** tree icon styles ***********************************/
-
 .icon_red {
 	border: 0px;
   	background-color: #990000; /* #A9C6A9; */
@@ -572,6 +571,7 @@ h3
   	background-image: url(/images/bg_rounded.gif);
   	background-repeat: no-repeat;
   	vertical-align:text-bottom;
+}
   	
 /************************** print styles ***********************************/
 @media print
