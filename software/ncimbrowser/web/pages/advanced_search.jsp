@@ -35,6 +35,44 @@
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
+    <script type="text/javascript">
+    
+    function refresh() {
+        var text = document.forms["advancedSearchForm"].matchText.value;
+        var selectSearchOption = document.forms["advancedSearchForm"].selectSearchOption.value;
+        algorithm = "exactMatch";
+        var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
+        for (var i=0; i<algorithmObj.length; i++) {
+            if (algorithmObj[i].checked) {
+                algorithm = algorithmObj[i].value;
+            }
+        }
+        var adv_search_source = document.forms["advancedSearchForm"].adv_search_source.value;
+
+	var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
+	var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
+        
+        var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
+		window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1&opt=" 
+		    + selectSearchOption
+		    + "&text="
+		    + text
+		    + "&algorithm="
+		    + algorithm
+		    + "&sab="
+		    + adv_search_source 
+		    + "&prop="
+		    + selectProperty
+		    + "&rel="
+		    + rel_search_association 		    
+		    + "&rela="
+		    + rel_search_rela; 	
+    }
+    
+    
+    </script>
+
+
 <f:view>
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -44,13 +82,83 @@
 
        <%@ include file="/pages/include/content-header-alt.jsp" %>
  
-      <!-- Page content -->
-      
-      
-      
+     
 <%
+
+    String refresh = request.getParameter("refresh");
+    boolean refresh_page = false;
+    if (refresh != null) {
+        refresh_page = true;
+    }
+
+String adv_search_algorithm = null; 
+String search_string = "";
+String selectProperty = null;
+String rel_search_association = null;
+String rel_search_rela = null;
+String adv_search_source = null;    
+    
     String t = null;
-    String adv_search_algorithm = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("adv_search_algorithm"));
+    String selectSearchOption = null;
+    
+    if (refresh_page) {
+
+        selectSearchOption = (String) request.getParameter("opt");
+        search_string = (String) request.getParameter("text");
+        adv_search_algorithm = (String) request.getParameter("algorithm");
+        adv_search_source = (String) request.getParameter("sab");
+        rel_search_association = (String) request.getParameter("rel");
+        rel_search_rela = (String) request.getParameter("rela");
+        selectProperty = (String) request.getParameter("prop");
+        
+        
+    } else {
+	selectSearchOption = (String) request.getAttribute("selectSearchOption");
+    }
+
+    if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0) {
+        selectSearchOption = "Property";
+    }
+
+
+       SearchStatusBean bean = null;
+	if (!refresh_page) {       
+
+	       Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
+	       if (bean_obj == null) {
+			   bean = new SearchStatusBean();
+			   FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
+
+	       } else {
+			   bean = (SearchStatusBean) bean_obj;
+			   adv_search_algorithm = bean.getAlgorithm();
+			   adv_search_source = bean.getSelectedSource();
+			   selectProperty = bean.getSelectedProperty();
+			   search_string = bean.getMatchText();
+			   rel_search_association = bean.getSelectedAssociation();
+			   rel_search_rela = bean.getSelectedRELA();
+
+	       }
+	}
+
+
+if (rel_search_association == null) rel_search_association = "ALL";
+if (rel_search_rela == null) rel_search_rela = " ";
+if (selectProperty == null) selectProperty = "ALL";
+if (adv_search_source == null) adv_search_source = "ALL";
+if (search_string == null) search_string = "";
+if (adv_search_algorithm == null) adv_search_algorithm = "exactMatch";
+
+/*
+System.out.println("adv_search_algorithm: " + adv_search_algorithm);
+System.out.println("search_string: " + search_string);
+System.out.println("adv_search_source: " + adv_search_source);
+System.out.println("selectProperty: " + selectProperty);
+System.out.println("rel_search_association: " + rel_search_association);
+System.out.println("rel_search_rela: " + rel_search_rela);
+System.out.println("\n"); 
+*/
+
     String check__e = "", check__b = "", check__s = "" , check__c ="";
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
       check__e = "checked";
@@ -66,58 +174,26 @@
       <div class="pagecontent">
           <table>
 
-
-<%
-String rel_search_direction = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("rel_search_direction"));
-String check_source = "";
-String check_target = "";
-if (rel_search_direction == null || rel_search_direction.compareToIgnoreCase("source") == 0)
-check_source = "checked";
-else if (rel_search_direction.compareToIgnoreCase("target") == 0)
-check_target= "checked"; 
-
-
-boolean useSessionAttributes = true;
-String searchKey = request.getParameter("searchKey");
-IteratorBeanManager iteratorBeanManager = BeanUtils.getIteratorBeanManager();
-SearchFields fields = (SearchFields) iteratorBeanManager.getSearchFields(searchKey);
-
-String advancedSearchOption = "Property";
-if (useSessionAttributes) {
-  advancedSearchOption = HTTPUtils.getSessionAttribute(
-    request, "advancedSearchOption", "Property");
-} else {
-  String searchOption = (String) request.getAttribute("searchOptionChangedTo");
-  if (searchOption != null) {
-      advancedSearchOption = searchOption;
-  } else if (fields != null && fields.getType() == SearchFields.Type.Relationship) {
-      advancedSearchOption = "Relationship";
-  }
-}
-
-String search_string = null;
-if (fields != null) search_string = fields.getMatchText();
-if (search_string == null || search_string.compareTo("null") == 0) search_string = "";
-
-%>
+     <tr class="textbody"><td>
+       <%
+      String message = (String) request.getAttribute("message");
+      if (message != null) {
+      %>
+	 <p class="textbodyred">&nbsp;<%=message%></p>
+      <%
+      }
+      %>
+      </td></tr>
 
              <tr class="textbody">
                   <td>    
- 		      <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
- 		      
- 		          <input type="hidden" name="searchType" value="<%=advancedSearchOption%>">
-
+ 		      <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
                           <table>
                           
                              <tr><td>
                              <input CLASS="searchbox-input" name="matchText" value="<%=search_string%>">
-                             
-                             <!--
- 			    <input CLASS="searchbox-input" name="matchText" value="<%=match_text%>" onFocus="active = true"
- 				onBlur="active = false" onkeypress="return submitEnter('search',event)" />
-                              -->
                               
- 			    <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.searchAction}"
+ 			    <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
  			      onclick="javascript:cursor_wait();"
  			      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
  			      alt="Search">
@@ -144,24 +220,32 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
                              
 <tr><td>
 <h:outputLabel id="rel_search_source_Label" value="Source" styleClass="textbody">
-
 <select id="adv_search_source" name="adv_search_source" size="1">
-<%  
-    String currValue = HTTPUtils.getSessionAttribute(request, "adv_search_source", "ALL");
-    if (! useSessionAttributes) {
-        currValue = (fields != null) ? fields.getSource() : "ALL";
-    }
-    t = "ALL";
-%>   
-   <option value="<%=t%>"><%=t%></option>
 <% 
    Vector src_vec = OntologyBean.getSupportedSources();
+   t = "ALL";
+   if (adv_search_source == null) adv_search_source = "ALL";
+        if (t.compareTo(adv_search_source) == 0) {
+%>            
+            <option value="<%=t%>" selected><%=t%></option>
+<%            
+        } else {
+%>       
+            <option value="<%=t%>"><%=t%></option>
+<%             
+        }
+   
    for (int i=0; i<src_vec.size(); i++) {
         t = (String) src_vec.elementAt(i);
-        String args = t.equals(currValue) ? "selected" : "";
+        if (t.compareTo(adv_search_source) == 0) {
+%>            
+            <option value="<%=t%>" selected><%=t%></option>
+<%            
+        } else {
 %>       
-        <option value="<%=t%>" "<%=args%>"><%=t%></option>
-<%        
+            <option value="<%=t%>"><%=t%></option>
+<%             
+        }
    }
 %>   
 </select>
@@ -176,101 +260,129 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 
               <tr><td>
 			    <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
-				<h:selectOneMenu id="selectSearchOption" value="#{searchStatusBean.selectedSearchOption}" 
-				    valueChangeListener="#{searchStatusBean.searchOptionChanged}"
-				    immediate="true" onchange="submit()" >
-				  <f:selectItems value="#{searchStatusBean.searchOptionList}" />
-				</h:selectOneMenu> 
+
+
+<select id="selectSearchOption" name="selectSearchOption" size="1" onchange="javascript:refresh()" >
+if (selectSearchOption == null) selectSearchOption = "Property";
+<%
+if (selectSearchOption.compareTo("Property") == 0) {
+%>
+    <option value="Property" selected>Property</option>
+    <option value="Relationship" >Relationship</option>
+<%
+} else {
+%>
+    <option value="Property" >Property</option>
+    <option value="Relationship" selected >Relationship</option>
+<%
+}
+%>
+
+</select>
+				
 			    </h:outputLabel> 
-			  </td></tr>
+			    
+	      </td></tr>
+			  
+             
 
 <tr><td>
 <table>
 <%
- if (advancedSearchOption.compareTo("Property") == 0) {
-     if (! useSessionAttributes) {
-         String selectedProperty = "ALL";
-         if (fields != null && fields.getType() == SearchFields.Type.Property)
-             selectedProperty = fields.getPropertyName();
-         SearchStatusBean searchStatusBean = BeanUtils.getSearchStatusBean();
-         searchStatusBean.setSelectedProperty(selectedProperty);
-     }
+ if (selectSearchOption.compareTo("Property") == 0) {
 %>
- 
-<!-- 
-              <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-      			<h:outputLabel id="selectPropertyTypeLabel" value="Property Type" styleClass="textbody">
-   				<h:selectOneMenu id="selectPropertyType" value="#{searchStatusBean.selectedPropertyType}" 
-   				    valueChangeListener="#{searchStatusBean.selectedPropertyTypeChanged}"
-   				    immediate="true" >
-   				  <f:selectItems value="#{searchStatusBean.propertyTypeList}" />
-   				</h:selectOneMenu> 
- 			    </h:outputLabel> 
-              </td></tr>    
--->                              
+
+    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
+    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
+
 
               <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
   			    <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
+
+
+             <select id="selectProperty" name="selectProperty" size="1">
+        <%    
+                t = "ALL";
+		if (t.compareTo(selectProperty) == 0) {
+	%>            
+		    <option value="<%=t%>" selected><%=t%></option>
+	<%            
+		} else {
+	%>       
+		    <option value="<%=t%>"><%=t%></option>
+	<%             
+		}
+        %>
+        
+             <%   
+                Vector property_vec = OntologyBean.getSupportedPropertyNames();
+                for (int i=0; i<property_vec.size(); i++) {
+                    t = (String) property_vec.elementAt(i);
+			if (t.compareTo(selectProperty) == 0) {
+		%>            
+			    <option value="<%=t%>" selected><%=t%></option>
+		<%            
+			} else {
+		%>       
+			    <option value="<%=t%>"><%=t%></option>
+		<%             
+			}
+                }
+             %>  
+             
+             </select>
+             
+<!--             
+  			    
  				<h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}" 
  				    valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
  				    immediate="true" >
  				  <f:selectItems value="#{searchStatusBean.propertyList}" />
  				</h:selectOneMenu> 
+--> 				
+ 				
+ 				
  			    </h:outputLabel> 
               </td></tr>                         
 
 <% } else { %> 
-<%-- Note(4/13/10 Tue): The h:selectOneMenu causes:
-         * org.apache.jasper.JasperException: javax.servlet.jsp.JspException: Duplicate component ID '_id4' found in view.
-       f:subview was used, but this causes the these h:selectOneMenu values to be null.
-       Commenting this block of code for now.   
-           
-           <f:subview id="tmp">
-             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-             <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
-             <h:selectOneMenu id="rel_search_association" value="#{searchStatusBean.selectedRelationship}" 
-                 valueChangeListener="#{searchStatusBean.selectedRelationshipChanged}"
-                 immediate="true" >
-               <f:selectItems value="#{searchStatusBean.relationshipList}" />
-             </h:selectOneMenu> 
-             </h:outputLabel>  
-             </td></tr>
-           
-             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-             <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-             <h:selectOneMenu id="rel_search_rela" value="#{searchStatusBean.selectedRELA}" 
-                 valueChangeListener="#{searchStatusBean.selectedRELAChanged}"
-                 immediate="true" >
-               <f:selectItems value="#{searchStatusBean.RELAList}" />
-             </h:selectOneMenu> 
-             </h:outputLabel>  
-             </td></tr>
-           </f:subview>
---%>
 
+           <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
+    
            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           
              <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
              <select id="rel_search_association" name="rel_search_association" size="1">
-             <%
-                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_association", "ALL"); 
-                 if (! useSessionAttributes) {
-                     currValue = "ALL";
-                     if (fields != null && fields.getType() == SearchFields.Type.Relationship)
-                         currValue = fields.getRelSearchAssociation();
-                 }
-                 t = "ALL";
-             %>   
-                <option value="<%=t%>"><%=t%></option>
+        <%    
+                t = "ALL";
+		if (t.compareTo(rel_search_association) == 0) {
+	%>            
+		    <option value="<%=t%>" selected><%=t%></option>
+	<%            
+		} else {
+	%>       
+		    <option value="<%=t%>"><%=t%></option>
+	<%             
+		}
+        %>
+        
              <%   
                 Vector association_vec = OntologyBean.getSupportedAssociationNames();
                 for (int i=0; i<association_vec.size(); i++) {
                     t = (String) association_vec.elementAt(i);
-                    String args = t.equals(currValue) ? "selected" : "";
-             %>       
-                     <option value="<%=t%>" "<%=args%>"><%=t%></option>
-             <%        
+			if (t.compareTo(rel_search_association) == 0) {
+		%>            
+			    <option value="<%=t%>" selected><%=t%></option>
+		<%            
+			} else {
+		%>       
+			    <option value="<%=t%>"><%=t%></option>
+		<%             
+			}
                 }
-             %>   
+             %>  
+             
+             
              </select>
              </h:outputLabel>  
            </td></tr>
@@ -279,43 +391,37 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
              <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
              <select id="rel_search_rela" name="rel_search_rela" size="1">
-             <%  
-                 String currValue = HTTPUtils.getSessionAttribute(request, "rel_search_rela", " ");
-                 if (! useSessionAttributes) {
-                     currValue = " ";
-                     if (fields != null && fields.getType() == SearchFields.Type.Relationship)
-                         currValue = fields.getRelSearchRela();
-                 }
-                 t = " ";
-             %>   
-                <option value="<%=t%>"><%=t%></option>
+<%             
+             t = " ";
+             if (t.compareTo(rel_search_rela) == 0) {
+%>             
+                 <option value="<%=t%>" selected><%=t%></option>
+<%                 
+             } else {
+%>             
+                 <option value="<%=t%>" <%=t%></option>
+<%                 
+             }
+ %>            
+             <option value="<%=t%>"><%=t%></option>
              <% 
                 Vector rela_vec = OntologyBean.getRELAs();
                 for (int i=0; i<rela_vec.size(); i++) {
                      t = (String) rela_vec.elementAt(i);
-                     String args = t.equals(currValue) ? "selected" : "";
+                     if (t.compareTo(rel_search_rela) == 0) {
+                     %>
+                         <option value="<%=t%>" selected><%=t%></option>
+                         <%
+                     } else {
              %>       
-                     <option value="<%=t%>" "<%=args%>"><%=t%></option>
-             <%        
+                     <option value="<%=t%>" <%=t%></option>
+             <%       
+                     }
                 }
              %>   
              </select>
              </h:outputLabel>  
            </td></tr> 
-
-<!--
-             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-               <table border="0" cellspacing="0" cellpadding="0">
-			     <tr valign="top" align="left">
-			       <td align="left" class="textbody"><input type="radio"
-				     name="rel_search_direction" value="source" alt="Source" <%=check_source%>>Source
-			         &nbsp; <input type="radio" name="rel_search_direction" value="target"
-				     alt="Target" <%=check_target%>>Target
-				   </td>
-			     </tr>
-			   </table>   
-             </td></tr>         
--->                             
 
 <%                              
 } 
@@ -325,14 +431,10 @@ if (search_string == null || search_string.compareTo("null") == 0) search_string
 </table>
 
 </td></tr>
-
-
-
-
-
  
                              
-                         </table>    
+                         </table>   
+                        
 		     <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
          </form> 
 		     
