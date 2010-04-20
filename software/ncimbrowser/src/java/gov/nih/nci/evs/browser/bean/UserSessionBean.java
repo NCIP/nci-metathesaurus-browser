@@ -269,6 +269,7 @@ public class UserSessionBean extends Object
         schemes.add(scheme);
         boolean ranking = true;
 
+        SearchFields searchFields = null;
         String key = null;
 
 
@@ -320,9 +321,10 @@ public class UserSessionBean extends Object
 				request.getSession().setAttribute("property_name", property_name);
 			}
 
-			key = iteratorBeanManager.createPropertyKey(
+			searchFields = SearchFields.setProperty(
 			    schemes, matchText, searchTarget, property_type, property_name,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
+			key = searchFields.getKey();
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
@@ -417,10 +419,10 @@ public class UserSessionBean extends Object
 			}
 
 
-
-			key = iteratorBeanManager.createRelationshipKey(schemes, matchText,
+            searchFields = SearchFields.setRelationship(schemes, matchText,
 			    searchTarget, rel_search_association, rel_search_rela,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
+            key = searchFields.getKey();
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -481,7 +483,8 @@ public class UserSessionBean extends Object
 
 		} else {
 
-			key = iteratorBeanManager.createSimpleKey(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+            searchFields = SearchFields.setSimple(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+            key = searchFields.getKey();
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -547,7 +550,7 @@ public class UserSessionBean extends Object
 			int size = iteratorBean.getSize();
 
 			// Write a search log entry
-			SearchLog.writeEntry(iteratorBeanManager.getSearchFields(key),
+			SearchLog.writeEntry(searchFields,
 			    size, HTTPUtils.getRefererParmDecode(request));
 
 			if (size > 1) {
@@ -707,6 +710,7 @@ public class UserSessionBean extends Object
         schemes.add(scheme);
         boolean ranking = true;
 
+        SearchFields searchFields = null;
         String key = null;
 
 
@@ -760,9 +764,10 @@ public class UserSessionBean extends Object
 				request.getSession().setAttribute("property_name", property_name);
 			}
 
-			key = iteratorBeanManager.createPropertyKey(
+			searchFields = SearchFields.setProperty(
 			    schemes, matchText, searchTarget, property_type, property_name,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
+			key = searchFields.getKey();
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
@@ -857,10 +862,10 @@ public class UserSessionBean extends Object
 			}
 
 
-
-			key = iteratorBeanManager.createRelationshipKey(schemes, matchText,
+			searchFields = SearchFields.setRelationship(schemes, matchText,
 			    searchTarget, rel_search_association, rel_search_rela,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
+			key = searchFields.getKey();
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -921,7 +926,8 @@ public class UserSessionBean extends Object
 
 		} else {
 
-			key = iteratorBeanManager.createSimpleKey(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+		    searchFields = SearchFields.setSimple(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+		    key = searchFields.getKey();
 			if (searchTarget.compareTo("names") == 0) {
 				if (iteratorBeanManager.containsIteratorBean(key)) {
 					iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -989,7 +995,7 @@ public class UserSessionBean extends Object
 			int size = iteratorBean.getSize();
 
 			// Write a search log entry
-			SearchLog.writeEntry(iteratorBeanManager.getSearchFields(key),
+			SearchLog.writeEntry(searchFields,
 			    size, HTTPUtils.getRefererParmDecode(request));
 
 			if (size > 1) {
