@@ -399,22 +399,22 @@ if (selectSearchOption.compareTo("Property") == 0) {
 <%                 
              } else {
 %>             
-                 <option value="<%=t%>" <%=t%></option>
+                 <option value="<%=t%>"><%=t%></option>
 <%                 
              }
  %>            
-             <option value="<%=t%>"><%=t%></option>
              <% 
                 Vector rela_vec = OntologyBean.getRELAs();
                 for (int i=0; i<rela_vec.size(); i++) {
                      t = (String) rela_vec.elementAt(i);
+                     //System.out.println("rela: " + t);
                      if (t.compareTo(rel_search_rela) == 0) {
                      %>
                          <option value="<%=t%>" selected><%=t%></option>
-                         <%
+             <%
                      } else {
              %>       
-                     <option value="<%=t%>" <%=t%></option>
+                         <option value="<%=t%>"><%=t%></option>
              <%       
                      }
                 }
