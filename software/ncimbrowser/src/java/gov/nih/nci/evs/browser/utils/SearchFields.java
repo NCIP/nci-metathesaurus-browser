@@ -67,8 +67,54 @@ public class SearchFields {
     private String _relSearchAssociation;
     private String _relSearchRela;
 
-    public SearchFields() {
+    private SearchFields() {
         _key = randomKey();
+    }
+
+    public static SearchFields setSimple(Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        SearchFields fields = new SearchFields();
+        fields.setType(Type.Simple);
+        fields.setSchemes(schemes);
+        fields.setMatchText(matchText);
+        fields.setSearchTarget(searchTarget);
+        fields.setSource(source);
+        fields.setMatchAlgorithm(matchAlgorithm);
+        fields.setMaxReturn(maxReturn);
+        return fields;
+    }
+
+    public static SearchFields setProperty(Vector schemes, String matchText,
+        String searchTarget, String propertyType, String propertyName,
+        String source, String matchAlgorithm, int maxReturn) {
+        SearchFields fields = new SearchFields();
+        fields.setType(Type.Property);
+        fields.setSchemes(schemes);
+        fields.setMatchText(matchText);
+        fields.setSearchTarget(searchTarget);
+        fields.setPropertyType(propertyType);
+        fields.setPropertyName(propertyName);
+        fields.setSource(source);
+        fields.setMatchAlgorithm(matchAlgorithm);
+        fields.setMaxReturn(maxReturn);
+        return fields;
+    }
+
+    public static SearchFields setRelationship(Vector schemes,
+        String matchText, String searchTarget, String relSearchAssociation,
+        String relSearchRela, String source, String matchAlgorithm,
+        int maxReturn) {
+        SearchFields fields = new SearchFields();
+        fields.setType(Type.Relationship);
+        fields.setSchemes(schemes);
+        fields.setMatchText(matchText);
+        fields.setSearchTarget(searchTarget);
+        fields.setRelSearchAssociation(relSearchAssociation);
+        fields.setRelSearchRela(relSearchRela);
+        fields.setSource(source);
+        fields.setMatchAlgorithm(matchAlgorithm);
+        fields.setMaxReturn(maxReturn);
+        return fields;
     }
 
     private String randomKey() {
@@ -78,83 +124,92 @@ public class SearchFields {
         return s;
     }
 
-    public void setSimpleFields(Vector schemes, String matchText,
-        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
-        _type = Type.Simple;
-        _schemes = schemes;
-        _matchText = matchText.trim();
-        _searchTarget = searchTarget;
-        _source = source;
-        _matchAlgorithm = matchAlgorithm;
-        _maxReturn = maxReturn;
-    }
-
-    public void setPropertyFields(Vector schemes, String matchText,
-        String searchTarget, String propertyType, String propertyName,
-        String source, String matchAlgorithm, int maxReturn) {
-        _type = Type.Property;
-        _schemes = schemes;
-        _matchText = matchText.trim();
-        _searchTarget = searchTarget;
-        _propertyType = propertyType;
-        _propertyName = propertyName;
-        _source = source;
-        _matchAlgorithm = matchAlgorithm;
-        _maxReturn = maxReturn;
-    }
-
-    public void setRelationshipFields(Vector schemes, String matchText,
-        String searchTarget, String relSearchAssociation, String relSearchRela,
-        String source, String matchAlgorithm, int maxReturn) {
-        _type = Type.Relationship;
-        _schemes = schemes;
-        _matchText = matchText.trim();
-        _searchTarget = searchTarget;
-        _relSearchAssociation = relSearchAssociation;
-        _relSearchRela = relSearchRela;
-        _source = source;
-        _matchAlgorithm = matchAlgorithm;
-        _maxReturn = maxReturn;
-    }
-
     public String getKey() {
         return _key;
+    }
+
+    public void setType(Type type) {
+        _type = type;
     }
 
     public Type getType() {
         return _type;
     }
 
+    public void setSchemes(Vector schemes) {
+        _schemes = schemes;
+    }
+
+    public Vector getSchemes() {
+        return _schemes;
+    }
+
+    public void setMatchText(String matchText) {
+        _matchText = matchText.trim();
+    }
+
     public String getMatchText() {
         return _matchText;
+    }
+
+    public void setMatchAlgorithm(String matchAlgorithm) {
+        _matchAlgorithm = matchAlgorithm;
     }
 
     public String getMatchAlgorithm() {
         return _matchAlgorithm;
     }
 
+    public void setSearchTarget(String searchTarget) {
+        _searchTarget = searchTarget;
+    }
+
     public String getSearchTarget() {
         return _searchTarget;
+    }
+
+    public void setSource(String source) {
+        _source = source;
     }
 
     public String getSource() {
         return _source;
     }
 
+    public void setMaxReturn(int maxReturn) {
+        _maxReturn = maxReturn;
+    }
+
     public int getMaxReturn() {
         return _maxReturn;
+    }
+
+    public void setPropertyType(String propertyType) {
+        _propertyType = propertyType;
     }
 
     public String getPropertyType() {
         return _propertyType;
     }
 
+    public void setPropertyName(String propertyName) {
+        _propertyName = propertyName;
+    }
+
     public String getPropertyName() {
         return _propertyName;
     }
 
+    public void setRelSearchAssociation(String relSearchAssociation) {
+        _relSearchAssociation = relSearchAssociation;
+    }
+
     public String getRelSearchAssociation() {
         return _relSearchAssociation;
+    }
+
+    public void setRelSearchRela(String relSearchRela) {
+        _relSearchRela = relSearchRela;
     }
 
     public String getRelSearchRela() {
