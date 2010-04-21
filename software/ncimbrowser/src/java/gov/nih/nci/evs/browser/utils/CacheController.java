@@ -349,12 +349,11 @@ public class CacheController
         return nodeArray;
     }
 
+
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, String sab, boolean fromCache)
     {
         return getPathsToRoots(ontology_display_name, version, node_id, sab, fromCache, -1);
     }
-
-
 
     public JSONArray getPathsToRoots(String ontology_display_name, String version, String node_id, String sab, boolean fromCache, int maxLevel)
     {
