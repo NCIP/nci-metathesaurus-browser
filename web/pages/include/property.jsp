@@ -1,3 +1,5 @@
+<%@ page import="gov.nih.nci.evs.browser.utils.SortUtils" %>
+
 <%
   List displayItemList = null;
 
@@ -391,19 +393,28 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
 </p>
 
-<!--
+
 <p>
   <b>Other Properties:</b>
   <table class="datatable">
     <%
     
+      hmap = DataUtils.getPropertyValueHashMap(curr_concept_code);
       Set keyset = hmap.keySet();
       Iterator iterator = keyset.iterator();
+      Vector key_vec = new Vector();
+      String prop_name = null;
+      while (iterator.hasNext()) {
+         prop_name = (String) iterator.next();
+         key_vec.add(prop_name);
+      }
+      key_vec = SortUtils.quickSort(key_vec);
+      
       n = 0;
       displayed_properties.add("textualPresentation");
 
-      while (iterator.hasNext()) {
-        String prop_name = (String) iterator.next();
+      for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
+        prop_name = (String) key_vec.elementAt(key_lcv);
         if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
           Vector value_vec = (Vector) hmap.get(prop_name);
           if (value_vec == null || value_vec.size() == 0) {
@@ -447,7 +458,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     %>
   </table>
 </p>
--->
+
 <p>
 
     <%

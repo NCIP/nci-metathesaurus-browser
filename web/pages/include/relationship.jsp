@@ -56,6 +56,8 @@
     Vector broader_vec = (Vector) hmap.get("Broader");
     Vector narrower_vec = (Vector) hmap.get("Narrower");
     Vector sibling_vec = (Vector) hmap.get("Sibling");
+    //Vector sibling_vec = util.getSiblings(code_curr);
+    
     Vector other_vec = (Vector) hmap.get("Other");
 
     String label = "";

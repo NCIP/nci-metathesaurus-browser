@@ -1425,7 +1425,6 @@ public class DataUtils {
 			if (siblingList.size() > 0) {
 				SortUtils.quickSort(siblingList);
 			}
-
 			if (btList.size() > 0) {
 				SortUtils.quickSort(btList);
 			}
@@ -3995,4 +3994,239 @@ public class DataUtils {
 
 	}
 
+	public Vector getSiblings(String code) {
+		return getSiblings("NCI Metathesaurus", null, code);
+	}
+
+	public Vector getSiblings(String scheme, String version, String code) {
+		LexBIGService lbSvc = null;
+		LexBIGServiceConvenienceMethods lbscm = null;
+		Vector sibling_vec = new Vector();
+		try {
+			lbSvc = RemoteServerUtil.createLexBIGService();
+			lbscm = (LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+		} catch (Exception ex) {
+			return sibling_vec;
+		}
+
+		HashSet hset = new HashSet();
+		String[] assocNames = new String[] {"PAR"};
+		//find parents
+		Vector v = getAssociatedConceptsByAssociations(lbSvc, lbscm, scheme, version, code, assocNames);
+		for (int i=0; i<v.size(); i++) {
+			AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+			String parent_code = ac.getReferencedEntry().getEntityCode();
+			Vector u = getAssociatedConceptsByAssociations(lbSvc, lbscm, scheme, version, parent_code, assocNames, false);
+			for (int j=0; j<u.size(); j++) {
+				AssociatedConcept ac2 = (AssociatedConcept)u.elementAt(j);
+				String sub_code = ac2.getReferencedEntry().getEntityCode();
+				if (!hset.contains(sub_code) && sub_code.compareTo(code) != 0) {
+					hset.add(sub_code);
+					sibling_vec.add(ac2);
+			    }
+			}
+		}
+		return sibling_vec;
+	}
+
+	public Vector getAssociatedConceptsByAssociations(LexBIGService lbSvc, LexBIGServiceConvenienceMethods lbscm, String scheme, String version, String code, String[] assocNames) {
+		return getAssociatedConceptsByAssociations(lbSvc, lbscm, scheme, version, code, assocNames, true);
+	}
+
+
+
+	public Vector getAssociatedConceptsByAssociations(LexBIGService lbSvc, LexBIGServiceConvenienceMethods lbscm, String scheme, String version, String code, String[] assocNames, boolean direction) {
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null)
+			csvt.setVersion(version);
+		ResolvedConceptReferenceList matches = null;
+		Vector v = new Vector();
+		try {
+			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+			NameAndValueList nameAndValueList = createNameAndValueList(	assocNames, null);
+
+			NameAndValueList nameAndValueList_qualifier = null;
+			cng = cng.restrictToAssociations(nameAndValueList,
+					nameAndValueList_qualifier);
+
+			int maxToReturn = -1;//NCImBrowserProperties.maxToReturn;
+
+			boolean navigationForward = !direction;
+			boolean navigationBackward = direction;
+
+			matches = cng.resolveAsList(ConvenienceMethods
+					.createConceptReference(code, scheme), navigationForward, navigationBackward, 1, 1, new LocalNameList(), null, null, maxToReturn);
+
+
+
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				Enumeration<ResolvedConceptReference> refEnum = matches
+						.enumerateResolvedConceptReference();
+
+				while (refEnum.hasMoreElements()) {
+					ResolvedConceptReference ref = refEnum.nextElement();
+
+					AssociationList targetof = ref.getTargetOf();
+					if (!direction) targetof = ref.getSourceOf();
+					Association[] associations = targetof.getAssociation();
+
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+
+						String associationName = lbscm
+								.getAssociationNameFromAssociationCode(
+										scheme, csvt,
+										assoc.getAssociationName());
+
+						if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+							AssociatedConcept[] acl = assoc.getAssociatedConcepts()
+									.getAssociatedConcept();
+							for (int j = 0; j < acl.length; j++) {
+								AssociatedConcept ac = acl[j];
+								v.add(ac);
+								//v.add(associationName + "|" + ac.getReferencedEntry().getEntityDescription().getContent()
+								//   + "|" + ac.getReferencedEntry().getEntityCode());
+							}
+						}
+					}
+				}
+				SortUtils.quickSort(v);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v;
+	}
+
+    public static HashMap getPropertyValueHashMap(String code) {
+		return getPropertyValueHashMap(Constants.CODING_SCHEME_NAME, null, code);
+	}
+
+
+    public static HashMap getPropertyValueHashMap(String scheme, String version, String code) {
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null)
+            {
+                System.out.println("lbSvc = null");
+                return null;
+            }
+
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(version);
+
+			ConceptReferenceList crefs = new ConceptReferenceList();
+			ConceptReference cr = new ConceptReference();
+			cr.setCodingSchemeName(scheme);
+			cr.setConceptCode(code);
+			crefs.addConceptReference(cr);
+
+			CodedNodeSet cns = null;
+			try {
+				cns = lbSvc.getCodingSchemeConcepts(scheme,	versionOrTag);
+				cns = cns.restrictToCodes(crefs);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		    try {
+				SortOptionList sortOptions = null;
+				LocalNameList filterOptions = null;
+				boolean resolveObjects = true;
+                ResolvedConceptReferenceList rcrl = cns.resolveToList(sortOptions, filterOptions, null,
+                    null, resolveObjects, 1);
+                HashMap hmap = new HashMap();
+
+				if (rcrl == null) {
+					System.out.println("Concep not found.");
+					return null;
+				}
+
+				if (rcrl.getResolvedConceptReferenceCount() == 0) return null;
+				ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(0);
+				Concept c = rcr.getReferencedEntry();
+				if (c == null) {
+					System.out.println("Concept is null.");
+					return null;
+				}
+				Property[] properties = c.getProperty();
+				for (int j=0; j<properties.length; j++) {
+					Property prop = properties[j];
+					String prop_name = prop.getPropertyName();
+					String prop_value = prop.getValue().getContent();
+					Vector u = new Vector();
+					if (hmap.containsKey(prop_name)) {
+						u = (Vector) hmap.get(prop_name);
+					} else {
+						u = new Vector();
+					}
+					if (!u.contains(prop_value)) {
+						u.add(prop_value);
+						hmap.put(prop_name, u);
+					}
+				}
+				properties = c.getPresentation();
+				for (int j=0; j<properties.length; j++) {
+					Property prop = properties[j];
+					String prop_name = prop.getPropertyName();
+					String prop_value = prop.getValue().getContent();
+					Vector u = new Vector();
+					if (hmap.containsKey(prop_name)) {
+						u = (Vector) hmap.get(prop_name);
+					} else {
+						u = new Vector();
+					}
+					if (!u.contains(prop_value)) {
+						u.add(prop_value);
+						hmap.put(prop_name, u);
+					}
+				}
+				properties = c.getDefinition();
+				for (int j=0; j<properties.length; j++) {
+					Property prop = properties[j];
+					String prop_name = prop.getPropertyName();
+					String prop_value = prop.getValue().getContent();
+					Vector u = new Vector();
+					if (hmap.containsKey(prop_name)) {
+						u = (Vector) hmap.get(prop_name);
+					} else {
+						u = new Vector();
+					}
+					if (!u.contains(prop_value)) {
+						u.add(prop_value);
+						hmap.put(prop_name, u);
+					}
+				}
+				properties = c.getComment();
+				for (int j=0; j<properties.length; j++) {
+					Property prop = properties[j];
+					String prop_name = prop.getPropertyName();
+					String prop_value = prop.getValue().getContent();
+					Vector u = new Vector();
+					if (hmap.containsKey(prop_name)) {
+						u = (Vector) hmap.get(prop_name);
+					} else {
+						u = new Vector();
+					}
+					if (!u.contains(prop_value)) {
+						u.add(prop_value);
+						hmap.put(prop_name, u);
+					}
+				}
+                return hmap;
+			}  catch (Exception e) {
+				System.out.println("* " + e.getClass().getSimpleName() + ": " +
+					e.getMessage());
+			}
+		} catch (Exception ex) {
+            ex.printStackTrace();
+		}
+		return null;
+	}
+
+
 }
+
