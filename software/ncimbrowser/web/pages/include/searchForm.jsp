@@ -36,7 +36,6 @@
     String match_text = (String) request.getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
     
-    System.out.println("searchForm: match_text " + match_text);
     String displayed_match_text = HTTPUtils.convertJSPString(match_text); 
     
  %>
@@ -106,7 +105,6 @@
 <%
 
 if (!MetadataUtils.isMetadataAvailable()) {
-    System.out.println("Retrieving metadata...");
     MetadataUtils.initialize();
 }
 

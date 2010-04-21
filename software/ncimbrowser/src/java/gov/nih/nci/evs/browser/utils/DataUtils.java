@@ -3465,6 +3465,7 @@ public class DataUtils {
 			List<BySourceTabResults> relations = map.get(rel);
 			if (rel.compareTo(INCOMPLETE) != 0) {
 				String category = "Other";
+				/*
 				if (parent_asso_vec.contains(rel))
 					category = "Parent";
 				else if (child_asso_vec.contains(rel))
@@ -3473,6 +3474,17 @@ public class DataUtils {
 					category = "Broader";
 				else if (nt_vec.contains(rel))
 					category = "Narrower";
+				*/
+				if (parent_asso_vec.contains(rel))
+					category = "Child";
+				else if (child_asso_vec.contains(rel))
+					category = "Parent";
+				else if (bt_vec.contains(rel))
+					category = "Narrower";
+				else if (nt_vec.contains(rel))
+					category = "Broader";
+
+
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
@@ -3559,6 +3571,7 @@ public class DataUtils {
 			List<BySourceTabResults> relations = map2.get(rel);
 			if (rel.compareTo(INCOMPLETE) != 0) {
 				String category = "Other";
+				/*
 				if (parent_asso_vec.contains(rel))
 					category = "Parent";
 				else if (child_asso_vec.contains(rel))
@@ -3567,6 +3580,17 @@ public class DataUtils {
 					category = "Broader";
 				else if (nt_vec.contains(rel))
 					category = "Narrower";
+				*/
+
+				if (parent_asso_vec.contains(rel))
+					category = "Child";
+				else if (child_asso_vec.contains(rel))
+					category = "Parent";
+				else if (bt_vec.contains(rel))
+					category = "Narrower";
+				else if (nt_vec.contains(rel))
+					category = "Broader";
+
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
