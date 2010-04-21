@@ -127,6 +127,11 @@ String adv_search_source = null;
 
 	       Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
 	       if (bean_obj == null) {
+	           bean_obj = request.getAttribute("searchStatusBean");
+	       }
+	       
+	       
+	       if (bean_obj == null) {
 			   bean = new SearchStatusBean();
 			   FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
 
@@ -138,6 +143,14 @@ String adv_search_source = null;
 			   search_string = bean.getMatchText();
 			   rel_search_association = bean.getSelectedAssociation();
 			   rel_search_rela = bean.getSelectedRELA();
+			   
+			   System.out.println("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
+			   System.out.println("advanced_search.jsp adv_search_source: " + adv_search_source);
+			   System.out.println("advanced_search.jsp selectProperty: " + selectProperty);
+			   System.out.println("advanced_search.jsp search_string: " + search_string);
+			   System.out.println("advanced_search.jsp rel_search_association: " + rel_search_association);
+			   System.out.println("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+			   FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
 
 	       }
 	}
