@@ -186,20 +186,18 @@ public class DataUtils {
 	public String EVSServiceURL = null;
 	public String NCItURL = null;
 
-	static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa",
-			"branch_of", "part_of", "tributary_of" };
-	static String[] hierAssocToChildNodes_ = new String[] { "CHD",
-			"inverse_isa" };
+
+	static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
+	static String[] hierAssocToChildNodes_ = new String[] { "CHD", "inverse_isa" };
+
 	static String[] assocToSiblingNodes_ = new String[] { "SIB" };
 	static String[] assocToBTNodes_ = new String[] { "RB" };
 	static String[] assocToNTNodes_ = new String[] { "RN" };
 
-	static String[] relationshipCategories_ = new String[] { "Parent", "Child",
-			"Broader", "Narrower", "Sibling", "Other" };
+	static String[] relationshipCategories_ = new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling", "Other" };
 
 	private static String SOURCE = "source";
-	static String[] META_ASSOCIATIONS = new String[] { "AQ", "CHD", "RB", "RO",
-			"RQ", "SIB", "SY" };
+	static String[] META_ASSOCIATIONS = new String[] { "AQ", "CHD", "RB", "RO", "RQ", "SIB", "SY" };
 
     public static HashMap formalName2MetadataHashMap = null;
 
@@ -2442,6 +2440,8 @@ public class DataUtils {
 			ms_categorization = System.currentTimeMillis();
 			String rel_rela = (String) it.next();
 
+//System.out.println("rel_rela: " + rel_rela);
+
 			if (rel_rela.compareTo(INCOMPLETE) != 0) {
 
 				Vector u = DataUtils.parseData(rel_rela, "|");
@@ -2457,21 +2457,30 @@ public class DataUtils {
 					category = "Broader";
 				else if (nt_vec.contains(rel))
 					category = "Narrower";
+
+/*
+				if (parent_asso_vec.contains(rel))
+					category = "Child";
+				else if (child_asso_vec.contains(rel))
+					category = "Parent";
+				else if (bt_vec.contains(rel))
+					category = "Narrower";
+				else if (nt_vec.contains(rel))
+					category = "Broader";
+*/
+
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
 				ms_categorization_delay = ms_categorization_delay
 						+ (System.currentTimeMillis() - ms_categorization);
-				// Vector v = (Vector) hmap.get(rel);
-				// Vector v = (Vector) hmap.get(rel_rela);
 
 				Object obj = hmap.get(rel_rela);
 				if (obj != null) {
 					Vector v = (Vector) obj;
 					// For each related concept:
 					for (int i = 0; i < v.size(); i++) {
-						AssociatedConcept ac = (AssociatedConcept) v
-								.elementAt(i);
+						AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
 						EntityDescription ed = ac.getEntityDescription();
 						Concept c = ac.getReferencedEntry();
 						if (!hset.contains(c.getEntityCode())) {
@@ -2482,11 +2491,10 @@ public class DataUtils {
 							String t = findRepresentativeTerm(c, sab);
 							ms_find_highest_rank_atom_delay = ms_find_highest_rank_atom_delay
 									+ (System.currentTimeMillis() - ms_find_highest_rank_atom);
+							t = t + "|" + c.getEntityCode() + "|" + rela + "|" + category;
 
-							// t = t + "|" + c.getEntityCode() + "|" + rel + "|"
-							// + category;
-							t = t + "|" + c.getEntityCode() + "|" + rela + "|"
-									+ category;
+							//System.out.println(t);
+
 							w.add(t);
 
 							// Temporarily save non-RO other relationships
@@ -3034,6 +3042,7 @@ public class DataUtils {
 			action = "Retrieving " + SOURCE_OF;
 			ms = System.currentTimeMillis();
 			map = mbs.getRelationshipsDisplay(CUI, null, Direction.SOURCEOF);
+
 			delay = System.currentTimeMillis() - ms;
 			Debug.println("Run time (ms) for " + action + " " + delay);
 			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -3041,8 +3050,8 @@ public class DataUtils {
 			ms = System.currentTimeMillis();
 			action = "Retrieving " + TARGET_OF;
 			ms = System.currentTimeMillis();
-			map2 = mbs.getRelationshipsDisplay(CUI, par_chd_assoc_list,
-					Direction.TARGETOF);
+			map2 = mbs.getRelationshipsDisplay(CUI, par_chd_assoc_list,	Direction.TARGETOF);
+
 			delay = System.currentTimeMillis() - ms;
 			Debug.println("Run time (ms) for " + action + " " + delay);
 			DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -3060,6 +3069,7 @@ public class DataUtils {
 			List<RelationshipTabResults> relations = map.get(rel);
 			if (rel.compareTo(INCOMPLETE) != 0) {
 				String category = "Other";
+				/*
 				if (parent_asso_vec.contains(rel))
 					category = "Parent";
 				else if (child_asso_vec.contains(rel))
@@ -3068,6 +3078,17 @@ public class DataUtils {
 					category = "Broader";
 				else if (nt_vec.contains(rel))
 					category = "Narrower";
+
+				*/
+				if (parent_asso_vec.contains(rel))
+					category = "Child";
+				else if (child_asso_vec.contains(rel))
+					category = "Parent";
+				else if (bt_vec.contains(rel))
+					category = "Narrower";
+				else if (nt_vec.contains(rel))
+					category = "Broader";
+
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
@@ -3097,6 +3118,7 @@ public class DataUtils {
 			List<RelationshipTabResults> relations = map2.get(rel);
 			if (rel.compareTo(INCOMPLETE) != 0) {
 				String category = "Other";
+				/*
 				if (parent_asso_vec.contains(rel))
 					category = "Parent";
 				else if (child_asso_vec.contains(rel))
@@ -3105,6 +3127,18 @@ public class DataUtils {
 					category = "Broader";
 				else if (nt_vec.contains(rel))
 					category = "Narrower";
+				*/
+
+				if (parent_asso_vec.contains(rel))
+					category = "Child";
+				else if (child_asso_vec.contains(rel))
+					category = "Parent";
+				else if (bt_vec.contains(rel))
+					category = "Narrower";
+				else if (nt_vec.contains(rel))
+					category = "Broader";
+
+
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
