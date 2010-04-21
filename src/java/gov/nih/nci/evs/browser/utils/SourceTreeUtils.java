@@ -83,6 +83,11 @@ import org.LexGrid.commonTypes.Source;
 import org.apache.commons.lang.StringUtils;
 import org.LexGrid.commonTypes.PropertyQualifier;
 
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
+import org.LexGrid.lexevs.metabrowser.MetaTree;
+import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode;
+import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.ExpandedState;
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -299,106 +304,9 @@ public class SourceTreeUtils {
 		return getAssociatedConceptsInTree(scheme, version, code, source, true);
 	}
 
-/*
-    public static ArrayList getSuperconceptsInTree(String scheme, String version, String code, String source) {
-		//return getAssociatedConceptsInTree(scheme, version, code, source, false);
-
-		ArrayList list = new ArrayList();
-
-		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-		if (version != null) csvt.setVersion(version);
-        long ms = System.currentTimeMillis();
-		try {
-			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
-			if (cs == null) return null;
-			Mappings mappings = cs.getMappings();
-			SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-			if (hierarchies == null || hierarchies.length == 0) return null;
-
-		    SupportedHierarchy hierarchyDefn = hierarchies[0];
-			String hier_id = hierarchyDefn.getLocalId();
-
-			String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
-
-			for (int i=0; i<associationsToNavigate.length; i++) {
-				String t = associationsToNavigate[i];
-				System.out.println(t);
-			}
-
-			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
-			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
-			propertyTypes[0] = PropertyType.PRESENTATION;
-
-			ResolvedConceptReferenceList matches = null;
-			try {
-				CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-				NameAndValueList nameAndValueList_qualifier = null;
-
-				if (source != null) {
-					nameAndValueList_qualifier = createNameAndValueList(new String[] {"source"}, new String[] {source});
-				}
-
-				cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
-				ConceptReference graphFocus = ConvenienceMethods
-						.createConceptReference(code, scheme);
-				matches = cng.resolveAsList(graphFocus, false, true,
-				                            1, 1,
-				                            new LocalNameList(), propertyTypes, null, null, -1,
-				                            true);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			// Analyze the result ...
-			if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
-
-				ResolvedConceptReference[] rcra = matches.getResolvedConceptReference();
-                for (int k=0; k<rcra.length; k++) {
-				    ResolvedConceptReference ref = (ResolvedConceptReference) rcra[k];
-					if (ref != null) {
-						AssociationList sourceof = ref.getTargetOf();
-						if (sourceof != null) {
-							Association[] associations = sourceof.getAssociation();
-							if (associations != null) {
-								for (int i = 0; i < associations.length; i++) {
-									Association assoc = associations[i];
-									if (assoc != null) {
-										if (assoc.getAssociatedConcepts() != null) {
-											AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-											if (acl != null) {
-												for (int j = 0; j < acl.length; j++) {
-													AssociatedConcept ac = acl[j];
-													if (ac != null && !ac.getConceptCode().startsWith("@")) {
-														list.add(ac);
-
-	System.out.println("getAssociatedConceptsInTree ac " + ac.getConceptCode());
-
-
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-
-				    }
-			    }
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		System.out.println("Run time (milliseconds) getSubconcepts: "
-				+ (System.currentTimeMillis() - ms) + " to resolve ");
-		SortUtils.quickSort(list);
-		return list;
-
+    private boolean isLeaf(MetaTreeNode focus) {
+		return focus.getExpandedState().equals(ExpandedState.LEAF);
 	}
-	*/
-
-
 
     public static ArrayList getSuperconceptsInTree(String scheme, String version, String code, String source) {
 
@@ -419,12 +327,7 @@ public class SourceTreeUtils {
 			String hier_id = hierarchyDefn.getLocalId();
 
 			String[] associationsToNavigate = hierarchyDefn.getAssociationNames();
-/*
-			for (int i=0; i<associationsToNavigate.length; i++) {
-				String t = associationsToNavigate[i];
-				System.out.println(t);
-			}
-*/
+
 			NameAndValueList nameAndValueList = createNameAndValueList(associationsToNavigate, null);
 			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
 			propertyTypes[0] = PropertyType.PRESENTATION;
@@ -1009,9 +912,6 @@ public class SourceTreeUtils {
         String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
         String rootCode = SRC_root.getCode();
 
-System.out.println("rootName: " + rootName);
-System.out.println("rootCode: " + rootCode);
-
         // Dummy root (place holder)
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
         int pathsResolved = 0;
@@ -1021,29 +921,15 @@ System.out.println("rootCode: " + rootCode);
             TreeItem[] pathsFromRoot = buildPathsToRoot(lbsvc, lbscm, rcr, scheme, csvt, sab, maxLevel);
             pathsResolved = pathsFromRoot.length;
 
-System.out.println("pathsResolved: " + pathsResolved);
-
-
             for (TreeItem rootItem : pathsFromRoot) {
-
-	System.out.println("rootItem.text: " + rootItem.text + "     code: " + rootItem.code);
-
-
 				if (rootItem.text.compareTo(rootName) == 0) {
 					for (String assoc : rootItem.assocToChildMap.keySet()) {
 						List<TreeItem> children = rootItem.assocToChildMap.get(assoc);
 						for (TreeItem childItem : children) {
-
-	System.out.println("adding CHD " + childItem.text + " under " + ti.text);
-
-
 						   ti.addChild(assoc, childItem);
 						}
 					}
 			    } else {
-
-	System.out.println("adding CHD " + rootItem.text + " under " + ti.text);
-
 					ti.addChild("CHD", rootItem);
 				}
 			}
@@ -1499,7 +1385,6 @@ HTLV1 IgG Ser Ql
 					String src_name = src.getContent();
 					if (src_name.compareTo(sab) == 0) {
 						containsSource = true;
-						//System.out.println("src_name: " + src_name);
 						break;
 					}
 				}
@@ -1515,7 +1400,6 @@ HTLV1 IgG Ser Ql
 						if (curr_rank > rank) {
 							name = presentation.getValue().getContent();
 							rank = curr_rank;
-							//System.out.println("Current rank: " + curr_rank + " - " + name);
 						}
 					}
 				}
@@ -1671,6 +1555,52 @@ HTLV1 IgG Ser Ql
 	}
 
 
+	public HashMap getChildren(String CUI, String SAB) {
+		HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+
+		try {
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			MetaBrowserService mbs = (MetaBrowserService) lbs.getGenericExtension("metabrowser-extension");
+			MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+			MetaTreeNode focus = tree.getCurrentFocus();
+            ti = new TreeItem(focus.getCui(), focus.getName());
+			if(isLeaf(focus)) {
+				System.out.println("Leaf node -- no children.");
+				ti.expandable = false;
+
+				hmap.put(ti.code, ti);
+
+				return hmap;
+			} else {
+				ti.expandable = true;
+			}
+
+			Iterator iterator = focus.getChildren();
+			if (iterator == null) {
+				return hmap;
+			}
+
+            String childNavText = "CHD";
+			while (iterator.hasNext()) {
+				MetaTreeNode child = (MetaTreeNode) iterator.next();
+				TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+				childItem.expandable = true;
+				if(isLeaf(child)) {
+					childItem.expandable = false;
+				}
+				ti.addChild(childNavText, childItem);
+			}
+	    } catch (Exception e) {
+
+		}
+		hmap.put(ti.code, ti);
+		return hmap;
+	}
+
+
+
     public List getSourceHierarchyRoots(
         String scheme,
         CodingSchemeVersionOrTag csvt,
@@ -1699,7 +1629,8 @@ HTLV1 IgG Ser Ql
 			String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
 			String rootCode = SRC_root.getCode();
 
-			HashMap hmap = getSubconcepts(scheme, csvt.getVersion(), rootCode, sab, associationsToNavigate, associationsNavigatedFwd);
+			//HashMap hmap = getSubconcepts(scheme, csvt.getVersion(), rootCode, sab, associationsToNavigate, associationsNavigatedFwd);
+            HashMap hmap = getChildren(rootCode, sab);
 
 			ArrayList list = new ArrayList();
 			TreeItem ti = (TreeItem) hmap.get(rootCode);
