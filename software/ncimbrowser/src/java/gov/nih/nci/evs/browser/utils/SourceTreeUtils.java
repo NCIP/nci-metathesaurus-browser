@@ -1629,6 +1629,8 @@ HTLV1 IgG Ser Ql
 			String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
 			String rootCode = SRC_root.getCode();
 
+System.out.println("Searching for roots in " + sab + " under -- " + rootName + " (CUI: " + rootCode + ")");
+
 			//HashMap hmap = getSubconcepts(scheme, csvt.getVersion(), rootCode, sab, associationsToNavigate, associationsNavigatedFwd);
             HashMap hmap = getChildren(rootCode, sab);
 
