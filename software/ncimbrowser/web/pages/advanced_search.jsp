@@ -122,7 +122,8 @@ String adv_search_source = null;
 
 
        SearchStatusBean bean = null;
-	if (!refresh_page) {       
+       String message = (String) request.getAttribute("message");
+	if (!refresh_page || message != null) {       
 
 	       Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
 	       if (bean_obj == null) {
@@ -176,7 +177,6 @@ System.out.println("\n");
 
      <tr class="textbody"><td>
        <%
-      String message = (String) request.getAttribute("message");
       if (message != null) {
       %>
 	 <p class="textbodyred">&nbsp;<%=message%></p>
