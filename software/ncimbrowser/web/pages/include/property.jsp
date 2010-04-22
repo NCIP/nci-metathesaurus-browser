@@ -393,12 +393,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
 </p>
 
-
-<p>
-  <b>Other Properties:</b>
-  <table class="datatable">
-    <%
-    
+<%
       hmap = DataUtils.getPropertyValueHashMap(curr_concept);
       Set keyset = hmap.keySet();
       Iterator iterator = keyset.iterator();
@@ -412,7 +407,33 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       
       n = 0;
       displayed_properties.add("textualPresentation");
+      
+      boolean show_other_properties = false;
+      for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
+         prop_name = (String) key_vec.elementAt(key_lcv);
+         if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
+            Vector value_vec = (Vector) hmap.get(prop_name);
+            if (value_vec.size() > 0) {
+                show_other_properties = true;
+                break;
+            }
+         }
+      }
+     
 
+
+  if (!has_external_source_codes) {
+  %>
+      <b>Other Properties:&nbsp;</b> <i>(none)</i>
+  <%
+  } else {
+  %>
+
+
+<p>
+  <b>Other Properties:</b>
+  <table class="datatable">
+    <%
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
         prop_name = (String) key_vec.elementAt(key_lcv);
         if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
@@ -459,8 +480,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   </table>
 </p>
 
-<p>
+<%
+}
+%>
 
+<p>
     <%
       String concept_name = curr_concept.getEntityDescription().getContent();
       concept_name = concept_name.replaceAll(" ", "_");
