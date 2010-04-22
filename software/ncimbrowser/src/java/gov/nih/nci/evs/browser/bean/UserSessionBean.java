@@ -444,7 +444,6 @@ public class UserSessionBean extends Object
 					association_qualifier_names = new String[] {"rela"};
 					association_qualifier_values = new String[] {rel_search_rela};
 
-/*
 
 					if (associationsToNavigate == null) {
 						Vector w = OntologyBean.getAssociationNames();
@@ -459,7 +458,7 @@ public class UserSessionBean extends Object
 					    }
                     }
 
-*/
+
 
 				} else {
 					System.out.println("(*) qualifiers == null");
