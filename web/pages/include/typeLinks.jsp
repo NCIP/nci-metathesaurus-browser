@@ -7,7 +7,7 @@ System.out.println("(*) concept_typelinks == null???");
   String concept_typelinks_id = concept_typelinks.getEntityCode();
 
   //request.getSession().setAttribute("code", concept_src_id);
-  Vector sources_typelinks = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_typelinks_id);
+  //Vector sources_typelinks = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_typelinks_id);
 %>
 
 <table class="tabTable" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -137,24 +137,10 @@ System.out.println("(*) concept_typelinks == null???");
         }
         %>
         </td>
+        
+        
         <td align="right" valign="top">
-    <%
-        if (sources_typelinks != null && sources_typelinks.contains("NCI")) {
-           String type_link_term_source = "NCI";
-    %>
-          <a id="a_hierBut" class="button" href="javascript:void(0)" onClick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?dictionary=<%=scheme%>&code=<%=id%>&sab=<%=type_link_term_source%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-          <img name="Hierarchy"
-            src="<%=request.getContextPath() %>/images/Hierarchy_button.gif"
-            width="91px" height="17px" border="0" alt="View in NCIt Hierarchy"
-            title="View in NCIt Hierarchy"/>
-          </a>
-    <%
-        } else {
-          %>
-            &nbsp;
-          <%
-        }
-    %>
-        </td>
+             &nbsp;
+         </td>
   </tr>
 </table>
