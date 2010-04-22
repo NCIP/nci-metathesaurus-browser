@@ -30,9 +30,8 @@
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <script type="text/javascript">
-    function refresh() {
+    function refresh(selectSearchOption) {
       var text = document.forms["advancedSearchForm"].matchText.value;
-      var selectSearchOption = document.forms["advancedSearchForm"].selectSearchOption.value;
       algorithm = "exactMatch";
       var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
       for (var i=0; i<algorithmObj.length; i++) {
@@ -44,20 +43,14 @@
       var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
       var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
       var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
-      window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1&opt="
-        + selectSearchOption
-        + "&text="
-        + text
-        + "&algorithm="
-        + algorithm
-        + "&sab="
-        + adv_search_source
-        + "&prop="
-        + selectProperty
-        + "&rel="
-        + rel_search_association
-        + "&rela="
-        + rel_search_rela;
+      window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1"
+          + "&opt="+ selectSearchOption
+          + "&text="+ text
+          + "&algorithm="+ algorithm
+          + "&sab="+ adv_search_source
+          + "&prop="+ selectProperty
+          + "&rel="+ rel_search_association
+          + "&rela="+ rel_search_rela;
     }
   </script>
 
@@ -84,7 +77,7 @@
 
     String t = null;
     String selectSearchOption = null;
-
+    
     if (refresh_page) {
         selectSearchOption = (String) request.getParameter("opt");
         search_string = (String) request.getParameter("text");
@@ -159,6 +152,17 @@
         check__b= "checked";
     else
         check__c = "checked";
+
+    String check_n2 = "", check_c2 = "", check_p2 = "" , check_r2 ="";
+    if (selectSearchOption == null || selectSearchOption.compareTo("Name") == 0)
+      check_n2 = "checked";
+    else if (selectSearchOption.compareTo("Code") == 0)
+        check_c2 = "checked";
+    else if (selectSearchOption.compareTo("Property") == 0)
+      check_p2 = "checked";
+    else if (selectSearchOption.compareTo("Relationship") == 0)
+      check_r2 = "checked";
+    else check_n2 = "checked";
 %>
 
         <div class="pagecontent">
@@ -229,24 +233,34 @@
                   &nbsp;&nbsp;
                 </td></tr>
 
-                <tr><td>
-                  <h:outputLabel id="searchOptionLabel" value="Search By" styleClass="textbody">
-                    <select id="selectSearchOption" name="selectSearchOption" size="1" onchange="javascript:refresh()" >
-                    if (selectSearchOption == null) selectSearchOption = "Property";
-                    <% if (selectSearchOption.compareTo("Property") == 0) { %>
-                        <option value="Property" selected>Property</option>
-                        <option value="Relationship" >Relationship</option>
-                    <% } else { %>
-                        <option value="Property" >Property</option>
-                        <option value="Relationship" selected >Relationship</option>
-                    <% } %>
-                    </select>
-                  </h:outputLabel>
+                <tr valign="top" align="left"><td align="left" class="textbody">
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh('Name')">Name&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh('Code')">Code&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh('Property')">Property&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh('Relationship')">Relationship
                 </td></tr>
-
+ 
                 <tr><td>
                   <table>
-                  <% if (selectSearchOption.compareTo("Property") == 0) { %>
+                  <% if (selectSearchOption.equals("Name")) { %>
+                    <tr>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td styleClass="textbody">
+                        <h:outputLabel id="selectNameLabel" value="Name" styleClass="textbody">
+                          Name Field(s): Not Available
+                        </h:outputLabel>
+                      </td>
+                    </tr>
+                  <% } else if (selectSearchOption.equals("Code")) { %>
+                    <tr>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td styleClass="textbody">
+                        <h:outputLabel id="selectCodeLabel" value="Code" styleClass="textbody">
+                          Code Field(s): Not Available
+                        </h:outputLabel>
+                      </td>
+                    </tr>
+                  <% } else if (selectSearchOption.equals("Property")) { %>
                     <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
                     <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
                     <tr>
@@ -288,7 +302,7 @@
                       </td>
                     </tr>
 
-                  <% } else { %>
+                  <% } else if (selectSearchOption.equals("Relationship")) { %>
                     <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
