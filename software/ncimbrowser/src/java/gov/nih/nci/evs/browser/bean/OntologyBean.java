@@ -150,6 +150,7 @@ public class OntologyBean {
 			int rela_count = 0;
 			for(int i=0;i<mdpl.getMetadataPropertyCount();i++){
 				MetadataProperty prop = mdpl.getMetadataProperty(i);
+				/*
 				if(prop.getName().equals("dockey") && prop.getValue().equals("RELA")){
 					i++;
 					rela_count++;
@@ -160,6 +161,25 @@ public class OntologyBean {
 						hset.add(prop.getValue());
 					}
 				}
+				*/
+
+				if(prop.getName().equals("dockey") && prop.getValue().equals("RELA")){
+					i++;
+					prop = mdpl.getMetadataProperty(i);
+
+					String potentialValue = prop.getValue();
+					i++;
+					prop = mdpl.getMetadataProperty(i);
+
+					String type = prop.getValue();
+					if(type.equals("expanded_form") || type.equals("rela_inverse")){
+						if (!hset.contains(potentialValue)) {
+							v.add(potentialValue);
+							hset.add(potentialValue);
+						}
+					}
+				}
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
