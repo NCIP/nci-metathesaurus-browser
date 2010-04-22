@@ -392,7 +392,7 @@ public class UserSessionBean extends Object
 			if (rel_search_direction != null && rel_search_direction.compareTo("source") == 0) {
 				search_direction = Constants.SEARCH_SOURCE;
 				//direction = true;
-			} else if (rel_search_direction != null && rel_search_direction.compareTo("taret") == 0) {
+			} else if (rel_search_direction != null && rel_search_direction.compareTo("target") == 0) {
 				search_direction = Constants.SEARCH_TARGET;
 				//direction = true;
 			}
@@ -444,6 +444,8 @@ public class UserSessionBean extends Object
 					association_qualifier_names = new String[] {"rela"};
 					association_qualifier_values = new String[] {rel_search_rela};
 
+/*
+
 					if (associationsToNavigate == null) {
 						Vector w = OntologyBean.getAssociationNames();
 						if (w == null || w.size() == 0) {
@@ -456,6 +458,8 @@ public class UserSessionBean extends Object
 							}
 					    }
                     }
+
+*/
 
 				} else {
 					System.out.println("(*) qualifiers == null");
