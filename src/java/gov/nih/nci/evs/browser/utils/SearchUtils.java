@@ -2715,8 +2715,6 @@ if (association_qualifier_values != null) {
 			matchAlgorithm = findBestContainsAlgorithm(matchText);
 		}
 
-System.out.println("searchByAssociations matchAlgorithm: " + matchAlgorithm);
-
         CodedNodeSet cns = null;
         ResolvedConceptReferencesIterator iterator = null;
 
