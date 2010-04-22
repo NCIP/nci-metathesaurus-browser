@@ -2655,13 +2655,35 @@ String[] associationsToNavigate,
                                                                          int search_direction,
                                                                          String source, String matchAlgorithm, boolean designationOnly,
                                                                          boolean ranking, int maxToReturn) {
-
+/*
 System.out.println("searchByAssociations scheme: " + scheme);
 System.out.println("searchByAssociations matchText: " + matchText);
 System.out.println("searchByAssociations resolve_direction: " + search_direction);
 System.out.println("searchByAssociations source: " + source);
+System.out.println("searchByAssociations search_direction: " + search_direction);
+System.out.println("searchByAssociations matchAlgorithm: " + matchAlgorithm);
 
+if (associationsToNavigate != null) {
+	for (int lcv=0; lcv<associationsToNavigate.length; lcv++) {
+		String str = (String) associationsToNavigate[lcv];
+		System.out.println("searchByAssociations associationsToNavigate: " + str);
+	}
+}
 
+if (association_qualifier_names != null) {
+	for (int lcv=0; lcv<association_qualifier_names.length; lcv++) {
+		String str = (String) association_qualifier_names[lcv];
+		System.out.println("searchByAssociations association_qualifier_names: " + str);
+	}
+}
+
+if (association_qualifier_values != null) {
+	for (int lcv=0; lcv<association_qualifier_values.length; lcv++) {
+		String str = (String) association_qualifier_values[lcv];
+		System.out.println("searchByAssociations association_qualifier_values: " + str);
+	}
+}
+*/
 		NameAndValueList associationList = null;
 		if (associationsToNavigate != null) {
 			associationList = createNameAndValueList(associationsToNavigate, null);
