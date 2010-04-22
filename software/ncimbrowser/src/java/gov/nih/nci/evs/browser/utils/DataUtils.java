@@ -4168,7 +4168,6 @@ public class DataUtils {
 		return getPropertyValueHashMap(Constants.CODING_SCHEME_NAME, null, code);
 	}
 
-
     public static HashMap getPropertyValueHashMap(String scheme, String version, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
