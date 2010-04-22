@@ -163,6 +163,7 @@
 
         <div class="pagecontent">
           <table>
+            <td class="texttitle-blue">Advanced Search</td>
             <tr class="textbody"><td>
             <% if (message != null) { %>
                 <p class="textbodyred">&nbsp;<%=message%></p>
