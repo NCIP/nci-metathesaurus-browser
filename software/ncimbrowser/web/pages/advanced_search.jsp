@@ -243,6 +243,7 @@
                 </td></tr>
 
                 <tr valign="top" align="left"><td align="left" class="textbody">
+                  Search By
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()">Name&nbsp;
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()">Code&nbsp;
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()">Property&nbsp;
