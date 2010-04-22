@@ -30,7 +30,7 @@
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <script type="text/javascript">
-    function refresh(selectSearchOption) {
+    function refresh() {
       var text = document.forms["advancedSearchForm"].matchText.value;
       algorithm = "exactMatch";
       var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
@@ -40,6 +40,15 @@
         }
       }
       var adv_search_source = document.forms["advancedSearchForm"].adv_search_source.value;
+
+      selectSearchOption = "Property";
+      var selectSearchOptionObj = document.forms["advancedSearchForm"].selectSearchOption;
+      for (var i=0; i<selectSearchOptionObj.length; i++) {
+        if (selectSearchOptionObj[i].checked) {
+        	selectSearchOption = selectSearchOptionObj[i].value;
+        }
+      }
+      
       var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
       var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
       var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
@@ -234,32 +243,18 @@
                 </td></tr>
 
                 <tr valign="top" align="left"><td align="left" class="textbody">
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh('Name')">Name&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh('Code')">Code&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh('Property')">Property&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh('Relationship')">Relationship
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()">Name&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()">Code&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()">Property&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()">Relationship
                 </td></tr>
  
                 <tr><td>
                   <table>
-                  <% if (selectSearchOption.equals("Name")) { %>
-                    <tr>
-                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td styleClass="textbody">
-                        <h:outputLabel id="selectNameLabel" value="Name" styleClass="textbody">
-                          Name Field(s): Not Available
-                        </h:outputLabel>
-                      </td>
-                    </tr>
-                  <% } else if (selectSearchOption.equals("Code")) { %>
-                    <tr>
-                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td styleClass="textbody">
-                        <h:outputLabel id="selectCodeLabel" value="Code" styleClass="textbody">
-                          Code Field(s): Not Available
-                        </h:outputLabel>
-                      </td>
-                    </tr>
+                  <% if (selectSearchOption.equals("Name") || selectSearchOption.equals("Code")) { %>
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
                   <% } else if (selectSearchOption.equals("Property")) { %>
                     <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
                     <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
