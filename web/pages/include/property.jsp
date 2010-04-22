@@ -399,7 +399,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   <table class="datatable">
     <%
     
-      hmap = DataUtils.getPropertyValueHashMap(curr_concept_code);
+      hmap = DataUtils.getPropertyValueHashMap(curr_concept);
       Set keyset = hmap.keySet();
       Iterator iterator = keyset.iterator();
       Vector key_vec = new Vector();

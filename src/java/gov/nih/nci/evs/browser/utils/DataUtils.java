@@ -1106,10 +1106,16 @@ public class DataUtils {
 
 		if (properties == null || properties.length == 0)
 			return v;
+		HashSet hset = new HashSet();
 		for (int i = 0; i < properties.length; i++) {
 			Property p = (Property) properties[i];
-			v.add(p.getPropertyName());
+			String nm = p.getPropertyName();
+			if (!hset.contains(nm)) {
+				hset.add(nm);
+				v.add(p.getPropertyName());
+		    }
 		}
+		hset.clear();
 		return v;
 	}
 
@@ -2242,8 +2248,7 @@ public class DataUtils {
 									String asso_label = associationName;
 									String qualifier_name = null;
 									String qualifier_value = null;
-									if (associationName
-											.compareToIgnoreCase("equivalentClass") != 0) {
+									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
 										for (NameAndValue qual : ac
 												.getAssociationQualifiers()
 												.getNameAndValue()) {
@@ -2777,6 +2782,7 @@ public class DataUtils {
 		return u;
 	}
 
+/*
 	public HashMap getAssociationTargetHashMap(String scheme, String version,
 			String code, Vector sort_option) {
 
@@ -2983,6 +2989,7 @@ public class DataUtils {
 			String code) {
 		return getAssociationTargetHashMap(scheme, version, code, null);
 	}
+*/
 
 	public Vector hashSet2Vector(HashSet hset) {
 		if (hset == null)
@@ -3137,7 +3144,6 @@ public class DataUtils {
 				else if (nt_vec.contains(rel))
 					category = "Broader";
 
-
 				else if (sibling_asso_vec.contains(rel))
 					category = "Sibling";
 
@@ -3277,10 +3283,16 @@ public class DataUtils {
 		Debug.println("Run time (ms) for " + action + " " + delay);
 		DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
+		//KLO, testing
+		new_rel_hmap.put("Sibling", getSiblings(CUI));
+
 		removeRedundantRecords(new_rel_hmap);
 		String incomplete = (String) new_rel_hmap.get(INCOMPLETE);
-		if (incomplete != null)
+		if (incomplete != null) {
 			new_rel_hmap.put(INCOMPLETE, incomplete);
+		}
+
+
 		return new_rel_hmap;
 	}
 
@@ -3994,6 +4006,11 @@ public class DataUtils {
 
 	}
 
+
+/////////////////////////////////////////////////
+// siblings
+////////////////////////////////////////////////
+
 	public Vector getSiblings(String code) {
 		return getSiblings("NCI Metathesaurus", null, code);
 	}
@@ -4016,16 +4033,26 @@ public class DataUtils {
 		//find parents
 		Vector v = getAssociatedConceptsByAssociations(lbSvc, lbscm, scheme, version, code, assocNames);
 		for (int i=0; i<v.size(); i++) {
-			AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-			String parent_code = ac.getReferencedEntry().getEntityCode();
+			String t = (String) v.elementAt(i);
+			Vector w = parseData(t);
+			String rel = (String) w.elementAt(0);
+			String rela = (String) w.elementAt(1);
+			String parent_name = (String) w.elementAt(2);
+			String parent_code = (String) w.elementAt(3);
+
 			Vector u = getAssociatedConceptsByAssociations(lbSvc, lbscm, scheme, version, parent_code, assocNames, false);
 			for (int j=0; j<u.size(); j++) {
-				AssociatedConcept ac2 = (AssociatedConcept)u.elementAt(j);
-				String sub_code = ac2.getReferencedEntry().getEntityCode();
-				if (!hset.contains(sub_code) && sub_code.compareTo(code) != 0) {
-					hset.add(sub_code);
-					sibling_vec.add(ac2);
-			    }
+				String t2 = (String) u.elementAt(j);
+				Vector w2 = parseData(t2);
+                String sib_rel = (String) w2.elementAt(0);
+                String sib_rela = (String) w2.elementAt(1);
+                String sib_name = (String) w2.elementAt(2);
+                String sib_code = (String) w2.elementAt(3);
+                String sib_sab = (String) w2.elementAt(4);
+
+				if (!hset.contains(t2) && sib_code.compareTo(code) != 0) {
+					sibling_vec.add("SIB" + "|" + sib_name + "|" + sib_code + "|" + sib_sab);
+				}
 			}
 		}
 		return sibling_vec;
@@ -4059,7 +4086,8 @@ public class DataUtils {
 			matches = cng.resolveAsList(ConvenienceMethods
 					.createConceptReference(code, scheme), navigationForward, navigationBackward, 1, 1, new LocalNameList(), null, null, maxToReturn);
 
-
+			String qualifier_name = null;
+			String qualifier_value = null;
 
 			if (matches.getResolvedConceptReferenceCount() > 0) {
 				Enumeration<ResolvedConceptReference> refEnum = matches
@@ -4085,9 +4113,44 @@ public class DataUtils {
 									.getAssociatedConcept();
 							for (int j = 0; j < acl.length; j++) {
 								AssociatedConcept ac = acl[j];
-								v.add(ac);
-								//v.add(associationName + "|" + ac.getReferencedEntry().getEntityDescription().getContent()
-								//   + "|" + ac.getReferencedEntry().getEntityCode());
+								String asso_label = "NA";
+								String asso_source = "NA";
+								if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+									for (NameAndValue qual : ac
+											.getAssociationQualifiers()
+											.getNameAndValue()) {
+										qualifier_name = qual.getName();
+										qualifier_value = qual.getContent();
+										if (qualifier_name
+												.compareToIgnoreCase("rela") == 0) {
+											asso_label = qualifier_value; // replace
+																			// associationName
+																			// by
+																			// Rela
+																			// value
+											break;
+										}
+									}
+									for (NameAndValue qual : ac
+											.getAssociationQualifiers()
+											.getNameAndValue()) {
+										qualifier_name = qual.getName();
+										qualifier_value = qual.getContent();
+										if (qualifier_name.compareToIgnoreCase("source") == 0) {
+											asso_source = qualifier_value; // replace
+																			// associationName
+																			// by
+																			// Rela
+																			// value
+											break;
+										}
+									}
+								}
+
+								v.add(associationName + "|" + asso_label + "|" +  ac.getReferencedEntry().getEntityDescription().getContent()
+								   + "|" + ac.getReferencedEntry().getEntityCode()
+								   + "|" + asso_source
+								   );
 							}
 						}
 					}
@@ -4152,71 +4215,7 @@ public class DataUtils {
 					System.out.println("Concept is null.");
 					return null;
 				}
-				Property[] properties = c.getProperty();
-				for (int j=0; j<properties.length; j++) {
-					Property prop = properties[j];
-					String prop_name = prop.getPropertyName();
-					String prop_value = prop.getValue().getContent();
-					Vector u = new Vector();
-					if (hmap.containsKey(prop_name)) {
-						u = (Vector) hmap.get(prop_name);
-					} else {
-						u = new Vector();
-					}
-					if (!u.contains(prop_value)) {
-						u.add(prop_value);
-						hmap.put(prop_name, u);
-					}
-				}
-				properties = c.getPresentation();
-				for (int j=0; j<properties.length; j++) {
-					Property prop = properties[j];
-					String prop_name = prop.getPropertyName();
-					String prop_value = prop.getValue().getContent();
-					Vector u = new Vector();
-					if (hmap.containsKey(prop_name)) {
-						u = (Vector) hmap.get(prop_name);
-					} else {
-						u = new Vector();
-					}
-					if (!u.contains(prop_value)) {
-						u.add(prop_value);
-						hmap.put(prop_name, u);
-					}
-				}
-				properties = c.getDefinition();
-				for (int j=0; j<properties.length; j++) {
-					Property prop = properties[j];
-					String prop_name = prop.getPropertyName();
-					String prop_value = prop.getValue().getContent();
-					Vector u = new Vector();
-					if (hmap.containsKey(prop_name)) {
-						u = (Vector) hmap.get(prop_name);
-					} else {
-						u = new Vector();
-					}
-					if (!u.contains(prop_value)) {
-						u.add(prop_value);
-						hmap.put(prop_name, u);
-					}
-				}
-				properties = c.getComment();
-				for (int j=0; j<properties.length; j++) {
-					Property prop = properties[j];
-					String prop_name = prop.getPropertyName();
-					String prop_value = prop.getValue().getContent();
-					Vector u = new Vector();
-					if (hmap.containsKey(prop_name)) {
-						u = (Vector) hmap.get(prop_name);
-					} else {
-						u = new Vector();
-					}
-					if (!u.contains(prop_value)) {
-						u.add(prop_value);
-						hmap.put(prop_name, u);
-					}
-				}
-                return hmap;
+				return getPropertyValueHashMap(c);
 			}  catch (Exception e) {
 				System.out.println("* " + e.getClass().getSimpleName() + ": " +
 					e.getMessage());
@@ -4227,6 +4226,77 @@ public class DataUtils {
 		return null;
 	}
 
+    public static HashMap getPropertyValueHashMap(Concept c) {
+		if (c == null) {
+			return null;
+		}
+		HashMap hmap = new HashMap();
+		Property[] properties = c.getProperty();
+		for (int j=0; j<properties.length; j++) {
+			Property prop = properties[j];
+			String prop_name = prop.getPropertyName();
+			String prop_value = prop.getValue().getContent();
+			Vector u = new Vector();
+			if (hmap.containsKey(prop_name)) {
+				u = (Vector) hmap.get(prop_name);
+			} else {
+				u = new Vector();
+			}
+			if (!u.contains(prop_value)) {
+				u.add(prop_value);
+				hmap.put(prop_name, u);
+			}
+		}
+		properties = c.getPresentation();
+		for (int j=0; j<properties.length; j++) {
+			Property prop = properties[j];
+			String prop_name = prop.getPropertyName();
+			String prop_value = prop.getValue().getContent();
+			Vector u = new Vector();
+			if (hmap.containsKey(prop_name)) {
+				u = (Vector) hmap.get(prop_name);
+			} else {
+				u = new Vector();
+			}
+			if (!u.contains(prop_value)) {
+				u.add(prop_value);
+				hmap.put(prop_name, u);
+			}
+		}
+		properties = c.getDefinition();
+		for (int j=0; j<properties.length; j++) {
+			Property prop = properties[j];
+			String prop_name = prop.getPropertyName();
+			String prop_value = prop.getValue().getContent();
+			Vector u = new Vector();
+			if (hmap.containsKey(prop_name)) {
+				u = (Vector) hmap.get(prop_name);
+			} else {
+				u = new Vector();
+			}
+			if (!u.contains(prop_value)) {
+				u.add(prop_value);
+				hmap.put(prop_name, u);
+			}
+		}
+		properties = c.getComment();
+		for (int j=0; j<properties.length; j++) {
+			Property prop = properties[j];
+			String prop_name = prop.getPropertyName();
+			String prop_value = prop.getValue().getContent();
+			Vector u = new Vector();
+			if (hmap.containsKey(prop_name)) {
+				u = (Vector) hmap.get(prop_name);
+			} else {
+				u = new Vector();
+			}
+			if (!u.contains(prop_value)) {
+				u.add(prop_value);
+				hmap.put(prop_name, u);
+			}
+		}
+		return hmap;
+	}
 
 }
 
