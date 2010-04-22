@@ -4098,62 +4098,68 @@ public class DataUtils {
 
 					AssociationList targetof = ref.getTargetOf();
 					if (!direction) targetof = ref.getSourceOf();
-					Association[] associations = targetof.getAssociation();
+					if (targetof != null) {
+						Association[] associations = targetof.getAssociation();
+						if (associations != null) {
+							for (int i = 0; i < associations.length; i++) {
+								Association assoc = associations[i];
 
-					for (int i = 0; i < associations.length; i++) {
-						Association assoc = associations[i];
+								if (assoc != null) {
 
-						String associationName = lbscm
-								.getAssociationNameFromAssociationCode(
-										scheme, csvt,
-										assoc.getAssociationName());
+									String associationName = lbscm
+											.getAssociationNameFromAssociationCode(
+													scheme, csvt,
+													assoc.getAssociationName());
 
-						if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-							AssociatedConcept[] acl = assoc.getAssociatedConcepts()
-									.getAssociatedConcept();
-							for (int j = 0; j < acl.length; j++) {
-								AssociatedConcept ac = acl[j];
-								String asso_label = "NA";
-								String asso_source = "NA";
-								if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
-									for (NameAndValue qual : ac
-											.getAssociationQualifiers()
-											.getNameAndValue()) {
-										qualifier_name = qual.getName();
-										qualifier_value = qual.getContent();
-										if (qualifier_name
-												.compareToIgnoreCase("rela") == 0) {
-											asso_label = qualifier_value; // replace
-																			// associationName
-																			// by
-																			// Rela
-																			// value
-											break;
-										}
-									}
-									for (NameAndValue qual : ac
-											.getAssociationQualifiers()
-											.getNameAndValue()) {
-										qualifier_name = qual.getName();
-										qualifier_value = qual.getContent();
-										if (qualifier_name.compareToIgnoreCase("source") == 0) {
-											asso_source = qualifier_value; // replace
-																			// associationName
-																			// by
-																			// Rela
-																			// value
-											break;
+									if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+										AssociatedConcept[] acl = assoc.getAssociatedConcepts()
+												.getAssociatedConcept();
+										for (int j = 0; j < acl.length; j++) {
+											AssociatedConcept ac = acl[j];
+											String asso_label = "NA";
+											String asso_source = "NA";
+											if (associationName.compareToIgnoreCase("equivalentClass") != 0) {
+												for (NameAndValue qual : ac
+														.getAssociationQualifiers()
+														.getNameAndValue()) {
+													qualifier_name = qual.getName();
+													qualifier_value = qual.getContent();
+													if (qualifier_name
+															.compareToIgnoreCase("rela") == 0) {
+														asso_label = qualifier_value; // replace
+																						// associationName
+																						// by
+																						// Rela
+																						// value
+														break;
+													}
+												}
+												for (NameAndValue qual : ac
+														.getAssociationQualifiers()
+														.getNameAndValue()) {
+													qualifier_name = qual.getName();
+													qualifier_value = qual.getContent();
+													if (qualifier_name.compareToIgnoreCase("source") == 0) {
+														asso_source = qualifier_value; // replace
+																						// associationName
+																						// by
+																						// Rela
+																						// value
+														break;
+													}
+												}
+											}
+
+											v.add(associationName + "|" + asso_label + "|" +  ac.getReferencedEntry().getEntityDescription().getContent()
+											   + "|" + ac.getReferencedEntry().getEntityCode()
+											   + "|" + asso_source
+											   );
 										}
 									}
 								}
-
-								v.add(associationName + "|" + asso_label + "|" +  ac.getReferencedEntry().getEntityDescription().getContent()
-								   + "|" + ac.getReferencedEntry().getEntityCode()
-								   + "|" + asso_source
-								   );
 							}
 						}
-					}
+				    }
 				}
 				SortUtils.quickSort(v);
 			}
