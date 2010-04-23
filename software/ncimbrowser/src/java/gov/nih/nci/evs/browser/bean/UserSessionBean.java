@@ -118,163 +118,103 @@ public class UserSessionBean extends Object
 
     public String advancedSearchAction() {
 		ResolvedConceptReferencesIteratorWrapper wrapper = null;
-       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest)FacesContext.
+            getCurrentInstance().getExternalContext().getRequest();
 
-		SearchStatusBean bean = (SearchStatusBean) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
+		SearchStatusBean bean = (SearchStatusBean) FacesContext.
+		    getCurrentInstance().getExternalContext().getRequestMap().
+		    get("searchStatusBean");
+		
 		if (bean == null) {
 			bean = new SearchStatusBean();
-
 			request.setAttribute("searchStatusBean", bean);
-
 		}
 
 		String matchText = (String) request.getParameter("matchText");
-		//System.out.println("matchText: " + matchText);
-			   request.setAttribute("matchText", matchText);
-			   bean.setMatchText(matchText);
-
-		//selectSearchOption
-		String selectSearchOption = (String) request.getParameter("selectSearchOption");
-		//System.out.println("advancedSearchAction selectSearchOption: " + selectSearchOption);
-		if (selectSearchOption != null) {
-			   System.out.println("selectSearchOption: " + selectSearchOption);
-			   //request.setAttribute("selectSearchOption", selectSearchOption);
-			   bean.setSelectedSearchOption(selectSearchOption);
-		}
-
-
-		String selectProperty = (String) request.getParameter("selectProperty");
-		if (selectProperty != null) {
-			   System.out.println("selectProperty: " + selectProperty);
-			   request.setAttribute("selectProperty", selectProperty);
-			   bean.setSelectedProperty(selectProperty);
-		}
-
-		String rel_search_association = (String) request.getParameter("rel_search_association");
-		if (rel_search_association != null) {
-		//System.out.println("rel_search_association: " + rel_search_association);
-			   request.setAttribute("rel_search_association", rel_search_association);
-			   bean.setSelectedAssociation(rel_search_association);
-		}
-
-		String rel_search_rela = (String) request.getParameter("rel_search_rela");
-		if (rel_search_rela != null) {
-		//System.out.println("rel_search_rela: " + rel_search_rela);
-			   request.setAttribute("rel_search_rela", rel_search_rela);
-			   bean.setSelectedRELA(rel_search_rela);
-		}
-
-		//adv_search_source
-		String adv_search_source = (String) request.getParameter("adv_search_source");
-
-		//System.out.println("adv_search_source: " + adv_search_source);
-
-
-		if (adv_search_source != null) {
-		//System.out.println("SET adv_search_source TO: " + adv_search_source);
-			   request.setAttribute("adv_search_source", adv_search_source);
-			   bean.setSelectedSource(adv_search_source);
-		}
-
-		//adv_search_algorithm
-		String adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
-
-		//System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-		if (adv_search_algorithm != null) {
-		//System.out.println("SET adv_search_algorithm TO: " + adv_search_algorithm);
-			   request.setAttribute("adv_search_algorithm", adv_search_algorithm);
-			   bean.setAlgorithm(adv_search_algorithm);
-		}
-
-		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
-		request.setAttribute("searchStatusBean", bean);
-
-        if (matchText != null) {
-			matchText = matchText.trim();
-			request.setAttribute("matchText", matchText);
-		}
-
-
-        //[#19965] Error message is not displayed when Search Criteria is not proivded
-        if (matchText == null || matchText.length() == 0)
-        {
+        if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
-        //request.getSession().setAttribute("matchText", matchText);
-        //request.setAttribute("matchText", matchText);
+        matchText = matchText.trim();
+        bean.setMatchText(matchText);
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
-        setSelectedAlgorithm(matchAlgorithm);
-        String matchtype = (String) request.getParameter("matchtype");
-        if (matchtype == null) matchtype = "string";
-
-        String searchTarget = (String) request.getParameter("searchTarget");
-        request.getSession().setAttribute("searchTarget", searchTarget);
-
-        //Remove ranking check box (KLO, 092409)
-        //String rankingStr = (String) request.getParameter("ranking");
-        //boolean ranking = rankingStr != null && rankingStr.equals("on");
-        //request.getSession().setAttribute("ranking", Boolean.toString(ranking));
-
+        //DYEE: setSelectedAlgorithm(matchAlgorithm);
+        
+        String adv_search_source = (String) request.getParameter("adv_search_source");
+        bean.setSelectedSource(adv_search_source);
         String source = (String) request.getParameter("source");
-        if (source == null) {
+        if (source == null)
             source = "ALL";
-        }
-        //request.getSession().setAttribute("source", source);
-        setSelectedSource(source);
+        //DYEE: setSelectedSource(source);
+
+        String selectSearchOption = (String) request.getParameter("selectSearchOption");
+        bean.setSelectedSearchOption(selectSearchOption);
+
+		String selectProperty = (String) request.getParameter("selectProperty");
+		bean.setSelectedProperty(selectProperty);
+
+		String rel_search_association = (String) request.getParameter("rel_search_association");
+		bean.setSelectedAssociation(rel_search_association);
+
+		String rel_search_rela = (String) request.getParameter("rel_search_rela");
+		bean.setSelectedRELA(rel_search_rela);
+
+		String adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
+		bean.setAlgorithm(adv_search_algorithm);
+
+		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().
+		    put("searchStatusBean", bean);
+		request.setAttribute("searchStatusBean", bean);
+
+        String searchTarget = (String) request.getParameter("searchTarget"); //DYEE Possibly not needed
+        request.getSession().setAttribute("searchTarget", searchTarget);     //DYEE Possibly not needed
 
         if (NCImBrowserProperties.debugOn) {
-            try {
-                System.out.println(Utils.SEPARATOR);
-                System.out.println("* criteria: " + matchText);
-                System.out.println("* matchType: " + matchtype);
-                System.out.println("* source: " + source);
-                //System.out.println("* ranking: " + ranking);
-               // System.out.println("* sortOption: " + sortOption);
-            } catch (Exception e) {
-            }
+            System.out.println(Utils.SEPARATOR);
+            System.out.println("* criteria: " + matchText);
+            System.out.println("* source: " + source);
         }
 
         String scheme = Constants.CODING_SCHEME_NAME;
+        Vector schemes = new Vector();
+        schemes.add(scheme);
+        
         String version = null;
         String max_str = null;
         int maxToReturn = -1;//1000;
         try {
-            max_str = NCImBrowserProperties.getInstance().getProperty(NCImBrowserProperties.MAXIMUM_RETURN);
+            max_str = NCImBrowserProperties.getInstance().
+                getProperty(NCImBrowserProperties.MAXIMUM_RETURN);
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
-
         }
         Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
-
 
         boolean excludeDesignation = true;
         boolean designationOnly = false;
 
         // check if this search has been performance previously through IteratorBeanManager
-		IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
-			.getSessionMap().get("iteratorBeanManager");
+		IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) 
+		    FacesContext.getCurrentInstance().getExternalContext().
+		    getSessionMap().get("iteratorBeanManager");
 
 		if (iteratorBeanManager == null) {
 			iteratorBeanManager = new IteratorBeanManager();
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBeanManager", iteratorBeanManager);
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().
+			    put("iteratorBeanManager", iteratorBeanManager);
 		}
 
         IteratorBean iteratorBean = null;
         ResolvedConceptReferencesIterator iterator = null;
-        Vector schemes = new Vector();
-        schemes.add(scheme);
         boolean ranking = true;
 
         SearchFields searchFields = null;
         String key = null;
 
-
 		String searchType = (String) request.getParameter("selectSearchOption");
-		//String searchType = (String) request.getParameter("searchType");
 		System.out.println("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
@@ -304,23 +244,6 @@ public class UserSessionBean extends Object
 				if (property_name.compareTo("ALL") == 0) property_name = null;
 			}
 
-			//System.out.println("adv_search_selected_property: " + property_name);
-			if (adv_search_source == null) {
-				request.getSession().setAttribute("adv_search_source", "ALL");
-			} else {
-				request.getSession().setAttribute("adv_search_source", adv_search_source);
-			}
-			if (property_type == null) {
-				request.getSession().setAttribute("property_type", "ALL");
-			} else {
-				request.getSession().setAttribute("property_type", property_type);
-			}
-			if (property_name == null) {
-				request.getSession().setAttribute("property_name", " ");
-			} else {
-				request.getSession().setAttribute("property_name", property_name);
-			}
-
 			searchFields = SearchFields.setProperty(
 			    schemes, matchText, searchTarget, property_type, property_name,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
@@ -330,21 +253,15 @@ public class UserSessionBean extends Object
 				iterator = iteratorBean.getIterator();
 			} else {
 				String[] property_types = null;
-				if (property_type != null) {
+				if (property_type != null)
 					property_types = new String[] {property_type};
-				}
 				String[] property_names = null;
-				if (property_name != null) {
+				if (property_name != null)
 					property_names = new String[] {property_name};
-				}
 				excludeDesignation = false;
                 wrapper = new SearchUtils().searchByProperties(scheme, version,
-                                                               matchText,
-															   property_types,
-															   property_names,
-															   adv_search_source,
-															   adv_search_algorithm,
-															   excludeDesignation, ranking, maxToReturn);
+                    matchText, property_types, property_names, adv_search_source,
+                    adv_search_algorithm, excludeDesignation, ranking, maxToReturn);
       	    	if (wrapper != null) {
 					iterator = wrapper.getIterator();
 				}
@@ -397,28 +314,6 @@ public class UserSessionBean extends Object
 				//direction = true;
 			}
 
-			request.getSession().setAttribute("adv_search_algorithm", adv_search_algorithm);
-			request.getSession().setAttribute("adv_search_source", adv_search_source);
-
-
-			if (rel_search_association == null) {
-				request.getSession().setAttribute("rel_search_association", "ALL");
-			} else {
-				request.getSession().setAttribute("rel_search_association", rel_search_association);
-			}
-			if (rel_search_rela == null) {
-				request.getSession().setAttribute("rel_search_rela", " ");
-			} else {
-				request.getSession().setAttribute("rel_search_rela", rel_search_rela);
-			}
-			request.getSession().setAttribute("search_direction", rel_search_direction);
-			if (adv_search_source == null) {
-				request.getSession().setAttribute("adv_search_source", "ALL");
-			} else {
-				request.getSession().setAttribute("adv_search_source", adv_search_source);
-			}
-
-
             searchFields = SearchFields.setRelationship(schemes, matchText,
 			    searchTarget, rel_search_association, rel_search_rela,
 			    adv_search_source, adv_search_algorithm, maxToReturn);
@@ -428,7 +323,6 @@ public class UserSessionBean extends Object
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
 			} else {
-
 
 				String[] associationsToNavigate = null;
 				String[] association_qualifier_names = null;
@@ -444,7 +338,6 @@ public class UserSessionBean extends Object
 					association_qualifier_names = new String[] {"rela"};
 					association_qualifier_values = new String[] {rel_search_rela};
 
-
 					if (associationsToNavigate == null) {
 						Vector w = OntologyBean.getAssociationNames();
 						if (w == null || w.size() == 0) {
@@ -458,21 +351,15 @@ public class UserSessionBean extends Object
 					    }
                     }
 
-
-
 				} else {
 					System.out.println("(*) qualifiers == null");
 				}
 
-                wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText,
-															   associationsToNavigate,
-															   association_qualifier_names,
-															   association_qualifier_values,
-															   search_direction,
-															   adv_search_source,
-															   adv_search_algorithm,
-															   excludeDesignation,
-															   ranking, maxToReturn);
+                wrapper = new SearchUtils().searchByAssociations(
+                    scheme, version, matchText, associationsToNavigate,
+                    association_qualifier_names, association_qualifier_values,
+                    search_direction, adv_search_source, adv_search_algorithm,
+                        excludeDesignation, ranking, maxToReturn);
       	    	if (wrapper != null) {
 					iterator = wrapper.getIterator();
 				}
