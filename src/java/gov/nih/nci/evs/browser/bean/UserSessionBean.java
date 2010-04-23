@@ -139,15 +139,13 @@ public class UserSessionBean extends Object
         matchText = matchText.trim();
         bean.setMatchText(matchText);
 
-        String matchAlgorithm = (String) request.getParameter("algorithm");
-        //DYEE: setSelectedAlgorithm(matchAlgorithm);
+        String matchAlgorithm = (String) request.getParameter("adv_search_algorithm");
+        bean.setAlgorithm(matchAlgorithm);
         
-        String adv_search_source = (String) request.getParameter("adv_search_source");
-        bean.setSelectedSource(adv_search_source);
-        String source = (String) request.getParameter("source");
-        if (source == null)
-            source = "ALL";
-        //DYEE: setSelectedSource(source);
+        String source = (String) request.getParameter("adv_search_source");
+        bean.setSelectedSource(source);
+        if (source != null && source.compareTo("ALL") == 0)
+            source = null;
 
         String selectSearchOption = (String) request.getParameter("selectSearchOption");
         bean.setSelectedSearchOption(selectSearchOption);
@@ -157,13 +155,10 @@ public class UserSessionBean extends Object
 
 		String rel_search_association = (String) request.getParameter("rel_search_association");
 		bean.setSelectedAssociation(rel_search_association);
-
+        
 		String rel_search_rela = (String) request.getParameter("rel_search_rela");
 		bean.setSelectedRELA(rel_search_rela);
-
-		String adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
-		bean.setAlgorithm(adv_search_algorithm);
-
+		
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().
 		    put("searchStatusBean", bean);
 		request.setAttribute("searchStatusBean", bean);
@@ -218,26 +213,20 @@ public class UserSessionBean extends Object
 		System.out.println("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
-			adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
-			matchAlgorithm = adv_search_algorithm;
-			adv_search_source = (String) request.getParameter("adv_search_source");
-			//System.out.println("Advanced Search: ");
-			//System.out.println("searchType: " + searchType);
-			//System.out.println("matchText: " + matchText);
-			//System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-			//System.out.println("adv_search_source: " + adv_search_source);
-
-			if (adv_search_source != null && adv_search_source.compareTo("ALL") == 0) {
-				adv_search_source = null;
-			}
+/*            
+			System.out.println("Advanced Search: ");
+			System.out.println("searchType: " + searchType);
+			System.out.println("matchText: " + matchText);
+			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
+			System.out.println("adv_search_source: " + adv_search_source);
+*/
 
 			String property_type = (String) request.getParameter("selectPropertyType");
 			if (property_type != null && property_type.compareTo("ALL") == 0) {
 				property_type = null;
 			}
 
-			String property_name = (String) request.getParameter("selectProperty");
-
+			String property_name = selectProperty;
             if (property_name != null) {
 				property_name = property_name.trim();
 				//if (property_name.length() == 0) property_name = null;
@@ -246,7 +235,7 @@ public class UserSessionBean extends Object
 
 			searchFields = SearchFields.setProperty(
 			    schemes, matchText, searchTarget, property_type, property_name,
-			    adv_search_source, adv_search_algorithm, maxToReturn);
+			    source, matchAlgorithm, maxToReturn);
 			key = searchFields.getKey();
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -260,8 +249,8 @@ public class UserSessionBean extends Object
 					property_names = new String[] {property_name};
 				excludeDesignation = false;
                 wrapper = new SearchUtils().searchByProperties(scheme, version,
-                    matchText, property_types, property_names, adv_search_source,
-                    adv_search_algorithm, excludeDesignation, ranking, maxToReturn);
+                    matchText, property_types, property_names, source,
+                    matchAlgorithm, excludeDesignation, ranking, maxToReturn);
       	    	if (wrapper != null) {
 					iterator = wrapper.getIterator();
 				}
@@ -274,36 +263,27 @@ public class UserSessionBean extends Object
 			}
 
         } else if (searchType != null && searchType.compareTo("Relationship") == 0) {
-
-			adv_search_algorithm = (String) request.getParameter("adv_search_algorithm");
-			matchAlgorithm = adv_search_algorithm;
-			adv_search_source = (String) request.getParameter("adv_search_source");
-			if (adv_search_source != null && adv_search_source.compareTo("ALL") == 0) {
-				adv_search_source = null;
-			}
-
-            rel_search_association = (String) request.getParameter("rel_search_association");
-            if (rel_search_association != null && rel_search_association.compareTo("ALL") == 0) {
-				rel_search_association = null;
-			}
-
-            rel_search_rela = (String) request.getParameter("rel_search_rela");
+            if (rel_search_association != null && rel_search_association.compareTo("ALL") == 0)
+                rel_search_association = null;
+            
             if (rel_search_rela != null) {
-				rel_search_rela = rel_search_rela.trim();
-				if (rel_search_rela.length() == 0) rel_search_rela = null;
-		    }
+                rel_search_rela = rel_search_rela.trim();
+                if (rel_search_rela.length() == 0)
+                    rel_search_rela = null;
+            }
 
 			String rel_search_direction = (String) request.getParameter("rel_search_direction");
 /*
-			System.out.println("Advanced Search: ");
-			System.out.println("searchType: " + searchType);
-			System.out.println("matchText: " + matchText);
-			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-			System.out.println("rel_search_association: " + rel_search_association);
-			System.out.println("rel_search_rela: " + rel_search_rela);
-			System.out.println("adv_search_source: " + adv_search_source);
-			System.out.println("rel_search_direction: " + rel_search_direction);
+            System.out.println("Advanced Search: ");
+            System.out.println("searchType: " + searchType);
+            System.out.println("matchText: " + matchText);
+            System.out.println("adv_search_algorithm: " + adv_search_algorithm);
+            System.out.println("rel_search_association: " + rel_search_association);
+            System.out.println("rel_search_rela: " + rel_search_rela);
+            System.out.println("adv_search_source: " + adv_search_source);
+            System.out.println("rel_search_direction: " + rel_search_direction);
 */
+			
 			//boolean direction = false;
 			int search_direction = Constants.SEARCH_BOTH_DIRECTION;
 			if (rel_search_direction != null && rel_search_direction.compareTo("source") == 0) {
@@ -316,7 +296,7 @@ public class UserSessionBean extends Object
 
             searchFields = SearchFields.setRelationship(schemes, matchText,
 			    searchTarget, rel_search_association, rel_search_rela,
-			    adv_search_source, adv_search_algorithm, maxToReturn);
+			    source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -358,7 +338,7 @@ public class UserSessionBean extends Object
                 wrapper = new SearchUtils().searchByAssociations(
                     scheme, version, matchText, associationsToNavigate,
                     association_qualifier_names, association_qualifier_values,
-                    search_direction, adv_search_source, adv_search_algorithm,
+                    search_direction, source, matchAlgorithm,
                         excludeDesignation, ranking, maxToReturn);
       	    	if (wrapper != null) {
 					iterator = wrapper.getIterator();
@@ -372,16 +352,16 @@ public class UserSessionBean extends Object
 			}
 
 		} else if (searchType != null && searchType.compareTo("Name") == 0) {
-            matchAlgorithm = adv_search_algorithm;
-            source = adv_search_source;
-		    searchFields = SearchFields.setName(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+		    searchFields = SearchFields.setName(schemes, matchText, 
+		        searchTarget, source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
 			} else {
 				wrapper =
-					new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
+					new SearchUtils().searchByName(scheme, version, matchText, 
+					    source, matchAlgorithm, ranking, maxToReturn);
 				iterator = wrapper.getIterator();
 				if (iterator != null) {
 					iteratorBean = new IteratorBean(iterator);
@@ -392,16 +372,16 @@ public class UserSessionBean extends Object
 			}
 
         } else if (searchType != null && searchType.compareTo("Code") == 0) {
-            matchAlgorithm = adv_search_algorithm;
-            source = adv_search_source;
-            searchFields = SearchFields.setCode(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+            searchFields = SearchFields.setCode(schemes, matchText, searchTarget, 
+                source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
                 wrapper =
-                    new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
+                    new SearchUtils().searchByName(scheme, version, matchText, 
+                        source, matchAlgorithm, ranking, maxToReturn);
                 iterator = wrapper.getIterator();
                 if (iterator != null) {
                     iteratorBean = new IteratorBean(iterator);
@@ -413,8 +393,6 @@ public class UserSessionBean extends Object
         }
 
         request.setAttribute("key", key);
-        request.getSession().setAttribute("vocabulary", scheme);
-        request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
         request.setAttribute("matchText", matchText);
 
         request.getSession().removeAttribute("neighborhood_synonyms");
@@ -458,7 +436,8 @@ public class UserSessionBean extends Object
 				} else {
 					c = ref.getReferencedEntry();
 					if (c == null) {
-						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, ref.getConceptCode());
+						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, 
+						    null, null, ref.getConceptCode());
 					}
 				}
 
@@ -479,7 +458,8 @@ public class UserSessionBean extends Object
 
 			if (newCUI != null) {
 				System.out.println("Searching for " + newCUI);
-				Concept c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, newCUI);
+				Concept c = DataUtils.getConceptByCode(
+				    Constants.CODING_SCHEME_NAME, null, null, newCUI);
 				request.getSession().setAttribute("code", newCUI);
 				request.getSession().setAttribute("concept", c);
 				request.getSession().setAttribute("type", "properties");
