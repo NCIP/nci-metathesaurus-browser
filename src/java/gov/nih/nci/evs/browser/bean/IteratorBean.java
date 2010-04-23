@@ -184,6 +184,9 @@ public class IteratorBean extends Object {
         try {
 			while(iterator != null && iterator.hasNext() && lastResolved < idx2 && lastResolved < size) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
+
+				System.out.println("IteratorBean iterator.next(" + maxReturn+ ") returns refs: " + refs.length);
+
 				for(ResolvedConceptReference ref : refs) {
 					lastResolved++;
 					//this.list.set(lastResolved, ref);
