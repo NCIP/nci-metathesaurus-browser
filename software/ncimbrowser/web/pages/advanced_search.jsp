@@ -252,11 +252,7 @@
  
                 <tr><td>
                   <table>
-                  <% if (selectSearchOption.equals("Name") || selectSearchOption.equals("Code")) { %>
-                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
-                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
-                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
-                  <% } else if (selectSearchOption.equals("Property")) { %>
+                  <% if (selectSearchOption.equals("Property")) { %>
                     <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
                     <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
                     <tr>
@@ -364,9 +360,11 @@
                         </h:outputLabel>
                       </td>
                     </tr>
-                  <%
-                    }
-                  %>
+                  <% } else { %>
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
+                  <% }%>
 
                   </table>
                 </td></tr>

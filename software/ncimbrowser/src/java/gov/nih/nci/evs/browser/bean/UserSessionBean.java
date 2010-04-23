@@ -484,58 +484,47 @@ public class UserSessionBean extends Object
 				}
 			}
 
-		} else {
-
-            searchFields = SearchFields.setSimple(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+		} else if (searchType != null && searchType.compareTo("Name") == 0) {
+            matchAlgorithm = adv_search_algorithm;
+            source = adv_search_source;
+		    searchFields = SearchFields.setName(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
-			if (searchTarget.compareTo("names") == 0) {
-				if (iteratorBeanManager.containsIteratorBean(key)) {
-					iteratorBean = iteratorBeanManager.getIteratorBean(key);
-					iterator = iteratorBean.getIterator();
-				} else {
-					wrapper =
-						new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
-				}
-
-			} else if (searchTarget.compareTo("properties") == 0) {
-				if (iteratorBeanManager.containsIteratorBean(key)) {
-					iteratorBean = iteratorBeanManager.getIteratorBean(key);
-					iterator = iteratorBean.getIterator();
-				} else {
-					wrapper = new SearchUtils().searchByProperties(scheme, version, matchText, source, matchAlgorithm, excludeDesignation, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
-				}
-
-			} else if (searchTarget.compareTo("relationships") == 0) {
-				designationOnly = true;
-				if (iteratorBeanManager.containsIteratorBean(key)) {
-					iteratorBean = iteratorBeanManager.getIteratorBean(key);
-					iterator = iteratorBean.getIterator();
-				} else {
-					wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText, source, matchAlgorithm, designationOnly, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+			} else {
+				wrapper =
+					new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
+				iterator = wrapper.getIterator();
+				if (iterator != null) {
+					iteratorBean = new IteratorBean(iterator);
+					iteratorBean.setKey(key);
+					iteratorBean.setMatchText(matchText);
+					iteratorBeanManager.addIteratorBean(iteratorBean);
 				}
 			}
-	    }
+
+        } else if (searchType != null && searchType.compareTo("Code") == 0) {
+            matchAlgorithm = adv_search_algorithm;
+            source = adv_search_source;
+            searchFields = SearchFields.setCode(schemes, matchText, searchTarget, source, matchAlgorithm, maxToReturn);
+            key = searchFields.getKey();
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                wrapper =
+                    new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
+                iterator = wrapper.getIterator();
+                if (iterator != null) {
+                    iteratorBean = new IteratorBean(iterator);
+                    iteratorBean.setKey(key);
+                    iteratorBean.setMatchText(matchText);
+                    iteratorBeanManager.addIteratorBean(iteratorBean);
+                }
+            }
+        }
+
         request.setAttribute("key", key);
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
