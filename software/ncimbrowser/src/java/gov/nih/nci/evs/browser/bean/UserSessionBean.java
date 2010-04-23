@@ -163,8 +163,7 @@ public class UserSessionBean extends Object
 		    put("searchStatusBean", bean);
 		request.setAttribute("searchStatusBean", bean);
 
-        String searchTarget = (String) request.getParameter("searchTarget"); //DYEE Possibly not needed
-        request.getSession().setAttribute("searchTarget", searchTarget);     //DYEE Possibly not needed
+        String searchTarget = (String) request.getParameter("searchTarget");
 
         if (NCImBrowserProperties.debugOn) {
             System.out.println(Utils.SEPARATOR);
