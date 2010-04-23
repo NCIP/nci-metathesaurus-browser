@@ -51,7 +51,7 @@ import java.util.*;
 
 public class SearchFields {
     public enum Type {
-        None, Simple, Property, Relationship
+        None, Simple, Name, Code, Property, Relationship
     };
 
     private String _key;
@@ -71,16 +71,38 @@ public class SearchFields {
         _key = randomKey();
     }
 
+    private void setBasic(Type type, Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        setType(type);
+        setSchemes(schemes);
+        setMatchText(matchText);
+        setSearchTarget(searchTarget);
+        setSource(source);
+        setMatchAlgorithm(matchAlgorithm);
+        setMaxReturn(maxReturn);
+    }
+
     public static SearchFields setSimple(Vector schemes, String matchText,
         String searchTarget, String source, String matchAlgorithm, int maxReturn) {
         SearchFields fields = new SearchFields();
-        fields.setType(Type.Simple);
-        fields.setSchemes(schemes);
-        fields.setMatchText(matchText);
-        fields.setSearchTarget(searchTarget);
-        fields.setSource(source);
-        fields.setMatchAlgorithm(matchAlgorithm);
-        fields.setMaxReturn(maxReturn);
+        fields.setBasic(Type.Simple, schemes, matchText, searchTarget, source,
+            matchAlgorithm, maxReturn);
+        return fields;
+    }
+
+    public static SearchFields setName(Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        SearchFields fields = new SearchFields();
+        fields.setBasic(Type.Name, schemes, matchText, searchTarget, source,
+            matchAlgorithm, maxReturn);
+        return fields;
+    }
+
+    public static SearchFields setCode(Vector schemes, String matchText,
+        String searchTarget, String source, String matchAlgorithm, int maxReturn) {
+        SearchFields fields = new SearchFields();
+        fields.setBasic(Type.Code, schemes, matchText, searchTarget, source,
+            matchAlgorithm, maxReturn);
         return fields;
     }
 
@@ -88,15 +110,10 @@ public class SearchFields {
         String searchTarget, String propertyType, String propertyName,
         String source, String matchAlgorithm, int maxReturn) {
         SearchFields fields = new SearchFields();
-        fields.setType(Type.Property);
-        fields.setSchemes(schemes);
-        fields.setMatchText(matchText);
-        fields.setSearchTarget(searchTarget);
+        fields.setBasic(Type.Property, schemes, matchText, searchTarget,
+            source, matchAlgorithm, maxReturn);
         fields.setPropertyType(propertyType);
         fields.setPropertyName(propertyName);
-        fields.setSource(source);
-        fields.setMatchAlgorithm(matchAlgorithm);
-        fields.setMaxReturn(maxReturn);
         return fields;
     }
 
@@ -105,15 +122,10 @@ public class SearchFields {
         String relSearchRela, String source, String matchAlgorithm,
         int maxReturn) {
         SearchFields fields = new SearchFields();
-        fields.setType(Type.Relationship);
-        fields.setSchemes(schemes);
-        fields.setMatchText(matchText);
-        fields.setSearchTarget(searchTarget);
+        fields.setBasic(Type.Relationship, schemes, matchText, searchTarget,
+            source, matchAlgorithm, maxReturn);
         fields.setRelSearchAssociation(relSearchAssociation);
         fields.setRelSearchRela(relSearchRela);
-        fields.setSource(source);
-        fields.setMatchAlgorithm(matchAlgorithm);
-        fields.setMaxReturn(maxReturn);
         return fields;
     }
 
