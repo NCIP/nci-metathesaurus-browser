@@ -394,6 +394,7 @@ public class MetadataUtils {
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
+				String css_local_name = css.getLocalName();
 				Boolean isActive = null;
 				if (csr == null) {
 					System.out.println("\tcsr == null???");
@@ -435,6 +436,7 @@ public class MetadataUtils {
 									localname2FormalnameHashMap.put(localname, formalname);
 								}
 								localname2FormalnameHashMap.put(formalname, formalname);
+								localname2FormalnameHashMap.put(css_local_name, formalname);
 						    }
 							System.out.println("\n");
 						} catch (Exception ex) {
