@@ -4012,7 +4012,8 @@ public class DataUtils {
 ////////////////////////////////////////////////
 
 	public Vector getSiblings(String code) {
-		return getSiblings("NCI Metathesaurus", null, code);
+		//return getSiblings("NCI Metathesaurus", null, code);
+		return getSiblingsExt(code);
 	}
 
 	public Vector getSiblings(String scheme, String version, String code) {
@@ -4303,5 +4304,78 @@ public class DataUtils {
 		return hmap;
 	}
 
+    public List<RelationshipTabResults> getAssociatedConceptsEx(String CUI, String associationName, Direction direction) {
+		List<String> assoc_list = new ArrayList();
+		assoc_list.add(associationName);
+
+		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+        CodingScheme cs = null;
+        List results = new ArrayList<RelationshipTabResults>();
+
+        try {
+	        cs = getCodingScheme("NCI Metathesaurus", null);
+
+			MetaBrowserService mbs = null;
+			try {
+				mbs = (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
+				Map<String, List<RelationshipTabResults>> map = null;
+
+				try {
+					map = mbs.getRelationshipsDisplay(CUI, assoc_list, direction);
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					return null;
+				}
+
+				for(String rel : map.keySet()){
+					List<RelationshipTabResults> relations = map.get(rel);
+					for(RelationshipTabResults result : relations){
+						results.add(result);
+					}
+				}
+				return results;
+
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+
+		} catch (Exception ex) {
+
+		}
+		return null;
+	}
+
+
+	public Vector getSiblingsExt(String CUI) {
+		Vector v = new Vector();
+		HashSet hset = new HashSet();
+		List results = getAssociatedConceptsEx(CUI, "PAR", Direction.TARGETOF);
+
+		if (results == null) return null;
+
+		for(int i=0; i<results.size(); i++) {
+			RelationshipTabResults result = (RelationshipTabResults) results.get(i);
+			List children = getAssociatedConceptsEx(result.getCui(), "CHD", Direction.TARGETOF);
+
+			for(int j=0; j<children.size(); j++) {
+				RelationshipTabResults sub_result = (RelationshipTabResults) children.get(j);
+				//System.out.println(" - CUI: " + sub_result.getCui());
+				//System.out.println("   - Name: " + sub_result.getName());
+				//System.out.println("   - REL: " + sub_result.getRel());
+				//System.out.println("   - RELA: " + sub_result.getRela());
+				//System.out.println("   - Source: " + sub_result.getSource());
+				String t = "SIB" + "|" + sub_result.getName() + "|" + sub_result.getCui() + "|" + sub_result.getSource();
+				if (!hset.contains(t) && sub_result.getCui().compareTo(CUI) != 0) {
+					hset.add(t);
+					v.add(t);
+				}
+			}
+		}
+		return SortUtils.quickSort(v);
+	}
 }
 
