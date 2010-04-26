@@ -1327,21 +1327,13 @@ public class SearchUtils {
         String scheme, String version, String matchText, String source, 
         String matchAlgorithm, boolean ranking, int maxToReturn,
         NameSearchType nameSearchType) {
-		String matchText0 = matchText;
-		String matchAlgorithm0 = matchAlgorithm;
-		matchText0 = matchText0.trim();
         if (matchText == null || matchText.length() == 0)
-        {
-			return null;
-		}
+            return null;
 
         matchText = matchText.trim();
-        if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0)
-		{
+        if (matchAlgorithm.compareToIgnoreCase("startsWith") == 0) {
 			//No literalStartsWith support
-		}
-        else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) //p11.1-q11.1  /100{WBC}
-		{
+		} else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) { //p11.1-q11.1  /100{WBC}
 			//matchAlgorithm = CONTAIN_SEARCH_ALGORITHM;
 			matchAlgorithm = findBestContainsAlgorithm(matchText);
 			//System.out.println("algorithm: " + matchAlgorithm);
@@ -1350,7 +1342,6 @@ public class SearchUtils {
         ResolvedConceptReferencesIterator iterator = null;
         if (nameSearchType == NameSearchType.All || nameSearchType == NameSearchType.Name) {
             CodedNodeSet cns = null;
-    
     		CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
     		propertyTypes[0] = PropertyType.PRESENTATION;
     
@@ -1428,13 +1419,13 @@ public class SearchUtils {
 			try {
 				int size = iterator != null ? iterator.numberRemaining() : 0;
 				if (size == 0) {
-					iterator = matchConceptCode(scheme, version, matchText0, 
+					iterator = matchConceptCode(scheme, version, matchText, 
 					    source, "LuceneQuery");
 				}
 				size = iterator.numberRemaining();
 				if (size == 0) {
 			        iterator = findConceptWithSourceCodeMatching(scheme, version,
-			            source, matchText0, maxToReturn, true);
+			            source, matchText, maxToReturn, true);
 				}
 				// Find ICD9CM concepts by code
 				size = iterator.numberRemaining();
@@ -1444,11 +1435,11 @@ public class SearchUtils {
 					Vector w = new Vector();
 					w.add(iterator);
 					ResolvedConceptReferencesIterator itr1 = matchConceptCode(
-					    scheme, version, matchText0, source, "LuceneQuery");
+					    scheme, version, matchText, source, "LuceneQuery");
 			        if (itr1 != null) w.add(itr1);
 			        ResolvedConceptReferencesIterator itr2 = 
 			            findConceptWithSourceCodeMatching(scheme, version,
-			                source, matchText0, maxToReturn, true);
+			                source, matchText, maxToReturn, true);
 					if (itr2 != null) w.add(itr2);
                     iterator = getResolvedConceptReferencesIteratorUnion(
                         scheme, version, w);
