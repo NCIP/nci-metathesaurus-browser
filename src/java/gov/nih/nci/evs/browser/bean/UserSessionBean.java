@@ -360,7 +360,8 @@ public class UserSessionBean extends Object
 			} else {
 				wrapper =
 					new SearchUtils().searchByName(scheme, version, matchText, 
-					    source, matchAlgorithm, ranking, maxToReturn);
+					    source, matchAlgorithm, ranking, maxToReturn,
+					    SearchUtils.NameSearchType.Name);
 				iterator = wrapper.getIterator();
 				if (iterator != null) {
 					iteratorBean = new IteratorBean(iterator);
@@ -380,7 +381,8 @@ public class UserSessionBean extends Object
             } else {
                 wrapper =
                     new SearchUtils().searchByName(scheme, version, matchText, 
-                        source, matchAlgorithm, ranking, maxToReturn);
+                        source, matchAlgorithm, ranking, maxToReturn,
+                        SearchUtils.NameSearchType.Code);
                 iterator = wrapper.getIterator();
                 if (iterator != null) {
                     iteratorBean = new IteratorBean(iterator);
