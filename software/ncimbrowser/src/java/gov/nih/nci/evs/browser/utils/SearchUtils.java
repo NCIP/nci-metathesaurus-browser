@@ -1314,9 +1314,19 @@ public class SearchUtils {
     public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String matchAlgorithm, boolean ranking, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, ranking, maxToReturn);
 	}
-
-
-    public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String source, String matchAlgorithm, boolean ranking, int maxToReturn) {
+    
+    public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String source, 
+        String matchAlgorithm, boolean ranking, int maxToReturn) {
+        return searchByName(scheme, version, matchText, source, 
+            matchAlgorithm, ranking, maxToReturn, NameSearchType.All);
+    }
+    
+    public enum NameSearchType { All, Name, Code };
+    
+    public ResolvedConceptReferencesIteratorWrapper searchByName(
+        String scheme, String version, String matchText, String source, 
+        String matchAlgorithm, boolean ranking, int maxToReturn,
+        NameSearchType nameSearchType) {
 		String matchText0 = matchText;
 		String matchAlgorithm0 = matchAlgorithm;
 		matchText0 = matchText0.trim();
@@ -1337,106 +1347,121 @@ public class SearchUtils {
 			//System.out.println("algorithm: " + matchAlgorithm);
 		}
 
-        CodedNodeSet cns = null;
         ResolvedConceptReferencesIterator iterator = null;
-
-		CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
-		propertyTypes[0] = PropertyType.PRESENTATION;
-
-        try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
-            if (lbSvc == null)
-            {
-                System.out.println("lbSvc = null");
-                return null;
-            }
-            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            if (version != null) versionOrTag.setVersion(version);
-
-            cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
-
-            if (cns == null)
-            {
-                System.out.println("cns = null");
-                return null;
-            }
-
-            //LocalNameList contextList = null;
+        if (nameSearchType == NameSearchType.All || nameSearchType == NameSearchType.Name) {
+            CodedNodeSet cns = null;
+    
+    		CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+    		propertyTypes[0] = PropertyType.PRESENTATION;
+    
             try {
-				LocalNameList sourceList = null;
-				if (source != null && source.compareToIgnoreCase("ALL") != 0) {
-					sourceList = new LocalNameList();
-					sourceList.addEntry(source);
-				}
-
-				cns = cns.restrictToMatchingDesignations(matchText, SearchDesignationOption.ALL, matchAlgorithm, null);
-				cns = cns.restrictToProperties(null, propertyTypes, sourceList, null, null);
-
-            } catch (Exception ex) {
-                return null;
-            }
-
-            LocalNameList restrictToProperties = null;//new LocalNameList();
-            LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
-            //boolean resolveConcepts = true; // Semantic_Type is no longer required.
-
-            SortOptionList sortCriteria = null;
-			boolean resolveConcepts = true;
-			LocalNameList filterOptions = null;
-			propertyTypes = null;
-            try {
-                try {
-					long ms = System.currentTimeMillis(), delay = 0;
-					cns = restrictToSource(cns, source);
-                    //iterator = cns.resolve(sortCriteria, propertyNames, restrictToProperties, null, resolveConcepts);
-                    iterator = cns.resolve(sortCriteria, filterOptions, propertyNames, propertyTypes, resolveConcepts);
-					Debug.println("cns.resolve delay ---- Run time (ms): " + (delay = System.currentTimeMillis() - ms) + " -- matchAlgorithm " + matchAlgorithm);
-                    //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
-
-                }  catch (Exception e) {
-                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+                if (lbSvc == null)
+                {
+                    System.out.println("lbSvc = null");
+                    return null;
                 }
+                CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+                if (version != null) versionOrTag.setVersion(version);
+    
+                cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
+                if (cns == null)
+                {
+                    System.out.println("cns = null");
+                    return null;
+                }
+    
+                //LocalNameList contextList = null;
+                try {
+    				LocalNameList sourceList = null;
+    				if (source != null && source.compareToIgnoreCase("ALL") != 0) {
+    					sourceList = new LocalNameList();
+    					sourceList.addEntry(source);
+    				}
+    
+    				cns = cns.restrictToMatchingDesignations(matchText, 
+    				    SearchDesignationOption.ALL, matchAlgorithm, null);
+    				cns = cns.restrictToProperties(null, propertyTypes, 
+    				    sourceList, null, null);
+    
+                } catch (Exception ex) {
+                    return null;
+                }
+    
+                LocalNameList restrictToProperties = null;//new LocalNameList();
+                LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
+                //boolean resolveConcepts = true; // Semantic_Type is no longer required.
+    
+                SortOptionList sortCriteria = null;
+    			boolean resolveConcepts = true;
+    			LocalNameList filterOptions = null;
+    			propertyTypes = null;
+                try {
+                    try {
+    					long ms = System.currentTimeMillis(), delay = 0;
+    					cns = restrictToSource(cns, source);
+                        //iterator = cns.resolve(sortCriteria, propertyNames, 
+    					//    restrictToProperties, null, resolveConcepts);
+                        iterator = cns.resolve(sortCriteria, filterOptions, 
+                            propertyNames, propertyTypes, resolveConcepts);
+    					Debug.println("cns.resolve delay ---- Run time (ms): " 
+    					    + (delay = System.currentTimeMillis() - ms) 
+    					    + " -- matchAlgorithm " + matchAlgorithm);
+                        //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
+    
+                    }  catch (Exception e) {
+                        System.out.println("ERROR: cns.resolve throws exceptions.");
+                    }
+    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+    
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			return null;
+    		}
+        }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
-            }
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-        if (iterator == null) {
-			iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
-		} else {
-			try {
-				int size = iterator.numberRemaining();
-				if (size == 0) {
-					iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
-				}
-				size = iterator.numberRemaining();
-				if (size == 0) {
-			        iterator = findConceptWithSourceCodeMatching(scheme, version,
-												   source, matchText0, maxToReturn, true);
-				}
-				// Find ICD9CM concepts by code
-				size = iterator.numberRemaining();
-				if (size < 20) { // heuristic rule (if the number of matches is large, then it's less likely that the matchText is a code)
-					Vector w = new Vector();
-					w.add(iterator);
-					ResolvedConceptReferencesIterator itr1 = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
-			        if (itr1 != null) w.add(itr1);
-			        ResolvedConceptReferencesIterator itr2 = findConceptWithSourceCodeMatching(scheme, version,
-												   source, matchText0, maxToReturn, true);
-					if (itr2 != null) w.add(itr2);
-                    iterator = getResolvedConceptReferencesIteratorUnion(scheme, version, w);
-				}
-
-			} catch (Exception e) {
-
-			}
-		}
+        if (nameSearchType == NameSearchType.All || nameSearchType == NameSearchType.Code) {
+            if (iterator == null) {
+    			iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
+    		} else {
+    			try {
+    				int size = iterator.numberRemaining();
+    				if (size == 0) {
+    					iterator = matchConceptCode(scheme, version, matchText0, 
+    					    source, "LuceneQuery");
+    				}
+    				size = iterator.numberRemaining();
+    				if (size == 0) {
+    			        iterator = findConceptWithSourceCodeMatching(scheme, version,
+    			            source, matchText0, maxToReturn, true);
+    				}
+    				// Find ICD9CM concepts by code
+    				size = iterator.numberRemaining();
+    				if (size < 20) {
+    				    // heuristic rule (if the number of matches is large, 
+    				    //    then it's less likely that the matchText is a code)
+    					Vector w = new Vector();
+    					w.add(iterator);
+    					ResolvedConceptReferencesIterator itr1 = matchConceptCode(
+    					    scheme, version, matchText0, source, "LuceneQuery");
+    			        if (itr1 != null) w.add(itr1);
+    			        ResolvedConceptReferencesIterator itr2 = 
+    			            findConceptWithSourceCodeMatching(scheme, version,
+    			                source, matchText0, maxToReturn, true);
+    					if (itr2 != null) w.add(itr2);
+                        iterator = getResolvedConceptReferencesIteratorUnion(
+                            scheme, version, w);
+    				}
+    
+    			} catch (Exception e) {
+    
+    			}
+    		}
+        }
         return new ResolvedConceptReferencesIteratorWrapper(iterator);
     }
 

@@ -49,7 +49,7 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/extlib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-1.1.6.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-1.1.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-1.1.8.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-1.1.8.jar"/>
 	<classpathentry kind="output" path="software/ncimbrowser/build/web/WEB-INF/classes"/>
 </classpath>
