@@ -144,8 +144,6 @@ public class UserSessionBean extends Object
         
         String source = (String) request.getParameter("adv_search_source");
         bean.setSelectedSource(source);
-        if (source != null && source.compareTo("ALL") == 0)
-            source = null;
 
         String selectSearchOption = (String) request.getParameter("selectSearchOption");
         bean.setSelectedSearchOption(selectSearchOption);
