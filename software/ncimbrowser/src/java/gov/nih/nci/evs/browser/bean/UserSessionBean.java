@@ -124,7 +124,7 @@ public class UserSessionBean extends Object
 		SearchStatusBean bean = (SearchStatusBean) FacesContext.
 		    getCurrentInstance().getExternalContext().getRequestMap().
 		    get("searchStatusBean");
-		
+
 		if (bean == null) {
 			bean = new SearchStatusBean();
 			request.setAttribute("searchStatusBean", bean);
@@ -141,7 +141,7 @@ public class UserSessionBean extends Object
 
         String matchAlgorithm = (String) request.getParameter("adv_search_algorithm");
         bean.setAlgorithm(matchAlgorithm);
-        
+
         String source = (String) request.getParameter("adv_search_source");
         bean.setSelectedSource(source);
 
@@ -153,10 +153,10 @@ public class UserSessionBean extends Object
 
 		String rel_search_association = (String) request.getParameter("rel_search_association");
 		bean.setSelectedAssociation(rel_search_association);
-        
+
 		String rel_search_rela = (String) request.getParameter("rel_search_rela");
 		bean.setSelectedRELA(rel_search_rela);
-		
+
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().
 		    put("searchStatusBean", bean);
 		request.setAttribute("searchStatusBean", bean);
@@ -172,7 +172,7 @@ public class UserSessionBean extends Object
         String scheme = Constants.CODING_SCHEME_NAME;
         Vector schemes = new Vector();
         schemes.add(scheme);
-        
+
         String version = null;
         String max_str = null;
         int maxToReturn = -1;//1000;
@@ -189,7 +189,7 @@ public class UserSessionBean extends Object
         boolean designationOnly = false;
 
         // check if this search has been performance previously through IteratorBeanManager
-		IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) 
+		IteratorBeanManager iteratorBeanManager = (IteratorBeanManager)
 		    FacesContext.getCurrentInstance().getExternalContext().
 		    getSessionMap().get("iteratorBeanManager");
 
@@ -210,7 +210,7 @@ public class UserSessionBean extends Object
 		System.out.println("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
-/*            
+/*
 			System.out.println("Advanced Search: ");
 			System.out.println("searchType: " + searchType);
 			System.out.println("matchText: " + matchText);
@@ -262,7 +262,7 @@ public class UserSessionBean extends Object
         } else if (searchType != null && searchType.compareTo("Relationship") == 0) {
             if (rel_search_association != null && rel_search_association.compareTo("ALL") == 0)
                 rel_search_association = null;
-            
+
             if (rel_search_rela != null) {
                 rel_search_rela = rel_search_rela.trim();
                 if (rel_search_rela.length() == 0)
@@ -280,7 +280,7 @@ public class UserSessionBean extends Object
             System.out.println("adv_search_source: " + adv_search_source);
             System.out.println("rel_search_direction: " + rel_search_direction);
 */
-			
+
 			//boolean direction = false;
 			int search_direction = Constants.SEARCH_BOTH_DIRECTION;
 			if (rel_search_direction != null && rel_search_direction.compareTo("source") == 0) {
@@ -291,10 +291,19 @@ public class UserSessionBean extends Object
 				//direction = true;
 			}
 
+
+System.out.println("AdvancedSearchAction search_direction " + search_direction);
+
+
+
             searchFields = SearchFields.setRelationship(schemes, matchText,
 			    searchTarget, rel_search_association, rel_search_rela,
 			    source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
+
+
+System.out.println("AdvancedSearchAction key " + key);
+
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -349,7 +358,7 @@ public class UserSessionBean extends Object
 			}
 
 		} else if (searchType != null && searchType.compareTo("Name") == 0) {
-		    searchFields = SearchFields.setName(schemes, matchText, 
+		    searchFields = SearchFields.setName(schemes, matchText,
 		        searchTarget, source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
 			if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -357,7 +366,7 @@ public class UserSessionBean extends Object
 				iterator = iteratorBean.getIterator();
 			} else {
 				wrapper =
-					new SearchUtils().searchByName(scheme, version, matchText, 
+					new SearchUtils().searchByName(scheme, version, matchText,
 					    source, matchAlgorithm, ranking, maxToReturn,
 					    SearchUtils.NameSearchType.Name);
 				iterator = wrapper.getIterator();
@@ -370,7 +379,7 @@ public class UserSessionBean extends Object
 			}
 
         } else if (searchType != null && searchType.compareTo("Code") == 0) {
-            searchFields = SearchFields.setCode(schemes, matchText, searchTarget, 
+            searchFields = SearchFields.setCode(schemes, matchText, searchTarget,
                 source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
             if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -378,7 +387,7 @@ public class UserSessionBean extends Object
                 iterator = iteratorBean.getIterator();
             } else {
                 wrapper =
-                    new SearchUtils().searchByName(scheme, version, matchText, 
+                    new SearchUtils().searchByName(scheme, version, matchText,
                         source, matchAlgorithm, ranking, maxToReturn,
                         SearchUtils.NameSearchType.Code);
                 iterator = wrapper.getIterator();
@@ -404,6 +413,10 @@ public class UserSessionBean extends Object
 
         if (iterator != null) {
 			int size = iteratorBean.getSize();
+
+
+System.out.println("AdvancedSearchActon size: " + size);
+
 
 			// Write a search log entry
 			SearchLog.writeEntry(searchFields,
@@ -435,7 +448,7 @@ public class UserSessionBean extends Object
 				} else {
 					c = ref.getReferencedEntry();
 					if (c == null) {
-						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, 
+						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
 						    null, null, ref.getConceptCode());
 					}
 				}

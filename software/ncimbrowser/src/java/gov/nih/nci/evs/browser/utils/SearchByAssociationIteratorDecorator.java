@@ -153,39 +153,6 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 				throw new RuntimeException(e);
 			}
 		}
-/*
-
-		//KLO
-
-//System.out.println("\treturnList.getResolvedConceptReferenceCount(): " + returnList.getResolvedConceptReferenceCount());
-//System.out.println("\tpage: " + page);
-//System.out.println("\tthis.currentChildren.size(): " + this.currentChildren.size());
-		try {
-	        pageIfNecessary();
-		} catch (Exception ex) {
-
-		}
-		while (returnList.getResolvedConceptReferenceCount() < page && this.currentChildren.size() > 0) {
-			try {
-
-				ResolvedConceptReference returnRef = this.currentChildren.get(this.position);
-
-		//System.out.println("position: " + this.position);
-		displayRef(returnRef);
-				position++;
-
-				returnList.addResolvedConceptReference(returnRef);
-
-//System.out.println("\treturnList.getResolvedConceptReferenceCount(): " + returnList.getResolvedConceptReferenceCount());
-//System.out.println("\tpage: " + page);
-//System.out.println("\tthis.currentChildren.size(): " + this.currentChildren.size());
-
-
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-*/
 		return returnList;
 	}
 
@@ -304,7 +271,8 @@ displayRef(returnRef);
 								this.maxToReturn);
 
 //System.out.println("Calling populateCurrentChildren ...");
-					populateCurrentChildren(list.getResolvedConceptReference(), false);
+					//populateCurrentChildren(list.getResolvedConceptReference(), false);
+					populateCurrentChildren(list.getResolvedConceptReference(), false, ref.getCode());
 
 			    }
 			}
@@ -343,6 +311,10 @@ displayRef(returnRef);
 			}
 
 			if (ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot) {
+
+				//System.out.println("\t????????? ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot: ");
+				displayRef(ref);
+
 				this.currentChildren.add(ref);
 			}
 
@@ -370,4 +342,56 @@ displayRef(returnRef);
 
 		//System.out.println("\tExiting populateCurrentChildren");
 	}
+
+
+	public void populateCurrentChildren(ResolvedConceptReference[] list, boolean addRoot, String rootCode){
+		if (list == null) return;
+
+		for(ResolvedConceptReference ref : list){
+
+			//displayRef(ref);
+
+			if(addRoot) {
+				//System.out.println("\tbefore addRoot this.currentChildren.size() " + this.currentChildren.size());
+				displayRef(ref);
+				this.currentChildren.add(ref);
+				//System.out.println("\tafter addRoot this.currentChildren.size() " + this.currentChildren.size());
+			} else {
+				//System.out.println("\tDO NOT add: ");
+				displayRef(ref);
+			}
+
+			if (ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot && rootCode.compareTo(ref.getConceptCode()) != 0) {
+
+				//System.out.println("\t????????? ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot: ");
+				displayRef(ref);
+
+				this.currentChildren.add(ref);
+			}
+
+			if(ref.getSourceOf() != null){
+				if (ref.getSourceOf().getAssociation() != null) {
+					for(Association assoc : ref.getSourceOf().getAssociation()){
+						populateCurrentChildren(assoc.getAssociatedConcepts().getAssociatedConcept(), true, rootCode);
+					}
+			    }
+			} else {
+				//System.out.println("\tref.getSourceOf() == null -- nothing done.");
+			}
+
+
+			if(ref.getTargetOf() != null){
+				if (ref.getTargetOf().getAssociation() != null) {
+					for(Association assoc : ref.getTargetOf().getAssociation()){
+						populateCurrentChildren(assoc.getAssociatedConcepts().getAssociatedConcept(), true, rootCode);
+					}
+			    }
+			} else {
+				//System.out.println("\tref.getTargetOf() == null -- nothing done.");
+			}
+		}
+
+		//System.out.println("\tExiting populateCurrentChildren");
+	}
+
 }
