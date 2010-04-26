@@ -1425,42 +1425,36 @@ public class SearchUtils {
         }
 
         if (nameSearchType == NameSearchType.All || nameSearchType == NameSearchType.Code) {
-            if (iterator == null) {
-    			iterator = matchConceptCode(scheme, version, matchText0, source, "LuceneQuery");
-    		} else {
-    			try {
-    				int size = iterator.numberRemaining();
-    				if (size == 0) {
-    					iterator = matchConceptCode(scheme, version, matchText0, 
-    					    source, "LuceneQuery");
-    				}
-    				size = iterator.numberRemaining();
-    				if (size == 0) {
-    			        iterator = findConceptWithSourceCodeMatching(scheme, version,
-    			            source, matchText0, maxToReturn, true);
-    				}
-    				// Find ICD9CM concepts by code
-    				size = iterator.numberRemaining();
-    				if (size < 20) {
-    				    // heuristic rule (if the number of matches is large, 
-    				    //    then it's less likely that the matchText is a code)
-    					Vector w = new Vector();
-    					w.add(iterator);
-    					ResolvedConceptReferencesIterator itr1 = matchConceptCode(
-    					    scheme, version, matchText0, source, "LuceneQuery");
-    			        if (itr1 != null) w.add(itr1);
-    			        ResolvedConceptReferencesIterator itr2 = 
-    			            findConceptWithSourceCodeMatching(scheme, version,
-    			                source, matchText0, maxToReturn, true);
-    					if (itr2 != null) w.add(itr2);
-                        iterator = getResolvedConceptReferencesIteratorUnion(
-                            scheme, version, w);
-    				}
-    
-    			} catch (Exception e) {
-    
-    			}
-    		}
+			try {
+				int size = iterator != null ? iterator.numberRemaining() : 0;
+				if (size == 0) {
+					iterator = matchConceptCode(scheme, version, matchText0, 
+					    source, "LuceneQuery");
+				}
+				size = iterator.numberRemaining();
+				if (size == 0) {
+			        iterator = findConceptWithSourceCodeMatching(scheme, version,
+			            source, matchText0, maxToReturn, true);
+				}
+				// Find ICD9CM concepts by code
+				size = iterator.numberRemaining();
+				if (size < 20) {
+				    // heuristic rule (if the number of matches is large, 
+				    //    then it's less likely that the matchText is a code)
+					Vector w = new Vector();
+					w.add(iterator);
+					ResolvedConceptReferencesIterator itr1 = matchConceptCode(
+					    scheme, version, matchText0, source, "LuceneQuery");
+			        if (itr1 != null) w.add(itr1);
+			        ResolvedConceptReferencesIterator itr2 = 
+			            findConceptWithSourceCodeMatching(scheme, version,
+			                source, matchText0, maxToReturn, true);
+					if (itr2 != null) w.add(itr2);
+                    iterator = getResolvedConceptReferencesIteratorUnion(
+                        scheme, version, w);
+				}
+			} catch (Exception e) {
+			}
         }
         return new ResolvedConceptReferencesIteratorWrapper(iterator);
     }
