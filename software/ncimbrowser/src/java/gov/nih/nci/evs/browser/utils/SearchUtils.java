@@ -605,6 +605,7 @@ public class SearchUtils {
         return list;
     }
 
+/*
     protected static NameAndValueList createNameAndValueList(Vector names, Vector values)
     {
         if (names == null) return null;
@@ -623,6 +624,7 @@ public class SearchUtils {
         }
         return nvList;
     }
+*/
 
     public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
     {
@@ -2635,6 +2637,29 @@ public class SearchUtils {
 	}
 
 
+    protected static NameAndValueList createNameAndValueList(Vector names, Vector values)
+    {
+        if (names == null) return null;
+        NameAndValueList nvList = new NameAndValueList();
+        for (int i=0; i<names.size(); i++)
+        {
+            String name = (String) names.elementAt(i);
+            String value = null;
+            if (values != null && values.size() > i) {
+				value = (String) values.elementAt(i);
+			}
+            NameAndValue nv = new NameAndValue();
+            nv.setName(name);
+            if (value != null)
+            {
+                nv.setContent(value);
+            }
+            nvList.addNameAndValue(nv);
+        }
+        return nvList;
+    }
+
+
 	public static NameAndValueList createNameAndValueList(String[] names, String[] values) {
         NameAndValueList nvList = null;
         if (names != null && names.length > 0) {
@@ -2812,8 +2837,6 @@ if (association_qualifier_values != null) {
                 sortCriteria = Constructors.createSortOptionList(new String[] { "entityDescription" }); //code
                 //resolveConcepts = false;
 			}
-			//Need to set to true to retrieve concept name
-			//resolveConcepts = true;
 			resolveConcepts = false;
             try {
                try {

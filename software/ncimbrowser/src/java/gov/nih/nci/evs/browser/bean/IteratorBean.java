@@ -110,6 +110,10 @@ public class IteratorBean extends Object {
 				this.size = iterator.numberRemaining();
 		    }
 
+
+System.out.println(	"IteratorBean Number of matches: " + this.size);
+
+
 		    int randomNumber = new Random().nextInt();
 		    this.randomNumberString = Integer.toString(randomNumber);
 
@@ -176,7 +180,8 @@ public class IteratorBean extends Object {
 
 
 	public List getData(int idx1, int idx2) {
-		System.out.println("Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
+		System.out.println("(*****************) IteratorBean Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
+
 		long ms = System.currentTimeMillis();
 		long dt = 0;
 		long total_delay = 0;
@@ -273,6 +278,7 @@ public class IteratorBean extends Object {
 	}
 
     public void setKey(String key) {
+		System.out.println("IteratorBean setKey: " + key);
 		this.key = key;
 	}
 
