@@ -33,7 +33,7 @@
           String visitedConceptsStr = DataUtils.getVisitedConceptLink(visitedConcepts);
       %> <%=visitedConceptsStr%> <%
       }
-      %>
+      %>&nbsp;
     </td>
     
   </tr>
