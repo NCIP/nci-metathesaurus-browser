@@ -190,7 +190,7 @@
         -->
 
         <!--OS Temp dir -->
-        <condition property="os.temp.dir" value="/tmp/${project.name}">
+        <condition property="os.temp.dir" value="/tmp/${user.home}/${project.name}">
             <or>
                 <os family="unix" />
                 <os family="mac" />
