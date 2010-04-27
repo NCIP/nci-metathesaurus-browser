@@ -2,6 +2,7 @@ package gov.nih.nci.evs.browser.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.Association;
@@ -59,6 +60,8 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 	private NameAndValueList associationQualifierNameAndValueList;
 
 
+    private HashSet hset = null;
+
 	/**
 	 * Instantiates a new search by association iterator decorator.
 	 *
@@ -82,6 +85,8 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 	    this.associationNameAndValueList = null;
 	    this.associationQualifierNameAndValueList = null;
 
+	    this.hset = new HashSet();
+
 	    //System.out.println("Type 1 SearchByAssociationIteratorDecorator ");
 
 	}
@@ -102,6 +107,8 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 		this.maxToReturn = maxToReturn;
 	    this.associationNameAndValueList = associationNameAndValueList;
 	    this.associationQualifierNameAndValueList = associationQualifierNameAndValueList;
+
+	    this.hset = new HashSet();
 
 	    //System.out.println("Type 2 SearchByAssociationIteratorDecorator ");
 	}
@@ -287,6 +294,9 @@ displayRef(returnRef);
 		//System.out.println(ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
 	}
 
+	protected void displayRef(String msg, ResolvedConceptReference ref){
+		//System.out.println(msg + " " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
+	}
 
 	/**
 	 * Populate current children.
@@ -299,27 +309,21 @@ displayRef(returnRef);
 
 		for(ResolvedConceptReference ref : list){
 
-			//displayRef(ref);
+			displayRef("Root: ", ref);
 
 			if(addRoot) {
-				//System.out.println("\tbefore addRoot this.currentChildren.size() " + this.currentChildren.size());
-				displayRef(ref);
-				this.currentChildren.add(ref);
-				//System.out.println("\tafter addRoot this.currentChildren.size() " + this.currentChildren.size());
+				if (!hset.contains(ref.getConceptCode())) {
+					hset.add(ref.getConceptCode());
+					//System.out.println("\tbefore addRoot this.currentChildren.size() " + this.currentChildren.size());
+					displayRef(ref);
+					this.currentChildren.add(ref);
+					//System.out.println("\tafter addRoot this.currentChildren.size() " + this.currentChildren.size());
+				}
 			} else {
 				//System.out.println("\tDO NOT add: ");
-				displayRef(ref);
+				displayRef("discarded ", ref);
 			}
 
-/*
-			if (ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot) {
-
-				//System.out.println("\t????????? ref.getSourceOf() == null && ref.getTargetOf() == null && !addRoot: ");
-				displayRef(ref);
-
-				this.currentChildren.add(ref);
-			}
-*/
 			if(ref.getSourceOf() != null){
 				if (ref.getSourceOf().getAssociation() != null) {
 					for(Association assoc : ref.getSourceOf().getAssociation()){
