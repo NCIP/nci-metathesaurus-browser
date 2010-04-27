@@ -110,10 +110,6 @@ public class IteratorBean extends Object {
 				this.size = iterator.numberRemaining();
 		    }
 
-
-System.out.println(	"IteratorBean Number of matches: " + this.size);
-
-
 		    int randomNumber = new Random().nextInt();
 		    this.randomNumberString = Integer.toString(randomNumber);
 
@@ -180,7 +176,7 @@ System.out.println(	"IteratorBean Number of matches: " + this.size);
 
 
 	public List getData(int idx1, int idx2) {
-		System.out.println("(*****************) IteratorBean Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
+		System.out.println("IteratorBean Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
 
 		long ms = System.currentTimeMillis();
 		long dt = 0;
@@ -232,6 +228,7 @@ System.out.println(	"IteratorBean Number of matches: " + this.size);
 
 		System.out.println("getData Run time (ms): "
 					+ (System.currentTimeMillis() - ms));
+
 
 		return rcr_list;
 	}

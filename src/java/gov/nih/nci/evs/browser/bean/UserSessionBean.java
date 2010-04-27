@@ -269,17 +269,8 @@ public class UserSessionBean extends Object
                     rel_search_rela = null;
             }
 
-			String rel_search_direction = (String) request.getParameter("rel_search_direction");
 /*
-            System.out.println("Advanced Search: ");
-            System.out.println("searchType: " + searchType);
-            System.out.println("matchText: " + matchText);
-            System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-            System.out.println("rel_search_association: " + rel_search_association);
-            System.out.println("rel_search_rela: " + rel_search_rela);
-            System.out.println("adv_search_source: " + adv_search_source);
-            System.out.println("rel_search_direction: " + rel_search_direction);
-*/
+			String rel_search_direction = (String) request.getParameter("rel_search_direction");
 
 			//boolean direction = false;
 			int search_direction = Constants.SEARCH_BOTH_DIRECTION;
@@ -290,7 +281,9 @@ public class UserSessionBean extends Object
 				search_direction = Constants.SEARCH_TARGET;
 				//direction = true;
 			}
+*/
 
+int search_direction = Constants.SEARCH_SOURCE;
 
 System.out.println("AdvancedSearchAction search_direction " + search_direction);
 

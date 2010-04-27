@@ -67,7 +67,7 @@ if (iteratorBeanManager == null) {
 }
 
 if (randomKey != null) {
-    iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
+        iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
 } else {
 	key = (String) request.getAttribute("key");  
 	iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -156,17 +156,17 @@ if (randomKey != null) {
           }
           %>
                 <%
-                  long ms0 = System.currentTimeMillis();
-                  List list = iteratorBean.getData(istart, iend);
-                  iterator_delay = System.currentTimeMillis() - ms0;
-                  System.out.println("iteratorBean.getData Run time (ms): " + iterator_delay);
-
+		  long ms0 = System.currentTimeMillis();
+		  List list = iteratorBean.getData(istart, iend);
+		  iterator_delay = System.currentTimeMillis() - ms0;
 
                   Vector code_vec = new Vector();
                   for (int k=0; k<list.size(); k++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
                       code_vec.add(rcr.getConceptCode());
                   }
+                  
+                  
                   if (code_vec.size() > 0) {
 			  HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
