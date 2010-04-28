@@ -362,13 +362,15 @@ System.out.println("AdvancedSearchAction key " + key);
 					new SearchUtils().searchByName(scheme, version, matchText,
 					    source, matchAlgorithm, ranking, maxToReturn,
 					    SearchUtils.NameSearchType.Name);
-				iterator = wrapper.getIterator();
-				if (iterator != null) {
-					iteratorBean = new IteratorBean(iterator);
-					iteratorBean.setKey(key);
-					iteratorBean.setMatchText(matchText);
-					iteratorBeanManager.addIteratorBean(iteratorBean);
-				}
+				if (wrapper != null) {
+					iterator = wrapper.getIterator();
+					if (iterator != null) {
+						iteratorBean = new IteratorBean(iterator);
+						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
+						iteratorBeanManager.addIteratorBean(iteratorBean);
+					}
+			    }
 			}
 
         } else if (searchType != null && searchType.compareTo("Code") == 0) {
@@ -383,13 +385,15 @@ System.out.println("AdvancedSearchAction key " + key);
                     new SearchUtils().searchByName(scheme, version, matchText,
                         source, matchAlgorithm, ranking, maxToReturn,
                         SearchUtils.NameSearchType.Code);
-                iterator = wrapper.getIterator();
-                if (iterator != null) {
-                    iteratorBean = new IteratorBean(iterator);
-                    iteratorBean.setKey(key);
-                    iteratorBean.setMatchText(matchText);
-                    iteratorBeanManager.addIteratorBean(iteratorBean);
-                }
+                if (wrapper != null) {
+					iterator = wrapper.getIterator();
+					if (iterator != null) {
+						iteratorBean = new IteratorBean(iterator);
+						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
+						iteratorBeanManager.addIteratorBean(iteratorBean);
+					}
+			    }
             }
         }
 
@@ -799,13 +803,15 @@ System.out.println("AdvancedSearchActon size: " + size);
 				} else {
 					wrapper =
 						new SearchUtils().searchByName(scheme, version, matchText, source, matchAlgorithm, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
+					if (wrapper != null) {
+						iterator = wrapper.getIterator();
+						if (iterator != null) {
+							iteratorBean = new IteratorBean(iterator);
+							iteratorBean.setKey(key);
+							iteratorBean.setMatchText(matchText);
+							iteratorBeanManager.addIteratorBean(iteratorBean);
+						}
+				    }
 				}
 
 			} else if (searchTarget.compareTo("properties") == 0) {
@@ -814,13 +820,15 @@ System.out.println("AdvancedSearchActon size: " + size);
 					iterator = iteratorBean.getIterator();
 				} else {
 					wrapper = new SearchUtils().searchByProperties(scheme, version, matchText, source, matchAlgorithm, excludeDesignation, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
+					if (wrapper != null) {
+						iterator = wrapper.getIterator();
+						if (iterator != null) {
+							iteratorBean = new IteratorBean(iterator);
+							iteratorBean.setKey(key);
+							iteratorBean.setMatchText(matchText);
+							iteratorBeanManager.addIteratorBean(iteratorBean);
+						}
+				    }
 				}
 
 			} else if (searchTarget.compareTo("relationships") == 0) {
@@ -830,13 +838,15 @@ System.out.println("AdvancedSearchActon size: " + size);
 					iterator = iteratorBean.getIterator();
 				} else {
 					wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText, source, matchAlgorithm, designationOnly, ranking, maxToReturn);
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
-					}
+					if (wrapper != null) {
+						iterator = wrapper.getIterator();
+						if (iterator != null) {
+							iteratorBean = new IteratorBean(iterator);
+							iteratorBean.setKey(key);
+							iteratorBean.setMatchText(matchText);
+							iteratorBeanManager.addIteratorBean(iteratorBean);
+						}
+				    }
 				}
 			}
 	    }
