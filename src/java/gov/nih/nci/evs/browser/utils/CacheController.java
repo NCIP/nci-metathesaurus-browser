@@ -511,6 +511,10 @@ public class CacheController
 
 //
 	public HashMap getChildrenExt(String CUI, String SAB) {
+
+System.out.println("getChildrenExt: CUI: " + CUI + " SAB: " + SAB);
+
+
 		HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
@@ -550,6 +554,11 @@ public class CacheController
 				MetaTreeNode child = (MetaTreeNode) iterator.next();
 				if (!hset.contains(child.getCui())) {
 					TreeItem childItem = new TreeItem(child.getCui(), child.getName());
+
+System.out.println("\tchild node: " + child.getCui() + " " + child.getName());
+
+
+
 					childItem.expandable = true;
 					if(isLeaf(child)) {
 						childItem.expandable = false;
