@@ -68,6 +68,7 @@ public class LicenseBean extends Object {
 		*/
 
 		boolean retval = licenseAgreementHashSet.contains(scheme);
+		//System.out.println("licenseAgreementAccepted " + scheme + ": " + retval);
 		return (retval);
 	}
 
@@ -76,7 +77,9 @@ public class LicenseBean extends Object {
         String license_display = null;
 
         license_display = getLicenseDisplay(codingSchemeName, "license_display");
-        if (license_display != null && license_display.compareTo("accept") == 0) return true;
+        if (license_display != null && license_display.compareTo("accept") == 0) {
+			return true;
+		}
 
         return false;
     }

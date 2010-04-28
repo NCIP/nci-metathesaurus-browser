@@ -153,7 +153,6 @@ public final class AjaxServlet extends HttpServlet {
         long ms = System.currentTimeMillis();
         if (action.equals("expand_tree")) {
 			String node_id_0 = node_id;
-
             if (node_id != null && ontology_display_name != null) {
 				int pos = node_id.indexOf("|");
 				if (pos != -1) {
