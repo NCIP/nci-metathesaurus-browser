@@ -70,7 +70,7 @@
       var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
       var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, false);
       if (nodeInfo.ontology_node_child_count > 0) {
-        //newNode.setDynamicLoad(loadNodeData);
+          newNode.setDynamicLoad(loadNodeData);
       }
     }
 
