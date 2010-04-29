@@ -424,7 +424,12 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
   if (!has_external_source_codes) {
   %>
-      <b>Other Properties:&nbsp;</b> <i>(none)</i>
+      <b>Other Properties:</b>
+         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
+          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+         <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
+         &nbsp; 
+      <i>(none)</i>
   <%
   } else {
   %>
@@ -432,6 +437,10 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
 <p>
   <b>Other Properties:</b>
+         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
+          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+         <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
+
   <table class="datatable">
     <%
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
