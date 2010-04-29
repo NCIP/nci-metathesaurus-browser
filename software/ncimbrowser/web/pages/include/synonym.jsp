@@ -5,9 +5,6 @@
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
   String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
-  
-  System.out.println("available_hierarchies: " + available_hierarchies);
-  
 
   String nciterm_browser_url = NCImBrowserProperties.getTermBrowserURL();
   String secured_vocabularies = NCImBrowserProperties.getSecuredVocabularies();

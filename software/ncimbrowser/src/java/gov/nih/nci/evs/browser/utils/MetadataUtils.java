@@ -437,6 +437,7 @@ public class MetadataUtils {
 								}
 								localname2FormalnameHashMap.put(formalname, formalname);
 								localname2FormalnameHashMap.put(css_local_name, formalname);
+								System.out.println("\tlocal name: " + css_local_name);
 						    }
 							System.out.println("\n");
 						} catch (Exception ex) {
