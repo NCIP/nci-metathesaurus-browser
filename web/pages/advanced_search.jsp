@@ -176,13 +176,13 @@
              
      String help_msg = null;
      if (selectSearchOption.compareTo("Code") == 0) {
-	 help_msg = "Find things with CUI or source code that exactly matches with the search string (from the specified Source).";
+	 help_msg = "Find things with CUI or source code that exactly matches with the search string (from the specified Source):";
      } else if (selectSearchOption.compareTo("Name") == 0) {
-	 help_msg = "Find things with a name (i.e., textual presentation) that matches with the search string (from the specified Source).";
+	 help_msg = "Find things with a name (i.e., textual presentation) that matches with the search string (from the specified Source):";
      } else if (selectSearchOption.compareTo("Property") == 0) {
-	 help_msg = "Find things with the specified property that matches with the search string (from the specified Source).";
+	 help_msg = "Find things with the specified property that matches with the search string (from the specified Source):";
      } else {
-	 help_msg = "Find things with the specified relationship (and RELA) to the search string (from the specified Source).";
+	 help_msg = "Find things with the specified relationship (and RELA) to the search string (from the specified Source):";
      }
        
 %>
