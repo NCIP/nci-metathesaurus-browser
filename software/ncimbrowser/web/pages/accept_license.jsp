@@ -56,29 +56,14 @@
           If and only if you agree to these terms and conditions, click the Accept button to proceed.
         </p>
           <form>
-<%          
-          if (sab != null) {
-%>          
             <h:commandButton
               id="accept"
               value="accept"
               action="#{userSessionBean.acceptLicenseAction}"
+              onmousedown="javascript:window.opener.location.reload(true);"
               image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
               alt="Accept">
             </h:commandButton>
-<%            
-          } else {
-%>          
-            <h:commandButton
-              id="accept"
-              value="accept"
-              action="#{userSessionBean.acceptLicenseAction}"
-              image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
-              alt="Accept">
-            </h:commandButton>          
-<%        
-          }
-%>            
             &nbsp;&nbsp;
             <a href="javascript:window.close();">
               <img src="<%= request.getContextPath() %>/images/cancel.gif" border="0" alt="Cancel"/>
