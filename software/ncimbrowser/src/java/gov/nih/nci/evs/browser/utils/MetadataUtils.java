@@ -78,6 +78,8 @@ public class MetadataUtils {
 
 	public static HashMap formalName2MetadataHashMap = null;
 
+	public static Vector propertyDescriptions_vec = null;
+
     public static boolean isMetadataAvailable() {
 		if (formalName2MetadataHashMap == null) return false;
 		return true;
@@ -532,6 +534,39 @@ public class MetadataUtils {
 		}
 		return new NameAndValue[0];
 
+	}
+
+
+	public static Vector getPropertyDescriptions() {
+		if (propertyDescriptions_vec != null) return propertyDescriptions_vec;
+		try {
+			propertyDescriptions_vec = new Vector();
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			LexBIGServiceMetadata lbsm = lbs.getServiceMetadata();
+			lbsm = lbsm.restrictToCodingScheme(Constructors.createAbsoluteCodingSchemeVersionReference("NCI Metathesaurus", null));
+
+			MetadataPropertyList mdpl = lbsm.resolve();
+			for(int i=0;i<mdpl.getMetadataPropertyCount();i++){
+				MetadataProperty prop = mdpl.getMetadataProperty(i);
+				if(prop.getName().equals("dockey") && prop.getValue().equals("ATN")){
+					i++;
+					String propertyName = mdpl.getMetadataProperty(i).getValue();
+					i++;
+					if(mdpl.getMetadataProperty(i).getValue().equals("expanded_form")){
+						i++;
+						String propertyValue = mdpl.getMetadataProperty(i).getValue();
+						String t = propertyName + "|" + propertyValue;
+						if (!propertyDescriptions_vec.contains(t)) {
+							propertyDescriptions_vec.add(t);
+						}
+					}
+				}
+			}
+			propertyDescriptions_vec = SortUtils.quickSort(propertyDescriptions_vec);
+			return propertyDescriptions_vec;
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 
 
