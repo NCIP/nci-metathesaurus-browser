@@ -4357,25 +4357,36 @@ public class DataUtils {
 
 		if (results == null) return null;
 
+		HashMap hmap = new HashMap();
+		Vector key_vec = new Vector();
+
 		for(int i=0; i<results.size(); i++) {
 			RelationshipTabResults result = (RelationshipTabResults) results.get(i);
 			List children = getAssociatedConceptsEx(result.getCui(), "CHD", Direction.TARGETOF);
 
 			for(int j=0; j<children.size(); j++) {
 				RelationshipTabResults sub_result = (RelationshipTabResults) children.get(j);
-				//System.out.println(" - CUI: " + sub_result.getCui());
-				//System.out.println("   - Name: " + sub_result.getName());
-				//System.out.println("   - REL: " + sub_result.getRel());
-				//System.out.println("   - RELA: " + sub_result.getRela());
-				//System.out.println("   - Source: " + sub_result.getSource());
 				String t = "SIB" + "|" + sub_result.getName() + "|" + sub_result.getCui() + "|" + sub_result.getSource();
 				if (!hset.contains(t) && sub_result.getCui().compareTo(CUI) != 0) {
 					hset.add(t);
-					v.add(t);
+					//v.add(t);
+					String key = sub_result.getSource() + "|" + sub_result.getName() + "|" + sub_result.getCui();
+					hmap.put(key, t);
+					key_vec.add(key);
 				}
 			}
 		}
-		return SortUtils.quickSort(v);
+
+		key_vec = SortUtils.quickSort(key_vec);
+		for (int i=0; i<key_vec.size(); i++) {
+			String key = (String) key_vec.elementAt(i);
+			String value = (String) hmap.get(key);
+			v.add(value);
+		}
+
+		//return SortUtils.quickSort(v);
+		return v;
 	}
+
 }
 
