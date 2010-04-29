@@ -2,9 +2,9 @@
 <div class="bannerarea">
     <div class="banner"><a href="<%=basePath%>"><img src="<%=basePath%>/images/thesaurus_browser_logo.gif" width="383" height="130" alt="Thesaurus Browser Logo" border="0"/></a></div>
     <div class="search-empty">
-        <table border="0" height="105px" class="global-nav">
+        <table border="0" height="105px" width="100%" class="global-nav">
           <tr>
-            <td valign="bottom">
+            <td valign="middle" align="center">
               <a href="<%= request.getContextPath() %>">Simple Search</a>        
             </td>
           </tr>         
