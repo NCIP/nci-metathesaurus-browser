@@ -172,16 +172,37 @@
     else if (selectSearchOption.compareTo("Relationship") == 0)
       check_r2 = "checked";
     else check_n2 = "checked";
+    
+             
+     String help_msg = null;
+     if (selectSearchOption.compareTo("Code") == 0) {
+	 help_msg = "Find things with CUI or source code that exactly matches with the search string (from the specified Source).";
+     } else if (selectSearchOption.compareTo("Name") == 0) {
+	 help_msg = "Find things with a name (i.e., textual presentation) that matches with the search string (from the specified Source).";
+     } else if (selectSearchOption.compareTo("Property") == 0) {
+	 help_msg = "Find things with the specified property that matches with the search string (from the specified Source).";
+     } else {
+	 help_msg = "Find things with the specified relationship (and RELA) to the search string (from the specified Source).";
+     }
+       
 %>
-
         <div class="pagecontent">
           <table>
+            <tr>
             <td class="texttitle-blue">Advanced Search</td>
-            <tr class="textbody"><td>
+            </tr> 
+            
+            <tr>
+            <td>
+            <p class="dataTableHeader">&nbsp;<%=help_msg%></p>
+            </td>
+            </tr>
+
             <% if (message != null) { %>
-                <p class="textbodyred">&nbsp;<%=message%></p>
+		    <tr class="textbodyred"><td>
+			<p class="textbodyred">&nbsp;<%=message%></p>
+		    </td></tr>
             <% } %>
-            </td></tr>
 
             <tr class="textbody"><td>
                <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >

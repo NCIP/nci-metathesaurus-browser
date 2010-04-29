@@ -430,14 +430,20 @@ public class MetadataUtils {
 								}
 
 								String [] localnames = cs.getLocalName();
+								boolean contains_css_local_name = false;
 								for (int m=0; m<localnames.length; m++) {
 									String localname = localnames[m];
 									System.out.println("\tlocal name: " + localname);
 									localname2FormalnameHashMap.put(localname, formalname);
+									if (localname.compareTo(css_local_name) == 0) {
+										contains_css_local_name = true;
+									}
 								}
 								localname2FormalnameHashMap.put(formalname, formalname);
-								localname2FormalnameHashMap.put(css_local_name, formalname);
-								System.out.println("\tlocal name: " + css_local_name);
+								if (!contains_css_local_name) {
+									System.out.println("\tlocal name: " + css_local_name);
+									localname2FormalnameHashMap.put(css_local_name, formalname);
+								}
 						    }
 							System.out.println("\n");
 						} catch (Exception ex) {
