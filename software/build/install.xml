@@ -454,7 +454,10 @@
         <if>
             <isset property="jboss.exists"/>
             <then>
-                <jboss-stop-jboss jboss.server.jndi.port="${jboss.server.jndi.port}"/>
+                <jboss-stop-jboss
+                    jboss.server.jndi.port="${jboss.server.jndi.port}"
+                    sleep.time="6"
+                />
             </then>
         </if>
     </target>
