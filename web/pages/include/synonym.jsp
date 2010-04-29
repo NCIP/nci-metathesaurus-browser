@@ -109,11 +109,6 @@
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
-            
-            
- System.out.println(term_source);
- 
-            
             String term_browser_formalname = null;
             String term_source_code = (String) synonym_data.elementAt(3);
 
@@ -125,9 +120,6 @@
                 && term_source_code.compareTo("null") != 0
                 && hmap.containsKey(term_source)) {
                 term_browser_formalname = (String) hmap.get(term_source);
-                
-                System.out.println(term_browser_formalname);
-                
             }
 
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
