@@ -839,7 +839,7 @@ public class SourceTreeUtils {
 
 //====================================================================================================================
 
-    public ResolvedConceptReference getRootInSRC(String scheme, String version, String source) {
+    public static ResolvedConceptReference getRootInSRC(String scheme, String version, String source) {
 		try {
 			ResolvedConceptReferencesIterator iterator = findConceptWithSourceCodeMatching(scheme, version,
 											   "SRC", "V-"+source,
@@ -1655,6 +1655,8 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 		}
 		return new ArrayList();
     }
+
+
 
 
 	public HashMap getSubconcepts(String scheme, String version, String code, String sab) {

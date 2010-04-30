@@ -253,7 +253,8 @@ public final class AjaxServlet extends HttpServlet {
 				if (ontology_source == null || ontology_source.compareTo("null") == 0) {
                 	nodesArray = CacheController.getInstance().getRootConcepts(ontology_display_name, null);
 				} else {
-					nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
+					nodesArray = CacheController.getInstance().getSourceRoots(ontology_display_name, null, ontology_source, true);
+					//nodesArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
 				}
                 if (nodesArray != null)
                 {
