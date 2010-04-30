@@ -7,6 +7,7 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js" ></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js" ></script>
@@ -428,12 +429,25 @@
     }
 
 
-    YAHOO.util.Event.addListener(window, "load", init);
 
     // Note: Need to refresh the parent window so the LicenseBean has a
     //  chance to update.  The following line helps avoid reprompting
     //  the license again.
-    window.opener.location.reload(true);
+    
+    function refresh() {
+            var licensed = document.forms["pg_form"].isLicensed_str.value;
+            if (licensed == "true") {
+		    var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
+		    if (accepted == "true") {
+			window.opener.location.reload(true);
+		    }
+	    }
+    }
+    
+    YAHOO.util.Event.addListener(window, "load", init);
+    YAHOO.util.Event.addListener(window, "load", refresh);
+    
+    
   </script>
 </head>
 <body>
@@ -469,7 +483,19 @@ if (ontology_sab == null) {
 	  ontology_sab = (String) selectedSource_obj;  
       }
 }
-ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);	      
+ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
+String SABFormalName = MetadataUtils.getSABFormalName(ontology_sab);
+
+LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
+if (licenseBean == null) {
+    licenseBean = new LicenseBean();
+    request.getSession().setAttribute("licenseBean", licenseBean);
+}
+
+boolean licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(SABFormalName);
+boolean isLicensed = licenseBean.isLicensed(SABFormalName, null); 
+
+//System.out.println("SABFormalName: " + SABFormalName + " licenseAgreementAccepted: " + licenseAgreementAccepted);
 
 
         if (ontology_sab.compareTo("NCI") == 0) {
@@ -530,8 +556,14 @@ ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
             <%
               String ontology_display_name = HTTPUtils.cleanXSS((String)request.getParameter("dictionary"));
 	      if (ontology_display_name == null) ontology_display_name = Constants.CODING_SCHEME_NAME;//"NCI Metathesaurus";
+	      
+	      String licenseAgreementAccepted_str = new Boolean(licenseAgreementAccepted).toString();
+	      String isLicensed_str = new Boolean(isLicensed).toString();
               
             %>
+	    <input type="hidden" id="licenseAgreementAccepted" name="licenseAgreementAccepted" value="<%=licenseAgreementAccepted_str%>" />
+	    <input type="hidden" id="isLicensed_str" name="isLicensed_str" value="<%=isLicensed_str%>" />
+            
             <input type="hidden" id="ontology_display_name" name="ontology_display_name" value="<%=ontology_display_name%>" />
             <input type="hidden" id="ontology_sab" name="ontology_sab" value="<%=ontology_sab%>" />
             
