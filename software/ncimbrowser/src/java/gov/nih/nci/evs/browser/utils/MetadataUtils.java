@@ -361,6 +361,16 @@ public class MetadataUtils {
 		return (String) SAB2DefinitionHashMap.get(sab);
 	}
 
+	public static String getFormalName(String localname) {
+		try {
+			String formalname = (String) localname2FormalnameHashMap.get(localname);
+			return formalname;
+		} catch (Exception ex) {
+
+		}
+	    return null;
+	}
+
 
     public static void initialize() {
 		if (SAB2FormalNameHashMap != null) return;
