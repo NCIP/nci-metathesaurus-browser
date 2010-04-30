@@ -60,7 +60,6 @@
               id="accept"
               value="accept"
               action="#{userSessionBean.acceptLicenseAction}"
-              onmouseup="javascript:window.opener.location.reload(true);"
               image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
               alt="Accept">
             </h:commandButton>
