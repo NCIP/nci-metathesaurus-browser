@@ -242,9 +242,9 @@
       rootDescDiv.render();
     }
 
+
     function showPageRenderingAction() {
       rootDescDiv.setBody("<span class='instruction_text'>(Note: This tree only shows partial hierarchy.)</span>");
-      rootDescDiv.setBody("<span class='instruction_text'>(      Rendering tree. Please wait...)</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
@@ -348,7 +348,6 @@
 
     function searchTree(ontology_node_id, ontology_display_name) {
         var handleBuildTreeSuccess = function(o) {
-        //showPageRenderingAction();
         var respTxt = o.responseText;
         var respObj = eval('(' + respTxt + ')');
         if ( typeof(respObj) != "undefined") {
@@ -358,9 +357,7 @@
                 showNoPathFoundStatus();
             }
             else {
-
               showPartialHierarchy();
-
               for (var i=0; i < respObj.root_nodes.length; i++) {
                 var nodeInfo = respObj.root_nodes[i];
                 addTreeBranch(ontology_node_id, root, nodeInfo);
