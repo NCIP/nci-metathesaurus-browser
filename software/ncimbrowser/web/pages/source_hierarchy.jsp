@@ -243,13 +243,6 @@
     }
 
 
-    function showPageRenderingAction() {
-      rootDescDiv.setBody("<span class='instruction_text'>(Note: This tree only shows partial hierarchy.)</span>");
-      rootDescDiv.show();
-      rootDescDiv.render();
-    }
-
-
     function showNoPathFoundStatus() {
       rootDescDiv.setBody("<span class='instruction_text'>Concept is not found in the hierarchy.</span>");
       rootDescDiv.show();
@@ -269,7 +262,12 @@
       treeStatusDiv.render();
     }
 
-
+    function showRenderingTreeStatus() {
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Rendering tree -- please wait ...</span>");
+      treeStatusDiv.show();
+      treeStatusDiv.render();
+    }
+    
     function loadNodeData(node, fnLoadComplete) {
       var id = node.data.id;
 
