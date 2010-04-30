@@ -430,6 +430,10 @@
 
     YAHOO.util.Event.addListener(window, "load", init);
 
+    // Note: Need to refresh the parent window so the LicenseBean has a
+    //  chance to update.  The following line helps avoid reprompting
+    //  the license again.
+    window.opener.location.reload(true);
   </script>
 </head>
 <body>
