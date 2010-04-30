@@ -1175,6 +1175,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 			}
 			licenseBean.addLicenseAgreement(dictionary);
 			request.getSession().setAttribute("licenseBean", licenseBean);
+
             request.getSession().setAttribute("term_browser_dictionary", dictionary);
             request.getSession().setAttribute("term_source_code", code);
 

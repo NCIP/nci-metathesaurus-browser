@@ -58,6 +58,11 @@ public class LicenseBean extends Object {
     public void addLicenseAgreement(String scheme) {
 		//System.out.println("LicenseBean addLicenseAgreement " +  scheme);
 		licenseAgreementHashSet.add(scheme);
+		String formalName = MetadataUtils.getFormalName(scheme);
+
+		if (formalName != null) {
+			licenseAgreementHashSet.add(formalName);
+		}
 	}
 
     public boolean licenseAgreementAccepted(String scheme) {
