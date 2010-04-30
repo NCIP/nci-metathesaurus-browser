@@ -434,18 +434,20 @@
     //  chance to update.  The following line helps avoid reprompting
     //  the license again.
     
-    function refresh() {
-            var licensed = document.forms["pg_form"].isLicensed_str.value;
-            if (licensed == "true") {
-		    var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
-		    if (accepted == "true") {
-			window.opener.location.reload(true);
-		    }
-	    }
-    }
+    //function refresh() {
+    //        var licensed = document.forms["pg_form"].isLicensed_str.value;
+    //        if (licensed == "true") {
+	//	    var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
+	//	    if (accepted == "true") {
+	//		window.opener.location.reload(true);
+	//	    }
+//	    }
+//   }
+    
     
     YAHOO.util.Event.addListener(window, "load", init);
-    YAHOO.util.Event.addListener(window, "load", refresh);
+    
+    //YAHOO.util.Event.addListener(window, "load", refresh);
     
     
   </script>
@@ -484,8 +486,9 @@ if (ontology_sab == null) {
       }
 }
 ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
-String SABFormalName = MetadataUtils.getSABFormalName(ontology_sab);
 
+/*
+String SABFormalName = MetadataUtils.getSABFormalName(ontology_sab);
 LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
 if (licenseBean == null) {
     licenseBean = new LicenseBean();
@@ -494,9 +497,7 @@ if (licenseBean == null) {
 
 boolean licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(SABFormalName);
 boolean isLicensed = licenseBean.isLicensed(SABFormalName, null); 
-
-//System.out.println("SABFormalName: " + SABFormalName + " licenseAgreementAccepted: " + licenseAgreementAccepted);
-
+*/
 
         if (ontology_sab.compareTo("NCI") == 0) {
 %>        
@@ -557,12 +558,10 @@ boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
               String ontology_display_name = HTTPUtils.cleanXSS((String)request.getParameter("dictionary"));
 	      if (ontology_display_name == null) ontology_display_name = Constants.CODING_SCHEME_NAME;//"NCI Metathesaurus";
 	      
-	      String licenseAgreementAccepted_str = new Boolean(licenseAgreementAccepted).toString();
-	      String isLicensed_str = new Boolean(isLicensed).toString();
-              
+	      //hidden variables
+	      //String licenseAgreementAccepted_str = new Boolean(licenseAgreementAccepted).toString();
+	      //String isLicensed_str = new Boolean(isLicensed).toString();
             %>
-	    <input type="hidden" id="licenseAgreementAccepted" name="licenseAgreementAccepted" value="<%=licenseAgreementAccepted_str%>" />
-	    <input type="hidden" id="isLicensed_str" name="isLicensed_str" value="<%=isLicensed_str%>" />
             
             <input type="hidden" id="ontology_display_name" name="ontology_display_name" value="<%=ontology_display_name%>" />
             <input type="hidden" id="ontology_sab" name="ontology_sab" value="<%=ontology_sab%>" />

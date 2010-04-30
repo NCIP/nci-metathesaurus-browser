@@ -136,7 +136,7 @@ if (obj != null) {
 	        } else {
         %>
 		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
+		              <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
 		      </a>	        
 	<%         
 	        }
