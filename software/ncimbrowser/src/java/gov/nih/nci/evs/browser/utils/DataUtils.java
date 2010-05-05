@@ -4175,6 +4175,27 @@ public class DataUtils {
 		return getPropertyValueHashMap(Constants.CODING_SCHEME_NAME, null, code);
 	}
 
+
+    private static String getSourceQualifierValue(Property p) {
+		if (p == null) return null;
+		PropertyQualifier[] qualifiers = p
+				.getPropertyQualifier();
+		if (qualifiers != null && qualifiers.length > 0) {
+			for (int j = 0; j < qualifiers.length; j++) {
+				PropertyQualifier q = qualifiers[j];
+				String qualifier_name = q
+						.getPropertyQualifierName();
+				String qualifier_value = q.getValue()
+						.getContent();
+				if (qualifier_name.compareToIgnoreCase("source") == 0) {
+					return qualifier_value;
+				}
+			}
+		}
+		return null;
+	}
+
+
     public static HashMap getPropertyValueHashMap(String scheme, String version, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -4242,6 +4263,10 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
+
+			String source = getSourceQualifierValue(prop);
+			if (source == null) source = "None";
+			prop_value = prop_value + "|" + source;
 			Vector u = new Vector();
 			if (hmap.containsKey(prop_name)) {
 				u = (Vector) hmap.get(prop_name);
@@ -4258,6 +4283,10 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
+			String source = getSourceQualifierValue(prop);
+			if (source == null) source = "None";
+			prop_value = prop_value + "|" + source;
+
 			Vector u = new Vector();
 			if (hmap.containsKey(prop_name)) {
 				u = (Vector) hmap.get(prop_name);
@@ -4274,6 +4303,10 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
+			String source = getSourceQualifierValue(prop);
+			if (source == null) source = "None";
+			prop_value = prop_value + "|" + source;
+
 			Vector u = new Vector();
 			if (hmap.containsKey(prop_name)) {
 				u = (Vector) hmap.get(prop_name);
@@ -4290,6 +4323,10 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
+			String source = getSourceQualifierValue(prop);
+			if (source == null) source = "None";
+			prop_value = prop_value + "|" + source;
+
 			Vector u = new Vector();
 			if (hmap.containsKey(prop_name)) {
 				u = (Vector) hmap.get(prop_name);

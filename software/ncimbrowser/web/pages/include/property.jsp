@@ -477,9 +477,15 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
                 <%
               }
               n++;
+              Vector value_source_vec = DataUtils.parseData(value);
+              String propertyValue = (String) value_source_vec.elementAt(0);
+              String propertySource = (String) value_source_vec.elementAt(1);
+              if (propertySource.compareTo("None") == 0) propertySource = "";
+              
               %>
                   <td><i><%=prop_name%></i></td>
-                  <td><i><%=value%></i></td>
+                  <td><i><%=propertyValue%></i></td>
+                  <td><i><%=propertySource%></i></td>
                 </tr>
               <%
             }
