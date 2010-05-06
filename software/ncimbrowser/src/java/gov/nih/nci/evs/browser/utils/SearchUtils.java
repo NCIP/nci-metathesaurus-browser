@@ -1235,6 +1235,47 @@ public class SearchUtils {
 */
 
 
+    //KLO, 050610
+    public ResolvedConceptReferencesIteratorWrapper searchByCode(String scheme, String version, String matchText, String source,
+        String matchAlgorithm, boolean ranking, int maxToReturn) {
+
+        ResolvedConceptReferencesIterator iterator = null;
+
+		iterator = matchConceptCode(scheme, version, matchText, source, "LuceneQuery");
+		try {
+			int size = iterator.numberRemaining();
+			if (size == 0) {
+				iterator = findConceptWithSourceCodeMatching(scheme, version,
+					source, matchText, maxToReturn, true);
+			}
+			/*
+			// Find ICD9CM concepts by code
+			size = iterator.numberRemaining();
+			if (size < 20) {
+				// heuristic rule (if the number of matches is large,
+				//    then it's less likely that the matchText is a code)
+				Vector w = new Vector();
+				w.add(iterator);
+				ResolvedConceptReferencesIterator itr1 = matchConceptCode(
+					scheme, version, matchText, source, "LuceneQuery");
+				if (itr1 != null) w.add(itr1);
+				ResolvedConceptReferencesIterator itr2 =
+					findConceptWithSourceCodeMatching(scheme, version,
+						source, matchText, maxToReturn, true);
+				if (itr2 != null) w.add(itr2);
+				iterator = getResolvedConceptReferencesIteratorUnion(
+					scheme, version, w);
+			}
+			*/
+			return new ResolvedConceptReferencesIteratorWrapper(iterator);
+		} catch (Exception ex) {
+            ex.printStackTrace();
+		}
+		return null;
+
+	}
+
+
     ResolvedConceptReferencesIterator getResolvedConceptReferencesIteratorUnion(String scheme, String version, Vector<ResolvedConceptReferencesIterator> v) {
 		if (v == null) return null;
 		int maxReturn = 100;
@@ -1316,17 +1357,17 @@ public class SearchUtils {
     public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String matchAlgorithm, boolean ranking, int maxToReturn) {
 		return searchByName(scheme, version, matchText, null, matchAlgorithm, ranking, maxToReturn);
 	}
-    
-    public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String source, 
+
+    public ResolvedConceptReferencesIteratorWrapper searchByName(String scheme, String version, String matchText, String source,
         String matchAlgorithm, boolean ranking, int maxToReturn) {
-        return searchByName(scheme, version, matchText, source, 
+        return searchByName(scheme, version, matchText, source,
             matchAlgorithm, ranking, maxToReturn, NameSearchType.All);
     }
-    
+
     public enum NameSearchType { All, Name, Code };
-    
+
     public ResolvedConceptReferencesIteratorWrapper searchByName(
-        String scheme, String version, String matchText, String source, 
+        String scheme, String version, String matchText, String source,
         String matchAlgorithm, boolean ranking, int maxToReturn,
         NameSearchType nameSearchType) {
         if (matchText == null || matchText.length() == 0)
@@ -1346,7 +1387,7 @@ public class SearchUtils {
             CodedNodeSet cns = null;
     		CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
     		propertyTypes[0] = PropertyType.PRESENTATION;
-    
+
             try {
                 LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
                 if (lbSvc == null)
@@ -1356,14 +1397,14 @@ public class SearchUtils {
                 }
                 CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
                 if (version != null) versionOrTag.setVersion(version);
-    
+
                 cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
                 if (cns == null)
                 {
                     System.out.println("cns = null");
                     return null;
                 }
-    
+
                 //LocalNameList contextList = null;
                 try {
     				LocalNameList sourceList = null;
@@ -1371,20 +1412,20 @@ public class SearchUtils {
     					sourceList = new LocalNameList();
     					sourceList.addEntry(source);
     				}
-    
-    				cns = cns.restrictToMatchingDesignations(matchText, 
+
+    				cns = cns.restrictToMatchingDesignations(matchText,
     				    SearchDesignationOption.ALL, matchAlgorithm, null);
-    				cns = cns.restrictToProperties(null, propertyTypes, 
+    				cns = cns.restrictToProperties(null, propertyTypes,
     				    sourceList, null, null);
-    
+
                 } catch (Exception ex) {
                     return null;
                 }
-    
+
                 LocalNameList restrictToProperties = null;//new LocalNameList();
                 LocalNameList propertyNames = Constructors.createLocalNameList("Semantic_Type");
                 //boolean resolveConcepts = true; // Semantic_Type is no longer required.
-    
+
                 SortOptionList sortCriteria = null;
     			boolean resolveConcepts = true;
     			LocalNameList filterOptions = null;
@@ -1393,24 +1434,24 @@ public class SearchUtils {
                     try {
     					long ms = System.currentTimeMillis(), delay = 0;
     					cns = restrictToSource(cns, source);
-                        //iterator = cns.resolve(sortCriteria, propertyNames, 
+                        //iterator = cns.resolve(sortCriteria, propertyNames,
     					//    restrictToProperties, null, resolveConcepts);
-                        iterator = cns.resolve(sortCriteria, filterOptions, 
+                        iterator = cns.resolve(sortCriteria, filterOptions,
                             propertyNames, propertyTypes, resolveConcepts);
-    					Debug.println("cns.resolve delay ---- Run time (ms): " 
-    					    + (delay = System.currentTimeMillis() - ms) 
+    					Debug.println("cns.resolve delay ---- Run time (ms): "
+    					    + (delay = System.currentTimeMillis() - ms)
     					    + " -- matchAlgorithm " + matchAlgorithm);
                         //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
-    
+
                     }  catch (Exception e) {
                         System.out.println("ERROR: cns.resolve throws exceptions.");
                     }
-    
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     return null;
                 }
-    
+
     		} catch (Exception e) {
     			e.printStackTrace();
     			return null;
@@ -1421,7 +1462,7 @@ public class SearchUtils {
 			try {
 				int size = iterator != null ? iterator.numberRemaining() : 0;
 				if (size == 0) {
-					iterator = matchConceptCode(scheme, version, matchText, 
+					iterator = matchConceptCode(scheme, version, matchText,
 					    source, "LuceneQuery");
 				}
 				size = iterator.numberRemaining();
@@ -1432,14 +1473,14 @@ public class SearchUtils {
 				// Find ICD9CM concepts by code
 				size = iterator.numberRemaining();
 				if (size < 20) {
-				    // heuristic rule (if the number of matches is large, 
+				    // heuristic rule (if the number of matches is large,
 				    //    then it's less likely that the matchText is a code)
 					Vector w = new Vector();
 					w.add(iterator);
 					ResolvedConceptReferencesIterator itr1 = matchConceptCode(
 					    scheme, version, matchText, source, "LuceneQuery");
 			        if (itr1 != null) w.add(itr1);
-			        ResolvedConceptReferencesIterator itr2 = 
+			        ResolvedConceptReferencesIterator itr2 =
 			            findConceptWithSourceCodeMatching(scheme, version,
 			                source, matchText, maxToReturn, true);
 					if (itr2 != null) w.add(itr2);

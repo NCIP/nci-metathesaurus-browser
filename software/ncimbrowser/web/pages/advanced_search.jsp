@@ -142,15 +142,6 @@
     if (search_string == null) search_string = "";
     if (adv_search_algorithm == null) adv_search_algorithm = "exactMatch";
 
-    /*
-    System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-    System.out.println("search_string: " + search_string);
-    System.out.println("adv_search_source: " + adv_search_source);
-    System.out.println("selectProperty: " + selectProperty);
-    System.out.println("rel_search_association: " + rel_search_association);
-    System.out.println("rel_search_rela: " + rel_search_rela);
-    System.out.println("\n");
-    */
 
     String check__e = "", check__b = "", check__s = "" , check__c ="";
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
@@ -163,6 +154,7 @@
         check__c = "checked";
 
     String check_n2 = "", check_c2 = "", check_p2 = "" , check_r2 ="";
+
     if (selectSearchOption == null || selectSearchOption.compareTo("Name") == 0)
       check_n2 = "checked";
     else if (selectSearchOption.compareTo("Code") == 0)
@@ -173,7 +165,7 @@
       check_r2 = "checked";
     else check_n2 = "checked";
     
-             
+    /*         
      String help_msg = null;
      if (selectSearchOption.compareTo("Code") == 0) {
 	 help_msg = "Find concepts with CUI or source code that exactly matches with the search string (from the specified Source):";
@@ -184,6 +176,7 @@
      } else {
 	 help_msg = "Find concepts with the specified relationship (and RELA) to the search string (from the specified Source):";
      }
+     */
        
 %>
         <div class="pagecontent">
@@ -191,12 +184,6 @@
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
             </tr> 
-            
-            <tr>
-            <td>
-            <p class="dataTableHeader">&nbsp;<%=help_msg%></p>
-            </td>
-            </tr>
 
             <% if (message != null) { %>
 		    <tr class="textbodyred"><td>
@@ -264,9 +251,12 @@
                 </td></tr>
 
                 <tr valign="top" align="left"><td align="left" class="textbody">
-                  Search By
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()">Name&nbsp;
+                Concepts with this value in:
+                </td></tr>
+                
+                <tr valign="top" align="left"><td align="left" class="textbody">
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()">Code&nbsp;
+                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()">Name&nbsp;
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()">Property&nbsp;
                   <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()">Relationship
                 </td></tr>
