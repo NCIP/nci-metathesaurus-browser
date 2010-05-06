@@ -33,7 +33,7 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
-    String match_text = (String) request.getAttribute("matchText");
+    String match_text = (String) request.getSession().getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
     
     String displayed_match_text = HTTPUtils.convertJSPString(match_text); 

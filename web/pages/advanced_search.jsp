@@ -88,6 +88,7 @@
     String selectSearchOption = null;
     
     if (refresh_page) {
+        // Note: Called when the user selects "Search By" fields.
         selectSearchOption = (String) request.getParameter("opt");
         search_string = (String) request.getParameter("text");
         adv_search_algorithm = (String) request.getParameter("algorithm");
@@ -97,6 +98,7 @@
         selectProperty = (String) request.getParameter("prop");
     } else {
         selectSearchOption = (String) request.getAttribute("selectSearchOption");
+        search_string = (String) request.getSession().getAttribute("matchText");
     }
 
     if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0) {
@@ -106,17 +108,17 @@
     SearchStatusBean bean = null;
     String message = (String) request.getAttribute("message");
     if (!refresh_page || message != null) {
+        // Note: Called when search contains no match.
         Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
         if (bean_obj == null) {
             bean_obj = request.getAttribute("searchStatusBean");
         }
 
-
         if (bean_obj == null) {
             bean = new SearchStatusBean();
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
 
-              } else {
+        } else {
             bean = (SearchStatusBean) bean_obj;
             adv_search_algorithm = bean.getAlgorithm();
             adv_search_source = bean.getSelectedSource();

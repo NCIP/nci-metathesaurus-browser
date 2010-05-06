@@ -404,7 +404,7 @@ System.out.println("AdvancedSearchAction key " + key);
         }
 
         request.setAttribute("key", key);
-        request.setAttribute("matchText", matchText);
+        request.getSession().setAttribute("matchText", matchText);
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -506,7 +506,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 
         if (matchText != null) {
 			matchText = matchText.trim();
-			request.setAttribute("matchText", matchText);
+			request.getSession().setAttribute("matchText", matchText);
 		}
 
 
@@ -517,8 +517,6 @@ System.out.println("AdvancedSearchActon size: " + size);
             request.getSession().setAttribute("message", message);
             return "message";
         }
-        //request.getSession().setAttribute("matchText", matchText);
-        //request.setAttribute("matchText", matchText);
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
@@ -859,7 +857,7 @@ System.out.println("AdvancedSearchActon size: " + size);
         request.setAttribute("key", key);
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
-        request.setAttribute("matchText", matchText);
+        request.getSession().setAttribute("matchText", matchText);
 
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
@@ -870,8 +868,6 @@ System.out.println("AdvancedSearchActon size: " + size);
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
-			//request.setAttribute("matchText", matchText);
-
 			int size = iteratorBean.getSize();
 
 			// Write a search log entry

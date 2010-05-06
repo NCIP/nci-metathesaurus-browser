@@ -336,7 +336,7 @@ public class SearchStatusBean extends Object
 ////////////////////////////////////////////////////////////////////////////////////
     public void setMatchText(String t) {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        request.setAttribute("matchText", t);
+        request.getSession().setAttribute("matchText", t);
 		this.matchText = t;
 
 		System.out.println("Set matchText to: " + t);
