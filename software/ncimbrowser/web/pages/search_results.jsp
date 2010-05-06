@@ -74,14 +74,14 @@ if (randomKey != null) {
 }
 
 
-          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("matchText"));
+          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
 
 	  if (iteratorBean == null) {
 	      System.out.println("iteratorBean NOT FOUND???" + key);  
 	  } else {
 	      matchText = iteratorBean.getMatchText();
 	      //KLO
-	      request.setAttribute("matchText", matchText);
+	      request.getSession().setAttribute("matchText", matchText);
 	  }
 
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
