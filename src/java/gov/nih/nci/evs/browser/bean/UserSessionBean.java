@@ -381,10 +381,16 @@ System.out.println("AdvancedSearchAction key " + key);
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
+				/*
                 wrapper =
                     new SearchUtils().searchByName(scheme, version, matchText,
                         source, matchAlgorithm, ranking, maxToReturn,
                         SearchUtils.NameSearchType.Code);
+                */
+
+                wrapper = new SearchUtils().searchByCode(scheme, version, matchText, source,
+				                                         matchAlgorithm, ranking, maxToReturn);
+
                 if (wrapper != null) {
 					iterator = wrapper.getIterator();
 					if (iterator != null) {
