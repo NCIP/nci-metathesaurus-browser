@@ -4187,10 +4187,23 @@ public class DataUtils {
 						.getPropertyQualifierName();
 				String qualifier_value = q.getValue()
 						.getContent();
+
 				if (qualifier_name.compareToIgnoreCase("source") == 0) {
 					return qualifier_value;
 				}
 			}
+		}
+		return null;
+	}
+
+
+    private static String getPropertySource(Property p) {
+		if (p == null) return null;
+
+		Source[] sources = p.getSource();
+		if (sources != null && sources.length > 0) {
+			Source src = sources[0];
+			return src.getContent();
 		}
 		return null;
 	}
@@ -4264,7 +4277,7 @@ public class DataUtils {
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
 
-			String source = getSourceQualifierValue(prop);
+			String source = getPropertySource(prop);
 			if (source == null) source = "None";
 			prop_value = prop_value + "|" + source;
 			Vector u = new Vector();
@@ -4283,7 +4296,7 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
-			String source = getSourceQualifierValue(prop);
+			String source = getPropertySource(prop);
 			if (source == null) source = "None";
 			prop_value = prop_value + "|" + source;
 
@@ -4303,7 +4316,7 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
-			String source = getSourceQualifierValue(prop);
+			String source = getPropertySource(prop);
 			if (source == null) source = "None";
 			prop_value = prop_value + "|" + source;
 
@@ -4323,7 +4336,7 @@ public class DataUtils {
 			Property prop = properties[j];
 			String prop_name = prop.getPropertyName();
 			String prop_value = prop.getValue().getContent();
-			String source = getSourceQualifierValue(prop);
+			String source = getPropertySource(prop);
 			if (source == null) source = "None";
 			prop_value = prop_value + "|" + source;
 

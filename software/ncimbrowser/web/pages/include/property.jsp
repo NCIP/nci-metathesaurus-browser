@@ -467,6 +467,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
             value_vec = SortUtils.quickSort(value_vec);
             for (int j=0; j<value_vec.size(); j++) {
               String value = (String) value_vec.elementAt(j);
+              
               if (n % 2 == 0) {
                 %>
                   <tr class="dataRowDark">
