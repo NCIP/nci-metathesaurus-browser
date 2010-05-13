@@ -33,6 +33,11 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
+    boolean isIE = false;
+    String userAgent = request.getHeader("user-agent");
+    if (userAgent != null && userAgent.toLowerCase().contains("msie"))
+        isIE = true;
+
     String match_text = (String) request.getSession().getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
     
@@ -61,7 +66,7 @@
     else
       check_c = "checked";
  %>
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody"><input type="radio"
         name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact
@@ -73,7 +78,12 @@
     </tr>
     <tr align="left">
       <td width="263px" height="1px" bgcolor="#2F2F5F"></td>
-      <td></td> <!-- This line needed to make "Advanced Search" link flush right -->
+      <!-- The following lines are needed to make "Advanced Search" link flush right -->
+      <% if (isIE) { %>
+          <td width="100%"></td> 
+      <% } else { %>
+          <td></td>
+      <% } %>
     </tr>
     <%
         String searchTarget = (String) request.getSession().getAttribute("searchTarget");
