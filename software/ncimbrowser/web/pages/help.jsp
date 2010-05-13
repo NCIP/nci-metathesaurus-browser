@@ -128,7 +128,7 @@
             selected source. This search method is helpful for users looking for source coverage of a term
             that may be expressed differently in that source (e.g., searching for grey for source FDA will
             return <i>Gray color</i>, even though the only FDA term is the American spelling gray).
-            <li><b>Source Hierarchy button</b> If you select a source with a concept hierarchy that can
+            <li><b>Source Hierarchy button</b>: If you select a source with a concept hierarchy that can
             be viewed, an icon will appear to the right of the source selection box; click on the icon to
             view the hierarchy in a separate window.
             <li><b>Search</b> button starts a search.
@@ -255,7 +255,10 @@
           <!-- ************* Known Issues ************** -->
           This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
-          known issues, see NCI Metathesaurus Browser 1.2 Release Notes.,
+          known issues, see
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.2+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 1.2 Release Notes.
+          </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
           Suggestions to add a new concept or make changes to an existing concept can also be made using the
