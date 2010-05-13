@@ -61,7 +61,7 @@
     else
       check_c = "checked";
  %>
-  <table border="0" cellspacing="0" cellpadding="0">
+  <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr valign="top" align="left">
       <td align="left" class="textbody"><input type="radio"
         name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact
@@ -72,7 +72,8 @@
         </td>
     </tr>
     <tr align="left">
-      <td height="1px" bgcolor="#2F2F5F"></td>
+      <td width="263px" height="1px" bgcolor="#2F2F5F"></td>
+      <td></td> <!-- This line needed to make "Advanced Search" link flush right -->
     </tr>
     <%
         String searchTarget = (String) request.getSession().getAttribute("searchTarget");
@@ -93,60 +94,67 @@
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
-    <tr valign="top" align="left">
-      <td align="left" class="textbody">
-        <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
-          <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
-            valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-            immediate="true" onchange="submit()" >
-            <f:selectItems value="#{userSessionBean.sourceList}" />
-          </h:selectOneMenu>
-        </h:outputLabel>
-<%
+    <tr><td colspan="2">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr valign="top">
+          <td align="left" class="textbody">
+            <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
+              <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
+                valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
+                immediate="true" onchange="submit()" >
+                <f:selectItems value="#{userSessionBean.sourceList}" />
+              </h:selectOneMenu>
+            </h:outputLabel>
 
-if (!MetadataUtils.isMetadataAvailable()) {
-    MetadataUtils.initialize();
-}
+   <%
+   
+   if (!MetadataUtils.isMetadataAvailable()) {
+       MetadataUtils.initialize();
+   }
+   
+   Object obj = request.getSession().getAttribute("selectedSource");
+   if (obj != null) {
+   	String selectedSource = (String) obj;
+   	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
+   	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
+                   boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
+   		boolean licenseAgreementAccepted = false;
+   		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+   		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
+   
+   		LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
+   		if (licenseBean == null) {
+   		    licenseBean = new LicenseBean();
+   		    request.getSession().setAttribute("licenseBean", licenseBean);
+   		}
+   
+   		licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
+   
+   		if (!isLicensed || licenseAgreementAccepted) {
+   
+   	%>
+   		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+   			      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
+   		      </a>         
+   	<% 
+   	        } else {
+           %>
+   		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+   		              <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
+   		      </a>	        
+   	<%         
+   	        }
+   	}
+   }
+   %>
 
-Object obj = request.getSession().getAttribute("selectedSource");
-if (obj != null) {
-	String selectedSource = (String) obj;
-	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
-	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
-                boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
-		boolean licenseAgreementAccepted = false;
-		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
-		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
-
-		LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
-		if (licenseBean == null) {
-		    licenseBean = new LicenseBean();
-		    request.getSession().setAttribute("licenseBean", licenseBean);
-		}
-
-		licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
-
-		if (!isLicensed || licenseAgreementAccepted) {
-
-	%>
-		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-			      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
-		      </a>         
-	<% 
-	        } else {
-        %>
-		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		              <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
-		      </a>	        
-	<%         
-	        }
-	}
-}
-%>
-              &nbsp;<font size=-4><a href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
-     
-      </td>
-    </tr>
+          </td>
+          <td valign="middle" align="right">
+            <a class="global-nav" href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
   </table>
   <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
 </FORM>
