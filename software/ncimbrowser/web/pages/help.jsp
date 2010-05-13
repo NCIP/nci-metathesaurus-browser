@@ -41,8 +41,10 @@
         <p class="textbody">
           <A HREF="#introduction">Introduction</A><br>
           <A HREF="#searchhelp">Search</A><br>
+          <A HREF="#searchavdhelp">Advanced Search</A><br>
+          <A HREF="#searchresults">Search Results</A><br>
           <A HREF="#conceptdetails">Concept Details</A><br>
-          <A HREF="#hierarchy">View NCIt Hierarchy</A><br>
+          <A HREF="#hierarchy">View Hierarchy</A><br>
           <A HREF="#sources">Sources</A><br>
           <A HREF="#knownissues">Known Issues</A><br>
           <A HREF="#additionalinformation">Additional Information</A>
@@ -61,11 +63,13 @@
           '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           NCIm Sources</a>).
           <br><br>
-          <b>The NCIm Browser</b> is for the retrieval of concepts from the NCI Metathesaurus. It is designed for ease of
-          use by a diverse user community. This release focuses on the data and features most users want. Future
-          releases will add advanced search options, additional information from source terminologies, and other things
-          requested by users. <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a> to provide feedback
-          and get additional help on the NCIm Browser.
+          <b>The NCIm Browser</b>
+          is for the retrieval of concepts from the NCI Metathesaurus, and for viewing the contents, structure,
+          and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
+          user community. This release adds some advanced search options, additional information from source
+          terminologies, and other features requested by users.
+          <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a>
+          to provide feedback and get additional help on the NCIm Browser.
           <br><br>
           <b>This help file</b> provides basic information about how to use the NCIm Browser effectively. It also provides
           pointers on how to learn more about NCIm and related resources. The following typeface font conventions are used
@@ -81,38 +85,86 @@
             <td><h2><A NAME="searchhelp">Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
-          <b>In the Search box,</b> enter all or part of what you are looking for and click the Search button.
-          Some details:
+          <b>In the Search box,</b>
+          enter all or part of what you are looking for, set what and how you want to search, and click
+          the <b>Search</b> button. Some details:
+          <!-- ************* Search ************** -->
           <ul>
-            <li>You can search for a concept’s name, synonyms, acronyms, or codes.
-            <li><b>Exact Match</b> is the default: Only terms or codes that are identical will match.
-            <li><b>Begins With</b> can be selected to find all terms that start with the words or characters you enter, or codes that match exactly.
-            <li><b>Contains</b> will search for what you enter at the beginning or end of any word or exactly matching any code (e.g.,
-            <i>carcinoma</i> will match <i>adenocarcinoma</i>) but not <i>adenocarcinomas</i>
-            (Embedded substring search is currently too slow; it will either be sped up or added as an advanced search option in a future release.)
-            <li>Concept Unique Identifiers (CUIs) and codes from individual sources will only match if they exactly match what you enter, even if you select <b>Begins With</b> or <b>Contains</b>.
-            <li>Search is not case sensitive (e.g., aids will match <i>aids</i>,
-            <i>Aids</i>, and <i>AIDS</i>).
-            <li>There are no wildcard characters. All characters are matched literally (e.g., searching for <b>Begins With</b> <span style="font-family:monospace;">NAT2*</span> will match
-            <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
-            <li>Do not use quotes - they will be searched for literally, as characters in concept terms.
-            <li>Searching for multiple words does not search on each word separately. To match, all words have to be found
-            in the same order you provided. For example, if you do a <b>Contains</b> search on <i>Melanoma Corneal</i>
-            no results will be returned, but if you search on <i>Corneal Melanoma</i> you
-            get the detail page for <i>Corneal Melanoma</i>.
-            <li><b>Source</b> drop-down box:
-            You can choose to limit your search to concepts with terms from a specific source. For example, if you only want to find
-            <i>breast cancer</i> concepts that include terms from SNOMEDCT, you would choose
-            <span style="font-family:monospace;">SNOMEDCT</span> from the <b>Source</b> box.
-            This will return concepts with at least one SNOMDEDCT term and at least one term that matches your search
-            criteria, even if the matching terms are not from the selected source. This search method is helpful for
-            users looking for source coverage of a term that may be expressed differently in that source (e.g.,
-            searching for grey for source FDA will return <i>Gray color</i>, even though the only FDA term is the American
-            spelling gray).
+            <li><b>Text Box:</b> Enter the exact string of characters you want to search for.
+            <ul>
+              <li>Search is not case sensitive (e.g., aids will match <i>aids</i>, <i>Aids</i>, and <i>AIDS</i>).
+              <li>There are no wildcard characters. All characters are matched literally (e.g., searching
+              for <b>Begins With</b> <span style="font-family:monospace;">NAT2*</span> will match <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
+              <li>Do not use quotes - they will be searched for literally, as characters to be matched.
+              <li>Searching for multiple words does not search on each word separately. To match, all
+              words have to be found in the same order you provided. For example, if you do a <b>Contains</b>
+              search on <span style="font-family:monospace;">Melanoma Corneal</span> no results will be returned, but if you search on
+              <span style="font-family:monospace;">Corneal Melanoma</span> you get the detail page
+              for <i>Corneal Melanoma</i>.
+            </ul>
+            <li><b>Match method radio buttons</b> select how your search string will be matched.
+            <ul>
+              <li><b>Exact Match</b> is the default: Only terms or codes that are identical will match.
+              <li><b>Begins With</b> can be selected to find all terms or codes that start with the words
+              or characters you enter.
+              <li><b>Contains</b> will search for what you enter anywhere within a term or code (e.g.,
+              <span style="font-family:monospace;">carcinoma</span> will match <i>adenocarcinoma</i>).
+              <li>Concept Codes will only match if they exactly match what you enter, even if you
+              select <b>Begins With</b> or <b>Contains</b>.
+            </ul>
+            <li><b>Match target radio buttons</b> select what category of concept information is searched
+            <ul>
+              <li><b>Name/Code</b> is the default: Search text is matched to a concept's preferred name, synonyms, acronyms, or codes. Unless stated otherwise, all search examples in this Help page use the default name/code search.
+              <li><b>Property</b> will match to other direct property attributes of a concept, such as definitions.
+              <li><b>Relationship</b> will return concepts that have relationships to concepts that match
+              by name/code (e.g., an exact relationship search on <span style="font-family:monospace;">toe</span>
+              does not return the concept <i>toe</i>, but does return <i>toenail</i> and other related concepts).
+            </ul>
+            <li><b>Source</b> drop-down box: You can choose to limit your search to concepts with terms from
+            a specific source. For example, if you only want to find <i>breast cancer</i> concepts that
+            include terms from SNOMEDCT, you would choose <span style="font-family:monospace;">SNOMEDCT</span>
+            from the <b>Source</b> box. This will return concepts with at least one SNOMDEDCT term and at
+            least one term that matches your search criteria, even if the matching terms are not from the
+            selected source. This search method is helpful for users looking for source coverage of a term
+            that may be expressed differently in that source (e.g., searching for grey for source FDA will
+            return <i>Gray color</i>, even though the only FDA term is the American spelling gray).
+            <li><b>Source Hierarchy button</b> If you select a source with a concept hierarchy that can
+            be viewed, an icon will appear to the right of the source selection box; click on the icon to
+            view the hierarchy in a separate window.
+            <li><b>Search</b> button starts a search.
+            <li><b>"?"</b> button takes you to this Search section of the Help file.
           </ul>
-          Search of other concept data, approximate matching, and other features will be added to future releases of
-          this browser. Some of these features are currently available in the <a href="<%=ncit_url%>/ncitbrowser/start.jsf"> NCI Term Browser</a>.
-          <br><br>
+        </p>
+        <p class="textbody">
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="searchavdhelp">Advanced Search</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
+          </tr></table>
+          <!-- ************* Advanced Search ************** -->
+          The <b>Advanced Search</b> link, at the bottom right corner of the main search box, leads to a
+          separate page.  Most options and selections are the same as those described under "Search" above.
+          The key differences are:
+          <ul>
+            <li><b>Code</b> and <b>Name</b> are searched separately.
+            <li><b>Property</b> search offers a drop down list of all specific properties in NCIm, so that
+            they can be selected and searched individually.
+            <li><b>Relationship</b> search offers drop down lists of broad relationship labels (RELs) and
+            specific relationship attributes (RELAs) that can be searched on, as explained in the
+            <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
+            '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+             NCIm Relationship Attributes</a>
+            help file. Note that many relationships have no source-assigned RELA value. For example, searching
+            on isa RELA value will retrieve only those specifically tagged as such and not others having only a
+            broader PAR (Parent) REL relationship.
+          </ul>
+          Advanced Search options will continue to grow in future releases.
+        </p>
+        <p class="textbody">
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="searchresults">Search Results</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
+          </tr></table>
+          <!-- ************* Seach Results ************** -->
           <b>Search results</b> are displayed by concept name. (If there is only one match, the concept details page
           is shown directly without first listing results.) Some details:
           <ul>
@@ -132,6 +184,7 @@
             <td><h2><A NAME="conceptdetails">Concept Details</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
+          <!-- ************* Concept Details ************** -->
           Detailed information on the selected concept is grouped and shown on several related pages:
          <ul>
             <li>Tabbed information gives the concept’s meaning, labels, and direct relationships:
@@ -156,23 +209,34 @@
         </p>
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
-            <td><h2><A NAME="hierarchy">View NCIt Hierarchy</A></h2></td>
+            <td><h2><A NAME="hierarchy">View Hierarchy</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
+          <!-- ************* View Hierarchy ************** -->
+          Many sources have hierarchies of concepts, arranged from the most general at the top to the most
+          specific at the bottom leaf nodes. Most common are "is-a" hierarchies, where child concepts are
+          subtypes of their parent(s) (e.g., Mold is-a Fungus), but other relationships, such as "part-of",
+          are also used by some source terminologies. The browser provides several ways of viewing hierarchies
+          when they are available.
+          <br><br>
           Click on the <b>View NCIt Hierarchy</b> link at the top of the page to bring up a separate window showing the
-          NCI Thesaurus hierarchy as presented through NCIm concepts.  Some details:
+          NCI Thesaurus hierarchy as presented through NCIm concepts. Some details:
           <ul>
             <li>At first, only the top level nodes of the hierarchy are shown.
             <li>At each level, concepts are listed alphabetically by concept name.
             <li>Browse through the levels by clicking on the + next to each concept.
             <li>Click on the concept name itself to see the concept’s details in the main browser window.
           </ul>
+          <b>Source</b> drop-down box: If you select a source with a concept hierarchy that can be viewed, an
+          icon will appear to the right of the source selection box; click on the icon to view the hierarchy
+          in a separate window.
         </p>
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="sources">Sources</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
+          <!-- ************* Sources ************** -->
           Click on the
           <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
           '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -188,37 +252,28 @@
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
-          This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still working on
-          remaining issues of data, functionality and documentation, which include the following:
-          <ul>
-            <li><b>Data</b>: NCI Metathesaurus has a few remaining gaps in data, plus some issues of best interpretation and presentation. Of particular importance,
-            <ul>
-              <li>Relationship data are represented somewhat differently in different sources, and the summary labels, described in the browser’s
-              <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
-                      '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-              Relationship Attribute Help</a>,
-              sometimes appear to be inappropriate. This also complicates efforts to reliably display individual source hierarchies within their broader NCIm context.
-              <li>The display of history data has been postponed until a future release.
-              <li>Some additional categories of source specific concept data are not included, but are being considered for inclusion in future releases.
-            </ul>
-            <li><b>Functionality</b>: Performance has greatly improved, but has been partly offset by the several-fold increase in
-            data.  Search results are ranked by goodness of match, but Contains searches had to be limited to the beginning or
-            end of words to get good performance. There are still performance issues with the display of concepts having many
-            thousands of relationships, and hierarchy display is still painfully slow. User-settable options and the ability to
-            search other concept data and relationships are needed, and should be part of forthcoming browser releases.
-            <li><b>Documentation</b>: Online and standalone documentation are still under development.
-            <li>For the latest updates of known issues, <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.1+Release+Notes" target="_blank"> see NCI Metathesaurus Browser 1.1 Release Notes</a>.
-          </ul>
-          Please report any bugs or suggestions using the browser’s <a href="contact_us.jsf">Contact Us</a> page.<br>
-          Suggestions to add a new concept or make changes to an existing concept can also be made using the <b>Term Suggestion</b> link below the Search box or the <b>Suggest changes to this concept</b> link in the upper right of all concept details pages.
+          <!-- ************* Known Issues ************** -->
+          This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still
+          working on remaining issues of data, functionality and documentation.  For the latest updates of
+          known issues, see NCI Metathesaurus Browser 1.2 Release Notes.,
+          <br><br>
+          Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
+          Suggestions to add a new concept or make changes to an existing concept can also be made using the
+          <b>Term Suggestion</b> link below the Search box or the <b>Suggest changes to this concept</b> link
+          in the upper right of all concept details pages.
         </p>
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="additionalinformation">Additional Information</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
-          Additional information about NCIm and EVS can be found on the <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a>
-          and <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a> sites.
+          <!-- ************* Additional Information ************** -->
+          Additional information about NCIm and EVS can be found on the
+          <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a>,
+          <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a>
+          sites and
+          <a href="https://cabig.nci.nih.gov/concepts/EVS/" target="_blank">EVS caBIG Web</a>,
+          sites.
         </p>
         <br>
         <%@ include file="/pages/include/nciFooter.jsp" %>
