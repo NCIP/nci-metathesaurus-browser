@@ -33,10 +33,8 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
-    boolean isIE = false;
     String userAgent = request.getHeader("user-agent");
-    if (userAgent != null && userAgent.toLowerCase().contains("msie"))
-        isIE = true;
+    boolean isIE = userAgent != null && userAgent.toLowerCase().contains("msie");
 
     String match_text = (String) request.getSession().getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
@@ -68,19 +66,17 @@
  %>
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
-      <td align="left" class="textbody"><input type="radio"
-        name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact
-      Match&nbsp; <input type="radio" name="algorithm" value="startsWith"
-        alt="Begins With" <%=check_s%>>Begins With&nbsp; <input
-        type="radio" name="algorithm" value="contains" alt="Containts"
-        <%=check_c%>>Contains
-        </td>
+      <td align="left" class="textbody" colspan="2">
+        <input type="radio" name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact Match&nbsp; 
+        <input type="radio" name="algorithm" value="startsWith" alt="Begins With" <%=check_s%>>Begins With&nbsp; 
+        <input type="radio" name="algorithm" value="contains" alt="Containts" <%=check_c%>>Contains
+      </td>
     </tr>
     <tr align="left">
       <td width="263px" height="1px" bgcolor="#2F2F5F"></td>
       <!-- The following lines are needed to make "Advanced Search" link flush right -->
       <% if (isIE) { %>
-          <td width="100%"></td> 
+          <td width="77px"></td> 
       <% } else { %>
           <td></td>
       <% } %>
@@ -96,7 +92,7 @@
           check_r = "checked";
      %>
     <tr valign="top" align="left">
-      <td align="left" class="textbody">
+      <td align="left" class="textbody" colspan="2">
         <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
         <input type="radio" name="searchTarget" value="properties" alt="Properties" <%=check_p%>>Property&nbsp;
         <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
@@ -109,7 +105,7 @@
         <tr valign="top">
           <td align="left" class="textbody">
             <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
-              <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
+              <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
                 valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
                 immediate="true" onchange="submit()" >
                 <f:selectItems value="#{userSessionBean.sourceList}" />
