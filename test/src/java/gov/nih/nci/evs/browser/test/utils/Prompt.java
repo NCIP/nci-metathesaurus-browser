@@ -3,7 +3,10 @@ package gov.nih.nci.evs.browser.test.utils;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
+
 public class Prompt {
+    private static Logger _logger = Logger.getLogger(Prompt.class);
     public static String prompt(String prompt) {
         try {
             System.out.print(prompt);
@@ -45,7 +48,7 @@ public class Prompt {
             try {
                 return Integer.parseInt(reply);
             } catch (NumberFormatException e) {
-                System.out.println("Try again: invalid integer value.");
+                _logger.debug("Try again: invalid integer value.");
             }
         }
     }

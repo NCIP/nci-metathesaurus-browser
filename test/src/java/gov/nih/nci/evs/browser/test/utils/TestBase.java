@@ -3,7 +3,10 @@ package gov.nih.nci.evs.browser.test.utils;
 import gov.nih.nci.evs.browser.utils.*;
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 public abstract class TestBase {
+    private static Logger _logger = Logger.getLogger(TestBase.class);
     private static final String PROPERTY_FILE = 
         "gov.nih.nci.evs.browser.NCImBrowserProperties";
     private static String DEFAULT_PROPERTY_FILE =
@@ -19,7 +22,7 @@ public abstract class TestBase {
     }
     
     protected void println(String text) {
-        System.out.println(text);
+        _logger.debug(text);
     }
     
     private String[] parse(String[] args) {

@@ -1,8 +1,11 @@
 package gov.nih.nci.evs.browser.test;
 
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.evs.browser.properties.*;
 
 public class PropertiesTest {
+    private static Logger _logger = Logger.getLogger(PropertiesTest.class);
     private static final String PROPERTY_FILE = 
         "gov.nih.nci.evs.browser.NCImBrowserProperties";
     private static String DEFAULT_PROPERTY_FILE =
@@ -18,7 +21,7 @@ public class PropertiesTest {
     }
     
     private void debug(String text) {
-        System.out.println(text);
+        _logger.debug(text);
     }
     
     public PropertiesTest() throws Exception {
