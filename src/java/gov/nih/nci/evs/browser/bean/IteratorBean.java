@@ -7,6 +7,7 @@ import java.util.*;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.concepts.Concept;
+import org.apache.log4j.Logger;
 
 import gov.nih.nci.evs.browser.common.Constants;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
@@ -44,6 +45,7 @@ import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
  */
 
 public class IteratorBean extends Object {
+    private static Logger _logger = Logger.getLogger(IteratorBean.class);
     static int DEFAULT_MAX_RETURN = 100;
     ResolvedConceptReferencesIterator iterator = null;
     int size = 0;
@@ -176,7 +178,7 @@ public class IteratorBean extends Object {
 
 
 	public List getData(int idx1, int idx2) {
-		System.out.println("IteratorBean Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
+		_logger.debug("IteratorBean Retrieving data (from: " + idx1 + " to: " + idx2 + ")");
 
 		long ms = System.currentTimeMillis();
 		long dt = 0;
@@ -186,7 +188,7 @@ public class IteratorBean extends Object {
 			while(iterator != null && iterator.hasNext() && lastResolved < idx2 && lastResolved < size) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 
-				System.out.println("IteratorBean iterator.next(" + maxReturn+ ") returns refs: " + refs.length);
+				_logger.debug("IteratorBean iterator.next(" + maxReturn+ ") returns refs: " + refs.length);
 
 				for(ResolvedConceptReference ref : refs) {
 					lastResolved++;
@@ -194,7 +196,7 @@ public class IteratorBean extends Object {
 					this.list.add(ref);
 				}
 
-				System.out.println("Advancing iterator: " + lastResolved);
+				_logger.debug("Advancing iterator: " + lastResolved);
 
 				dt = System.currentTimeMillis() - ms;
 				ms = System.currentTimeMillis();
@@ -202,7 +204,7 @@ public class IteratorBean extends Object {
 				if (total_delay > NCImBrowserProperties.getPaginationTimeOut() * 60 * 1000) {
 					timeout = true;
 
-					System.out.println("Time out at: " + lastResolved);
+					_logger.debug("Time out at: " + lastResolved);
 					break;
 				}
 			}
@@ -226,7 +228,7 @@ public class IteratorBean extends Object {
 			//if (i >= lastResolved) break;
 		}
 
-		System.out.println("getData Run time (ms): "
+		_logger.debug("getData Run time (ms): "
 					+ (System.currentTimeMillis() - ms));
 
 
@@ -235,11 +237,11 @@ public class IteratorBean extends Object {
 
 
 	protected void displayRef(ResolvedConceptReference ref){
-		System.out.println(ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
+		_logger.debug(ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
 	}
 
 	protected void displayRef(int k, ResolvedConceptReference ref){
-		System.out.println("(" + k + ") " + ref.getCodingSchemeName() + " " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
+		_logger.debug("(" + k + ") " + ref.getCodingSchemeName() + " " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
 	}
 
 	protected void displayRef(OutputStreamWriter osWriter, int k, ResolvedConceptReference ref){
@@ -252,7 +254,7 @@ public class IteratorBean extends Object {
 
 	public void dumpData(List list) {
 		if (list == null) {
-			System.out.println("WARNING: dumpData list = null???");
+			_logger.warn("WARNING: dumpData list = null???");
 			return;
 		}
 		for (int i=0; i<list.size(); i++) {
@@ -264,7 +266,7 @@ public class IteratorBean extends Object {
 
 	public void dumpData(OutputStreamWriter osWriter, List list) {
 		if (list == null) {
-			System.out.println("WARNING: dumpData list = null???");
+			_logger.warn("WARNING: dumpData list = null???");
 			return;
 		}
 		for (int i=0; i<list.size(); i++) {
@@ -275,7 +277,7 @@ public class IteratorBean extends Object {
 	}
 
     public void setKey(String key) {
-		System.out.println("IteratorBean setKey: " + key);
+		_logger.debug("IteratorBean setKey: " + key);
 		this.key = key;
 	}
 

@@ -29,10 +29,11 @@ import org.LexGrid.LexBIG.DataModel.NCIHistory.NCIChangeEvent;
 
 import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.apache.log4j.Logger;
 
 
 public class OntologyBean {
-
+    private static Logger _logger = Logger.getLogger(OntologyBean.class);
 	private static List _rela_list = null;
 	private static List _association_name_list = null;
 	private static List _property_name_list = null;
@@ -380,12 +381,12 @@ public class OntologyBean {
 
 
 	public static void dumpVector(String label, Vector v) {
-		System.out.println("\n" + label);
+		_logger.debug("\n" + label);
 		if (v == null) return;
 		for (int i=0; i<v.size(); i++) {
 			String t = (String) v.elementAt(i);
 			int j = i+1;
-			System.out.println("(" + j + "): " + t);
+			_logger.debug("(" + j + "): " + t);
 		}
 	}
 
