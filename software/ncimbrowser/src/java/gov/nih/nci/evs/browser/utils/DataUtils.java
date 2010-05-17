@@ -115,6 +115,7 @@ import gov.nih.nci.evs.browser.common.Constants;
  */
 
 public class DataUtils {
+    private static Logger _logger = Logger.getLogger(DataUtils.class);
 	private static Vector<String> sourceListData = null;
 	LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
 	static SortOptionList sortByCode_ = Constructors
@@ -225,14 +226,14 @@ public class DataUtils {
 			formalName2MetadataHashMap = new HashMap();
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
-				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+				_logger.warn("WARNING: Unable to connect to instantiate LexBIGService ???");
 			}
             CodingSchemeRenderingList csrl = null;
             try {
 				csrl = lbSvc.getSupportedCodingSchemes();
 			} catch (LBInvocationException ex) {
 				ex.printStackTrace();
-				System.out.println("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
+				_logger.error("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
                 return null;
 			}
 
@@ -243,15 +244,15 @@ public class DataUtils {
 				CodingSchemeRendering csr = csrs[i];
 				CodingSchemeSummary css = csr.getCodingSchemeSummary();
 				String formalname = css.getFormalName();
-				System.out.println("(" + j + "): " + formalname);
+				_logger.debug("(" + j + "): " + formalname);
 
 				Boolean isActive = null;
 				if (csr == null) {
-					System.out.println("\tcsr == null???");
+					_logger.debug("\tcsr == null???");
 				} else if (csr.getRenderingDetail() == null) {
-					System.out.println("\tcsr.getRenderingDetail() == null");
+					_logger.debug("\tcsr.getRenderingDetail() == null");
 				} else if (csr.getRenderingDetail().getVersionStatus() == null) {
-					System.out.println("\tcsr.getRenderingDetail().getVersionStatus() == null");
+					_logger.debug("\tcsr.getRenderingDetail().getVersionStatus() == null");
 				} else {
 					isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
 				}
@@ -279,12 +280,12 @@ public class DataUtils {
 								}
 							}
 						} catch (Exception ex) {
-							System.out.println("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
-							System.out.println("\t\tAccess to " + formalname + " denied.");
+							_logger.warn("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
+							_logger.warn("\t\tAccess to " + formalname + " denied.");
 						}
 				} else {
-					System.out.println("\tWARNING: setCodingSchemeMap discards " + formalname);
-					System.out.println("\t\trepresentsVersion " + representsVersion);
+					_logger.warn("\tWARNING: setCodingSchemeMap discards " + formalname);
+					_logger.warn("\t\trepresentsVersion " + representsVersion);
 				}
 			}
 	    } catch (Exception e) {
@@ -322,7 +323,7 @@ public class DataUtils {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) {
-				System.out.println("scheme is NULL");
+				_logger.warn("scheme is NULL");
 				return null;
 			}
 
@@ -512,7 +513,7 @@ public class DataUtils {
 		try {
 			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 			if (lbSvc == null) {
-				System.out.println("lbSvc == null???");
+				_logger.warn("lbSvc == null???");
 				return null;
 			}
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -529,7 +530,7 @@ public class DataUtils {
 				ResolvedConceptReferenceList matches = cns.resolveToList(null,
 						null, null, 1);
 				if (matches == null) {
-					System.out.println("Concept not found.");
+					_logger.debug("Concept not found.");
 					return null;
 				}
 				int count = matches.getResolvedConceptReferenceCount();
@@ -544,7 +545,7 @@ public class DataUtils {
 						Concept entry = ref.getReferencedEntry();
 						return entry;
 					} catch (Exception ex1) {
-						System.out.println("Exception entry == null");
+						_logger.error("Exception entry == null");
 						return null;
 					}
 				}
@@ -579,7 +580,7 @@ public class DataUtils {
 			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL,
 					contextList, qualifierList);
 		} catch (Exception ex) {
-			System.out.println("restrictToSource throws exceptions.");
+			_logger.error("restrictToSource throws exceptions.");
 			return null;
 		}
 		return cns;
@@ -590,7 +591,7 @@ public class DataUtils {
 		try {
 			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 			if (lbSvc == null) {
-				System.out.println("lbSvc == null???");
+				_logger.warn("lbSvc == null???");
 				return null;
 			}
 
@@ -617,7 +618,7 @@ public class DataUtils {
 					null, null, 1);
 
 			if (matches == null) {
-				System.out.println("Concep not found.");
+				_logger.warn("Concept not found.");
 				return null;
 			}
 			// Analyze the result ...
@@ -848,7 +849,7 @@ public class DataUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
-			System.out.println("Run time (ms): "
+			_logger.debug("Run time (ms): "
 					+ (System.currentTimeMillis() - ms));
 		}
 		return v;
@@ -926,7 +927,7 @@ public class DataUtils {
 
 		if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
 				& knt == 1) {
-			System.out.println("\tUse " + version + " as default.");
+			_logger.debug("\tUse " + version + " as default.");
 			return version;
 		}
 		return null;
@@ -941,7 +942,7 @@ public class DataUtils {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			if (csrl == null)
-				System.out.println("csrl is NULL");
+				_logger.warn("csrl is NULL");
 
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
 			for (int i = 0; i < csrs.length; i++) {
@@ -1138,7 +1139,7 @@ public class DataUtils {
 			properties = concept.getDefinition();
 		} else {
 
-			System.out.println("WARNING: property_type not found -- "
+			_logger.warn("WARNING: property_type not found -- "
 					+ property_type);
 
 		}
@@ -1155,7 +1156,7 @@ public class DataUtils {
 					t = t + "|" + src.getContent();
 				} else {
 					if (property_name.compareToIgnoreCase("definition") == 0) {
-						System.out.println("*** WARNING: " + property_name
+						_logger.warn("*** WARNING: " + property_name
 								+ " with no source data: "
 								+ p.getValue().getContent());
 						PropertyQualifier[] qualifiers = p
@@ -1167,13 +1168,13 @@ public class DataUtils {
 										.getPropertyQualifierName();
 								String qualifier_value = q.getValue()
 										.getContent();
-								// System.out.println("\t*** qualifier_name: " +
+								// _logger.debug("\t*** qualifier_name: " +
 								// qualifier_name);
-								// System.out.println("\t*** qualifier_value: "
+								// _logger.debug("\t*** qualifier_value: "
 								// + qualifier_value);
 								if (qualifier_name.compareTo("source") == 0) {
 									t = t + "|" + qualifier_value;
-									// System.out.println("*** SOURCE: " +
+									// _logger.debug("*** SOURCE: " +
 									// qualifier_value);
 									break;
 								}
@@ -1569,7 +1570,7 @@ public class DataUtils {
 					resolveAssociationDepth, maxToReturn);
 
 			if (cns == null) {
-				System.out.println("cng.toNodeList returns null???");
+				_logger.warn("cng.toNodeList returns null???");
 				return null;
 			}
 
@@ -1588,7 +1589,7 @@ public class DataUtils {
 			}
 
 			if (iterator == null) {
-				System.out.println("cns.resolve returns null???");
+				_logger.warn("cns.resolve returns null???");
 			}
 			return iterator;
 
@@ -1607,7 +1608,7 @@ public class DataUtils {
 			int maxToReturn, String code) {
 		Vector v = new Vector();
 		if (iterator == null) {
-			System.out.println("No match.");
+			_logger.debug("No match.");
 			return v;
 		}
 		try {
@@ -1776,7 +1777,7 @@ public class DataUtils {
 
 		}
 
-		System.out.println("getNCICBContactURL returns " + NCICBContactURL);
+		_logger.debug("getNCICBContactURL returns " + NCICBContactURL);
 		return NCICBContactURL;
 	}
 
@@ -1809,7 +1810,7 @@ public class DataUtils {
 
 		}
 
-		System.out.println("getNCIMBuildInfo returns " + NCIMBuildInfo);
+		_logger.debug("getNCIMBuildInfo returns " + NCIMBuildInfo);
 		return NCIMBuildInfo;
 	}
 
@@ -2035,7 +2036,7 @@ public class DataUtils {
 			lbscm.setLexBIGService(lbSvc);
 
 			if (lbSvc == null) {
-				System.out.println("lbSvc == null???");
+				_logger.warn("lbSvc == null???");
 				return hmap;
 			}
 
@@ -2203,9 +2204,9 @@ public class DataUtils {
 
 			if (matches != null) {
 				java.lang.Boolean incomplete = matches.getIncomplete();
-				// System.out.println("(*) Number of matches: " +
+				// _logger.debug("(*) Number of matches: " +
 				// matches.getResolvedConceptReferenceCount());
-				// System.out.println("(*) Incomplete? " + incomplete);
+				// _logger.debug("(*) Incomplete? " + incomplete);
 				hmap.put(INCOMPLETE, incomplete.toString());
 			}
 
@@ -2444,7 +2445,7 @@ public class DataUtils {
 			ms_categorization = System.currentTimeMillis();
 			String rel_rela = (String) it.next();
 
-//System.out.println("rel_rela: " + rel_rela);
+//_logger.debug("rel_rela: " + rel_rela);
 
 			if (rel_rela.compareTo(INCOMPLETE) != 0) {
 
@@ -2497,7 +2498,7 @@ public class DataUtils {
 									+ (System.currentTimeMillis() - ms_find_highest_rank_atom);
 							t = t + "|" + c.getEntityCode() + "|" + rela + "|" + category;
 
-							//System.out.println(t);
+							//_logger.debug(t);
 
 							w.add(t);
 
@@ -2881,7 +2882,7 @@ public class DataUtils {
 		for (int k = 0; k < w2.size(); k++) {
 			String s = (String) w2.elementAt(k);
 
-			// System.out.println("(*) getAssociationTargetHashMap s " + s);
+			// _logger.debug("(*) getAssociationTargetHashMap s " + s);
 			Vector ret_vec = DataUtils.parseData(s, "|");
 			String rel = (String) ret_vec.elementAt(0);
 			String name = (String) ret_vec.elementAt(1);
@@ -2916,7 +2917,7 @@ public class DataUtils {
 		for (int k = 0; k < w2.size(); k++) {
 			String s = (String) w2.elementAt(k);
 
-			// System.out.println("(*) getAssociationTargetHashMap s " + s);
+			// _logger.debug("(*) getAssociationTargetHashMap s " + s);
 
 			Vector ret_vec = DataUtils.parseData(s, "|");
 			String rel = (String) ret_vec.elementAt(0);
@@ -2932,7 +2933,7 @@ public class DataUtils {
 		for (int k = 0; k < w2.size(); k++) {
 			String s = (String) w2.elementAt(k);
 
-			// System.out.println("(*) getAssociationTargetHashMap s " + s);
+			// _logger.debug("(*) getAssociationTargetHashMap s " + s);
 
 			Vector ret_vec = DataUtils.parseData(s, "|");
 			String rel = (String) ret_vec.elementAt(0);
@@ -3853,7 +3854,7 @@ public class DataUtils {
 
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -3892,11 +3893,11 @@ public class DataUtils {
                 ResolvedConceptReferenceList rcrl = cns.resolveToList(sortOptions, filterOptions, propertyNames,
                     propertyTypes, resolveObjects, maxToReturn);
 
-                //System.out.println("resolveToList done");
+                //_logger.debug("resolveToList done");
                 HashMap hmap = new HashMap();
 
 				if (rcrl == null) {
-					System.out.println("Concep not found.");
+					_logger.warn("Concept not found.");
 					return null;
 				}
 
@@ -3905,9 +3906,9 @@ public class DataUtils {
 						ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
 						Concept c = rcr.getReferencedEntry();
 						if (c == null) {
-							System.out.println("Concept is null.");
+							_logger.warn("Concept is null.");
 						} else {
-							//System.out.println(c.getEntityDescription().getContent());
+							//_logger.debug(c.getEntityDescription().getContent());
 							Property[] properties = c.getProperty();
 							String values = "";
 							for (int j=0; j<properties.length; j++) {
@@ -3924,9 +3925,9 @@ public class DataUtils {
                 return hmap;
 
 			}  catch (Exception e) {
-				System.out.println("Method: SearchUtil.searchByProperties");
-				System.out.println("* ERROR: cns.resolve throws exceptions.");
-				System.out.println("* " + e.getClass().getSimpleName() + ": " +
+				_logger.error("Method: SearchUtil.searchByProperties");
+				_logger.error("* ERROR: cns.resolve throws exceptions.");
+				_logger.error("* " + e.getClass().getSimpleName() + ": " +
 					e.getMessage());
 			}
 		} catch (Exception ex) {
@@ -4214,7 +4215,7 @@ public class DataUtils {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -4244,7 +4245,7 @@ public class DataUtils {
                 HashMap hmap = new HashMap();
 
 				if (rcrl == null) {
-					System.out.println("Concep not found.");
+					_logger.warn("Concept not found.");
 					return null;
 				}
 
@@ -4252,12 +4253,12 @@ public class DataUtils {
 				ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(0);
 				Concept c = rcr.getReferencedEntry();
 				if (c == null) {
-					System.out.println("Concept is null.");
+					_logger.warn("Concept is null.");
 					return null;
 				}
 				return getPropertyValueHashMap(c);
 			}  catch (Exception e) {
-				System.out.println("* " + e.getClass().getSimpleName() + ": " +
+				_logger.error("* " + e.getClass().getSimpleName() + ": " +
 					e.getMessage());
 			}
 		} catch (Exception ex) {

@@ -25,8 +25,10 @@ import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.apache.log4j.Logger;
 
 public class HistoryUtils {
+    private static Logger _logger = Logger.getLogger(HistoryUtils.class);
     private static DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Vector<String> getTableHeader() {
@@ -71,7 +73,7 @@ public class HistoryUtils {
             ChangeType type = event.getEditaction();
             Date date = event.getEditDate();
 
-			//System.out.println(" HistoryUtils date: " + date);
+			//_logger.debug(" HistoryUtils date: " + date);
 
             String rCode = event.getReferencecode();
             String desc = "N/A";
@@ -92,7 +94,7 @@ public class HistoryUtils {
             if (hset.contains(info))
                 continue;
 
-            //System.out.println("NCIChangeEvent: " + info);
+            //_logger.debug("NCIChangeEvent: " + info);
             v.add(info);
             hset.add(info);
         }
@@ -128,7 +130,7 @@ public class HistoryUtils {
             if (hset.contains(info))
                 continue;
 
-            //System.out.println("NCIChangeEvent: " + info);
+            //_logger.debug("NCIChangeEvent: " + info);
             v.add(info);
             hset.add(info);
         }
@@ -160,7 +162,7 @@ public class HistoryUtils {
         try {
 			if (lbSvc == null)
 			{
-				System.out.println("lbSvc == null???");
+				_logger.warn("lbSvc == null???");
 				return null;
 			}
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -177,7 +179,7 @@ public class HistoryUtils {
 				ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
 				if (matches == null)
 				{
-					System.out.println("Concep not found.");
+					_logger.warn("Concept not found.");
 					return null;
 				}
                 int count = matches.getResolvedConceptReferenceCount();
@@ -190,7 +192,7 @@ public class HistoryUtils {
 						Concept entry = ref.getReferencedEntry();
 						return entry;
 					} catch (Exception ex1) {
-						System.out.println("Exception entry == null");
+						_logger.error("Exception entry == null");
 						return null;
 					}
 				}
@@ -261,18 +263,18 @@ public class HistoryUtils {
 
 		   code = "C1325880";
 
-		   System.out.println("\n\nTesting getEditActions ...");
+		   _logger.info("\n\nTesting getEditActions ...");
 
            Vector<String> v = test.getEditActions(scheme, version, null, code);
-           System.out.println(v.size());
+           _logger.info(v.size());
 
-           System.out.println("\n\nTesting getAncestors ...");
+           _logger.info("\n\nTesting getAncestors ...");
            v = test.getAncestors(scheme, version, null, code);
-           System.out.println(v.size());
+           _logger.info(v.size());
 
-           System.out.println("\n\nTesting getDescendants ...");
+           _logger.info("\n\nTesting getDescendants ...");
            v = test.getDescendants(scheme, version, null, code);
-           System.out.println(v.size());
+           _logger.info(v.size());
 
 	   } catch (Exception ex) {
 		   ex.printStackTrace();
@@ -288,7 +290,7 @@ public class HistoryUtils {
 			hs = lbSvc.getHistoryService(codingSchemeName);
 			if (hs != null) return true;
 		} catch (Exception ex) {
-			System.out.println("Unable to getHistoryService for " + codingSchemeName);
+			_logger.error("Unable to getHistoryService for " + codingSchemeName);
 		}
 		return false;
 	}
@@ -308,19 +310,19 @@ public class HistoryUtils {
         try {
 			/*
 			Concept c = getConceptByCode(codingSchemeName, vers, ltag, code);
-			System.out.println("getConceptByCode codingSchemeName: " + codingSchemeName);
-			System.out.println("getConceptByCode vers: " + vers);
-			System.out.println("getConceptByCode ltag: " + ltag);
-			System.out.println("getConceptByCode code: " + code);
+			_logger.debug("getConceptByCode codingSchemeName: " + codingSchemeName);
+			_logger.debug("getConceptByCode vers: " + vers);
+			_logger.debug("getConceptByCode ltag: " + ltag);
+			_logger.debug("getConceptByCode code: " + code);
 
 			if (c == null) {
-				System.out.println("getConceptByCode returns null??? ");
+				_logger.warn("getConceptByCode returns null??? ");
 			}
 
 			if (c != null) {
-				System.out.println("calling hs.getEditActionList... ");
+				_logger.debug("calling hs.getEditActionList... ");
 				NCIChangeEventList list = hs.getEditActionList(Constructors.createConceptReference(code, null), null, null);
-				System.out.println("calling getEditActions... ");
+				_logger.debug("calling getEditActions... ");
 				return getEditActions(codingSchemeName, vers, ltag, code, list);
 			}
 			*/
@@ -379,7 +381,7 @@ public class HistoryUtils {
         try {
 			hs = lbSvc.getHistoryService(codingSchemeName);
 		} catch (Exception ex) {
-			System.out.println("Unable to getHistoryService for " + codingSchemeName);
+			_logger.error("Unable to getHistoryService for " + codingSchemeName);
 			return null;
 		}
 
@@ -402,7 +404,7 @@ public class HistoryUtils {
         try {
 			hs = lbSvc.getHistoryService(codingSchemeName);
 		} catch (Exception ex) {
-			System.out.println("Unable to getHistoryService for " + codingSchemeName);
+			_logger.error("Unable to getHistoryService for " + codingSchemeName);
 			return null;
 		}
 
@@ -424,7 +426,7 @@ public class HistoryUtils {
         try {
 			hs = lbSvc.getHistoryService(codingSchemeName);
 		} catch (Exception ex) {
-			System.out.println("Unable to getHistoryService for " + codingSchemeName);
+			_logger.error("Unable to getHistoryService for " + codingSchemeName);
 			return null;
 		}
 
@@ -476,16 +478,16 @@ public class HistoryUtils {
 			String rCode = event.getReferencecode();
 			if (rCode.compareTo(code) == 0) {
 
-				System.out.println("rCode." + rCode + " == code == " + code);
+				_logger.debug("rCode." + rCode + " == code == " + code);
 
 				try {
 					HistoryService hs = lbSvc.getHistoryService(codingSchemeName);
 					if (hs == null) {
-						System.out.println("Unable to getHistoryService for " + codingSchemeName);
+						_logger.warn("Unable to getHistoryService for " + codingSchemeName);
 						return null;
 					}
 					try {
-						System.out.println("\tcheck Ancestors");
+						_logger.debug("\tcheck Ancestors");
 
 						NCIChangeEventList list = hs.getAncestors(Constructors.createConceptReference(code, null));
 						int count =	list.getEntryCount();
@@ -498,15 +500,15 @@ public class HistoryUtils {
 							String con_code = event2.getConceptcode();
 							String ref_code = event2.getReferencecode();
 
-							System.out.println("\tAncestor -- con_code " + con_code + "; ref_code == " + ref_code);
+							_logger.debug("\tAncestor -- con_code " + con_code + "; ref_code == " + ref_code);
 
 							Date date2 = event2.getEditDate();
 							ChangeType type2 = event2.getEditaction();
 							String type_str2 = type2.toString();
 							if (type_str.compareTo("merge") == 0 && ref_code.compareTo(con_code) != 0 && ref_code.compareTo(code) == 0 && date.toString().compareTo(date2.toString()) == 0) {
-								//System.out.println("(***) con_code: " + con_code + " ref_code: " + ref_code);
+								//_logger.debug("(***) con_code: " + con_code + " ref_code: " + ref_code);
 
-								System.out.println("\tsubstituting...");
+								_logger.debug("\tsubstituting...");
 							    event2.setConceptcode(ref_code);
 							    event2.setReferencecode(con_code);
 							    return event2;
@@ -514,11 +516,11 @@ public class HistoryUtils {
 						}
 					} catch (Exception ex) {
 						//ex.printStackTrace();
-						System.out.println("getAncestors throws exception.");
+						_logger.error("getAncestors throws exception.");
 					}
 
 					try {
-						System.out.println("\tcheck Descendants");
+						_logger.debug("\tcheck Descendants");
 
 						NCIChangeEventList list = hs.getDescendants(Constructors.createConceptReference(code, null));
 						Enumeration<NCIChangeEvent> enumeration = list.enumerateEntry();
@@ -529,15 +531,15 @@ public class HistoryUtils {
 							String con_code = event2.getConceptcode();
 							String ref_code = event2.getReferencecode();
 
-							System.out.println("\tDescendant con_code " + con_code + "; ref_code == " + ref_code);
+							_logger.debug("\tDescendant con_code " + con_code + "; ref_code == " + ref_code);
 
 							Date date2 = event2.getEditDate();
 							ChangeType type2 = event2.getEditaction();
 							String type_str2 = type2.toString();
 							if (type_str.compareTo("merge") == 0 && ref_code.compareTo(con_code) != 0 && ref_code.compareTo(code) == 0 && date.toString().compareTo(date2.toString()) == 0) {
-								//System.out.println("(***) con_code: " + con_code + " ref_code: " + ref_code);
+								//_logger.debug("(***) con_code: " + con_code + " ref_code: " + ref_code);
 
-								System.out.println("\tsubstituting...");
+								_logger.debug("\tsubstituting...");
 							    event2.setConceptcode(ref_code);
 							    event2.setReferencecode(con_code);
 							    return event2;
@@ -545,12 +547,12 @@ public class HistoryUtils {
 						}
 					} catch (Exception ex) {
 						//ex.printStackTrace();
-						System.out.println("getAncestors throws exception.");
+						_logger.error("getAncestors throws exception.");
 					}
 
 				} catch (Exception ex) {
 					//ex.printStackTrace();
-					System.out.println("getAncestors throws exception.");
+					_logger.error("getAncestors throws exception.");
 				}
 			}
 
@@ -581,7 +583,7 @@ public class HistoryUtils {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
             if (lbSvc == null) {
-                System.out.println("lbSvc == null???");
+                _logger.warn("lbSvc == null???");
                 return null;
             }
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -600,11 +602,11 @@ public class HistoryUtils {
 				try {
 					matches = cns.resolveToList(null, null, null, 1);
 				} catch (Exception e) {
-					System.out.println("cns.resolveToList failed???");
+					_logger.error("cns.resolveToList failed???");
 				}
 
                 if (matches == null) {
-                    System.out.println("Concept not found.");
+                    _logger.warn("Concept not found.");
                     return null;
                 }
                 int count = matches.getResolvedConceptReferenceCount();
@@ -619,7 +621,7 @@ public class HistoryUtils {
                         Concept entry = ref.getReferencedEntry();
                         return entry;
                     } catch (Exception ex1) {
-                        System.out.println("Exception entry == null");
+                        _logger.error("Exception entry == null");
                         return null;
                     }
                 }
@@ -639,7 +641,7 @@ public class HistoryUtils {
 		if (v == null) return;
 		for (int i=0; i<v.size(); i++) {
 			String t = (String) v.elementAt(i);
-			System.out.println(t);
+			_logger.debug(t);
 		}
 	}
 
@@ -647,8 +649,8 @@ public class HistoryUtils {
     //[#23463] Linking retired concept to corresponding new concept
     public static String getReferencedCUI(String code) {
 		code = code.trim();
-		System.out.println("code Length: " + code.length() + " " + code);
-		System.out.println("scheme: " + Constants.CODING_SCHEME_NAME);
+		_logger.debug("code Length: " + code.length() + " " + code);
+		_logger.debug("scheme: " + Constants.CODING_SCHEME_NAME);
 
 		if (code.length() != 8) {
 			return null;
@@ -657,10 +659,10 @@ public class HistoryUtils {
 		try {
 			Vector<String> v = getEditActions(Constants.CODING_SCHEME_NAME, null, null, code);
 			if (v != null) {
-				if (v.size() == 0) System.out.println("(*) HistoryUtils.getEditActions returns nothing");
+				if (v.size() == 0) _logger.debug("(*) HistoryUtils.getEditActions returns nothing");
 				for (int i=0; i<v.size(); i++) {
 					String s = (String) v.elementAt(i);
-					//System.out.println("s: " + s);
+					//_logger.debug("s: " + s);
 //11:55:42,983 INFO  [STDOUT] s: retire|2008-08-01|unclassified Enteroviruses (Code C1040101)
 					Vector w = DataUtils.parseData(s, "|");
 					String action = (String) w.elementAt(0);
@@ -668,18 +670,18 @@ public class HistoryUtils {
 						String date = (String) w.elementAt(1);
 						String nameAndCode = (String) w.elementAt(2);
 
-						System.out.println("(*) nameAndCode: " + nameAndCode);
+						_logger.debug("(*) nameAndCode: " + nameAndCode);
 						////merge|2006-01-01|LAS17 protein, S cerevisiae (Code C1433544)
 						int idx = nameAndCode.indexOf("(Code");
 						if (idx != -1) {
 							String t = nameAndCode.substring(idx+6, nameAndCode.length()-1);
-							System.out.println("(*) new CUI: " + t);
+							_logger.debug("(*) new CUI: " + t);
 							return t;
 						}
 				    }
 				}
 			} else {
-				System.out.println("(*) HistoryUtils.getEditActions returns null");
+				_logger.warn("(*) HistoryUtils.getEditActions returns null");
 			}
 		} catch (Exception ex) {
 
@@ -699,7 +701,7 @@ public class HistoryUtils {
 		   String scheme = "NCI Metathesaurus";
 
 		   boolean avail = test.isHistoryServiceAvailable(scheme);
-		   System.out.println("History service available? " + avail);
+		   _logger.info("History service available? " + avail);
 
 		   String version = null;
 		   String code = "C0260526";
@@ -711,16 +713,16 @@ public class HistoryUtils {
            code = "C0678222";
            code = "C0536142";
 
-		   System.out.println("\n\nTesting getEditActions ..." + scheme + " " + code);
+		   _logger.info("\n\nTesting getEditActions ..." + scheme + " " + code);
 
            Vector<String> v = test.getEditActions(scheme, version, null, code);
 
-           System.out.println("\n\nExited Testing getEditActions ...");
+           _logger.info("\n\nExited Testing getEditActions ...");
 
            if (v != null) {
 			   test.dumpVector(v);
 		   } else {
-			   System.out.println("\n\ngetEditActions returns null???");
+			   _logger.warn("\n\ngetEditActions returns null???");
 		   }
 
 

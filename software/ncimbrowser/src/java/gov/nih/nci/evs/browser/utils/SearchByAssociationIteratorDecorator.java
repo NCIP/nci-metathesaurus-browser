@@ -16,6 +16,7 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -27,7 +28,8 @@ import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
  * large CodedNodeGraphs.
  */
 public class SearchByAssociationIteratorDecorator implements ResolvedConceptReferencesIterator {
-
+    //private static Logger _logger = Logger.getLogger(SearchByAssociationIteratorDecorator.class);
+        
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4126716487618136771L;
 
@@ -87,7 +89,7 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 
 	    this.hset = new HashSet();
 
-	    //System.out.println("Type 1 SearchByAssociationIteratorDecorator ");
+	    //_logger.debug("Type 1 SearchByAssociationIteratorDecorator ");
 
 	}
 
@@ -110,7 +112,7 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 
 	    this.hset = new HashSet();
 
-	    //System.out.println("Type 2 SearchByAssociationIteratorDecorator ");
+	    //_logger.debug("Type 2 SearchByAssociationIteratorDecorator ");
 	}
 
 	/* (non-Javadoc)
@@ -150,8 +152,8 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 		//long startTime = System.currentTimeMillis();
 		ResolvedConceptReferenceList returnList = new ResolvedConceptReferenceList();
 
-//System.out.println("next method: getResolvedConceptReferenceCount() " + returnList.getResolvedConceptReferenceCount());
-//System.out.println("next method: page " + page);
+//_logger.debug("next method: getResolvedConceptReferenceCount() " + returnList.getResolvedConceptReferenceCount());
+//_logger.debug("next method: page " + page);
 
 		while(returnList.getResolvedConceptReferenceCount() < page && this.hasNext()){
 			try {
@@ -190,19 +192,19 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 	 *  have AT LEAST this amount remaining -- it may actually have more.
 	 */
 	public int numberRemaining() throws LBResourceUnavailableException {
-		//System.out.println("SearchByAssociationIteratorDecorator: calling numberRemaining()	");
+		//_logger.debug("SearchByAssociationIteratorDecorator: calling numberRemaining()	");
 		try {
 			pageIfNecessary();
 		} catch (Exception e) {
 			throw new LBResourceUnavailableException(e.getMessage());
 		}
 
-        //System.out.println("SearchByAssociationIteratorDecorator: this.quickIterator.numberRemaining(): " + this.quickIterator.numberRemaining());
-        //System.out.println("SearchByAssociationIteratorDecorator: this.currentChildren.size(): " + this.currentChildren.size());
+        //_logger.debug("SearchByAssociationIteratorDecorator: this.quickIterator.numberRemaining(): " + this.quickIterator.numberRemaining());
+        //_logger.debug("SearchByAssociationIteratorDecorator: this.currentChildren.size(): " + this.currentChildren.size());
 
         //int total = this.quickIterator.numberRemaining() + this.currentChildren.size();
         int total = this.currentChildren.size();
-        //System.out.println("SearchByAssociationIteratorDecorator: total: " + total);
+        //_logger.debug("SearchByAssociationIteratorDecorator: total: " + total);
 
 		//return this.quickIterator.numberRemaining() + this.currentChildren.size();
 		return this.currentChildren.size();
@@ -226,7 +228,7 @@ public class SearchByAssociationIteratorDecorator implements ResolvedConceptRefe
 		pageIfNecessary();
 		ResolvedConceptReference returnRef = this.currentChildren.get(this.position);
 
-//System.out.println("doGetNext() position: " + this.position);
+//_logger.debug("doGetNext() position: " + this.position);
 displayRef(returnRef);
 
 		position++;
@@ -240,11 +242,11 @@ displayRef(returnRef);
 	 */
 	protected void pageIfNecessary() throws Exception {
 
-		//System.out.println("pageIfNecessary ...");
+		//_logger.debug("pageIfNecessary ...");
 
 		LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 
-		//System.out.println("position: " + position + " ----------- currentChildren.size: " + this.currentChildren.size());
+		//_logger.debug("position: " + position + " ----------- currentChildren.size: " + this.currentChildren.size());
 
 		if(position == this.currentChildren.size()) {
 			currentChildren.clear();
@@ -278,24 +280,24 @@ displayRef(returnRef);
 								null,
 								this.maxToReturn);
 
-//System.out.println("Calling populateCurrentChildren ...");
+//_logger.debug("Calling populateCurrentChildren ...");
 					//populateCurrentChildren(list.getResolvedConceptReference(), false);
 					populateCurrentChildren(list.getResolvedConceptReference(), false);
 
 			    }
 			}
 		}
-		//System.out.println("Exiting pageIfNecessary(): this.currentChildren.size() " + this.currentChildren.size());
+		//_logger.debug("Exiting pageIfNecessary(): this.currentChildren.size() " + this.currentChildren.size());
 
 	}
 
 
 	protected void displayRef(ResolvedConceptReference ref){
-		//System.out.println(ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
+		//_logger.debug(ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
 	}
 
 	protected void displayRef(String msg, ResolvedConceptReference ref){
-		//System.out.println(msg + " " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
+		//_logger.debug(msg + " " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent());
 	}
 
 	/**
@@ -314,13 +316,13 @@ displayRef(returnRef);
 			if(addRoot) {
 				if (!hset.contains(ref.getConceptCode())) {
 					hset.add(ref.getConceptCode());
-					//System.out.println("\tbefore addRoot this.currentChildren.size() " + this.currentChildren.size());
+					//_logger.debug("\tbefore addRoot this.currentChildren.size() " + this.currentChildren.size());
 					displayRef(ref);
 					this.currentChildren.add(ref);
-					//System.out.println("\tafter addRoot this.currentChildren.size() " + this.currentChildren.size());
+					//_logger.debug("\tafter addRoot this.currentChildren.size() " + this.currentChildren.size());
 				}
 			} else {
-				//System.out.println("\tDO NOT add: ");
+				//_logger.debug("\tDO NOT add: ");
 				displayRef("discarded ", ref);
 			}
 
@@ -331,7 +333,7 @@ displayRef(returnRef);
 					}
 			    }
 			} else {
-				//System.out.println("\tref.getSourceOf() == null -- nothing done.");
+				//_logger.debug("\tref.getSourceOf() == null -- nothing done.");
 			}
 
 
@@ -342,11 +344,11 @@ displayRef(returnRef);
 					}
 			    }
 			} else {
-				//System.out.println("\tref.getTargetOf() == null -- nothing done.");
+				//_logger.debug("\tref.getTargetOf() == null -- nothing done.");
 			}
 		}
 
-		//System.out.println("\tExiting populateCurrentChildren");
+		//_logger.debug("\tExiting populateCurrentChildren");
 	}
 
 

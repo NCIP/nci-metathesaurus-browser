@@ -81,6 +81,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
 import org.LexGrid.concepts.Presentation;
 import org.LexGrid.commonTypes.Source;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.LexGrid.commonTypes.PropertyQualifier;
 
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
@@ -123,7 +124,8 @@ import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.ExpandedState;
 
 
 public class SourceTreeUtils {
-
+    private static Logger _logger = Logger.getLogger(SourceTreeUtils.class);
+    
 //	protected final Logger logger = Logger.getLogger(this.getClass());
     static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
@@ -166,7 +168,7 @@ public class SourceTreeUtils {
 			} catch (Exception ex2) {
 				cs = null;
 				ex2.printStackTrace();
-				System.out.println("Unable to resolveCodingScheme " + codingScheme);
+				_logger.error("Unable to resolveCodingScheme " + codingScheme);
 			}
 			if (cs != null)
 			{
@@ -293,7 +295,7 @@ public class SourceTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: "
+		_logger.debug("Run time (milliseconds) getSubconcepts: "
 				+ (System.currentTimeMillis() - ms) + " to resolve ");
 		SortUtils.quickSort(list);
 		return list;
@@ -366,7 +368,7 @@ public class SourceTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: "
+		_logger.debug("Run time (milliseconds) getSubconcepts: "
 				+ (System.currentTimeMillis() - ms) + " to resolve ");
 		SortUtils.quickSort(list);
 		return list;
@@ -479,7 +481,7 @@ public class SourceTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: "
+		_logger.debug("Run time (milliseconds) getSubconcepts: "
 				+ (System.currentTimeMillis() - ms) + " to resolve ");
 		SortUtils.quickSort(list);
 		return list;
@@ -501,7 +503,7 @@ public class SourceTreeUtils {
 
 			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
 			if (cs == null) {
-				System.out.println("CodingScheme is NULL??? " + scheme);
+				_logger.warn("CodingScheme is NULL??? " + scheme);
 				return null;
 			}
 			Mappings mappings = cs.getMappings();
@@ -525,13 +527,13 @@ public class SourceTreeUtils {
 				NameAndValueList nameAndValueList_qualifier = null;
 				ConceptReference graphFocus = null;
 				try {
-					System.out.println("cng.resolveAsList ..." );
+					_logger.debug("cng.resolveAsList ..." );
 				    //matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), null, null, -1);
 				    matches = cng.resolveAsList(graphFocus, associationsNavigatedFwd, !associationsNavigatedFwd, 1, 1, new LocalNameList(), propertyTypes, null, 10);
 
 			    } catch (Exception ex) {
 					//ex.printStackTrace();
-					System.out.println("\tNo top nodes could be located for the supplied restriction set in the requested direction.\n");
+					_logger.error("\tNo top nodes could be located for the supplied restriction set in the requested direction.\n");
 					return new ArrayList();
 				}
 			} catch (Exception ex) {
@@ -575,7 +577,7 @@ public class SourceTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getRootConceptNamesAndCodes: "
+		_logger.debug("Run time (milliseconds) getRootConceptNamesAndCodes: "
 				+ (System.currentTimeMillis() - ms) + " to resolve ");
 		SortUtils.quickSort(list);
 		return list;
@@ -619,7 +621,7 @@ public class SourceTreeUtils {
 
 		if (lbSvc == null)
 		{
-			System.out.println("lbSvc = null");
+			_logger.warn("lbSvc = null");
 			return null;
 		}
 
@@ -653,7 +655,7 @@ public class SourceTreeUtils {
 			CodedNodeSet cns = lbSvc.getNodeSet(scheme, null, null);
 			if (cns == null)
 			{
-				System.out.println("lbSvc.getCodingSchemeConceptsd returns null");
+				_logger.warn("lbSvc.getCodingSchemeConceptsd returns null");
 				return null;
 			}
 			CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[] {CodedNodeSet.PropertyType.PRESENTATION};
@@ -688,7 +690,7 @@ public class SourceTreeUtils {
 
 	protected static void displayRef(int k, ResolvedConceptReference ref){
 		try {
-			System.out.println("(" + k + ") " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent() + "\n");
+			_logger.debug("(" + k + ") " + ref.getConceptCode() + ":" + ref.getEntityDescription().getContent() + "\n");
 		} catch (Exception ex) {
 
 		}
@@ -791,7 +793,7 @@ public class SourceTreeUtils {
                     && sab.equalsIgnoreCase(qualifier.getContent()))
                 return true;
 		}
-		//System.out.println("(*) isValidForSAB returns false " + ac.getEntityDescription().getContent());
+		//_logger.debug("(*) isValidForSAB returns false " + ac.getEntityDescription().getContent());
         return false;
         */
         return true;
@@ -881,7 +883,7 @@ public class SourceTreeUtils {
 		if (version != null) csvt.setVersion(version);
 
 		HashMap map = getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
-        System.out.println("Run time (milliseconds) getTreePathData: " + (System.currentTimeMillis() - ms) );
+        _logger.debug("Run time (milliseconds) getTreePathData: " + (System.currentTimeMillis() - ms) );
 
 		return map;
 
@@ -900,11 +902,11 @@ public class SourceTreeUtils {
 
         ResolvedConceptReference rcr = resolveConcept(scheme, csvt, cui);
         if (rcr == null) {
-            System.out.println("Unable to resolve a concept for CUI = '" + cui + "'");
+            _logger.debug("Unable to resolve a concept for CUI = '" + cui + "'");
             return null;
         }
         else {
-			System.out.println("Concept found: " + rcr.getReferencedEntry().getEntityDescription().getContent()
+			_logger.debug("Concept found: " + rcr.getReferencedEntry().getEntityDescription().getContent()
 			   + " -- " + rcr.getCode());
 		}
 
@@ -936,7 +938,7 @@ public class SourceTreeUtils {
 			ti.expandable = true;
 
         } finally {
-            System.out.println("SourceTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+            _logger.debug("SourceTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
 
             if (pathsResolved == 0) {
@@ -1118,7 +1120,7 @@ public class SourceTreeUtils {
 					String childNavText = "CHD";
 					ti.addChild(childNavText, childItem);
 				} else {
-					//System.out.println("(*) Excluding self-referential node: " + branchItemCode);
+					//_logger.debug("(*) Excluding self-referential node: " + branchItemCode);
 					//ti.text = ti.text + " (*)";
 				}
 			}
@@ -1127,7 +1129,7 @@ public class SourceTreeUtils {
 
 
     public static void Util_displayMessage(String msg) {
-		System.out.println(msg);
+		_logger.debug(msg);
 	}
 
 
@@ -1437,8 +1439,8 @@ HTLV1 IgG Ser Ql
 		PrintWriter pw = openPrintWriter(outputfile);
 		if (pw == null) return;
 		long ms = System.currentTimeMillis();
-		System.out.println(outputfile + " opened.");
-		System.out.println("Writing root concepts by source - please wait.");
+		_logger.debug(outputfile + " opened.");
+		_logger.debug("Writing root concepts by source - please wait.");
 
 		Vector src_with_roots = new Vector();
 		Vector src_without_roots = new Vector();
@@ -1468,7 +1470,7 @@ HTLV1 IgG Ser Ql
 			String source = (String) sources.elementAt(k);
 			int k1 = k + 1;
 			pw.println("\n(" + k1 + ")" + source);
-			System.out.println("(" + k1 + ")" + source);
+			_logger.debug("(" + k1 + ")" + source);
 			try {
                 ResolvedConceptReferencesIterator iterator = findConceptWithSourceCodeMatching(scheme, version,
 												   "SRC", "V-"+source,
@@ -1547,9 +1549,9 @@ HTLV1 IgG Ser Ql
 		pw.println(t);
 
 		closeWriter(pw);
-		System.out.println("Output file " + outputfile + " generated.");
+		_logger.debug("Output file " + outputfile + " generated.");
 
-		System.out.println("Run time (ms): "
+		_logger.debug("Run time (ms): "
 				+ (System.currentTimeMillis() - ms));
 
 	}
@@ -1567,7 +1569,7 @@ HTLV1 IgG Ser Ql
 			MetaTreeNode focus = tree.getCurrentFocus();
             ti = new TreeItem(focus.getCui(), focus.getName());
 			if(isLeaf(focus)) {
-				System.out.println("Leaf node -- no children.");
+				_logger.debug("Leaf node -- no children.");
 				ti.expandable = false;
 
 				hmap.put(ti.code, ti);
@@ -1629,7 +1631,7 @@ HTLV1 IgG Ser Ql
 			String rootName = SRC_root.getReferencedEntry().getEntityDescription().getContent();
 			String rootCode = SRC_root.getCode();
 
-System.out.println("Searching for roots in " + sab + " under -- " + rootName + " (CUI: " + rootCode + ")");
+_logger.debug("Searching for roots in " + sab + " under -- " + rootName + " (CUI: " + rootCode + ")");
 
 			//HashMap hmap = getSubconcepts(scheme, csvt.getVersion(), rootCode, sab, associationsToNavigate, associationsNavigatedFwd);
             HashMap hmap = getChildren(rootCode, sab);
@@ -1684,7 +1686,7 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 			boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();
 			return getSubconcepts(scheme, version, code, sab, associationsToNavigate, associationsNavigatedFwd);
 	    } catch (Exception ex) {
-            System.out.println("getSubconcepts throws exception???");
+            _logger.error("getSubconcepts throws exception???");
             ex.printStackTrace();
 		}
 		return null;
@@ -1708,7 +1710,7 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 	        Concept c = DataUtils.getConceptByCode(scheme, version, null, code);
 			if (c == null) {
-				System.out.println("Concept not found ??? " + code);
+				_logger.warn("Concept not found ??? " + code);
 				return null;
 			}
 
@@ -1726,7 +1728,7 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		_logger.debug("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
 	}
 
@@ -2010,7 +2012,7 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 
 				// Analyze the result ...
 				if (matches == null) {
-					System.out.println("matches == null ??? ");
+					_logger.warn("matches == null ??? ");
 					return list;
 				}
                 if (matches != null && matches.getResolvedConceptReferenceCount() > 0) {
@@ -2033,10 +2035,10 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 												for (int j = 0; j < acl.length; j++) {
 													AssociatedConcept ac = acl[j];
 													if (ac != null && !ac.getConceptCode().startsWith("@")) {
-														//System.out.println("\t" + ac.getCode());
+														//_logger.debug("\t" + ac.getCode());
 														String t = getSelfReferentialRelationship(associationName, ac, source);
 														if (t != null) {
-															//System.out.println(t);
+															//_logger.debug(t);
 															list.add(t);
 														}
 													}
@@ -2053,7 +2055,7 @@ System.out.println("Searching for roots in " + sab + " under -- " + rootName + "
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: "
+		_logger.debug("Run time (milliseconds) getSubconcepts: "
 				+ (System.currentTimeMillis() - ms) + " to resolve ");
 		//SortUtils.quickSort(list);
 		return list;

@@ -35,9 +35,11 @@ package gov.nih.nci.evs.browser.utils;
 import java.io.*;
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 public class FormatUtils
 {
-
+    private static Logger _logger = Logger.getLogger(FormatUtils.class);
    static final String ncit_url = "http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&";
 
 
@@ -177,7 +179,7 @@ http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus
       FormatUtils test = new FormatUtils();
 
       String t = test.reformatPDQDefinition(def);
-	  System.out.println(t);
+	  _logger.info(t);
    }
 }
 

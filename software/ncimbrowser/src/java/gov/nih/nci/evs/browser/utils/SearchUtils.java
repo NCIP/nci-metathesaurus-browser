@@ -176,6 +176,7 @@ import gov.nih.nci.evs.browser.common.Constants;
  */
 
 public class SearchUtils {
+    private static Logger _logger = Logger.getLogger(SearchUtils.class);
 	private int max_str_length = 1000;
 	private int penalty_multiplier_1 = 1;
 	private int penalty_multiplier_2 = 2;
@@ -237,7 +238,7 @@ public class SearchUtils {
             //EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-            if(csrl == null) System.out.println("csrl is NULL");
+            if(csrl == null) _logger.warn("csrl is NULL");
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i=0; i<csrs.length; i++)
@@ -261,7 +262,7 @@ public class SearchUtils {
                             codingSchemeMap.put((Object) formalname, (Object) scheme);
 
                             String value = formalname + " (version: " + representsVersion + ")";
-                            System.out.println(value);
+                            _logger.debug(value);
 
                             csnv2codingSchemeNameMap.put(value, formalname);
                             csnv2VersionMap.put(value, representsVersion);
@@ -277,7 +278,7 @@ public class SearchUtils {
                                 codingSchemeMap.put((Object) formalname, (Object) scheme);
 
                                 String value = formalname + " (version: " + representsVersion + ")";
-                                System.out.println(value);
+                                _logger.debug(value);
 
                                 csnv2codingSchemeNameMap.put(value, formalname);
                                 csnv2VersionMap.put(value, representsVersion);
@@ -294,7 +295,7 @@ public class SearchUtils {
                                     codingSchemeMap.put((Object) formalname, (Object) scheme);
 
                                     String value = formalname + " (version: " + representsVersion + ")";
-                                    System.out.println(value);
+                                    _logger.debug(value);
 
                                     csnv2codingSchemeNameMap.put(value, formalname);
                                     csnv2VersionMap.put(value, representsVersion);
@@ -352,7 +353,7 @@ public class SearchUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+            _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         return v;
     }
@@ -395,7 +396,7 @@ public class SearchUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+            _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         return v;
     }
@@ -465,9 +466,9 @@ public class SearchUtils {
          } catch (Exception e) {
              e.printStackTrace();
          }
-         System.out.println("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
+         _logger.debug("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
          if (ltag.compareToIgnoreCase("PRODUCTION") == 0 & knt == 1) {
-			 System.out.println("\tUse " + version + " as default.");
+			 _logger.debug("\tUse " + version + " as default.");
 			 return version;
 		 }
          return null;
@@ -505,7 +506,7 @@ public class SearchUtils {
          } catch (Exception e) {
              e.printStackTrace();
          }
-         System.out.println("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
+         _logger.debug("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
          return null;
      }
      */
@@ -517,7 +518,7 @@ public class SearchUtils {
             RemoteServerUtil rsu = new RemoteServerUtil();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-            if(csrl == null) System.out.println("csrl is NULL");
+            if(csrl == null) _logger.warn("csrl is NULL");
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i=0; i<csrs.length; i++)
@@ -632,7 +633,7 @@ public class SearchUtils {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
             if (lbSvc == null)
             {
-                System.out.println("lbSvc == null???");
+                _logger.warn("lbSvc == null???");
                 return null;
             }
 
@@ -656,7 +657,7 @@ public class SearchUtils {
 
             if (matches == null)
             {
-                System.out.println("Concep not found.");
+                _logger.warn("Concept not found.");
                 return null;
             }
 
@@ -743,7 +744,7 @@ public class SearchUtils {
         if (maxToReturn == 0) return v;
         if (iterator == null)
         {
-            System.out.println("No match.");
+            _logger.warn("No match.");
             return v;
         }
         int scroll_size = 200;
@@ -761,7 +762,7 @@ public class SearchUtils {
 						{
 							ResolvedConceptReference rcr = rcra[i];
 							if (rcr == null) {
-								System.out.println("resolveIterator rcr == null???");
+								_logger.warn("resolveIterator rcr == null???");
 								break;
 							}
 
@@ -780,7 +781,7 @@ public class SearchUtils {
 							} else {
 								Concept ce = rcr.getReferencedEntry();
 								if (ce == null) {
-									System.out.println("resolveIterator rcr.getReferencedEntry() returns null???");
+									_logger.warn("resolveIterator rcr.getReferencedEntry() returns null???");
 									break;
 								} else {
 									if (code == null) v.add(ce);
@@ -818,7 +819,7 @@ public class SearchUtils {
 
              if (cns == null)
              {
-                 System.out.println("cng.toNodeList returns null???");
+                 _logger.warn("cng.toNodeList returns null???");
                  return null;
              }
 
@@ -837,7 +838,7 @@ public class SearchUtils {
 
              if(iterator == null)
              {
-                 System.out.println("cns.resolve returns null???");
+                 _logger.warn("cns.resolve returns null???");
              }
              return iterator;
 
@@ -1008,7 +1009,7 @@ public class SearchUtils {
 		try {
 			cns = cns.restrictToProperties(propertyLnL, types, sourceLnL, contextList, qualifierList);
 		} catch (Exception ex) {
-			System.out.println("restrictToSource throws exceptions.");
+			_logger.error("restrictToSource throws exceptions.");
 			return null;
 		}
 		return cns;
@@ -1021,7 +1022,7 @@ public class SearchUtils {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
             if (lbSvc == null)
             {
-                System.out.println("lbSvc == null???");
+                _logger.warn("lbSvc == null???");
                 return null;
             }
 
@@ -1047,7 +1048,7 @@ public class SearchUtils {
 
             if (matches == null)
             {
-                System.out.println("Concep not found.");
+                _logger.warn("Concept not found.");
                 return null;
             }
             // Analyze the result ...
@@ -1108,7 +1109,7 @@ public class SearchUtils {
 
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -1120,7 +1121,7 @@ public class SearchUtils {
 
             if (cns == null)
             {
-                System.out.println("cns = null");
+                _logger.warn("cns = null");
                 return null;
             }
 
@@ -1142,7 +1143,7 @@ public class SearchUtils {
                 boolean resolveConcepts = false;
                 if (sortOption.isApplySortScore() && !sortOption.isSortByPtOnly()) resolveConcepts = true;
 
-				System.out.println("resolveConcepts? " + resolveConcepts);
+				_logger.warn("resolveConcepts? " + resolveConcepts);
 
                 try {
 					long ms = System.currentTimeMillis(), delay = 0;
@@ -1151,7 +1152,7 @@ public class SearchUtils {
                     DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
 
                 }  catch (Exception e) {
-                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                    _logger.error("ERROR: cns.resolve throws exceptions.");
                 }
 
             } catch (Exception ex) {
@@ -1163,8 +1164,8 @@ public class SearchUtils {
 			return null;
 		}
 
-		System.out.println("sortOption: " + sortOption);
-		System.out.println("apply_sort_score? " + sortOption.isApplySortScore());
+		_logger.debug("sortOption: " + sortOption);
+		_logger.debug("apply_sort_score? " + sortOption.isApplySortScore());
 
         if (sortOption.isApplySortScore())
         {
@@ -1193,7 +1194,7 @@ public class SearchUtils {
         }
 
         if (v == null || v.size() == 0) {
-			System.out.println("** No match -- trying matching by code " );
+			_logger.warn("** No match -- trying matching by code " );
 
 			v = new Vector();
 			Vector w = searchByCode(scheme, version, matchText0, source, "LuceneQuery");
@@ -1319,7 +1320,7 @@ public class SearchUtils {
 				LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 				if (lbSvc == null)
 				{
-					System.out.println("lbSvc == null???");
+					_logger.warn("lbSvc == null???");
 					return null;
 				}
 
@@ -1379,7 +1380,7 @@ public class SearchUtils {
 		} else if (matchAlgorithm.compareToIgnoreCase("contains") == 0) { //p11.1-q11.1  /100{WBC}
 			//matchAlgorithm = CONTAIN_SEARCH_ALGORITHM;
 			matchAlgorithm = findBestContainsAlgorithm(matchText);
-			//System.out.println("algorithm: " + matchAlgorithm);
+			//_logger.debug("algorithm: " + matchAlgorithm);
 		}
 
         ResolvedConceptReferencesIterator iterator = null;
@@ -1392,7 +1393,7 @@ public class SearchUtils {
                 LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
                 if (lbSvc == null)
                 {
-                    System.out.println("lbSvc = null");
+                    _logger.warn("lbSvc = null");
                     return null;
                 }
                 CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -1401,7 +1402,7 @@ public class SearchUtils {
                 cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
                 if (cns == null)
                 {
-                    System.out.println("cns = null");
+                    _logger.warn("cns = null");
                     return null;
                 }
 
@@ -1444,7 +1445,7 @@ public class SearchUtils {
                         //DBG.debugDetails(delay, "cns.resolve", "searchByName, CodedNodeSet.resolve");
 
                     }  catch (Exception e) {
-                        System.out.println("ERROR: cns.resolve throws exceptions.");
+                        _logger.error("ERROR: cns.resolve throws exceptions.");
                     }
 
                 } catch (Exception ex) {
@@ -1715,7 +1716,7 @@ public class SearchUtils {
 				String word = (String) compareWords.get(k);
 				String doubleMetaphonecode = doubleMetaphoneEncode(word);
 				compareCodes.add(doubleMetaphonecode);
-				//System.out.println("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
+				//_logger.debug("*** DoubleMetaphoneLuceneQuery word " + word + " code: " + doubleMetaphone.encode(word));
 				target = target + doubleMetaphonecode;
 				if (k < compareWords.size()-1) target = target + " ";
 			}
@@ -1850,7 +1851,7 @@ public class SearchUtils {
             long ms = System.currentTimeMillis();
 
             ResolvedConceptReferenceList refs = toSort.next(500); // slow why???
-            //System.out.println("Run time (ms): toSort.next() took " + (System.currentTimeMillis() - ms) + " millisec.");
+            //_logger.debug("Run time (ms): toSort.next() took " + (System.currentTimeMillis() - ms) + " millisec.");
 
             ms = System.currentTimeMillis();
             for (int i = 0; i < refs.getResolvedConceptReferenceCount(); i++) {
@@ -1871,7 +1872,7 @@ public class SearchUtils {
                 	scoredResult.put(code, new ScoredTerm(ref, score));
 			    }
             }
-            //System.out.println("Run time (ms): assigning scores took " + (System.currentTimeMillis() - ms) + " millisec.");
+            //_logger.debug("Run time (ms): assigning scores took " + (System.currentTimeMillis() - ms) + " millisec.");
         }
         // Return an iterator that will sort the scored result.
         return new ScoredIterator(scoredResult.values(), maxToReturn);
@@ -2018,7 +2019,7 @@ public class SearchUtils {
 
 		if (lbSvc == null)
 		{
-			System.out.println("lbSvc = null");
+			_logger.warn("lbSvc = null");
 			return null;
 		}
 
@@ -2052,7 +2053,7 @@ public class SearchUtils {
 			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
 			if (cns == null)
 			{
-				System.out.println("lbSvc.getCodingSchemeConceptsd returns null");
+				_logger.warn("lbSvc.getCodingSchemeConceptsd returns null");
 				return null;
 			}
 			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
@@ -2094,7 +2095,7 @@ public class SearchUtils {
 
 		if (lbSvc == null)
 		{
-			System.out.println("lbSvc = null");
+			_logger.warn("lbSvc = null");
 			return null;
 		}
 
@@ -2127,7 +2128,7 @@ public class SearchUtils {
 			CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, null);
 			if (cns == null)
 			{
-				System.out.println("lbSvc.getCodingSchemeConceptsd returns null");
+				_logger.warn("lbSvc.getCodingSchemeConceptsd returns null");
 				return null;
 			}
 			CodedNodeSet.PropertyType[] types = new PropertyType[] {PropertyType.PRESENTATION};
@@ -2227,10 +2228,10 @@ public class SearchUtils {
 					v.add(ref.getReferencedEntry());
 				}
 			} catch (Exception ex) {
-				System.out.println("WARNING: searchByCode throws exception.");
+				_logger.error("WARNING: searchByCode throws exception.");
 			}
 		} catch (Exception ex) {
-			System.out.println("WARNING: searchByCode throws exception.");
+			_logger.error("WARNING: searchByCode throws exception.");
 		}
         return v;
 	}
@@ -2265,10 +2266,10 @@ public class SearchUtils {
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 
                     int size = iterator.numberRemaining();
-                    System.out.println("cns.resolve size: " + size);
+                    _logger.debug("cns.resolve size: " + size);
 
                 }  catch (Exception e) {
-                    System.out.println("ERROR: cns.resolve throws exceptions.");
+                    _logger.error("ERROR: cns.resolve throws exceptions.");
                 }
 
             } catch (Exception ex) {
@@ -2277,7 +2278,7 @@ public class SearchUtils {
             }
 
 		} catch (Exception ex) {
-			System.out.println("WARNING: searchByCode throws exception.");
+			_logger.error("WARNING: searchByCode throws exception.");
 		}
         return iterator;
 	}
@@ -2316,24 +2317,24 @@ public class SearchUtils {
 		LocalNameList propertyNames = null;
 		LocalNameList sourceList = null;
 		if (property_types != null || property_names != null) {
-			System.out.println("Case #1 -- property_types != null || property_names != null");
+			_logger.debug("Case #1 -- property_types != null || property_names != null");
 
 			restrictToProperties = true;
 		    if (property_types != null) propertyTypes = createPropertyTypes(property_types);
 		    if (property_names != null) propertyNames = ConvenienceMethods.createLocalNameList(property_names);
 		} else {
-			System.out.println("Case #2 ");
+			_logger.debug("Case #2 ");
 			propertyNames = new LocalNameList();
 			propertyTypes = getAllPropertyTypes();
 			if (excludeDesignation) {
-				System.out.println("Case #3 ");
+				_logger.debug("Case #3 ");
 				propertyTypes = getAllNonPresentationPropertyTypes();
 			}
 		}
-		System.out.println("searchByProperties scheme: " + scheme);
-		System.out.println("searchByProperties matchAlgorithm: " + matchAlgorithm);
-		System.out.println("searchByProperties source: " + source);
-		System.out.println("searchByProperties excludeDesignation: " + excludeDesignation);
+		_logger.debug("searchByProperties scheme: " + scheme);
+		_logger.debug("searchByProperties matchAlgorithm: " + matchAlgorithm);
+		_logger.debug("searchByProperties source: " + source);
+		_logger.debug("searchByProperties excludeDesignation: " + excludeDesignation);
 
 		if (source != null) sourceList = ConvenienceMethods.createLocalNameList(new String[] {source});
 		NameAndValueList qualifierList = null;
@@ -2358,7 +2359,7 @@ public class SearchUtils {
 
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -2370,7 +2371,7 @@ public class SearchUtils {
 			try {
 				if (lbSvc == null)
 				{
-					System.out.println("lbSvc = null");
+					_logger.warn("lbSvc = null");
 					return null;
 				}
 
@@ -2381,24 +2382,24 @@ public class SearchUtils {
 					try {
 						String language = null;
 						try {
-							System.out.println("*** restrictToMatchingProperties ...matchText " + matchText + " matchAlgorithm " + matchAlgorithm);
+							_logger.debug("*** restrictToMatchingProperties ...matchText " + matchText + " matchAlgorithm " + matchAlgorithm);
                             cns = cns.restrictToMatchingProperties(propertyNames, propertyTypes, matchText, matchAlgorithm, language);
 
 						} catch (Exception e) {
-							System.out.println("\t(*) restrictToMatchingProperties throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
+							_logger.debug("\t(*) restrictToMatchingProperties throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
 							//e.printStackTrace();
 						}
 						try {
-							System.out.println("restrictToSource ...source " + source);
+							_logger.debug("restrictToSource ...source " + source);
 							cns = restrictToSource(cns, source);
 						} catch (Exception e) {
-							System.out.println("\t(*) restrictToSource throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
+							_logger.error("\t(*) restrictToSource throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
 							//e.printStackTrace();
 						}
 
 					} catch (Exception ex) {
 						//ex.printStackTrace();
-						System.out.println("\t(*) searchByProperties2 throws exceptions.");
+						_logger.error("\t(*) searchByProperties2 throws exceptions.");
 					}
 				}
 			} catch (Exception e) {
@@ -2418,20 +2419,20 @@ public class SearchUtils {
 
             } else {
                 sortCriteria = Constructors.createSortOptionList(new String[] { "entityDescription" }); //code
-                System.out.println("*** Sort alphabetically...");
+                _logger.debug("*** Sort alphabetically...");
                 resolveConcepts = false;
 			}
             try {
                try {
 					long ms = System.currentTimeMillis(), delay = 0;
 					cns = restrictToSource(cns, source);
-					System.out.println("cns.resolve ...");
+					_logger.debug("cns.resolve ...");
                     iterator = cns.resolve(sortCriteria, null, null, null, resolveConcepts);
 
                 }  catch (Exception e) {
-                    System.out.println("Method: SearchUtil.searchByProperties");
-                    System.out.println("* ERROR: cns.resolve throws exceptions.");
-                    System.out.println("* " + e.getClass().getSimpleName() + ": " +
+                    _logger.error("Method: SearchUtil.searchByProperties");
+                    _logger.error("* ERROR: cns.resolve throws exceptions.");
+                    _logger.error("* " + e.getClass().getSimpleName() + ": " +
                         e.getMessage());
                     e.printStackTrace();
                 }
@@ -2452,7 +2453,7 @@ public class SearchUtils {
 				try {
 					iterator_size = iterator.numberRemaining();
 
-					System.out.println("Number of matches: " + iterator_size);
+					_logger.debug("Number of matches: " + iterator_size);
 				} catch (Exception ex) {
 
 				}
@@ -2504,7 +2505,7 @@ public class SearchUtils {
 
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -2516,7 +2517,7 @@ public class SearchUtils {
 			try {
 				if (lbSvc == null)
 				{
-					System.out.println("lbSvc = null");
+					_logger.warn("lbSvc = null");
 					return null;
 				}
 
@@ -2536,19 +2537,19 @@ public class SearchUtils {
 						try {
 							cns = cns.restrictToMatchingProperties(propertyNames, propertyTypes, matchText, matchAlgorithm, language);
 						} catch (Exception e) {
-							System.out.println("\t(*) restrictToMatchingProperties throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
+							_logger.error("\t(*) restrictToMatchingProperties throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
 							//e.printStackTrace();
 						}
 						try {
 							cns = restrictToSource(cns, source);
 						} catch (Exception e) {
-							System.out.println("\t(*) restrictToSource throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
+							_logger.error("\t(*) restrictToSource throws exceptions???: " + matchText + " matchAlgorithm: " + matchAlgorithm );
 							//e.printStackTrace();
 						}
 
 					} catch (Exception ex) {
 						//ex.printStackTrace();
-						System.out.println("\t(*) searchByProperties2 throws exceptions.");
+						_logger.error("\t(*) searchByProperties2 throws exceptions.");
 					}
 				}
 			} catch (Exception e) {
@@ -2570,20 +2571,20 @@ public class SearchUtils {
 
             } else {
                 sortCriteria = Constructors.createSortOptionList(new String[] { "entityDescription" }); //code
-                System.out.println("*** Sort alphabetically...");
+                _logger.debug("*** Sort alphabetically...");
                 resolveConcepts = false;
 			}
             try {
                try {
 					long ms = System.currentTimeMillis(), delay = 0;
 					cns = restrictToSource(cns, source);
-					System.out.println("cns.resolve ...");
+					_logger.debug("cns.resolve ...");
                     iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 
                 }  catch (Exception e) {
-                    System.out.println("Method: SearchUtil.searchByProperties");
-                    System.out.println("* ERROR: cns.resolve throws exceptions.");
-                    System.out.println("* " + e.getClass().getSimpleName() + ": " +
+                    _logger.error("Method: SearchUtil.searchByProperties");
+                    _logger.error("* ERROR: cns.resolve throws exceptions.");
+                    _logger.error("* " + e.getClass().getSimpleName() + ": " +
                         e.getMessage());
                     e.printStackTrace();
                 }
@@ -2604,7 +2605,7 @@ public class SearchUtils {
 				try {
 					iterator_size = iterator.numberRemaining();
 
-					System.out.println("Number of matches: " + iterator_size);
+					_logger.debug("Number of matches: " + iterator_size);
 				} catch (Exception ex) {
 
 				}
@@ -2732,31 +2733,31 @@ String[] associationsToNavigate,
                                                                          String source, String matchAlgorithm, boolean designationOnly,
                                                                          boolean ranking, int maxToReturn) {
 /*
-System.out.println("searchByAssociations scheme: " + scheme);
-System.out.println("searchByAssociations matchText: " + matchText);
-System.out.println("searchByAssociations resolve_direction: " + search_direction);
-System.out.println("searchByAssociations source: " + source);
-System.out.println("searchByAssociations search_direction: " + search_direction);
-System.out.println("searchByAssociations matchAlgorithm: " + matchAlgorithm);
+_logger.debug("searchByAssociations scheme: " + scheme);
+_logger.debug("searchByAssociations matchText: " + matchText);
+_logger.debug("searchByAssociations resolve_direction: " + search_direction);
+_logger.debug("searchByAssociations source: " + source);
+_logger.debug("searchByAssociations search_direction: " + search_direction);
+_logger.debug("searchByAssociations matchAlgorithm: " + matchAlgorithm);
 
 if (associationsToNavigate != null) {
 	for (int lcv=0; lcv<associationsToNavigate.length; lcv++) {
 		String str = (String) associationsToNavigate[lcv];
-		System.out.println("searchByAssociations associationsToNavigate: " + str);
+		_logger.debug("searchByAssociations associationsToNavigate: " + str);
 	}
 }
 
 if (association_qualifier_names != null) {
 	for (int lcv=0; lcv<association_qualifier_names.length; lcv++) {
 		String str = (String) association_qualifier_names[lcv];
-		System.out.println("searchByAssociations association_qualifier_names: " + str);
+		_logger.debug("searchByAssociations association_qualifier_names: " + str);
 	}
 }
 
 if (association_qualifier_values != null) {
 	for (int lcv=0; lcv<association_qualifier_values.length; lcv++) {
 		String str = (String) association_qualifier_values[lcv];
-		System.out.println("searchByAssociations association_qualifier_values: " + str);
+		_logger.debug("searchByAssociations association_qualifier_values: " + str);
 	}
 }
 */
@@ -2799,7 +2800,7 @@ if (association_qualifier_values != null) {
 
             if (lbSvc == null)
             {
-                System.out.println("lbSvc = null");
+                _logger.warn("lbSvc = null");
                 return null;
             }
 
@@ -2807,7 +2808,7 @@ if (association_qualifier_values != null) {
 
 			cns = null;
 			iterator = null;
-			System.out.println("\tsearching " + scheme);
+			_logger.debug("\tsearching " + scheme);
 
 			ms = System.currentTimeMillis();
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -2816,7 +2817,7 @@ if (association_qualifier_values != null) {
 			try {
 				if (lbSvc == null)
 				{
-					System.out.println("lbSvc = null");
+					_logger.warn("lbSvc = null");
 					return null;
 				}
 
@@ -2902,9 +2903,9 @@ if (association_qualifier_values != null) {
                         iterator = new SearchByAssociationIteratorDecorator(quickUnionIterator, resolveForward, resolveBackward, associationList, qualifiers, resolveAssociationDepth, maxToReturn);
 				    }
                 }  catch (Exception e) {
-                    System.out.println("Method: SearchUtil.searchByAssociations");
-                    System.out.println("* ERROR: cns.resolve throws exceptions.");
-                    System.out.println("* " + e.getClass().getSimpleName() + ": " +
+                    _logger.error("Method: SearchUtil.searchByAssociations");
+                    _logger.error("* ERROR: cns.resolve throws exceptions.");
+                    _logger.error("* " + e.getClass().getSimpleName() + ": " +
                         e.getMessage());
                 }
 
@@ -2917,13 +2918,13 @@ if (association_qualifier_values != null) {
 			e.printStackTrace();
 			return null;
         } finally {
-            System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+            _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         // Pending LexEVS fix:
         // if (iterator != null) iterator.setMessage(message);
 
         if (iterator == null) {
-			System.out.println("=================== searchByAssociations returns iterator == null???");
+			_logger.warn("=================== searchByAssociations returns iterator == null???");
 		}
 
         return new ResolvedConceptReferencesIteratorWrapper(iterator, message);
@@ -2951,24 +2952,24 @@ if (association_qualifier_values != null) {
         try {
 			if (iterator == null || iterator.numberRemaining() == 0) return iterator;
 
-			//System.out.println("iterator.numberRemaining(): " + iterator.numberRemaining());
+			//_logger.debug("iterator.numberRemaining(): " + iterator.numberRemaining());
 
 			while(iterator.hasNext()) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					String code = ref.getConceptCode();
 					knt++;
-					System.out.println("(" + knt + ") code: " + code);
+					_logger.debug("(" + knt + ") code: " + code);
 					if (code.indexOf("@") == -1) {
 						codeList.addConceptReference(ref);
 						knt_concept++;
 					} else {
-						//System.out.println("name: " + ref.getEntityDescription().getContent());
+						//_logger.debug("name: " + ref.getEntityDescription().getContent());
 					}
 				}
 			}
 
-			//System.out.println("(**) Number of concepts: " + knt_concept);
+			//_logger.debug("(**) Number of concepts: " + knt_concept);
             //KLO 022410 changed failed.
             cns = lbSvc.getNodeSet(scheme, null, null);
             //cns = getNodeSetByEntityType(scheme, null, "concept");
@@ -2979,7 +2980,7 @@ if (association_qualifier_values != null) {
 			boolean resolveConcepts = false;
 			iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 
-			//System.out.println("New iterator.numberRemaining(): " + iterator.numberRemaining());
+			//_logger.debug("New iterator.numberRemaining(): " + iterator.numberRemaining());
 
 			return iterator;
 		} catch (Exception ex) {
@@ -2999,24 +3000,24 @@ if (association_qualifier_values != null) {
         try {
 			if (iterator == null || iterator.numberRemaining() == 0) return iterator;
 
-			//System.out.println("iterator.numberRemaining(): " + iterator.numberRemaining());
+			//_logger.debug("iterator.numberRemaining(): " + iterator.numberRemaining());
 
 			while(iterator.hasNext()) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					String code = ref.getConceptCode();
 					knt++;
-					System.out.println("(" + knt + ") code: " + code);
+					_logger.debug("(" + knt + ") code: " + code);
 					if (code.indexOf("@") == -1) {
 						codeList.addConceptReference(ref);
 						knt_concept++;
 					} else {
-						//System.out.println("name: " + ref.getEntityDescription().getContent());
+						//_logger.debug("name: " + ref.getEntityDescription().getContent());
 					}
 				}
 			}
 
-			//System.out.println("(**) Number of concepts: " + knt_concept);
+			//_logger.debug("(**) Number of concepts: " + knt_concept);
 
             cns = lbSvc.getNodeSet(scheme, null, null);
 
@@ -3026,7 +3027,7 @@ if (association_qualifier_values != null) {
 			boolean resolveConcepts = false;
 			iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
 
-			//System.out.println("New iterator.numberRemaining(): " + iterator.numberRemaining());
+			//_logger.debug("New iterator.numberRemaining(): " + iterator.numberRemaining());
 
 			return iterator;
 		} catch (Exception ex) {
@@ -3050,25 +3051,25 @@ if (association_qualifier_values != null) {
 
         try {
 		    ResolvedConceptReferencesIterator iterator = cns.resolve(sortCriteria, null, restrictToProperties, null, resolveConcepts);
-			//System.out.println("iterator.numberRemaining(): " + iterator.numberRemaining());
+			//_logger.debug("iterator.numberRemaining(): " + iterator.numberRemaining());
 
 			while(iterator.hasNext()) {
 				ResolvedConceptReference[] refs = iterator.next(maxReturn).getResolvedConceptReference();
 				for(ResolvedConceptReference ref : refs) {
 					String code = ref.getConceptCode();
 					knt++;
-					//System.out.println("(" + knt + ") code: " + code);
+					//_logger.debug("(" + knt + ") code: " + code);
 					if (code.indexOf("@") == -1) {
 						codeList.addConceptReference(ref);
 						knt_concept++;
 					} else {
-						//System.out.println("name: " + ref.getEntityDescription().getContent());
+						//_logger.debug("name: " + ref.getEntityDescription().getContent());
 					}
 				}
 			}
 			if (knt_concept == 0) return null;
 
-			//System.out.println("(**) Number of concepts: " + knt_concept);
+			//_logger.debug("(**) Number of concepts: " + knt_concept);
 
             cns = lbSvc.getNodeSet(scheme, null, null);
 			cns = cns.restrictToCodes(codeList);
@@ -3145,7 +3146,7 @@ if (association_qualifier_values != null) {
 			}
 
 			if (cns == null) {
-				System.out.println("getConceptByCode getCodingSchemeConcepts returns null??? " + scheme);
+				_logger.warn("getConceptByCode getCodingSchemeConcepts returns null??? " + scheme);
 				return null;
 			}
 
@@ -3160,9 +3161,9 @@ if (association_qualifier_values != null) {
 
                     int size = iterator.numberRemaining();
                 }  catch (Exception e) {
-                    System.out.println("Method: SearchUtil.matchConceptCode");
-                    System.out.println("* ERROR: cns.resolve throws exceptions.");
-                    System.out.println("* " + e.getClass().getSimpleName() + ": " +
+                    _logger.error("Method: SearchUtil.matchConceptCode");
+                    _logger.error("* ERROR: cns.resolve throws exceptions.");
+                    _logger.error("* " + e.getClass().getSimpleName() + ": " +
                         e.getMessage());
                 }
 
@@ -3172,7 +3173,7 @@ if (association_qualifier_values != null) {
             }
 
 		} catch (Exception ex) {
-			System.out.println("WARNING: searchByCode throws exception.");
+			_logger.error("WARNING: searchByCode throws exception.");
 		}
 		//[#26386] Need app to be able to distinguish/prioritize/display matching code vrs. matching name results
 
@@ -3197,9 +3198,9 @@ if (association_qualifier_values != null) {
 				}
 			}
 		}  catch (Exception e) {
-			System.out.println("Method: SearchUtil.matchConceptByCode");
-			System.out.println("* ERROR: cns.resolve throws exceptions.");
-			System.out.println("* " + e.getClass().getSimpleName() + ": " +
+			_logger.error("Method: SearchUtil.matchConceptByCode");
+			_logger.error("* ERROR: cns.resolve throws exceptions.");
+			_logger.error("* " + e.getClass().getSimpleName() + ": " +
 				e.getMessage());
 		}
 		return null;
@@ -3213,7 +3214,7 @@ if (association_qualifier_values != null) {
          if (args.length == 1)
          {
              url = args[0];
-             System.out.println(url);
+             _logger.debug(url);
          }
 
          SearchUtils test = new SearchUtils(url);

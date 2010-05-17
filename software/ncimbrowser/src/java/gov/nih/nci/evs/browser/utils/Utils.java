@@ -4,7 +4,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
+
 public class Utils {
+    private static Logger _logger = Logger.getLogger(Utils.class);
 	public static final String SEPARATOR = 
 		"----------------------------------------" +
 		"----------------------------------------";
@@ -100,11 +103,11 @@ public class Utils {
     
     public static void debug(String msg, String[] list) {
         if (msg != null && msg.length() > 0)
-            System.out.println(msg);
+            _logger.debug(msg);
         if (list == null)
             return;
         for (int i=0; i<list.length; ++i) {
-            System.out.println("  " + (i+1) + ") " + list[i]);
+            _logger.debug("  " + (i+1) + ") " + list[i]);
         }
     }
     
