@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Application constants class
+ * 
  * @author garciawa2
  */
 public class Constants {
@@ -13,13 +14,14 @@ public class Constants {
     static public final int MAJOR_VER = 1;
     static public final int MINOR_VER = 0;
     static public final String CONFIG_FILE = "NCImBrowserProperties.xml";
-    //KLO, 011210
+    // KLO, 011210
     static public final String CODING_SCHEME_NAME = "NCI Metathesaurus";
 
     // Application error constants
     static public final String INIT_PARAM_ERROR_PAGE = "errorPage";
     static public final String ERROR_MESSAGE = "systemMessage";
-    static public final String ERROR_UNEXPECTED = "Warning: An unexpected processing error has occurred.";
+    static public final String ERROR_UNEXPECTED =
+        "Warning: An unexpected processing error has occurred.";
 
     // Application constants
     static public final String NA = "N/A";
@@ -31,28 +33,31 @@ public class Constants {
     static public final String EXTERNAL_TERM_SOURCE = "Other";
     static public final String EXTERNAL_TERM_SOURCE_CODE = "N/A";
 
-    static public final String ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS = "No match found. Please try 'Begins With' or 'Contains' search instead.";
+    static public final String ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS =
+        "No match found. Please try 'Begins With' or 'Contains' search instead.";
 
     static public final int DEFAULT_PAGE_SIZE = 50;
 
-    static public final  int SEARCH_BOTH_DIRECTION = 0;
-    static public final  int SEARCH_SOURCE = 1;
-    static public final  int SEARCH_TARGET = 2;
+    static public final int SEARCH_BOTH_DIRECTION = 0;
+    static public final int SEARCH_SOURCE = 1;
+    static public final int SEARCH_TARGET = 2;
 
-    static public final List<String> REL = Arrays.asList(new String[] {
-            "Parent\tPAR\tAnother concept&apos;s term subsumes a term in the current concept as a subtype, part, or otherwise.",
-            "Child\tCHD\tAnother concept&apos;s term is subsumed by a term in the current concept as its subtype, part, or otherwise.",
-            "Broader\tRB\tAnother concept&apos;s term is broader than a term in the current concept in some less specific way.",
-            "Narrower\tRN\tAnother concept&apos;s term is narrower than a term in the current concept in some less specific way.",
-            "Sibling\tSIB\tAnother concept&apos;s term is subsumed by a parent shared with the a term in the current concept.",
-            "Other\tAQ\tAnother concept&apos;s term is an allowable qualifier of the a term in the current concept.",
-            "Other\tQB\tAnother concept&apos;s term is qualified by a term in the current concept.",
-            "Other\tRO\tAnother concept&apos;s term is related in some other way.",
-            "Other\tRQ\tAnother concept&apos;s term is related and possibly synonymous with a term in the current concept.",
-            "Other\tSY\tAnother concept&apos;s term is synonymous with a term in the current concept."
-        });
+    static public final List<String> REL =
+        Arrays
+            .asList(new String[] {
+                "Parent\tPAR\tAnother concept&apos;s term subsumes a term in the current concept as a subtype, part, or otherwise.",
+                "Child\tCHD\tAnother concept&apos;s term is subsumed by a term in the current concept as its subtype, part, or otherwise.",
+                "Broader\tRB\tAnother concept&apos;s term is broader than a term in the current concept in some less specific way.",
+                "Narrower\tRN\tAnother concept&apos;s term is narrower than a term in the current concept in some less specific way.",
+                "Sibling\tSIB\tAnother concept&apos;s term is subsumed by a parent shared with the a term in the current concept.",
+                "Other\tAQ\tAnother concept&apos;s term is an allowable qualifier of the a term in the current concept.",
+                "Other\tQB\tAnother concept&apos;s term is qualified by a term in the current concept.",
+                "Other\tRO\tAnother concept&apos;s term is related in some other way.",
+                "Other\tRQ\tAnother concept&apos;s term is related and possibly synonymous with a term in the current concept.",
+                "Other\tSY\tAnother concept&apos;s term is synonymous with a term in the current concept." });
 
-    static public final List<String> RELA = Arrays.asList(new String[] {
+    static public final List<String> RELA =
+        Arrays.asList(new String[] { 
             "Parent\tPAR\t[none]",
             "Parent\tPAR\tcontains",
             "Parent\tPAR\thas_branch",
@@ -782,8 +787,7 @@ public class Constants {
             "Other\tSY\tmth_xml_form_of",
             "Other\tSY\tpermuted_term_of",
             "Other\tSY\tplain_text_form_of",
-            "Other\tSY\tsort_version_of"
-        });
+            "Other\tSY\tsort_version_of" });
 
     /**
      * Constructor
