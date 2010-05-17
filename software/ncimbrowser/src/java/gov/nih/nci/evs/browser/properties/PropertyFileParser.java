@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -54,7 +55,7 @@ import gov.nih.nci.evs.browser.bean.SecurityTokenHolder;
  */
 
 public class PropertyFileParser {
-
+    private static Logger _logger = Logger.getLogger(PropertyFileParser.class);
 	List displayItemList;
 	List termGroupRankList;
 
@@ -208,7 +209,7 @@ public class PropertyFileParser {
 	private void printData(){
 		Iterator it = displayItemList.iterator();
 		while(it.hasNext()) {
-			System.out.println(it.next().toString());
+			_logger.debug(it.next().toString());
 		}
 	}
 
