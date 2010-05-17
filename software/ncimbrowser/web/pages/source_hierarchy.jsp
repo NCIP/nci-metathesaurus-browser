@@ -453,6 +453,11 @@
   </script>
 </head>
 <body>
+  <%!
+      private static org.apache.log4j.Logger _logger = 
+          org.apache.log4j.Logger.getLogger(
+          "gov.nih.nci.evs.browser.web.source_hierarchy_jsp");
+  %>     
   <f:view>
     <div id="popupContainer">
       <!-- nci popup banner -->
@@ -477,7 +482,7 @@
 String ontology_sab = null;
 String ontology_formalname = null;
 ontology_sab = HTTPUtils.cleanXSS((String)request.getParameter("sab"));
-System.out.println("SAB: " + ontology_sab);
+_logger.debug("SAB: " + ontology_sab);
 
 if (ontology_sab == null) {
       Object selectedSource_obj = request.getSession().getAttribute("selectedSource");

@@ -1,7 +1,12 @@
+<%!
+    private static org.apache.log4j.Logger _logger = 
+        org.apache.log4j.Logger.getLogger(
+        "gov.nih.nci.evs.browser.web.typeLinks_jsp");
+%>     
 <%
   Concept concept_typelinks = (Concept) request.getSession().getAttribute("concept");
   if (concept_typelinks == null) {
-System.out.println("(*) concept_typelinks == null???");  
+_logger.warn("(*) concept_typelinks == null???");  
   }
   
   String concept_typelinks_id = concept_typelinks.getEntityCode();
