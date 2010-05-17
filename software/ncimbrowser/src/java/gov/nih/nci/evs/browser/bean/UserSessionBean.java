@@ -65,7 +65,7 @@ import gov.nih.nci.evs.browser.common.Constants;
 
 public class UserSessionBean extends Object
 {
-	private static Logger logger = Logger.getLogger(UserSessionBean.class);
+	private static Logger _logger = Logger.getLogger(UserSessionBean.class);
 
     private String selectedQuickLink = null;
     private List quickLinkList = null;
@@ -85,7 +85,7 @@ public class UserSessionBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("quickLinkChanged; " + newValue);
+        _logger.debug("quickLinkChanged; " + newValue);
         setSelectedQuickLink(newValue);
 
         HttpServletResponse response = (HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -164,9 +164,9 @@ public class UserSessionBean extends Object
         String searchTarget = (String) request.getParameter("searchTarget");
 
         if (NCImBrowserProperties.debugOn) {
-            System.out.println(Utils.SEPARATOR);
-            System.out.println("* criteria: " + matchText);
-            System.out.println("* source: " + source);
+            _logger.debug(Utils.SEPARATOR);
+            _logger.debug("* criteria: " + matchText);
+            _logger.debug("* source: " + source);
         }
 
         String scheme = Constants.CODING_SCHEME_NAME;
@@ -207,15 +207,15 @@ public class UserSessionBean extends Object
         String key = null;
 
 		String searchType = (String) request.getParameter("selectSearchOption");
-		System.out.println("SearchUtils.java searchType: " + searchType);
+		_logger.debug("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
 /*
-			System.out.println("Advanced Search: ");
-			System.out.println("searchType: " + searchType);
-			System.out.println("matchText: " + matchText);
-			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-			System.out.println("adv_search_source: " + adv_search_source);
+			_logger.debug("Advanced Search: ");
+			_logger.debug("searchType: " + searchType);
+			_logger.debug("matchText: " + matchText);
+			_logger.debug("adv_search_algorithm: " + adv_search_algorithm);
+			_logger.debug("adv_search_source: " + adv_search_source);
 */
 
 			String property_type = (String) request.getParameter("selectPropertyType");
@@ -285,7 +285,7 @@ public class UserSessionBean extends Object
 
 int search_direction = Constants.SEARCH_SOURCE;
 
-System.out.println("AdvancedSearchAction search_direction " + search_direction);
+_logger.debug("AdvancedSearchAction search_direction " + search_direction);
 
 
 
@@ -295,7 +295,7 @@ System.out.println("AdvancedSearchAction search_direction " + search_direction);
             key = searchFields.getKey();
 
 
-System.out.println("AdvancedSearchAction key " + key);
+_logger.debug("AdvancedSearchAction key " + key);
 
 
 			if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -310,7 +310,7 @@ System.out.println("AdvancedSearchAction key " + key);
 				if (rel_search_association != null) {
 					associationsToNavigate = new String[] {rel_search_association};
 				} else {
-					System.out.println("(*) associationsToNavigate == null");
+					_logger.debug("(*) associationsToNavigate == null");
 				}
 
 				if (rel_search_rela != null) {
@@ -320,7 +320,7 @@ System.out.println("AdvancedSearchAction key " + key);
 					if (associationsToNavigate == null) {
 						Vector w = OntologyBean.getAssociationNames();
 						if (w == null || w.size() == 0) {
-							System.out.println("OntologyBean.getAssociationNames() returns null, or nothing???");
+							_logger.warn("OntologyBean.getAssociationNames() returns null, or nothing???");
 						} else {
 							associationsToNavigate = new String[w.size()];
 							for (int i=0; i<w.size(); i++) {
@@ -331,7 +331,7 @@ System.out.println("AdvancedSearchAction key " + key);
                     }
 
 				} else {
-					System.out.println("(*) qualifiers == null");
+					_logger.warn("(*) qualifiers == null");
 				}
 
                 wrapper = new SearchUtils().searchByAssociations(
@@ -418,7 +418,7 @@ System.out.println("AdvancedSearchAction key " + key);
 			int size = iteratorBean.getSize();
 
 
-System.out.println("AdvancedSearchActon size: " + size);
+_logger.debug("AdvancedSearchActon size: " + size);
 
 
 			// Write a search log entry
@@ -472,7 +472,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 			String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
 			if (newCUI != null) {
-				System.out.println("Searching for " + newCUI);
+				_logger.debug("Searching for " + newCUI);
 				Concept c = DataUtils.getConceptByCode(
 				    Constants.CODING_SCHEME_NAME, null, null, newCUI);
 				request.getSession().setAttribute("code", newCUI);
@@ -501,7 +501,7 @@ System.out.println("AdvancedSearchActon size: " + size);
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
 		String matchText = (String) request.getParameter("matchText");
-		System.out.println("matchText: " + matchText);
+		_logger.debug("matchText: " + matchText);
 
 
         if (matchText != null) {
@@ -540,12 +540,12 @@ System.out.println("AdvancedSearchActon size: " + size);
 
         if (NCImBrowserProperties.debugOn) {
             try {
-                System.out.println(Utils.SEPARATOR);
-                System.out.println("* criteria: " + matchText);
-                System.out.println("* matchType: " + matchtype);
-                System.out.println("* source: " + source);
-                //System.out.println("* ranking: " + ranking);
-               // System.out.println("* sortOption: " + sortOption);
+                _logger.debug(Utils.SEPARATOR);
+                _logger.debug("* criteria: " + matchText);
+                _logger.debug("* matchType: " + matchtype);
+                _logger.debug("* source: " + source);
+                //_logger.debug("* ranking: " + ranking);
+               // _logger.debug("* sortOption: " + sortOption);
             } catch (Exception e) {
             }
         }
@@ -587,7 +587,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 
 
 		String searchType = (String) request.getParameter("selectSearchOption");
-		//System.out.println("SearchUtils.java searchType: " + searchType);
+		//_logger.debug("SearchUtils.java searchType: " + searchType);
 
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
@@ -595,11 +595,11 @@ System.out.println("AdvancedSearchActon size: " + size);
 			matchAlgorithm = adv_search_algorithm;
 			String adv_search_source = (String) request.getParameter("adv_search_source");
 			/*
-			System.out.println("Advanced Search: ");
-			System.out.println("searchType: " + searchType);
-			System.out.println("matchText: " + matchText);
-			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-			System.out.println("adv_search_source: " + adv_search_source);
+			_logger.debug("Advanced Search: ");
+			_logger.debug("searchType: " + searchType);
+			_logger.debug("matchText: " + matchText);
+			_logger.debug("adv_search_algorithm: " + adv_search_algorithm);
+			_logger.debug("adv_search_source: " + adv_search_source);
 			*/
 
 			if (adv_search_source != null && adv_search_source.compareTo("ALL") == 0) {
@@ -619,7 +619,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 				if (property_name.compareTo("ALL") == 0) property_name = null;
 			}
 
-			//System.out.println("adv_search_selected_property: " + property_name);
+			//_logger.debug("adv_search_selected_property: " + property_name);
 			if (adv_search_source == null) {
 				request.getSession().setAttribute("adv_search_source", "ALL");
 			} else {
@@ -693,14 +693,14 @@ System.out.println("AdvancedSearchActon size: " + size);
 
 			String rel_search_direction = (String) request.getParameter("rel_search_direction");
 /*
-			System.out.println("Advanced Search: ");
-			System.out.println("searchType: " + searchType);
-			System.out.println("matchText: " + matchText);
-			System.out.println("adv_search_algorithm: " + adv_search_algorithm);
-			System.out.println("rel_search_association: " + rel_search_association);
-			System.out.println("rel_search_rela: " + rel_search_rela);
-			System.out.println("adv_search_source: " + adv_search_source);
-			System.out.println("rel_search_direction: " + rel_search_direction);
+			_logger.debug("Advanced Search: ");
+			_logger.debug("searchType: " + searchType);
+			_logger.debug("matchText: " + matchText);
+			_logger.debug("adv_search_algorithm: " + adv_search_algorithm);
+			_logger.debug("rel_search_association: " + rel_search_association);
+			_logger.debug("rel_search_rela: " + rel_search_rela);
+			_logger.debug("adv_search_source: " + adv_search_source);
+			_logger.debug("rel_search_direction: " + rel_search_direction);
 */
 			//boolean direction = false;
 			int search_direction = Constants.SEARCH_BOTH_DIRECTION;
@@ -752,7 +752,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 				if (rel_search_association != null) {
 					associationsToNavigate = new String[] {rel_search_association};
 				} else {
-					System.out.println("(*) associationsToNavigate == null");
+					_logger.warn("(*) associationsToNavigate == null");
 				}
 
 				if (rel_search_rela != null) {
@@ -762,7 +762,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 					if (associationsToNavigate == null) {
 						Vector w = OntologyBean.getAssociationNames();
 						if (w == null || w.size() == 0) {
-							System.out.println("OntologyBean.getAssociationNames() returns null, or nothing???");
+							_logger.warn("OntologyBean.getAssociationNames() returns null, or nothing???");
 						} else {
 							associationsToNavigate = new String[w.size()];
 							for (int i=0; i<w.size(); i++) {
@@ -773,7 +773,7 @@ System.out.println("AdvancedSearchActon size: " + size);
                     }
 
 				} else {
-					System.out.println("(*) qualifiers == null");
+					_logger.warn("(*) qualifiers == null");
 				}
 
                 wrapper = new SearchUtils().searchByAssociations(scheme, version, matchText,
@@ -920,7 +920,7 @@ System.out.println("AdvancedSearchActon size: " + size);
 			String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
 			if (newCUI != null) {
-				System.out.println("Searching for " + newCUI);
+				_logger.debug("Searching for " + newCUI);
 				Concept c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, newCUI);
 				request.getSession().setAttribute("code", newCUI);
 				request.getSession().setAttribute("concept", c);
@@ -1022,7 +1022,7 @@ System.out.println("AdvancedSearchActon size: " + size);
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        //System.out.println("algorithmChanged; " + newValue);
+        //_logger.debug("algorithmChanged; " + newValue);
         setSelectedAlgorithm(newValue);
     }
 
@@ -1101,7 +1101,7 @@ System.out.println("AdvancedSearchActon size: " + size);
     public void sourceSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() != null) {
             String source = (String) event.getNewValue();
-            //System.out.println("==================== sourceSelectionChanged to: " + source);
+            //_logger.debug("==================== sourceSelectionChanged to: " + source);
             setSelectedSource(source);
         }
     }
