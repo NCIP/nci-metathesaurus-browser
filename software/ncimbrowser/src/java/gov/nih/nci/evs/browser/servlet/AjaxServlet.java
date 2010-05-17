@@ -92,7 +92,7 @@ import org.LexGrid.concepts.Presentation;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 public final class AjaxServlet extends HttpServlet {
-
+    private static Logger _logger = Logger.getLogger(AjaxServlet.class);
     protected final Logger logger = Logger.getLogger(this.getClass());
 
   /**
@@ -174,7 +174,7 @@ public final class AjaxServlet extends HttpServlet {
 					}
 
 					response.getWriter().write(json.toString());
-					System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+					_logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
 					return;
 				}
 
@@ -197,7 +197,7 @@ public final class AjaxServlet extends HttpServlet {
                 } catch (Exception e) {
                 }
                 response.getWriter().write(json.toString());
-                System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+                _logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
             }
         }
@@ -222,7 +222,7 @@ public final class AjaxServlet extends HttpServlet {
                         rootsArray = CacheController.getInstance().getPathsToRoots(ontology_display_name, null, node_id, ontology_source, true, maxLevel);
 						if (rootsArray.length() == 0)
 						{
-							//System.out.println("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
+							//_logger.debug("AjaxServlet getPathsToRoots finds no path -- calling getRootConceptsBySource...");
 							//rootsArray = CacheController.getInstance().getRootConceptsBySource(ontology_display_name, null, ontology_source);
 						}
 
@@ -233,11 +233,11 @@ public final class AjaxServlet extends HttpServlet {
                 }
 
                 response.getWriter().write(json.toString());
-                System.out.println("search_tree: " + json.toString());
+                _logger.debug("search_tree: " + json.toString());
 */
                 String t = CacheController.getInstance().getPathsToRootsExt(ontology_display_name, null, node_id, ontology_source, false);
                 response.getWriter().write(t);
-                System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+                _logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
                 return;
             }
         }
@@ -265,7 +265,7 @@ public final class AjaxServlet extends HttpServlet {
             }
 
             response.getWriter().write(json.toString());
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
+            _logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) );
             return;
        }
    }
