@@ -6,9 +6,12 @@ import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
 import org.LexGrid.LexBIG.DataModel.Collections.*;
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.evs.browser.utils.*;
 
 public class RegExpTest {
+    private static Logger _logger = Logger.getLogger(RegExpTest.class);
     private LexBIGService _lbs = RemoteServerUtil.createLexBIGService();
     private Vector<String> _searchTexts = new Vector<String>();
     private String _codingSchemeName = "NCI MetaThesaurus"; //"NCI Thesaurus"
@@ -27,9 +30,9 @@ public class RegExpTest {
     public void testIterator() throws Exception {
         for (int i = 0; i < _searchTexts.size(); i++) {
             String t = (String) _searchTexts.elementAt(i);
-            System.out.println("---------------------------------------------");
-            System.out.println("* codingSchemeName: " + _codingSchemeName);
-            System.out.println("* Search string: " + t);
+            _logger.debug("---------------------------------------------");
+            _logger.debug("* codingSchemeName: " + _codingSchemeName);
+            _logger.debug("* Search string: " + t);
 
             CodedNodeSet cns = null;
             try {
@@ -37,7 +40,7 @@ public class RegExpTest {
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
-            System.out.println("* cns: " + (cns == null ? "null" : "not null"));
+            _logger.debug("* cns: " + (cns == null ? "null" : "not null"));
 
             cns = cns.restrictToMatchingDesignations(t,
                 SearchDesignationOption.ALL, _algorithm, null);
@@ -51,11 +54,11 @@ public class RegExpTest {
                 itr = cns.resolve(sortCriteria, null, restrictToProperties,
                     null, resolveConcepts);
                 while (itr.hasNext()) {
-                    System.out.println("* hasNext cnt: " + cnt);
+                    _logger.debug("* hasNext cnt: " + cnt);
                     ResolvedConceptReference[] refs = itr.next(100)
                         .getResolvedConceptReference();
                     for (ResolvedConceptReference ref : refs) {
-                        System.out.println(cnt + ") " + getConceptInfo(ref));
+                        _logger.debug(cnt + ") " + getConceptInfo(ref));
                         cnt++;
                     }
                 }
@@ -63,16 +66,16 @@ public class RegExpTest {
                 ex.printStackTrace();
             }
             if (cnt == 0)
-                System.out.println("No match.");
-            System.out.println("");
+                _logger.debug("No match.");
+            _logger.debug("");
         }
     }
 
     public void testList() throws Exception {
         for (int i = 0; i < _searchTexts.size(); i++) {
             String t = (String) _searchTexts.elementAt(i);
-            System.out.println("---------------------------------------------");
-            System.out.println("* Search string: " + t);
+            _logger.debug("---------------------------------------------");
+            _logger.debug("* Search string: " + t);
 
             CodedNodeSet cns = _lbs.getCodingSchemeConcepts(_codingSchemeName,
                 null);
@@ -85,15 +88,15 @@ public class RegExpTest {
                     .getResolvedConceptReference();
 
                 for (ResolvedConceptReference ref : list) {
-                    System.out.println(cnt + ") " + getConceptInfo(ref));
+                    _logger.debug(cnt + ") " + getConceptInfo(ref));
                     cnt++;
                 }
             } catch (Exception ex) {
-                System.out.println("Exception thrown #2");
+                _logger.debug("Exception thrown #2");
             }
             if (cnt == 0)
-                System.out.println("No match.");
-            System.out.println("");
+                _logger.debug("No match.");
+            _logger.debug("");
         }
     }
 

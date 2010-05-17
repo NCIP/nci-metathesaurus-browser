@@ -6,10 +6,12 @@ import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
 import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
+import org.apache.log4j.Logger;
 
 import gov.nih.nci.evs.browser.utils.*;
 
 public class ResolveConceptIteratorTest {
+    private static Logger _logger = Logger.getLogger(ResolveConceptIteratorTest.class);
     private final String SEPARATOR = 
         "---------------------------------------------------------------------";
     private String _codingSchemeName = "NCI MetaThesaurus"; // "NCI Thesaurus"
@@ -21,16 +23,16 @@ public class ResolveConceptIteratorTest {
     
     private void printConcepts(ResolvedConceptReference[] refs, int offset) {
         for (int i=0; i < refs.length; ++i)
-            System.out.println((i+offset) + ") " + getConceptInfo(refs[i]));
+            _logger.debug((i+offset) + ") " + getConceptInfo(refs[i]));
     }
     
     private ResolvedConceptReferencesIterator search(String matchText, 
         String algorithm, boolean ranking) throws Exception {
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
-        System.out.println(SEPARATOR);
-        System.out.println("* matchText: " + matchText);
-        System.out.println("* algorithm: " + algorithm);
-        System.out.println("* ranking: " + ranking);
+        _logger.debug(SEPARATOR);
+        _logger.debug("* matchText: " + matchText);
+        _logger.debug("* algorithm: " + algorithm);
+        _logger.debug("* ranking: " + ranking);
 
         CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
         CodedNodeSet cns = lbs.getNodeSet(_codingSchemeName, versionOrTag,
@@ -43,20 +45,20 @@ public class ResolveConceptIteratorTest {
         SortOptionList sortCriteria = null;
 
         if (ranking) {
-            System.out.println("* Sort by Lucene score...");
+            _logger.debug("* Sort by Lucene score...");
             sortCriteria = Constructors
                 .createSortOptionList(new String[] { "matchToQuery" });
         } else {
-            System.out.println("* Sort alphabetically...");
+            _logger.debug("* Sort alphabetically...");
             sortCriteria = Constructors
                 .createSortOptionList(new String[] { "entityDescription" }); // code
             resolveConcepts = false;
         }
 
-        System.out.println(SEPARATOR);
+        _logger.debug(SEPARATOR);
         ResolvedConceptReferencesIterator iterator = cns.resolve(sortCriteria,
             null, restrictToProperties, null, resolveConcepts);
-        System.out.println("* Search found: " + iterator.numberRemaining());
+        _logger.debug("* Search found: " + iterator.numberRemaining());
         return iterator;
     }
 
@@ -68,21 +70,21 @@ public class ResolveConceptIteratorTest {
         if (n % maxReturn != 0)
             ++loops;
         
-        System.out.println("* n: " + n);
-        System.out.println("* maxReturn: " + maxReturn);
-        System.out.println("* loops: " + loops);
+        _logger.debug("* n: " + n);
+        _logger.debug("* maxReturn: " + maxReturn);
+        _logger.debug("* loops: " + loops);
         
         ResolvedConceptReference[] refs = null;
         int i=0;
         for (; i<loops; ++i) {
             refs = iterator.next(maxReturn).getResolvedConceptReference();
-            System.out.println((i * maxReturn) + ") " + getConceptInfo(refs[0]));
+            _logger.debug((i * maxReturn) + ") " + getConceptInfo(refs[0]));
         }
         
         boolean printLastPage = true;
         if (printLastPage && refs != null && refs.length > 0) {
-            System.out.println(SEPARATOR);
-            System.out.println("* Print last page:");
+            _logger.debug(SEPARATOR);
+            _logger.debug("* Print last page:");
             printConcepts(refs, (i-1) * maxReturn);
         }
     }

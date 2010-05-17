@@ -3,9 +3,12 @@ package gov.nih.nci.evs.browser.test;
 import java.util.*;
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.evs.browser.utils.*;
 
 public class Test1 {
+    private static Logger _logger = Logger.getLogger(Test1.class);
     private LexBIGService evsService = null;
     private ResolvedConceptReferenceList concepts = null;
     
@@ -14,7 +17,7 @@ public class Test1 {
     }
     
     private void debug(String text) {
-        System.out.println("Debug: " + text);
+        _logger.debug("Debug: " + text);
     }
     
     private void process() {
