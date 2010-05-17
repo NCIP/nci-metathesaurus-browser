@@ -66,9 +66,10 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
 import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
+import org.apache.log4j.Logger;
 
 public class MetadataUtils {
-
+    private static Logger _logger = Logger.getLogger(MetadataUtils.class);
 	private static final String SOURCE_ABBREVIATION = "rsab";
 	private static final String SOURCE_DESCRIPTION = "son";
 
@@ -262,7 +263,7 @@ public class MetadataUtils {
         String urn, String propertyName) {
         Vector v = getMetadataValues(codingSchemeName, version, urn, propertyName);
         if (v == null) {
-			System.out.println("getMetadataValue returns null??? " + codingSchemeName);
+			_logger.warn("getMetadataValue returns null??? " + codingSchemeName);
             //return "";
             return null;
 		}
@@ -375,7 +376,7 @@ public class MetadataUtils {
     public static void initialize() {
 		if (SAB2FormalNameHashMap != null) return;
 
-		System.out.println("MetadatUtils.initialize ...");
+		_logger.info("initialize ...");
 		SAB2FormalNameHashMap = new HashMap();
 		localname2FormalnameHashMap = new HashMap();
 		boolean includeInactive = false;
@@ -388,14 +389,14 @@ public class MetadataUtils {
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
 			if (lbSvc == null) {
-				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+				_logger.warn("Unable to connect to instantiate LexBIGService ???");
 			}
             CodingSchemeRenderingList csrl = null;
             try {
 				csrl = lbSvc.getSupportedCodingSchemes();
 			} catch (LBInvocationException ex) {
 				ex.printStackTrace();
-				System.out.println("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
+				_logger.error("lbSvc.getSupportedCodingSchemes() FAILED..." + ex.getCause() );
                 return;
 			}
 
@@ -409,11 +410,11 @@ public class MetadataUtils {
 				String css_local_name = css.getLocalName();
 				Boolean isActive = null;
 				if (csr == null) {
-					System.out.println("\tcsr == null???");
+					_logger.warn("\tcsr == null???");
 				} else if (csr.getRenderingDetail() == null) {
-					System.out.println("\tcsr.getRenderingDetail() == null");
+				    _logger.warn("\tcsr.getRenderingDetail() == null");
 				} else if (csr.getRenderingDetail().getVersionStatus() == null) {
-					System.out.println("\tcsr.getRenderingDetail().getVersionStatus() == null");
+				    _logger.warn("\tcsr.getRenderingDetail().getVersionStatus() == null");
 				} else {
 					isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
 				}
@@ -437,7 +438,7 @@ public class MetadataUtils {
 										metadataProperties.add(nv.getName() + "|" + nv.getContent());
 									}
 									vocabulary_count++;
-									System.out.println("(" + vocabulary_count + ") " + formalname);
+									_logger.info("(" + vocabulary_count + ") " + formalname);
 									formalName2MetadataHashMap.put(formalname, metadataProperties);
 								}
 
@@ -445,7 +446,7 @@ public class MetadataUtils {
 								boolean contains_css_local_name = false;
 								for (int m=0; m<localnames.length; m++) {
 									String localname = localnames[m];
-									System.out.println("\tlocal name: " + localname);
+									_logger.info("\tlocal name: " + localname);
 									localname2FormalnameHashMap.put(localname, formalname);
 									if (localname.compareTo(css_local_name) == 0) {
 										contains_css_local_name = true;
@@ -453,19 +454,19 @@ public class MetadataUtils {
 								}
 								localname2FormalnameHashMap.put(formalname, formalname);
 								if (!contains_css_local_name) {
-									System.out.println("\tlocal name: " + css_local_name);
+									_logger.info("\tlocal name: " + css_local_name);
 									localname2FormalnameHashMap.put(css_local_name, formalname);
 								}
 						    }
-							System.out.println("\n");
 						} catch (Exception ex) {
-							System.out.println("\tWARNING: Unable to resolve coding scheme " + formalname + " possibly due to missing security token.");
-							System.out.println("\t\tAccess to " + formalname + " denied.");
+							_logger.warn("\tUnable to resolve coding scheme " + formalname + " possibly due to missing security token.");
+							_logger.warn("\t\tAccess to " + formalname + " denied.");
 						}
 				} else {
-					System.out.println("\tWARNING: setCodingSchemeMap discards " + formalname);
-					System.out.println("\t\trepresentsVersion " + representsVersion);
+				    _logger.warn("\tWARNING: setCodingSchemeMap discards " + formalname);
+				    _logger.warn("\t\trepresentsVersion " + representsVersion);
 				}
+                _logger.info("\n");
 			}
 	    } catch (Exception e) {
 			e.printStackTrace();
@@ -594,25 +595,16 @@ public class MetadataUtils {
 		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(serviceUrl);
 
 		if (lbSvc == null) {
-			System.out.println("Unable to connect to " + serviceUrl);
+			_logger.info("Unable to connect to " + serviceUrl);
 			System.exit(1);
 		} else {
-			System.out.println("Connected to " + serviceUrl);
+			_logger.info("Connected to " + serviceUrl);
 		}
 
         Vector v = test.getMetadataForCodingSchemes();
         for (int i=0; i<v.size(); i++) {
 			String t = (String) v.elementAt(i);
-			System.out.println(t);
+			_logger.info(t);
 		}
-
     }
 }
-
-
-
-
-
-
-
-

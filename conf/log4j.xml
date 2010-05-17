@@ -4,10 +4,11 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-        <param name="Target" value="System.out" />
+        <param name="Threshold" value="DEBUG" />
+        <param name="Append" value="false"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                value="%-5p %c{1} - %m%n" />
+                value="%-5p [%c{1}:%L] %m%n" />
         </layout>
     </appender>
 
@@ -42,7 +43,7 @@
     </logger>
 
     <logger name="gov.nih.nci.evs.browser">
-        <level value="info" />
+        <level value="debug" />
     </logger>
 
     <logger name="org.springframework">
