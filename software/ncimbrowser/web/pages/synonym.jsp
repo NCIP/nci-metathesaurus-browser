@@ -44,7 +44,11 @@
       src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
-
+  <%!
+      private static org.apache.log4j.Logger _logger = 
+          org.apache.log4j.Logger.getLogger(
+          "gov.nih.nci.evs.browser.web.synonym_jsp");
+  %>     
   <f:view>
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -61,10 +65,10 @@
             String code = c.getEntityCode();
             String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));
 
-System.out.println("Sortby: " + sort_by);
+_logger.debug("Sortby: " + sort_by);
 
             if (sort_by == null) {
-System.out.println("set Sortby to: " + sort_by);
+_logger.debug("set Sortby to: " + sort_by);
                 sort_by = "name";
             }
             //request.getSession().setAttribute("sortBy", sortBy);

@@ -62,7 +62,11 @@
           + "&rela="+ rel_search_rela;
     }
   </script>
-
+  <%!
+      private static org.apache.log4j.Logger _logger = 
+          org.apache.log4j.Logger.getLogger(
+          "gov.nih.nci.evs.browser.web.advanced_search_jsp");
+  %>        
   <f:view>
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -127,12 +131,12 @@
             rel_search_association = bean.getSelectedAssociation();
             rel_search_rela = bean.getSelectedRELA();
 
-            System.out.println("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
-            System.out.println("advanced_search.jsp adv_search_source: " + adv_search_source);
-            System.out.println("advanced_search.jsp selectProperty: " + selectProperty);
-            System.out.println("advanced_search.jsp search_string: " + search_string);
-            System.out.println("advanced_search.jsp rel_search_association: " + rel_search_association);
-            System.out.println("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+            _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
+            _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
+            _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
+            _logger.debug("advanced_search.jsp search_string: " + search_string);
+            _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
+            _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
     }
@@ -359,7 +363,7 @@
                             Vector rela_vec = OntologyBean.getRELAs();
                             for (int i=0; i<rela_vec.size(); i++) {
                               t = (String) rela_vec.elementAt(i);
-                              //System.out.println("rela: " + t);
+                              //_logger.debug("rela: " + t);
                               if (t.compareTo(rel_search_rela) == 0) {
                           %>
                                 <option value="<%=t%>" selected><%=t%></option>

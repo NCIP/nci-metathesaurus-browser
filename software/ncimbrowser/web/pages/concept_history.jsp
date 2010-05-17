@@ -19,6 +19,11 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+  <%!
+      private static org.apache.log4j.Logger _logger = 
+          org.apache.log4j.Logger.getLogger(
+          "gov.nih.nci.evs.browser.web.concept_history_jsp");
+  %>
   <%
     String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
     code = HTTPUtils.cleanXSS(code);
@@ -26,7 +31,7 @@
     String dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
     dictionary = HTTPUtils.cleanXSS(dictionary);
 
-System.out.println("concept_history.jsp " + dictionary);
+_logger.debug("concept_history.jsp " + dictionary);
 
     String vers = null;
     String ltag = null;
@@ -54,7 +59,7 @@ System.out.println("concept_history.jsp " + dictionary);
     } else {
       Vector rows = HistoryUtils.getEditActions(dictionary, vers, ltag, code);
 
-System.out.println("concept_history.jsp rows " + rows.size());
+_logger.debug("concept_history.jsp rows " + rows.size());
 
 
       String concept_name = concept.getEntityDescription().getContent();
