@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * @author garciawa2 AccessLog class
  */
 public class SearchLog {
-
+    private static Logger _logger = Logger.getLogger(SearchLog.class);
     static Logger logger = null;
     public static final char SEPARATOR = '|';
     public static final String UK = "Unknown";
@@ -50,7 +50,7 @@ public class SearchLog {
         if (logger != null) {
             logger = null;
         }
-        System.out.println("Search log is shutdown.");
+        _logger.debug("Search log is shutdown.");
     }
 
     /**
