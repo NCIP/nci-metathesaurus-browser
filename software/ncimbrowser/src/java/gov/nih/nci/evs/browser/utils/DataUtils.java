@@ -782,8 +782,7 @@ public class DataUtils {
 					associations = lbscm.getHierarchyLevelNext(scheme, csvt,
 							hierarchyID, code, false, null);
 				} catch (Exception e) {
-					System.out
-							.println("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
+					_logger.error("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
 					return v;
 				}
 
@@ -1180,8 +1179,7 @@ public class DataUtils {
 								}
 							}
 						} else {
-							System.out
-									.println("*** SOURCE NOT FOUND IN qualifiers neither. ");
+							_logger.warn("*** SOURCE NOT FOUND IN qualifiers neither. ");
 						}
 					}
 				}
@@ -2235,8 +2233,7 @@ public class DataUtils {
 											lbscm, codingSchemeName,
 											versionOrTag, assoc, navigatedFwd);
 								} catch (Exception e) {
-									Debug
-											.println("(*) getDirectionalLabel throws exceptions: "
+									Debug.println("(*) getDirectionalLabel throws exceptions: "
 													+ directionalLabel);
 								}
 
@@ -2308,8 +2305,7 @@ public class DataUtils {
 										// "   directionalLabel: " +
 										// directionalLabel);
 									} catch (Exception e) {
-										Debug
-												.println("(**) getDirectionalLabel throws exceptions: "
+										Debug.println("(**) getDirectionalLabel throws exceptions: "
 														+ directionalLabel);
 									}
 
