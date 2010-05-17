@@ -70,8 +70,8 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 */
 
-public class SearchStatusBean extends Object
-{
+public class SearchStatusBean extends Object {
+    private static Logger _logger = Logger.getLogger(SearchStatusBean.class);
 	public SearchStatusBean() {
 
 	}
@@ -109,7 +109,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("searchOptionChanged to " + newValue);
+        _logger.debug("searchOptionChanged to " + newValue);
         setSelectedSearchOption(newValue);
         HttpServletRequest request = HTTPUtils.getRequest();
 
@@ -162,7 +162,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedPropertyChanged to " + newValue);
+        _logger.debug("selectedPropertyChanged to " + newValue);
         setSelectedProperty(newValue);
     }
 
@@ -194,7 +194,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedSourceChanged to " + newValue);
+        _logger.debug("selectedSourceChanged to " + newValue);
         setSelectedSource(newValue);
     }
 
@@ -225,7 +225,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedPropertyTypeChanged to " + newValue);
+        _logger.debug("selectedPropertyTypeChanged to " + newValue);
         setSelectedPropertyType(newValue);
     }
 
@@ -256,7 +256,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedAssociationChanged to " + newValue);
+        _logger.debug("selectedAssociationChanged to " + newValue);
         setSelectedAssociation(newValue);
     }
 
@@ -288,7 +288,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedRelationshipChanged to " + newValue);
+        _logger.debug("selectedRelationshipChanged to " + newValue);
         setSelectedRelationship(newValue);
     }
 
@@ -319,7 +319,7 @@ public class SearchStatusBean extends Object
         if (event.getNewValue() == null) return;
         String newValue = (String) event.getNewValue();
 
-        System.out.println("selectedRELAChanged to " + newValue);
+        _logger.debug("selectedRELAChanged to " + newValue);
         setSelectedRELA(newValue);
     }
 
@@ -339,7 +339,7 @@ public class SearchStatusBean extends Object
         request.getSession().setAttribute("matchText", t);
 		this.matchText = t;
 
-		System.out.println("Set matchText to: " + t);
+		_logger.debug("Set matchText to: " + t);
 	}
 
 

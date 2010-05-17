@@ -8,6 +8,7 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.apache.log4j.Logger;
 
 //import gov.nih.nci.evs.browser.utils.RemoteServerUtil;
 import gov.nih.nci.evs.browser.utils.*;
@@ -48,7 +49,7 @@ import gov.nih.nci.evs.browser.common.Constants;
  */
 
 public class LicenseBean extends Object {
-
+    private static Logger _logger = Logger.getLogger(LicenseBean.class);
     HashSet licenseAgreementHashSet = null;
 
     public LicenseBean() {
@@ -56,7 +57,7 @@ public class LicenseBean extends Object {
     }
 
     public void addLicenseAgreement(String scheme) {
-		//System.out.println("LicenseBean addLicenseAgreement " +  scheme);
+		//_logger.debug("LicenseBean addLicenseAgreement " +  scheme);
 		licenseAgreementHashSet.add(scheme);
 		String formalName = MetadataUtils.getFormalName(scheme);
 
@@ -73,7 +74,7 @@ public class LicenseBean extends Object {
 		*/
 
 		boolean retval = licenseAgreementHashSet.contains(scheme);
-		//System.out.println("licenseAgreementAccepted " + scheme + ": " + retval);
+		//_logger.debug("licenseAgreementAccepted " + scheme + ": " + retval);
 		return (retval);
 	}
 
