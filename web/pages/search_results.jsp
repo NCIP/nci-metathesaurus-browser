@@ -35,6 +35,11 @@
       src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
+  <%!
+      private static org.apache.log4j.Logger _logger = 
+          org.apache.log4j.Logger.getLogger(
+          "gov.nih.nci.evs.browser.web.search_results_jsp");
+  %>
 
 <f:view>
   <%@ include file="/pages/include/header.jsp" %>
@@ -61,7 +66,7 @@ IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.get
     .getSessionMap().get("iteratorBeanManager");
 
 if (iteratorBeanManager == null) {
-    System.out.println("iteratorBeanManager == null???");
+    _logger.warn("iteratorBeanManager == null???");
     iteratorBeanManager = new IteratorBeanManager();
     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBeanManager", iteratorBeanManager);
 }
@@ -77,7 +82,7 @@ if (randomKey != null) {
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
 
 	  if (iteratorBean == null) {
-	      System.out.println("iteratorBean NOT FOUND???" + key);  
+	      _logger.warn("iteratorBean NOT FOUND???" + key);  
 	  } else {
 	      matchText = iteratorBean.getMatchText();
 	      //KLO
@@ -216,7 +221,7 @@ if (randomKey != null) {
 
         <%
         long pageRenderingDelay = System.currentTimeMillis() - ms - iterator_delay;
-        System.out.println("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator next call delay.)");
+        _logger.debug("Page rendering Run time (ms): " + pageRenderingDelay + " (excluding iterator next call delay.)");
         %>
 
       </div>
