@@ -39,6 +39,7 @@ import org.LexGrid.commonTypes.PropertyQualifier;
 import org.LexGrid.commonTypes.Source;
 import org.LexGrid.concepts.Presentation;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 
 
@@ -72,6 +73,7 @@ import org.LexGrid.lexevs.metabrowser.model.BySourceTabResults;
 
 
 public class MetaTreeUtils {
+    private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
     static String[] hierAssocToParentNodes_ = new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
     static String[] hierAssociationToParentNodes_ = new String[] { "PAR" };
@@ -245,7 +247,7 @@ public class MetaTreeUtils {
 	 * @param ac
 	 */
 	protected void displayRoot(AssociatedConcept ac){
-		System.out.println(ac.getCode() + " - " + ac.getEntityDescription().getContent());
+		_logger.debug(ac.getCode() + " - " + ac.getEntityDescription().getContent());
 	}
 
 	/**
@@ -313,11 +315,11 @@ public class MetaTreeUtils {
     // Tree
     /////////////////////
     private static void Util_displayMessage(String s) {
-		System.out.println(s);
+		_logger.debug(s);
 	}
 
     private static void Util_displayAndLogError(String s, Exception e) {
-		System.out.println(s);
+		_logger.debug(s);
 	}
 
 
@@ -375,7 +377,7 @@ public class MetaTreeUtils {
 			//ti.expandable = true;
 
         } finally {
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+            _logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
         }
         printTree(ti, cui, 0);
@@ -412,7 +414,7 @@ public class MetaTreeUtils {
 
 		HashMap map = getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
 
-System.out.println("Run time (milliseconds) getTreePathData: " + (System.currentTimeMillis() - ms) );
+		_logger.debug("Run time (milliseconds) getTreePathData: " + (System.currentTimeMillis() - ms) );
 
 		return map;
 
@@ -438,7 +440,7 @@ System.out.println("Run time (milliseconds) getTreePathData: " + (System.current
             Util_displayMessage("Unable to resolve a concept for CUI = '" + cui + "'");
             return null;
         } else {
-System.out.println("getTreePathData " + rcr.getEntityDescription().getContent());
+_logger.debug("getTreePathData " + rcr.getEntityDescription().getContent());
 		}
 
         // Dummy root (place holder)
@@ -455,7 +457,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 			ti.expandable = true;
 
         } finally {
-            System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+            _logger.debug("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
         }
 
@@ -505,7 +507,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 			ti.expandable = true;
 
         } finally {
-            System.out.println("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
+            _logger.debug("MetaTreeUtils Run time (milliseconds): " + (System.currentTimeMillis() - ms) + " to resolve "
                     + pathsResolved + " paths from root.");
         }
 
@@ -868,7 +870,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
                     && sab.equalsIgnoreCase(qualifier.getContent()))
                 return true;
 		}
-		//System.out.println("(*) isValidForSAB returns false " + ac.getEntityDescription().getContent());
+		//_logger.debug("(*) isValidForSAB returns false " + ac.getEntityDescription().getContent());
         return false;
         */
         return true;
@@ -927,7 +929,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 		int knt = 0;
 		HashSet hset = new HashSet();
 		for(String rel : map.keySet()){
-			//System.out.println("(***) rel: " + rel);
+			//_logger.debug("(***) rel: " + rel);
 			List<BySourceTabResults> relations = map.get(rel);
 			for(BySourceTabResults result : relations) {
 				String code = result.getCui();
@@ -935,7 +937,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 					hset.add(code);
 				}
 				String name = result.getTerm();
-				//System.out.println("(***) subconcept: " + name + " " + code);
+				//_logger.debug("(***) subconcept: " + name + " " + code);
 				knt++;
 			}
 		}
@@ -965,7 +967,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 		}
 
 		for(String rel : map.keySet()){
-			//System.out.println("(***) rel: " + rel);
+			//_logger.debug("(***) rel: " + rel);
 			List<BySourceTabResults> relations = map.get(rel);
 			for(BySourceTabResults result : relations) {
 				String code = result.getCui();
@@ -1101,7 +1103,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		_logger.debug("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
 		*/
 		return getSubconcepts(code, sab, "CHD", associationsNavigatedFwd);
@@ -1167,7 +1169,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 
 		hmap.put(code, ti);
 
-		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		_logger.debug("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
     }
 
@@ -1246,10 +1248,10 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 			indent = indent + "\t";
 		}
 
-		System.out.println(indent + ti.text + " (" + ti.code + ")");
+		_logger.debug(indent + ti.text + " (" + ti.code + ")");
         try {
             for (String association : ti.assocToChildMap.keySet()) {
-				System.out.println("\n" + indent + " --- " + association);
+				_logger.debug("\n" + indent + " --- " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
 
                 for (TreeItem childItem : children) {
@@ -1258,7 +1260,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("\tdumpTreeItem throws exception.");
+            _logger.error("\tdumpTreeItem throws exception.");
         }
     }
 
@@ -1272,19 +1274,19 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
-				System.out.println("\n--- " + association);
+				_logger.debug("\n--- " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
 
                 for (TreeItem childItem : children) {
-                    //System.out.println(childItem.text + "(" + childItem.code + ")");
+                    //_logger.debug(childItem.text + "(" + childItem.code + ")");
                     /*
                     int knt = 0;
                     if (childItem.expandable)
                     {
                         knt = 1;
-                        System.out.println("\tnode.expandable");
+                        _logger.debug("\tnode.expandable");
                     } else {
-						System.out.println("\tnode.NOT expandable");
+						_logger.debug("\tnode.NOT expandable");
 					}
 					*/
 					dumpTreeItem(childItem, 0);
@@ -1316,21 +1318,21 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 		} catch (Exception ex) {
 			name = "Unknown";
 		}
-        System.out.println("Coding scheme: " + scheme);
-        System.out.println("code: " + code);
-        System.out.println("name: " + name);
+        _logger.debug("Coding scheme: " + scheme);
+        _logger.debug("code: " + code);
+        _logger.debug("name: " + name);
 
 		String sab = "NCI";
 		//boolean associationsNavigatedFwd = true;
 
 		Long startTime = System.currentTimeMillis();
 		HashMap hmap1 = getSubconcepts(scheme, version, code, sab, true);
-		System.out.println("Call getSubconcepts true took: " + (System.currentTimeMillis() - startTime) + "ms");
+		_logger.debug("Call getSubconcepts true took: " + (System.currentTimeMillis() - startTime) + "ms");
 		dumpTreeItems(hmap1);
 
 		startTime = System.currentTimeMillis();
 		HashMap hmap2 = getSubconcepts(scheme, version, code, sab, false);
-		System.out.println("Call getSubconcepts false took: " + (System.currentTimeMillis() - startTime) + "ms");
+		_logger.debug("Call getSubconcepts false took: " + (System.currentTimeMillis() - startTime) + "ms");
 		dumpTreeItems(hmap2);
 
 	}
@@ -1459,7 +1461,7 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		_logger.debug("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
 	}
 
@@ -1840,15 +1842,15 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
             String code = (String) objs[0];
             TreeItem ti = (TreeItem) hmap.get(code);
             for (String association : ti.assocToChildMap.keySet()) {
-				System.out.println("\nassociation: " + association);
+				_logger.debug("\nassociation: " + association);
                 List<TreeItem> children = ti.assocToChildMap.get(association);
                 for (TreeItem childItem : children) {
-                    System.out.println(childItem.text + "(" + childItem.code + ")");
+                    _logger.debug(childItem.text + "(" + childItem.code + ")");
                     int knt = 0;
                     if (childItem.expandable)
                     {
                         knt = 1;
-                        System.out.println("\tnode.expandable");
+                        _logger.debug("\tnode.expandable");
 
                         printTree(childItem, focusCode, level);
 
@@ -1868,10 +1870,10 @@ System.out.println("getTreePathData " + rcr.getEntityDescription().getContent())
 								  nd_code = node.getEntityCode();
 								  nd_name = node.getEntityDescription().getContent();
 							  }
-							  System.out.println("TOP NODE: " + nd_name + " (" + nd_code + ")" );
+							  _logger.debug("TOP NODE: " + nd_name + " (" + nd_code + ")" );
 						}
                     } else {
-						System.out.println("\tnode.NOT expandable");
+						_logger.debug("\tnode.NOT expandable");
 					}
                 }
             }
@@ -1914,7 +1916,7 @@ KLO, 020210
 		Iterator iterator = keyset.iterator();
 		while (iterator.hasNext()) {
 			String child_cui = (String) iterator.next();
-			//System.out.println("\tchild_cui: " + child_cui);
+			//_logger.debug("\tchild_cui: " + child_cui);
 			TreeItem sub = null;
 			if (code2Tree.containsKey(child_cui)) {
 				sub = (TreeItem) code2Tree.get(child_cui);
@@ -1939,7 +1941,7 @@ KLO, 020210
 		Iterator iterator = keyset.iterator();
 		while (iterator.hasNext()) {
 			String child_cui = (String) iterator.next();
-			//System.out.println("\tchild_cui: " + child_cui);
+			//_logger.debug("\tchild_cui: " + child_cui);
 			TreeItem sub = null;
 			if (code2Tree.containsKey(child_cui)) {
 				sub = (TreeItem) code2Tree.get(child_cui);

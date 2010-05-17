@@ -1,10 +1,13 @@
 package gov.nih.nci.evs.browser.utils;
 
+import org.apache.log4j.Logger;
+
 /**
- * This class allows us to turn off System.out.println message at
+ * This class allows us to turn off logger message at
  * various places to help with the Performance testing.
  */
 public class Debug {
+    private static Logger _logger = Logger.getLogger(Debug.class);
     private static boolean _display = true;
     
     public static void setDisplay(boolean display) {
@@ -17,6 +20,6 @@ public class Debug {
 
     public static void println(String text) {
         if (_display)
-            System.out.println(text);
+            _logger.debug(text);
     }
 }

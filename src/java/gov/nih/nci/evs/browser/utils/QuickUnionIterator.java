@@ -18,6 +18,7 @@ import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.apache.log4j.Logger;
 
 /**
  * The Class QuickUnionIterator. Provides Union-like resolving of CodedNodeSets
@@ -25,7 +26,8 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
  * have been placed on the CodedNodeSets BEFORE being passed into this Iterator.
  */
 public class QuickUnionIterator implements ResolvedConceptReferencesIterator{
-
+    private static Logger _logger = Logger.getLogger(QuickUnionIterator.class);
+    
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6285970594380754741L;
 
@@ -65,7 +67,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator{
 						iterators.add(iterator);
 					}
 				} catch (Exception ex) {
-					System.out.println("QuickUnionIterator constructor - cns.resolve throws exception???");
+					_logger.error("QuickUnionIterator constructor - cns.resolve throws exception???");
 				}
 		    }
 		}

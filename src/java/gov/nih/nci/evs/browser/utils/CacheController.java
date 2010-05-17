@@ -84,11 +84,13 @@ import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.ExpandedState;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
 public class CacheController
 {
+  private static Logger _logger = Logger.getLogger(CacheController.class);
   public static final String ONTOLOGY_ADMINISTRATORS = "ontology_administrators";
   public static final String ONTOLOGY_FILE = "ontology_file";
   public static final String ONTOLOGY_FILE_ID = "ontology_file_id";
@@ -190,7 +192,7 @@ public class CacheController
         }
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getSubconcepts..." );
+            _logger.debug("Not in cache -- calling getSubconcepts..." );
 			map = new MetaTreeUtils().getRemainingSubconcepts(scheme, version, code, NCI_SOURCE, null);
 
             nodeArray = HashMap2JSONArray(map);
@@ -241,7 +243,7 @@ public class CacheController
 
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getHierarchyRoots " );
+            _logger.debug("Not in cache -- calling getHierarchyRoots " );
             try {
                 //list = new DataUtils().getHierarchyRoots(scheme, version, null);
                 String tag = null;
@@ -287,7 +289,7 @@ public class CacheController
         }
         if (nodeArray == null)
         {
-            //System.out.println("Not in cache -- calling getSubconceptsBySource..." );
+            //_logger.debug("Not in cache -- calling getSubconceptsBySource..." );
             //KLO, 041210
 			//map = new SourceTreeUtils().getSubconcepts(scheme, version, code, sab);
 			map = getChildrenExt(code, sab);
@@ -328,7 +330,7 @@ public class CacheController
 
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getSourceHierarchyRoots " );
+            _logger.debug("Not in cache -- calling getSourceHierarchyRoots " );
             try {
                 String tag = null;
                 CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
@@ -623,7 +625,7 @@ public class CacheController
 			//code: parent CUI|SAB|n
 			hmap = getRemainingSubconcepts(CUI, SAB, nodes_to_exclude_str, batch_number);
 		} else {
-			System.out.println("WARNING: getRemainingSubconcepts invalid input string: " + s);
+			_logger.warn("WARNING: getRemainingSubconcepts invalid input string: " + s);
 		}
 
 		if (hmap == null) return null;
@@ -892,7 +894,7 @@ public class CacheController
 
         if (nodeArray == null)
         {
-            System.out.println("Not in cache -- calling getHierarchyRoots " );
+            _logger.debug("Not in cache -- calling getHierarchyRoots " );
             try {
                 nodeArray = getPathsToRoots(scheme, version, code, true);
                 element = new Element(key, nodeArray);

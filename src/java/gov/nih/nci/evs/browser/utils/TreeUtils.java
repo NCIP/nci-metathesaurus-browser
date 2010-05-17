@@ -65,6 +65,7 @@ import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.commonTypes.EntityDescription;
 import org.LexGrid.naming.SupportedHierarchy;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.LexGrid.naming.Mappings;
 import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
@@ -94,6 +95,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
  * assumed.
  */
 public class TreeUtils {
+    private static Logger _logger = Logger.getLogger(TreeUtils.class);
     LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
 
     public TreeUtils() {
@@ -172,7 +174,7 @@ public class TreeUtils {
             }
 
         } finally {
-            System.out.println("Run time (milliseconds): " + (System.currentTimeMillis() - ms) +
+            _logger.debug("Run time (milliseconds): " + (System.currentTimeMillis() - ms) +
                 " to resolve " + pathsResolved + " paths from root.");
         }
 
@@ -343,11 +345,11 @@ public class TreeUtils {
             .append(ti.code).append(':')
             .append(ti.text.length() > 64 ? ti.text.substring(0, 62) + "..." : ti.text)
             .append(ti.expandable ? " [+]" : "");
-        System.out.println(codeAndText.toString());
+        _logger.debug(codeAndText.toString());
 
         indent.append("| ");
         for (String association : ti.assocToChildMap.keySet()) {
-            System.out.println(indent.toString() + association);
+            _logger.debug(indent.toString() + association);
             List<TreeItem> children = ti.assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children)
@@ -565,7 +567,7 @@ public class TreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
+		_logger.debug("Run time (milliseconds) getSubconcepts: " + (System.currentTimeMillis() - ms) + " to resolve " );
 		return hmap;
     }
 
@@ -601,7 +603,7 @@ public class TreeUtils {
 			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 			if (lbSvc == null)
 			{
-				System.out.println("lbSvc == null???");
+				_logger.warn("lbSvc == null???");
 				return null;
 			}
 
@@ -625,7 +627,7 @@ public class TreeUtils {
 
 			if (matches == null)
 			{
-				System.out.println("Concep not found.");
+				_logger.warn("Concept not found.");
 				return null;
 			}
 
@@ -751,7 +753,7 @@ public class TreeUtils {
 				{
 					if (!association_vec.contains(ids[i])) {
 						association_vec.add(ids[i]);
-						//System.out.println(ids[i]);
+						//_logger.debug(ids[i]);
 					}
 				}
 		    }
@@ -798,7 +800,7 @@ public class TreeUtils {
 				EntityDescription entityDescription = new EntityDescription();
 				entityDescription.setContent(ti.text);
 				rcr.setEntityDescription(entityDescription);
-				//System.out.println("Root: " + ti.text);
+				//_logger.debug("Root: " + ti.text);
 				list.add(rcr);
 		    }
 		}
