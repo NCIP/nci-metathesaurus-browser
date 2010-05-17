@@ -51,12 +51,12 @@ import gov.nih.nci.evs.browser.utils.*;
 
 public class BeanUtils {
     public static IteratorBeanManager getIteratorBeanManager() {
-        return (IteratorBeanManager) HTTPUtils.getBean("iteratorBeanManager", 
+        return (IteratorBeanManager) HTTPUtils.getBean("iteratorBeanManager",
             "gov.nih.nci.evs.browser.bean.IteratorBeanManager");
     }
 
     public static SearchStatusBean getSearchStatusBean() {
-        return (SearchStatusBean) HTTPUtils.getBean("searchStatusBean", 
+        return (SearchStatusBean) HTTPUtils.getBean("searchStatusBean",
             "gov.nih.nci.evs.browser.bean.SearchStatusBean");
     }
 }
