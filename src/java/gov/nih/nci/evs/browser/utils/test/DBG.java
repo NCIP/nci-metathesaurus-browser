@@ -4,7 +4,10 @@ import gov.nih.nci.evs.browser.utils.*;
 
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 public class DBG {
+    private static Logger _logger = Logger.getLogger(DBG.class);
     private static boolean _isPerformanceTesting = false;
     private static boolean _displayDetails = false;
     private static boolean _displayTabDelimitedFormat = false;
@@ -36,7 +39,7 @@ public class DBG {
 
     public static void debug(String text) {
         if (_isPerformanceTesting)
-            System.out.println(text);
+            _logger.debug(text);
     }
 
     public static void debug(boolean display, String text) {
