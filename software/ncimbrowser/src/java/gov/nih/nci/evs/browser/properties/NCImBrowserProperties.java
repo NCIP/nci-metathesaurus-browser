@@ -42,6 +42,7 @@ import gov.nih.nci.evs.browser.bean.TermGroupRank;
  */
 
 public class NCImBrowserProperties {
+    private static Logger _logger = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static List displayItemList;
 	private static List termGroupRankList;
@@ -76,8 +77,6 @@ public class NCImBrowserProperties {
     public static final String SECURED_VOCABULARIES = "SECURED_VOCABULARIES";
     public static final String SUBCONCEPT_PAGE_SIZE = "SUBCONCEPT_PAGE_SIZE";
 
-
-	private static Logger log = Logger.getLogger(NCImBrowserProperties.class);
 
 	private static NCImBrowserProperties NCImBrowserProperties = null;
 
@@ -140,11 +139,11 @@ public class NCImBrowserProperties {
 
 					service_url = NCImBrowserProperties
 							.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
-					// System.out.println("EVS_SERVICE_URL: " + service_url);
+					// _logger.debug("EVS_SERVICE_URL: " + service_url);
 
 					lg_config_file = NCImBrowserProperties
 							.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
-					// System.out.println("LG_CONFIG_FILE: " + lg_config_file);
+					// _logger.debug("LG_CONFIG_FILE: " + lg_config_file);
 
 					// sort_by_score =
 					// NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
@@ -269,7 +268,7 @@ public class NCImBrowserProperties {
 		String propertyFile = System
 				.getProperty("gov.nih.nci.evs.browser.NCImBrowserProperties");
 
-		log.info("NCImBrowserProperties File Location= " + propertyFile);
+		_logger.info("NCImBrowserProperties File Location= " + propertyFile);
 
 		PropertyFileParser parser = new PropertyFileParser(propertyFile);
 		parser.run();
