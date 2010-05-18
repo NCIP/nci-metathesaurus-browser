@@ -1,10 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ page import="java.util.Vector" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.HistoryUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
-<%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="java.util.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="org.LexGrid.concepts.*" %>
+<%@ page import="org.apache.log4j.*" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%
   String basePath = request.getContextPath();
@@ -20,9 +19,7 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <%!
-      private static org.apache.log4j.Logger _logger = 
-          org.apache.log4j.Logger.getLogger(
-          "gov.nih.nci.evs.browser.web.concept_history_jsp");
+      private static Logger _logger = Utils.getJspLogger("concept_history.jsp");
   %>
   <%
     String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));

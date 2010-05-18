@@ -2,12 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 
-<%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Concept" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
+<%@ page import="java.util.*"%>
+<%@ page import="org.LexGrid.concepts.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.*" %>
+<%@ page import="org.apache.log4j.*" %>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js" ></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js" ></script>
@@ -454,9 +455,7 @@
 </head>
 <body>
   <%!
-      private static org.apache.log4j.Logger _logger = 
-          org.apache.log4j.Logger.getLogger(
-          "gov.nih.nci.evs.browser.web.source_hierarchy_jsp");
+      private static Logger _logger = Utils.getJspLogger("source_hierarchy.jsp");
   %>     
   <f:view>
     <div id="popupContainer">

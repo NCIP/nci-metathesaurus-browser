@@ -26,6 +26,7 @@
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
+<%@ page import="org.apache.log4j.*" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -45,9 +46,7 @@
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <%!
-      private static org.apache.log4j.Logger _logger = 
-          org.apache.log4j.Logger.getLogger(
-          "gov.nih.nci.evs.browser.web.synonym_jsp");
+      private static Logger _logger = Utils.getJspLogger("synonym.jsp");
   %>     
   <f:view>
     <%@ include file="/pages/include/header.jsp" %>
