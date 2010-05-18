@@ -56,9 +56,9 @@ import gov.nih.nci.evs.browser.common.Constants;
 /**
  * @author EVS Team
  * @version 1.0
- * 
+ *
  *          Modification history Initial implementation kim.ong@ngc.com
- * 
+ *
  */
 
 public class UserSessionBean extends Object {
@@ -128,7 +128,7 @@ public class UserSessionBean extends Object {
             bean = new SearchStatusBean();
             request.setAttribute("searchStatusBean", bean);
         }
-
+/*
         String matchText = (String) request.getParameter("matchText");
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
@@ -138,7 +138,7 @@ public class UserSessionBean extends Object {
         }
         matchText = matchText.trim();
         bean.setMatchText(matchText);
-
+*/
         String matchAlgorithm =
             (String) request.getParameter("adv_search_algorithm");
         bean.setAlgorithm(matchAlgorithm);
@@ -167,11 +167,24 @@ public class UserSessionBean extends Object {
 
         String searchTarget = (String) request.getParameter("searchTarget");
 
+
+
+        String matchText = (String) request.getParameter("matchText");
+        if (matchText == null || matchText.length() == 0) {
+            String message = "Please enter a search string.";
+            //request.getSession().setAttribute("message", message);
+            request.setAttribute("message", message);
+            return "message";
+        }
+        matchText = matchText.trim();
+        bean.setMatchText(matchText);
+
         if (NCImBrowserProperties.debugOn) {
             _logger.debug(Utils.SEPARATOR);
             _logger.debug("* criteria: " + matchText);
             _logger.debug("* source: " + source);
         }
+
 
         String scheme = Constants.CODING_SCHEME_NAME;
         Vector schemes = new Vector();
@@ -286,7 +299,7 @@ public class UserSessionBean extends Object {
             /*
              * String rel_search_direction = (String)
              * request.getParameter("rel_search_direction");
-             * 
+             *
              * //boolean direction = false; int search_direction =
              * Constants.SEARCH_BOTH_DIRECTION; if (rel_search_direction != null
              * && rel_search_direction.compareTo("source") == 0) {
