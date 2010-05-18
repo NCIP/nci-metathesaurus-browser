@@ -54,6 +54,14 @@ public class Utils {
             + "----------------------------------------";
     private static DecimalFormat _doubleFormatter = new DecimalFormat("0.00");
 
+    public static Logger getJspLogger(String fileName) {
+        String name = fileName;
+        int i = fileName.lastIndexOf('.');
+        if (i > 0)
+            name = fileName.substring(0, i) + "_" + fileName.substring(i+1);
+        return Logger.getLogger("gov.nih.nci.evs.browser.jsp." + name);
+    }
+    
     public static class StopWatch {
         private long _startMS = 0;
         private long _incrementMS = 0;

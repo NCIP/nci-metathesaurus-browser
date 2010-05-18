@@ -1,20 +1,17 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
-<%@ page import="java.util.Vector"%>
-<%@ page import="java.util.List"%>
-<%@ page import="java.util.HashMap"%>
-<%@ page import="org.LexGrid.concepts.Concept" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
-<%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
+<%@ page import="java.util.*"%>
+<%@ page import="org.LexGrid.concepts.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.properties.*" %>
 
-<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBean" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.IteratorBeanManager" %>
-<%@ page import="javax.faces.context.FacesContext" %>
-<%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.*" %>
+<%@ page import="javax.faces.context.*" %>
+<%@ page import="org.LexGrid.LexBIG.DataModel.Core.*" %>
 
 <%@ page import="java.io.*" %>
-
+<%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -36,9 +33,7 @@
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <%!
-      private static org.apache.log4j.Logger _logger = 
-          org.apache.log4j.Logger.getLogger(
-          "gov.nih.nci.evs.browser.web.search_results_jsp");
+      private static Logger _logger = Utils.getJspLogger("search_results.jsp");
   %>
 
 <f:view>
