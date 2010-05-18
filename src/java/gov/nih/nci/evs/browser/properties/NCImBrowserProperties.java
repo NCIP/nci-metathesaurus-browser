@@ -131,8 +131,7 @@ public class NCImBrowserProperties {
      * 
      * @return single instance of NCImBrowserProperties
      * 
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     public static NCImBrowserProperties getInstance() throws Exception {
         if (NCImBrowserProperties == null) {
