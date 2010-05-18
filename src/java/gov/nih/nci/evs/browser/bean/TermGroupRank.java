@@ -51,43 +51,41 @@ package gov.nih.nci.evs.browser.bean;
  */
 
 public class TermGroupRank {
-
-    private String index;
-    private String source;
-    private String termGroup;
+    private String _index;
+    private String _source;
+    private String _termGroup;
 
     public TermGroupRank() {
-
     }
 
     public TermGroupRank(String index, String source, String termGroup) {
-        this.index = index;
-        this.source = source;
-        this.termGroup = termGroup;
+        _index = index;
+        _source = source;
+        _termGroup = termGroup;
     }
 
     public String getIndex() {
-        return this.index;
+        return _index;
     }
 
     public void setIndex(String index) {
-        this.index = index;
+        _index = index;
     }
 
     public String getSource() {
-        return this.source;
+        return _source;
     }
 
     public void setSource(String source) {
-        this.source = source;
+        _source = source;
     }
 
     public String getTermGroup() {
-        return this.termGroup;
+        return _termGroup;
     }
 
     public void setTermGroup(String termGroup) {
-        this.termGroup = termGroup;
+        _termGroup = termGroup;
     }
 
     public String toString() {

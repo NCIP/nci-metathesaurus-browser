@@ -69,11 +69,11 @@ import org.apache.log4j.*;
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
 
-    private String selectedQuickLink = null;
-    private List quickLinkList = null;
+    private String _selectedQuickLink = null;
+    private List _quickLinkList = null;
 
     public void setSelectedQuickLink(String selectedQuickLink) {
-        this.selectedQuickLink = selectedQuickLink;
+        _selectedQuickLink = selectedQuickLink;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -82,7 +82,7 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedQuickLink() {
-        return this.selectedQuickLink;
+        return _selectedQuickLink;
     }
 
     public void quickLinkChanged(ValueChangeEvent event) {
@@ -98,7 +98,7 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getResponse();
 
         String targetURL = null;// "http://nciterms.nci.nih.gov/";
-        if (selectedQuickLink.compareTo("NCI Terminology Browser") == 0) {
+        if (_selectedQuickLink.compareTo("NCI Terminology Browser") == 0) {
             targetURL = "http://nciterms.nci.nih.gov/";
         }
         try {
@@ -111,12 +111,12 @@ public class UserSessionBean extends Object {
     }
 
     public List getQuickLinkList() {
-        quickLinkList = new ArrayList();
-        quickLinkList.add(new SelectItem("Quick Links"));
-        quickLinkList.add(new SelectItem("NCI Terminology Browser"));
-        quickLinkList.add(new SelectItem("EVS Home"));
-        quickLinkList.add(new SelectItem("NCI Terminology Resources"));
-        return quickLinkList;
+        _quickLinkList = new ArrayList();
+        _quickLinkList.add(new SelectItem("Quick Links"));
+        _quickLinkList.add(new SelectItem("NCI Terminology Browser"));
+        _quickLinkList.add(new SelectItem("EVS Home"));
+        _quickLinkList.add(new SelectItem("NCI Terminology Resources"));
+        return _quickLinkList;
     }
 
     public String advancedSearchAction() {
@@ -1022,39 +1022,39 @@ public class UserSessionBean extends Object {
         return "message";
     }
 
-    private String selectedResultsPerPage = null;
-    private List resultsPerPageList = null;
+    private String _selectedResultsPerPage = null;
+    private List _resultsPerPageList = null;
 
     public List getResultsPerPageList() {
-        resultsPerPageList = new ArrayList();
-        resultsPerPageList.add(new SelectItem("10"));
-        resultsPerPageList.add(new SelectItem("25"));
-        resultsPerPageList.add(new SelectItem("50"));
-        resultsPerPageList.add(new SelectItem("75"));
-        resultsPerPageList.add(new SelectItem("100"));
-        resultsPerPageList.add(new SelectItem("250"));
-        resultsPerPageList.add(new SelectItem("500"));
+        _resultsPerPageList = new ArrayList();
+        _resultsPerPageList.add(new SelectItem("10"));
+        _resultsPerPageList.add(new SelectItem("25"));
+        _resultsPerPageList.add(new SelectItem("50"));
+        _resultsPerPageList.add(new SelectItem("75"));
+        _resultsPerPageList.add(new SelectItem("100"));
+        _resultsPerPageList.add(new SelectItem("250"));
+        _resultsPerPageList.add(new SelectItem("500"));
 
-        selectedResultsPerPage =
-            ((SelectItem) resultsPerPageList.get(2)).getLabel(); // default to
+        _selectedResultsPerPage =
+            ((SelectItem) _resultsPerPageList.get(2)).getLabel(); // default to
         // 50
 
-        for (int i = 0; i < selectedResultsPerPage.length(); i++) {
-            SelectItem item = (SelectItem) resultsPerPageList.get(i);
+        for (int i = 0; i < _selectedResultsPerPage.length(); i++) {
+            SelectItem item = (SelectItem) _resultsPerPageList.get(i);
             String label = item.getLabel();
             int k = Integer.parseInt(label);
             if (k == Constants.DEFAULT_PAGE_SIZE) {
-                selectedResultsPerPage = label;
+                _selectedResultsPerPage = label;
                 break;
             }
         }
-        return resultsPerPageList;
+        return _resultsPerPageList;
     }
 
     public void setSelectedResultsPerPage(String selectedResultsPerPage) {
         if (selectedResultsPerPage == null)
             return;
-        this.selectedResultsPerPage = selectedResultsPerPage;
+        _selectedResultsPerPage = selectedResultsPerPage;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -1070,12 +1070,12 @@ public class UserSessionBean extends Object {
             (String) request.getSession()
                 .getAttribute("selectedResultsPerPage");
         if (s != null) {
-            this.selectedResultsPerPage = s;
+            _selectedResultsPerPage = s;
         } else {
-            this.selectedResultsPerPage = "50";
+            _selectedResultsPerPage = "50";
             request.getSession().setAttribute("selectedResultsPerPage", "50");
         }
-        return this.selectedResultsPerPage;
+        return _selectedResultsPerPage;
     }
 
     public void resultsPerPageChanged(ValueChangeEvent event) {
@@ -1093,16 +1093,16 @@ public class UserSessionBean extends Object {
         return "";
     }
 
-    private String selectedAlgorithm = null;
-    private List algorithmList = null;
+    private String _selectedAlgorithm = null;
+    private List _algorithmList = null;
 
     public List getAlgorithmList() {
-        algorithmList = new ArrayList();
-        algorithmList.add(new SelectItem("exactMatch", "exactMatch"));
-        algorithmList.add(new SelectItem("startsWith", "Begins With"));
-        algorithmList.add(new SelectItem("contains", "Contains"));
-        selectedAlgorithm = ((SelectItem) algorithmList.get(0)).getLabel();
-        return algorithmList;
+        _algorithmList = new ArrayList();
+        _algorithmList.add(new SelectItem("exactMatch", "exactMatch"));
+        _algorithmList.add(new SelectItem("startsWith", "Begins With"));
+        _algorithmList.add(new SelectItem("contains", "Contains"));
+        _selectedAlgorithm = ((SelectItem) _algorithmList.get(0)).getLabel();
+        return _algorithmList;
     }
 
     public void algorithmChanged(ValueChangeEvent event) {
@@ -1115,7 +1115,7 @@ public class UserSessionBean extends Object {
     }
 
     public void setSelectedAlgorithm(String selectedAlgorithm) {
-        this.selectedAlgorithm = selectedAlgorithm;
+        _selectedAlgorithm = selectedAlgorithm;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -1124,7 +1124,7 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedAlgorithm() {
-        return this.selectedAlgorithm;
+        return _selectedAlgorithm;
     }
 
     public String contactUs() throws Exception {
@@ -1153,24 +1153,24 @@ public class UserSessionBean extends Object {
     // source
     // //////////////////////////////////////////////////////////////
 
-    private String selectedSource = "ALL";
-    private List sourceList = null;
-    private Vector<String> sourceListData = null;
+    private String _selectedSource = "ALL";
+    private List _sourceList = null;
+    private Vector<String> _sourceListData = null;
 
     public List getSourceList() {
-        if (sourceList != null)
-            return sourceList;
+        if (_sourceList != null)
+            return _sourceList;
         String codingSchemeName = Constants.CODING_SCHEME_NAME;
         String version = null;
-        sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
-        sourceList = new ArrayList();
-        if (sourceListData != null) {
-            for (int i = 0; i < sourceListData.size(); i++) {
-                String t = (String) sourceListData.elementAt(i);
-                sourceList.add(new SelectItem(t));
+        _sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+        _sourceList = new ArrayList();
+        if (_sourceListData != null) {
+            for (int i = 0; i < _sourceListData.size(); i++) {
+                String t = (String) _sourceListData.elementAt(i);
+                _sourceList.add(new SelectItem(t));
             }
         }
-        return sourceList;
+        return _sourceList;
     }
 
     public void setSelectedSource(String selectedSource) {
@@ -1181,18 +1181,18 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getRequest();
         request.getSession().removeAttribute("selectedSource");
         request.getSession().setAttribute("selectedSource", selectedSource);
-        this.selectedSource = selectedSource;
+        _selectedSource = selectedSource;
     }
 
     public String getSelectedSource() {
-        if (selectedSource == null) {
-            sourceList = getSourceList();
-            if (sourceList != null && sourceList.size() > 0) {
-                this.selectedSource =
-                    ((SelectItem) sourceList.get(0)).getLabel();
+        if (_selectedSource == null) {
+            _sourceList = getSourceList();
+            if (_sourceList != null && _sourceList.size() > 0) {
+                _selectedSource =
+                    ((SelectItem) _sourceList.get(0)).getLabel();
             }
         }
-        return this.selectedSource;
+        return _selectedSource;
     }
 
     public void sourceSelectionChanged(ValueChangeEvent event) {
@@ -1208,9 +1208,9 @@ public class UserSessionBean extends Object {
     // concept sources
     // //////////////////////////////////////////////////////////////
 
-    private String selectedConceptSource = null;
-    private List conceptSourceList = null;
-    private Vector<String> conceptSourceListData = null;
+    private String _selectedConceptSource = null;
+    private List _conceptSourceList = null;
+    private Vector<String> _conceptSourceListData = null;
 
     public List getConceptSourceList() {
         String codingSchemeName = Constants.CODING_SCHEME_NAME;
@@ -1219,21 +1219,21 @@ public class UserSessionBean extends Object {
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         String code = (String) request.getSession().getAttribute("code");
-        conceptSourceListData =
+        _conceptSourceListData =
             DataUtils.getSources(codingSchemeName, version, null, code);
-        conceptSourceList = new ArrayList();
-        if (conceptSourceListData == null)
-            return conceptSourceList;
+        _conceptSourceList = new ArrayList();
+        if (_conceptSourceListData == null)
+            return _conceptSourceList;
 
-        for (int i = 0; i < conceptSourceListData.size(); i++) {
-            String t = (String) conceptSourceListData.elementAt(i);
-            conceptSourceList.add(new SelectItem(t));
+        for (int i = 0; i < _conceptSourceListData.size(); i++) {
+            String t = (String) _conceptSourceListData.elementAt(i);
+            _conceptSourceList.add(new SelectItem(t));
         }
-        return conceptSourceList;
+        return _conceptSourceList;
     }
 
     public void setSelectedConceptSource(String selectedConceptSource) {
-        this.selectedConceptSource = selectedConceptSource;
+        _selectedConceptSource = selectedConceptSource;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -1242,14 +1242,14 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedConceptSource() {
-        if (selectedConceptSource == null) {
-            conceptSourceList = getConceptSourceList();
-            if (conceptSourceList != null && conceptSourceList.size() > 0) {
-                this.selectedConceptSource =
-                    ((SelectItem) conceptSourceList.get(0)).getLabel();
+        if (_selectedConceptSource == null) {
+            _conceptSourceList = getConceptSourceList();
+            if (_conceptSourceList != null && _conceptSourceList.size() > 0) {
+                _selectedConceptSource =
+                    ((SelectItem) _conceptSourceList.get(0)).getLabel();
             }
         }
-        return this.selectedConceptSource;
+        return _selectedConceptSource;
     }
 
     public void conceptSourceSelectionChanged(ValueChangeEvent event) {
