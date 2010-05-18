@@ -132,7 +132,8 @@ public class UserSessionBean extends Object {
         String matchText = (String) request.getParameter("matchText");
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
-            request.getSession().setAttribute("message", message);
+            //request.getSession().setAttribute("message", message);
+            request.setAttribute("message", message);
             return "message";
         }
         matchText = matchText.trim();
