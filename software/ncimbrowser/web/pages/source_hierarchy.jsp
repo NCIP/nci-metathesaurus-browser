@@ -250,26 +250,26 @@
       rootDescDiv.show();
       rootDescDiv.render();
     }
-    
-    
+
+
     function showTreeLoadingStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Building tree ...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Building tree ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
 
     function showSearchingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
 
     function showRenderingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Rendering tree -- please wait ...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Rendering tree -- please wait ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
-    
+
     function loadNodeData(node, fnLoadComplete) {
       var id = node.data.id;
 
@@ -285,37 +285,37 @@
         var pos = id.indexOf("|");
         if ( typeof(respObj.nodes) != "undefined") {
 
-	    if (pos == -1) {
-		      for (var i=0; i < respObj.nodes.length; i++) {
-			var name = respObj.nodes[i].ontology_node_name;
-			var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-			var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-			var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
-			if (respObj.nodes[i].ontology_node_child_count > 0) {
-			    newNode.setDynamicLoad(loadNodeData);
-			}
-		      }
+      if (pos == -1) {
+          for (var i=0; i < respObj.nodes.length; i++) {
+      var name = respObj.nodes[i].ontology_node_name;
+      var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+      var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+      var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
+      if (respObj.nodes[i].ontology_node_child_count > 0) {
+          newNode.setDynamicLoad(loadNodeData);
+      }
+          }
 
-	    } else {
-		var parent = node.parent;
-		var parent_label = parent.label;
-		if (parent_label == undefined) {
-		    parent = tree.getRoot();
-		}
-		for (var i=0; i < respObj.nodes.length; i++) {
-		    var name = respObj.nodes[i].ontology_node_name;
-		    var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-		    var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-		    var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
-		    if (respObj.nodes[i].ontology_node_child_count > 0) {
-			newNode.setDynamicLoad(loadNodeData);
-		    }
-		}
-		tree.removeNode(node,true);
-		if (parent_label == undefined) {
-		    tree.draw();
-		}		
-	    }
+      } else {
+    var parent = node.parent;
+    var parent_label = parent.label;
+    if (parent_label == undefined) {
+        parent = tree.getRoot();
+    }
+    for (var i=0; i < respObj.nodes.length; i++) {
+        var name = respObj.nodes[i].ontology_node_name;
+        var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
+        var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
+        var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
+        if (respObj.nodes[i].ontology_node_child_count > 0) {
+      newNode.setDynamicLoad(loadNodeData);
+        }
+    }
+    tree.removeNode(node,true);
+    if (parent_label == undefined) {
+        tree.draw();
+    }
+      }
         }
         fnLoadComplete();
       }
@@ -434,29 +434,29 @@
     // Note: Need to refresh the parent window so the LicenseBean has a
     //  chance to update.  The following line helps avoid reprompting
     //  the license again.
-    
+
     //function refresh() {
     //        var licensed = document.forms["pg_form"].isLicensed_str.value;
     //        if (licensed == "true") {
-	//	    var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
-	//	    if (accepted == "true") {
-	//		window.opener.location.reload(true);
-	//	    }
-//	    }
+  //      var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
+  //      if (accepted == "true") {
+  //    window.opener.location.reload(true);
+  //      }
+//      }
 //   }
-    
-    
+
+
     YAHOO.util.Event.addListener(window, "load", init);
-    
+
     //YAHOO.util.Event.addListener(window, "load", refresh);
-    
-    
+
+
   </script>
 </head>
 <body>
   <%!
       private static Logger _logger = Utils.getJspLogger("source_hierarchy.jsp");
-  %>     
+  %>
   <f:view>
     <div id="popupContainer">
       <!-- nci popup banner -->
@@ -476,7 +476,7 @@
           <td valign="top"><div id="closeWindow"><a href="javascript:window.close();"><img src="<%=basePath%>/images/thesaurus_close_icon.gif" width="10" height="10" border="0" alt="Close Window" />&nbsp;CLOSE WINDOW</a></div></td>
         </tr>
         </table>
- 
+
 <%
 String ontology_sab = null;
 String ontology_formalname = null;
@@ -486,7 +486,7 @@ _logger.debug("SAB: " + ontology_sab);
 if (ontology_sab == null) {
       Object selectedSource_obj = request.getSession().getAttribute("selectedSource");
       if (selectedSource_obj != null) {
-	  ontology_sab = (String) selectedSource_obj;  
+    ontology_sab = (String) selectedSource_obj;
       }
 }
 ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
@@ -500,38 +500,38 @@ if (licenseBean == null) {
 }
 
 boolean licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(SABFormalName);
-boolean isLicensed = licenseBean.isLicensed(SABFormalName, null); 
+boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
 */
 
         if (ontology_sab.compareTo("NCI") == 0) {
-%>        
+%>
            <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
 <%
         } else {
-        
-%>        
+
+%>
            <div><%=ontology_formalname%></div>
-<%           
+<%
         }
-%>        
-        
+%>
+
         <div id="popupContentArea">
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody">
               <td class="pageTitle" align="left">
-              
-<%              
+
+<%
                   if (ontology_sab.compareTo("NCI") == 0) {
-%>                  
+%>
                       NCI Thesaurus Hierarchy
-<%                      
+<%
                   } else {
-%>                  
+%>
                       <%=ontology_sab%> Hierarchy
-<%                      
+<%
                   }
-%>                 
-                  
+%>
+
               </td>
               <td class="pageTitle" align="right">
                 <font size="1" color="red" align="right">
@@ -560,16 +560,16 @@ boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
             <input type="hidden" id="ontology_node_id" name="ontology_node_id" value="<%=ontology_node_id%>" />
             <%
               String ontology_display_name = HTTPUtils.cleanXSS((String)request.getParameter("dictionary"));
-	      if (ontology_display_name == null) ontology_display_name = Constants.CODING_SCHEME_NAME;//"NCI Metathesaurus";
-	      
-	      //hidden variables
-	      //String licenseAgreementAccepted_str = new Boolean(licenseAgreementAccepted).toString();
-	      //String isLicensed_str = new Boolean(isLicensed).toString();
+        if (ontology_display_name == null) ontology_display_name = Constants.CODING_SCHEME_NAME;//"NCI Metathesaurus";
+
+        //hidden variables
+        //String licenseAgreementAccepted_str = new Boolean(licenseAgreementAccepted).toString();
+        //String isLicensed_str = new Boolean(isLicensed).toString();
             %>
-            
+
             <input type="hidden" id="ontology_display_name" name="ontology_display_name" value="<%=ontology_display_name%>" />
             <input type="hidden" id="ontology_sab" name="ontology_sab" value="<%=ontology_sab%>" />
-            
+
           </form>
           <!-- End of Tree control content -->
         </div>
