@@ -51,71 +51,71 @@ package gov.nih.nci.evs.browser.bean;
  */
 
 public class DisplayItem {
-    private String propertyName;
-    private String itemLabel;
-    private String url;
-    private String hyperlinkText;
-    private boolean isExternalCode;
+    private String _propertyName;
+    private String _itemLabel;
+    private String _url;
+    private String _hyperlinkText;
+    private boolean _isExternalCode;
 
     public DisplayItem() {
     }
 
     public DisplayItem(String propertyName, String itemLabel, String url,
         String hyperlinkText) {
-        this.propertyName = propertyName;
-        this.itemLabel = itemLabel;
-        this.url = url;
-        this.hyperlinkText = hyperlinkText;
-        this.isExternalCode = false;
+        _propertyName = propertyName;
+        _itemLabel = itemLabel;
+        _url = url;
+        _hyperlinkText = hyperlinkText;
+        _isExternalCode = false;
     }
 
     public DisplayItem(String propertyName, String itemLabel, String url,
         String hyperlinkText, boolean isExternalCode) {
-        this.propertyName = propertyName;
-        this.itemLabel = itemLabel;
-        this.url = url;
-        this.hyperlinkText = hyperlinkText;
-        this.isExternalCode = isExternalCode;
+        _propertyName = propertyName;
+        _itemLabel = itemLabel;
+        _url = url;
+        _hyperlinkText = hyperlinkText;
+        _isExternalCode = isExternalCode;
     }
 
     public String getPropertyName() {
-        return this.propertyName;
+        return _propertyName;
     }
 
     public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+        _propertyName = propertyName;
     }
 
     public String getItemLabel() {
-        return this.itemLabel;
+        return _itemLabel;
     }
 
     public void setItemLabel(String itemLabel) {
-        this.itemLabel = itemLabel;
+        _itemLabel = itemLabel;
     }
 
     public String getUrl() {
-        return this.url;
+        return _url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        _url = url;
     }
 
     public String getHyperlinkText() {
-        return this.hyperlinkText;
+        return _hyperlinkText;
     }
 
     public void setHyperlinkText(String hyperlinkText) {
-        this.hyperlinkText = hyperlinkText;
+        _hyperlinkText = hyperlinkText;
     }
 
     public boolean getIsExternalCode() {
-        return this.isExternalCode;
+        return _isExternalCode;
     }
 
     public void setIsExternalCode(String isExternalCode) {
-        this.hyperlinkText = isExternalCode;
+        _hyperlinkText = isExternalCode;
     }
 
     public String toString() {

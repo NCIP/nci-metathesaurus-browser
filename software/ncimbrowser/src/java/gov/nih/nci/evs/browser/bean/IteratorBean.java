@@ -62,123 +62,123 @@ import gov.nih.nci.evs.browser.properties.*;
 
 public class IteratorBean extends Object {
     private static Logger _logger = Logger.getLogger(IteratorBean.class);
-    static int DEFAULT_MAX_RETURN = 100;
-    ResolvedConceptReferencesIterator iterator = null;
-    int size = 0;
-    List list = null;
+    private static int DEFAULT_MAX_RETURN = 100;
+    private ResolvedConceptReferencesIterator _iterator = null;
+    private int _size = 0;
+    private List _list = null;
 
-    int pageNumber;
-    int pageSize;
-    int startIndex;
-    int endIndex;
-    int numberOfPages;
+    private int _pageNumber;
+    private int _pageSize;
+    private int _startIndex;
+    private int _endIndex;
+    private int _numberOfPages;
 
-    int lastResolved;
-    int maxReturn = 100;
+    private int _lastResolved;
+    private int _maxReturn = 100;
 
-    String matchText = null;
+    private String _matchText = null;
 
-    String key = null;
-    boolean timeout = false;
+    private String _key = null;
+    private boolean _timeout = false;
 
-    public String randomNumberString = null;
+    public String _randomNumberString = null;
 
     public IteratorBean(ResolvedConceptReferencesIterator iterator) {
-        this.iterator = iterator;
-        this.maxReturn = DEFAULT_MAX_RETURN;
+        _iterator = iterator;
+        _maxReturn = DEFAULT_MAX_RETURN;
         initialize();
     }
 
     public IteratorBean(ResolvedConceptReferencesIterator iterator,
         int maxReturn) {
-        this.iterator = iterator;
-        this.maxReturn = maxReturn;
+        _iterator = iterator;
+        _maxReturn = maxReturn;
         initialize();
     }
 
     public int getNumberOfPages() {
-        return this.numberOfPages;
+        return _numberOfPages;
     }
 
     public void setIterator(ResolvedConceptReferencesIterator iterator) {
-        this.iterator = iterator;
-        this.maxReturn = DEFAULT_MAX_RETURN;
+        _iterator = iterator;
+        _maxReturn = DEFAULT_MAX_RETURN;
         initialize();
     }
 
     public ResolvedConceptReferencesIterator getIterator() {
-        return this.iterator;
+        return _iterator;
     }
 
     public boolean getTimeout() {
-        return timeout;
+        return _timeout;
     }
 
     public String getRandomNumberString() {
-        return randomNumberString;
+        return _randomNumberString;
     }
 
     public void initialize() {
         try {
-            if (iterator == null) {
-                this.size = 0;
+            if (_iterator == null) {
+                _size = 0;
             } else {
-                this.size = iterator.numberRemaining();
+                _size = _iterator.numberRemaining();
             }
 
             int randomNumber = new Random().nextInt();
-            this.randomNumberString = Integer.toString(randomNumber);
+            _randomNumberString = Integer.toString(randomNumber);
 
-            this.pageNumber = 1;
+            _pageNumber = 1;
             /*
-             * this.list = new ArrayList(size); for (int i=0; i<size; i++) {
+             * list = new ArrayList(size); for (int i=0; i<size; i++) {
              * list.add(null); }
              */
-            this.list = new ArrayList();
+            _list = new ArrayList();
 
-            this.pageSize = Constants.DEFAULT_PAGE_SIZE;
-            this.numberOfPages = size / pageSize;
-            if (this.pageSize * this.numberOfPages < size) {
-                this.numberOfPages = this.numberOfPages + 1;
+            _pageSize = Constants.DEFAULT_PAGE_SIZE;
+            _numberOfPages = _size / _pageSize;
+            if (_pageSize * _numberOfPages < _size) {
+                _numberOfPages = _numberOfPages + 1;
             }
-            this.lastResolved = -1;
+            _lastResolved = -1;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public int getMumberOfPages() {
-        return this.numberOfPages;
+        return _numberOfPages;
     }
 
     public int getSize() {
-        return this.size;
+        return _size;
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+        _pageSize = pageSize;
     }
 
     public int getPageSize() {
-        return this.pageSize;
+        return _pageSize;
     }
 
     public int getLastResolved() {
-        return this.lastResolved;
+        return _lastResolved;
     }
 
     public int getStartIndex(int pageNumber) {
-        startIndex = (pageNumber - 1) * pageSize;
-        if (startIndex < 0)
-            startIndex = 0;
-        return startIndex;
+        _startIndex = (pageNumber - 1) * _pageSize;
+        if (_startIndex < 0)
+            _startIndex = 0;
+        return _startIndex;
     }
 
     public int getEndIndex(int pageNumber) {
-        endIndex = pageNumber * pageSize - 1;
-        if (endIndex > (size - 1))
-            endIndex = size - 1;
-        return endIndex;
+        _endIndex = pageNumber * _pageSize - 1;
+        if (_endIndex > (_size - 1))
+            _endIndex = _size - 1;
+        return _endIndex;
     }
 
     public List getData(int pageNumber) {
@@ -194,31 +194,31 @@ public class IteratorBean extends Object {
         long ms = System.currentTimeMillis();
         long dt = 0;
         long total_delay = 0;
-        timeout = false;
+        _timeout = false;
         try {
-            while (iterator != null && iterator.hasNext()
-                && lastResolved < idx2 && lastResolved < size) {
+            while (_iterator != null && _iterator.hasNext()
+                && _lastResolved < idx2 && _lastResolved < _size) {
                 ResolvedConceptReference[] refs =
-                    iterator.next(maxReturn).getResolvedConceptReference();
+                    _iterator.next(_maxReturn).getResolvedConceptReference();
 
-                _logger.debug("IteratorBean iterator.next(" + maxReturn
+                _logger.debug("IteratorBean iterator.next(" + _maxReturn
                     + ") returns refs: " + refs.length);
 
                 for (ResolvedConceptReference ref : refs) {
-                    lastResolved++;
-                    // this.list.set(lastResolved, ref);
-                    this.list.add(ref);
+                    _lastResolved++;
+                    // list.set(lastResolved, ref);
+                    _list.add(ref);
                 }
 
-                _logger.debug("Advancing iterator: " + lastResolved);
+                _logger.debug("Advancing iterator: " + _lastResolved);
 
                 dt = System.currentTimeMillis() - ms;
                 ms = System.currentTimeMillis();
                 total_delay = total_delay + dt;
                 if (total_delay > NCImBrowserProperties.getPaginationTimeOut() * 60 * 1000) {
-                    timeout = true;
+                    _timeout = true;
 
-                    _logger.debug("Time out at: " + lastResolved);
+                    _logger.debug("Time out at: " + _lastResolved);
                     break;
                 }
             }
@@ -235,11 +235,11 @@ public class IteratorBean extends Object {
          * if (upper >= lastResolved) upper = lastResolved; if (upper <= 0)
          * upper = 1;
          */
-        if (upper > list.size())
-            upper = list.size();
+        if (upper > _list.size())
+            upper = _list.size();
         for (int i = idx1; i < upper; i++) {
             ResolvedConceptReference rcr =
-                (ResolvedConceptReference) this.list.get(i);
+                (ResolvedConceptReference) _list.get(i);
             rcr_list.add(rcr);
             // if (i > lastResolved) break;
             // if (i >= lastResolved) break;
@@ -300,19 +300,19 @@ public class IteratorBean extends Object {
 
     public void setKey(String key) {
         _logger.debug("IteratorBean setKey: " + key);
-        this.key = key;
+        _key = key;
     }
 
     public String getKey() {
-        return this.key;
+        return _key;
     }
 
     public void setMatchText(String matchText) {
-        this.matchText = matchText;
+        _matchText = matchText;
     }
 
     public String getMatchText() {
-        return this.matchText;
+        return _matchText;
     }
 
 }
