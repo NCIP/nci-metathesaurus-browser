@@ -1,7 +1,8 @@
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="org.apache.log4j.*" %>
+
 <%!
-    private static org.apache.log4j.Logger _logger = 
-        org.apache.log4j.Logger.getLogger(
-        "gov.nih.nci.evs.browser.web.typeLinks_jsp");
+    private static Logger _logger = Utils.getJspLogger("typeLinks.jsp");
 %>     
 <%
   Concept concept_typelinks = (Concept) request.getSession().getAttribute("concept");

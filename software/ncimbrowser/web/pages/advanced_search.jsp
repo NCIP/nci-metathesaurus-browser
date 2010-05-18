@@ -8,8 +8,9 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="javax.faces.context.FacesContext" %>
-<%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
+<%@ page import="javax.faces.context.*" %>
+<%@ page import="org.LexGrid.LexBIG.DataModel.Core.*" %>
+<%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -63,9 +64,7 @@
     }
   </script>
   <%!
-      private static org.apache.log4j.Logger _logger = 
-          org.apache.log4j.Logger.getLogger(
-          "gov.nih.nci.evs.browser.web.advanced_search_jsp");
+      private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
   %>        
   <f:view>
     <%@ include file="/pages/include/header.jsp" %>
