@@ -56,19 +56,19 @@ import org.apache.log4j.*;
 
 public class LicenseBean extends Object {
     private static Logger _logger = Logger.getLogger(LicenseBean.class);
-    HashSet licenseAgreementHashSet = null;
+    private HashSet _licenseAgreementHashSet = null;
 
     public LicenseBean() {
-        licenseAgreementHashSet = new HashSet();
+        _licenseAgreementHashSet = new HashSet();
     }
 
     public void addLicenseAgreement(String scheme) {
         // _logger.debug("LicenseBean addLicenseAgreement " + scheme);
-        licenseAgreementHashSet.add(scheme);
+        _licenseAgreementHashSet.add(scheme);
         String formalName = MetadataUtils.getFormalName(scheme);
 
         if (formalName != null) {
-            licenseAgreementHashSet.add(formalName);
+            _licenseAgreementHashSet.add(formalName);
         }
     }
 
@@ -81,7 +81,7 @@ public class LicenseBean extends Object {
          * return true;
          */
 
-        boolean retval = licenseAgreementHashSet.contains(scheme);
+        boolean retval = _licenseAgreementHashSet.contains(scheme);
         // _logger.debug("licenseAgreementAccepted " + scheme + ": " + retval);
         return (retval);
     }

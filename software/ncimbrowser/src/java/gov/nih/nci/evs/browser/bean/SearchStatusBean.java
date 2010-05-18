@@ -71,10 +71,7 @@ public class SearchStatusBean extends Object {
     private static Logger _logger = Logger.getLogger(SearchStatusBean.class);
 
     public SearchStatusBean() {
-
     }
-
-    private static Logger logger = Logger.getLogger(SearchStatusBean.class);
 
     public String setSessionAttribute(String attributeName, String value) {
         HttpServletRequest request = HTTPUtils.getRequest();
@@ -87,19 +84,19 @@ public class SearchStatusBean extends Object {
 
     // ////////////////////////////////////////////////////////////////////////////////////////
 
-    private String selectedSearchOption = "Property";
-    private String matchText = null;
-    private List searchOptionList = null;
+    private String _selectedSearchOption = "Property";
+    private String _matchText = null;
+    private List _searchOptionList = null;
 
     public void setSelectedSearchOption(String selectedSearchOption) {
-        // this.selectedSearchOption = setSessionAttribute(
+        // selectedSearchOption = setSessionAttribute(
         // "advancedSearchOption", selectedSearchOption);
 
-        this.selectedSearchOption = selectedSearchOption;
+        _selectedSearchOption = selectedSearchOption;
     }
 
     public String getSelectedSearchOption() {
-        return this.selectedSearchOption;
+        return _selectedSearchOption;
     }
 
     public void searchOptionChanged(ValueChangeEvent event) {
@@ -124,7 +121,7 @@ public class SearchStatusBean extends Object {
 
         } else {
             bean = (SearchStatusBean) bean_obj;
-            bean.setAlgorithm(this.getAlgorithm());
+            bean.setAlgorithm(getAlgorithm());
         }
         FacesContext.getCurrentInstance().getExternalContext().getRequestMap()
             .put("searchStatusBean", bean);
@@ -138,26 +135,26 @@ public class SearchStatusBean extends Object {
     }
 
     public List getSearchOptionList() {
-        searchOptionList = new ArrayList();
-        searchOptionList.add(new SelectItem("Property", "Property"));
-        searchOptionList.add(new SelectItem("Relationship", "Relationship"));
-        return searchOptionList;
+        _searchOptionList = new ArrayList();
+        _searchOptionList.add(new SelectItem("Property", "Property"));
+        _searchOptionList.add(new SelectItem("Relationship", "Relationship"));
+        return _searchOptionList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
 
-    private String selectedProperty = "ALL";
-    private List propertyList = null;
+    private String _selectedProperty = "ALL";
+    private List _propertyList = null;
 
     public void setSelectedProperty(String selectedProperty) {
-        // this.selectedProperty = setSessionAttribute(
+        // selectedProperty = setSessionAttribute(
         // "advancedPropertyOption", selectedProperty);
 
-        this.selectedProperty = selectedProperty;
+        _selectedProperty = selectedProperty;
     }
 
     public String getSelectedProperty() {
-        return this.selectedProperty;
+        return _selectedProperty;
     }
 
     public void selectedPropertyChanged(ValueChangeEvent event) {
@@ -170,26 +167,26 @@ public class SearchStatusBean extends Object {
     }
 
     public List getPropertyList() {
-        if (propertyList == null) {
-            propertyList = OntologyBean.getPropertyNameList();
-            if (propertyList != null && propertyList.size() > 0) {
-                this.selectedProperty =
-                    ((SelectItem) propertyList.get(0)).getLabel();
+        if (_propertyList == null) {
+            _propertyList = OntologyBean.getPropertyNameList();
+            if (_propertyList != null && _propertyList.size() > 0) {
+                _selectedProperty =
+                    ((SelectItem) _propertyList.get(0)).getLabel();
             }
         }
-        return propertyList;
+        return _propertyList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedSource = null;
-    private List sourceList = null;
+    private String _selectedSource = null;
+    private List _sourceList = null;
 
     public void setSelectedSource(String selectedSource) {
-        this.selectedSource = selectedSource;
+        _selectedSource = selectedSource;
     }
 
     public String getSelectedSource() {
-        return this.selectedSource;
+        return _selectedSource;
     }
 
     public void selectedSourceChanged(ValueChangeEvent event) {
@@ -202,26 +199,26 @@ public class SearchStatusBean extends Object {
     }
 
     public List getSourceList() {
-        if (sourceList == null) {
-            sourceList = OntologyBean.getSourceList();
-            if (sourceList != null && sourceList.size() > 0) {
-                this.selectedSource =
-                    ((SelectItem) sourceList.get(0)).getLabel();
+        if (_sourceList == null) {
+            _sourceList = OntologyBean.getSourceList();
+            if (_sourceList != null && _sourceList.size() > 0) {
+                _selectedSource =
+                    ((SelectItem) _sourceList.get(0)).getLabel();
             }
         }
-        return sourceList;
+        return _sourceList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedPropertyType = null;
-    private List propertyTypeList = null;
+    private String _selectedPropertyType = null;
+    private List _propertyTypeList = null;
 
     public void setSelectedPropertyType(String selectedPropertyType) {
-        this.selectedPropertyType = selectedPropertyType;
+        _selectedPropertyType = selectedPropertyType;
     }
 
     public String getSelectedPropertyType() {
-        return this.selectedPropertyType;
+        return _selectedPropertyType;
     }
 
     public void selectedPropertyTypeChanged(ValueChangeEvent event) {
@@ -234,26 +231,26 @@ public class SearchStatusBean extends Object {
     }
 
     public List getPropertyTypeList() {
-        if (propertyTypeList == null) {
-            propertyTypeList = OntologyBean.getPropertyTypeList();
-            if (propertyTypeList != null && propertyTypeList.size() > 0) {
-                this.selectedPropertyType =
-                    ((SelectItem) propertyTypeList.get(0)).getLabel();
+        if (_propertyTypeList == null) {
+            _propertyTypeList = OntologyBean.getPropertyTypeList();
+            if (_propertyTypeList != null && _propertyTypeList.size() > 0) {
+                _selectedPropertyType =
+                    ((SelectItem) _propertyTypeList.get(0)).getLabel();
             }
         }
-        return propertyTypeList;
+        return _propertyTypeList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedAssociation = null;
-    private List associationList = null;
+    private String _selectedAssociation = null;
+    private List _associationList = null;
 
     public void setSelectedAssociation(String selectedAssociation) {
-        this.selectedAssociation = selectedAssociation;
+        _selectedAssociation = selectedAssociation;
     }
 
     public String getSelectedAssociation() {
-        return this.selectedAssociation;
+        return _selectedAssociation;
     }
 
     public void selectedAssociationChanged(ValueChangeEvent event) {
@@ -266,27 +263,27 @@ public class SearchStatusBean extends Object {
     }
 
     public List getAssociationList() {
-        if (associationList == null) {
-            associationList = OntologyBean.getAssociationNameList();
-            if (associationList != null && associationList.size() > 0) {
-                this.selectedAssociation =
-                    ((SelectItem) associationList.get(0)).getLabel();
+        if (_associationList == null) {
+            _associationList = OntologyBean.getAssociationNameList();
+            if (_associationList != null && _associationList.size() > 0) {
+                _selectedAssociation =
+                    ((SelectItem) _associationList.get(0)).getLabel();
             }
         }
-        return associationList;
+        return _associationList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedRelationship = "ALL";
-    private List relationshipList = null;
+    private String _selectedRelationship = "ALL";
+    private List _relationshipList = null;
 
     public void setSelectedRelationship(String selectedRelationship) {
-        this.selectedRelationship =
+        _selectedRelationship =
             setSessionAttribute("advancedRelationOption", selectedRelationship);
     }
 
     public String getSelectedRelationship() {
-        return this.selectedRelationship;
+        return _selectedRelationship;
     }
 
     public void selectedRelationshipChanged(ValueChangeEvent event) {
@@ -299,28 +296,28 @@ public class SearchStatusBean extends Object {
     }
 
     public List getRelationshipList() {
-        if (relationshipList == null) {
-            relationshipList = OntologyBean.getAssociationNameList();
-            relationshipList.add(0, new SelectItem("ALL", "ALL"));
-            if (relationshipList != null && relationshipList.size() > 0) {
-                this.selectedRelationship =
-                    ((SelectItem) relationshipList.get(0)).getLabel();
+        if (_relationshipList == null) {
+            _relationshipList = OntologyBean.getAssociationNameList();
+            _relationshipList.add(0, new SelectItem("ALL", "ALL"));
+            if (_relationshipList != null && _relationshipList.size() > 0) {
+                _selectedRelationship =
+                    ((SelectItem) _relationshipList.get(0)).getLabel();
             }
         }
-        return relationshipList;
+        return _relationshipList;
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String selectedRELA = "";
-    private List RELAList = null;
+    private String _selectedRELA = "";
+    private List _RELAList = null;
 
     public void setSelectedRELA(String selectedRELA) {
-        this.selectedRELA =
+        _selectedRELA =
             setSessionAttribute("advancedRELAOption", selectedRELA);
     }
 
     public String getSelectedRELA() {
-        return this.selectedRELA;
+        return _selectedRELA;
     }
 
     public void selectedRELAChanged(ValueChangeEvent event) {
@@ -333,13 +330,13 @@ public class SearchStatusBean extends Object {
     }
 
     public List getRELAList() {
-        if (RELAList == null) {
-            RELAList = OntologyBean.getRELAList();
-            if (RELAList != null && RELAList.size() > 0) {
-                this.selectedRELA = ((SelectItem) RELAList.get(0)).getLabel();
+        if (_RELAList == null) {
+            _RELAList = OntologyBean.getRELAList();
+            if (_RELAList != null && _RELAList.size() > 0) {
+                _selectedRELA = ((SelectItem) _RELAList.get(0)).getLabel();
             }
         }
-        return RELAList;
+        return _RELAList;
     }
 
     // //////////////////////////////////////////////////////////////////////////////////
@@ -348,7 +345,7 @@ public class SearchStatusBean extends Object {
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("matchText", t);
-        this.matchText = t;
+        _matchText = t;
 
         _logger.debug("Set matchText to: " + t);
     }
@@ -359,17 +356,17 @@ public class SearchStatusBean extends Object {
     }
 
     public String getMatchText() {
-        return matchText;
+        return _matchText;
     }
 
-    private String algorithm;
+    private String _algorithm;
 
     public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+        _algorithm = algorithm;
     }
 
     public String getAlgorithm() {
-        return this.algorithm;
+        return _algorithm;
     }
 
 }

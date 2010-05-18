@@ -51,41 +51,40 @@ package gov.nih.nci.evs.browser.bean;
  */
 
 public class SecurityTokenHolder {
-
-    private String name;
-    private String value;
+    private String _name;
+    private String _value;
 
     public SecurityTokenHolder() {
 
     }
 
     public SecurityTokenHolder(String name, String value) {
-        this.name = name;
-        this.value = value;
+        _name = name;
+        _value = value;
     }
 
     public String getName() {
-        return this.name;
+        return _name;
     }
 
     public String getValue() {
-        return this.value;
+        return _value;
     }
 
     public void setName(String name) {
-        this.name = name;
+        _name = name;
     }
 
     public void setValue(String value) {
-        this.value = value;
+        _value = value;
     }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("SecurityTokenHolder ");
         sb.append("\n");
-        sb.append("\tname: " + name);
-        sb.append("\tvalue: " + value);
+        sb.append("\tname: " + _name);
+        sb.append("\tvalue: " + _value);
         sb.append("\n");
         sb.append("\n");
 
