@@ -243,13 +243,13 @@
     }
 
     function showTreeLoadingStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Building tree ...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Building tree ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
 
     function showSearchingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
+      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
       treeStatusDiv.show();
       treeStatusDiv.render();
     }
