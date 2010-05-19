@@ -110,7 +110,6 @@ import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 
 public final class AjaxServlet extends HttpServlet {
     private static Logger _logger = Logger.getLogger(AjaxServlet.class);
-    protected final Logger logger = Logger.getLogger(this.getClass());
 
     /**
      * Validates the Init and Context parameters, configures authentication URL

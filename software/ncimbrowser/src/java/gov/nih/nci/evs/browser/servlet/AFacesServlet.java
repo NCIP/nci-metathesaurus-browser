@@ -61,8 +61,8 @@ public class AFacesServlet extends HttpServlet {
      * Default Serial Version UID
      */
     private static final long serialVersionUID = 1L;
-    private FacesServlet delegate = null;
-    private String errorPage = null;
+    private FacesServlet _delegate = null;
+    private String _errorPage = null;
 
     /**
      * Constructor
@@ -77,9 +77,9 @@ public class AFacesServlet extends HttpServlet {
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
     public void init(ServletConfig _servletConfig) throws ServletException {
-        delegate = new FacesServlet();
-        delegate.init(_servletConfig);
-        errorPage = _servletConfig.getInitParameter(INIT_PARAM_ERROR_PAGE);
+        _delegate = new FacesServlet();
+        _delegate.init(_servletConfig);
+        _errorPage = _servletConfig.getInitParameter(INIT_PARAM_ERROR_PAGE);
     }
 
     /**
@@ -88,7 +88,7 @@ public class AFacesServlet extends HttpServlet {
      * @see javax.servlet.GenericServlet#destroy()
      */
     public void destroy() {
-        delegate.destroy();
+        _delegate.destroy();
     }
 
     /**
@@ -97,7 +97,7 @@ public class AFacesServlet extends HttpServlet {
      * @see javax.servlet.GenericServlet#getServletConfig()
      */
     public ServletConfig getServletConfig() {
-        return delegate.getServletConfig();
+        return _delegate.getServletConfig();
     }
 
     /**
@@ -106,7 +106,7 @@ public class AFacesServlet extends HttpServlet {
      * @see javax.servlet.GenericServlet#getServletInfo()
      */
     public String getServletInfo() {
-        return delegate.getServletInfo();
+        return _delegate.getServletInfo();
     }
 
     /**
@@ -118,7 +118,7 @@ public class AFacesServlet extends HttpServlet {
     public void service(ServletRequest _request, ServletResponse _response)
             throws ServletException, IOException {
         try {
-            delegate.service(_request, _response);
+            _delegate.service(_request, _response);
         } catch (Throwable ex) {
             // Make Sure the Stack Trace is Printed to the Log
             ex.printStackTrace();
@@ -137,8 +137,8 @@ public class AFacesServlet extends HttpServlet {
      */
     private void redirectToErrorPage(HttpServletRequest _request,
         HttpServletResponse _response) throws IOException {
-        if (!"".equals(errorPage)) {
-            _response.sendRedirect(_request.getContextPath() + errorPage);
+        if (!"".equals(_errorPage)) {
+            _response.sendRedirect(_request.getContextPath() + _errorPage);
         }
     }
 }
