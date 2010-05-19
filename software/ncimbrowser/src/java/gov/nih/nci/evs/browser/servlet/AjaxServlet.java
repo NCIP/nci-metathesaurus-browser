@@ -52,61 +52,12 @@ package gov.nih.nci.evs.browser.servlet;
  */
 
 import org.json.*;
+import java.io.*;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 import gov.nih.nci.evs.browser.utils.*;
-
-import gov.nih.nci.evs.browser.utils.TreeItem;
-import gov.nih.nci.evs.browser.utils.CacheController;
-
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.ArrayList;
-
-import java.util.HashMap;
-import java.util.Vector;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.util.Arrays;
-import java.util.Iterator;
-
-import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
-import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
-import org.LexGrid.LexBIG.DataModel.Core.Association;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.commonTypes.EntityDescription;
-import org.LexGrid.concepts.Concept;
-import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
-
-import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.concepts.Presentation;
-import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
+import org.apache.log4j.*;
 
 public final class AjaxServlet extends HttpServlet {
     private static Logger _logger = Logger.getLogger(AjaxServlet.class);
@@ -307,5 +258,4 @@ public final class AjaxServlet extends HttpServlet {
             return;
         }
     }
-
 }
