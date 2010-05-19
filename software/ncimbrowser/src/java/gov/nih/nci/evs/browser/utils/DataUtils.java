@@ -656,7 +656,7 @@ public class DataUtils {
                 cng.restrictToAssociations(nameAndValueList,
                     nameAndValueList_qualifier);
 
-            int maxToReturn = NCImBrowserProperties.maxToReturn;
+            int maxToReturn = NCImBrowserProperties._maxToReturn;
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                     code, scheme), false, true, 1, 1, new LocalNameList(),
@@ -1339,7 +1339,7 @@ public class DataUtils {
                         .createNameAndValueList(sab, SOURCE));
             }
 
-            int maxToReturn = NCImBrowserProperties.maxToReturn;
+            int maxToReturn = NCImBrowserProperties._maxToReturn;
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                     code, scheme), true, false, 1, 1, noopList_, null, null,
@@ -2606,7 +2606,7 @@ public class DataUtils {
         Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
-        DBG.debugDetails("Max Return", NCImBrowserProperties.maxToReturn);
+        DBG.debugDetails("Max Return", NCImBrowserProperties._maxToReturn);
         return u;
 
     }

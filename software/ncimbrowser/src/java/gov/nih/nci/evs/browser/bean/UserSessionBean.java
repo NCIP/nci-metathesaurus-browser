@@ -179,7 +179,7 @@ public class UserSessionBean extends Object {
         matchText = matchText.trim();
         bean.setMatchText(matchText);
 
-        if (NCImBrowserProperties.debugOn) {
+        if (NCImBrowserProperties._debugOn) {
             _logger.debug(Utils.SEPARATOR);
             _logger.debug("* criteria: " + matchText);
             _logger.debug("* source: " + source);
@@ -573,7 +573,7 @@ public class UserSessionBean extends Object {
         // request.getSession().setAttribute("source", source);
         setSelectedSource(source);
 
-        if (NCImBrowserProperties.debugOn) {
+        if (NCImBrowserProperties._debugOn) {
             try {
                 _logger.debug(Utils.SEPARATOR);
                 _logger.debug("* criteria: " + matchText);

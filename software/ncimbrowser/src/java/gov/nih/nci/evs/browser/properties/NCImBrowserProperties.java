@@ -60,13 +60,13 @@ public class NCImBrowserProperties {
     private static Logger _logger =
         Logger.getLogger(NCImBrowserProperties.class);
 
-    private static List displayItemList;
-    private static List termGroupRankList;
-    private static HashMap termGroupRankHashMap;
-    private static HashMap configurableItemMap;
+    private static List _displayItemList;
+    private static List _termGroupRankList;
+    private static HashMap _termGroupRankHashMap;
+    private static HashMap _configurableItemMap;
 
-    private static List securityTokenList;
-    private static HashMap securityTokenHashMap;
+    private static List _securityTokenList;
+    private static HashMap _securityTokenHashMap;
 
     public static final String DEBUG_ON = "DEBUG_ON";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
@@ -100,25 +100,25 @@ public class NCImBrowserProperties {
     private static NCImBrowserProperties NCImBrowserProperties = null;
     private static Properties properties = new Properties();
 
-    public static boolean debugOn = false;
-    public static int maxToReturn = 1000;
-    public static int maxTreeLevel = 1000;
-    private static String service_url = null;
-    private static String lg_config_file = null;
-    private static String mail_smtp_server = null;
-    private static String ncicb_contact_url = null;
-    private static String terminology_subset_download_url = null;
-    private static String term_suggestion_application_url = null;
-    private static String term_browser_url = null;
-    private static String source_hierarchies = null;
-    private static String secured_vocabularies = null;
+    public static boolean _debugOn = false;
+    public static int _maxToReturn = 1000;
+    public static int _maxTreeLevel = 1000;
+    private static String _service_url = null;
+    private static String _lg_config_file = null;
+    private static String _mail_smtp_server = null;
+    private static String _ncicb_contact_url = null;
+    private static String _terminology_subset_download_url = null;
+    private static String _term_suggestion_application_url = null;
+    private static String _term_browser_url = null;
+    private static String _source_hierarchies = null;
+    private static String _secured_vocabularies = null;
 
-    private static int pagination_time_out = 4;
-    private static int minimum_search_string_length = 1;
-    private static int sliding_window_half_width = 5;
+    private static int _pagination_time_out = 4;
+    private static int _minimum_search_string_length = 1;
+    private static int _sliding_window_half_width = 5;
     public static final String LICENSE_PAGE_OPTION = "LICENSE_PAGE_OPTION";
-    private static String license_page_option = null;
-    private static int subconcept_page_size = 1000;
+    private static String _license_page_option = null;
+    private static int _subconcept_page_size = 1000;
 
     /**
      * Private constructor for singleton pattern.
@@ -140,40 +140,40 @@ public class NCImBrowserProperties {
                     NCImBrowserProperties = new NCImBrowserProperties();
                     loadProperties();
 
-                    debugOn = Boolean.parseBoolean(getProperty(DEBUG_ON));
+                    _debugOn = Boolean.parseBoolean(getProperty(DEBUG_ON));
 
                     String max_str =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MAXIMUM_RETURN);
-                    maxToReturn = Integer.parseInt(max_str);
+                    _maxToReturn = Integer.parseInt(max_str);
 
                     String max_tree_level_str =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MAXIMUM_TREE_LEVEL);
-                    maxTreeLevel = Integer.parseInt(max_tree_level_str);
+                    _maxTreeLevel = Integer.parseInt(max_tree_level_str);
 
-                    service_url =
+                    _service_url =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
                     // _logger.debug("EVS_SERVICE_URL: " + service_url);
 
-                    lg_config_file =
+                    _lg_config_file =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
                     // _logger.debug("LG_CONFIG_FILE: " + lg_config_file);
 
                     // sort_by_score =
                     // NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
-                    ncicb_contact_url =
+                    _ncicb_contact_url =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.NCICB_CONTACT_URL);
-                    mail_smtp_server =
+                    _mail_smtp_server =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MAIL_SMTP_SERVER);
-                    terminology_subset_download_url =
+                    _terminology_subset_download_url =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
-                    term_suggestion_application_url =
+                    _term_suggestion_application_url =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLICATION_URL);
 
@@ -181,7 +181,7 @@ public class NCImBrowserProperties {
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.PAGINATION_TIME_OUT);
                     if (pagination_time_out_str != null) {
-                        pagination_time_out =
+                        _pagination_time_out =
                             Integer.parseInt(pagination_time_out_str);
                     }
 
@@ -189,7 +189,7 @@ public class NCImBrowserProperties {
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MINIMUM_SEARCH_STRING_LENGTH);
                     if (minimum_search_string_length_str != null) {
-                        minimum_search_string_length =
+                        _minimum_search_string_length =
                             Integer.parseInt(minimum_search_string_length_str);
                     }
 
@@ -200,21 +200,21 @@ public class NCImBrowserProperties {
                         int sliding_window_halfwidth =
                             Integer.parseInt(sliding_window_half_width_str);
                         if (sliding_window_halfwidth > 1) {
-                            sliding_window_half_width =
+                            _sliding_window_half_width =
                                 sliding_window_halfwidth;
                         }
                     }
-                    term_browser_url =
+                    _term_browser_url =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.NCIT_URL);
-                    source_hierarchies =
+                    _source_hierarchies =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.SOURCE_HIERARCHIES);
-                    secured_vocabularies =
+                    _secured_vocabularies =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.SECURED_VOCABULARIES);
 
-                    license_page_option =
+                    _license_page_option =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.LICENSE_PAGE_OPTION);
 
@@ -222,7 +222,7 @@ public class NCImBrowserProperties {
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.SUBCONCEPT_PAGE_SIZE);
                     if (subconcept_page_size_str != null) {
-                        subconcept_page_size =
+                        _subconcept_page_size =
                             Integer.parseInt(subconcept_page_size_str);
                     }
                 }
@@ -233,23 +233,23 @@ public class NCImBrowserProperties {
     }
 
     public static String getSourceHierarchies() {
-        return source_hierarchies;
+        return _source_hierarchies;
     }
 
     public static String getSecuredVocabularies() {
-        return secured_vocabularies;
+        return _secured_vocabularies;
     }
 
     public static List getSecurityTokenList() {
-        return securityTokenList;
+        return _securityTokenList;
     }
 
     public static HashMap getSecurityTokenHashMap() {
-        return securityTokenHashMap;
+        return _securityTokenHashMap;
     }
 
     public static String getProperty(String key) throws Exception {
-        String ret_str = (String) configurableItemMap.get(key);
+        String ret_str = (String) _configurableItemMap.get(key);
         if (ret_str == null)
             return null;
         if (ret_str.compareToIgnoreCase("null") == 0)
@@ -258,17 +258,17 @@ public class NCImBrowserProperties {
     }
 
     public List getDisplayItemList() {
-        return this.displayItemList;
+        return this._displayItemList;
     }
 
     public List getTermGroupRankList() {
-        return this.termGroupRankList;
+        return this._termGroupRankList;
     }
 
     public static String getRank(String term_type, String term_source) {
         String key = term_source + "$" + term_type;
-        if (termGroupRankHashMap.containsKey(key))
-            return (String) termGroupRankHashMap.get(key);
+        if (_termGroupRankHashMap.containsKey(key))
+            return (String) _termGroupRankHashMap.get(key);
         return "0";
     }
 
@@ -313,19 +313,19 @@ public class NCImBrowserProperties {
         PropertyFileParser parser = new PropertyFileParser(propertyFile);
         parser.run();
 
-        securityTokenList = parser.getSecurityTokenList();
-        securityTokenHashMap = parser.getSecurityTokenHashMap();
+        _securityTokenList = parser.getSecurityTokenList();
+        _securityTokenHashMap = parser.getSecurityTokenHashMap();
 
-        displayItemList = parser.getDisplayItemList();
-        termGroupRankList = parser.getTermGroupRankList();
-        termGroupRankHashMap = createTermGroupRankHashMap();
-        configurableItemMap = parser.getConfigurableItemMap();
+        _displayItemList = parser.getDisplayItemList();
+        _termGroupRankList = parser.getTermGroupRankList();
+        _termGroupRankHashMap = createTermGroupRankHashMap();
+        _configurableItemMap = parser.getConfigurableItemMap();
     }
 
     private static HashMap createTermGroupRankHashMap() throws Exception {
         HashMap hmap = new HashMap();
-        for (int i = 0; i < termGroupRankList.size(); i++) {
-            TermGroupRank tgr = (TermGroupRank) termGroupRankList.get(i);
+        for (int i = 0; i < _termGroupRankList.size(); i++) {
+            TermGroupRank tgr = (TermGroupRank) _termGroupRankList.get(i);
             String index = tgr.getIndex();
             String source = tgr.getSource();
             String termGroup = tgr.getTermGroup();
@@ -335,26 +335,26 @@ public class NCImBrowserProperties {
     }
 
     public static int getPaginationTimeOut() {
-        return pagination_time_out;
+        return _pagination_time_out;
     }
 
     public static int getMinimumSearchStringLength() {
-        return minimum_search_string_length;
+        return _minimum_search_string_length;
     }
 
     public static int getSlidingWindowHalfWidth() {
-        return sliding_window_half_width;
+        return _sliding_window_half_width;
     }
 
     public static String getTermBrowserURL() {
-        return term_browser_url;
+        return _term_browser_url;
     }
 
     public static String getLicensePageOption() {
-        return license_page_option;
+        return _license_page_option;
     }
 
     public static int getSubconceptPageSize() {
-        return subconcept_page_size;
+        return _subconcept_page_size;
     }
 }
