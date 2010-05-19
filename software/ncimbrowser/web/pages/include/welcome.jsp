@@ -1,6 +1,7 @@
 <%
-  String version = new DataUtils().getVocabularyVersionByTag(
-    "NCI Metathesaurus", "PRODUCTION");
+  // String version = new DataUtils().getVocabularyVersionByTag(
+  //   "NCI Metathesaurus", "PRODUCTION");
+  String version = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "version");
   if (version == null)
     version = new DataUtils().getVocabularyVersionByTag(
       "NCI Metathesaurus", null);
