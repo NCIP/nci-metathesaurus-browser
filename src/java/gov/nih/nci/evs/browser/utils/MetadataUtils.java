@@ -488,6 +488,17 @@ public class MetadataUtils {
                                 localname2FormalnameHashMap.put(css_local_name,
                                     formalname);
                             }
+                            
+                            _logger.info("\trepresentsVersion: " + representsVersion);
+                            String version = "[Not Set]";
+                            if (nvList != null) {
+                                for (int k = 0; k < nvList.length; k++) {
+                                    NameAndValue nv = (NameAndValue) nvList[k];
+                                    if (nv.getName().equals("version"))
+                                        version = nv.getContent();
+                                }
+                            }
+                            _logger.info("\tMetadata version: " + version);
                         }
                     } catch (Exception ex) {
                         _logger.warn("\tUnable to resolve coding scheme "
