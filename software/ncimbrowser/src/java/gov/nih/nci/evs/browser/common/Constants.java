@@ -50,40 +50,39 @@ import java.util.*;
  * @author garciawa2
  */
 public class Constants {
-
     // Application version
-    static public final int MAJOR_VER = 1;
-    static public final int MINOR_VER = 0;
-    static public final String CONFIG_FILE = "NCImBrowserProperties.xml";
+    public static final int MAJOR_VER = 1;
+    public static final int MINOR_VER = 0;
+    public static final String CONFIG_FILE = "NCImBrowserProperties.xml";
     // KLO, 011210
-    static public final String CODING_SCHEME_NAME = "NCI Metathesaurus";
+    public static final String CODING_SCHEME_NAME = "NCI Metathesaurus";
 
     // Application error constants
-    static public final String INIT_PARAM_ERROR_PAGE = "errorPage";
-    static public final String ERROR_MESSAGE = "systemMessage";
-    static public final String ERROR_UNEXPECTED =
+    public static final String INIT_PARAM_ERROR_PAGE = "errorPage";
+    public static final String ERROR_MESSAGE = "systemMessage";
+    public static final String ERROR_UNEXPECTED =
         "Warning: An unexpected processing error has occurred.";
 
     // Application constants
-    static public final String NA = "N/A";
-    static public final String TRUE = "true";
-    static public final String FALSE = "false";
-    static public final String EMPTY = "";
+    public static final String NA = "N/A";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String EMPTY = "";
 
-    static public final String EXTERNAL_TERM_TYPE = "External";
-    static public final String EXTERNAL_TERM_SOURCE = "Other";
-    static public final String EXTERNAL_TERM_SOURCE_CODE = "N/A";
+    public static final String EXTERNAL_TERM_TYPE = "External";
+    public static final String EXTERNAL_TERM_SOURCE = "Other";
+    public static final String EXTERNAL_TERM_SOURCE_CODE = "N/A";
 
-    static public final String ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS =
+    public static final String ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS =
         "No match found. Please try 'Begins With' or 'Contains' search instead.";
 
-    static public final int DEFAULT_PAGE_SIZE = 50;
+    public static final int DEFAULT_PAGE_SIZE = 50;
 
-    static public final int SEARCH_BOTH_DIRECTION = 0;
-    static public final int SEARCH_SOURCE = 1;
-    static public final int SEARCH_TARGET = 2;
+    public static final int SEARCH_BOTH_DIRECTION = 0;
+    public static final int SEARCH_SOURCE = 1;
+    public static final int SEARCH_TARGET = 2;
 
-    static public final List<String> REL =
+    public static final List<String> REL =
         Arrays
             .asList(new String[] {
                 "Parent\tPAR\tAnother concept&apos;s term subsumes a term in the current concept as a subtype, part, or otherwise.",
@@ -97,7 +96,7 @@ public class Constants {
                 "Other\tRQ\tAnother concept&apos;s term is related and possibly synonymous with a term in the current concept.",
                 "Other\tSY\tAnother concept&apos;s term is synonymous with a term in the current concept." });
 
-    static public final List<String> RELA =
+    public static final List<String> RELA =
         Arrays.asList(new String[] { 
             "Parent\tPAR\t[none]",
             "Parent\tPAR\tcontains",
@@ -830,11 +829,7 @@ public class Constants {
             "Other\tSY\tplain_text_form_of",
             "Other\tSY\tsort_version_of" });
 
-    /**
-     * Constructor
-     */
     private Constants() {
         // Prevent class from being explicitly instantiated
     }
-
-} // Class Constants
+}

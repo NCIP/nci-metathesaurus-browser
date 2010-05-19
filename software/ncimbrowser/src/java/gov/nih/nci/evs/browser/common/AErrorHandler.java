@@ -59,35 +59,35 @@ public class AErrorHandler {
     public static final String ERROR_PAGE = "/pages/error_handler.jsf";
 
     /**
-     * @param _facesContext
-     * @param _ex
+     * @param facesContext
+     * @param exception
      */
     public static void displayPhaseListenerException(
-        FacesContext _facesContext, Exception _ex) {
+        FacesContext facesContext, Exception exception) {
         HttpServletResponse response =
-            (HttpServletResponse) _facesContext.getExternalContext()
+            (HttpServletResponse) facesContext.getExternalContext()
                 .getResponse();
         HttpServletRequest request =
-            (HttpServletRequest) _facesContext.getExternalContext()
+            (HttpServletRequest) facesContext.getExternalContext()
                 .getRequest();
         try {
-            setPageErrorData(_ex, request);
+            setPageErrorData(exception, request);
             response.sendRedirect(request.getContextPath() + ERROR_PAGE);
-            _facesContext.responseComplete();
-            _ex.printStackTrace();
+            facesContext.responseComplete();
+            exception.printStackTrace();
         } catch (IOException ex) {
-            _ex.printStackTrace();
+            exception.printStackTrace();
             ex.printStackTrace();
         }
         throw new AbortProcessingException("An Error has occurred.");
     }
 
     /**
-     * @param _e
-     * @param _request
+     * @param throwable
+     * @param request
      */
-    public static void setPageErrorData(Throwable _e,
-        HttpServletRequest _request) {
-        _request.getSession().setAttribute(ERROR_MESSAGE, ERROR_UNEXPECTED);
+    public static void setPageErrorData(Throwable throwable,
+        HttpServletRequest request) {
+        request.getSession().setAttribute(ERROR_MESSAGE, ERROR_UNEXPECTED);
     }
 }
