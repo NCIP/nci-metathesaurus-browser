@@ -66,7 +66,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
     private static final long serialVersionUID = 6285970594380754741L;
 
     /** The current iterator. */
-    private int currentIterator = 0;
+    private int _currentIterator = 0;
 
     /** The iterators. */
     private List<ResolvedConceptReferencesIterator> iterators =
@@ -245,14 +245,14 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
     private ResolvedConceptReference getNextFromList() {
         try {
             while (this.hasNext()) {
-                int iterator = currentIterator % this.iterators.size();
+                int iterator = _currentIterator % this.iterators.size();
                 ResolvedConceptReferencesIterator itr =
                     this.iterators.get(iterator);
                 if (itr.hasNext()) {
-                    currentIterator++;
+                    _currentIterator++;
                     return itr.next();
                 } else {
-                    currentIterator++;
+                    _currentIterator++;
                 }
             }
             return null;

@@ -49,8 +49,8 @@ import org.LexGrid.commonTypes.*;
  * Used to manage and sort search results based on a scoring algorithm.
  */
 class ScoredTerm implements Comparable<ScoredTerm> {
-    ResolvedConceptReference ref = null;
-    float score = 0;
+    public ResolvedConceptReference _ref = null;
+    private float _score = 0;
 
     /**
      * Construct a ScoredTerm based on the given concept reference and score.
@@ -59,8 +59,8 @@ class ScoredTerm implements Comparable<ScoredTerm> {
      * @param score
      */
     public ScoredTerm(ResolvedConceptReference ref, float score) {
-        this.ref = ref;
-        this.score = score;
+        this._ref = ref;
+        this._score = score;
     }
 
     /**
@@ -68,11 +68,11 @@ class ScoredTerm implements Comparable<ScoredTerm> {
      * description text as tie-breaker ...
      */
     public int compareTo(ScoredTerm st) {
-        float f = st.score - this.score;
+        float f = st._score - this._score;
         if (f != 0)
             return f > 0 ? 1 : 0;
-        EntityDescription ed1 = ref.getEntityDescription();
-        EntityDescription ed2 = st.ref.getEntityDescription();
+        EntityDescription ed1 = _ref.getEntityDescription();
+        EntityDescription ed2 = st._ref.getEntityDescription();
         String term1 = ed1 != null ? ed1.getContent() : "";
         String term2 = ed2 != null ? ed2.getContent() : "";
         return term1.compareTo(term2);

@@ -66,8 +66,8 @@ public class RemoteServerUtil {
     private static Logger _logger = Logger.getLogger(RemoteServerUtil.class);
     private static boolean debug = false;
     private static String _serviceInfo = "EvsServiceInfo";
-    // private Properties systemProperties = null;
-    private static String serviceURL = null;
+    // private Properties _systemProperties = null;
+    private static String _serviceURL = null;
 
     public RemoteServerUtil() {
         // Do nothing
@@ -241,6 +241,6 @@ public class RemoteServerUtil {
     }
 
     public static String getServiceURL() {
-        return serviceURL;
+        return _serviceURL;
     }
 }

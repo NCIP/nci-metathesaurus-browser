@@ -63,28 +63,28 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 
 public class MetaTreeUtils {
     private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
-    static String[] hierAssocToParentNodes_ =
+    private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
-    static String[] hierAssociationToParentNodes_ = new String[] { "PAR" };
+    private static String[] _hierAssociationToParentNodes = new String[] { "PAR" };
 
-    // static String[] hierAssocToChildNodes_ = new String[] { "CHD",
+    // static String[] _hierAssocToChildNodes = new String[] { "CHD",
     // "hasSubtype" };
-    static String[] hierAssocToChildNodes_ = new String[] { "CHD" };
-    static SortOptionList sortByCode_ =
+    public static String[] _hierAssocToChildNodes = new String[] { "CHD" };
+    private static SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
 
-    LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
-    LexBIGServiceConvenienceMethods lbscm_ = null;
-    LexBIGService lbsvc_ = null;
+    private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
+    private LexBIGServiceConvenienceMethods _lbscm = null;
+    private LexBIGService _lbsvc = null;
 
-    private static String NCI_META_THESAURUS = "NCI Metathesaurus";
-    private static String NCI_SOURCE = "NCI";
+    private static final String NCI_META_THESAURUS = "NCI Metathesaurus";
+    private static final String NCI_SOURCE = "NCI";
 
-    private static boolean RESOLVE_CONCEPT = false;// true;
+    private static boolean _resolveConcept = false;// true;
 
     // KLO, 020210
-    private static String NCI_Thesaurus_CUI = "C1140168";
+    private static String _nciThesaurusCui = "C1140168";
 
     public MetaTreeUtils() {
     }
@@ -121,16 +121,16 @@ public class MetaTreeUtils {
 
             ArrayList list = new ArrayList();
             TreeItem ti = (TreeItem) hmap.get(code);
-            for (String assoc : ti.assocToChildMap.keySet()) {
-                List<TreeItem> roots = ti.assocToChildMap.get(assoc);
+            for (String assoc : ti._assocToChildMap.keySet()) {
+                List<TreeItem> roots = ti._assocToChildMap.get(assoc);
                 for (int k = 0; k < roots.size(); k++) {
                     TreeItem root = roots.get(k);
                     ResolvedConceptReference rcr =
                         new ResolvedConceptReference();
                     EntityDescription desc = new EntityDescription();
-                    desc.setContent(root.text);
+                    desc.setContent(root._text);
                     rcr.setEntityDescription(desc);
-                    rcr.setCode(root.code);
+                    rcr.setCode(root._code);
                     list.add(rcr);
                 }
             }
@@ -485,11 +485,11 @@ public class MetaTreeUtils {
             pathsResolved = pathsFromRoot.length;
 
             for (TreeItem rootItem : pathsFromRoot) {
-                if (rootItem.text.compareTo("NCI Thesaurus") == 0) {
+                if (rootItem._text.compareTo("NCI Thesaurus") == 0) {
                     // rootItem is NCI Thesaurus
-                    for (String assoc : rootItem.assocToChildMap.keySet()) {
+                    for (String assoc : rootItem._assocToChildMap.keySet()) {
                         List<TreeItem> children =
-                            rootItem.assocToChildMap.get(assoc);
+                            rootItem._assocToChildMap.get(assoc);
                         for (TreeItem childItem : children) {
                             ti.addChild(assoc, childItem);
                         }
@@ -498,7 +498,7 @@ public class MetaTreeUtils {
                     ti.addChild("CHD", rootItem);
                 }
             }
-            ti.expandable = true;
+            ti._expandable = true;
 
         } finally {
             _logger.debug("MetaTreeUtils Run time (milliseconds): "
@@ -543,19 +543,19 @@ public class MetaTreeUtils {
 
         StringBuffer codeAndText =
             new StringBuffer(indent).append(
-                focusCode.equals(ti.code) ? ">" : " ").append(ti.code).append(
-                ':').append(StringUtils.abbreviate(ti.text, 60)).append(
-                ti.expandable ? " [+]" : "");
-        if (ti.auis != null)
-            for (String line : ti.auis.split("\\|"))
+                focusCode.equals(ti._code) ? ">" : " ").append(ti._code).append(
+                ':').append(StringUtils.abbreviate(ti._text, 60)).append(
+                ti._expandable ? " [+]" : "");
+        if (ti._auis != null)
+            for (String line : ti._auis.split("\\|"))
                 codeAndText.append('\n').append(indent).append("    {").append(
                     StringUtils.abbreviate(line, 60)).append('}');
         Util_displayMessage(codeAndText.toString());
 
         indent.append("| ");
-        for (String association : ti.assocToChildMap.keySet()) {
+        for (String association : ti._assocToChildMap.keySet()) {
             Util_displayMessage(indent.toString() + association);
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children)
                 printTree(childItem, focusCode, depth + 1);
@@ -584,7 +584,7 @@ public class MetaTreeUtils {
         ResolvedConceptReferenceList nodes =
             neighborsBySource.resolveAsList(rcr, true, true, Integer.MAX_VALUE,
                 1, null, new PropertyType[] { PropertyType.PRESENTATION },
-                sortByCode_, null, -1);
+                _sortByCode, null, -1);
 
         List<AssociatedConcept> neighbors = new ArrayList<AssociatedConcept>();
         for (ResolvedConceptReference node : nodes
@@ -639,7 +639,7 @@ public class MetaTreeUtils {
             lbscm.setLexBIGService(lbSvc);
             String name = getCodeDescription(lbSvc, scheme, csvt, code);
             ti = new TreeItem(code, name);
-            ti.expandable = false;
+            ti._expandable = false;
 
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, null, null);
 
@@ -660,7 +660,7 @@ public class MetaTreeUtils {
              * PropertyType.PRESENTATION;
              */
             CodedNodeSet.PropertyType[] propertytypes = null;
-            if (RESOLVE_CONCEPT) {
+            if (_resolveConcept) {
                 propertytypes =
                     new PropertyType[] { PropertyType.PRESENTATION };
             }
@@ -719,7 +719,7 @@ public class MetaTreeUtils {
                                                         .getEntityDescription()
                                                         .getContent());
 
-                                            childItem.expandable = false;
+                                            childItem._expandable = false;
 
                                             AssociationList grandchildBranch =
                                                 branchItemNode.getSourceOf();
@@ -739,7 +739,7 @@ public class MetaTreeUtils {
                                                         if (isValidForSAB(
                                                             grandchildbranchItemNode,
                                                             sab)) {
-                                                            childItem.expandable =
+                                                            childItem._expandable =
                                                                 true;
                                                             break;
                                                         }
@@ -749,7 +749,7 @@ public class MetaTreeUtils {
                                             ti
                                                 .addChild(childNavText,
                                                     childItem);
-                                            ti.expandable = true;
+                                            ti._expandable = true;
                                         }
                                     }
 
@@ -790,10 +790,10 @@ public class MetaTreeUtils {
      * Returns a cached instance of a LexBIG service.
      */
     protected LexBIGService getLexBIGService() throws LBException {
-        if (lbsvc_ == null)
+        if (_lbsvc == null)
             // lbsvc_ = LexBIGServiceImpl.defaultInstance();
-            lbsvc_ = RemoteServerUtil.createLexBIGService();
-        return lbsvc_;
+            _lbsvc = RemoteServerUtil.createLexBIGService();
+        return _lbsvc;
     }
 
     /**
@@ -801,12 +801,12 @@ public class MetaTreeUtils {
      */
     protected LexBIGServiceConvenienceMethods getConvenienceMethods()
             throws LBException {
-        if (lbscm_ == null)
-            lbscm_ =
+        if (_lbscm == null)
+            _lbscm =
                 (LexBIGServiceConvenienceMethods) getLexBIGService()
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm_.setLexBIGService(lbsvc_);
-        return lbscm_;
+        _lbscm.setLexBIGService(_lbsvc);
+        return _lbscm;
     }
 
     /**
@@ -935,7 +935,7 @@ public class MetaTreeUtils {
         // HashMap hmap = getSubconcepts(scheme, null, code, sab, asso_name,
         // direction);
         HashMap hmap =
-            getSubconcepts(scheme, version, code, sab, hierAssocToParentNodes_,
+            getSubconcepts(scheme, version, code, sab, _hierAssocToParentNodes,
                 false);
 
         if (hmap == null)
@@ -951,8 +951,8 @@ public class MetaTreeUtils {
         String id = (String) objs[0];
         int knt = 0;
         TreeItem ti = (TreeItem) hmap.get(id);
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             knt = knt + children.size();
         }
         return knt;
@@ -1057,8 +1057,8 @@ public class MetaTreeUtils {
         String id = (String) objs[0];
         int knt = 0;
         TreeItem ti = (TreeItem) hmap.get(id);
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             knt = knt + children.size();
         }
         return knt;
@@ -1170,7 +1170,7 @@ public class MetaTreeUtils {
             String name =
                 getCodeDescription(lbs, "NCI Metathesaurus", null, code);
             ti = new TreeItem(code, name);
-            ti.expandable = false;
+            ti._expandable = false;
 
             List<String> par_chd_assoc_list = new ArrayList();
             par_chd_assoc_list.add(association);
@@ -1209,11 +1209,11 @@ public class MetaTreeUtils {
                     result = (BySourceTabResults) v.elementAt(0);
                 }
                 sub = new TreeItem(child_cui, result.getTerm());
-                sub.expandable =
+                sub._expandable =
                     hasSubconcepts(lbs, mbs, child_cui, "NCI", association,
                         associationsNavigatedFwd);
                 ti.addChild(association, sub);
-                ti.expandable = true;
+                ti._expandable = true;
             }
 
         } catch (Exception ex) {
@@ -1243,7 +1243,7 @@ public class MetaTreeUtils {
             cns.restrictToCodes(Constructors.createConceptReferenceList(code,
                 scheme));
         ResolvedConceptReferenceList rcrl =
-            cns.resolveToList(null, noopList_, null, 1);
+            cns.resolveToList(null, _noopList, null, 1);
         if (rcrl.getResolvedConceptReferenceCount() > 0) {
             EntityDescription desc =
                 rcrl.getResolvedConceptReference(0).getEntityDescription();
@@ -1275,19 +1275,19 @@ public class MetaTreeUtils {
             list = new ArrayList();
         if (currLevel > maxLevel)
             return;
-        if (ti.assocToChildMap.keySet().size() > 0) {
-            if (ti.text.compareTo("Root node") != 0) {
+        if (ti._assocToChildMap.keySet().size() > 0) {
+            if (ti._text.compareTo("Root node") != 0) {
                 ResolvedConceptReference rcr = new ResolvedConceptReference();
-                rcr.setConceptCode(ti.code);
+                rcr.setConceptCode(ti._code);
                 EntityDescription entityDescription = new EntityDescription();
-                entityDescription.setContent(ti.text);
+                entityDescription.setContent(ti._text);
                 rcr.setEntityDescription(entityDescription);
                 list.add(rcr);
             }
         }
 
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children) {
                 getTopNodes(childItem, list, currLevel + 1, maxLevel);
@@ -1305,11 +1305,11 @@ public class MetaTreeUtils {
             indent = indent + "\t";
         }
 
-        _logger.debug(indent + ti.text + " (" + ti.code + ")");
+        _logger.debug(indent + ti._text + " (" + ti._code + ")");
         try {
-            for (String association : ti.assocToChildMap.keySet()) {
+            for (String association : ti._assocToChildMap.keySet()) {
                 _logger.debug("\n" + indent + " --- " + association);
-                List<TreeItem> children = ti.assocToChildMap.get(association);
+                List<TreeItem> children = ti._assocToChildMap.get(association);
 
                 for (TreeItem childItem : children) {
                     dumpTreeItem(childItem, level + 1);
@@ -1329,9 +1329,9 @@ public class MetaTreeUtils {
             String code = (String) objs[0];
 
             TreeItem ti = (TreeItem) hmap.get(code);
-            for (String association : ti.assocToChildMap.keySet()) {
+            for (String association : ti._assocToChildMap.keySet()) {
                 _logger.debug("\n--- " + association);
-                List<TreeItem> children = ti.assocToChildMap.get(association);
+                List<TreeItem> children = ti._assocToChildMap.get(association);
 
                 for (TreeItem childItem : children) {
                     // _logger.debug(childItem.text + "(" + childItem.code +
@@ -1425,7 +1425,7 @@ public class MetaTreeUtils {
             lbscm.setLexBIGService(lbSvc);
             String name = getCodeDescription(lbSvc, scheme, csvt, code);
             ti = new TreeItem(code, name);
-            ti.expandable = false;
+            ti._expandable = false;
 
             CodedNodeGraph cng = null;
             cng = lbSvc.getNodeGraph(scheme, null, null);
@@ -1433,16 +1433,16 @@ public class MetaTreeUtils {
             if (sab != null) {
                 cng =
                     cng.restrictToAssociations(Constructors
-                        .createNameAndValueList(hierAssocToChildNodes_),
+                        .createNameAndValueList(_hierAssocToChildNodes),
                         Constructors.createNameAndValueList("source", sab));
             } else {
                 cng =
                     cng.restrictToAssociations(Constructors
-                        .createNameAndValueList(hierAssocToChildNodes_), null);
+                        .createNameAndValueList(_hierAssocToChildNodes), null);
             }
 
             CodedNodeSet.PropertyType[] propertytypes = null;
-            if (RESOLVE_CONCEPT) {
+            if (_resolveConcept) {
                 propertytypes =
                     new PropertyType[] { PropertyType.PRESENTATION };
             }
@@ -1502,7 +1502,7 @@ public class MetaTreeUtils {
                                                     .getEntityDescription()
                                                     .getContent());
 
-                                        childItem.expandable = false;
+                                        childItem._expandable = false;
 
                                         AssociationList grandchildBranch =
                                             branchItemNode.getSourceOf();
@@ -1530,7 +1530,7 @@ public class MetaTreeUtils {
                                                     if (isValidForSAB(
                                                         grandchildbranchItemNode,
                                                         sab)) {
-                                                        childItem.expandable =
+                                                        childItem._expandable =
                                                             true;
                                                         break;
                                                     }
@@ -1538,7 +1538,7 @@ public class MetaTreeUtils {
                                             }
                                         }
                                         ti.addChild(childNavText, childItem);
-                                        ti.expandable = true;
+                                        ti._expandable = true;
                                     }
                                 }
                             }
@@ -1616,7 +1616,7 @@ public class MetaTreeUtils {
 
         }
 
-        ti.expandable =
+        ti._expandable =
             hasSubconcepts(lbs, mbs, rcr.getCode(), sab, "CHD", true);
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
@@ -1640,14 +1640,14 @@ public class MetaTreeUtils {
     protected boolean hasChildren(TreeItem tiParent, String code) {
         if (tiParent == null)
             return false;
-        if (tiParent.assocToChildMap == null)
+        if (tiParent._assocToChildMap == null)
             return false;
 
-        for (String association : tiParent.assocToChildMap.keySet()) {
-            List<TreeItem> children = tiParent.assocToChildMap.get(association);
+        for (String association : tiParent._assocToChildMap.keySet()) {
+            List<TreeItem> children = tiParent._assocToChildMap.get(association);
             for (int i = 0; i < children.size(); i++) {
                 TreeItem childItem = (TreeItem) children.get(i);
-                if (childItem.code.compareTo(code) == 0)
+                if (childItem._code.compareTo(code) == 0)
                     return true;
             }
         }
@@ -1693,7 +1693,7 @@ public class MetaTreeUtils {
         for (int i = 0; i <= 1; i++) {
             boolean fwd = i < 1;
             String[] upstreamAssoc =
-                fwd ? hierAssocToParentNodes_ : hierAssocToChildNodes_;
+                fwd ? _hierAssocToParentNodes : _hierAssocToChildNodes;
 
             // Define a code graph for all relationships tagged with
             // the specified sab.
@@ -1711,7 +1711,7 @@ public class MetaTreeUtils {
             ResolvedConceptReference[] refs =
                 graph.resolveAsList(rcr, fwd, !fwd, Integer.MAX_VALUE, 1, null,
                     new PropertyType[] { PropertyType.PRESENTATION },
-                    sortByCode_, null, -1).getResolvedConceptReference();
+                    _sortByCode, null, -1).getResolvedConceptReference();
             // null, null, sortByCode_, null, -1).getResolvedConceptReference();
 
             // Create a new tree item for each upstream node, add the current
@@ -1781,8 +1781,8 @@ public class MetaTreeUtils {
                                             // recursion.
 
                                             String[] downstreamAssoc =
-                                                fwd ? hierAssocToChildNodes_
-                                                    : hierAssocToParentNodes_;
+                                                fwd ? _hierAssocToChildNodes
+                                                    : _hierAssocToParentNodes;
                                             // addChildren(tiParent, scheme,
                                             // csvt, sab, parentCode,
                                             // code2Tree.keySet(),
@@ -1803,10 +1803,10 @@ public class MetaTreeUtils {
 
                                         // Add the child (eliminate redundancy
                                         // -- e.g., hasSubtype and CHD)
-                                        if (!hasChildren(tiParent, ti.code)) {
+                                        if (!hasChildren(tiParent, ti._code)) {
                                             tiParent.addChild(directionalName,
                                                 ti);
-                                            tiParent.expandable = true;
+                                            tiParent._expandable = true;
                                         }
                                         isRoot = false;
                                     }
@@ -1865,11 +1865,11 @@ public class MetaTreeUtils {
         }
 
         // Only need to process a code once ...
-        if (code2Tree.containsKey(ti.code))
+        if (code2Tree.containsKey(ti._code))
             return;
 
         // Cache for future reference.
-        code2Tree.put(ti.code, ti);
+        code2Tree.put(ti._code, ti);
 
         // UMLS relations can be defined with forward direction
         // being parent to child or child to parent on a source
@@ -1893,7 +1893,7 @@ public class MetaTreeUtils {
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
             map =
-                mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list,
+                mbs.getBySourceTabDisplay(ti._code, sab, par_chd_assoc_list,
                     Direction.TARGETOF);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1907,7 +1907,7 @@ public class MetaTreeUtils {
         while (iterator.hasNext()) {
             String parent_cui = (String) iterator.next();
             // KLO, 020210
-            if (parent_cui.compareTo(NCI_Thesaurus_CUI) != 0) {
+            if (parent_cui.compareTo(_nciThesaurusCui) != 0) {
                 Vector v = (Vector) cui2SynonymsMap.get(parent_cui);
                 BySourceTabResults result =
                     DataUtils.findHighestRankedAtom(v, sab);
@@ -1917,7 +1917,7 @@ public class MetaTreeUtils {
                 }
                 // BySourceTabResults result = (BySourceTabResults)
                 // v.elementAt(0);
-                String link = ti.code + "|" + parent_cui;
+                String link = ti._code + "|" + parent_cui;
 
                 if (!visited_links.contains(link)) {
                     visited_links.add(link);
@@ -1935,7 +1935,7 @@ public class MetaTreeUtils {
                     // parent_cui, code2Tree.keySet(), code2Tree);
                     tiParent =
                         addChildrenExt(lbs, mbs, tiParent, sab, parent_cui,
-                            code2Tree.keySet(), code2Tree, ti.code);
+                            code2Tree.keySet(), code2Tree, ti._code);
                     tiParent.addChild("CHD", ti);
 
                     // Try to go higher through recursion.
@@ -1947,18 +1947,18 @@ public class MetaTreeUtils {
                 }
             } else {
                 roots.add(ti);
-                new_root_codes.add(ti.code);
+                new_root_codes.add(ti._code);
             }
         }
 
-        code2Tree.put(ti.code, ti);
+        code2Tree.put(ti._code, ti);
         isRoot = false;
         if (maxLevel != -1 && currLevel == maxLevel) {
             isRoot = true;
         }
         if (isRoot) {
             // //KLO, 020210
-            if (!new_root_codes.contains(ti.code)) {
+            if (!new_root_codes.contains(ti._code)) {
                 roots.add(ti);
             }
         }
@@ -1970,13 +1970,13 @@ public class MetaTreeUtils {
             Object[] objs = keyset.toArray();
             String code = (String) objs[0];
             TreeItem ti = (TreeItem) hmap.get(code);
-            for (String association : ti.assocToChildMap.keySet()) {
+            for (String association : ti._assocToChildMap.keySet()) {
                 _logger.debug("\nassociation: " + association);
-                List<TreeItem> children = ti.assocToChildMap.get(association);
+                List<TreeItem> children = ti._assocToChildMap.get(association);
                 for (TreeItem childItem : children) {
-                    _logger.debug(childItem.text + "(" + childItem.code + ")");
+                    _logger.debug(childItem._text + "(" + childItem._code + ")");
                     int knt = 0;
-                    if (childItem.expandable) {
+                    if (childItem._expandable) {
                         knt = 1;
                         _logger.debug("\tnode.expandable");
 
@@ -2035,7 +2035,7 @@ public class MetaTreeUtils {
             // mbs =
             // (MetaBrowserService)lbs.getGenericExtension("metabrowser-extension");
             map =
-                mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list,
+                mbs.getBySourceTabDisplay(ti._code, sab, par_chd_assoc_list,
                     Direction.SOURCEOF);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -2061,7 +2061,7 @@ public class MetaTreeUtils {
          * ti.expandable = true; }
          */
         HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
-        ti.expandable = false;
+        ti._expandable = false;
         Set keyset = cui2SynonymsMap.keySet();
         Iterator iterator = keyset.iterator();
         while (iterator.hasNext()) {
@@ -2081,7 +2081,7 @@ public class MetaTreeUtils {
                 // BySourceTabResults result = (BySourceTabResults)
                 // v.elementAt(0);
                 sub = new TreeItem(child_cui, result.getTerm());
-                sub.expandable =
+                sub._expandable =
                     hasSubconcepts(lbs, mbs, child_cui, NCI_SOURCE, "CHD", true);
             }
             w.add(sub);
@@ -2097,7 +2097,7 @@ public class MetaTreeUtils {
         int target_idx = -1;
         for (int i = 0; i < w.size(); i++) {
             TreeItem sub = (TreeItem) w.elementAt(i);
-            if (sub.code.compareTo(target_code) == 0) {
+            if (sub._code.compareTo(target_code) == 0) {
                 target_idx = i;
                 break;
             }
@@ -2105,7 +2105,7 @@ public class MetaTreeUtils {
 
         for (int i = 0; i <= target_idx; i++) {
             TreeItem sub = (TreeItem) w.elementAt(i);
-            ti.expandable = true;
+            ti._expandable = true;
             ti.addChild("CHD", sub);
         }
 
@@ -2115,14 +2115,14 @@ public class MetaTreeUtils {
 
         for (int i = target_idx + 1; i < w.size(); i++) {
             TreeItem sub = (TreeItem) w.elementAt(i);
-            if (sub.expandable) {
-                sub.text = "...";// + sub.text;
-                sub.code = sub.code + "|" + ti.code;
-                ti.expandable = true;
+            if (sub._expandable) {
+                sub._text = "...";// + sub.text;
+                sub._code = sub._code + "|" + ti._code;
+                ti._expandable = true;
                 ti.addChild("CHD", sub);
                 break;
             } else {
-                ti.expandable = true;
+                ti._expandable = true;
                 ti.addChild("CHD", sub);
             }
         }
@@ -2157,7 +2157,7 @@ public class MetaTreeUtils {
         }
 
         TreeItem ti = new TreeItem(code, name);
-        ti.expandable = false;
+        ti._expandable = false;
 
         HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
@@ -2178,7 +2178,7 @@ public class MetaTreeUtils {
                 (MetaBrowserService) lbSvc
                     .getGenericExtension("metabrowser-extension");
             map =
-                mbs.getBySourceTabDisplay(ti.code, sab, par_chd_assoc_list,
+                mbs.getBySourceTabDisplay(ti._code, sab, par_chd_assoc_list,
                     Direction.SOURCEOF);
 
         } catch (Exception ex) {
@@ -2188,7 +2188,7 @@ public class MetaTreeUtils {
         }
 
         HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
-        ti.expandable = false;
+        ti._expandable = false;
         Set keyset = cui2SynonymsMap.keySet();
         Iterator iterator = keyset.iterator();
         while (iterator.hasNext()) {
@@ -2200,7 +2200,7 @@ public class MetaTreeUtils {
                 result = (BySourceTabResults) v.elementAt(0);
             }
             sub = new TreeItem(child_cui, result.getTerm());
-            sub.expandable =
+            sub._expandable =
                 hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
             w.add(sub);
         }
@@ -2232,7 +2232,7 @@ public class MetaTreeUtils {
         if (subconcept_code != null) {
             for (int i = 0; i < w.size(); i++) {
                 TreeItem sub = (TreeItem) w.elementAt(i);
-                if (sub.code.compareTo(subconcept_code) == 0) {
+                if (sub._code.compareTo(subconcept_code) == 0) {
                     istart = i;
                     break;
                 }
@@ -2247,7 +2247,7 @@ public class MetaTreeUtils {
                 if (i >= istart)
                     include = true;
             }
-            ti.expandable = true;
+            ti._expandable = true;
             if (include) {
                 ti.addChild("CHD", sub);
             }
