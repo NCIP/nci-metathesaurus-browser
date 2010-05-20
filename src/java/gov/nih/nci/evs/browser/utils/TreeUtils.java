@@ -108,7 +108,7 @@ import org.apache.log4j.*;
  */
 public class TreeUtils {
     private static Logger _logger = Logger.getLogger(TreeUtils.class);
-    LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
+    LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
 
     public TreeUtils() {
 
@@ -332,7 +332,7 @@ public class TreeUtils {
                 .createNameAndValueList(associationsToNavigate), null);
         ResolvedConceptReferenceList branch =
             cng.resolveAsList(focus, associationsNavigatedFwd,
-                !associationsNavigatedFwd, -1, 2, noopList_, null, null, null,
+                !associationsNavigatedFwd, -1, 2, _noopList, null, null, null,
                 -1, true);
 
         // The resolved branch will be represented by the first node in
@@ -376,7 +376,7 @@ public class TreeUtils {
                             associationsNavigatedFwd ? branchItemNode
                                 .getSourceOf() : branchItemNode.getTargetOf();
                         if (grandchildBranch != null)
-                            childItem.expandable = true;
+                            childItem._expandable = true;
                         ti.addChild(childNavText, childItem);
                     }
                 }
@@ -398,16 +398,16 @@ public class TreeUtils {
 
         StringBuffer codeAndText =
             new StringBuffer(indent).append(
-                focusCode.equals(ti.code) ? ">>>>" : "").append(ti.code)
+                focusCode.equals(ti._code) ? ">>>>" : "").append(ti._code)
                 .append(':').append(
-                    ti.text.length() > 64 ? ti.text.substring(0, 62) + "..."
-                        : ti.text).append(ti.expandable ? " [+]" : "");
+                    ti._text.length() > 64 ? ti._text.substring(0, 62) + "..."
+                        : ti._text).append(ti._expandable ? " [+]" : "");
         _logger.debug(codeAndText.toString());
 
         indent.append("| ");
-        for (String association : ti.assocToChildMap.keySet()) {
+        for (String association : ti._assocToChildMap.keySet()) {
             _logger.debug(indent.toString() + association);
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children)
                 printTree(childItem, focusCode, depth + 1);
@@ -429,7 +429,7 @@ public class TreeUtils {
             cns.restrictToCodes(Constructors.createConceptReferenceList(code,
                 scheme));
         ResolvedConceptReferenceList rcrl =
-            cns.resolveToList(null, noopList_, null, 1);
+            cns.resolveToList(null, _noopList, null, 1);
         if (rcrl.getResolvedConceptReferenceCount() > 0) {
             EntityDescription desc =
                 rcrl.getResolvedConceptReference(0).getEntityDescription();
@@ -576,7 +576,7 @@ public class TreeUtils {
 
             String name = getCodeDescription(lbSvc, scheme, csvt, code);
             ti = new TreeItem(code, name);
-            ti.expandable = false;
+            ti._expandable = false;
 
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
             ConceptReference focus =
@@ -587,7 +587,7 @@ public class TreeUtils {
             boolean associationsNavigatedFwd = true;
             ResolvedConceptReferenceList branch =
                 cng.resolveAsList(focus, associationsNavigatedFwd,
-                    !associationsNavigatedFwd, -1, 2, noopList_, null, null,
+                    !associationsNavigatedFwd, -1, 2, _noopList, null, null,
                     null, -1, true);
 
             for (Iterator<ResolvedConceptReference> nodes =
@@ -639,13 +639,13 @@ public class TreeUtils {
                             TreeItem childItem =
                                 new TreeItem(branchItemCode,
                                     getCodeDescription(branchItemNode));
-                            ti.expandable = true;
+                            ti._expandable = true;
                             AssociationList grandchildBranch =
                                 associationsNavigatedFwd ? branchItemNode
                                     .getSourceOf() : branchItemNode
                                     .getTargetOf();
                             if (grandchildBranch != null)
-                                childItem.expandable = true;
+                                childItem._expandable = true;
                             ti.addChild(childNavText, childItem);
                         }
                     }
@@ -886,20 +886,20 @@ public class TreeUtils {
             list = new ArrayList();
         if (currLevel > maxLevel)
             return;
-        if (ti.assocToChildMap.keySet().size() > 0) {
-            if (ti.text.compareTo("Root node") != 0) {
+        if (ti._assocToChildMap.keySet().size() > 0) {
+            if (ti._text.compareTo("Root node") != 0) {
                 ResolvedConceptReference rcr = new ResolvedConceptReference();
-                rcr.setConceptCode(ti.code);
+                rcr.setConceptCode(ti._code);
                 EntityDescription entityDescription = new EntityDescription();
-                entityDescription.setContent(ti.text);
+                entityDescription.setContent(ti._text);
                 rcr.setEntityDescription(entityDescription);
                 // _logger.debug("Root: " + ti.text);
                 list.add(rcr);
             }
         }
 
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children) {
                 getTopNodes(childItem, list, currLevel + 1, maxLevel);

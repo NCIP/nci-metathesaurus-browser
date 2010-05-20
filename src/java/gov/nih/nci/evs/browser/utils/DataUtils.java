@@ -83,49 +83,49 @@ import gov.nih.nci.evs.browser.common.*;
 
 public class DataUtils {
     private static Logger _logger = Logger.getLogger(DataUtils.class);
-    private static Vector<String> sourceListData = null;
-    LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
-    static SortOptionList sortByCode_ =
+    private static Vector<String> _sourceListData = null;
+    private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
+    private static SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
 
-    Connection con;
-    Statement stmt;
-    ResultSet rs;
+    private Connection _con;
+    private Statement _stmt;
+    private ResultSet _rs;
 
-    private List supportedStandardReportList = new ArrayList();
+    private List _supportedStandardReportList = new ArrayList();
 
-    private static List standardReportTemplateList = null;
-    private static List adminTaskList = null;
-    private static List userTaskList = null;
-    private static List propertyTypeList = null;
+    private static List _standardReportTemplateList = null;
+    private static List _adminTaskList = null;
+    private static List _userTaskList = null;
+    private static List _propertyTypeList = null;
     private static List _ontologies = null;
 
-    private static org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
-    public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
-    public CodingSchemeRenderingList csrl = null;
-    private Vector supportedCodingSchemes = null;
-    private static HashMap codingSchemeMap = null;
-    private Vector codingSchemes = null;
+    private static org.LexGrid.LexBIG.LexBIGService.LexBIGService _lbSvc = null;
+    public org.LexGrid.LexBIG.Utility.ConvenienceMethods _lbConvMethods = null;
+    public CodingSchemeRenderingList _csrl = null;
+    private Vector _supportedCodingSchemes = null;
+    private static HashMap _codingSchemeMap = null;
+    private Vector _codingSchemes = null;
 
-    private static HashMap csnv2codingSchemeNameMap = null;
-    private static HashMap csnv2VersionMap = null;
-    private static List directionList = null;
+    private static HashMap _csnv2codingSchemeNameMap = null;
+    private static HashMap _csnv2VersionMap = null;
+    private static List _directionList = null;
     private static String[] ASSOCIATION_NAMES = null;
-    public static String INCOMPLETE = "INCOMPLETE";
+    public final static String INCOMPLETE = "INCOMPLETE";
 
     // ==================================================================================
     // For customized query use
     private static String SOURCE_OF = "outbound associations";
     private static String TARGET_OF = "inbound associations";
 
-    public static int ALL = 0;
-    public static int PREFERRED_ONLY = 1;
-    public static int NON_PREFERRED_ONLY = 2;
+    public static final int ALL = 0;
+    public static final int PREFERRED_ONLY = 1;
+    public static final int NON_PREFERRED_ONLY = 2;
 
-    static int RESOLVE_SOURCE = 1;
-    static int RESOLVE_TARGET = -1;
-    static int RESTRICT_SOURCE = -1;
-    static int RESTRICT_TARGET = 1;
+    private static final int RESOLVE_SOURCE = 1;
+    private static final int RESOLVE_TARGET = -1;
+    private static final int RESTRICT_SOURCE = -1;
+    private static final int RESTRICT_TARGET = 1;
 
     public static final int SEARCH_NAME_CODE = 1;
     public static final int SEARCH_DEFINITION = 2;
@@ -134,7 +134,7 @@ public class DataUtils {
     public static final int SEARCH_ROLE_VALUE = 6;
     public static final int SEARCH_ASSOCIATION_VALUE = 7;
 
-    static final List<String> STOP_WORDS =
+    private static final List<String> STOP_WORDS =
         Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
             "in", "nos", "the", "to", "with" });
 
@@ -146,47 +146,47 @@ public class DataUtils {
     public static String TYPE_BROADERCONCEPT = "type_broaderconcept";
     public static String TYPE_NARROWERCONCEPT = "type_narrowerconcept";
 
-    public String NCICBContactURL = null;
-    public String terminologySubsetDownloadURL = null;
-    public String NCIMBuildInfo = null;
-    public String NCIMAppVersion = null;
-    public String NCITAnthillBuildTagBuilt = null;
-    public String EVSServiceURL = null;
-    public String NCItURL = null;
+    public String _ncicbContactURL = null;
+    public String _terminologySubsetDownloadURL = null;
+    public String _ncimBuildInfo = null;
+    public String _ncimAppVersion = null;
+    public String _ncitAnthillBuildTagBuilt = null;
+    public String _evsServiceURL = null;
+    public String _ncitURL = null;
 
-    static String[] hierAssocToParentNodes_ =
+    private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
-    static String[] hierAssocToChildNodes_ =
+    private static String[] _hierAssocToChildNodes =
         new String[] { "CHD", "inverse_isa" };
 
-    static String[] assocToSiblingNodes_ = new String[] { "SIB" };
-    static String[] assocToBTNodes_ = new String[] { "RB" };
-    static String[] assocToNTNodes_ = new String[] { "RN" };
+    private static String[] _assocToSiblingNodes = new String[] { "SIB" };
+    private static String[] _assocToBTNodes = new String[] { "RB" };
+    private static String[] _assocToNTNodes = new String[] { "RN" };
 
-    static String[] relationshipCategories_ =
+    private static String[] _relationshipCategories =
         new String[] { "Parent", "Child", "Broader", "Narrower", "Sibling",
             "Other" };
 
     private static String SOURCE = "source";
-    static String[] META_ASSOCIATIONS =
+    private static String[] META_ASSOCIATIONS =
         new String[] { "AQ", "CHD", "RB", "RO", "RQ", "SIB", "SY" };
 
-    public static HashMap formalName2MetadataHashMap = null;
+    public static HashMap _formalName2MetadataHashMap = null;
 
     public DataUtils() {
         // Do nothing
-        formalName2MetadataHashMap = null;
+        _formalName2MetadataHashMap = null;
     }
 
     public static void setFormalName2MetadataHashMap(HashMap hmap) {
-        formalName2MetadataHashMap = hmap;
+        _formalName2MetadataHashMap = hmap;
     }
 
     public static HashMap getFormalName2MetadataHashMap() {
-        if (formalName2MetadataHashMap != null)
-            return formalName2MetadataHashMap;
+        if (_formalName2MetadataHashMap != null)
+            return _formalName2MetadataHashMap;
         MetadataUtils.initialize();
-        return formalName2MetadataHashMap;
+        return _formalName2MetadataHashMap;
     }
 
     /*
@@ -318,18 +318,18 @@ public class DataUtils {
     }
 
     public static String getCodingSchemeName(String key) {
-        return (String) csnv2codingSchemeNameMap.get(key);
+        return (String) _csnv2codingSchemeNameMap.get(key);
     }
 
     public static String getCodingSchemeVersion(String key) {
-        return (String) csnv2VersionMap.get(key);
+        return (String) _csnv2VersionMap.get(key);
     }
 
     public static Vector<String> getRepresentationalFormListData(String key) {
-        String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = (String) _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = (String) csnv2VersionMap.get(key);
+        String version = (String) _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getRepresentationalFormListData(codingSchemeName, version);
@@ -366,10 +366,10 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyQualifierListData(String key) {
-        String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = (String) _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = (String) csnv2VersionMap.get(key);
+        String version = (String) _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getPropertyQualifierListData(codingSchemeName, version);
@@ -406,8 +406,8 @@ public class DataUtils {
 
     public static Vector<String> getSourceListData(String codingSchemeName,
         String version) {
-        if (sourceListData != null)
-            return sourceListData;
+        if (_sourceListData != null)
+            return _sourceListData;
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
@@ -422,11 +422,11 @@ public class DataUtils {
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
                 return null;
-            sourceListData = new Vector<String>();
+            _sourceListData = new Vector<String>();
 
             if (scheme.getMappings() == null)
                 return null;
-            sourceListData.add("ALL");
+            _sourceListData.add("ALL");
 
             // Insert your code here
             SupportedSource[] sources =
@@ -436,10 +436,10 @@ public class DataUtils {
 
             for (int i = 0; i < sources.length; i++) {
                 SupportedSource source = sources[i];
-                sourceListData.add(source.getLocalId());
+                _sourceListData.add(source.getLocalId());
             }
 
-            return sourceListData;
+            return _sourceListData;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1313,13 +1313,13 @@ public class DataUtils {
         ArrayList ntList = new ArrayList();
 
         Vector parent_asso_vec =
-            new Vector(Arrays.asList(hierAssocToParentNodes_));
+            new Vector(Arrays.asList(_hierAssocToParentNodes));
         Vector child_asso_vec =
-            new Vector(Arrays.asList(hierAssocToChildNodes_));
+            new Vector(Arrays.asList(_hierAssocToChildNodes));
         Vector sibling_asso_vec =
-            new Vector(Arrays.asList(assocToSiblingNodes_));
-        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
-        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+            new Vector(Arrays.asList(_assocToSiblingNodes));
+        Vector bt_vec = new Vector(Arrays.asList(_assocToBTNodes));
+        Vector nt_vec = new Vector(Arrays.asList(_assocToNTNodes));
 
         HashMap map = new HashMap();
         try {
@@ -1342,7 +1342,7 @@ public class DataUtils {
             int maxToReturn = NCImBrowserProperties._maxToReturn;
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                    code, scheme), true, false, 1, 1, noopList_, null, null,
+                    code, scheme), true, false, 1, 1, _noopList, null, null,
                     null, maxToReturn, false);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
@@ -1453,7 +1453,7 @@ public class DataUtils {
 
     public Vector getSuperconcepts(String scheme, String version, String code) {
         return getAssociationSources(scheme, version, code,
-            hierAssocToChildNodes_);
+            _hierAssocToChildNodes);
     }
 
     public Vector getAssociationSources(String scheme, String version,
@@ -1499,7 +1499,7 @@ public class DataUtils {
 
     public Vector getSubconcepts(String scheme, String version, String code) {
         return getAssociationTargets(scheme, version, code,
-            hierAssocToChildNodes_);
+            _hierAssocToChildNodes);
     }
 
     public Vector getAssociationTargets(String scheme, String version,
@@ -1748,137 +1748,137 @@ public class DataUtils {
     }
 
     public String getNCICBContactURL() {
-        if (NCICBContactURL != null) {
-            return NCICBContactURL;
+        if (_ncicbContactURL != null) {
+            return _ncicbContactURL;
         }
         String default_url = "ncicb@pop.nci.nih.gov";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            NCICBContactURL =
+            _ncicbContactURL =
                 properties.getProperty(NCImBrowserProperties.NCICB_CONTACT_URL);
-            if (NCICBContactURL == null) {
-                NCICBContactURL = default_url;
+            if (_ncicbContactURL == null) {
+                _ncicbContactURL = default_url;
             }
         } catch (Exception ex) {
 
         }
 
-        _logger.debug("getNCICBContactURL returns " + NCICBContactURL);
-        return NCICBContactURL;
+        _logger.debug("getNCICBContactURL returns " + _ncicbContactURL);
+        return _ncicbContactURL;
     }
 
     public String getTerminologySubsetDownloadURL() {
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            terminologySubsetDownloadURL =
+            _terminologySubsetDownloadURL =
                 properties
                     .getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
         } catch (Exception ex) {
 
         }
-        return terminologySubsetDownloadURL;
+        return _terminologySubsetDownloadURL;
     }
 
     public String getNCIMBuildInfo() {
-        if (NCIMBuildInfo != null) {
-            return NCIMBuildInfo;
+        if (_ncimBuildInfo != null) {
+            return _ncimBuildInfo;
         }
         String default_info = "N/A";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            NCIMBuildInfo =
+            _ncimBuildInfo =
                 properties.getProperty(NCImBrowserProperties.NCIM_BUILD_INFO);
-            if (NCIMBuildInfo == null) {
-                NCIMBuildInfo = default_info;
+            if (_ncimBuildInfo == null) {
+                _ncimBuildInfo = default_info;
             }
         } catch (Exception ex) {
 
         }
 
-        _logger.debug("getNCIMBuildInfo returns " + NCIMBuildInfo);
-        return NCIMBuildInfo;
+        _logger.debug("getNCIMBuildInfo returns " + _ncimBuildInfo);
+        return _ncimBuildInfo;
     }
 
     public String getApplicationVersion() {
-        if (NCIMAppVersion != null) {
-            return NCIMAppVersion;
+        if (_ncimAppVersion != null) {
+            return _ncimAppVersion;
         }
         String default_info = "1.0";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            NCIMAppVersion =
+            _ncimAppVersion =
                 properties.getProperty(NCImBrowserProperties.NCIM_APP_VERSION);
-            if (NCIMAppVersion == null) {
-                NCIMAppVersion = default_info;
+            if (_ncimAppVersion == null) {
+                _ncimAppVersion = default_info;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return NCIMAppVersion;
+        return _ncimAppVersion;
     }
 
     public String getNCITAnthillBuildTagBuilt() {
-        if (NCITAnthillBuildTagBuilt != null) {
-            return NCITAnthillBuildTagBuilt;
+        if (_ncitAnthillBuildTagBuilt != null) {
+            return _ncitAnthillBuildTagBuilt;
         }
         String default_info = "N/A";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            NCITAnthillBuildTagBuilt =
+            _ncitAnthillBuildTagBuilt =
                 properties
                     .getProperty(NCImBrowserProperties.ANTHILL_BUILD_TAG_BUILT);
-            if (NCITAnthillBuildTagBuilt == null) {
-                NCITAnthillBuildTagBuilt = default_info;
+            if (_ncitAnthillBuildTagBuilt == null) {
+                _ncitAnthillBuildTagBuilt = default_info;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return NCITAnthillBuildTagBuilt;
+        return _ncitAnthillBuildTagBuilt;
     }
 
     public String getEVSServiceURL() {
-        if (EVSServiceURL != null) {
-            return EVSServiceURL;
+        if (_evsServiceURL != null) {
+            return _evsServiceURL;
         }
         String default_info = "Local LexEVS";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            EVSServiceURL =
+            _evsServiceURL =
                 properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
-            if (EVSServiceURL == null) {
-                EVSServiceURL = default_info;
+            if (_evsServiceURL == null) {
+                _evsServiceURL = default_info;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return EVSServiceURL;
+        return _evsServiceURL;
     }
 
     public String getNCItURL() {
-        if (NCItURL != null) {
-            return NCItURL;
+        if (_ncitURL != null) {
+            return _ncitURL;
         }
         String default_info = "N/A";
         NCImBrowserProperties properties = null;
         try {
             properties = NCImBrowserProperties.getInstance();
-            NCItURL = properties.getProperty(NCImBrowserProperties.NCIT_URL);
-            if (NCItURL == null) {
-                NCItURL = default_info;
+            _ncitURL = properties.getProperty(NCImBrowserProperties.NCIT_URL);
+            if (_ncitURL == null) {
+                _ncitURL = default_info;
             }
         } catch (Exception ex) {
 
         }
-        return NCItURL;
+        return _ncitURL;
     }
 
     public static Vector<String> getMatchTypeListData(String codingSchemeName,
@@ -2102,7 +2102,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+                                .createNameAndValueList(MetaTreeUtils._hierAssocToChildNodes),
                             Constructors.createNameAndValueList("source",
                                 source));
             } else {
@@ -2110,7 +2110,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils.hierAssocToChildNodes_),
+                                .createNameAndValueList(MetaTreeUtils._hierAssocToChildNodes),
                             null);
             }
 
@@ -2413,13 +2413,13 @@ public class DataUtils {
         Debug.println("(*) getNeighborhoodSynonyms ..." + sab);
 
         Vector parent_asso_vec =
-            new Vector(Arrays.asList(hierAssocToParentNodes_));
+            new Vector(Arrays.asList(_hierAssocToParentNodes));
         Vector child_asso_vec =
-            new Vector(Arrays.asList(hierAssocToChildNodes_));
+            new Vector(Arrays.asList(_hierAssocToChildNodes));
         Vector sibling_asso_vec =
-            new Vector(Arrays.asList(assocToSiblingNodes_));
-        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
-        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+            new Vector(Arrays.asList(_assocToSiblingNodes));
+        Vector bt_vec = new Vector(Arrays.asList(_assocToBTNodes));
+        Vector nt_vec = new Vector(Arrays.asList(_assocToNTNodes));
 
         Vector w = new Vector();
         HashSet hset = new HashSet();
@@ -2962,15 +2962,15 @@ public class DataUtils {
         par_chd_assoc_list.add("RB");
 
         Vector parent_asso_vec =
-            new Vector(Arrays.asList(hierAssocToParentNodes_));
+            new Vector(Arrays.asList(_hierAssocToParentNodes));
         Vector child_asso_vec =
-            new Vector(Arrays.asList(hierAssocToChildNodes_));
+            new Vector(Arrays.asList(_hierAssocToChildNodes));
         Vector sibling_asso_vec =
-            new Vector(Arrays.asList(assocToSiblingNodes_));
-        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
-        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+            new Vector(Arrays.asList(_assocToSiblingNodes));
+        Vector bt_vec = new Vector(Arrays.asList(_assocToBTNodes));
+        Vector nt_vec = new Vector(Arrays.asList(_assocToNTNodes));
         Vector category_vec =
-            new Vector(Arrays.asList(relationshipCategories_));
+            new Vector(Arrays.asList(_relationshipCategories));
 
         HashMap rel_hmap = new HashMap();
         for (int k = 0; k < category_vec.size(); k++) {
@@ -3332,13 +3332,13 @@ public class DataUtils {
         Vector ret_vec = new Vector();
 
         Vector parent_asso_vec =
-            new Vector(Arrays.asList(hierAssocToParentNodes_));
+            new Vector(Arrays.asList(_hierAssocToParentNodes));
         Vector child_asso_vec =
-            new Vector(Arrays.asList(hierAssocToChildNodes_));
+            new Vector(Arrays.asList(_hierAssocToChildNodes));
         Vector sibling_asso_vec =
-            new Vector(Arrays.asList(assocToSiblingNodes_));
-        Vector bt_vec = new Vector(Arrays.asList(assocToBTNodes_));
-        Vector nt_vec = new Vector(Arrays.asList(assocToNTNodes_));
+            new Vector(Arrays.asList(_assocToSiblingNodes));
+        Vector bt_vec = new Vector(Arrays.asList(_assocToBTNodes));
+        Vector nt_vec = new Vector(Arrays.asList(_assocToNTNodes));
 
         Vector w = new Vector();
         HashSet hset = new HashSet();
@@ -3917,13 +3917,13 @@ public class DataUtils {
          * //formalName2MetadataHashMap = getFormalName2MetadataHashMap();
          * MetadataUtils.setSAB2FormalNameHashMap(); }
          */
-        if (formalName2MetadataHashMap == null) {
-            formalName2MetadataHashMap =
+        if (_formalName2MetadataHashMap == null) {
+            _formalName2MetadataHashMap =
                 MetadataUtils.getFormalName2MetadataHashMap();
         }
 
         Vector metadataProperties =
-            (Vector) formalName2MetadataHashMap.get(scheme);
+            (Vector) _formalName2MetadataHashMap.get(scheme);
         if (metadataProperties != null) {
             for (int i = 0; i < metadataProperties.size(); i++) {
                 String t = (String) metadataProperties.elementAt(i);

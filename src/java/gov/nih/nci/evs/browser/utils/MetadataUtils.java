@@ -70,25 +70,25 @@ public class MetadataUtils {
     private static final String SOURCE_ABBREVIATION = "rsab";
     private static final String SOURCE_DESCRIPTION = "son";
 
-    private static HashMap SAB2FormalNameHashMap = null;
-    private static HashMap localname2FormalnameHashMap = null;
-    private static HashMap SAB2DefinitionHashMap = null;
+    private static HashMap _sab2FormalNameHashMap = null;
+    private static HashMap _localname2FormalnameHashMap = null;
+    private static HashMap _sab2DefinitionHashMap = null;
 
-    public static HashMap formalName2MetadataHashMap = null;
+    public static HashMap _formalName2MetadataHashMap = null;
 
-    public static Vector propertyDescriptions_vec = null;
+    public static Vector _propertyDescriptionsVec = null;
 
     public static boolean isMetadataAvailable() {
-        if (formalName2MetadataHashMap == null)
+        if (_formalName2MetadataHashMap == null)
             return false;
         return true;
     }
 
     public static HashMap getFormalName2MetadataHashMap() {
-        if (formalName2MetadataHashMap == null) {
+        if (_formalName2MetadataHashMap == null) {
             initialize();
         }
-        return formalName2MetadataHashMap;
+        return _formalName2MetadataHashMap;
     }
 
     public static Vector getMetadataForCodingSchemes() {
@@ -359,30 +359,30 @@ public class MetadataUtils {
 
     // For term browse mapping use:
     public static HashMap getSAB2FormalNameHashMap() {
-        if (SAB2FormalNameHashMap == null) {
+        if (_sab2FormalNameHashMap == null) {
             initialize();
         }
-        return SAB2FormalNameHashMap;
+        return _sab2FormalNameHashMap;
     }
 
     public static String getSABFormalName(String sab) {
-        if (SAB2FormalNameHashMap == null) {
+        if (_sab2FormalNameHashMap == null) {
             initialize();
         }
-        return (String) SAB2FormalNameHashMap.get(sab);
+        return (String) _sab2FormalNameHashMap.get(sab);
     }
 
     public static String getSABDefinition(String sab) {
-        if (SAB2DefinitionHashMap == null) {
+        if (_sab2DefinitionHashMap == null) {
             initialize();
         }
-        return (String) SAB2DefinitionHashMap.get(sab);
+        return (String) _sab2DefinitionHashMap.get(sab);
     }
 
     public static String getFormalName(String localname) {
         try {
             String formalname =
-                (String) localname2FormalnameHashMap.get(localname);
+                (String) _localname2FormalnameHashMap.get(localname);
             return formalname;
         } catch (Exception ex) {
 
@@ -391,16 +391,16 @@ public class MetadataUtils {
     }
 
     public static void initialize() {
-        if (SAB2FormalNameHashMap != null)
+        if (_sab2FormalNameHashMap != null)
             return;
 
         _logger.info("initialize ...");
-        SAB2FormalNameHashMap = new HashMap();
-        localname2FormalnameHashMap = new HashMap();
+        _sab2FormalNameHashMap = new HashMap();
+        _localname2FormalnameHashMap = new HashMap();
         boolean includeInactive = false;
 
-        if (formalName2MetadataHashMap == null) {
-            formalName2MetadataHashMap = new HashMap();
+        if (_formalName2MetadataHashMap == null) {
+            _formalName2MetadataHashMap = new HashMap();
         }
 
         int vocabulary_count = 0;
@@ -466,7 +466,7 @@ public class MetadataUtils {
                                 vocabulary_count++;
                                 _logger.info("(" + vocabulary_count + ") "
                                     + formalname);
-                                formalName2MetadataHashMap.put(formalname,
+                                _formalName2MetadataHashMap.put(formalname,
                                     metadataProperties);
                             }
 
@@ -475,17 +475,17 @@ public class MetadataUtils {
                             for (int m = 0; m < localnames.length; m++) {
                                 String localname = localnames[m];
                                 _logger.info("\tlocal name: " + localname);
-                                localname2FormalnameHashMap.put(localname,
+                                _localname2FormalnameHashMap.put(localname,
                                     formalname);
                                 if (localname.compareTo(css_local_name) == 0) {
                                     contains_css_local_name = true;
                                 }
                             }
-                            localname2FormalnameHashMap.put(formalname,
+                            _localname2FormalnameHashMap.put(formalname,
                                 formalname);
                             if (!contains_css_local_name) {
                                 _logger.info("\tlocal name: " + css_local_name);
-                                localname2FormalnameHashMap.put(css_local_name,
+                                _localname2FormalnameHashMap.put(css_local_name,
                                     formalname);
                             }
                             
@@ -520,20 +520,20 @@ public class MetadataUtils {
         }
 
         Vector abbr_vec = getMetadataForCodingSchemes();
-        SAB2DefinitionHashMap = new HashMap();
+        _sab2DefinitionHashMap = new HashMap();
         for (int n = 0; n < abbr_vec.size(); n++) {
             String t = (String) abbr_vec.elementAt(n);
             Vector w = parseData(t, "|");
             String abbr = (String) w.elementAt(0);
             String def = (String) w.elementAt(1);
-            if (localname2FormalnameHashMap.get(abbr) != null) {
+            if (_localname2FormalnameHashMap.get(abbr) != null) {
                 String formalname =
-                    (String) localname2FormalnameHashMap.get(abbr);
-                SAB2FormalNameHashMap.put(abbr, formalname);
+                    (String) _localname2FormalnameHashMap.get(abbr);
+                _sab2FormalNameHashMap.put(abbr, formalname);
             }
-            SAB2DefinitionHashMap.put(abbr, def);
+            _sab2DefinitionHashMap.put(abbr, def);
         }
-        DataUtils.setFormalName2MetadataHashMap(formalName2MetadataHashMap);
+        DataUtils.setFormalName2MetadataHashMap(_formalName2MetadataHashMap);
         return;
     }
 
@@ -592,10 +592,10 @@ public class MetadataUtils {
     }
 
     public static Vector getPropertyDescriptions() {
-        if (propertyDescriptions_vec != null)
-            return propertyDescriptions_vec;
+        if (_propertyDescriptionsVec != null)
+            return _propertyDescriptionsVec;
         try {
-            propertyDescriptions_vec = new Vector();
+            _propertyDescriptionsVec = new Vector();
             LexBIGService lbs = RemoteServerUtil.createLexBIGService();
             LexBIGServiceMetadata lbsm = lbs.getServiceMetadata();
             lbsm =
@@ -618,15 +618,15 @@ public class MetadataUtils {
                         String propertyValue =
                             mdpl.getMetadataProperty(i).getValue();
                         String t = propertyName + "|" + propertyValue;
-                        if (!propertyDescriptions_vec.contains(t)) {
-                            propertyDescriptions_vec.add(t);
+                        if (!_propertyDescriptionsVec.contains(t)) {
+                            _propertyDescriptionsVec.add(t);
                         }
                     }
                 }
             }
-            propertyDescriptions_vec =
-                SortUtils.quickSort(propertyDescriptions_vec);
-            return propertyDescriptions_vec;
+            _propertyDescriptionsVec =
+                SortUtils.quickSort(_propertyDescriptionsVec);
+            return _propertyDescriptionsVec;
         } catch (Exception ex) {
             return null;
         }
