@@ -68,41 +68,41 @@ import java.io.*;
  */
 
 public class TreeItem implements Serializable, Comparable<TreeItem> {
-    public String code = null;
-    public String text = null;
-    public String auis = null;
-    public boolean expandable = false;
-    public Map<String, List<TreeItem>> assocToChildMap =
+    public String _code = null;
+    public String _text = null;
+    public String _auis = null;
+    public boolean _expandable = false;
+    public Map<String, List<TreeItem>> _assocToChildMap =
         new TreeMap<String, List<TreeItem>>();
 
     public boolean equals(Object o) {
         return o instanceof TreeItem
-            && code.compareTo(((TreeItem) o).code) == 0;
+            && _code.compareTo(((TreeItem) o)._code) == 0;
     }
 
     public int compareTo(TreeItem ti) {
-        String c1 = code;
-        String c2 = ti.code;
+        String c1 = _code;
+        String c2 = ti._code;
         if (c1.startsWith("@"))
             return 1;
         if (c2.startsWith("@"))
             return -1;
         int i = c1.compareTo(c2);
-        return i != 0 ? i : text.compareTo(ti.text);
+        return i != 0 ? i : _text.compareTo(ti._text);
     }
 
     public TreeItem(String code, String text) {
         super();
-        this.code = code;
-        this.text = text;
-        this.auis = null;
+        this._code = code;
+        this._text = text;
+        this._auis = null;
     }
 
     public TreeItem(String code, String text, String auiText) {
         super();
-        this.code = code;
-        this.text = text;
-        this.auis = auiText;
+        this._code = code;
+        this._text = text;
+        this._auis = auiText;
     }
 
     public void addAll(String assocText, List<TreeItem> children) {
@@ -111,19 +111,19 @@ public class TreeItem implements Serializable, Comparable<TreeItem> {
     }
 
     public void addChild(String assocText, TreeItem child) {
-        List<TreeItem> children = assocToChildMap.get(assocText);
+        List<TreeItem> children = _assocToChildMap.get(assocText);
         if (children == null) {
             children = new ArrayList<TreeItem>();
-            assocToChildMap.put(assocText, children);
+            _assocToChildMap.put(assocText, children);
         }
         int i;
         if ((i = children.indexOf(child)) >= 0) {
             TreeItem existingTreeItem = children.get(i);
-            for (String assoc : child.assocToChildMap.keySet()) {
-                List<TreeItem> toAdd = child.assocToChildMap.get(assoc);
+            for (String assoc : child._assocToChildMap.keySet()) {
+                List<TreeItem> toAdd = child._assocToChildMap.get(assoc);
                 if (!toAdd.isEmpty()) {
                     existingTreeItem.addAll(assoc, toAdd);
-                    existingTreeItem.expandable = false;
+                    existingTreeItem._expandable = false;
                 }
             }
         } else

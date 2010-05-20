@@ -76,20 +76,20 @@ public class SourceTreeUtils {
     private static Logger _logger = Logger.getLogger(SourceTreeUtils.class);
 
     // protected final Logger logger = Logger.getLogger(this.getClass());
-    static String[] hierAssocToParentNodes_ =
+    private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
-    static String[] hierAssociationToParentNodes_ = new String[] { "PAR" };
-    static String[] hierAssocToChildNodes_ = new String[] { "CHD" };
+    private static String[] _hierAssociationToParentNodes = new String[] { "PAR" };
+    private static String[] _hierAssocToChildNodes = new String[] { "CHD" };
 
     public static final boolean DIRECTION_FORWARD = true;
 
-    static SortOptionList sortByCode_ =
+    private static SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
-    LocalNameList noopList_ = Constructors.createLocalNameList("_noop_");
+    private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
 
-    private int maxLevel = 50;
-    private int maxLinks = 300;
+    private int _maxLevel = 50;
+    private int _maxLinks = 300;
 
     public SourceTreeUtils() {
 
@@ -823,14 +823,14 @@ public class SourceTreeUtils {
     protected boolean hasChildren(TreeItem tiParent, String code) {
         if (tiParent == null)
             return false;
-        if (tiParent.assocToChildMap == null)
+        if (tiParent._assocToChildMap == null)
             return false;
 
-        for (String association : tiParent.assocToChildMap.keySet()) {
-            List<TreeItem> children = tiParent.assocToChildMap.get(association);
+        for (String association : tiParent._assocToChildMap.keySet()) {
+            List<TreeItem> children = tiParent._assocToChildMap.get(association);
             for (int i = 0; i < children.size(); i++) {
                 TreeItem childItem = (TreeItem) children.get(i);
-                if (childItem.code.compareTo(code) == 0)
+                if (childItem._code.compareTo(code) == 0)
                     return true;
             }
         }
@@ -1000,10 +1000,10 @@ public class SourceTreeUtils {
             pathsResolved = pathsFromRoot.length;
 
             for (TreeItem rootItem : pathsFromRoot) {
-                if (rootItem.text.compareTo(rootName) == 0) {
-                    for (String assoc : rootItem.assocToChildMap.keySet()) {
+                if (rootItem._text.compareTo(rootName) == 0) {
+                    for (String assoc : rootItem._assocToChildMap.keySet()) {
                         List<TreeItem> children =
-                            rootItem.assocToChildMap.get(assoc);
+                            rootItem._assocToChildMap.get(assoc);
                         for (TreeItem childItem : children) {
                             ti.addChild(assoc, childItem);
                         }
@@ -1012,7 +1012,7 @@ public class SourceTreeUtils {
                     ti.addChild("CHD", rootItem);
                 }
             }
-            ti.expandable = true;
+            ti._expandable = true;
 
         } finally {
             _logger.debug("SourceTreeUtils Run time (milliseconds): "
@@ -1020,7 +1020,7 @@ public class SourceTreeUtils {
                 + pathsResolved + " paths from root.");
 
             if (pathsResolved == 0) {
-                ti.text = "No path found";
+                ti._text = "No path found";
             }
         }
 
@@ -1043,7 +1043,7 @@ public class SourceTreeUtils {
         TreeItem ti = new TreeItem(rcr.getCode(), root_name);
         // LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 
-        ti.expandable =
+        ti._expandable =
             hasSubconcepts(scheme, csvt.getVersion(), rcr.getCode(), sab);
         // Maintain root tree items.
         Set<TreeItem> rootItems = new HashSet<TreeItem>();
@@ -1152,9 +1152,9 @@ public class SourceTreeUtils {
 
                         // Add the child (eliminate redundancy -- e.g.,
                         // hasSubtype and CHD)
-                        if (!hasChildren(tiParent, ti.code)) {
+                        if (!hasChildren(tiParent, ti._code)) {
                             tiParent.addChild(directionalName, ti);
-                            tiParent.expandable = true;
+                            tiParent._expandable = true;
                         }
                         isRoot = false;
                     }
@@ -1213,7 +1213,7 @@ public class SourceTreeUtils {
                         associationsNavigatedFwd ? branchItemNode.getSourceOf()
                             : branchItemNode.getTargetOf();
                     if (grandchildBranch != null)
-                        childItem.expandable = true;
+                        childItem._expandable = true;
 
                     String childNavText = "CHD";
                     ti.addChild(childNavText, childItem);
@@ -1237,19 +1237,19 @@ public class SourceTreeUtils {
 
         StringBuffer codeAndText =
             new StringBuffer(indent).append(
-                focusCode.equals(ti.code) ? ">" : " ").append(ti.code).append(
-                ':').append(StringUtils.abbreviate(ti.text, 120)).append(
-                ti.expandable ? " [+]" : "");
-        if (ti.auis != null)
-            for (String line : ti.auis.split("\\|"))
+                focusCode.equals(ti._code) ? ">" : " ").append(ti._code).append(
+                ':').append(StringUtils.abbreviate(ti._text, 120)).append(
+                ti._expandable ? " [+]" : "");
+        if (ti._auis != null)
+            for (String line : ti._auis.split("\\|"))
                 codeAndText.append('\n').append(indent).append("    {").append(
                     StringUtils.abbreviate(line, 120)).append('}');
         Util_displayMessage(codeAndText.toString());
 
         indent.append("| ");
-        for (String association : ti.assocToChildMap.keySet()) {
+        for (String association : ti._assocToChildMap.keySet()) {
             Util_displayMessage(indent.toString() + association);
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children)
                 printTree(childItem, focusCode, depth + 1);
@@ -1344,7 +1344,7 @@ public class SourceTreeUtils {
             cns.restrictToCodes(Constructors.createConceptReferenceList(code,
                 scheme));
         ResolvedConceptReferenceList rcrl =
-            cns.resolveToList(null, noopList_, null, 1);
+            cns.resolveToList(null, _noopList, null, 1);
         if (rcrl.getResolvedConceptReferenceCount() > 0) {
             EntityDescription desc =
                 rcrl.getResolvedConceptReference(0).getEntityDescription();
@@ -1637,13 +1637,13 @@ public class SourceTreeUtils {
             ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
                 _logger.debug("Leaf node -- no children.");
-                ti.expandable = false;
+                ti._expandable = false;
 
-                hmap.put(ti.code, ti);
+                hmap.put(ti._code, ti);
 
                 return hmap;
             } else {
-                ti.expandable = true;
+                ti._expandable = true;
             }
 
             Iterator iterator = focus.getChildren();
@@ -1656,16 +1656,16 @@ public class SourceTreeUtils {
                 MetaTreeNode child = (MetaTreeNode) iterator.next();
                 TreeItem childItem =
                     new TreeItem(child.getCui(), child.getName());
-                childItem.expandable = true;
+                childItem._expandable = true;
                 if (isLeaf(child)) {
-                    childItem.expandable = false;
+                    childItem._expandable = false;
                 }
                 ti.addChild(childNavText, childItem);
             }
         } catch (Exception e) {
 
         }
-        hmap.put(ti.code, ti);
+        hmap.put(ti._code, ti);
         return hmap;
     }
 
@@ -1711,16 +1711,16 @@ public class SourceTreeUtils {
 
             ArrayList list = new ArrayList();
             TreeItem ti = (TreeItem) hmap.get(rootCode);
-            for (String assoc : ti.assocToChildMap.keySet()) {
-                List<TreeItem> roots = ti.assocToChildMap.get(assoc);
+            for (String assoc : ti._assocToChildMap.keySet()) {
+                List<TreeItem> roots = ti._assocToChildMap.get(assoc);
                 for (int k = 0; k < roots.size(); k++) {
                     TreeItem root = roots.get(k);
                     ResolvedConceptReference rcr =
                         new ResolvedConceptReference();
                     EntityDescription desc = new EntityDescription();
-                    desc.setContent(root.text);
+                    desc.setContent(root._text);
                     rcr.setEntityDescription(desc);
-                    rcr.setCode(root.code);
+                    rcr.setCode(root._code);
                     list.add(rcr);
                 }
             }
@@ -1798,7 +1798,7 @@ public class SourceTreeUtils {
             // csvt.getVersion(), sab);
             String name = c.getEntityDescription().getContent();
             ti = new TreeItem(code, name);
-            ti.expandable = false;
+            ti._expandable = false;
 
             // KLO, testing
             codesToExclude.add(code);
@@ -1826,19 +1826,19 @@ public class SourceTreeUtils {
             list = new ArrayList();
         if (currLevel > maxLevel)
             return;
-        if (ti.assocToChildMap.keySet().size() > 0) {
-            if (ti.text.compareTo("Root node") != 0) {
+        if (ti._assocToChildMap.keySet().size() > 0) {
+            if (ti._text.compareTo("Root node") != 0) {
                 ResolvedConceptReference rcr = new ResolvedConceptReference();
-                rcr.setConceptCode(ti.code);
+                rcr.setConceptCode(ti._code);
                 EntityDescription entityDescription = new EntityDescription();
-                entityDescription.setContent(ti.text);
+                entityDescription.setContent(ti._text);
                 rcr.setEntityDescription(entityDescription);
                 list.add(rcr);
             }
         }
 
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children) {
                 getTopNodes(childItem, list, currLevel + 1, maxLevel);
@@ -1860,19 +1860,19 @@ public class SourceTreeUtils {
             return;
         }
 
-        if (ti.assocToChildMap.keySet().size() > 0) {
-            if (ti.text.compareTo("Root node") != 0) {
+        if (ti._assocToChildMap.keySet().size() > 0) {
+            if (ti._text.compareTo("Root node") != 0) {
                 ResolvedConceptReference rcr = new ResolvedConceptReference();
-                rcr.setConceptCode(ti.code);
+                rcr.setConceptCode(ti._code);
                 EntityDescription entityDescription = new EntityDescription();
-                entityDescription.setContent(ti.text);
+                entityDescription.setContent(ti._text);
                 rcr.setEntityDescription(entityDescription);
                 list.add(rcr);
             }
         }
 
-        for (String association : ti.assocToChildMap.keySet()) {
-            List<TreeItem> children = ti.assocToChildMap.get(association);
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
             Collections.sort(children);
             for (TreeItem childItem : children) {
                 getTopNodes(childItem, list, currLevel + 1, maxLevel, sab);

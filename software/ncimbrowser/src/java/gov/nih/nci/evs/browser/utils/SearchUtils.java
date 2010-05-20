@@ -75,36 +75,36 @@ import gov.nih.nci.evs.browser.common.*;
 
 public class SearchUtils {
     private static Logger _logger = Logger.getLogger(SearchUtils.class);
-    private int max_str_length = 1000;
-    private int penalty_multiplier_1 = 1;
-    private int penalty_multiplier_2 = 2;
+    private int _max_str_length = 1000;
+    private int _penalty_multiplier_1 = 1;
+    private int _penalty_multiplier_2 = 2;
 
-    public CodingSchemeRenderingList csrl = null;
-    private Vector supportedCodingSchemes = null;
-    private static HashMap codingSchemeMap = null;
-    private Vector codingSchemes = null;
+    public CodingSchemeRenderingList _csrl = null;
+    private Vector _supportedCodingSchemes = null;
+    private static HashMap _codingSchemeMap = null;
+    private Vector _codingSchemes = null;
 
-    private static HashMap csnv2codingSchemeNameMap = null;
-    private static HashMap csnv2VersionMap = null;
+    private static HashMap _csnv2codingSchemeNameMap = null;
+    private static HashMap _csnv2VersionMap = null;
 
-    private static List directionList = null;
-    private static String url = null;
+    private static List _directionList = null;
+    private static String _url = null;
 
-    static final List<String> STOP_WORDS =
+    private static final List<String> STOP_WORDS =
         Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
             "in", "nos", "the", "to", "with" });
 
-    private DoubleMetaphone doubleMetaphone = null;
+    private DoubleMetaphone _doubleMetaphone = null;
 
     public static final String CONTAIN_SEARCH_ALGORITHM =
         "nonLeadingWildcardLiteralSubString";// "literalSubString";//"subString";
 
-    static int RESOLVE_SOURCE = 1;
-    static int RESOLVE_TARGET = -1;
-    static int RESTRICT_SOURCE = -1;
-    static int RESTRICT_TARGET = 1;
+    private static int RESOLVE_SOURCE = 1;
+    private static int RESOLVE_TARGET = -1;
+    private static int RESTRICT_SOURCE = -1;
+    private static int RESTRICT_TARGET = 1;
 
-    static HashMap propertyLocalNameListHashMap = null;
+    private static HashMap _propertyLocalNameListHashMap = null;
 
     // ==================================================================================
 
@@ -113,18 +113,18 @@ public class SearchUtils {
     }
 
     public SearchUtils(String url) {
-        this.url = url;
+        this._url = url;
         initializeSortParameters();
     }
 
     private void initializeSortParameters() {
-        doubleMetaphone = new DoubleMetaphone();
+        _doubleMetaphone = new DoubleMetaphone();
     }
 
     private static void setCodingSchemeMap() {
-        codingSchemeMap = new HashMap();
-        csnv2codingSchemeNameMap = new HashMap();
-        csnv2VersionMap = new HashMap();
+        _codingSchemeMap = new HashMap();
+        _csnv2codingSchemeNameMap = new HashMap();
+        _csnv2VersionMap = new HashMap();
 
         try {
             // RemoteServerUtil rsu = new RemoteServerUtil();
@@ -152,7 +152,7 @@ public class SearchUtils {
                     try {
                         scheme = lbSvc.resolveCodingScheme(formalname, vt);
                         if (scheme != null) {
-                            codingSchemeMap.put((Object) formalname,
+                            _codingSchemeMap.put((Object) formalname,
                                 (Object) scheme);
 
                             String value =
@@ -160,8 +160,8 @@ public class SearchUtils {
                                     + ")";
                             _logger.debug(value);
 
-                            csnv2codingSchemeNameMap.put(value, formalname);
-                            csnv2VersionMap.put(value, representsVersion);
+                            _csnv2codingSchemeNameMap.put(value, formalname);
+                            _csnv2VersionMap.put(value, representsVersion);
 
                         }
 
@@ -170,7 +170,7 @@ public class SearchUtils {
                         try {
                             scheme = lbSvc.resolveCodingScheme(urn, vt);
                             if (scheme != null) {
-                                codingSchemeMap.put((Object) formalname,
+                                _codingSchemeMap.put((Object) formalname,
                                     (Object) scheme);
 
                                 String value =
@@ -178,8 +178,8 @@ public class SearchUtils {
                                         + representsVersion + ")";
                                 _logger.debug(value);
 
-                                csnv2codingSchemeNameMap.put(value, formalname);
-                                csnv2VersionMap.put(value, representsVersion);
+                                _csnv2codingSchemeNameMap.put(value, formalname);
+                                _csnv2VersionMap.put(value, representsVersion);
 
                             }
 
@@ -190,7 +190,7 @@ public class SearchUtils {
                                 scheme =
                                     lbSvc.resolveCodingScheme(localname, vt);
                                 if (scheme != null) {
-                                    codingSchemeMap.put((Object) formalname,
+                                    _codingSchemeMap.put((Object) formalname,
                                         (Object) scheme);
 
                                     String value =
@@ -198,9 +198,9 @@ public class SearchUtils {
                                             + representsVersion + ")";
                                     _logger.debug(value);
 
-                                    csnv2codingSchemeNameMap.put(value,
+                                    _csnv2codingSchemeNameMap.put(value,
                                         formalname);
-                                    csnv2VersionMap.put(value,
+                                    _csnv2VersionMap.put(value,
                                         representsVersion);
 
                                 }
@@ -1983,7 +1983,7 @@ public class SearchUtils {
         if (containsDigit(word))
             return word;
 
-        return doubleMetaphone.encode(word);
+        return _doubleMetaphone.encode(word);
     }
 
     protected float score_contains(String text, String target) {
@@ -1991,11 +1991,11 @@ public class SearchUtils {
         String target_lower = target.toLowerCase();
         int n = text_lower.indexOf(target_lower);
         if (n == -1)
-            return -1 * max_str_length;
+            return -1 * _max_str_length;
         int m1 = n;
         int m2 = text.length() - (n + target.length());
         int score =
-            max_str_length - penalty_multiplier_2 * m2 - penalty_multiplier_1
+            _max_str_length - _penalty_multiplier_2 * m2 - _penalty_multiplier_1
                 * m1;
         return Math.max(0, score);
     }
@@ -2912,19 +2912,19 @@ public class SearchUtils {
     }
 
     public static LocalNameList getPropertyLocalNameList(String codingSchemeName) {
-        if (propertyLocalNameListHashMap == null) {
-            propertyLocalNameListHashMap = new HashMap();
+        if (_propertyLocalNameListHashMap == null) {
+            _propertyLocalNameListHashMap = new HashMap();
         }
-        if (!propertyLocalNameListHashMap.containsKey(codingSchemeName)) {
+        if (!_propertyLocalNameListHashMap.containsKey(codingSchemeName)) {
             try {
                 LocalNameList lnl = getAllPropertyNames(codingSchemeName);
-                propertyLocalNameListHashMap.put(codingSchemeName, lnl);
+                _propertyLocalNameListHashMap.put(codingSchemeName, lnl);
                 return lnl;
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
-            return (LocalNameList) propertyLocalNameListHashMap
+            return (LocalNameList) _propertyLocalNameListHashMap
                 .get(codingSchemeName);
         }
         return null;

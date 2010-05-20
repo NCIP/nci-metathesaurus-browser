@@ -54,8 +54,8 @@ import java.util.*;
 
 public class SortUtils {
 
-    public static int SORT_BY_NAME = 1;
-    public static int SORT_BY_CODE = 2;
+    public static final int SORT_BY_NAME = 1;
+    public static final int SORT_BY_CODE = 2;
 
     /**
      * Performs quick sort of a List by name.

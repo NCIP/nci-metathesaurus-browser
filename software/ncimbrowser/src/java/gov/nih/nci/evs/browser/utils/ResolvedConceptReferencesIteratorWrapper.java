@@ -57,36 +57,36 @@ public class ResolvedConceptReferencesIteratorWrapper {
     private static final long serialVersionUID = 4126716487618136771L;
 
     /** The lbs. */
-    private ResolvedConceptReferencesIterator iterator;
+    private ResolvedConceptReferencesIterator _iterator;
 
     /** The quick iterator. */
-    private String message = null;
+    private String _message = null;
 
     public ResolvedConceptReferencesIteratorWrapper(
         ResolvedConceptReferencesIterator iterator) {
-        this.iterator = iterator;
-        this.message = null;
+        this._iterator = iterator;
+        this._message = null;
     }
 
     public ResolvedConceptReferencesIteratorWrapper(
         ResolvedConceptReferencesIterator iterator, String message) {
-        this.iterator = iterator;
-        this.message = message;
+        this._iterator = iterator;
+        this._message = message;
     }
 
     public void setIterator(ResolvedConceptReferencesIterator iterator) {
-        this.iterator = iterator;
+        this._iterator = iterator;
     }
 
     public ResolvedConceptReferencesIterator getIterator() {
-        return this.iterator;
+        return this._iterator;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this._message = message;
     }
 
     public String getMessage() {
-        return this.message;
+        return this._message;
     }
 }

@@ -55,7 +55,7 @@ import org.apache.log4j.*;
 
 public class FormatUtils {
     private static Logger _logger = Logger.getLogger(FormatUtils.class);
-    static final String ncit_url =
+    private static final String _ncitUrl =
         "http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&";
 
     public FormatUtils() {
@@ -178,7 +178,7 @@ public class FormatUtils {
         int n = url.indexOf("code=");
         if (n != -1) {
             String t = url.substring(n, url.length());
-            return ncit_url + t;
+            return _ncitUrl + t;
         }
         return url;
     }

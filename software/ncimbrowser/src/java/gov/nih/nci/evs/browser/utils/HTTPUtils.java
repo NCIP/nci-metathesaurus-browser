@@ -58,7 +58,7 @@ import javax.servlet.http.*;
  */
 public class HTTPUtils {
 
-    private static String REFERER = "referer";
+    private final static String REFERER = "referer";
 
     /**
      * Remove potentially bad XSS syntax
