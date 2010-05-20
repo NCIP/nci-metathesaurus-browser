@@ -258,11 +258,11 @@ public class NCImBrowserProperties {
     }
 
     public List getDisplayItemList() {
-        return this._displayItemList;
+        return _displayItemList;
     }
 
     public List getTermGroupRankList() {
-        return this._termGroupRankList;
+        return _termGroupRankList;
     }
 
     public static String getRank(String term_type, String term_source) {
