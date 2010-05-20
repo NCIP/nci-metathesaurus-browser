@@ -110,19 +110,19 @@
             <form method="post">
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Subject of your email:</i>
+                <i><label for="subject">Subject of your email:</label></i>
               </p>
-              <input CLASS="input.formField" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+              <input CLASS="input.formField" size="100" name="subject" id="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Detailed description of your problem or suggestion (no attachments):</i>
+                <i><label for="message">Detailed description of your problem or suggestion (no attachments):</label></i>
               </p>
-              <TEXTAREA Name="message" alt="Message" rows="4" cols="75"><%= message %></TEXTAREA>
+              <TEXTAREA Name="message" id="message" alt="Message" rows="4" cols="75"><%= message %></TEXTAREA>
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
-                <i>Enter your e-mail address:</i>
+                <i><label for="emailaddress">Enter your e-mail address:</label></i>
               </p>
-              <input CLASS="input.formField" size="100" name="emailaddress" alt="Email Address" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+              <input CLASS="input.formField" size="100" name="emailaddress" id="emailaddress" alt="Email Address" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
               <br/><br/>
 
               <h:commandButton
