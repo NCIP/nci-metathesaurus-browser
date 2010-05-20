@@ -87,24 +87,24 @@ public class PropertyFileParser {
         displayItemList = new ArrayList();
         termGroupRankList = new ArrayList();
         configurableItemMap = new HashMap();
-        this.xmlfile = xmlfile;
+        xmlfile = xmlfile;
 
         securityTokenList = new ArrayList();
         securityTokenHashMap = new HashMap();
     }
 
     public void run() {
-        parseXmlFile(this.xmlfile);
+        parseXmlFile(xmlfile);
         parseDocument();
         // printData();
     }
 
     public List getDisplayItemList() {
-        return this.displayItemList;
+        return displayItemList;
     }
 
     public HashMap getConfigurableItemMap() {
-        return this.configurableItemMap;
+        return configurableItemMap;
     }
 
     private void parseXmlFile(String xmlfile) {
@@ -216,7 +216,7 @@ public class PropertyFileParser {
     }
 
     public List getTermGroupRankList() {
-        return this.termGroupRankList;
+        return termGroupRankList;
     }
 
     private TermGroupRank getTermGroupRank(Element termGroupRankElement) {
@@ -229,7 +229,7 @@ public class PropertyFileParser {
     }
 
     public List getSecurityTokenList() {
-        return this.securityTokenList;
+        return securityTokenList;
     }
 
     public HashMap getSecurityTokenHashMap() {
