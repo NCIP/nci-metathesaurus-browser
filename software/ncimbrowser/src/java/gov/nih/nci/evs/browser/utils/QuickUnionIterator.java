@@ -146,7 +146,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
      */
     public ResolvedConceptReference next()
             throws LBResourceUnavailableException, LBInvocationException {
-        return this.next(1).getResolvedConceptReference(0);
+        return next(1).getResolvedConceptReference(0);
     }
 
     /*
@@ -191,7 +191,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
      */
     public boolean hasNext() throws LBResourceUnavailableException {
         removeEmptyIterators();
-        return this.iterators.size() > 0;
+        return iterators.size() > 0;
     }
 
     /**
@@ -200,7 +200,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
     private void removeEmptyIterators() {
         List<ResolvedConceptReferencesIterator> newList =
             new ArrayList<ResolvedConceptReferencesIterator>();
-        for (ResolvedConceptReferencesIterator itr : this.iterators) {
+        for (ResolvedConceptReferencesIterator itr : iterators) {
             try {
                 if (itr.hasNext()) {
                     newList.add(itr);
@@ -220,7 +220,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
      */
     public int numberRemaining() throws LBResourceUnavailableException {
         int number = 0;
-        for (ResolvedConceptReferencesIterator itr : this.iterators) {
+        for (ResolvedConceptReferencesIterator itr : iterators) {
             number += itr.numberRemaining();
         }
         return number;
@@ -232,7 +232,7 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
      * @see org.LexGrid.LexBIG.Utility.Iterators.EntityListIterator#release()
      */
     public void release() throws LBResourceUnavailableException {
-        for (ResolvedConceptReferencesIterator itr : this.iterators) {
+        for (ResolvedConceptReferencesIterator itr : iterators) {
             itr.release();
         }
     }
@@ -244,10 +244,10 @@ public class QuickUnionIterator implements ResolvedConceptReferencesIterator {
      */
     private ResolvedConceptReference getNextFromList() {
         try {
-            while (this.hasNext()) {
-                int iterator = _currentIterator % this.iterators.size();
+            while (hasNext()) {
+                int iterator = _currentIterator % iterators.size();
                 ResolvedConceptReferencesIterator itr =
-                    this.iterators.get(iterator);
+                    iterators.get(iterator);
                 if (itr.hasNext()) {
                     _currentIterator++;
                     return itr.next();

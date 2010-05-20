@@ -54,7 +54,7 @@ import java.io.*;
  * compareTo(TreeItem ti) { String c1 = code; String c2 = ti.code; if
  * (c1.startsWith("@")) return 1; if (c2.startsWith("@")) return -1; return
  * c1.compareTo(c2); } public TreeItem(String code, String text) { super();
- * this.code = code; this.text = text; } public void addAll(String assocText,
+ * code = code; text = text; } public void addAll(String assocText,
  * List<TreeItem> children) { for (TreeItem item : children) addChild(assocText,
  * item); } public void addChild(String assocText, TreeItem child) {
  * List<TreeItem> children = assocToChildMap.get(assocText); if (children ==
@@ -93,16 +93,16 @@ public class TreeItem implements Serializable, Comparable<TreeItem> {
 
     public TreeItem(String code, String text) {
         super();
-        this._code = code;
-        this._text = text;
-        this._auis = null;
+        _code = code;
+        _text = text;
+        _auis = null;
     }
 
     public TreeItem(String code, String text, String auiText) {
         super();
-        this._code = code;
-        this._text = text;
-        this._auis = auiText;
+        _code = code;
+        _text = text;
+        _auis = auiText;
     }
 
     public void addAll(String assocText, List<TreeItem> children) {

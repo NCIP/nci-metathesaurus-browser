@@ -150,7 +150,7 @@ public class MetaTreeUtils {
      * assocList = root.getSourceOf(); for(Association assoc :
      * assocList.getAssociation()){ for(AssociatedConcept ac :
      * assoc.getAssociatedConcepts().getAssociatedConcept()){
-     * if(this.isSabQualifiedAssociation(ac, sab)){ displayRoot(ac); } } } }
+     * if(isSabQualifiedAssociation(ac, sab)){ displayRoot(ac); } } } }
      */
 
     /*
@@ -161,7 +161,7 @@ public class MetaTreeUtils {
      * assocList = root.getSourceOf(); if (assocList != null) { for(Association
      * assoc : assocList.getAssociation()){ for(AssociatedConcept ac :
      * assoc.getAssociatedConcepts().getAssociatedConcept()){ if
-     * (RESOLVE_CONCEPT) { if(this.isSabQualifiedAssociation(ac, sab)){
+     * (RESOLVE_CONCEPT) { if(isSabQualifiedAssociation(ac, sab)){
      * ResolvedConceptReference r = new ResolvedConceptReference();
      * EntityDescription entityDescription = new EntityDescription();
      * entityDescription.setContent(ac.getEntityDescription().getContent());

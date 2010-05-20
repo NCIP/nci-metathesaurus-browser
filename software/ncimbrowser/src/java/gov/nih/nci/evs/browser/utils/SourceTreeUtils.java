@@ -75,7 +75,7 @@ import org.apache.log4j.*;
 public class SourceTreeUtils {
     private static Logger _logger = Logger.getLogger(SourceTreeUtils.class);
 
-    // protected final Logger logger = Logger.getLogger(this.getClass());
+    // protected final Logger logger = Logger.getLogger(getClass());
     private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 

@@ -59,8 +59,8 @@ class ScoredTerm implements Comparable<ScoredTerm> {
      * @param score
      */
     public ScoredTerm(ResolvedConceptReference ref, float score) {
-        this._ref = ref;
-        this._score = score;
+        _ref = ref;
+        _score = score;
     }
 
     /**
@@ -68,7 +68,7 @@ class ScoredTerm implements Comparable<ScoredTerm> {
      * description text as tie-breaker ...
      */
     public int compareTo(ScoredTerm st) {
-        float f = st._score - this._score;
+        float f = st._score - _score;
         if (f != 0)
             return f > 0 ? 1 : 0;
         EntityDescription ed1 = _ref.getEntityDescription();

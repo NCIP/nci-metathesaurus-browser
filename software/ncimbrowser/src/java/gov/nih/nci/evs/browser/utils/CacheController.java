@@ -101,7 +101,7 @@ public class CacheController {
             _cacheManager.addCache(cacheName);
         }
 
-        this._cache = _cacheManager.getCache(cacheName);
+        _cache = _cacheManager.getCache(cacheName);
     }
 
     public static CacheController getInstance() {
