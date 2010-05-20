@@ -46,10 +46,10 @@
       var selectSearchOptionObj = document.forms["advancedSearchForm"].selectSearchOption;
       for (var i=0; i<selectSearchOptionObj.length; i++) {
         if (selectSearchOptionObj[i].checked) {
-        	selectSearchOption = selectSearchOptionObj[i].value;
+          selectSearchOption = selectSearchOptionObj[i].value;
         }
       }
-      
+
       var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
       var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
       var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
@@ -65,7 +65,7 @@
   </script>
   <%!
       private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
-  %>        
+  %>
   <f:view>
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -89,7 +89,7 @@
 
     String t = null;
     String selectSearchOption = null;
-    
+
     if (refresh_page) {
         // Note: Called when the user selects "Search By" fields.
         selectSearchOption = (String) request.getParameter("opt");
@@ -113,8 +113,8 @@
     if (message != null) {
         request.removeAttribute("message");
     }
-    
-    
+
+
     if (!refresh_page || message != null) {
         // Note: Called when search contains no match.
         Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
@@ -174,38 +174,38 @@
     else if (selectSearchOption.compareTo("Relationship") == 0)
       check_r2 = "checked";
     else check_n2 = "checked";
-    
-    /*         
+
+    /*
      String help_msg = null;
      if (selectSearchOption.compareTo("Code") == 0) {
-	 help_msg = "Find concepts with CUI or source code that exactly matches with the search string (from the specified Source):";
+   help_msg = "Find concepts with CUI or source code that exactly matches with the search string (from the specified Source):";
      } else if (selectSearchOption.compareTo("Name") == 0) {
-	 help_msg = "Find concepts with a name (i.e., textual presentation) that matches with the search string (from the specified Source):";
+   help_msg = "Find concepts with a name (i.e., textual presentation) that matches with the search string (from the specified Source):";
      } else if (selectSearchOption.compareTo("Property") == 0) {
-	 help_msg = "Find concepts with the specified property that matches with the search string (from the specified Source):";
+   help_msg = "Find concepts with the specified property that matches with the search string (from the specified Source):";
      } else {
-	 help_msg = "Find concepts with the specified relationship (and RELA) to the search string (from the specified Source):";
+   help_msg = "Find concepts with the specified relationship (and RELA) to the search string (from the specified Source):";
      }
      */
-       
+
 %>
         <div class="pagecontent">
           <table>
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
-            </tr> 
+            </tr>
 
             <% if (message != null) { %>
-		    <tr class="textbodyred"><td>
-			<p class="textbodyred">&nbsp;<%=message%></p>
-		    </td></tr>
+        <tr class="textbodyred"><td>
+      <p class="textbodyred">&nbsp;<%=message%></p>
+        </td></tr>
             <% } %>
 
             <tr class="textbody"><td>
                <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
                 <table>
                   <tr><td>
-                    <input CLASS="searchbox-input" name="matchText" value="<%=search_string%>">
+                    <label for="matchText"/><input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>">
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
                       onclick="javascript:cursor_wait();"
                       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
@@ -215,9 +215,9 @@
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
                     <tr valign="top" align="left"><td align="left" class="textbody">
-                      <input type="radio" name="adv_search_algorithm" value="exactMatch" alt="Exact Match" <%=check__e%>>Exact Match&nbsp;
-                      <input type="radio" name="adv_search_algorithm" value="startsWith" alt="Begins With" <%=check__s%>>Begins With&nbsp;
-                      <input type="radio" name="adv_search_algorithm" value="contains" alt="Containts" <%=check__c%>>Contains
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%>><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%>><label for="adv_search_algorithm2">Begins With&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Containts" <%=check__c%>><label for="adv_search_algorithm3">Contains</label>
                     </td></tr>
                   </table>
                 </td></tr>
@@ -263,14 +263,14 @@
                 <tr valign="top" align="left"><td align="left" class="textbody">
                 Concepts with this value in:
                 </td></tr>
-                
+
                 <tr valign="top" align="left"><td align="left" class="textbody">
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()">Code&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()">Name&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()">Property&nbsp;
-                  <input type="radio" id="selectSearchOption" name="selectSearchOption" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()">Relationship
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption1" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()"><label for="selectSearchOption1">Code&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption2" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()"><label for="selectSearchOption2">Name&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption3" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()"><label for="selectSearchOption3">Property&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption4" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()"><label for="selectSearchOption4">Relationship</label>
                 </td></tr>
- 
+
                 <tr><td>
                   <table>
                   <% if (selectSearchOption.equals("Property")) { %>
@@ -289,7 +289,7 @@
                           <%} else {%>
                               <option value="<%=t%>"><%=t%></option>
                           <%}%>
-                  
+
                           <%
                             Vector property_vec = OntologyBean.getSupportedPropertyNames();
                             for (int i=0; i<property_vec.size(); i++) {
@@ -330,7 +330,7 @@
                           <%} else {%>
                               <option value="<%=t%>"><%=t%></option>
                           <%} %>
-                  
+
                           <%
                             Vector association_vec = OntologyBean.getSupportedAssociationNames();
                             for (int i=0; i<association_vec.size(); i++) {
@@ -362,7 +362,7 @@
                           <%} else {%>
                               <option value="<%=t%>"><%=t%></option>
                           <%}%>
-                          
+
                           <%
                             Vector rela_vec = OntologyBean.getRELAs();
                             for (int i=0; i<rela_vec.size(); i++) {
