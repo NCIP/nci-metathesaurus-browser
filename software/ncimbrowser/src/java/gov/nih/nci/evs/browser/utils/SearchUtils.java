@@ -113,7 +113,7 @@ public class SearchUtils {
     }
 
     public SearchUtils(String url) {
-        this._url = url;
+        _url = url;
         initializeSortParameters();
     }
 
@@ -223,7 +223,7 @@ public class SearchUtils {
         Vector v = new Vector();
         try {
             // EVSApplicationService lbSvc = new
-            // RemoteServerUtil().createLexBIGService(this.url);
+            // RemoteServerUtil().createLexBIGService(url);
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc

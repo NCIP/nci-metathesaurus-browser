@@ -109,15 +109,15 @@ public class SearchByAssociationIteratorDecorator implements
         ResolvedConceptReferencesIterator quickIterator,
         boolean resolveForward, boolean resolveBackward,
         int resolveAssociationDepth, int maxToReturn) {
-        this._quickIterator = quickIterator;
-        this._resolveForward = resolveForward;
-        this._resolveBackward = resolveBackward;
-        this._resolveAssociationDepth = resolveAssociationDepth;
-        this._maxToReturn = maxToReturn;
-        this._associationNameAndValueList = null;
-        this._associationQualifierNameAndValueList = null;
+        _quickIterator = quickIterator;
+        _resolveForward = resolveForward;
+        _resolveBackward = resolveBackward;
+        _resolveAssociationDepth = resolveAssociationDepth;
+        _maxToReturn = maxToReturn;
+        _associationNameAndValueList = null;
+        _associationQualifierNameAndValueList = null;
 
-        this._hset = new HashSet();
+        _hset = new HashSet();
 
         // _logger.debug("Type 1 SearchByAssociationIteratorDecorator ");
 
@@ -130,16 +130,16 @@ public class SearchByAssociationIteratorDecorator implements
         NameAndValueList associationQualifierNameAndValueList,
         int resolveAssociationDepth, int maxToReturn) {
 
-        this._quickIterator = quickIterator;
-        this._resolveForward = resolveForward;
-        this._resolveBackward = resolveBackward;
-        this._resolveAssociationDepth = resolveAssociationDepth;
-        this._maxToReturn = maxToReturn;
-        this._associationNameAndValueList = associationNameAndValueList;
-        this._associationQualifierNameAndValueList =
+        _quickIterator = quickIterator;
+        _resolveForward = resolveForward;
+        _resolveBackward = resolveBackward;
+        _resolveAssociationDepth = resolveAssociationDepth;
+        _maxToReturn = maxToReturn;
+        _associationNameAndValueList = associationNameAndValueList;
+        _associationQualifierNameAndValueList =
             associationQualifierNameAndValueList;
 
-        this._hset = new HashSet();
+        _hset = new HashSet();
 
         // _logger.debug("Type 2 SearchByAssociationIteratorDecorator ");
     }
@@ -203,7 +203,7 @@ public class SearchByAssociationIteratorDecorator implements
         // _logger.debug("next method: page " + page);
 
         while (returnList.getResolvedConceptReferenceCount() < page
-            && this.hasNext()) {
+            && hasNext()) {
             try {
                 returnList.addResolvedConceptReference(doGetNext());
             } catch (Exception e) {
@@ -236,7 +236,7 @@ public class SearchByAssociationIteratorDecorator implements
         } catch (Exception e) {
             throw new LBResourceUnavailableException(e.getMessage());
         }
-        return this._currentChildren.size() > 0;
+        return _currentChildren.size() > 0;
     }
 
     /**
@@ -253,20 +253,20 @@ public class SearchByAssociationIteratorDecorator implements
             throw new LBResourceUnavailableException(e.getMessage());
         }
 
-        // _logger.debug("SearchByAssociationIteratorDecorator: this.quickIterator.numberRemaining(): "
-        // + this.quickIterator.numberRemaining());
-        // _logger.debug("SearchByAssociationIteratorDecorator: this.currentChildren.size(): "
-        // + this.currentChildren.size());
+        // _logger.debug("SearchByAssociationIteratorDecorator: quickIterator.numberRemaining(): "
+        // + quickIterator.numberRemaining());
+        // _logger.debug("SearchByAssociationIteratorDecorator: currentChildren.size(): "
+        // + currentChildren.size());
 
-        // int total = this.quickIterator.numberRemaining() +
-        // this.currentChildren.size();
-        int total = this._currentChildren.size();
+        // int total = quickIterator.numberRemaining() +
+        // currentChildren.size();
+        int total = _currentChildren.size();
         // _logger.debug("SearchByAssociationIteratorDecorator: total: " +
         // total);
 
-        // return this.quickIterator.numberRemaining() +
-        // this.currentChildren.size();
-        return this._currentChildren.size();
+        // return quickIterator.numberRemaining() +
+        // currentChildren.size();
+        return _currentChildren.size();
     }
 
     /*
@@ -288,9 +288,9 @@ public class SearchByAssociationIteratorDecorator implements
     protected ResolvedConceptReference doGetNext() throws Exception {
         pageIfNecessary();
         ResolvedConceptReference returnRef =
-            this._currentChildren.get(this._position);
+            _currentChildren.get(_position);
 
-        // _logger.debug("doGetNext() position: " + this.position);
+        // _logger.debug("doGetNext() position: " + position);
         displayRef(returnRef);
 
         _position++;
@@ -309,19 +309,19 @@ public class SearchByAssociationIteratorDecorator implements
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 
         // _logger.debug("position: " + position +
-        // " ----------- currentChildren.size: " + this.currentChildren.size());
+        // " ----------- currentChildren.size: " + currentChildren.size());
 
-        if (_position == this._currentChildren.size()) {
+        if (_position == _currentChildren.size()) {
             _currentChildren.clear();
-            this._position = 0;
+            _position = 0;
 
             // [#26965] Contains Relationship search returns invalid result
-            // if (this.quickIterator.hasNext()) {
+            // if (quickIterator.hasNext()) {
 
-            while (this._quickIterator.hasNext()
-                && this._currentChildren.size() == 0) {
-                // while (this.quickIterator.hasNext()) {
-                ResolvedConceptReference ref = this._quickIterator.next();
+            while (_quickIterator.hasNext()
+                && _currentChildren.size() == 0) {
+                // while (quickIterator.hasNext()) {
+                ResolvedConceptReference ref = _quickIterator.next();
                 if (ref != null) {
                     // KLO
                     String formalName = ref.getCodingSchemeName();
@@ -338,9 +338,9 @@ public class SearchByAssociationIteratorDecorator implements
                     ResolvedConceptReferenceList list =
                         cng.resolveAsList(Constructors.createConceptReference(
                             ref.getCode(), ref.getCodingSchemeName()),
-                            this._resolveForward, this._resolveBackward, 0,
-                            this._resolveAssociationDepth, null, null, null,
-                            this._maxToReturn);
+                            _resolveForward, _resolveBackward, 0,
+                            _resolveAssociationDepth, null, null, null,
+                            _maxToReturn);
 
                     // _logger.debug("Calling populateCurrentChildren ...");
                     // populateCurrentChildren(list.getResolvedConceptReference(),
@@ -351,8 +351,8 @@ public class SearchByAssociationIteratorDecorator implements
                 }
             }
         }
-        // _logger.debug("Exiting pageIfNecessary(): this.currentChildren.size() "
-        // + this.currentChildren.size());
+        // _logger.debug("Exiting pageIfNecessary(): currentChildren.size() "
+        // + currentChildren.size());
 
     }
 
@@ -384,12 +384,12 @@ public class SearchByAssociationIteratorDecorator implements
             if (addRoot) {
                 if (!_hset.contains(ref.getConceptCode())) {
                     _hset.add(ref.getConceptCode());
-                    // _logger.debug("\tbefore addRoot this.currentChildren.size() "
-                    // + this.currentChildren.size());
+                    // _logger.debug("\tbefore addRoot currentChildren.size() "
+                    // + currentChildren.size());
                     displayRef(ref);
-                    this._currentChildren.add(ref);
-                    // _logger.debug("\tafter addRoot this.currentChildren.size() "
-                    // + this.currentChildren.size());
+                    _currentChildren.add(ref);
+                    // _logger.debug("\tafter addRoot currentChildren.size() "
+                    // + currentChildren.size());
                 }
             } else {
                 // _logger.debug("\tDO NOT add: ");
