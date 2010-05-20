@@ -63,55 +63,55 @@ import gov.nih.nci.evs.browser.bean.*;
 
 public class PropertyFileParser {
     private static Logger _logger = Logger.getLogger(PropertyFileParser.class);
-    List displayItemList;
-    List termGroupRankList;
+    private List _displayItemList;
+    private List _termGroupRankList;
 
-    HashMap configurableItemMap;
-    String xmlfile;
+    private HashMap _configurableItemMap;
+    private String _xmlfile;
 
-    List securityTokenList;
-    HashMap securityTokenHashMap;
+    private List _securityTokenList;
+    private HashMap _securityTokenHashMap;
 
-    Document dom;
+    private Document _dom;
 
     public PropertyFileParser() {
-        displayItemList = new ArrayList();
-        termGroupRankList = new ArrayList();
-        configurableItemMap = new HashMap();
+        _displayItemList = new ArrayList();
+        _termGroupRankList = new ArrayList();
+        _configurableItemMap = new HashMap();
 
-        securityTokenList = new ArrayList();
-        securityTokenHashMap = new HashMap();
+        _securityTokenList = new ArrayList();
+        _securityTokenHashMap = new HashMap();
     }
 
     public PropertyFileParser(String xmlfile) {
-        displayItemList = new ArrayList();
-        termGroupRankList = new ArrayList();
-        configurableItemMap = new HashMap();
-        xmlfile = xmlfile;
+        _displayItemList = new ArrayList();
+        _termGroupRankList = new ArrayList();
+        _configurableItemMap = new HashMap();
+        _xmlfile = xmlfile;
 
-        securityTokenList = new ArrayList();
-        securityTokenHashMap = new HashMap();
+        _securityTokenList = new ArrayList();
+        _securityTokenHashMap = new HashMap();
     }
 
     public void run() {
-        parseXmlFile(xmlfile);
+        parseXmlFile(_xmlfile);
         parseDocument();
         // printData();
     }
 
     public List getDisplayItemList() {
-        return displayItemList;
+        return _displayItemList;
     }
 
     public HashMap getConfigurableItemMap() {
-        return configurableItemMap;
+        return _configurableItemMap;
     }
 
     private void parseXmlFile(String xmlfile) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
-            dom = db.parse(xmlfile);
+            _dom = db.parse(xmlfile);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         } catch (SAXException se) {
@@ -122,13 +122,13 @@ public class PropertyFileParser {
     }
 
     private void parseDocument() {
-        Element docEle = dom.getDocumentElement();
+        Element docEle = _dom.getDocumentElement();
         NodeList list1 = docEle.getElementsByTagName("DisplayItem");
         if (list1 != null && list1.getLength() > 0) {
             for (int i = 0; i < list1.getLength(); i++) {
                 Element el = (Element) list1.item(i);
                 DisplayItem e = getDisplayItem(el);
-                displayItemList.add(e);
+                _displayItemList.add(e);
             }
         }
 
@@ -145,7 +145,7 @@ public class PropertyFileParser {
             for (int i = 0; i < list3.getLength(); i++) {
                 Element el = (Element) list3.item(i);
                 TermGroupRank e = getTermGroupRank(el);
-                termGroupRankList.add(e);
+                _termGroupRankList.add(e);
             }
         }
 
@@ -156,8 +156,8 @@ public class PropertyFileParser {
                 SecurityTokenHolder e = getSecurityTokenHolder(el);
 
                 if (e.getValue().indexOf("token") == -1) {
-                    securityTokenList.add(e);
-                    securityTokenHashMap.put(e.getName(), e.getValue());
+                    _securityTokenList.add(e);
+                    _securityTokenHashMap.put(e.getName(), e.getValue());
                 }
             }
         }
@@ -188,7 +188,7 @@ public class PropertyFileParser {
     private void getConfigurableItem(Element displayItemElement) {
         String key = getTextValue(displayItemElement, "key");
         String value = getTextValue(displayItemElement, "value");
-        configurableItemMap.put(key, value);
+        _configurableItemMap.put(key, value);
     }
 
     private String getTextValue(Element ele, String tagName) {
@@ -209,14 +209,14 @@ public class PropertyFileParser {
     }
 
     private void printData() {
-        Iterator it = displayItemList.iterator();
+        Iterator it = _displayItemList.iterator();
         while (it.hasNext()) {
             _logger.debug(it.next().toString());
         }
     }
 
     public List getTermGroupRankList() {
-        return termGroupRankList;
+        return _termGroupRankList;
     }
 
     private TermGroupRank getTermGroupRank(Element termGroupRankElement) {
@@ -229,11 +229,11 @@ public class PropertyFileParser {
     }
 
     public List getSecurityTokenList() {
-        return securityTokenList;
+        return _securityTokenList;
     }
 
     public HashMap getSecurityTokenHashMap() {
-        return securityTokenHashMap;
+        return _securityTokenHashMap;
     }
 
     private SecurityTokenHolder getSecurityTokenHolder(
