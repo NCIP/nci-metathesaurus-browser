@@ -78,10 +78,10 @@ public class ScoredIterator implements ResolvedConceptReferencesIterator {
             maxItems > 0 ? Math.min(maxItems, scoredTerms.size()) : scoredTerms
                 .size();
         int count = 0;
-        this._scoredTerms = new ScoredTerm[limit];
+        _scoredTerms = new ScoredTerm[limit];
         for (Iterator<ScoredTerm> terms = temp.listIterator(); terms.hasNext()
             && count < limit; count++)
-            this._scoredTerms[count] = terms.next();
+            _scoredTerms[count] = terms.next();
     }
 
     /**
@@ -90,7 +90,7 @@ public class ScoredIterator implements ResolvedConceptReferencesIterator {
      * @param scoredTerms
      */
     public ScoredIterator(ScoredTerm[] scoredTerms) {
-        this._scoredTerms = scoredTerms;
+        _scoredTerms = scoredTerms;
     }
 
     /**

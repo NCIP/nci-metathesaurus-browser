@@ -64,29 +64,29 @@ public class ResolvedConceptReferencesIteratorWrapper {
 
     public ResolvedConceptReferencesIteratorWrapper(
         ResolvedConceptReferencesIterator iterator) {
-        this._iterator = iterator;
-        this._message = null;
+        _iterator = iterator;
+        _message = null;
     }
 
     public ResolvedConceptReferencesIteratorWrapper(
         ResolvedConceptReferencesIterator iterator, String message) {
-        this._iterator = iterator;
-        this._message = message;
+        _iterator = iterator;
+        _message = message;
     }
 
     public void setIterator(ResolvedConceptReferencesIterator iterator) {
-        this._iterator = iterator;
+        _iterator = iterator;
     }
 
     public ResolvedConceptReferencesIterator getIterator() {
-        return this._iterator;
+        return _iterator;
     }
 
     public void setMessage(String message) {
-        this._message = message;
+        _message = message;
     }
 
     public String getMessage() {
-        return this._message;
+        return _message;
     }
 }
