@@ -2,32 +2,32 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
- 
+
 <script type="text/javascript">
   function cursor_wait() {
      document.body.style.cursor = 'wait';
   }
-  
+
   function disableAnchor(){
-  
+
     var obj1 = document.getElementById("a_tpTab");
     if (obj1 != null) obj1.removeAttribute('href');
-  
+
     var obj2 = document.getElementById("a_relTab");
     if (obj2 != null) obj2.removeAttribute('href');
-  
+
     var obj3 = document.getElementById("a_synTab");
     if (obj3 != null) obj3.removeAttribute('href');
-  
+
     var obj4 = document.getElementById("a_srcTab");
     if (obj4 != null) obj4.removeAttribute('href');
-  
+
     var obj5 = document.getElementById("a_allTab");
     if (obj5 != null) obj5.removeAttribute('href');
-  
+
     var obj6 = document.getElementById("a_hierBut");
     if (obj6 != null) obj6.removeAttribute('href');
-  
+
   }
 </script>
 
@@ -36,11 +36,11 @@
 <%
     String match_text = (String) request.getParameter("searchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
-    String displayed_match_text = HTTPUtils.convertJSPString(match_text); 
+    String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>
 
-  <input CLASS="searchbox-input" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
+  <label for="matchText"/><input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
@@ -64,13 +64,11 @@
  %>
   <table border="0" cellspacing="0" cellpadding="0">
     <tr valign="top" align="left">
-      <td align="left" class="textbody"><input type="radio"
-        name="algorithm" value="exactMatch" alt="Exact Match" <%=check_e%>>Exact
-      Match&nbsp; <input type="radio" name="algorithm" value="startsWith"
-        alt="Begins With" <%=check_s%>>Begins With&nbsp; <input
-        type="radio" name="algorithm" value="contains" alt="Containts"
-        <%=check_c%>>Contains
-        </td>
+      <td align="left" class="textbody">
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%>><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%>><label for="algorithm2">Begins With&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%>><label for="algorithm3">Contains</label>
+      </td>
     </tr>
     <tr align="left">
       <td height="1px" bgcolor="#2F2F5F"></td>
@@ -87,10 +85,9 @@
      %>
     <tr valign="top" align="left">
       <td align="left" class="textbody">
-        <input type="radio" name="searchTarget" value="names" alt="Names" <%=check_n%>>Name/Code&nbsp;
-        <input type="radio" name="searchTarget" value="properties" alt="Properties" <%=check_p%>>Property&nbsp;
-        <input type="radio" name="searchTarget" value="relationships" alt="Relationships" <%=check_r%>>Relationship
-        
+        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%>><label for="searchTarget1">Name/Code&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%>><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%>><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -106,31 +103,31 @@
 <%
 Object obj = request.getSession().getAttribute("selectedSource");
 if (obj != null) {
-	String selectedSource = (String) obj;
-	String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
-	if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
+  String selectedSource = (String) obj;
+  String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
+  if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
 
-		boolean licenseAgreementAccepted = false;
-		String formal_name = MetadataUtils.getSABFormalName(selectedSource);
-		String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
-		
-		boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
-		if (licenseAgreementAccepted) {
+    boolean licenseAgreementAccepted = false;
+    String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+    String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
 
-	%>
-	      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		   View Hierarchy		 
-	      </a>         
-	<% 
-	        } else {
+    boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
+    if (licenseAgreementAccepted) {
+
+  %>
+        <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+       View Hierarchy
+        </a>
+  <%
+          } else {
         %>
-		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
-		      </a>	        
-	<%         
-	        }
-	}
-} 
+          <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
+          </a>
+  <%
+          }
+  }
+}
 %>
       </td>
     </tr>
