@@ -19,6 +19,9 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <f:view>
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+  <!-- End Skip Top Navigation -->
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
@@ -27,6 +30,7 @@
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
+        <a name="evs-content" id="evs-content"></a>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
         <tr>
           <td valign="top">
@@ -62,8 +66,8 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
 </p>
             </td></tr>
           </table>
-          
-          
+
+
           <br/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <%
@@ -72,18 +76,18 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
                  if (t.compareTo(prev_t) != 0) {
-			 Vector w = DataUtils.parseData(t, "|");
-			 String abbr = (String) w.elementAt(0);
-			 String def = (String) w.elementAt(1);
-			 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
-		    %>
-		      <tr class="<%=rowColor%>">
-			<td><%=abbr%></td>
-			<td>&nbsp;</td>
-			<td><%=def%></td>
-		      </tr>
-		    <%
-		    prev_t = t;
+       Vector w = DataUtils.parseData(t, "|");
+       String abbr = (String) w.elementAt(0);
+       String def = (String) w.elementAt(1);
+       String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+        %>
+          <tr class="<%=rowColor%>">
+      <td><%=abbr%></td>
+      <td>&nbsp;</td>
+      <td><%=def%></td>
+          </tr>
+        <%
+        prev_t = t;
                  }
               }
             %>

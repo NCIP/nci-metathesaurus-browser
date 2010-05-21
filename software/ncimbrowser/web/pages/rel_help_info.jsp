@@ -22,6 +22,9 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <f:view>
+    <!-- Begin Skip Top Navigation -->
+      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+    <!-- End Skip Top Navigation -->
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
@@ -30,6 +33,7 @@
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
+        <a name="evs-content" id="evs-content"></a>
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
         <tr>
           <td valign="top">
