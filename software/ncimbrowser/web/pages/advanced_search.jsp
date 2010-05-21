@@ -67,6 +67,9 @@
       private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
   %>
   <f:view>
+    <!-- Begin Skip Top Navigation -->
+      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <!-- End Skip Top Navigation -->
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
       <%@ include file="/pages/include/sub-header.jsp" %>
@@ -190,6 +193,7 @@
 
 %>
         <div class="pagecontent">
+          <a name="evs-content" id="evs-content"></a>
           <table>
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
