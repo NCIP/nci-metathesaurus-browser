@@ -30,10 +30,7 @@
 
 <%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-
-
 <html>
 <head>
   <title>NCI Metathesaurus</title>
@@ -52,10 +49,10 @@
       src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
-
-
   <f:view>
-
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+  <!-- End Skip Top Navigation -->
 <%
 Concept concept_details_c = null;
 String concept_details_code = null;
@@ -96,8 +93,7 @@ request.getSession().removeAttribute("new_search");
 
         <!-- Page content -->
         <div class="pagecontent">
-
-
+        <a name="evs-content" id="evs-content"></a>
 <%
     String dictionary = null;
     String code = null;
