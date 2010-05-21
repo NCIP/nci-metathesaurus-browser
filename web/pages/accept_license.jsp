@@ -22,17 +22,20 @@
   String display_name = DataUtils.getMetadataValue(dictionary, "display_name");
   String code = (String) request.getParameter("code");
   String sab = (String) request.getParameter("sab");
-  
+
   String type = (String) request.getParameter("type");
-  
+
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
-  
+
   String base_path = request.getContextPath();
 
   if (dictionary != null) dictionary = dictionary.replaceAll("%20", " ");
 %>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <f:view>
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+  <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
     <%@ include file="/pages/include/sub-header.jsp" %>
@@ -48,6 +51,7 @@
       <!-- end Quick links bar -->
       <!-- Page content -->
       <div class="pagecontent">
+        <a name="evs-content" id="evs-content"></a>
         <p>
           To access <b><%=display_name%></b>, please review and accept the copyright/license statement below:
         </p>
@@ -67,7 +71,7 @@
             <a href="javascript:window.close();">
               <img src="<%= request.getContextPath() %>/images/cancel.gif" border="0" alt="Cancel"/>
             </a>
-            
+
             <input type="hidden" id="dictionary" name="dictionary" value="<%=dictionary%>" />
             <input type="hidden" id="code" name="code" value="<%=code%>" />
             <input type="hidden" id="sab" name="sab" value="<%=sab%>" />
