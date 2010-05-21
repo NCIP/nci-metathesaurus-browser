@@ -29,6 +29,9 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
 
 <f:view>
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+  <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
     <%@ include file="/pages/include/sub-header.jsp" %>
@@ -37,8 +40,7 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
-
-
+      <a name="evs-content" id="evs-content"></a>
 <%
   String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
   Concept concept_neighborhood = null;
