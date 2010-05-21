@@ -31,28 +31,32 @@
     <script type="text/javascript"
       src="<%= request.getContextPath() %>/js/dropdown.js"></script>
   </head>
-  
-  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">  
+
+  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/tip_centerwindow.js"></script>
     <script type="text/javascript"
-      src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>    
+      src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
     <f:view>
+      <!-- Begin Skip Top Navigation -->
+        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+      <!-- End Skip Top Navigation -->
       <%@ include file="/pages/include/header.jsp"%>
-      <div class="center-page"><%@ include
-        file="/pages/include/sub-header.jsp"%> <!-- Main box -->
-      <div id="main-area"><%@ include
-        file="/pages/include/content-header.jsp"%>
+      <div class="center-page">
+        <%@ include file="/pages/include/sub-header.jsp"%> <!-- Main box -->
+      <div id="main-area">
+        <%@ include file="/pages/include/content-header.jsp"%>
       <!-- Page content -->
-      <div class="pagecontent"><%@ include
-        file="/pages/include/welcome.jsp"%> <%@ include
-        file="/pages/include/nciFooter.jsp"%></div>
+      <div class="pagecontent">
+        <a name="evs-content" id="evs-content"></a>
+        <%@ include file="/pages/include/welcome.jsp"%>
+        <%@ include file="/pages/include/nciFooter.jsp"%></div>
       <!-- end Page content --></div>
-      <div class="mainbox-bottom"><img
-        src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5"
-        alt="Mainbox Bottom" /></div>
+      <div class="mainbox-bottom">
+        <img src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5" alt="Mainbox Bottom" />
+      </div>
       <!-- end Main box --></div>
     </f:view>
   </body>
