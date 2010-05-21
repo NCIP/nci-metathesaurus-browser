@@ -19,6 +19,9 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <f:view>
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+  <!-- End Skip Top Navigation -->
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
@@ -39,6 +42,7 @@
         </table>
         <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
+          <a name="evs-content" id="evs-content"></a>
           <!-- Term Type content -->
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
@@ -99,18 +103,18 @@ some of which are proprietary and included, by permission, for non-commercial us
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
                  if (t.compareTo(prev_t) != 0) {
-			 Vector w = DataUtils.parseData(t, "|");
-			 String abbr = (String) w.elementAt(0);
-			 String def = (String) w.elementAt(1);
-			 String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
-		    %>
-		      <tr class="<%=rowColor%>">
-			<td><%=abbr%></td>
-			<td>&nbsp;</td>
-			<td><%=def%></td>
-		      </tr>
-		    <%
-		    prev_t = t;
+       Vector w = DataUtils.parseData(t, "|");
+       String abbr = (String) w.elementAt(0);
+       String def = (String) w.elementAt(1);
+       String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+        %>
+          <tr class="<%=rowColor%>">
+      <td><%=abbr%></td>
+      <td>&nbsp;</td>
+      <td><%=def%></td>
+          </tr>
+        <%
+        prev_t = t;
                  }
               }
             %>

@@ -37,6 +37,9 @@
   %>
 
 <f:view>
+  <!-- Begin Skip Top Navigation -->
+    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+  <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
     <%@ include file="/pages/include/sub-header.jsp" %>
@@ -45,18 +48,19 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
+        <a name="evs-content" id="evs-content"></a>
         <%
 
           long ms = System.currentTimeMillis();
           long iterator_delay;
 
           String page_string = null;
-          
+
 
           IteratorBean iteratorBean = null;
-          
-String key = null;          
-String randomKey = (String) request.getParameter("key");  
+
+String key = null;
+String randomKey = (String) request.getParameter("key");
 IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
     .getSessionMap().get("iteratorBeanManager");
 
@@ -69,20 +73,20 @@ if (iteratorBeanManager == null) {
 if (randomKey != null) {
         iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
 } else {
-	key = (String) request.getAttribute("key");  
-	iteratorBean = iteratorBeanManager.getIteratorBean(key);
+  key = (String) request.getAttribute("key");
+  iteratorBean = iteratorBeanManager.getIteratorBean(key);
 }
 
 
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
 
-	  if (iteratorBean == null) {
-	      _logger.warn("iteratorBean NOT FOUND???" + key);  
-	  } else {
-	      matchText = iteratorBean.getMatchText();
-	      //KLO
-	      request.getSession().setAttribute("matchText", matchText);
-	  }
+    if (iteratorBean == null) {
+        _logger.warn("iteratorBean NOT FOUND???" + key);
+    } else {
+        matchText = iteratorBean.getMatchText();
+        //KLO
+        request.getSession().setAttribute("matchText", matchText);
+    }
 
           page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
 
@@ -156,54 +160,54 @@ if (randomKey != null) {
           }
           %>
                 <%
-		  long ms0 = System.currentTimeMillis();
-		  List list = iteratorBean.getData(istart, iend);
-		  iterator_delay = System.currentTimeMillis() - ms0;
+      long ms0 = System.currentTimeMillis();
+      List list = iteratorBean.getData(istart, iend);
+      iterator_delay = System.currentTimeMillis() - ms0;
 
                   Vector code_vec = new Vector();
                   for (int k=0; k<list.size(); k++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
                       code_vec.add(rcr.getConceptCode());
                   }
-                  
-                  
+
+
                   if (code_vec.size() > 0) {
-			  HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
+        HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
-			  for (int i=0; i<list.size(); i++) {
-			      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-			      String code = rcr.getConceptCode();
-			      String name = rcr.getEntityDescription().getContent();
-			      String semantic_type = "";
-			      String t = (String) type_hmap.get(code);
-			      if (t != null) semantic_type = t;
-			      if (i % 2 == 0) {
-				%>
-				  <tr class="dataRowDark">
-				<%
-			      } else {
-				%>
-				  <tr class="dataRowLight">
-				<%
-			      }
-			      %>
-				  <td class="dataCellText" width=600>
-				    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-				  </td>
-				  <td class="dataCellText" width=400>
-				      <%=semantic_type%>
-				  </td>
-				</tr>
-			      <%
+        for (int i=0; i<list.size(); i++) {
+            ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+            String code = rcr.getConceptCode();
+            String name = rcr.getEntityDescription().getContent();
+            String semantic_type = "";
+            String t = (String) type_hmap.get(code);
+            if (t != null) semantic_type = t;
+            if (i % 2 == 0) {
+        %>
+          <tr class="dataRowDark">
+        <%
+            } else {
+        %>
+          <tr class="dataRowLight">
+        <%
+            }
+            %>
+          <td class="dataCellText" width=600>
+            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+          </td>
+          <td class="dataCellText" width=400>
+              <%=semantic_type%>
+          </td>
+        </tr>
+            <%
 
-			  } 
+        }
                   } else {
                   %>
                        <tr>
-                       <td class="textbodyred"> 
+                       <td class="textbodyred">
                            WARNING: Application timeout.
- 		       </td>
-		       </tr>
+           </td>
+           </tr>
                   <%
                   }
                 %>
