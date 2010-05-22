@@ -209,7 +209,8 @@
                <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
                 <table>
                   <tr><td>
-                    <label for="matchText"/><input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>">
+                    <label for="matchText"/>
+                    <input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>" />
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
                       onclick="javascript:cursor_wait();"
                       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
@@ -219,9 +220,9 @@
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
                     <tr valign="top" align="left"><td align="left" class="textbody">
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%>><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%>><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Containts" <%=check__c%>><label for="adv_search_algorithm3">Contains</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Containts" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
                     </td></tr>
                   </table>
                 </td></tr>
@@ -269,17 +270,17 @@
                 </td></tr>
 
                 <tr valign="top" align="left"><td align="left" class="textbody">
-                  <input type="radio" name="selectSearchOption" id="selectSearchOption1" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()"><label for="selectSearchOption1">Code&nbsp;</label>
-                  <input type="radio" name="selectSearchOption" id="selectSearchOption2" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()"><label for="selectSearchOption2">Name&nbsp;</label>
-                  <input type="radio" name="selectSearchOption" id="selectSearchOption3" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()"><label for="selectSearchOption3">Property&nbsp;</label>
-                  <input type="radio" name="selectSearchOption" id="selectSearchOption4" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()"><label for="selectSearchOption4">Relationship</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption1" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()" /><label for="selectSearchOption1">Code&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption2" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()" /><label for="selectSearchOption2">Name&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption3" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()" /><label for="selectSearchOption3">Property&nbsp;</label>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption4" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()" /><label for="selectSearchOption4">Relationship</label>
                 </td></tr>
 
                 <tr><td>
                   <table>
                   <% if (selectSearchOption.equals("Property")) { %>
-                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
-                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>" />
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>" />
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
@@ -320,7 +321,7 @@
                     </tr>
 
                   <% } else if (selectSearchOption.equals("Relationship")) { %>
-                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>" />
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
@@ -386,16 +387,16 @@
                       </td>
                     </tr>
                   <% } else { %>
-                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>">
-                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>">
-                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>">
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>" />
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>" />
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>" />
                   <% }%>
 
                   </table>
                 </td></tr>
 
               </table>
-              <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
+              <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
             </form>
           </td></tr>
         </table>
