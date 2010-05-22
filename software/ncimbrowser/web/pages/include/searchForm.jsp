@@ -44,11 +44,15 @@
  %>
   <label for="matchText"/><input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
+    
+    
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
       alt="Search">
     </h:commandButton>
+    
+    
     <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
@@ -67,9 +71,9 @@
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%>><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%>><label for="algorithm2">Begins With&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%>><label for="algorithm3">Contains</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> /><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> /><label for="algorithm2">Begins With&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%> /><label for="algorithm3">Contains</label>
       </td>
     </tr>
     <tr align="left">
@@ -93,9 +97,9 @@
      %>
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%>><label for="searchTarget1">Name/Code&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%>><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%>><label for="searchTarget3">Relationship</label>
+        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> /><label for="searchTarget1">Name/Code&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> /><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> /><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -135,7 +139,7 @@
 
       licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
 
-      if (!isLicensed || licenseAgreementAccepted) {
+            if (!isLicensed || licenseAgreementAccepted) {
 
     %>
             <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -161,5 +165,5 @@
       </table>
     </td></tr>
   </table>
-  <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>">
+  <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
 </FORM>
