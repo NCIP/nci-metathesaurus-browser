@@ -89,7 +89,9 @@ request.getSession().removeAttribute("new_search");
         <%@ include file="/pages/include/sub-header.jsp" %>
         <!-- Main box -->
         <div id="main-area">
-    <%@ include file="/pages/include/content-header.jsp" %>
+        
+        
+        <%@ include file="/pages/include/content-header.jsp" %>
 
         <!-- Page content -->
         <div class="pagecontent">
@@ -147,17 +149,7 @@ request.getSession().setAttribute("type", type);
     ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
           IteratorBean iteratorBean = new IteratorBean(iterator);
           iteratorBean.setIterator(iterator);
-/*
-         IteratorBean iteratorBean = (IteratorBean) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("iteratorBean");
 
-         if (iteratorBean == null) {
-    iteratorBean = new IteratorBean(iterator);
-              FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBean", iteratorBean);
-         } else {
-    iteratorBean.setIterator(iterator);
-   }
-*/
    int size = iteratorBean.getSize();
    if (size > 1) {
 

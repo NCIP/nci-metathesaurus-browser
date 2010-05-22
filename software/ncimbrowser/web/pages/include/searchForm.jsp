@@ -30,8 +30,7 @@
   }
 </script>
 
-<FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
-  onsubmit="javascript:disableAnchor();">
+  
 <%
     String userAgent = request.getHeader("user-agent");
     boolean isIE = userAgent != null && userAgent.toLowerCase().contains("msie");
@@ -41,10 +40,41 @@
 
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
+    String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
+    String check_e = "", check_b = "", check_s = "" , check_c ="";
+    if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
+      check_e = "checked";
+    else if (algorithm.compareTo("startsWith") == 0)
+      check_s= "checked";
+    else if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
+      check_b= "checked";
+    else
+      check_c = "checked";
+
+        String searchTarget = (String) request.getSession().getAttribute("searchTarget");
+        String check_n = "", check_p = "" , check_r ="";
+        if (searchTarget == null || searchTarget.compareTo("names") == 0)
+          check_n = "checked";
+        else if (searchTarget.compareTo("properties") == 0)
+          check_p= "checked";
+        else
+          check_r = "checked";
+     
  %>
-  <label for="matchText"/><input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
-    onBlur="active = false" onkeypress="return submitEnter('search',event)" />
-    
+ 
+ <!--
+ <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
+  -->
+ <h:form id="searchTerm" onsubmit="javascript:disableAnchor();">
+  
+  <label for="matchText"/>
+    <!--
+    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
+        onBlur="active = false" onkeypress="return submitEnter('search',event)" />
+     -->
+     
+     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
+        onBlur="active=false"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
@@ -56,18 +86,7 @@
     <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
-<%
-    String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
-    String check_e = "", check_b = "", check_s = "" , check_c ="";
-    if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
-      check_e = "checked";
-    else if (algorithm.compareTo("startsWith") == 0)
-      check_s= "checked";
-    else if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
-      check_b= "checked";
-    else
-      check_c = "checked";
- %>
+
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
@@ -85,16 +104,7 @@
           <td></td>
       <% } %>
     </tr>
-    <%
-        String searchTarget = (String) request.getSession().getAttribute("searchTarget");
-        String check_n = "", check_p = "" , check_r ="";
-        if (searchTarget == null || searchTarget.compareTo("names") == 0)
-          check_n = "checked";
-        else if (searchTarget.compareTo("properties") == 0)
-          check_p= "checked";
-        else
-          check_r = "checked";
-     %>
+
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
         <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> /><label for="searchTarget1">Name/Code&nbsp;</label>
@@ -107,6 +117,7 @@
       <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr valign="top">
           <td align="left" class="textbody">
+          
             <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
               <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
                 valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
@@ -115,18 +126,26 @@
               </h:selectOneMenu>
             </h:outputLabel>
 
+    <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
+</h:form>
+
+
    <%
 
    if (!MetadataUtils.isMetadataAvailable()) {
        MetadataUtils.initialize();
    }
 
+   String selectedSource = "ALL";
    Object obj = request.getSession().getAttribute("selectedSource");
    if (obj != null) {
-    String selectedSource = (String) obj;
-    String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
-    if (available_hierarchies != null && available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
-                   boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
+       selectedSource = (String) obj;
+   }
+   
+
+    String sf_available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
+    if (sf_available_hierarchies != null && selectedSource.compareTo("ALL") != 0 && sf_available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
+      boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
       boolean licenseAgreementAccepted = false;
       String formal_name = MetadataUtils.getSABFormalName(selectedSource);
       String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
@@ -147,23 +166,26 @@
             </a>
     <%
             } else {
-           %>
+    %>
             <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                     <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
             </a>
     <%
             }
     }
-   }
+
    %>
 
           </td>
+          
           <td valign="middle" align="right">
             <a class="global-nav" href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
           </td>
+          
         </tr>
       </table>
     </td></tr>
   </table>
-  <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
-</FORM>
+
+
+ 
