@@ -115,7 +115,7 @@
 
   <navigation-rule>
     <from-view-id>/pages/search_results.jsp</from-view-id>
-
+   
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
