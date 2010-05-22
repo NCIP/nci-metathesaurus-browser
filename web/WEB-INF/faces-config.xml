@@ -119,6 +119,13 @@
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>search_results</from-outcome>
+       <to-view-id>/pages/search_results.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+       <description>Search</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
@@ -143,12 +150,7 @@
        <from-outcome>error</from-outcome>
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
-
-    <navigation-case>
-       <description>advanced_search</description>
-       <to-view-id>/pages/advanced_search.jsp</to-view-id>
-    </navigation-case>
-    
+   
   </navigation-rule>
 
   <navigation-rule>
@@ -341,7 +343,7 @@
     <from-view-id>/pages/advanced_search.jsp</from-view-id>
     
     <navigation-case>
-       <description>message</description>
+       <description>no_match</description>
        <from-action>#{userSessionBean.advancedSearchAction}</from-action>
        <from-outcome>no_match</from-outcome>
        <to-view-id>/pages/advanced_search.jsp</to-view-id>
