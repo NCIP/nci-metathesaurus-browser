@@ -65,16 +65,16 @@
  <!--
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
- <h:form id="searchTerm" onsubmit="javascript:disableAnchor();">
+ <h:form id="searchTerm" onsubmit="javascript:disableAnchor();" >
   
-  <label for="matchText"/>
+  <label for="matchText" />
     <!--
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
         onBlur="active = false" onkeypress="return submitEnter('search',event)" />
      -->
      
      <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  />   
+        onBlur="active=false"  onkeypress="return pressEnterKey(event)"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
