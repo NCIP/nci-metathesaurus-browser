@@ -74,7 +74,7 @@
      -->
      
      <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return pressEnterKey(event)"  />   
+        onBlur="active=false"  onkeypress="return submitEnter('search',event)"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
