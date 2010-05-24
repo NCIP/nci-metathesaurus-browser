@@ -279,23 +279,6 @@ function submitEnter(commandId,e)
                 return true;
 }
 
-function pressEnterKey(e)
-{
-        var keycode;
-        if (window.event) 
-                keycode = window.event.keyCode;
-        else if (e) 
-                keycode = e.which;
-        else 
-                return true;
-        
-        if (keycode == 13) {
-                //document.forms["searchTerm"].elements['search'].click();
-                document.getElementById('search').click();
-                return false;
-        } else
-                return true;
-}	
 	
 if (window.addEventListener)
 	window.addEventListener("load", onloadfunction, false)
