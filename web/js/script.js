@@ -290,7 +290,8 @@ function pressEnterKey(e)
                 return true;
         
         if (keycode == 13) {
-                document.forms["searchTerm"].search.click();
+                //document.forms["searchTerm"].elements['search'].click();
+                document.getElementById('search').click();
                 return false;
         } else
                 return true;
