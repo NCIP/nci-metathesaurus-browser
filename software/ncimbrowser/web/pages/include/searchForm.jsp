@@ -176,10 +176,7 @@
    %>
 
           </td>
-          <!--
           <td valign="middle" align="right">
-          -->
-          <td align="right" class="textbody">
             <a class="global-nav" href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
           </td>
           
