@@ -62,18 +62,14 @@
      
  %>
  
+ 
  <!--
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
- <h:form id="searchTerm" onsubmit="javascript:disableAnchor();" >
-  
+  <h:form id="searchTerm" onsubmit="javascript:disableAnchor();" >
+ 
   <label for="matchText" />
-    <!--
-    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
-        onBlur="active = false" onkeypress="return submitEnter('search',event)" />
-     -->
-     
-     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
+    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('search',event)"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
@@ -87,6 +83,7 @@
     <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
+
 
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
@@ -128,7 +125,8 @@
             </h:outputLabel>
 
     <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
-</h:form>
+    
+
 
 
    <%
@@ -178,15 +176,17 @@
    %>
 
           </td>
-          
+          <!--
           <td valign="middle" align="right">
+          -->
+          <td align="right" class="textbody">
             <a class="global-nav" href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
           </td>
           
         </tr>
       </table>
+
     </td></tr>
   </table>
 
-
- 
+</h:form> 
