@@ -66,7 +66,7 @@
  <!--
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
-  <h:form id="searchTerm" onsubmit="javascript:disableAnchor();" >
+  <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();" >
  
   <label for="matchText" />
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
