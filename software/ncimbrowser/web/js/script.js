@@ -275,6 +275,7 @@ function submitEnter(commandId,e)
         if (keycode == 13) {
                 document.getElementById(commandId).click();
                 return false;
+                
         } else
                 return true;
 }
