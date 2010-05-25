@@ -279,7 +279,30 @@ function submitEnter(commandId,e)
                 return true;
 }
 
-	
+
+function pressEnter(commandId,e)
+{
+        var keycode;
+        if (window.event) 
+                keycode = window.event.keyCode;
+        else if (e) 
+                keycode = e.which;
+        else 
+                return true;
+        
+        if (keycode == 13) {
+                var btn = document.getElementById(commandId);
+                if (btn != null) 
+                {
+                    btn.click();
+                    event.keyCode = 0;
+                    return false;
+                }
+        } else
+                return true;
+}
+
+
 if (window.addEventListener)
 	window.addEventListener("load", onloadfunction, false)
 else if (window.attachEvent)

@@ -77,6 +77,7 @@
         onBlur="active=false"  onkeypress="return submitEnter('search',event)"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
+      accesskey="13"
       onclick="javascript:cursor_wait();"
       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
       alt="Search">

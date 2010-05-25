@@ -33,42 +33,42 @@ import gov.nih.nci.evs.browser.common.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -76,9 +76,9 @@ import gov.nih.nci.evs.browser.common.*;
 /**
  * @author EVS Team
  * @version 1.0
- * 
+ *
  *          Modification history Initial implementation kim.ong@ngc.com
- * 
+ *
  */
 
 public class DataUtils {
@@ -192,7 +192,7 @@ public class DataUtils {
     /*
      * public static HashMap getFormalName2MetadataHashMap() { if
      * (formalName2MetadataHashMap != null) return formalName2MetadataHashMap;
-     * 
+     *
      * try { formalName2MetadataHashMap = new HashMap(); LexBIGService lbSvc =
      * RemoteServerUtil.createLexBIGService(true); if (lbSvc == null) {
      * _logger.warn
@@ -202,13 +202,13 @@ public class DataUtils {
      * ex.printStackTrace();
      * _logger.error("lbSvc.getSupportedCodingSchemes() FAILED..." +
      * ex.getCause() ); return null; }
-     * 
+     *
      * CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering(); for (int
      * i=0; i<csrs.length; i++) { int j = i+1; CodingSchemeRendering csr =
      * csrs[i]; CodingSchemeSummary css = csr.getCodingSchemeSummary(); String
      * formalname = css.getFormalName(); _logger.debug("(" + j + "): " +
      * formalname);
-     * 
+     *
      * Boolean isActive = null; if (csr == null) {
      * _logger.debug("\tcsr == null???"); } else if (csr.getRenderingDetail() ==
      * null) { _logger.debug("\tcsr.getRenderingDetail() == null"); } else if
@@ -217,7 +217,7 @@ public class DataUtils {
      * else { isActive =
      * csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus
      * .ACTIVE); }
-     * 
+     *
      * String representsVersion = css.getRepresentsVersion(); boolean
      * includeInactive = false; if ((includeInactive && isActive == null) ||
      * (isActive != null && isActive.equals(Boolean.TRUE)) || (includeInactive
@@ -225,7 +225,7 @@ public class DataUtils {
      * CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
      * vt.setVersion(representsVersion); try { CodingScheme cs =
      * lbSvc.resolveCodingScheme(formalname, vt);
-     * 
+     *
      * if (cs != null) { NameAndValue[] nvList =
      * MetadataUtils.getMetadataProperties(cs); if (nvList != null) { Vector
      * metadataProperties = new Vector(); for (int k=0; k<nvList.length; k++) {
@@ -239,7 +239,7 @@ public class DataUtils {
      * _logger.warn("\tWARNING: setCodingSchemeMap discards " + formalname);
      * _logger.warn("\t\trepresentsVersion " + representsVersion); } } } catch
      * (Exception e) { e.printStackTrace(); }
-     * 
+     *
      * return formalName2MetadataHashMap; }
      */
 
@@ -2811,7 +2811,7 @@ public class DataUtils {
     /*
      * public HashMap getAssociationTargetHashMap(String scheme, String version,
      * String code, Vector sort_option) {
-     * 
+     *
      * Debug.println("(*) DataUtils getAssociationTargetHashMap "); Vector
      * parent_asso_vec = new Vector(Arrays .asList(hierAssocToParentNodes_));
      * Vector child_asso_vec = new Vector(Arrays
@@ -2820,23 +2820,23 @@ public class DataUtils {
      * Vector(Arrays.asList(assocToBTNodes_)); Vector nt_vec = new
      * Vector(Arrays.asList(assocToNTNodes_)); Vector category_vec = new
      * Vector(Arrays.asList(relationshipCategories_));
-     * 
+     *
      * HashMap rel_hmap = new HashMap(); for (int k = 0; k <
      * category_vec.size(); k++) { String category = (String)
      * category_vec.elementAt(k); Vector vec = new Vector();
      * rel_hmap.put(category, vec); }
-     * 
+     *
      * Vector w = new Vector(); HashSet hset = new HashSet();
-     * 
+     *
      * long ms = System.currentTimeMillis(), delay = 0; String action =
      * "Retrieving all relationships from the server"; HashMap hmap =
      * getRelatedConceptsHashMap(scheme, version, code, null, 0); //
      * resolveCodedEntryDepth // = // 0; delay = System.currentTimeMillis() -
      * ms; Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
-     * 
+     *
      * Set keyset = hmap.keySet(); Iterator it = keyset.iterator();
-     * 
+     *
      * // Categorize relationships into six categories and find association //
      * source data ms = System.currentTimeMillis(); action =
      * "Categorizing relationships into six categories; finding source data for each relationship"
@@ -2844,18 +2844,18 @@ public class DataUtils {
      * (rel_rela.compareTo(INCOMPLETE) != 0) { Vector u =
      * DataUtils.parseData(rel_rela, "|"); String rel = (String) u.elementAt(0);
      * String rela = (String) u.elementAt(1);
-     * 
+     *
      * String category = "Other"; if (parent_asso_vec.contains(rel)) category =
      * "Parent"; else if (child_asso_vec.contains(rel)) category = "Child"; else
      * if (bt_vec.contains(rel)) category = "Broader"; else if
      * (nt_vec.contains(rel)) category = "Narrower"; else if
      * (sibling_asso_vec.contains(rel)) category = "Sibling"; Vector v =
      * (Vector) hmap.get(rel_rela);
-     * 
+     *
      * for (int i = 0; i < v.size(); i++) { AssociatedConcept ac =
      * (AssociatedConcept) v.elementAt(i); EntityDescription ed =
      * ac.getEntityDescription(); String source = "unspecified";
-     * 
+     *
      * for (NameAndValue qualifier : ac.getAssociationQualifiers()
      * .getNameAndValue()) { if (SOURCE.equalsIgnoreCase(qualifier.getName())) {
      * source = qualifier.getContent(); w = (Vector) rel_hmap.get(category); if
@@ -2865,14 +2865,14 @@ public class DataUtils {
      * } } } } } delay = System.currentTimeMillis() - ms;
      * Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
-     * 
+     *
      * // Remove redundant RO relationships ms = System.currentTimeMillis();
      * action = "Removing redundant RO and CHD relationships";
-     * 
+     *
      * HashSet other_hset = new HashSet(); Vector w2 = (Vector)
      * rel_hmap.get("Other"); for (int k = 0; k < w2.size(); k++) { String s =
      * (String) w2.elementAt(k);
-     * 
+     *
      * // _logger.debug("(*) getAssociationTargetHashMap s " + s); Vector
      * ret_vec = DataUtils.parseData(s, "|"); String rel = (String)
      * ret_vec.elementAt(0); String name = (String) ret_vec.elementAt(1); String
@@ -2887,12 +2887,12 @@ public class DataUtils {
      * ret_vec.elementAt(3); if (rel.compareTo("RO") != 0) { w3.add(s); } else {
      * // RO String t = name + "|" + target_code + "|" + src; if
      * (!other_hset.contains(t)) { w3.add(s); } } } rel_hmap.put("Other", w3);
-     * 
+     *
      * other_hset = new HashSet(); w2 = (Vector) rel_hmap.get("Child"); for (int
      * k = 0; k < w2.size(); k++) { String s = (String) w2.elementAt(k);
-     * 
+     *
      * // _logger.debug("(*) getAssociationTargetHashMap s " + s);
-     * 
+     *
      * Vector ret_vec = DataUtils.parseData(s, "|"); String rel = (String)
      * ret_vec.elementAt(0); String name = (String) ret_vec.elementAt(1); String
      * target_code = (String) ret_vec.elementAt(2); String src = (String)
@@ -2900,9 +2900,9 @@ public class DataUtils {
      * (rel.compareTo("CHD") != 0 && !other_hset.contains(t)) {
      * other_hset.add(t); } } w3 = new Vector(); for (int k = 0; k < w2.size();
      * k++) { String s = (String) w2.elementAt(k);
-     * 
+     *
      * // _logger.debug("(*) getAssociationTargetHashMap s " + s);
-     * 
+     *
      * Vector ret_vec = DataUtils.parseData(s, "|"); String rel = (String)
      * ret_vec.elementAt(0); String name = (String) ret_vec.elementAt(1); String
      * target_code = (String) ret_vec.elementAt(2); String src = (String)
@@ -2912,10 +2912,10 @@ public class DataUtils {
      * delay = System.currentTimeMillis() - ms;
      * Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
-     * 
+     *
      * ms = System.currentTimeMillis(); action =
      * "Sorting relationships by sort options (columns)";
-     * 
+     *
      * // Sort relationships by sort options (columns) if (sort_option == null)
      * { for (int k = 0; k < category_vec.size(); k++) { String category =
      * (String) category_vec.elementAt(k); w = (Vector) rel_hmap.get(category);
@@ -2927,11 +2927,11 @@ public class DataUtils {
      * rel_hmap.put(category, w); } } delay = System.currentTimeMillis() - ms;
      * Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
-     * 
+     *
      * removeRedundantRecords(rel_hmap); String incomplete = (String)
      * hmap.get(INCOMPLETE); if (incomplete != null) rel_hmap.put(INCOMPLETE,
      * incomplete); return rel_hmap; }
-     * 
+     *
      * public HashMap getAssociationTargetHashMap(String scheme, String version,
      * String code) { return getAssociationTargetHashMap(scheme, version, code,
      * null); }
@@ -3226,7 +3226,13 @@ public class DataUtils {
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
 
         // KLO, testing
-        new_rel_hmap.put("Sibling", getSiblings(CUI));
+        Vector sibling_vector = getSiblings(CUI);
+        if (sort_option != null) {
+        	sibling_vector = sortRelationshipData(sibling_vector, (String) sort_option.elementAt(4));
+	    }
+
+        //new_rel_hmap.put("Sibling", getSiblings(CUI));
+        new_rel_hmap.put("Sibling", sibling_vector);
 
         removeRedundantRecords(new_rel_hmap);
         String incomplete = (String) new_rel_hmap.get(INCOMPLETE);
@@ -3469,7 +3475,7 @@ public class DataUtils {
                              * "|" + top_atom.getSource() + "|" +
                              * top_atom.getCode(); } t = t + "|" + code + "|" +
                              * rela + "|" + category;
-                             * 
+                             *
                              * w.add(t);
                              */
 
