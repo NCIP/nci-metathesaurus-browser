@@ -31,6 +31,9 @@
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <script type="text/javascript">
+    function cursor_wait() {
+        document.body.style.cursor = 'wait';
+    }  
     function refresh() {
       var text = document.forms["advancedSearchForm"].matchText.value;
       algorithm = "exactMatch";
