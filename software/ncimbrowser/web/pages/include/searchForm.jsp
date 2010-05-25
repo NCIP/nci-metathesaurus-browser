@@ -70,7 +70,7 @@
  
   <label for="matchText" />
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('search',event)"  />   
+        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)"  />   
     
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       accesskey="13"
