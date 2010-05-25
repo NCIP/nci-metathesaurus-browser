@@ -194,16 +194,29 @@
             <% } %>
 
             <tr class="textbody"><td>
+            <!--
                <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
+             -->
+             
+               <h:form id="advancedSearchForm" styleClass="search-form" >
+               
                 <table>
                   <tr><td>
                     <label for="matchText"/>
+                    <!--
                     <input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>" />
+                     -->
+                     
+    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=search_string%>" onFocus="active=true"
+        onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />   
+                    
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
+                      accesskey="13"
                       onclick="javascript:cursor_wait();"
                       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
                       alt="Search">
                     </h:commandButton>
+                    
                   </td></tr>
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
@@ -385,7 +398,11 @@
 
               </table>
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
+            <!--
             </form>
+            -->
+            </h:form>
+            
           </td></tr>
         </table>
         <%@ include file="/pages/include/nciFooter.jsp" %>
