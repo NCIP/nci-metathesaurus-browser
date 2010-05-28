@@ -32,6 +32,8 @@
 
   
 <%
+
+
     String userAgent = request.getHeader("user-agent");
     boolean isIE = userAgent != null && userAgent.toLowerCase().contains("msie");
 
@@ -39,7 +41,6 @@
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
 
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
-
     String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
@@ -126,7 +127,14 @@
 
     <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
     
-
+<%
+    String searchForm_key = (String) request.getSession().getAttribute("key");
+    if (searchForm_key != null) {
+%>
+    <input type="hidden" name="key" id="key" value="<%=searchForm_key%>" />
+<%   
+    }
+%>
 
 
    <%
