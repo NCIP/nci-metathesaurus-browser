@@ -55,12 +55,15 @@
           long iterator_delay;
 
           String page_string = null;
-
-
           IteratorBean iteratorBean = null;
 
 String key = null;
-String randomKey = (String) request.getParameter("key");
+String randomKey = (String) request.getSession().getAttribute("key");
+if (randomKey == null) {
+    randomKey = (String) request.getParameter("key");
+}
+
+
 IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
     .getSessionMap().get("iteratorBeanManager");
 
@@ -70,20 +73,17 @@ if (iteratorBeanManager == null) {
     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("iteratorBeanManager", iteratorBeanManager);
 }
 
+
 if (randomKey != null) {
         iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
-} else {
-  key = (String) request.getAttribute("key");
-  iteratorBean = iteratorBeanManager.getIteratorBean(key);
-}
-
+} 
 
           String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
 
     if (iteratorBean == null) {
         _logger.warn("iteratorBean NOT FOUND???" + key);
     } else {
-        matchText = iteratorBean.getMatchText();
+        //matchText = iteratorBean.getMatchText();
         //KLO
         request.getSession().setAttribute("matchText", matchText);
     }
@@ -216,6 +216,7 @@ if (randomKey != null) {
           </tr>
         </table>
         <%@ include file="/pages/include/pagination.jsp" %>
+        
         <%@ include file="/pages/include/nciFooter.jsp" %>
 
         <%

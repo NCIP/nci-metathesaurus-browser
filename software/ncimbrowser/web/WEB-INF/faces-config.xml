@@ -124,7 +124,7 @@
     </navigation-case>
     
     <navigation-case>
-       <description>Search</description>
+       <description>message</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
