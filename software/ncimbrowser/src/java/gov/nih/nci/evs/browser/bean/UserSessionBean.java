@@ -141,6 +141,11 @@ public class UserSessionBean extends Object {
          * request.setAttribute("message", message); return "message"; }
          * matchText = matchText.trim(); bean.setMatchText(matchText);
          */
+        String matchType =
+            (String) request.getParameter("adv_search_type");
+
+        bean.setSearchType(matchType);
+
         String matchAlgorithm =
             (String) request.getParameter("adv_search_algorithm");
         bean.setAlgorithm(matchAlgorithm);
@@ -558,6 +563,7 @@ public class UserSessionBean extends Object {
         String matchtype = (String) request.getParameter("matchtype");
         if (matchtype == null)
             matchtype = "string";
+
 
         String searchTarget = (String) request.getParameter("searchTarget");
         request.getSession().setAttribute("searchTarget", searchTarget);

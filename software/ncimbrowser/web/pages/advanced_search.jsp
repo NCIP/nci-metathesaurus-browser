@@ -92,6 +92,7 @@
     String rel_search_association = null;
     String rel_search_rela = null;
     String adv_search_source = null;
+    String adv_search_type = null;
 
     String t = null;
     String selectSearchOption = null;
@@ -124,6 +125,8 @@
     if (!refresh_page || message != null) {
         // Note: Called when search contains no match.
         Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
+        
+        
         if (bean_obj == null) {
             bean_obj = request.getAttribute("searchStatusBean");
         }
@@ -134,6 +137,10 @@
 
         } else {
             bean = (SearchStatusBean) bean_obj;
+            
+            selectSearchOption = bean.getSearchType();
+            if (selectSearchOption == null) selectSearchOption = "Property";
+            
             adv_search_algorithm = bean.getAlgorithm();
             adv_search_source = bean.getSelectedSource();
             selectProperty = bean.getSelectedProperty();
@@ -150,6 +157,8 @@
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
     }
+    
+    adv_search_type = selectSearchOption;
 
     if (rel_search_association == null) rel_search_association = "ALL";
     if (rel_search_rela == null) rel_search_rela = " ";
@@ -401,6 +410,8 @@
 
               </table>
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
+              <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=adv_search_type%>" />
+              
             <!--
             </form>
             -->
