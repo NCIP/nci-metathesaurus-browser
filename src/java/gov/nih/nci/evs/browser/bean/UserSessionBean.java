@@ -1213,6 +1213,15 @@ public class UserSessionBean extends Object {
              //+ source);
             setSelectedSource(source);
         }
+
+         HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+         String matchText = request.getParameter("matchText");
+         if (matchText != null) {
+         	request.getSession().setAttribute("matchText", matchText);
+	     }
+
     }
 
     // //////////////////////////////////////////////////////////////
