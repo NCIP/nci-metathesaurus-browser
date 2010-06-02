@@ -246,7 +246,7 @@
 
 
     function showNoPathFoundStatus() {
-      rootDescDiv.setBody("<span class='instruction_text'>Concept is not found in the hierarchy.</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>This concept is an orphan to this source.</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
