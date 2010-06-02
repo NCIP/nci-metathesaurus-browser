@@ -28,20 +28,67 @@
     var obj6 = document.getElementById("a_hierBut");
     if (obj6 != null) obj6.removeAttribute('href');
   }
+
+  function refresh(url) {
+      var text = document.forms["searchTerm"].matchText.value;
+      algorithm = "exactMatch";
+      var algorithmObj = document.forms["searchTerm"].algorithm;
+      for (var i=0; i<algorithmObj.length; i++) {
+        if (algorithmObj[i].checked) {
+          algorithm = algorithmObj[i].value;
+        }
+      }
+
+      searchTarget = "names";
+      var searchTargetObj = document.forms["searchTerm"].searchTarget;
+      for (var i=0; i<searchTargetObj.length; i++) {
+        if (searchTargetObj[i].checked) {
+          searchTarget = searchTargetObj[i].value;
+        }
+      }
+
+      window.location.href=url + "?refresh=1"
+          + "&text="+ text
+          + "&algorithm="+ algorithm
+          + "&searchTarget="+ searchTarget;
+    }
 </script>
 
   
 <%
+    String pageUrl = request.getRequestURL().toString();
+    pageUrl = pageUrl.substring(pageUrl.indexOf("/ncimbrowser"));
+    pageUrl = pageUrl.replace(".jsp", ".jsf");
 
+    String refresh = request.getParameter("refresh");
+    boolean refresh_page = false;
+    if (refresh != null) {
+        refresh_page = true;
+    }
+    
+    String match_text = null;
+    String algorithm = null;
+    String searchTarget = null;
+    if (refresh_page) {
+        match_text = request.getParameter("text");
+        request.getSession().setAttribute("matchText", match_text);
+        algorithm = request.getParameter("algorithm");
+        request.getSession().setAttribute("selectedAlgorithm", algorithm);
+        searchTarget = request.getParameter("searchTarget");
+        request.getSession().setAttribute("searchTarget", searchTarget);
+    } else {
+        match_text = (String) request.getSession().getAttribute("matchText");
+        algorithm = (String) request.getSession().getAttribute("selectedAlgorithm");
+        searchTarget = (String) request.getSession().getAttribute("searchTarget");
+    }
 
     String userAgent = request.getHeader("user-agent");
     boolean isIE = userAgent != null && userAgent.toLowerCase().contains("msie");
 
-    String match_text = (String) request.getSession().getAttribute("matchText");
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
 
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
-    String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
+    algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(algorithm);
     String check_e = "", check_b = "", check_s = "" , check_c ="";
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
       check_e = "checked";
@@ -52,7 +99,6 @@
     else
       check_c = "checked";
 
-        String searchTarget = (String) request.getSession().getAttribute("searchTarget");
         String check_n = "", check_p = "" , check_r ="";
         if (searchTarget == null || searchTarget.compareTo("names") == 0)
           check_n = "checked";
@@ -89,9 +135,9 @@
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> /><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> /><label for="algorithm2">Begins With&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%> /><label for="algorithm3">Contains</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="algorithm2">Begins With&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="algorithm3">Contains</label>
       </td>
     </tr>
     <tr align="left">
@@ -106,9 +152,9 @@
 
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> /><label for="searchTarget1">Name/Code&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> /><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> /><label for="searchTarget3">Relationship</label>
+        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="searchTarget1">Name/Code&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> onclick="javascript:refresh('<%=pageUrl%>')" /><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
