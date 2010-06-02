@@ -99,7 +99,7 @@ request.getSession().removeAttribute("new_search");
 <%
     String dictionary = null;
     String code = null;
-    String type = null;
+    String type = concept_details_type;
     String sortBy = null;
     String name = null;
     Concept c = null;
@@ -112,15 +112,12 @@ request.getSession().removeAttribute("new_search");
     String checkmultiplicity = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("checkmultiplicity"));
     if (checkmultiplicity == null) checkmultiplicity = "false";
 
-type = "properties";
-if (isNew == null)
+if (isNew == null || isNew.equals(Boolean.FALSE))
 {
-  type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
-} else if (isNew.equals(Boolean.FALSE)) {
-        type = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+  String ptype = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("type"));
+  if (ptype != null)
+      type = ptype;
 }
-
-request.getSession().setAttribute("type", type);
 
             if (type == null) {
                 type = "properties";
@@ -132,8 +129,7 @@ request.getSession().setAttribute("type", type);
                      type.compareTo("all") != 0) {
                 type = "properties";
             }
-
-
+            request.getSession().setAttribute("type", type);
 
 
     boolean multipleCUIs = false;
@@ -343,7 +339,7 @@ request.getSession().setAttribute("type", type);
           }
       }
 
-request.getSession().removeAttribute("type");
+//request.getSession().removeAttribute("type");
           %>
             <%@ include file="/pages/include/nciFooter.jsp" %>
         </div>

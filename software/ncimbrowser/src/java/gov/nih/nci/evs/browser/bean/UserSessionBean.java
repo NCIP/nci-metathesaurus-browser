@@ -1223,16 +1223,18 @@ public class UserSessionBean extends Object {
          HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-         String matchText = request.getParameter("matchText");
-         if (matchText != null) {
-         	request.getSession().setAttribute("matchText", matchText);
-	     }
+         
+         String value = request.getParameter("matchText");
+         if (value != null)
+         	request.getSession().setAttribute("matchText", value);
 
-         String matchAlgorithm = (String) request.getParameter("algorithm");
-         setSelectedAlgorithm(matchAlgorithm);
+         value = request.getParameter("algorithm");
+         if (value != null)
+             setSelectedAlgorithm(value);
 
-         String searchTarget = (String) request.getParameter("searchTarget");
-         request.getSession().setAttribute("searchTarget", searchTarget);
+         value = request.getParameter("searchTarget");
+         if (value != null)
+             request.getSession().setAttribute("searchTarget", value);
     }
 
     // //////////////////////////////////////////////////////////////
