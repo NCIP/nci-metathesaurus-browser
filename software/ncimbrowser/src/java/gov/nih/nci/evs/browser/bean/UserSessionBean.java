@@ -1228,6 +1228,11 @@ public class UserSessionBean extends Object {
          	request.getSession().setAttribute("matchText", matchText);
 	     }
 
+         String matchAlgorithm = (String) request.getParameter("algorithm");
+         setSelectedAlgorithm(matchAlgorithm);
+
+         String searchTarget = (String) request.getParameter("searchTarget");
+         request.getSession().setAttribute("searchTarget", searchTarget);
     }
 
     // //////////////////////////////////////////////////////////////
