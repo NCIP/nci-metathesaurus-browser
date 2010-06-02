@@ -421,8 +421,21 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       }
      
 
+boolean has_other_properties = false;
+for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
+   prop_name = (String) key_vec.elementAt(key_lcv);
+   if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
+      Vector value_vec = (Vector) hmap.get(prop_name);
+      if (value_vec.size() > 0) {
+          has_other_properties = true;
+          break;
+      }
+   }
+}
 
-  if (!has_external_source_codes) {
+
+
+  if (!has_other_properties) {
   %>
       <b>Other Properties:</b>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
