@@ -50,6 +50,11 @@ import gov.nih.nci.evs.browser.utils.*;
  */
 
 public class BeanUtils {
+    public static UserSessionBean getUserSessionBean() {
+        return (UserSessionBean) HTTPUtils.getBean("userSessionBean",
+            "gov.nih.nci.evs.browser.bean.UserSessionBean");
+    }
+
     public static IteratorBeanManager getIteratorBeanManager() {
         return (IteratorBeanManager) HTTPUtils.getBean("iteratorBeanManager",
             "gov.nih.nci.evs.browser.bean.IteratorBeanManager");
