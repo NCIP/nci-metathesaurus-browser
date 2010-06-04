@@ -566,7 +566,7 @@ public class UserSessionBean extends Object {
 
 
         String searchTarget = (String) request.getParameter("searchTarget");
-        request.getSession().setAttribute("searchTarget", searchTarget);
+        setSelectedSearchTarget(searchTarget);
 
         // Remove ranking check box (KLO, 092409)
         // String rankingStr = (String) request.getParameter("ranking");
@@ -1135,10 +1135,23 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedAlgorithm",
             selectedAlgorithm);
+        
+        SearchStatusBean bean = BeanUtils.getSearchStatusBean();
+        bean.setAlgorithm(_selectedAlgorithm, false);
     }
 
     public String getSelectedAlgorithm() {
         return _selectedAlgorithm;
+    }
+    
+    public void setSelectedSearchTarget(String searchTarget) {
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        request.getSession().setAttribute("searchTarget", searchTarget);
+
+        SearchStatusBean bean = BeanUtils.getSearchStatusBean();
+        bean.setSearchTarget(searchTarget);
     }
 
     public String contactUs() throws Exception {
@@ -1198,6 +1211,8 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedSource", selectedSource);
 
         _selectedSource = selectedSource;
+        SearchStatusBean bean = BeanUtils.getSearchStatusBean();
+        bean.setSelectedSource(_selectedSource, false);
     }
 
     public String getSelectedSource() {
@@ -1234,7 +1249,7 @@ public class UserSessionBean extends Object {
 
          value = request.getParameter("searchTarget");
          if (value != null)
-             request.getSession().setAttribute("searchTarget", value);
+             setSelectedSearchTarget(value);
     }
 
     // //////////////////////////////////////////////////////////////
