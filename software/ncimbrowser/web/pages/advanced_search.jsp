@@ -33,7 +33,7 @@
   <script type="text/javascript">
     function cursor_wait() {
         document.body.style.cursor = 'wait';
-    }  
+    }
     function refresh() {
       var text = document.forms["advancedSearchForm"].matchText.value;
       algorithm = "exactMatch";
@@ -125,8 +125,8 @@
     if (!refresh_page || message != null) {
         // Note: Called when search contains no match.
         Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
-        
-        
+
+
         if (bean_obj == null) {
             bean_obj = request.getAttribute("searchStatusBean");
         }
@@ -137,10 +137,10 @@
 
         } else {
             bean = (SearchStatusBean) bean_obj;
-            
+
             selectSearchOption = bean.getSearchType();
             if (selectSearchOption == null) selectSearchOption = "Property";
-            
+
             adv_search_algorithm = bean.getAlgorithm();
             adv_search_source = bean.getSelectedSource();
             selectProperty = bean.getSelectedProperty();
@@ -157,7 +157,7 @@
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
     }
-    
+
     adv_search_type = selectSearchOption;
 
     if (rel_search_association == null) rel_search_association = "ALL";
@@ -209,26 +209,26 @@
             <!--
                <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
              -->
-             
+
                <h:form id="advancedSearchForm" styleClass="search-form" >
-               
+
                 <table>
                   <tr><td>
                     <label for="matchText"/>
                     <!--
                     <input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>" />
                      -->
-                     
+
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=search_string%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />   
-                    
+        onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
+
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
                       accesskey="13"
                       onclick="javascript:cursor_wait();"
                       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
                       alt="Search">
                     </h:commandButton>
-                    
+
                   </td></tr>
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
@@ -241,7 +241,7 @@
                 </td></tr>
 
                 <tr><td>
-                  <h:outputLabel id="rel_search_source_Label" value="Source" styleClass="textbody">
+                  <h:outputLabel for="adv_search_source" id="rel_search_source_Label" value="Source" styleClass="textbody">
                     <select id="adv_search_source" name="adv_search_source" size="1">
                     <%
                       Vector src_vec = OntologyBean.getSupportedSources();
@@ -297,7 +297,7 @@
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
-                        <h:outputLabel id="selectPropertyLabel" value="Property" styleClass="textbody">
+                        <h:outputLabel for="selectProperty" id="selectPropertyLabel" value="Property" styleClass="textbody">
                           <select id="selectProperty" name="selectProperty" size="1">
                           <%
                             t = "ALL";
@@ -338,7 +338,7 @@
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
-                        <h:outputLabel id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
+                        <h:outputLabel for="rel_search_association" id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
                           <select id="rel_search_association" name="rel_search_association" size="1">
                           <%
                             t = "ALL";
@@ -374,7 +374,7 @@
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
-                        <h:outputLabel id="rel_search_rela_Label" value="RELA" styleClass="textbody">
+                        <h:outputLabel for="rel_search_rela" id="rel_search_rela_Label" value="RELA" styleClass="textbody">
                           <select id="rel_search_rela" name="rel_search_rela" size="1">
                           <%
                             t = " ";
@@ -419,12 +419,12 @@
               </table>
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
               <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=adv_search_type%>" />
-              
+
             <!--
             </form>
             -->
             </h:form>
-            
+
           </td></tr>
         </table>
         <%@ include file="/pages/include/nciFooter.jsp" %>
