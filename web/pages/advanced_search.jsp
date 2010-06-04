@@ -45,7 +45,7 @@
       }
       var adv_search_source = document.forms["advancedSearchForm"].adv_search_source.value;
 
-      selectSearchOption = "Property";
+      selectSearchOption = "Name";
       var selectSearchOptionObj = document.forms["advancedSearchForm"].selectSearchOption;
       for (var i=0; i<selectSearchOptionObj.length; i++) {
         if (selectSearchOptionObj[i].checked) {
@@ -80,6 +80,7 @@
       <div id="main-area">
         <%@ include file="/pages/include/content-header-alt.jsp" %>
 <%
+    String defaultSearchOption = "Name";
     String refresh = request.getParameter("refresh");
     boolean refresh_page = false;
     if (refresh != null) {
@@ -110,7 +111,7 @@
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         selectSearchOption = bean.getSearchType();
         if (selectSearchOption == null)
-            selectSearchOption = "Property";
+            selectSearchOption = defaultSearchOption;
         
         adv_search_algorithm = bean.getAlgorithm();
         adv_search_source = bean.getSelectedSource();
@@ -129,7 +130,7 @@
     }
 
     if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0) {
-        selectSearchOption = "Property";
+        selectSearchOption = defaultSearchOption;
     }
 
     SearchStatusBean bean = null;
@@ -156,7 +157,8 @@
             bean = (SearchStatusBean) bean_obj;
 
             selectSearchOption = bean.getSearchType();
-            if (selectSearchOption == null) selectSearchOption = "Property";
+            if (selectSearchOption == null)
+                selectSearchOption = defaultSearchOption;
 
             adv_search_algorithm = bean.getAlgorithm();
             adv_search_source = bean.getSelectedSource();
