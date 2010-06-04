@@ -107,8 +107,25 @@
         rel_search_rela = (String) request.getParameter("rela");
         selectProperty = (String) request.getParameter("prop");
     } else {
-        selectSearchOption = (String) request.getAttribute("selectSearchOption");
+        SearchStatusBean bean = BeanUtils.getSearchStatusBean();
+        selectSearchOption = bean.getSearchType();
+        if (selectSearchOption == null)
+            selectSearchOption = "Property";
+        
+        adv_search_algorithm = bean.getAlgorithm();
+        adv_search_source = bean.getSelectedSource();
+        selectProperty = bean.getSelectedProperty();
+        //search_string = bean.getMatchText();
         search_string = (String) request.getSession().getAttribute("matchText");
+        rel_search_association = bean.getSelectedAssociation();
+        rel_search_rela = bean.getSelectedRELA();
+
+        _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
+        _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
+        _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
+        _logger.debug("advanced_search.jsp search_string: " + search_string);
+        _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
+        _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
     }
 
     if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0) {

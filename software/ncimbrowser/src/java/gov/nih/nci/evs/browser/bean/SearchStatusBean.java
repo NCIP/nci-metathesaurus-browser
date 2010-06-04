@@ -181,8 +181,18 @@ public class SearchStatusBean extends Object {
     private String _selectedSource = null;
     private List _sourceList = null;
 
-    public void setSelectedSource(String selectedSource) {
+    public void setSelectedSource(String selectedSource, 
+        boolean updateUserSessionBean) {
         _selectedSource = selectedSource;
+        
+        if (updateUserSessionBean) {
+            UserSessionBean bean = BeanUtils.getUserSessionBean();
+            bean.setSelectedSource(selectedSource);
+        }
+    }
+    
+    public void setSelectedSource(String selectedSource) {
+        setSelectedSource(selectedSource, true);
     }
 
     public String getSelectedSource() {
@@ -361,8 +371,17 @@ public class SearchStatusBean extends Object {
 
     private String _algorithm;
 
-    public void setAlgorithm(String algorithm) {
+    public void setAlgorithm(String algorithm, boolean updateUserSessionBean) {
         _algorithm = algorithm;
+
+        if (updateUserSessionBean) {
+            UserSessionBean bean = BeanUtils.getUserSessionBean();
+            bean.setSelectedAlgorithm(_algorithm);
+        }
+    }
+    
+    public void setAlgorithm(String algorithm) {
+        setAlgorithm(algorithm, true);
     }
 
     public String getAlgorithm() {
@@ -370,11 +389,42 @@ public class SearchStatusBean extends Object {
     }
 
     private String _searchType;
-
-    public void setSearchType(String searchType) {
+    
+    private String mapSearchTypeToSimpleSearch(String searchType) {
+        if (searchType.toLowerCase().startsWith("relationship"))
+            return "relationships";
+        else if (searchType.toLowerCase().startsWith("propert"))
+            return "properties";
+        else return "names";
+    }
+    
+    public void setSearchType(String searchType, boolean updateUserSessionBean) {
         _searchType = searchType;
+        
+        if (updateUserSessionBean) {
+            String value = mapSearchTypeToSimpleSearch(searchType);
+            UserSessionBean bean = BeanUtils.getUserSessionBean();
+            bean.setSelectedSearchTarget(value);
+        }
     }
 
+    public void setSearchType(String searchType) {
+        setSearchType(searchType, true);
+    }
+    
+    private String mapSearchTypeToAdvanceSearch(String searchType) {
+        if (searchType.toLowerCase().startsWith("relationship"))
+            return "Relationship";
+        else if ((searchType.toLowerCase().startsWith("propert")))
+            return "Property";
+        else return "Name";
+    }
+    
+    public void setSearchTarget(String searchTarget) {
+        String value = mapSearchTypeToAdvanceSearch(searchTarget);
+        _searchType = value;
+    }
+    
     public String getSearchType() {
         return _searchType;
     }
