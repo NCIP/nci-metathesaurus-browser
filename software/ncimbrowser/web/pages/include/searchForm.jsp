@@ -30,7 +30,7 @@
   }
 </script>
 
-  
+
 <%
 
 
@@ -60,27 +60,27 @@
           check_p= "checked";
         else
           check_r = "checked";
-     
+
  %>
- 
- 
+
+
  <!--
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
   <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();" >
- 
+
   <label for="matchText" />
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)"  />   
-    
+        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)"  />
+
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       accesskey="13"
       onclick="javascript:cursor_wait();"
       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
       alt="Search">
     </h:commandButton>
-    
-    
+
+
     <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
@@ -116,23 +116,22 @@
       <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr valign="top">
           <td align="left" class="textbody">
-          
-            <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
-              <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
-                valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-                immediate="true" onchange="submit()" >
-                <f:selectItems value="#{userSessionBean.sourceList}" />
-              </h:selectOneMenu>
-            </h:outputLabel>
+
+            <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody" for="source"/>
+            <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
+               valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
+               immediate="true" onchange="submit()" >
+               <f:selectItems value="#{userSessionBean.sourceList}" />
+            </h:selectOneMenu>
 
     <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
-    
+
 <%
     String searchForm_key = (String) request.getSession().getAttribute("key");
     if (searchForm_key != null) {
 %>
     <input type="hidden" name="key" id="key" value="<%=searchForm_key%>" />
-<%   
+<%
     }
 %>
 
@@ -148,7 +147,7 @@
    if (obj != null) {
        selectedSource = (String) obj;
    }
-   
+
 
     String sf_available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
     if (sf_available_hierarchies != null && selectedSource.compareTo("ALL") != 0 && sf_available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
@@ -187,11 +186,11 @@
           <td valign="middle" align="right">
             <a class="global-nav" href="<%=request.getContextPath() %>/pages/advanced_search.jsf">Advanced Search</a>
           </td>
-          
+
         </tr>
       </table>
 
     </td></tr>
   </table>
 
-</h:form> 
+</h:form>
