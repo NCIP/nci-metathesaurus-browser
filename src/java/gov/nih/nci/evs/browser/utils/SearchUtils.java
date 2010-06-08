@@ -1345,7 +1345,7 @@ public class SearchUtils {
                 }
                 // Find ICD9CM concepts by code
                 //size = iterator.numberRemaining();
-                //if (size < 20) {
+                if (size < 500) {
                     // heuristic rule (if the number of matches is large,
                     // then it's less likely that the matchText is a code)
                     Vector w = new Vector();
@@ -1363,7 +1363,7 @@ public class SearchUtils {
                     iterator =
                         getResolvedConceptReferencesIteratorUnion(scheme,
                             version, w);
-                //}
+                }
             } catch (Exception e) {
             }
         }
