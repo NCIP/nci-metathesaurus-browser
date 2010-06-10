@@ -246,7 +246,7 @@
 
 
     function showNoPathFoundStatus() {
-      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child is-a hierarchy in this source – check other relationships.</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source – check other relationships.</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
