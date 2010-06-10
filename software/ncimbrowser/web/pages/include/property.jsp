@@ -155,7 +155,7 @@
 if (retired_cui != null) {
 %>
     <p class="textbodyred"><b>Note: The CUI&nbsp;<i class="textbodyred"><%=retired_cui%></i>
-         your searched for is obsolete.</b>
+         you searched for is obsolete.</b>
     </p>
 <%    
 }
