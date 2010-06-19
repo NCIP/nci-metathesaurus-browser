@@ -537,7 +537,7 @@ public class UserSessionBean extends Object {
         }
 
         String message = "No match found.";
-        if (matchAlgorithm.compareTo("exactMatch") == 0) {
+        if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
             message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
         }
         request.setAttribute("message", message);

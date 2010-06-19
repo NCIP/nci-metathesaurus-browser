@@ -251,7 +251,12 @@ public class SearchByAssociationIteratorDecorator implements
     public int numberRemaining() throws LBResourceUnavailableException {
         // _logger.debug("SearchByAssociationIteratorDecorator: calling numberRemaining()	");
         try {
-            pageIfNecessary();
+            //pageIfNecessary();
+            boolean _completed = pageWhenNecessary();
+            if (!_completed) {
+				return (-1) * _maxIteration;
+			}
+
         } catch (Exception e) {
             throw new LBResourceUnavailableException(e.getMessage());
         }
@@ -358,6 +363,65 @@ public class SearchByAssociationIteratorDecorator implements
         // + currentChildren.size());
 
     }
+
+
+
+    protected boolean pageWhenNecessary() throws Exception {
+        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+
+        // _logger.debug("position: " + position +
+        // " ----------- currentChildren.size: " + currentChildren.size());
+
+        if (_position == _currentChildren.size()) {
+            _currentChildren.clear();
+            _position = 0;
+
+            // [#26965] Contains Relationship search returns invalid result
+            // if (quickIterator.hasNext()) {
+            int _numIteration = 0;
+            while (_quickIterator.hasNext()
+                && _currentChildren.size() == 0) {
+				_numIteration++;
+				if (_numIteration > _maxIteration) {
+					return false;
+				}
+                // while (quickIterator.hasNext()) {
+                ResolvedConceptReference ref = _quickIterator.next();
+                if (ref != null) {
+                    // KLO
+                    String formalName = ref.getCodingSchemeName();
+                    CodedNodeGraph cng =
+                        lbs.getNodeGraph(formalName, null, null);
+
+                    if (_associationNameAndValueList != null) {
+                        cng =
+                            cng.restrictToAssociations(
+                                _associationNameAndValueList,
+                                _associationQualifierNameAndValueList);
+                    }
+
+                    ResolvedConceptReferenceList list =
+                        cng.resolveAsList(Constructors.createConceptReference(
+                            ref.getCode(), ref.getCodingSchemeName()),
+                            _resolveForward, _resolveBackward, 0,
+                            _resolveAssociationDepth, null, null, null,
+                            _maxToReturn);
+
+                    // _logger.debug("Calling populateCurrentChildren ...");
+                    // populateCurrentChildren(list.getResolvedConceptReference(),
+                    // false);
+                    populateCurrentChildren(list.getResolvedConceptReference(),
+                        false);
+
+                }
+            }
+        }
+        // _logger.debug("Exiting pageIfNecessary(): currentChildren.size() "
+        // + currentChildren.size());
+        return true;
+    }
+
+
 
     protected void displayRef(ResolvedConceptReference ref) {
         // _logger.debug(ref.getConceptCode() + ":" +
