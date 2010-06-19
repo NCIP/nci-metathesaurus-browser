@@ -453,6 +453,15 @@ public class UserSessionBean extends Object {
 
         if (iterator != null) {
             int size = iteratorBean.getSize();
+            if (size < 0) {
+				int num_iteration = (-1) * size;
+				String msg =
+					"WARNING: No match is found after " + num_iteration + " iteration. Please try again using more specific search criteria.";
+
+				System.out.println(msg);
+				request.setAttribute("message", msg);
+				return "message";
+			}
 
             _logger.debug("AdvancedSearchActon size: " + size);
 
@@ -1135,7 +1144,7 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedAlgorithm",
             selectedAlgorithm);
-        
+
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         bean.setAlgorithm(_selectedAlgorithm, false);
     }
@@ -1143,7 +1152,7 @@ public class UserSessionBean extends Object {
     public String getSelectedAlgorithm() {
         return _selectedAlgorithm;
     }
-    
+
     public void setSelectedSearchTarget(String searchTarget) {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
@@ -1238,7 +1247,7 @@ public class UserSessionBean extends Object {
          HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-         
+
          String value = request.getParameter("matchText");
          if (value != null)
          	request.getSession().setAttribute("matchText", value);
