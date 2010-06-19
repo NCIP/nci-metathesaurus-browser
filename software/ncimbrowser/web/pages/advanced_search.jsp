@@ -139,7 +139,6 @@
         request.removeAttribute("message");
     }
 
-
     if (!refresh_page || message != null) {
         // Note: Called when search contains no match.
         Object bean_obj = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("searchStatusBean");
