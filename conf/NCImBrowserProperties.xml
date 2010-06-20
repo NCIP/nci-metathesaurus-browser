@@ -2323,6 +2323,11 @@
                  <key>SUBCONCEPT_PAGE_SIZE</key>
                  <value>@subconcept_page_size@</value>
         </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_SEARCH_ITERATION</key>
+                 <value>@max_search_iteration@</value>
+        </ConfigurableItem>
         
     </ConfigurableItems>
 
