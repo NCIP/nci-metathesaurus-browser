@@ -98,6 +98,8 @@ public class SearchByAssociationIteratorDecorator implements
 
     private int _maxIteration = 100;
 
+    private int _quickIteratorSize = 0;
+
     /**
      * Instantiates a new search by association iterator decorator.
      *
@@ -121,6 +123,12 @@ public class SearchByAssociationIteratorDecorator implements
 
         _hset = new HashSet();
 
+        try {
+        	_quickIteratorSize = _quickIterator.numberRemaining();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
         // _logger.debug("Type 1 SearchByAssociationIteratorDecorator ");
 
     }
@@ -142,9 +150,22 @@ public class SearchByAssociationIteratorDecorator implements
             associationQualifierNameAndValueList;
 
         _hset = new HashSet();
-
+        try {
+        	_quickIteratorSize = _quickIterator.numberRemaining();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
         // _logger.debug("Type 2 SearchByAssociationIteratorDecorator ");
     }
+
+
+    public ResolvedConceptReferencesIterator getQuickIterator() {
+		return this._quickIterator;
+	}
+
+    public int getQuickIteratorSize() {
+		return this._quickIteratorSize;
+	}
 
     /*
      * (non-Javadoc)

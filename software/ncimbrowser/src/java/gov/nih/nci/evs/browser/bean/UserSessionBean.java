@@ -455,8 +455,17 @@ public class UserSessionBean extends Object {
             int size = iteratorBean.getSize();
             if (size < 0) {
 				int num_iteration = (-1) * size;
+				int matchingConceptCount = 0;
+				try {
+					SearchByAssociationIteratorDecorator assoIterator = (SearchByAssociationIteratorDecorator) iterator;
+					matchingConceptCount = assoIterator.getQuickIteratorSize();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
 				String msg =
-					"WARNING: No match is found after " + num_iteration + " iteration. Please try again using more specific search criteria.";
+					"WARNING: No match found, but only able to test the first " + num_iteration + " out of " + matchingConceptCount + " matching target concepts. "
+					+ " Consider using a more specific search or a different relationship.";
 
 				System.out.println(msg);
 				request.setAttribute("message", msg);
