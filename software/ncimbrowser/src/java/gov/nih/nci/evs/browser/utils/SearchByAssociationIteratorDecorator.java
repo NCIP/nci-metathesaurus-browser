@@ -9,6 +9,8 @@ import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
 
+import gov.nih.nci.evs.browser.properties.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -128,7 +130,7 @@ public class SearchByAssociationIteratorDecorator implements
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
+		_maxIteration = NCImBrowserProperties.getMaxSearchIteration();
         // _logger.debug("Type 1 SearchByAssociationIteratorDecorator ");
 
     }
@@ -155,6 +157,7 @@ public class SearchByAssociationIteratorDecorator implements
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		_maxIteration = NCImBrowserProperties.getMaxSearchIteration();
         // _logger.debug("Type 2 SearchByAssociationIteratorDecorator ");
     }
 
