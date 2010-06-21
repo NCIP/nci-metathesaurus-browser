@@ -300,6 +300,7 @@
             <filter token="source_hierarchies" value="${source_hierarchies}"/>
             <filter token="secured_vocabularies" value="${secured_vocabularies}"/>
             <filter token="subconcept_page_size" value="${subconcept_page_size}"/>
+            <filter token="max_search_iteration" value="${max_search_iteration}"/>
             <filter token="meddra_security_token" value="${meddra_security_token}"/>
         </filterset>
         <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
