@@ -527,7 +527,9 @@ public class UserSessionBean extends Object {
         // [#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
 
-        if (matchAlgorithm.compareTo("exactMatch") == 0) {
+        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
+
+        //if (matchAlgorithm.compareTo("exactMatch") == 0) {
             String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
@@ -1028,7 +1030,10 @@ public class UserSessionBean extends Object {
         // [#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
 
-        if (matchAlgorithm.compareTo("exactMatch") == 0) {
+        // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
+
+        //if (matchAlgorithm.compareTo("exactMatch") == 0) {
+        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
             String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
