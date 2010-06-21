@@ -2328,6 +2328,11 @@
                  <key>MAXIMUM_SEARCH_ITERATION</key>
                  <value>@max_search_iteration@</value>
         </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_SEARCH_TIME_LIMIT</key>
+                 <value>@max_search_time_limit@</value>
+        </ConfigurableItem>
         
     </ConfigurableItems>
 
