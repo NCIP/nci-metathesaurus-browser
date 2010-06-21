@@ -100,6 +100,8 @@ public class SearchByAssociationIteratorDecorator implements
 
     private int _maxIteration = 100;
 
+    private int _maxTimeLimit = 4;
+
     private int _quickIteratorSize = 0;
 
     /**
@@ -131,6 +133,7 @@ public class SearchByAssociationIteratorDecorator implements
 			ex.printStackTrace();
 		}
 		_maxIteration = NCImBrowserProperties.getMaxSearchIteration();
+		_maxTimeLimit = NCImBrowserProperties.getMaxSearchTimeLimit();
         // _logger.debug("Type 1 SearchByAssociationIteratorDecorator ");
 
     }
@@ -158,6 +161,7 @@ public class SearchByAssociationIteratorDecorator implements
 			ex.printStackTrace();
 		}
 		_maxIteration = NCImBrowserProperties.getMaxSearchIteration();
+		_maxTimeLimit = NCImBrowserProperties.getMaxSearchTimeLimit();
         // _logger.debug("Type 2 SearchByAssociationIteratorDecorator ");
     }
 
@@ -396,6 +400,10 @@ public class SearchByAssociationIteratorDecorator implements
         // _logger.debug("position: " + position +
         // " ----------- currentChildren.size: " + currentChildren.size());
 
+        long ms = System.currentTimeMillis();
+        long dt = 0;
+        long total_delay = 0;
+
         if (_position == _currentChildren.size()) {
             _currentChildren.clear();
             _position = 0;
@@ -406,9 +414,22 @@ public class SearchByAssociationIteratorDecorator implements
             while (_quickIterator.hasNext()
                 && _currentChildren.size() == 0) {
 				_numIteration++;
+
 				if (_numIteration > _maxIteration) {
 					return false;
 				}
+
+                dt = System.currentTimeMillis() - ms;
+                ms = System.currentTimeMillis();
+                total_delay = total_delay + dt;
+                if (total_delay > _maxTimeLimit * 60 * 1000) {
+					if (_numIteration < _maxIteration) {
+						_maxIteration = _numIteration;
+					}
+					System.out.println("Search timeout after " + total_delay + " (milliseconds.)");
+                    return false;
+                }
+
                 // while (quickIterator.hasNext()) {
                 ResolvedConceptReference ref = _quickIterator.next();
                 if (ref != null) {

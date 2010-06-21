@@ -98,6 +98,7 @@ public class NCImBrowserProperties {
     public static final String SUBCONCEPT_PAGE_SIZE = "SUBCONCEPT_PAGE_SIZE";
 
     public static final String MAXIMUM_SEARCH_ITERATION = "MAXIMUM_SEARCH_ITERATION";
+    public static final String MAXIMUM_SEARCH_TIME_LIMIT = "MAXIMUM_SEARCH_TIME_LIMIT";
 
     private static NCImBrowserProperties NCImBrowserProperties = null;
     private static Properties properties = new Properties();
@@ -106,6 +107,8 @@ public class NCImBrowserProperties {
     public static int _maxToReturn = 1000;
     public static int _maxTreeLevel = 1000;
     public static int _max_search_iteration = 100;
+    public static int _max_search_time_limit = 4; // in minutes
+
     private static String _service_url = null;
     private static String _lg_config_file = null;
     private static String _mail_smtp_server = null;
@@ -234,6 +237,13 @@ public class NCImBrowserProperties {
                             .getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_ITERATION);
                     if (_max_search_iteration_str != null) {
                     	_max_search_iteration = Integer.parseInt(_max_search_iteration_str);
+				    }
+
+                    String _max_search_time_limit_str =
+                        NCImBrowserProperties
+                            .getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_TIME_LIMIT);
+                    if (_max_search_time_limit_str != null) {
+                    	_max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
 				    }
                 }
             }
@@ -370,5 +380,9 @@ public class NCImBrowserProperties {
 
     public static int getMaxSearchIteration() {
         return _max_search_iteration;
+    }
+
+    public static int getMaxSearchTimeLimit() {
+        return _max_search_time_limit;
     }
 }
