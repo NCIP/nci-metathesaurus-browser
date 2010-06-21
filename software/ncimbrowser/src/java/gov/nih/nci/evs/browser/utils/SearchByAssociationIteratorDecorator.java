@@ -394,77 +394,6 @@ public class SearchByAssociationIteratorDecorator implements
 
 
 
-    protected boolean pageWhenNecessary() throws Exception {
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
-
-        // _logger.debug("position: " + position +
-        // " ----------- currentChildren.size: " + currentChildren.size());
-
-        long ms = System.currentTimeMillis();
-        long dt = 0;
-        long total_delay = 0;
-
-        if (_position == _currentChildren.size()) {
-            _currentChildren.clear();
-            _position = 0;
-
-            // [#26965] Contains Relationship search returns invalid result
-            // if (quickIterator.hasNext()) {
-            int _numIteration = 0;
-            while (_quickIterator.hasNext()
-                && _currentChildren.size() == 0) {
-				_numIteration++;
-
-				if (_numIteration > _maxIteration) {
-					return false;
-				}
-
-                dt = System.currentTimeMillis() - ms;
-                ms = System.currentTimeMillis();
-                total_delay = total_delay + dt;
-                if (total_delay > _maxTimeLimit * 60 * 1000) {
-					if (_numIteration < _maxIteration) {
-						_maxIteration = _numIteration;
-					}
-					System.out.println("Search timeout after " + total_delay + " (milliseconds.)");
-                    return false;
-                }
-
-                // while (quickIterator.hasNext()) {
-                ResolvedConceptReference ref = _quickIterator.next();
-                if (ref != null) {
-                    // KLO
-                    String formalName = ref.getCodingSchemeName();
-                    CodedNodeGraph cng =
-                        lbs.getNodeGraph(formalName, null, null);
-
-                    if (_associationNameAndValueList != null) {
-                        cng =
-                            cng.restrictToAssociations(
-                                _associationNameAndValueList,
-                                _associationQualifierNameAndValueList);
-                    }
-
-                    ResolvedConceptReferenceList list =
-                        cng.resolveAsList(Constructors.createConceptReference(
-                            ref.getCode(), ref.getCodingSchemeName()),
-                            _resolveForward, _resolveBackward, 0,
-                            _resolveAssociationDepth, null, null, null,
-                            _maxToReturn);
-
-                    // _logger.debug("Calling populateCurrentChildren ...");
-                    // populateCurrentChildren(list.getResolvedConceptReference(),
-                    // false);
-                    populateCurrentChildren(list.getResolvedConceptReference(),
-                        false);
-
-                }
-            }
-        }
-        // _logger.debug("Exiting pageIfNecessary(): currentChildren.size() "
-        // + currentChildren.size());
-        return true;
-    }
 
 
 
@@ -533,5 +462,133 @@ public class SearchByAssociationIteratorDecorator implements
 
         // _logger.debug("\tExiting populateCurrentChildren");
     }
+
+
+
+    public void populateCurrentChildren(ResolvedConceptReference[] list,
+        boolean addRoot, int num) {
+
+	    if (num > _maxIteration) return;
+        if (list == null)
+            return;
+
+        for (ResolvedConceptReference ref : list) {
+
+            displayRef("Root: ", ref);
+
+            if (addRoot) {
+                if (!_hset.contains(ref.getConceptCode())) {
+                    _hset.add(ref.getConceptCode());
+                    // _logger.debug("\tbefore addRoot currentChildren.size() "
+                    // + currentChildren.size());
+                    displayRef(ref);
+                    _currentChildren.add(ref);
+                    // _logger.debug("\tafter addRoot currentChildren.size() "
+                    // + currentChildren.size());
+                }
+            } else {
+                // _logger.debug("\tDO NOT add: ");
+                displayRef("discarded ", ref);
+            }
+
+            if (ref.getSourceOf() != null) {
+                if (ref.getSourceOf().getAssociation() != null) {
+                    for (Association assoc : ref.getSourceOf().getAssociation()) {
+                        populateCurrentChildren(assoc.getAssociatedConcepts()
+                            .getAssociatedConcept(), true, num+1 );
+                    }
+                }
+            } else {
+                // _logger.debug("\tref.getSourceOf() == null -- nothing done.");
+            }
+
+            if (ref.getTargetOf() != null) {
+                if (ref.getTargetOf().getAssociation() != null) {
+                    for (Association assoc : ref.getTargetOf().getAssociation()) {
+                        populateCurrentChildren(assoc.getAssociatedConcepts()
+                            .getAssociatedConcept(), true, num+1);
+                    }
+                }
+            } else {
+                // _logger.debug("\tref.getTargetOf() == null -- nothing done.");
+            }
+        }
+
+        // _logger.debug("\tExiting populateCurrentChildren");
+    }
+
+
+    protected boolean pageWhenNecessary() throws Exception {
+        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+
+        // _logger.debug("position: " + position +
+        // " ----------- currentChildren.size: " + currentChildren.size());
+
+        long ms = System.currentTimeMillis();
+        long dt = 0;
+        long total_delay = 0;
+
+        if (_position == _currentChildren.size()) {
+            _currentChildren.clear();
+            _position = 0;
+
+            // [#26965] Contains Relationship search returns invalid result
+            // if (quickIterator.hasNext()) {
+            int _numIteration = 0;
+            while (_quickIterator.hasNext()
+                && _currentChildren.size() == 0) {
+				_numIteration++;
+
+				if (_numIteration > _maxIteration) {
+					return false;
+				}
+
+                dt = System.currentTimeMillis() - ms;
+                ms = System.currentTimeMillis();
+                total_delay = total_delay + dt;
+                if (total_delay > _maxTimeLimit * 60 * 1000) {
+					if (_numIteration < _maxIteration) {
+						_maxIteration = _numIteration;
+					}
+					System.out.println("Search timeout after " + total_delay + " (milliseconds.)");
+                    return false;
+                }
+
+                // while (quickIterator.hasNext()) {
+                ResolvedConceptReference ref = _quickIterator.next();
+                if (ref != null) {
+                    // KLO
+                    String formalName = ref.getCodingSchemeName();
+                    CodedNodeGraph cng =
+                        lbs.getNodeGraph(formalName, null, null);
+
+                    if (_associationNameAndValueList != null) {
+                        cng =
+                            cng.restrictToAssociations(
+                                _associationNameAndValueList,
+                                _associationQualifierNameAndValueList);
+                    }
+
+                    ResolvedConceptReferenceList list =
+                        cng.resolveAsList(Constructors.createConceptReference(
+                            ref.getCode(), ref.getCodingSchemeName()),
+                            _resolveForward, _resolveBackward, 0,
+                            _resolveAssociationDepth, null, null, null,
+                            _maxToReturn);
+
+                    // _logger.debug("Calling populateCurrentChildren ...");
+                    // populateCurrentChildren(list.getResolvedConceptReference(),
+                    // false);
+                    populateCurrentChildren(list.getResolvedConceptReference(),
+                        false, 0);
+
+                }
+            }
+        }
+        // _logger.debug("Exiting pageIfNecessary(): currentChildren.size() "
+        // + currentChildren.size());
+        return true;
+    }
+
 
 }
