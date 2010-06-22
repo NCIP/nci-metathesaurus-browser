@@ -290,11 +290,23 @@ public class UserSessionBean extends Object {
 
         } else if (searchType != null
             && searchType.compareTo("Relationship") == 0) {
+
+			matchText = matchText.trim();
+
             if (rel_search_association != null
                 && rel_search_association.compareTo("ALL") == 0)
                 rel_search_association = null;
 
             if (rel_search_rela != null) {
+
+				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+					String msg =
+						"Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
+
+					System.out.println(msg);
+					request.setAttribute("message", msg);
+					return "message";
+				}
                 rel_search_rela = rel_search_rela.trim();
                 if (rel_search_rela.length() == 0)
                     rel_search_rela = null;
