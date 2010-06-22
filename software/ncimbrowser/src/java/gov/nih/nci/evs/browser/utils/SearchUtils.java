@@ -3192,8 +3192,6 @@ System.out.println("cns.resolve");
     }
 
 
-
-
     public ResolvedConceptReferencesIteratorWrapper searchByRELA(String scheme,
         String version, String matchText, String source, String matchAlgorithm,
         String rel, String rela, int maxToReturn) {
@@ -3274,7 +3272,7 @@ System.out.println("cns.resolve");
 
         try {
 			CodedNodeGraph cng = getRestrictedCodedNodeGraph(lbSvc,
-				scheme, version, null, rela, cns, 1);
+				scheme, version, rel, rela, cns, 1);
 
 			if (cng == null) {
 				return null;
@@ -3284,13 +3282,12 @@ System.out.println("cns.resolve");
             boolean resolveBackward = true;
             int resolveAssociationDepth = 0;
 
-            iterator =
-                codedNodeGraph2CodedNodeSetIterator(cng, cns, null, resolveForward,
-                    resolveBackward, resolveAssociationDepth, maxToReturn);
+            System.out.println("Calling resolveCodedNodeGraph");
+	        iterator = resolveCodedNodeGraph(lbSvc, scheme, version, cng, RESOLVE_SOURCE, -1);
 
-		if (iterator != null) {
-			return new ResolvedConceptReferencesIteratorWrapper(iterator);
-		}
+			if (iterator != null) {
+				return new ResolvedConceptReferencesIteratorWrapper(iterator);
+			}
 
 
 		} catch (Exception ex) {
@@ -3299,7 +3296,78 @@ System.out.println("cns.resolve");
         return null;
 	}
 
+	public ResolvedConceptReferencesIterator resolveCodedNodeGraph(LexBIGService lbSvc, String scheme, String version,
+		CodedNodeGraph cng, int direction, int maxToReturn)
+	{
+        ConceptReferenceList codeList = new ConceptReferenceList();
+		try {
+			ResolvedConceptReferenceList rcrl = null;
+			try {
+				boolean resolveForward = true;
+				boolean resolveBackward = false;
+				int resolveAssociationDepth = 0;
+				int resolveCodedEntryDepth = 0;
 
+				rcrl = cng.resolveAsList(null, resolveForward, resolveBackward, // graphFocus, resolveForward, resolveBackward
+					resolveCodedEntryDepth, resolveAssociationDepth, null, null, null, maxToReturn);
+
+			} catch (Exception ex) {
+				System.out.println("Exception thrown -- cng.resolveAsList.");
+				return null;
+			}
+
+			ResolvedConceptReference[] rcrArray = rcrl.getResolvedConceptReference();
+			org.LexGrid.concepts.Concept ce = null;
+
+			for (int i=0; i<rcrArray.length; i++)
+			{
+				if (direction == RESOLVE_SOURCE)
+				{
+					codeList.addConceptReference(rcrArray[i]);
+
+				}
+				else if (direction == RESOLVE_TARGET)
+				{
+					AssociationList al = rcrArray[i].getSourceOf();
+					Association[] assos = al.getAssociation();
+					if (assos != null)
+					{
+						for (int j=0; j<assos.length; j++)
+						{
+							Association asso = (Association) assos[j];
+							AssociatedConceptList acl = asso.getAssociatedConcepts();
+							AssociatedConcept[] ac_array = acl.getAssociatedConcept();
+							for (int k=0; k<ac_array.length; k++)
+							{
+								AssociatedConcept ac = (AssociatedConcept) ac_array[k];
+								codeList.addConceptReference(ac);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+        CodedNodeSet cns = null;
+        try {
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			if (version != null)
+				versionOrTag.setVersion(version);
+
+            cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
+            cns = cns.restrictToCodes(codeList);
+            if (cns == null) {
+                return null;
+            }
+            ResolvedConceptReferencesIterator it = cns.resolve(null, null, null, null, false);
+            return it;
+	    } catch (Exception ex) {
+
+		}
+		return null;
+	}
 
 
     // ///////////////////////////////////////////////////////////////
