@@ -315,8 +315,8 @@ public class UserSessionBean extends Object {
 
             int search_direction = Constants.SEARCH_SOURCE;
 
-            _logger.debug("AdvancedSearchAction search_direction "
-                + search_direction);
+            //_logger.debug("AdvancedSearchAction search_direction "
+            //    + search_direction);
 
             searchFields =
                 SearchFields.setRelationship(schemes, matchText, searchTarget,
@@ -324,7 +324,7 @@ public class UserSessionBean extends Object {
                     matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
 
-            _logger.debug("AdvancedSearchAction key " + key);
+            //_logger.debug("AdvancedSearchAction key " + key);
 
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -339,7 +339,7 @@ public class UserSessionBean extends Object {
                     associationsToNavigate =
                         new String[] { rel_search_association };
                 } else {
-                    _logger.debug("(*) associationsToNavigate == null");
+                    _logger.debug("rel_search_association == null");
                 }
 
                 if (rel_search_rela != null) {
@@ -365,13 +365,25 @@ public class UserSessionBean extends Object {
                     _logger.warn("(*) qualifiers == null");
                 }
 
-                wrapper =
-                    new SearchUtils().searchByAssociations(scheme, version,
-                        matchText, associationsToNavigate,
-                        association_qualifier_names,
-                        association_qualifier_values, search_direction, source,
-                        matchAlgorithm, excludeDesignation, ranking,
-                        maxToReturn);
+// KLO, testing
+                if (rel_search_rela != null && rel_search_rela.compareTo("") != 0) {
+					_logger.debug("search by RELA");
+					wrapper = new SearchUtils().searchByRELA(scheme,
+						version, matchText, source, matchAlgorithm,
+						rel_search_association, rel_search_rela, maxToReturn);
+				}
+
+                if (wrapper == null) {
+					_logger.debug("searchByAssociations");
+					wrapper =
+						new SearchUtils().searchByAssociations(scheme, version,
+							matchText, associationsToNavigate,
+							association_qualifier_names,
+							association_qualifier_values, search_direction, source,
+							matchAlgorithm, excludeDesignation, ranking,
+							maxToReturn);
+				}
+
                 if (wrapper != null) {
                     iterator = wrapper.getIterator();
                 }

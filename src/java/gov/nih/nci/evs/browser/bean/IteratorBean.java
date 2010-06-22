@@ -124,6 +124,9 @@ public class IteratorBean extends Object {
                 _size = 0;
             } else {
                 _size = _iterator.numberRemaining();
+
+ System.out.println("Iterator beam _iterator.numberRemaining() " + _iterator.numberRemaining());
+
             }
 
             int randomNumber = new Random().nextInt();

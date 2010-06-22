@@ -23,6 +23,8 @@ import org.LexGrid.LexBIG.Impl.*;
 import org.apache.commons.codec.language.*;
 import gov.nih.nci.evs.browser.common.*;
 
+import gov.nih.nci.evs.browser.bean.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -701,6 +703,10 @@ public class SearchUtils {
         int resolveAssociationDepth, int maxToReturn) {
         CodedNodeSet cns = null;
         try {
+
+
+System.out.println("toNodeList");
+
             cns =
                 cng.toNodeList(graphFocus, resolveForward, resolveBackward,
                     resolveAssociationDepth, maxToReturn);
@@ -718,6 +724,10 @@ public class SearchUtils {
             CodedNodeSet.PropertyType[] propertyTypes = null;
             ResolvedConceptReferencesIterator iterator = null;
             try {
+
+
+System.out.println("cns.resolve");
+
                 iterator =
                     cns.resolve(sortCriteria, propertyNames, propertyTypes);
             } catch (Exception e) {
@@ -2431,6 +2441,52 @@ public class SearchUtils {
     // Search by matching ALL relationships
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/*
+                    if (_associationNameAndValueList != null) {
+                        cng =
+                            cng.restrictToAssociations(
+                                _associationNameAndValueList,
+                                _associationQualifierNameAndValueList);
+                    }
+
+
+
+                String[] associationsToNavigate = null;
+                String[] association_qualifier_names = null;
+                String[] association_qualifier_values = null;
+
+                if (rel_search_association != null) {
+                    associationsToNavigate =
+                        new String[] { rel_search_association };
+                } else {
+                    _logger.debug("(*) associationsToNavigate == null");
+                }
+
+                if (rel_search_rela != null) {
+                    association_qualifier_names = new String[] { "rela" };
+                    association_qualifier_values =
+                        new String[] { rel_search_rela };
+
+                    if (associationsToNavigate == null) {
+                        Vector w = OntologyBean.getAssociationNames();
+                        if (w == null || w.size() == 0) {
+                            _logger
+                                .warn("OntologyBean.getAssociationNames() returns null, or nothing???");
+                        } else {
+                            associationsToNavigate = new String[w.size()];
+                            for (int i = 0; i < w.size(); i++) {
+                                String nm = (String) w.elementAt(i);
+                                associationsToNavigate[i] = nm;
+                            }
+                        }
+                    }
+
+                }
+
+
+*/
+
     public CodedNodeGraph getRestrictedCodedNodeGraph(LexBIGService lbSvc,
         String scheme, String version, String associationName,
         CodedNodeSet cns, int direction) {
@@ -3034,6 +3090,217 @@ public class SearchUtils {
         }
         return null;
     }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public CodedNodeGraph getRestrictedCodedNodeGraph(LexBIGService lbSvc,
+        String scheme, String version, String rel, String rela,
+        CodedNodeSet cns, int direction) {
+        CodedNodeGraph cng = null;
+        CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+        versionOrTag.setVersion(version);
+
+        try {
+            cng = lbSvc.getNodeGraph(scheme, versionOrTag, null);
+            NameAndValueList asso_list = null;
+            String [] associationsToNavigate = null;
+
+			if (rel == null) {
+				Vector w = OntologyBean.getAssociationNames();
+				if (w == null || w.size() == 0) {
+					_logger
+						.warn("OntologyBean.getAssociationNames() returns null, or nothing???");
+				} else {
+					associationsToNavigate = new String[w.size()];
+					for (int i = 0; i < w.size(); i++) {
+						String nm = (String) w.elementAt(i);
+						associationsToNavigate[i] = nm;
+					}
+				}
+			} else {
+				associationsToNavigate = new String[] { rel };
+			}
+			asso_list = createNameAndValueList(associationsToNavigate, null);
+
+            NameAndValueList qualifier_list = null;
+            if (rela != null) {
+				qualifier_list = createNameAndValueList(new String[] { "rela" }, new String[] { rela });
+			}
+
+            cng = cng.restrictToAssociations(asso_list, qualifier_list);
+
+            if (cns != null) {
+                if (direction == -1) {
+                    cng = cng.restrictToSourceCodes(cns);
+                } else if (direction == 1) {
+                    cng = cng.restrictToTargetCodes(cns);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return cng;
+    }
+
+
+
+
+    public ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
+        CodedNodeGraph cng, CodedNodeSet cns_to_remove, ConceptReference graphFocus,
+        boolean resolveForward, boolean resolveBackward,
+        int resolveAssociationDepth, int maxToReturn) {
+        CodedNodeSet cns = null;
+        try {
+			_logger.debug("codedNodeGraph2CodedNodeSetIterator cng.toNodeList");
+            cns =
+                cng.toNodeList(graphFocus, resolveForward, resolveBackward,
+                    resolveAssociationDepth, maxToReturn);
+
+            _logger.debug("exit codedNodeGraph2CodedNodeSetIterator cng.toNodeList");
+            if (cns == null) {
+                _logger.warn("cng.toNodeList returns null???");
+                return null;
+            }
+
+            cns = cns.difference(cns_to_remove);
+
+            SortOptionList sortCriteria = null;
+
+            LocalNameList propertyNames = null;
+            CodedNodeSet.PropertyType[] propertyTypes = null;
+            ResolvedConceptReferencesIterator iterator = null;
+            try {
+                iterator =
+                    cns.resolve(sortCriteria, propertyNames, propertyTypes);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (iterator == null) {
+                _logger.warn("cns.resolve returns null???");
+            }
+            return iterator;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+    public ResolvedConceptReferencesIteratorWrapper searchByRELA(String scheme,
+        String version, String matchText, String source, String matchAlgorithm,
+        String rel, String rela, int maxToReturn) {
+
+        if (matchText == null || matchText.length() == 0)
+            return null;
+
+        matchText = matchText.trim();
+        if (matchAlgorithm.compareToIgnoreCase("contains") == 0) {
+            matchAlgorithm = findBestContainsAlgorithm(matchText);
+        }
+
+        ResolvedConceptReferencesIterator iterator = null;
+		CodedNodeSet cns = null;
+		CodedNodeSet.PropertyType[] propertyTypes =
+			new CodedNodeSet.PropertyType[1];
+		propertyTypes[0] = PropertyType.PRESENTATION;
+        LexBIGService lbSvc = null;
+		try {
+			lbSvc = new RemoteServerUtil().createLexBIGService();
+			if (lbSvc == null) {
+				_logger.warn("lbSvc = null");
+				return null;
+			}
+			CodingSchemeVersionOrTag versionOrTag =
+				new CodingSchemeVersionOrTag();
+			if (version != null)
+				versionOrTag.setVersion(version);
+
+			cns = lbSvc.getNodeSet(scheme, versionOrTag, null);
+			if (cns == null) {
+				_logger.warn("cns = null");
+				return null;
+			}
+
+			try {
+				LocalNameList sourceList = null;
+				if (source != null
+					&& source.compareToIgnoreCase("ALL") != 0) {
+					sourceList = new LocalNameList();
+					sourceList.addEntry(source);
+				}
+
+				cns =
+					cns.restrictToMatchingDesignations(matchText,
+						SearchDesignationOption.ALL, matchAlgorithm, null);
+
+				if(source != null && source.compareTo("ALL") != 0) {
+					cns =
+						cns.restrictToProperties(null, propertyTypes,
+							sourceList, null, null);
+				}
+
+
+                try {
+					ResolvedConceptReferencesIterator it = cns.resolve(null, null, null, null, false);
+					int num = it.numberRemaining();
+					if (num > 1000) {
+						System.out.println("Matching target concepts size: " + num + " > 1000 -- method aborts.");
+						return null;
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+
+
+			} catch (Exception ex) {
+				return null;
+			}
+		} catch (Exception e) {
+            return null;
+		}
+
+		if (cns == null) {
+			return null;
+		}
+
+        try {
+			CodedNodeGraph cng = getRestrictedCodedNodeGraph(lbSvc,
+				scheme, version, null, rela, cns, 1);
+
+			if (cng == null) {
+				return null;
+			}
+
+            boolean resolveForward = false;
+            boolean resolveBackward = true;
+            int resolveAssociationDepth = 0;
+
+            iterator =
+                codedNodeGraph2CodedNodeSetIterator(cng, cns, null, resolveForward,
+                    resolveBackward, resolveAssociationDepth, maxToReturn);
+
+		if (iterator != null) {
+			return new ResolvedConceptReferencesIteratorWrapper(iterator);
+		}
+
+
+		} catch (Exception ex) {
+
+		}
+        return null;
+	}
+
+
+
 
     // ///////////////////////////////////////////////////////////////
     public static void main(String[] args) {
