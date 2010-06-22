@@ -1548,6 +1548,9 @@ public class DataUtils {
         int resolveAssociationDepth, int maxToReturn) {
         CodedNodeSet cns = null;
         try {
+
+System.out.println("codedNodeGraph2CodedNodeSetIterator toNodeList ");
+
             cns =
                 cng.toNodeList(graphFocus, resolveForward, resolveBackward,
                     resolveAssociationDepth, maxToReturn);
@@ -1565,8 +1568,16 @@ public class DataUtils {
             CodedNodeSet.PropertyType[] propertyTypes = null;
             ResolvedConceptReferencesIterator iterator = null;
             try {
+
+System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
+
+
                 iterator =
                     cns.resolve(sortCriteria, propertyNames, propertyTypes);
+
+
+ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve DONE  ");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
