@@ -339,7 +339,10 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
           }
       }
 
-//request.getSession().removeAttribute("type");
+request.getSession().setAttribute("prev_type", type);
+request.getSession().removeAttribute("type");
+
+
           %>
             <%@ include file="/pages/include/nciFooter.jsp" %>
         </div>

@@ -1297,6 +1297,13 @@ public class UserSessionBean extends Object {
          value = request.getParameter("searchTarget");
          if (value != null)
              setSelectedSearchTarget(value);
+
+
+         String prev_type = (String) request.getSession().getAttribute("prev_type");
+         request.getSession().setAttribute("type", prev_type);
+         request.getSession().removeAttribute("prev_type");
+
+
     }
 
     // //////////////////////////////////////////////////////////////
