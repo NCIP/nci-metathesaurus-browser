@@ -378,12 +378,12 @@ public class UserSessionBean extends Object {
                 }
 
 // KLO, testing
-                if (rel_search_rela != null && rel_search_rela.compareTo("") != 0) {
-					_logger.debug("search by RELA");
+                //if (rel_search_rela != null && rel_search_rela.compareTo("") != 0) {
+					//_logger.debug("search by RELA");
 					wrapper = new SearchUtils().searchByRELA(scheme,
 						version, matchText, source, matchAlgorithm,
 						rel_search_association, rel_search_rela, maxToReturn);
-				}
+				//}
 
                 if (wrapper == null) {
 					_logger.debug("searchByAssociations");
@@ -1181,10 +1181,5 @@ public class UserSessionBean extends Object {
         }
     }
 
-    /*
-     * public String refreashAdvancedSearchAction() { HttpServletRequest request
-     * =
-     * (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext
-     * ().getRequest(); return "advanced_search"; }
-     */
+
 }
