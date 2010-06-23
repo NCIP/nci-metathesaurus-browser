@@ -2441,52 +2441,6 @@ System.out.println("cns.resolve");
     // Search by matching ALL relationships
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-/*
-                    if (_associationNameAndValueList != null) {
-                        cng =
-                            cng.restrictToAssociations(
-                                _associationNameAndValueList,
-                                _associationQualifierNameAndValueList);
-                    }
-
-
-
-                String[] associationsToNavigate = null;
-                String[] association_qualifier_names = null;
-                String[] association_qualifier_values = null;
-
-                if (rel_search_association != null) {
-                    associationsToNavigate =
-                        new String[] { rel_search_association };
-                } else {
-                    _logger.debug("(*) associationsToNavigate == null");
-                }
-
-                if (rel_search_rela != null) {
-                    association_qualifier_names = new String[] { "rela" };
-                    association_qualifier_values =
-                        new String[] { rel_search_rela };
-
-                    if (associationsToNavigate == null) {
-                        Vector w = OntologyBean.getAssociationNames();
-                        if (w == null || w.size() == 0) {
-                            _logger
-                                .warn("OntologyBean.getAssociationNames() returns null, or nothing???");
-                        } else {
-                            associationsToNavigate = new String[w.size()];
-                            for (int i = 0; i < w.size(); i++) {
-                                String nm = (String) w.elementAt(i);
-                                associationsToNavigate[i] = nm;
-                            }
-                        }
-                    }
-
-                }
-
-
-*/
-
     public CodedNodeGraph getRestrictedCodedNodeGraph(LexBIGService lbSvc,
         String scheme, String version, String associationName,
         CodedNodeSet cns, int direction) {
