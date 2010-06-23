@@ -604,10 +604,15 @@ public class UserSessionBean extends Object {
 
         String matchAlgorithm = (String) request.getParameter("algorithm");
         setSelectedAlgorithm(matchAlgorithm);
-        String matchtype = (String) request.getParameter("matchtype");
-        if (matchtype == null)
-            matchtype = "string";
 
+
+/*
+        String matchtype = (String) request.getParameter("matchtype");
+        if (matchtype == null) {
+            matchtype = "string";
+		}
+
+*/
 
         String searchTarget = (String) request.getParameter("searchTarget");
         setSelectedSearchTarget(searchTarget);
@@ -632,7 +637,7 @@ public class UserSessionBean extends Object {
             try {
                 _logger.debug(Utils.SEPARATOR);
                 _logger.debug("* criteria: " + matchText);
-                _logger.debug("* matchType: " + matchtype);
+                //_logger.debug("* matchType: " + matchtype);
                 _logger.debug("* source: " + source);
                 // _logger.debug("* ranking: " + ranking);
                 // _logger.debug("* sortOption: " + sortOption);
@@ -682,7 +687,7 @@ public class UserSessionBean extends Object {
         String key = null;
 
         String searchType = (String) request.getParameter("selectSearchOption");
-        // _logger.debug("SearchUtils.java searchType: " + searchType);
+        _logger.debug("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
             String adv_search_algorithm =
@@ -896,13 +901,24 @@ public class UserSessionBean extends Object {
                     _logger.warn("(*) qualifiers == null");
                 }
 
-                wrapper =
-                    new SearchUtils().searchByAssociations(scheme, version,
-                        matchText, associationsToNavigate,
-                        association_qualifier_names,
-                        association_qualifier_values, search_direction,
-                        adv_search_source, adv_search_algorithm,
-                        excludeDesignation, ranking, maxToReturn);
+                //[#28946] Contains relationship results possibly missing some concepts
+                //KLO, 062310
+                _logger.warn("(*) searchByRELA(rel: null; rela: null) ...");
+				wrapper = new SearchUtils().searchByRELA(scheme,
+						version, matchText, source, matchAlgorithm,
+						null, null, maxToReturn);
+
+                if (wrapper == null) {
+					wrapper =
+						new SearchUtils().searchByAssociations(scheme, version,
+							matchText, associationsToNavigate,
+							association_qualifier_names,
+							association_qualifier_values, search_direction,
+							adv_search_source, adv_search_algorithm,
+							excludeDesignation, ranking, maxToReturn);
+				}
+
+
                 if (wrapper != null) {
                     iterator = wrapper.getIterator();
                 }
@@ -915,12 +931,13 @@ public class UserSessionBean extends Object {
             }
 
         } else {
-
             searchFields =
                 SearchFields.setSimple(schemes, matchText, searchTarget,
                     source, matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
+
             if (searchTarget.compareTo("names") == 0) {
+
                 if (iteratorBeanManager.containsIteratorBean(key)) {
                     iteratorBean = iteratorBeanManager.getIteratorBean(key);
                     iterator = iteratorBean.getIterator();
@@ -965,11 +982,21 @@ public class UserSessionBean extends Object {
                 if (iteratorBeanManager.containsIteratorBean(key)) {
                     iteratorBean = iteratorBeanManager.getIteratorBean(key);
                     iterator = iteratorBean.getIterator();
+
                 } else {
-                    wrapper =
-                        new SearchUtils().searchByAssociations(scheme, version,
-                            matchText, source, matchAlgorithm, designationOnly,
-                            ranking, maxToReturn);
+					//[GF#28946] Contains relationship results possibly missing some concepts
+					//KLO, 062310
+					wrapper = new SearchUtils().searchByRELA(scheme,
+						version, matchText, source, matchAlgorithm,
+						null, null, maxToReturn);
+
+                    if (wrapper == null) {
+						wrapper =
+							new SearchUtils().searchByAssociations(scheme, version,
+								matchText, source, matchAlgorithm, designationOnly,
+								ranking, maxToReturn);
+					}
+
                     if (wrapper != null) {
                         iterator = wrapper.getIterator();
                         if (iterator != null) {
