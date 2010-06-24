@@ -4444,4 +4444,24 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return v;
     }
 
+
+    public static String getAssociationReverseName(String assoName) {
+        String assocLabel = assoName;
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            LexBIGServiceConvenienceMethods lbscm =
+                (LexBIGServiceConvenienceMethods) lbSvc
+                    .getGenericExtension("LexBIGServiceConvenienceMethods");
+            lbscm.setLexBIGService(lbSvc);
+
+            assocLabel = lbscm
+                .getAssociationReverseName(assoName, "NCI Metathesaurus", null);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+        return assocLabel;
+	}
+
+
 }

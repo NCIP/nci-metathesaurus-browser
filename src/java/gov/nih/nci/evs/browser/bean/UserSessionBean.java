@@ -294,21 +294,30 @@ public class UserSessionBean extends Object {
 			matchText = matchText.trim();
 
             if (rel_search_association != null
-                && rel_search_association.compareTo("ALL") == 0)
+                && rel_search_association.compareTo("ALL") == 0) {
                 rel_search_association = null;
+			}
+
+			//KLO testing 062410
+			if (rel_search_association != null) {
+				String rel_search_association_0 = rel_search_association;
+				rel_search_association = DataUtils.getAssociationReverseName(rel_search_association);
+				System.out.println("Changing " + rel_search_association_0 + " to " + rel_search_association);
+		    }
+
 
             if (rel_search_rela != null) {
 				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
-					String msg =
-						"Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
+					String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
 
 					System.out.println(msg);
 					request.setAttribute("message", msg);
 					return "message";
 				}
                 rel_search_rela = rel_search_rela.trim();
-                if (rel_search_rela.length() == 0)
+                if (rel_search_rela.length() == 0) {
                     rel_search_rela = null;
+				}
             }
 
             /*
@@ -637,9 +646,7 @@ public class UserSessionBean extends Object {
 
 
 		if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
-			String msg =
-				"Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
-
+			String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
 			System.out.println(msg);
 			request.getSession().setAttribute("message", msg);
 			return "message";
@@ -1190,6 +1197,5 @@ public class UserSessionBean extends Object {
             return "message";
         }
     }
-
 
 }
