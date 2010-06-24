@@ -3057,6 +3057,11 @@ System.out.println("cns.resolve");
         CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
         versionOrTag.setVersion(version);
 
+		_logger
+			.warn("getRestrictedCodedNodeGraph rel: " + rel);
+		_logger
+			.warn("getRestrictedCodedNodeGraph rela: " + rela);
+
         try {
             cng = lbSvc.getNodeGraph(scheme, versionOrTag, null);
             NameAndValueList asso_list = null;
@@ -3088,8 +3093,15 @@ System.out.println("cns.resolve");
 
             if (cns != null) {
                 if (direction == -1) {
+					_logger
+						.warn("restrictToSourceCodes... ");
+
                     cng = cng.restrictToSourceCodes(cns);
                 } else if (direction == 1) {
+					_logger
+						.warn("restrictToTargetCodes... ");
+
+
                     cng = cng.restrictToTargetCodes(cns);
                 }
             }

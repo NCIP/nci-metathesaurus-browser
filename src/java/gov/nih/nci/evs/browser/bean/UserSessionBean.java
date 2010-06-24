@@ -298,7 +298,6 @@ public class UserSessionBean extends Object {
                 rel_search_association = null;
 
             if (rel_search_rela != null) {
-
 				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
 					String msg =
 						"Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
@@ -635,6 +634,17 @@ public class UserSessionBean extends Object {
             } catch (Exception e) {
             }
         }
+
+
+		if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			String msg =
+				"Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
+
+			System.out.println(msg);
+			request.getSession().setAttribute("message", msg);
+			return "message";
+		}
+
 
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
