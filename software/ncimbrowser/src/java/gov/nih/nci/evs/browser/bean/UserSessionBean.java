@@ -298,19 +298,12 @@ public class UserSessionBean extends Object {
                 rel_search_association = null;
 			}
 
-			//KLO testing 062410
-			if (rel_search_association != null) {
-				String rel_search_association_0 = rel_search_association;
-				rel_search_association = DataUtils.getAssociationReverseName(rel_search_association);
-				System.out.println("Changing " + rel_search_association_0 + " to " + rel_search_association);
-		    }
+
 
 
             if (rel_search_rela != null) {
 				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
 					String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
-
-					System.out.println(msg);
 					request.setAttribute("message", msg);
 					return "message";
 				}
@@ -355,9 +348,12 @@ public class UserSessionBean extends Object {
                 String[] association_qualifier_names = null;
                 String[] association_qualifier_values = null;
 
+                String inverse_rel_search_association = rel_search_association;
                 if (rel_search_association != null) {
+					inverse_rel_search_association = DataUtils.getAssociationReverseName(rel_search_association);
                     associationsToNavigate =
-                        new String[] { rel_search_association };
+                        //new String[] { rel_search_association };
+                        new String[] { inverse_rel_search_association };
                 } else {
                     _logger.debug("rel_search_association == null");
                 }
@@ -384,13 +380,11 @@ public class UserSessionBean extends Object {
                 } else {
                     _logger.warn("(*) qualifiers == null");
                 }
-
-// KLO, testing
                 //if (rel_search_rela != null && rel_search_rela.compareTo("") != 0) {
 					//_logger.debug("search by RELA");
 					wrapper = new SearchUtils().searchByRELA(scheme,
 						version, matchText, source, matchAlgorithm,
-						rel_search_association, rel_search_rela, maxToReturn);
+						inverse_rel_search_association, rel_search_rela, maxToReturn);
 				//}
 
                 if (wrapper == null) {
@@ -645,13 +639,6 @@ public class UserSessionBean extends Object {
         }
 
 
-		if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
-			String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
-			System.out.println(msg);
-			request.getSession().setAttribute("message", msg);
-			return "message";
-		}
-
 
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
@@ -741,6 +728,15 @@ public class UserSessionBean extends Object {
 			}
 
 		} else if (searchTarget.compareTo("relationships") == 0) {
+
+			if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+				String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
+				System.out.println(msg);
+				request.getSession().setAttribute("message", msg);
+				return "message";
+			}
+
+
 			designationOnly = true;
 			if (iteratorBeanManager.containsIteratorBean(key)) {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
