@@ -13,7 +13,7 @@ set cp=%cp%;..\build\web\WEB-INF\classes
 set CLASSPATH=%cp%
 
 set java=%JAVA_HOME%\bin\java
-set class=gov.nih.nci.evs.browser.test.Test
+set class=gov.nih.nci.evs.browser.test.ContainsRelationTest
 set args=-propertyFile C:/apps/evs/ncim-webapp/conf/NCImBrowserProperties.xml
 
 rem -------------------------------------------------------------------------------------
