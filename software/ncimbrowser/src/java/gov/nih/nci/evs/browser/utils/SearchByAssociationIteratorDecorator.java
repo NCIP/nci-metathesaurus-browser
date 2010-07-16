@@ -415,6 +415,8 @@ public class SearchByAssociationIteratorDecorator implements
     // [#26965] Contains Relationship search returns invalid result
     public void populateCurrentChildren(ResolvedConceptReference[] list,
         boolean addRoot) {
+        DYEE.header();
+        DYEE.println("list: size: " + list.length);
         if (list == null)
             return;
 
