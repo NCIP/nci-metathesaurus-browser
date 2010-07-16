@@ -28,7 +28,8 @@ public class RelationshipTest extends DataUtils {
             }
         }
         DBG.debug(DBG.isDisplayDetails(), "* Details: " + code);
-        return super.getAssociationTargetHashMap(scheme, version, code, sort_option);
+        //return super.getAssociationTargetHashMap(scheme, version, code, sort_option);
+        return super.getAssociationTargetHashMap(code, sort_option);
     }
     
     public void getAssociationTargetHashMapTest(String scheme, String version, String code, Vector sort_option) {
