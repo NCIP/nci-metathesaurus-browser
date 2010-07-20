@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="software/ncimbrowser/src/java"/>
 	<classpathentry kind="src" path="software/ncimbrowser/web/pages"/>
-	<classpathentry kind="src" path="software/ncimbrowser/test/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/acegi-security-1.0.4.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/antlr-2.7.6.jar"/>
