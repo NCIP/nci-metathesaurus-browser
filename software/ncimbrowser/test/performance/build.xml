@@ -7,7 +7,7 @@
   <property name="app.name" value="ncimtest"/>
   <property name="source.dir" value="src/java"/>
   <property name="bin.dir" value="classes"/>
-  <property name="lib.dir" value="../lib"/>
+  <property name="lib.dir" value="../../lib"/>
   <property name="lib2.dir" value="./lib"/>
   <property name="target.dir" value="target"/>
   <property name="script_list" value="**/*.sh,**/*.conf,**/*.properties"/>
@@ -95,7 +95,7 @@ ${ant.version}
 	
   <target name="pre-build">
     <jar destfile="${project.jar}"
-        basedir="../build/web/WEB-INF/classes">
+        basedir="../../build/web/WEB-INF/classes">
       <include name="org/**"/>
       <include name="gov/**"/>
       <manifest>
@@ -130,6 +130,7 @@ ${ant.version}
     <delete dir="${bin.dir}" quiet="true" />
     <delete dir="${target.dir}" quiet="true" />
     <delete file="${project.jar}" quiet="true" />
+    <delete dir="@search.log.dir@" quiet="true" />
   </target>
 
   <!-- ================================================================== -->
