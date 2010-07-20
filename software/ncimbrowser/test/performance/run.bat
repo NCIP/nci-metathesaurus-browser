@@ -4,12 +4,13 @@ setlocal enabledelayedexpansion
 set ocp=%CLASSPATH%
 
 set cp=.
-set cp=%cp%;..\conf
+set mainDir=..\..
+set cp=%cp%;%mainDir%\conf
 set cp=%cp%;classes
-for %%x in (..\lib\*.jar lib\*.jar) do (
+for %%x in (%mainDir%\lib\*.jar lib\*.jar) do (
   set cp=!cp!;%%x
 )
-set cp=%cp%;..\build\web\WEB-INF\classes
+set cp=%cp%;%mainDir%\build\web\WEB-INF\classes
 set CLASSPATH=%cp%
 
 set java=%JAVA_HOME%\bin\java

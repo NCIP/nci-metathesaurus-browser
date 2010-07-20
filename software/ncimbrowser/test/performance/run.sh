@@ -2,12 +2,13 @@
 
 #----------------------------------------------------------------------------------------
 set cp=.
-set cp="$cp":../conf
+set mainDir=../..
+set cp="$cp":$mainDir/conf
 set cp="$cp":classes
-foreach jar (../lib/*.jar lib/*.jar)
+foreach jar ($mainDir/lib/*.jar lib/*.jar)
   set cp="$cp":$jar
 end
-set cp="$cp":../build/web/WEB-INF/classes
+set cp="$cp":$mainDir/build/web/WEB-INF/classes
 setenv CLASSPATH $cp
 
 #----------------------------------------------------------------------------------------
