@@ -61,7 +61,7 @@
     <property name="common.dir" location="${software.dir}/common" />
     <property name="local.repo.dir" location="${software.dir}/local-ivy-repo" />
     <property name="target.dir" location="${software.dir}/target" />
-    <property name="bda-download.dir" location="${target.dir}/bda-download" />
+    <property name="bda-download.dir" location="${common.dir}/bda-download"/>
     <property name="ivy.settings.dir" location="${common.dir}/ivy" />
     <property name="lib.dir" location="${target.dir}/lib" />
     <property name="temp.dir" location="${target.dir}/temp" />
