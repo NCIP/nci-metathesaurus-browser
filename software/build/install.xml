@@ -459,7 +459,7 @@
             <then>
                 <jboss-stop-jboss
                     jboss.server.jndi.port="${jboss.server.jndi.port}"
-                    sleep.time="30"
+                    sleep.time="5"
                 />
             </then>
         </if>
