@@ -23,11 +23,13 @@ This is the definition of a virtual module called bda-download that has a depend
   <publications>    
   </publications>
   <dependencies>
-    <dependency org="openqa" name="selenium-server" rev="1.0-beta-2" conf="test-selenium->master"/>
+    <dependency org="org.seleniumhq.selenium.server" name="selenium-server" rev="1.0.3" conf="test-selenium->master">
+	    <artifact name="selenuim-server" type="jar" url="https://ncisvn.nci.nih.gov/svn/maven-mirror/trunk/org/seleniumhq/selenium/server/selenium-server/1.0.3/selenium-server-1.0.3-standalone.jar"/>
+    </dependency>
     <dependency org="junit" name="junit" rev="4.6" conf="test-junit->master"/>
-    <dependency org="cobertura" name="cobertura" rev="1.9.1" conf="test-cobertura->runtime"/>  
+    <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="test-cobertura->runtime"/>  
     <dependency org="javancss" name="javancss" rev="29.50" conf="test-javancss->runtime"/>
-    <dependency org="checkstyle" name="checkstyle" rev="4.6" conf="test-checkstyle->runtime"/>
+    <dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test-checkstyle->runtime"/>
     <dependency org="pmd" name="pmd" rev="4.2.5" conf="test-pmd->runtime"/>
     <dependency org="ncicb" name="bda-utils" rev="${bda.version}" changing="true" conf="runtime"/>
   </dependencies>
