@@ -3,6 +3,7 @@
 @rem **** Command file to invoke build.xml ****
 @rem ******************************************
 setlocal
+set JAVA_HOME=C:\Apps\Java\jdk1.5.0_14
 set DEVPROPFILE=C:\NCI-Projects\ncim-properties\properties\dev-upgrade.properties
 set CIPROPFILE=C:\NCI-Projects\ncim-properties\properties\ci-upgrade.properties
 set QAPROPFILE=C:\NCI-Projects\ncim-properties\properties\qa-upgrade.properties
