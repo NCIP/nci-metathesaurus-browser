@@ -89,8 +89,8 @@ request.getSession().removeAttribute("new_search");
         <%@ include file="/pages/include/sub-header.jsp" %>
         <!-- Main box -->
         <div id="main-area">
-        
-        
+
+
         <%@ include file="/pages/include/content-header.jsp" %>
 
         <!-- Page content -->
@@ -293,7 +293,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
   if (term_suggestion_application_url1 == null) {
-     term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
+     term_suggestion_application_url1 = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "term_suggestion_application_url");
      if (term_suggestion_application_url1 != null) {
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
      }
