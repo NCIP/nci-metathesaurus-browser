@@ -119,7 +119,7 @@ public class HTTPUtils {
     @SuppressWarnings("unchecked")
     public static Object getBean(String name, String classPath) {
         try {
-            Map<Object, Object> map =
+            Map<String, Object> map =
                 FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap();
 
