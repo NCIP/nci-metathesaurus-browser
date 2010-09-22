@@ -253,7 +253,7 @@
                     <tr valign="top" align="left"><td align="left" class="textbody">
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Containts" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
                     </td></tr>
                   </table>
                 </td></tr>
