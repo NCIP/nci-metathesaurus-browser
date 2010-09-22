@@ -127,34 +127,64 @@
         <echo message="application.data.path=${application.data.path}"/>
     </target>
 
-    <target name="install:jboss:init" depends="common:init:pre" unless="upgrade.running">
+    <target name="install:jboss:init" depends="common:init:pre" unless="exclude.jboss">
         <!-- determine if port configurations or port lists are being called -->
         <if>
             <isset property="jboss.ncicb-standard.port-config"/>
             <then>
                 <!-- Read some port properties from standard bindings file -->
                 <echo message="Using JBoss NCICB Standard port configurations"/>
-                <property name="jboss.server.binding.template.location" value="${basedir}/${jboss-bindings.file}"/>
-                <jboss-read-ports
-                    jboss.server.bindingfile.location="${jboss.server.binding.template.location}"
+                <if>
+                    <equals arg1="${jboss.major.version}" arg2="4"/>
+                    <then>
+                        <property name="jboss.server.binding.template.location" value="${basedir}/${jboss-bindings.file}"/>
+                        <jboss-read-ports
+                            jboss.server.bindingfile.location="${jboss.server.binding.template.location}"
+                            />
+                        <jboss-bindings-validate
+                            jboss.server.bindingfile.location="${jboss.server.binding.template.location}"
                     />
+                    </then>
+                    <elseif>
+                        <equals arg1="${jboss.major.version}" arg2="5"/>
+                        <then>
+                            <property name="jboss.server.binding.template.location" value="${basedir}/${jboss-bindings.file}"/>
+                            <property name="jboss.server.bindingfile.location" value="${jboss.home}/server/${jboss.server.name}/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"/>
+                            <property name="temp.ejb.file" value="${temp.dir}/ejb3-connectors-jboss-beans.xml"/>
+                            <copy tofile="${temp.ejb.file}" file="${bda-utils.dir}/resource/jboss-5.1.0.GA/ejb3-connectors-jboss-beans.xml"/>
+                            <!--
+                            <jboss51-bindings-nci
+                                jboss.server.bindingfile.location="${jboss-bindings.file}"
+                                />
+                            -->
+                            <jboss51-read-ports-nci
+                                jboss.server.bindingfile.location="${jboss-bindings.file}"
+                                jboss.server.ejbfile.location="${temp.ejb.file}"
+                                />
+                        </then>
+                    </elseif>
+                </if>
                 <echo message="http -${jboss.server.port} "/>
                 <echo message="http -${jboss.server.jndi.port} "/>
                 <properties-exist
                     properties.list="jboss.server.jndi.port,jboss.server.port,jboss.server.ports.name"
                     />
-                <!-- Make sure there are not unexpanded tokens and that the jboss.server.ports.name is a configuration in the bindings file. -->
-                <jboss-bindings-validate
-                    jboss.server.bindingfile.location="${jboss.server.binding.template.location}"
-                    />
-
             </then>
             <else>
                 <!-- else ensure that all ports are set, since these will be removed from install-properties.template we will verify here.  They have to be removed so the validator works with or without the properties or we have to change the format of the file. -->
                 <echo message="Using custom JBoss port configurations"/>
-                <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings.xml"/>
+                <if>
+                    <equals arg1="${jboss.major.version}" arg2="4"/>
+                    <then>
+                        <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings.xml"/>
+                    </then>
+                    <else>
+                        <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings-jboss-beans.xml"/>
+  
+                    </else>
+                </if>
                 <properties-exist
-                    properties.list="jboss.server.jndi.port,jboss.server.port,jboss.cobraorb.port,jboss.ejbinvoker.port,jboss.hajndi.port,jboss.hajrmi.port,jboss.jms.port,jboss.jmx-rmi.port,jboss.messaging.port,jboss.pooledha.port,jboss.remoting.port,jboss.server.bind.port,jboss.server.rmi.port,jboss.service.rmiobject.port,jboss.snmp.port,jboss.snmp-trapd.port,jboss.web.service.port"
+                    properties.list="jboss.server.jndi.port,jboss.server.port,jboss.cobraorb.port,jboss.hajndi.port,jboss.hajrmi.port,jboss.jmx-rmi.port,jboss.messaging.port,jboss.pooledha.port,jboss.server.bind.port,jboss.server.rmi.port,jboss.service.rmiobject.port,jboss.snmp.port,jboss.snmp-trapd.port,jboss.web.service.port,jboss.unifiedinvoker.port,jboss.hajndi.auto.port,jboss.ssl.port,jboss.jms2.netty.port,jboss.jms2.netty-ssl.port,jboss.transaction.recovery.port,jboss.transaction.status.port,jboss.transaction.processid.port"
                     />
             </else>
         </if>
@@ -364,7 +394,7 @@
 
     <target name="install:jboss:configure:log4j" description="Configure custom entries in system wide log4j" unless="exclude.jboss" depends="common:jboss:init, common:init">
         <echo message="Configuring Log4J"/>
-        <property name="log4j.file.name" value="log4j.xml"/>
+        <property name="log4j.file.name" value="jboss-log4j.xml"/>
         <copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.pre"/>
         <replaceregexp file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
             byline="true"
@@ -419,10 +449,11 @@
     </target>
 
     <target name="install:jboss:configure" description="Configure JBoss (bindings, login-config.xml, ect)" unless="exclude.jboss"
-        depends="common:jboss:init,
+        depends="
+        common:jboss:init,
         common:init,
         install:jboss:configure:log4j
-        ">
+            ">
         <!-- Calls the following macros
             jboss-bindings - configures ports for jboss
             jboss-login-config - sets up authentication
@@ -433,14 +464,43 @@
             grid-secure-configure-connector - configures secure grid
         -->
         <!-- Use below if you are defining all the ports in your install.xml not the NCICB port configuraitons-->
-        <jboss-configure
-            jboss.server.ports.name="bda-ports"
-            jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jboss-web.deployer/server.xml"
-            />
-        <!-- Default values for all attributes if you are using standard NCICB port configurations
-        <jboss-configure
-            />
-            -->
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="4"/>
+            <then>
+                <jboss-configure
+                    jboss.grid.configure="${jboss.grid.enable}"
+                    />
+                <if>
+                    <equals arg1="${jboss.cgmm.enable}" arg2="true"/>
+                    <then>
+                        <jboss-configure-cgmm
+                            />
+                    </then>
+                </if>
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="5"/>
+            <then>
+                <!-- clean up ssl config from systems provided jboss -->
+                <xmltask preservetype="true" source="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                    dest="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml">
+                    <xmlcatalog refid="bda.xml.catalog"/>
+                    <remove path="/Server/Service[@name='jboss.web']/Connector[@keystoreFile='${jboss.server.home.dir}/conf/keystore/server.keystore']" />
+                </xmltask>
+                <jboss-configure
+                    jboss.grid.configure="false"
+                    jboss.server.bindingfile.location="${jboss.home}/server/${jboss.server.name}/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
+                    jboss.server.binding.template.location="${jboss.server.binding.template.location}"
+                    jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                    proxy.update.connector.port.ssl="${jboss.ssl.port}"
+                    />
+                <!--
+                <jboss51-encrypt-messaging-passwd
+                    />
+                -->
+            </then>
+        </if>
     </target>
 
     <target name="-install:jboss:configure:jbossmq-dest" description="Configure MQ settings based on contents of software/common/resource/jboss-conf/jbossmq-destinations-service.block.xml" unless="exclude.jboss" depends="common:jboss:init,common:init">
@@ -754,7 +814,7 @@
             </else>
         </if>
 
-        <property name="upgrade.running" value="true"/>
+        <property name="upgrade.running" value="common:init:pre true"/>
         <!-- Upgrades always use port configs -->
         <property name="jboss.ncicb-standard.port-config" value="true"/>
         <available file="${jboss.home}" property="jboss.exists"/>
@@ -766,8 +826,8 @@
         <!-- call your custom readers here, two properties included in these scripts that don't have readers are "fs-data.base.dir, mail.smtp.server" -->
     </target>
 
-    <target name="upgrade:jboss:readers:bda" if="jboss.exists">
-
+    <target name="upgrade:jboss:readers:bda" unless="exclude.jboss">
+  
         <!-- Make sure the ${properties.file} has at least the following props -->
         <properties-exist
             properties.list="application.base.path,jboss.home,jboss.server.name"
@@ -790,39 +850,150 @@
             </then>
         </if>
         <!-- Begin JBoss Readers -->
-        <var name="read.properties.list" value=""/>
         <!-- Reader reqiures that you have only one data source defined in each *-ds.xml file -->
+        <jboss-read-dbconfig
+            jboss.home="${read.jboss.home}"
+            jboss.ds-xml.file="bda-blueprints-ds.xml"
+            />
         <jboss-read-ldapconfig
+            jboss.home="${read.jboss.home}"
             />
-        <jboss-read-bindings-file-location
-            />
-        <jboss-read-ports
-            />
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="4"/>
+            <then>
+                <jboss-read-bindings-file-location
+                    jboss.home="${read.jboss.home}"
+                    />
+                <jboss-read-ports
+                    />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="5"/>
+            <then>
+                <jboss51-read-default-portconfig
+                    />
+                <jboss51-read-ports-nci
+                    />
+            </then>
+        </if>
         <!-- Setting this variable will cause install to copy it into place if using CM/DAC, not modified in NCM -->
         <var name="jboss.ssl.keystore.dir" value="${working.dir}/keys/jboss"/>
-        <jboss-read-ssl
-            copied.keystore.dir="${jboss.ssl.keystore.dir}"
-            />
-        <!-- No longer needed now reading all the ports
-        <jboss-copy-bindings
-            copied.jboss.server.bindingfile.dir="${working.dir}/copied-bindings"
-            copied.jboss.bindings.file.property.name="copied.jboss.bindings.file"
-            />
-        # Setting this will cause install to copy this file into place if using CM/DAC, not modified in NCM
-        <var name="jboss.server.binding.template.location" value="${working.dir}/copied-bindings/${copied.jboss.bindings.file}"/>
-        -->
-        <jboss-read-external-hostname
-            />
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="4"/>
+            <then>
+                <jboss-read-ssl
+                    jboss.home="${read.jboss.home}"
+                    copied.keystore.dir="${jboss.ssl.keystore.dir}"
+                    />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="5"/>
+            <then>
+                <jboss-read-ssl
+                    jboss.home="${read.jboss.home}"
+                    jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                    copied.keystore.dir="${jboss.ssl.keystore.dir}"
+                    />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="4"/>
+            <then>
+                <jboss-read-external-hostname
+                    jboss.home="${read.jboss.home}"
+                    search.ssl.port="${jboss.ssl.port}"
+                    />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="5"/>
+            <then>
+                <jboss-read-external-hostname
+                    jboss.home="${read.jboss.home}"
+                    jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                    search.ssl.port="${jboss.ssl.port}"
+                    />
+            </then>
+        </if>
         <!-- for tier installs, should be done first, since it is set first it will be the one used if it exists -->
         <jboss-read-java_opts
-            jboss.bin.dir="${jboss.home}/server/${jboss.server.name}/bin"
+            jboss.bin.dir="${read.jboss.home}/server/${jboss.server.name}/bin"
             />
         <jboss-read-java_opts
+            jboss.home="${read.jboss.home}"
             />
         <!-- will have to add code to install:post:jboss to copy this back if exists -->
         <property name="copied.jboss.log4j.dir" value="${working.dir}/copied-log4j"/>
-        <jboss-copy-log4j
-            copied.jboss.log4j.dir="${copied.jboss.log4j.dir}"
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="4"/>
+            <then>
+                <jboss-copy-log4j
+                    jboss.home="${read.jboss.home}"
+                    jboss.log4j.location="${jboss.home}/server/${jboss.server.name}/conf/log4j.xml"
+                    copied.jboss.log4j.dir="${copied.jboss.log4j.dir}"
+                    />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${jboss.major.version}" arg2="5"/>
+            <then>
+                <jboss-copy-log4j
+                    jboss.home="${read.jboss.home}"
+                    jboss.log4j.location="${jboss.home}/server/${jboss.server.name}/conf/jboss-log4j.xml"
+                    copied.jboss.log4j.dir="${copied.jboss.log4j.dir}"
+                    />
+            </then>
+        </if>
+        <if>
+            <not>
+                <isset property="exclude.jboss.grid"/>
+            </not>
+            <then>
+                <grid-read-index-url
+                    grid.wsrf.dir="${read.jboss.home}/server/${jboss.server.name}/deploy/wsrf.war"
+                    />
+                <var name="jboss.grid.secure.dir" value="${working.dir}/keys/jboss"/>
+                <if>
+                    <equals arg1="${jboss.major.version}" arg2="4"/>
+                    <then>
+                        <jboss-read-grid-secure
+                            jboss.home="${read.jboss.home}"
+                            copied.keystore.dir="${jboss.grid.secure.dir}"
+                            />
+                    </then>
+                </if>
+                <if>
+                    <equals arg1="${jboss.major.version}" arg2="5"/>
+                    <then>
+                        <jboss-read-grid-secure
+                            jboss.home="${read.jboss.home}"
+                            jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                            copied.keystore.dir="${jboss.grid.secure.dir}"
+                            />
+                    </then>
+                </if>
+                <!-- will have to add code to install:post:jboss to copy this back if exists -->
+                <!-- no longer needed
+                <property name="copied.jboss.service-metadata.dir" value="${working.dir}/jboss-grid"/>
+                <grid-copy-service-metadata
+                    copied.service-metadata.dir="${copied.service-metadata.dir}"
+                    />
+                -->
+                <grid-read-poc
+                    grid.wsrf.dir="${read.jboss.home}/server/${jboss.server.name}/deploy/wsrf.war"
+                    grid.service.name="Sample"
+                    />
+            </then>
+        </if>
+        <read-property-from-properties-service
+            jboss.home="${read.jboss.home}"
+            property.name="property1"
+            />
+        <read-property-from-properties-service
+            jboss.home="${read.jboss.home}"
+            property.name="property2"
             />
     </target>
 
