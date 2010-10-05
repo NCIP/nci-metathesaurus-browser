@@ -68,5 +68,12 @@ if "%1" == "data-qa" (
     ant -Dproperties.file=%DATAQAPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
+if "%1" == "setjboss" (
+    endlocal
+    set ANT_HOME=C:\Apps\apache-ant-1.7.0
+    set JAVA_HOME=C:\Apps\Java\jdk1.5.0_14
+    set PATH=%JAVA_HOME%\bin;%ANT_HOME%\bin
+    goto DONE
+)
 :DONE
 endlocal
