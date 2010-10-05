@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-template version 1.6.1 -->
+<!-- bda-build-template version 1.1.1 -->
 
 <project name="ncimbrowser-installer" default="upgrade" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant"
@@ -37,12 +37,15 @@
     <property file="${properties.file}" />
     <property name="env.name" value="local"/>
 
+
     <property name="project.name" value="ncimbrowser"/>
 
     <!-- Generic properties -->
     <property name="log.dir" value="${basedir}/logs" />
     <property name="working.dir" value="${basedir}/working" />
     <property name="temp.dir" value="${working.dir}/temp" />
+    <property name="copied.jboss.log4j.dir" value="${working.dir}/copied-log4j"/>
+
 
     <!-- Install Time properties -->
     <!-- Source and target directories -->
@@ -72,7 +75,9 @@
             <include name="**/*.jar" />
         </fileset>
     </path>
+
     <!-- Task definitions -->
+
     <taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml" classpathref="bda-utils.classpath"/>
     <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda-utils.classpath"/>
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="bda-utils.classpath"/>
@@ -81,7 +86,6 @@
 
     <!-- Conditionals -->
     <available file="${jboss.home}/server/${jboss.server.name}/conf/jboss-service.xml" property="jboss.exists"/>
-
     <!-- Includes-->
     <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
 
@@ -98,7 +102,6 @@
     <target name="diag">
         <echoproperties/>
     </target>
-
     <target name="common:init:pre">
         <!-- Set application.base.path based on platform -->
         <condition property="application.base.path" value="${application.base.path.linux}">
@@ -127,7 +130,7 @@
         <echo message="application.data.path=${application.data.path}"/>
     </target>
 
-    <target name="install:jboss:init" depends="common:init:pre" unless="exclude.jboss">
+    <target name="install:jboss:init" depends="common:init:pre">
         <!-- determine if port configurations or port lists are being called -->
         <if>
             <isset property="jboss.ncicb-standard.port-config"/>
@@ -138,7 +141,7 @@
                     <equals arg1="${jboss.major.version}" arg2="4"/>
                     <then>
                         <property name="jboss.server.binding.template.location" value="${basedir}/${jboss-bindings.file}"/>
-                        <jboss-read-ports
+                        <jboss51-read-ports
                             jboss.server.bindingfile.location="${jboss.server.binding.template.location}"
                             />
                         <jboss-bindings-validate
@@ -148,17 +151,14 @@
                     <elseif>
                         <equals arg1="${jboss.major.version}" arg2="5"/>
                         <then>
-                            <property name="jboss.server.binding.template.location" value="${basedir}/${jboss-bindings.file}"/>
-                            <property name="jboss.server.bindingfile.location" value="${jboss.home}/server/${jboss.server.name}/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"/>
+                            <property name="jboss.server.bindingfile.location" value="${basedir}/${jboss-bindings.file}"/>
                             <property name="temp.ejb.file" value="${temp.dir}/ejb3-connectors-jboss-beans.xml"/>
-                            <copy tofile="${temp.ejb.file}" file="${bda-utils.dir}/resource/jboss-5.1.0.GA/ejb3-connectors-jboss-beans.xml"/>
-                            <!--
+                            <copy tofile="${temp.ejb.file}" file="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/ejb3-connectors-jboss-beans.xml"/>
                             <jboss51-bindings-nci
-                                jboss.server.bindingfile.location="${jboss-bindings.file}"
+                                jboss.server.bindingfile.location="${jboss.server.bindingfile.location}"
                                 />
-                            -->
                             <jboss51-read-ports-nci
-                                jboss.server.bindingfile.location="${jboss-bindings.file}"
+                                jboss.server.bindingfile.location="${jboss.server.bindingfile.location}"
                                 jboss.server.ejbfile.location="${temp.ejb.file}"
                                 />
                         </then>
@@ -166,6 +166,16 @@
                 </if>
                 <echo message="http -${jboss.server.port} "/>
                 <echo message="http -${jboss.server.jndi.port} "/>
+                    <if>
+                        <equals arg1="${jboss.major.version}" arg2="4"/>
+                        <then>
+                                <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings.xml"/>
+                        </then>
+                        <else>
+                                <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings-jboss-beans.xml"/>
+
+                        </else>
+                    </if>
                 <properties-exist
                     properties.list="jboss.server.jndi.port,jboss.server.port,jboss.server.ports.name"
                     />
@@ -173,16 +183,7 @@
             <else>
                 <!-- else ensure that all ports are set, since these will be removed from install-properties.template we will verify here.  They have to be removed so the validator works with or without the properties or we have to change the format of the file. -->
                 <echo message="Using custom JBoss port configurations"/>
-                <if>
-                    <equals arg1="${jboss.major.version}" arg2="4"/>
-                    <then>
-                        <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings.xml"/>
-                    </then>
-                    <else>
-                        <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings-jboss-beans.xml"/>
-  
-                    </else>
-                </if>
+                <property name="jboss.server.binding.template.location" value="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings.xml"/>
                 <properties-exist
                     properties.list="jboss.server.jndi.port,jboss.server.port,jboss.cobraorb.port,jboss.hajndi.port,jboss.hajrmi.port,jboss.jmx-rmi.port,jboss.messaging.port,jboss.pooledha.port,jboss.server.bind.port,jboss.server.rmi.port,jboss.service.rmiobject.port,jboss.snmp.port,jboss.snmp-trapd.port,jboss.web.service.port,jboss.unifiedinvoker.port,jboss.hajndi.auto.port,jboss.ssl.port,jboss.jms2.netty.port,jboss.jms2.netty-ssl.port,jboss.transaction.recovery.port,jboss.transaction.status.port,jboss.transaction.processid.port"
                     />
@@ -207,7 +208,7 @@
 
     <target name="common:init" depends="common:init:pre">
         <property name="properties.template.file" value="${basedir}/properties.template" />
-        <!--
+
         <filterset id="embedded.filterset">
             <filter token="application.base.path" value="${application.base.path}"/>
             <filter token="application.url" value="${application.url}"/>
@@ -215,9 +216,8 @@
             <filter token="tomcat.home" value="${tomcat.home}"/>
             <filter token="env.LOGNAME" value="${env.LOGNAME}"/>
             <filter token="env.JAVA_HOME" value="${env.JAVA_HOME}"/>
-            <filter token="project.name" value="project.name"/>
+            <filter token="project.name" value="${project.name}"/>
         </filterset>
-        -->
 
         <!--OS Temp dir -->
         <condition property="os.temp.dir" value="/tmp/${project.name}">
@@ -230,7 +230,9 @@
         <condition property="os.temp.dir" value="c:/temp/${project.name}">
             <os family="windows" />
         </condition>
+
         <!-- Copy files to ensure values containing variables are expanded, such properties are stored in embedded.filterset and then copy with filter files -->
+
         <copy todir="${common.dir.dest}" filtering="true">
             <fileset dir="${common.dir.src}">
                 <include name="**/*"/>
@@ -243,7 +245,7 @@
         </copy>
     </target>
 
-    <target name="install:common:clean" description="Removes all files from the local filesystem" depends="common:init, install:jboss:clean">
+    <target name="install:common:clean" description="Removes all files from the local filesystem" depends="common:init, install:jboss:clean ">
     </target>
 
     <target name="install:jboss:clean" unless="exclude.jboss" depends="common:jboss:init, common:init">
@@ -274,6 +276,7 @@
     <target name="install:jboss:binaries" description="Install JBoss binaries" unless="exclude.jboss" depends="common:jboss:init, common:init">
         <jboss-install-binaries/>
         <jboss-nci-customizations/>
+        <chmod file="${jboss.home}/bin/status_jboss" perm="+x"/>
     </target>
 
     <target name="install:jboss:ncimbrowser-webapp" description="Deploy ncimbrowser-webapp and common libraries to jboss installation" unless="exclude.jboss"
@@ -293,7 +296,7 @@
     </target>
 
     <target name="install:jboss:ncimbrowser-webapp:configure" description="Configure ncimbrowser-webapp application, copies over externalized properties or configurations that are not part of the jboss configuration"
-        unless="exclude.jboss" depends="-install:jboss:remove:jsf, -install:jboss:configure:properties-service">
+        unless="exclude.jboss" depends="-install:jboss:configure:properties-service">
 
         <tstamp>
             <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
@@ -413,6 +416,7 @@
                     <param name="File" value="${jboss.server.log.dir}/testAppender.log"/>
                     <param name="Append" value="false"/>
                     <param name="MaxFileSize" value="${log4j.maxFileSize}"/>
+                    <param name="MaxBackupIndex" value="${log4j.maxDays}"/>
                     <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
                     </layout>
@@ -443,11 +447,6 @@
         <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.post"/>-->
     </target>
 
-    <target name="-install:jboss:remove:jsf" description="Remove JSF library files from jbossweb to allow NCIA JSF to work" unless="exclude.jboss" depends="common:jboss:init, common:init">
-        <delete file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-api.jar" failonerror="false" />
-        <delete file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-impl.jar" failonerror="false" />
-    </target>
-
     <target name="install:jboss:configure" description="Configure JBoss (bindings, login-config.xml, ect)" unless="exclude.jboss"
         depends="
         common:jboss:init,
@@ -468,7 +467,7 @@
             <equals arg1="${jboss.major.version}" arg2="4"/>
             <then>
                 <jboss-configure
-                    jboss.grid.configure="${jboss.grid.enable}"
+                    jboss.grid.configure="true"
                     />
                 <if>
                     <equals arg1="${jboss.cgmm.enable}" arg2="true"/>
@@ -482,25 +481,27 @@
         <if>
             <equals arg1="${jboss.major.version}" arg2="5"/>
             <then>
-                <!-- clean up ssl config from systems provided jboss -->
                 <xmltask preservetype="true" source="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
                     dest="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml">
                     <xmlcatalog refid="bda.xml.catalog"/>
                     <remove path="/Server/Service[@name='jboss.web']/Connector[@keystoreFile='${jboss.server.home.dir}/conf/keystore/server.keystore']" />
                 </xmltask>
                 <jboss-configure
-                    jboss.grid.configure="false"
                     jboss.server.bindingfile.location="${jboss.home}/server/${jboss.server.name}/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
-                    jboss.server.binding.template.location="${jboss.server.binding.template.location}"
+                    jboss.server.binding.template.location="${bda-utils.dir}/resource/${jboss.binaries.relative.dir}/bindings-jboss-beans.xml"
                     jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
+                    jboss.server.ports.name="ports-default"
                     proxy.update.connector.port.ssl="${jboss.ssl.port}"
                     />
-                <!--
-                <jboss51-encrypt-messaging-passwd
-                    />
-                -->
             </then>
         </if>
+
+        <!-- Turn off JBoss hot deploy. We will use twiddle.bat for hot deployments -->
+        <move
+            file="${jboss.home}/server/${jboss.server.name}/deploy/hdscanner-jboss-beans.xml"
+            tofile="${jboss.home}/server/${jboss.server.name}/deploy/hdscanner-jboss-beans.xml.bak"
+            />
+
     </target>
 
     <target name="-install:jboss:configure:jbossmq-dest" description="Configure MQ settings based on contents of software/common/resource/jboss-conf/jbossmq-destinations-service.block.xml" unless="exclude.jboss" depends="common:jboss:init,common:init">
@@ -536,7 +537,6 @@
             </then>
         </if>
     </target>
-
     <target name="install:common:validation:pre-install" description="Runs pre-install validation checks bda-utils" depends="common:init">
         <validate-pre-install-common
             ant.check.version="${ant.minimum.version}"
@@ -544,7 +544,6 @@
             java.check.version.minor="${java.minor.version}"
             />
     </target>
-
     <target name="install:jboss:validation:pre-install" description="Runs pre-install validation checks bda-utils"
         depends="
         common:jboss:init,common:init,
@@ -553,7 +552,6 @@
         <validate-pre-install-jboss
             />
     </target>
-
     <target name="install:jboss:validation:pre-install:ports" description="Checks to see if configured ports are listenting and fails buld, meant to be run after jboss:stop"
         depends="
         common:init,
@@ -569,7 +567,6 @@
         ">
         <validate-post-common />
     </target>
-
     <target name="install:jboss:validation:post-install" description="Run post-install checks from bda-utils"
         depends="
         common:jboss:init,
@@ -585,6 +582,7 @@
             </then>
         </if>
     </target>
+
 
     <target name="install:jboss" description="Wrapper scripts that calls all required targets to install the jboss container" unless="exclude.jboss"
         depends="
@@ -610,20 +608,8 @@
     <target name="install" description="Installs and configures JBOSS and deploys application" depends="install:jboss">
     </target>
 
-    <target name="install:hot" description="Hot deploys application"
-        depends="
-        common:init,
-        install:jboss:ncimbrowser-webapp:re-configure
-        ">
-        <copy file="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}"
-             todir="${jboss.home}/server/${jboss.server.name}/deploy" />
-    </target>
-
     <target name="install:jboss:ncimbrowser-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss" depends="common:jboss:init,common:init">
-
-        <!-- This is only required if configuration files are not externalized, below is a sample of
-             what you may do. -->
-
+        <!-- This is only required if configuration files are not externalized, below is a sample of what you may do. -->
         <delete dir="${working.dir}/ncimbrowser-webapp"/>
         <unzip src="${ncimbrowser-webapp.dir.dist}/${ncimbrowser-webapp.war.file}" dest="${working.dir}/ncimbrowser-webapp"/>
 
@@ -711,7 +697,6 @@
         install:jboss:ncimbrowser-webapp:re-configure,
         install:jboss:ncimbrowser-webapp,
         install:jboss:ncimbrowser-webapp:configure,
-        upgrade:post:jboss,
         install:post:jboss,
         install:jboss:start,
         install:jboss:validation:post-install
@@ -756,11 +741,10 @@
 
     <target name="upgrade:common:init" depends="upgrade:jboss:init " unless="install.running">
     </target>
-
     <target name="upgrade:jboss:init" unless="install.running"
         depends="
         upgrade:jboss:init:prep,
-        upgrade:jboss:readers:bda,
+
         upgrade:jboss:readers:custom
         ">
         <properties-print
@@ -773,7 +757,6 @@
             properties.list="${read.properties.list}"
             />
     </target>
-
     <target name="upgrade:common:init:prep" unless="install.running">
         <if>
             <not>
@@ -814,7 +797,7 @@
             </else>
         </if>
 
-        <property name="upgrade.running" value="common:init:pre true"/>
+        <property name="upgrade.running" value="true"/>
         <!-- Upgrades always use port configs -->
         <property name="jboss.ncicb-standard.port-config" value="true"/>
         <available file="${jboss.home}" property="jboss.exists"/>
@@ -822,17 +805,20 @@
 
     </target>
 
+
     <target name="upgrade:jboss:readers:custom" unless="install.running">
         <!-- call your custom readers here, two properties included in these scripts that don't have readers are "fs-data.base.dir, mail.smtp.server" -->
     </target>
 
-    <target name="upgrade:jboss:readers:bda" unless="exclude.jboss">
-  
+
+    <target name="upgrade:jboss:readers:bda" if="jboss.exists">
         <!-- Make sure the ${properties.file} has at least the following props -->
         <properties-exist
             properties.list="application.base.path,jboss.home,jboss.server.name"
             />
+
         <!-- Set these -->
+
         <osfamily property="os.family"/>
         <if>
             <or>
@@ -849,12 +835,11 @@
                 <property name="jboss.server.hostname" value="${env.COMPUTERNAME}"/>
             </then>
         </if>
+
         <!-- Begin JBoss Readers -->
+
         <!-- Reader reqiures that you have only one data source defined in each *-ds.xml file -->
-        <jboss-read-dbconfig
-            jboss.home="${read.jboss.home}"
-            jboss.ds-xml.file="bda-blueprints-ds.xml"
-            />
+
         <jboss-read-ldapconfig
             jboss.home="${read.jboss.home}"
             />
@@ -877,7 +862,9 @@
                     />
             </then>
         </if>
+
         <!-- Setting this variable will cause install to copy it into place if using CM/DAC, not modified in NCM -->
+
         <var name="jboss.ssl.keystore.dir" value="${working.dir}/keys/jboss"/>
         <if>
             <equals arg1="${jboss.major.version}" arg2="4"/>
@@ -917,15 +904,19 @@
                     />
             </then>
         </if>
+
         <!-- for tier installs, should be done first, since it is set first it will be the one used if it exists -->
+
         <jboss-read-java_opts
             jboss.bin.dir="${read.jboss.home}/server/${jboss.server.name}/bin"
             />
         <jboss-read-java_opts
             jboss.home="${read.jboss.home}"
             />
+
         <!-- will have to add code to install:post:jboss to copy this back if exists -->
-        <property name="copied.jboss.log4j.dir" value="${working.dir}/copied-log4j"/>
+
+
         <if>
             <equals arg1="${jboss.major.version}" arg2="4"/>
             <then>
@@ -946,59 +937,11 @@
                     />
             </then>
         </if>
-        <if>
-            <not>
-                <isset property="exclude.jboss.grid"/>
-            </not>
-            <then>
-                <grid-read-index-url
-                    grid.wsrf.dir="${read.jboss.home}/server/${jboss.server.name}/deploy/wsrf.war"
-                    />
-                <var name="jboss.grid.secure.dir" value="${working.dir}/keys/jboss"/>
-                <if>
-                    <equals arg1="${jboss.major.version}" arg2="4"/>
-                    <then>
-                        <jboss-read-grid-secure
-                            jboss.home="${read.jboss.home}"
-                            copied.keystore.dir="${jboss.grid.secure.dir}"
-                            />
-                    </then>
-                </if>
-                <if>
-                    <equals arg1="${jboss.major.version}" arg2="5"/>
-                    <then>
-                        <jboss-read-grid-secure
-                            jboss.home="${read.jboss.home}"
-                            jboss.server-xml.file="${jboss.home}/server/${jboss.server.name}/deploy/jbossweb.sar/server.xml"
-                            copied.keystore.dir="${jboss.grid.secure.dir}"
-                            />
-                    </then>
-                </if>
-                <!-- will have to add code to install:post:jboss to copy this back if exists -->
-                <!-- no longer needed
-                <property name="copied.jboss.service-metadata.dir" value="${working.dir}/jboss-grid"/>
-                <grid-copy-service-metadata
-                    copied.service-metadata.dir="${copied.service-metadata.dir}"
-                    />
-                -->
-                <grid-read-poc
-                    grid.wsrf.dir="${read.jboss.home}/server/${jboss.server.name}/deploy/wsrf.war"
-                    grid.service.name="Sample"
-                    />
-            </then>
-        </if>
-        <read-property-from-properties-service
-            jboss.home="${read.jboss.home}"
-            property.name="property1"
-            />
-        <read-property-from-properties-service
-            jboss.home="${read.jboss.home}"
-            property.name="property2"
-            />
+
     </target>
 
     <target name="upgrade:post:jboss">
-         <copy file="${copied.jboss.log4j.dir}/log4j.xml" todir="${jboss.home}/server/${jboss.server.name}/conf"/>
+         <copy file="${copied.jboss.log4j.dir}/jboss-log4j.xml" todir="${jboss.home}/server/${jboss.server.name}/conf"/>
     </target>
 
 </project>
