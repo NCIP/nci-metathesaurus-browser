@@ -16,7 +16,7 @@
     <property name="webapp.war.name"  value="ncimbrowser.war"/>
     <property name="src.dir" value="${basedir}/src" />
     <property name="conf.dir" value="${basedir}/conf" />
-    <property name="lib.dir" value="${basedir}/lib" />    
+    <property name="lib.dir" value="${basedir}/lib" />
     <property name="extlib.dir" value="${basedir}/extlib" />
     <property name="target.dir" value="${basedir}/target" />
     <property name="webapp.dir" value="${basedir}/web" />
@@ -108,7 +108,6 @@
         <mkdir dir="${dist.dir}/deploy" />
         <copy todir="${dist.dir}/deploy" flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${conf.dir}/cache.ccf"/>
                 <file file="${conf.dir}/ehcache.xml"/>
             </resources>
         </copy>
