@@ -1,6 +1,6 @@
 ##############################################################
 #
-# bda-build-templates version 1.5.13
+# bda-build-templates version 1.1.1
 #
 # This properties file template for all .properties to adhere (The "interface")
 #
@@ -17,7 +17,7 @@ application.url=The URL to access the application. Example: http://${jboss.serve
 ###  JBOSS SETTINGS  ###
 ########################
 # jboss.home will be generated as ${application.base.path}/${jboss.relative.path}
-jboss.server.hostname=The server name where jboss will be running. Example: localhost
+#jboss.server.hostname=The server name where jboss will be running. Example: localhost
 jboss.server.name=The jboss server instance name, $JBOSS_HOME/server/${jboss.server.name}. Example: default
 #jboss.web.user=The account name to log into the JBoss web consoles.  Example: admin
 #jboss.port.config=This is the NCICB port configuration scheme used by this application server.  If this is set the other ports except for jboss.server.port and jboss.server.jndi.port are igored (those are used by the install process). Having this set also causes pre and post installation validation to not check ports.
@@ -58,7 +58,7 @@ jboss.server.name=The jboss server instance name, $JBOSS_HOME/server/${jboss.ser
 ###  LDAP  ###
 ##############
 #ldap.url=The fully qulified url to the ldap instance. Example: ldaps://ncids4a.nci.nih.gov:636
-ldap.basedn=The base DN to search for records. Example: ldap.basedn=ou=nci,o=nih
+#ldap.basedn=The base DN to search for records. Example: ldap.basedn=ou=nci,o=nih
 ###############
 ###  Log4J  ###
 ###############
