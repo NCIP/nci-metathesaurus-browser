@@ -69,14 +69,17 @@
                 </patternset>
             </fileset>
         </copy>
-        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" filtering="false">
+        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no">
             <fileset dir="${conf.dir}">
                 <patternset>
                     <include name="**/log4j.*"/>
                 </patternset>
             </fileset>
         </copy>
-        <copy todir="${webapp.classes.dir}" flatten="true" includeEmptyDirs="no" filtering="false">
+        <copy todir="${webapp.classes.dir}" flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+            </filterset>
             <resources>
                 <file file="${conf.dir}/application-config-client.xml"/>
             </resources>
@@ -108,7 +111,6 @@
         <mkdir dir="${dist.dir}/deploy" />
         <copy todir="${dist.dir}/deploy" flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${conf.dir}/cache.ccf"/>
                 <file file="${conf.dir}/ehcache.xml"/>
             </resources>
         </copy>

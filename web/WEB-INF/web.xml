@@ -36,19 +36,15 @@
     <!-- Faces Servlet -->
 
     <servlet>
-         <servlet-name>Faces Servlet</servlet-name>
-         <servlet-class>gov.nih.nci.evs.browser.servlet.AFacesServlet</servlet-class>
-         <init-param>
-           <param-name>errorPage</param-name>
-           <param-value>/pages/error_handler.jsf</param-value>
-         </init-param>
-         <load-on-startup>-1</load-on-startup>
+        <servlet-name>FacesServlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <!-- Faces Servlet Mapping -->
 
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-name>FacesServlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
 
