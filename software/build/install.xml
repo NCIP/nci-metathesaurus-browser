@@ -277,6 +277,8 @@
         <jboss-install-binaries/>
         <jboss-nci-customizations/>
         <chmod file="${jboss.home}/bin/status_jboss" perm="+x"/>
+        <chmod file="${jboss.home}/bin/stop_jboss" perm="+x"/>
+        <chmod file="${jboss.home}/bin/start_jboss" perm="+x"/>
     </target>
 
     <target name="install:jboss:ncimbrowser-webapp" description="Deploy ncimbrowser-webapp and common libraries to jboss installation" unless="exclude.jboss"
