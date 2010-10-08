@@ -91,7 +91,7 @@ if "%1" == "data-qa" (
     goto DONE
 )
 if "%1" == "cissh" (
-    ssh jboss51a@ncias-c512-v.nci.nih.gov -i C:\NCI-Projects\ncim-properties\properties\ssh-keys\id_dsa_bda echo "Test worked!"
+    ssh jboss51d@ncias-c512-v.nci.nih.gov -i C:\NCI-Projects\ssh-keys\id_dsa_bda echo "Test worked!"
     goto DONE
 )
 :DONE
