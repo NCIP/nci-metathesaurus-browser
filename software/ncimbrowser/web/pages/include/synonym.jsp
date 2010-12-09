@@ -174,7 +174,7 @@
 	              } else {
 %>	  
                           <td>
-			  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/ncitbrowser/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
+			  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
 			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			      <%=term_source_code%>
 			  </a> 

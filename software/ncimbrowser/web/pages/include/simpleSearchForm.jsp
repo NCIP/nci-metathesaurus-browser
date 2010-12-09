@@ -39,7 +39,6 @@
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>
-
   <label for="matchText"/><input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"

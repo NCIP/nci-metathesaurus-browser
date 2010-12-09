@@ -319,13 +319,14 @@ h3
  width: 252px;
  height: 21px;
  margin-bottom: 3px;
- vertical-align: bottom;
+ vertical-align: top;
  font-size: 12px;
 }
 
 .searchbox-btn
 {
- vertical-align: middle;
+ vertical-align: top;
+ margin-right: 3px;
 }
 
 .search-form
