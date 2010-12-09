@@ -27,7 +27,7 @@
     if (errorMsg == null) errorMsg = "";
     boolean error = errorMsg.length() > 0;
   %>
-  <body>
+  <body onLoad="document.forms.searchTerm.matchText.focus();">
       <script type="text/javascript"
         src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
       <script type="text/javascript"

@@ -10,15 +10,15 @@
 <table border="0" width="100%" class="global-nav">
   <tr>
     <td align="left">
-      <a href="<%= request.getContextPath() %>">Home</a> |
-      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?&sab=<%=menu_bar_term_source%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+      <a href="<%= request.getContextPath() %>" tabindex="10">Home</a> |
+      <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?&sab=<%=menu_bar_term_source%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="11">
         View NCIt Hierarchy
       </a> |
       <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-        '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+        '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="12">
         Sources
       </a> |
-      <a href="<%= request.getContextPath() %>/pages/help.jsf">Help</a>
+      <a href="<%= request.getContextPath() %>/pages/help.jsf" tabindex="13">Help</a>
     </td>
     <!--
     <td align="right">
