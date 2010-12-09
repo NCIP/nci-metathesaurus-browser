@@ -1061,7 +1061,7 @@ public class DataUtils {
         return null;
     }
 
-    public static Vector getPropertyNamesByType(Concept concept,
+    public static Vector getPropertyNamesByType(Entity concept,
         String property_type) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
@@ -1091,7 +1091,7 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector getPropertyValues(Concept concept,
+    public static Vector getPropertyValues(Entity concept,
         String property_type, String property_name) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
@@ -1180,7 +1180,7 @@ public class DataUtils {
                     AssociationPredicate[] asso_array =
                         relation.getAssociationPredicate();
                     for (int j = 0; j < asso_array.length; j++) {
-                    	AssociationPredicate association =
+                        AssociationPredicate association =
                             (AssociationPredicate) asso_array[j];
                         list.add(association.getAssociationName());
                     }
@@ -1240,7 +1240,7 @@ public class DataUtils {
         return names;
     }
 
-    public String getPreferredName(Concept c) {
+    public String getPreferredName(Entity c) {
 
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
@@ -1426,7 +1426,7 @@ public class DataUtils {
 
             Vector superconcept_vec = getSuperconcepts(scheme, version, code);
             for (int i = 0; i < superconcept_vec.size(); i++) {
-                Concept c = (Concept) superconcept_vec.elementAt(i);
+                Entity c = (Entity) superconcept_vec.elementAt(i);
                 // String pt = getPreferredName(c);
                 String pt = c.getEntityDescription().getContent();
                 superconceptList.add(pt + "|" + c.getEntityCode());
@@ -1437,7 +1437,7 @@ public class DataUtils {
 
             Vector subconcept_vec = getSubconcepts(scheme, version, code);
             for (int i = 0; i < subconcept_vec.size(); i++) {
-                Concept c = (Concept) subconcept_vec.elementAt(i);
+                Entity c = (Entity) subconcept_vec.elementAt(i);
                 // String pt = getPreferredName(c);
                 String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
@@ -1696,7 +1696,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getSynonyms(String scheme, String version, String tag,
         String code) {
-    	Entity concept = getConceptByCode(scheme, version, tag, code);
+        Entity concept = getConceptByCode(scheme, version, tag, code);
         return getSynonyms(concept, null);
     }
 
@@ -3239,8 +3239,8 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         // KLO, testing
         Vector sibling_vector = getSiblings(CUI);
         if (sort_option != null) {
-        	sibling_vector = sortRelationshipData(sibling_vector, (String) sort_option.elementAt(4));
-	    }
+            sibling_vector = sortRelationshipData(sibling_vector, (String) sort_option.elementAt(4));
+        }
 
         //new_rel_hmap.put("Sibling", getSiblings(CUI));
         new_rel_hmap.put("Sibling", sibling_vector);
@@ -3894,7 +3894,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getConceptSources(String scheme, String version,
         String code) {
-    	Entity c = getConceptByCode(scheme, version, null, code);
+        Entity c = getConceptByCode(scheme, version, null, code);
         if (c == null)
             return null;
         Presentation[] presentations = c.getPresentation();
@@ -4456,12 +4456,12 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             assocLabel = lbscm
                 .getAssociationReverseName(assoName, "NCI Metathesaurus", null);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         return assocLabel;
-	}
+    }
 
 
 }

@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.io.*" %>
 <%@ page import="java.util.*"%>
-<%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.*" %>
@@ -112,7 +112,7 @@
         selectSearchOption = bean.getSearchType();
         if (selectSearchOption == null)
             selectSearchOption = defaultSearchOption;
-        
+
         adv_search_algorithm = bean.getAlgorithm();
         adv_search_source = bean.getSelectedSource();
         selectProperty = bean.getSelectedProperty();
