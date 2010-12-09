@@ -1,6 +1,7 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
+<%@ page import="org.LexGrid.concepts.Entity" %>
 <%
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
@@ -17,7 +18,7 @@
  
   if (type.compareTo("synonym") == 0 || type.compareTo("all") == 0)
   {
-    Concept syn_details_concept = (Concept) request.getSession().getAttribute("concept");
+	Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
     <span class="textsubtitle-blue">Synonym Details</span><a name="SynonymsDetails"></a>
@@ -93,7 +94,7 @@
           </th>
         </tr>
         <%
-          Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
+          Entity concept_syn = (Entity) request.getSession().getAttribute("concept");
           Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
           //if (synonyms == null) {
               synonyms = new DataUtils().getSynonyms(concept_syn);

@@ -16,7 +16,7 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
-<%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="org.LexGrid.concepts.Presentation" %>
 <%@ page import="org.LexGrid.commonTypes.Source" %>
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
@@ -54,14 +54,14 @@
     <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
 <%
-Concept concept_details_c = null;
+Entity concept_details_c = null;
 String concept_details_code = null;
 Object concept_details_obj = request.getSession().getAttribute("concept");
 if (concept_details_obj == null) {
     concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
     request.getSession().setAttribute("code", concept_details_code);
 } else {
-    concept_details_c = (Concept) concept_details_obj;
+    concept_details_c = (Entity) concept_details_obj;
     concept_details_code = concept_details_c.getEntityCode();
 }
 
@@ -89,8 +89,8 @@ request.getSession().removeAttribute("new_search");
         <%@ include file="/pages/include/sub-header.jsp" %>
         <!-- Main box -->
         <div id="main-area">
-        
-        
+
+
         <%@ include file="/pages/include/content-header.jsp" %>
 
         <!-- Page content -->
@@ -102,7 +102,7 @@ request.getSession().removeAttribute("new_search");
     String type = concept_details_type;
     String sortBy = null;
     String name = null;
-    Concept c = null;
+    Entity c = null;
     String vers = null;
     String ltag = null;
     String sab = null;
