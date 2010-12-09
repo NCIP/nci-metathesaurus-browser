@@ -123,7 +123,7 @@
     <property name="jboss.deploy.dir"  value="${jboss.home}/server/${jboss.server.name}/deploy"/>
     <property name="ncimbrowser-webapp.name"  value="ncimbrowser"/>
     <property name="ncimbrowser-webapp.file.name"  value="${ncimbrowser-webapp.name}.war"/>
-    <property name="ncimbrowser-webapp.src.dir" value="${ncimbrowser-webapp.base.dir}/src/web"/>
+    <property name="ncimbrowser-webapp.src.dir" value="${ncimbrowser-webapp.base.dir}/web"/>
 
     <!-- retrive ivy.jar.files then retrieve bda files and librarires -->
     <condition property="commonlibrary.dir" value="">
@@ -673,137 +673,227 @@
         <util-dot-on-dir dot-file.dir="target/reports/ivy" />
     </target>
 
-
-    <target name="deploy:hot" depends="build:all, set:jboss.war.temp.dir.location" description="Hot deploys the deployment artifact">
+    <target name="deploy:hot" depends="build:all, set:jboss.war.temp.dir.location, invoke:garbagecollector" description="Hot deploys the deployment artifact">
 
         <echo message="       Bin: ${application.base.path}/${jboss.binaries.relative.dir}/bin"/>
         <echo message="    Target: ${jboss.deploy.dir}"/>
 
         <osfamily property="os.family"/>
+
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
-
-                <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
-
-                <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
-
-                <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
-                </exec>
-
-                <copy
-                    file="${ncimbrowser-webapp.dist.dir}/${ncimbrowser-webapp.file.name}"
-                    tofile="${jboss.deploy.dir}/${ncimbrowser-webapp.file.name}"
-                    overwrite="true"
-                    />
-
-                <unzip src="${jboss.deploy.dir}/${ncimbrowser-webapp.file.name}"
-                       dest="${jboss.war.temp.dir.location}">
-                </unzip>
-
-                <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
-                </exec>
-
+                <property name="is.windows" value="true" />
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
+                <property name="file" value="file:///" />
             </then>
             <else>
-                <echo message="deploy:hot is not configured for Unix systems."/>
+                <property name="is.windows" value="false" />
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
+                <property name="file" value="file:" />
             </else>
         </if>
-    </target>
 
-    <target name="deploy:hot:jsp" depends="set:jboss.war.temp.dir.location">
-
-        <osfamily property="os.family"/>
         <if>
-            <equals arg1="${os.family}" arg2="windows"/>
+            <!-- Hot deployment of classes does not work on Jboss 5.1 / Windows XP
+                   so we default to just deploying JSP files
+              -->
+            <equals arg1="${is.windows}" arg2="true"/>
             <then>
+                <echo message=""/>
+                <echo message="*** Hot deployment of classes does not work on Jboss 5.1 and Windows. ***"/>
+                <echo message="*** Will use 'deploy:hot:jsp' instead. ***"/>
+                <echo message=""/>
+                <antcall target="deploy:hot:jsp" />
+            </then>
+            <else>
 
-                <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
-                <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
-                <echo message="    Source: ${ncimbrowser-webapp.src.dir}"/>
+                <if>
+                    <isset property="jboss.war.temp.dir.location" />
+                    <then>
+                        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+                        <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+                        </exec>
+                    </then>
+                </if>
 
-                <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
-                </exec>
-
+                <!-- Copy the war file -->
                 <sequential>
-                    <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
-                        <fileset dir="${ncimbrowser-webapp.src.dir}">
-                            <include name="**/*.jsp" />
-                            <include name="**/*.jspf" />
-                            <include name="**/*.css" />
-                            <include name="**/*.js" />
-                            <include name="**/*.jpg" />
-                            <include name="**/*.gif" />
-                            <include name="**/*.png" />
-                            <include name="**/*.faces" />
-                            <include name="**/*.tag" />
-                            <include name="**/*.tagf" />
-                        </fileset>
-                    </copy>
+                    <copy
+                        file="${ncimbrowser-webapp.dist.dir}/${ncimbrowser-webapp.file.name}"
+                        tofile="${jboss.deploy.dir}/${ncimbrowser-webapp.file.name}"
+                        overwrite="true"
+                        />
                 </sequential>
 
-                <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
-                </exec>
+                <!-- Restart or re-deploy the war -->
+                <if>
+                    <isset property="jboss.war.temp.dir.location" />
+                    <then>
+                        <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+                        </exec>
 
-            </then>
-            <else>
-                <echo message="deploy:hot:jsp is not configured for Unix systems."/>
+                        <echo message="Redeploying: ${ncimbrowser-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:service=MainDeployer" redeploy ${file}${jboss.deploy.dir}/${ncimbrowser-webapp.file.name}'/>
+                        </exec>
+                    </then>
+                    <else>
+                        <echo message="Deploying: ${ncimbrowser-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:service=MainDeployer" deploy ${file}${jboss.deploy.dir}/${ncimbrowser-webapp.file.name}'/>
+                        </exec>
+                    </else>
+                </if>
+
             </else>
         </if>
 
+    </target>
+
+    <target name="deploy:hot:jsp" depends="set:jboss.war.temp.dir.location, invoke:garbagecollector">
+
+        <osfamily property="os.family"/>
+
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
+            </then>
+            <else>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
+            </else>
+        </if>
+
+        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+        <echo message="    Source: ${ncimbrowser-webapp.src.dir}"/>
+
+        <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+        </exec>
+
+        <sequential>
+            <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+                <fileset dir="${ncimbrowser-webapp.src.dir}">
+                    <include name="**/*.jsp" />
+                    <include name="**/*.jspf" />
+                    <include name="**/*.css" />
+                    <include name="**/*.js" />
+                    <include name="**/*.jpg" />
+                    <include name="**/*.gif" />
+                    <include name="**/*.png" />
+                    <include name="**/*.faces" />
+                    <include name="**/*.tag" />
+                    <include name="**/*.tagf" />
+                </fileset>
+            </copy>
+        </sequential>
+
+        <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+        </exec>
+
+    </target>
+
+    <target name="invoke:garbagecollector">
+        <echo message="Invoking JBoss garbage collector" />
+
+        <osfamily property="os.family"/>
+
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+                <property name="is.windows" value="true" />
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
+                <property name="file" value="file:///" />
+            </then>
+            <else>
+                <property name="is.windows" value="false" />
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
+                <property name="file" value="file:" />
+            </else>
+        </if>
+
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:type=Server" runGarbageCollector'/>
+        </exec>
     </target>
 
     <target name="deploy:stop">
 
         <osfamily property="os.family"/>
+
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
-
-                <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
-                </exec>
-
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
             </then>
             <else>
-                <echo message="deploy:stop is not configured for Unix systems."/>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
             </else>
         </if>
+
+        <echo message="Stopping: ${ncimbrowser-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+        </exec>
 
     </target>
 
     <target name="deploy:start">
 
         <osfamily property="os.family"/>
+
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
-
-                <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
-                </exec>
-
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
             </then>
             <else>
-                <echo message="deploy:start is not configured for Unix systems."/>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
             </else>
         </if>
+
+        <echo message="Starting: ${ncimbrowser-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+        </exec>
 
     </target>
 
