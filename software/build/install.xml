@@ -321,6 +321,8 @@
             <filter token="term.suggestion.application.url" value="${term.suggestion.application.url}"/>
             <filter token="ncim.build.info" value="Built: ${BUILD_DATE}"/>
             <filter token="application.version" value="${application.version}"/>
+            <filter token="log.package" value="${log.package}"/>
+            <filter token="log.level" value="${log.level}"/>
             <filter token="ncit.url" value="${ncit.url}"/>
             <filter token="application.base.path" value="${application.base.path}"/>
             <filter token="application.url" value="${application.url}"/>
