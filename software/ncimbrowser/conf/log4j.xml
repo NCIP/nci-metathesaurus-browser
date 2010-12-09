@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM ".\log4j.dtd">
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
 
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="DEBUG" />
-        <param name="Append" value="false"/>
+        <param name="Target" value="System.out" />
+        <param name="Threshold" value="@log.level@" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                value="%-5p [%c{1}:%L] %m%n" />
+                value="%d{ABSOLUTE} %-5p [%c{1}] %m%n" />
         </layout>
     </appender>
 
@@ -35,23 +35,24 @@
     </category>
 
     <logger name="org.hibernate">
-        <level value="info" />
+        <level value="WARN" />
     </logger>
 
     <logger name="org.apache">
-        <level value="warn" />
-    </logger>
-
-    <logger name="gov.nih.nci.evs.browser">
-        <level value="debug" />
+        <level value="WARN" />
     </logger>
 
     <logger name="org.springframework">
-        <level value="error" />
+        <level value="ERROR" />
+    </logger>
+
+    <!-- EVS Logger -->
+    <logger name="@log.package@">
+        <level value="@log.level@" />
     </logger>
 
     <root>
-        <priority value="error" />
+        <priority value="ERROR" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="SEARCHLOG" />
     </root>

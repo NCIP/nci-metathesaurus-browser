@@ -16,7 +16,7 @@
     <property name="webapp.war.name"  value="ncimbrowser.war"/>
     <property name="src.dir" value="${basedir}/src" />
     <property name="conf.dir" value="${basedir}/conf" />
-    <property name="lib.dir" value="${basedir}/lib" />    
+    <property name="lib.dir" value="${basedir}/lib" />
     <property name="extlib.dir" value="${basedir}/extlib" />
     <property name="target.dir" value="${basedir}/target" />
     <property name="webapp.dir" value="${basedir}/web" />
@@ -24,6 +24,8 @@
     <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
     <property name="webapp.dist.dir" value="${basedir}/dist" />
     <property name="ncimbrowser-webapp.prop.file" value="NCImBrowserProperties.xml" />
+    <property name="local.properties.loc" location="../build/local.properties"/>
+    <property name="project.properties.loc" location="../build/project.properties"/>
 
     <!-- Build class path -->
 
@@ -52,9 +54,9 @@
     <!-- This sets up all of the neccessary directories -->
 
     <target name="-init" depends="-pre-clean">
-
+        <property file="${local.properties.loc}"/>
+        <property file="${project.properties.loc}"/>
         <mkdir dir="${webapp.classes.dir}" />
-
     </target>
 
     <target name="compile:application-code" depends="-init" description="Compiles all subproject code">
@@ -69,7 +71,11 @@
                 </patternset>
             </fileset>
         </copy>
-        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no">
+        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="log.package" value="${log.package}"/>
+                <filter token="log.level" value="${log.level}"/>
+            </filterset>
             <fileset dir="${conf.dir}">
                 <patternset>
                     <include name="**/log4j.*"/>
