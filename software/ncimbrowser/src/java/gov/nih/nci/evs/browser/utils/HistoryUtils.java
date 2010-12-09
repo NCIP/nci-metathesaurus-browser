@@ -285,7 +285,7 @@ public class HistoryUtils {
     private static Vector<String> getEditActions(String codingSchemeName,
         String vers, String ltag, String code, NCIChangeEventList list) {
 
-        Enumeration<NCIChangeEvent> enumeration = list.enumerateEntry();
+        Enumeration<NCIChangeEvent> enumeration = (Enumeration<NCIChangeEvent>) list.enumerateEntry();
         LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
         int count = list.getEntryCount();
@@ -303,7 +303,7 @@ public class HistoryUtils {
             String desc = "N/A";
             if (rCode != null && rCode.length() > 0
                 && !rCode.equalsIgnoreCase("null")) {
-                Concept c =
+            	Entity c =
                     getConceptByCode(codingSchemeName, vers, ltag, rCode);
                 // KLO
                 if (c != null) {
@@ -393,7 +393,7 @@ public class HistoryUtils {
             int count = list.getEntryCount();
 
             HashSet<String> hset = new HashSet<String>();
-            Enumeration<NCIChangeEvent> enumeration = list.enumerateEntry();
+            Enumeration<NCIChangeEvent> enumeration = (Enumeration<NCIChangeEvent>) list.enumerateEntry();
             while (enumeration.hasMoreElements()) {
                 NCIChangeEvent event = enumeration.nextElement();
                 ChangeType type = event.getEditaction();
@@ -402,7 +402,7 @@ public class HistoryUtils {
                 String name = "unassigned";
                 if (rCode != null && rCode.length() > 0
                     && !rCode.equalsIgnoreCase("null")) {
-                    Concept c =
+                	Entity c =
                         getConceptByCode(codingSchemeName, vers, ltag, rCode);
 
                     if (c != null) {
@@ -454,7 +454,7 @@ public class HistoryUtils {
                         int count = list.getEntryCount();
 
                         Enumeration<NCIChangeEvent> enumeration =
-                            list.enumerateEntry();
+                            (Enumeration<NCIChangeEvent>) list.enumerateEntry();
                         Vector<String> v = new Vector<String>();
                         HashSet<String> hset = new HashSet<String>();
                         while (enumeration.hasMoreElements()) {
@@ -493,7 +493,7 @@ public class HistoryUtils {
                             hs.getDescendants(Constructors
                                 .createConceptReference(code, null));
                         Enumeration<NCIChangeEvent> enumeration =
-                            list.enumerateEntry();
+                            (Enumeration<NCIChangeEvent>) list.enumerateEntry();
                         Vector<String> v = new Vector<String>();
                         HashSet<String> hset = new HashSet<String>();
                         while (enumeration.hasMoreElements()) {
@@ -551,7 +551,7 @@ public class HistoryUtils {
         return list;
     }
 
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -597,7 +597,7 @@ public class HistoryUtils {
                             (ResolvedConceptReference) matches
                                 .enumerateResolvedConceptReference()
                                 .nextElement();
-                        Concept entry = ref.getReferencedEntry();
+                        Entity entry = ref.getReferencedEntry();
                         return entry;
                     } catch (Exception ex1) {
                         _logger.error("Exception entry == null");

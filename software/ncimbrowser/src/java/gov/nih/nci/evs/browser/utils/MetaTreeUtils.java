@@ -679,7 +679,7 @@ public class MetaTreeUtils {
 
             if (branch.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    branch.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) branch.enumerateResolvedConceptReference();
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
                     AssociationList childAssociationList = ref.getSourceOf();
@@ -1457,7 +1457,7 @@ public class MetaTreeUtils {
 
             if (branch.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    branch.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) branch.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2256,7 +2256,7 @@ public class MetaTreeUtils {
         return hmap;
     }
 
-    protected String getAtomName(Concept ce, String sab_name, String term_type) {
+    protected String getAtomName(Entity ce, String sab_name, String term_type) {
         if (ce == null)
             return null;
         Property[] properties = ce.getPresentation();

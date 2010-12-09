@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 import org.LexGrid.concepts.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
+import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.properties.*;
@@ -205,7 +206,7 @@ public class UserSessionBean extends Object {
         } catch (Exception ex) {
         }
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<org.LexGrid.concepts.Concept> v = null;
+        Vector<Entity> v = null;
 
         boolean excludeDesignation = true;
         boolean designationOnly = false;
@@ -524,7 +525,7 @@ public class UserSessionBean extends Object {
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) list.get(0);
 
-                Concept c = null;
+                Entity c = null;
                 if (ref == null) {
                     String msg =
                         "Error: Null ResolvedConceptReference encountered.";
@@ -560,7 +561,7 @@ public class UserSessionBean extends Object {
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
-                Concept c =
+                Entity c =
                     DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
                         null, null, newCUI);
                 request.getSession().setAttribute("code", newCUI);
@@ -810,7 +811,7 @@ public class UserSessionBean extends Object {
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) list.get(0);
 
-                Concept c = null;
+                Entity c = null;
                 if (ref == null) {
                     String msg =
                         "Error: Null ResolvedConceptReference encountered.";
@@ -847,7 +848,7 @@ public class UserSessionBean extends Object {
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
-                Concept c =
+                Entity c =
                     DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
                         null, null, newCUI);
                 request.getSession().setAttribute("code", newCUI);

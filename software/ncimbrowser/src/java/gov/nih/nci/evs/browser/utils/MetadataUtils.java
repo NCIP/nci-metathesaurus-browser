@@ -129,7 +129,7 @@ public class MetadataUtils {
 
     private static Vector getMetadataCodingSchemeNames(MetadataPropertyList mdpl) {
         Vector v = new Vector();
-        Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
+        Iterator<MetadataProperty> metaItr = (Iterator<MetadataProperty>) mdpl.iterateMetadataProperty();
         while (metaItr.hasNext()) {
             MetadataProperty property = metaItr.next();
             v.add(property.getValue());
@@ -216,7 +216,7 @@ public class MetadataUtils {
         if (mdpl == null)
             return null;
         Vector v = new Vector();
-        Iterator<MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
+        Iterator<MetadataProperty> metaItr = (Iterator<MetadataProperty>) mdpl.iterateMetadataProperty();
         while (metaItr.hasNext()) {
             MetadataProperty property = metaItr.next();
             String t = property.getName() + "|" + property.getValue();
