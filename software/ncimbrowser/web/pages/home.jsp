@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Concept"%>
+<%@ page import="org.LexGrid.concepts.Entity"%>
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
   String application_version = new DataUtils().getApplicationVersion();

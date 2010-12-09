@@ -21,42 +21,42 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -95,7 +95,7 @@ public class MetaTreeUtils {
 
     /**
      * Finds the root node of a given sab.
-     * 
+     *
      * @param sab
      * @throws Exception
      */
@@ -109,7 +109,7 @@ public class MetaTreeUtils {
      * ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
      * list.add(rcr); } SortUtils.quickSort(list); return list; } catch
      * (Exception ex) {
-     * 
+     *
      * } return new ArrayList(); }
      */
 
@@ -143,7 +143,7 @@ public class MetaTreeUtils {
     }
 
     /*
-     * 
+     *
      * public void getRoots(String sab) throws Exception {
      * ResolvedConceptReference root =
      * resolveReferenceGraphForward(getCodingSchemeRoot(sab)); AssociationList
@@ -167,7 +167,7 @@ public class MetaTreeUtils {
      * entityDescription.setContent(ac.getEntityDescription().getContent());
      * r.setEntityDescription(entityDescription); r.setCode(ac.getCode());
      * rcrl.addResolvedConceptReference(r); } } else {
-     * 
+     *
      * ResolvedConceptReference r = new ResolvedConceptReference();
      * EntityDescription entityDescription = new EntityDescription();
      * entityDescription.setContent(ac.getEntityDescription().getContent());
@@ -210,7 +210,7 @@ public class MetaTreeUtils {
 
     /**
      * Displays the root node.
-     * 
+     *
      * @param ac
      */
     protected void displayRoot(AssociatedConcept ac) {
@@ -220,7 +220,7 @@ public class MetaTreeUtils {
 
     /**
      * Gets the UMLS root node of a given SAB.
-     * 
+     *
      * @param sab
      * @return
      * @throws LBException
@@ -255,7 +255,7 @@ public class MetaTreeUtils {
     /**
      * Resolve the relationships of a ResolvedConceptReference forward one
      * level.
-     * 
+     *
      * @param ref
      * @return
      * @throws Exception
@@ -281,7 +281,7 @@ public class MetaTreeUtils {
     /**
      * Determines whether or not the given reference is a root Concept for the
      * given Coding Scheme.
-     * 
+     *
      * @param reference
      * @param sourceCodingScheme
      * @return
@@ -311,7 +311,7 @@ public class MetaTreeUtils {
     /**
      * Process the provided code, constraining relationships to the given source
      * abbreviation.
-     * 
+     *
      * @throws LBException
      */
     public void run(String cui, String sab) throws LBException {
@@ -319,7 +319,7 @@ public class MetaTreeUtils {
         /*
          * CodingSchemeSummary css = Util.promptForCodeSystem(); if (css ==
          * null) return;
-         * 
+         *
          * String scheme = css.getCodingSchemeURI();
          */
         String scheme = "NCI Metathesaurus";
@@ -434,26 +434,26 @@ public class MetaTreeUtils {
      * CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel)
      * throws LBException { if (sab == null) sab = NCI_SOURCE; HashMap hmap =
      * new HashMap(); long ms = System.currentTimeMillis();
-     * 
+     *
      * ResolvedConceptReference rcr = resolveConcept(scheme, csvt, cui); if (rcr
      * == null) { Util_displayMessage("Unable to resolve a concept for CUI = '"
      * + cui + "'"); return null; } else { _logger.debug("getTreePathData " +
      * rcr.getEntityDescription().getContent()); }
-     * 
+     *
      * // Dummy root (place holder) TreeItem ti = new TreeItem("<Root>",
      * "Root node", null); int pathsResolved = 0; try { // Identify the set of
      * all codes on path from root // to the focus code ... TreeItem[]
      * pathsFromRoot = buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
      * pathsResolved = pathsFromRoot.length; for (TreeItem rootItem :
      * pathsFromRoot) { ti.addChild("CHD", rootItem); } ti.expandable = true;
-     * 
+     *
      * } finally { _logger.debug("MetaTreeUtils Run time (milliseconds): " +
      * (System.currentTimeMillis() - ms) + " to resolve " + pathsResolved +
      * " paths from root."); }
-     * 
+     *
      * hmap.put(cui, ti);
-     * 
-     * 
+     *
+     *
      * return hmap; }
      */
 
@@ -514,7 +514,7 @@ public class MetaTreeUtils {
     /**
      * Prints formatted text providing context for the given item including CUI,
      * SAB, AUI, and Text.
-     * 
+     *
      * @throws LBException
      */
     protected void printHeader(ResolvedConceptReference rcr, String sab)
@@ -533,7 +533,7 @@ public class MetaTreeUtils {
 
     /**
      * Prints the given tree item, recursing through all branches.
-     * 
+     *
      * @param ti
      */
     public void printTree(TreeItem ti, String focusCode, int depth) {
@@ -565,7 +565,7 @@ public class MetaTreeUtils {
     /**
      * Prints formatted text with the CUIs and AUIs of neighboring concepts for
      * the requested SAB.
-     * 
+     *
      * @throws LBException
      */
     protected void printNeighborhood(String scheme,
@@ -767,7 +767,7 @@ public class MetaTreeUtils {
 
     /**
      * Returns a resolved concept for the specified code and scheme.
-     * 
+     *
      * @throws LBException
      */
     protected ResolvedConceptReference resolveConcept(String scheme,
@@ -909,7 +909,7 @@ public class MetaTreeUtils {
     /**
      * Indicates whether the given associated concept contains a qualifier for
      * the given source abbreviation (SAB).
-     * 
+     *
      * @return true if a qualifier exists; false otherwise.
      */
     protected boolean isValidForSAB(AssociatedConcept ac, String sab) {
@@ -1069,11 +1069,11 @@ public class MetaTreeUtils {
         /*
          * HashMap hmap = new HashMap(); TreeItem ti = null; long ms =
          * System.currentTimeMillis();
-         * 
+         *
          * Set<String> codesToExclude = Collections.EMPTY_SET; boolean fwd =
          * true; String[] associationsToNavigate = fwd ? hierAssocToChildNodes_
          * : hierAssocToParentNodes_; //boolean associationsNavigatedFwd = true;
-         * 
+         *
          * CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag(); if
          * (version != null) csvt.setVersion(version);
          * ResolvedConceptReferenceList matches = null; //Vector v = new
@@ -1085,27 +1085,27 @@ public class MetaTreeUtils {
          * lbscm.setLexBIGService(lbsvc); String name =
          * getCodeDescription(lbsvc, scheme, csvt, code); ti = new
          * TreeItem(code, name); ti.expandable = false;
-         * 
+         *
          * // Resolve the next branch, representing children of the given //
          * code, navigated according to the provided relationship and //
          * direction. Resolve the children as a code graph, looking 2 // levels
          * deep but leaving the final level unresolved.
-         * 
+         *
          * CodedNodeGraph cng = lbsvc.getNodeGraph(scheme, csvt, null);
          * ConceptReference focus = Constructors.createConceptReference(code,
          * scheme); cng = cng.restrictToAssociations(
          * Constructors.createNameAndValueList(associationsToNavigate),
          * ConvenienceMethods.createNameAndValueList("source", sab));
-         * 
+         *
          * CodedNodeSet.PropertyType[] propertytypes = null; if
          * (RESOLVE_CONCEPT) { propertytypes = new PropertyType[]
          * {PropertyType.PRESENTATION}; }
-         * 
+         *
          * ResolvedConceptReferenceList branch = cng.resolveAsList( focus,
          * associationsNavigatedFwd, !associationsNavigatedFwd,
          * Integer.MAX_VALUE, 2, //null, propertytypes, sortByCode_, null, -1,
          * true); null, propertytypes, sortByCode_, null, -1, RESOLVE_CONCEPT);
-         * 
+         *
          * // The resolved branch will be represented by the first node in //
          * the resolved list. The node will be subdivided by source or // target
          * associations (depending on direction). The associated // nodes define
@@ -1125,13 +1125,13 @@ public class MetaTreeUtils {
          * indicated to be available. If so, mark the // entry with a '+' to
          * indicate it can be expanded. if
          * (!codesToExclude.contains(branchItemCode)) { ti.expandable = true;
-         * 
+         *
          * TreeItem childItem = new TreeItem(branchItemCode,
          * branchItemNode.getEntityDescription().getContent()); AssociationList
          * grandchildBranch = associationsNavigatedFwd ?
          * branchItemNode.getSourceOf() : branchItemNode.getTargetOf(); if
          * (grandchildBranch != null) {
-         * 
+         *
          * for (Association grandchild : grandchildBranch.getAssociation()) {
          * java.lang.String association_name = grandchild.getAssociationName();
          * //String grandchildNavText = getDirectionalLabel(lbscm, scheme, csvt,
@@ -1140,10 +1140,10 @@ public class MetaTreeUtils {
          * = grandchild.getAssociatedConcepts(); for (AssociatedConcept
          * grandchildbranchItemNode :
          * grandchildbranchItemList.getAssociatedConcept()) {
-         * 
+         *
          * if (isValidForSAB(grandchildbranchItemNode, sab)) {
          * childItem.expandable = true; break; } } } }
-         * 
+         *
          * ti.addChild(childNavText, childItem); ti.expandable = true; } } } } }
          * hmap.put(code, ti); } catch (Exception ex) { ex.printStackTrace(); }
          * _logger.debug("Run time (milliseconds) getSubconcepts: " +
@@ -1588,7 +1588,7 @@ public class MetaTreeUtils {
     /**
      * Build and returns tree items that represent the root and core concepts of
      * resolved paths for printing.
-     * 
+     *
      * @throws LBException
      */
     protected TreeItem[] buildPathsToRoot(ResolvedConceptReference rcr,
@@ -1659,7 +1659,7 @@ public class MetaTreeUtils {
      * and move backward in the tree. If the natural flow of relations is
      * thought of moving from tree root to leaves, this method processes nodes
      * in the reverse direction (from child to parent).
-     * 
+     *
      * @throws LBException
      */
 
@@ -1993,8 +1993,8 @@ public class MetaTreeUtils {
                                 nd_code = node.getConceptCode();
                                 nd_name =
                                     node.getEntityDescription().getContent();
-                            } else if (obj instanceof Concept) {
-                                Concept node = (Concept) list.get(i);
+                            } else if (obj instanceof Entity) {
+                                Entity node = (Entity) list.get(i);
                                 nd_code = node.getEntityCode();
                                 nd_name =
                                     node.getEntityDescription().getContent();
@@ -2211,10 +2211,10 @@ public class MetaTreeUtils {
          * (MetaBrowserService)lbSvc.getGenericExtension
          * ("metabrowser-extension"); map = mbs.getBySourceTabDisplay(ti.code,
          * sab, par_chd_assoc_list, Direction.TARGETOF);
-         * 
+         *
          * } catch (Exception ex) { ex.printStackTrace(); hmap.put(code, ti);
          * return hmap; }
-         * 
+         *
          * cui2SynonymsMap = createCUI2SynonymsHahMap(map); //ti.expandable =
          * false; keyset = cui2SynonymsMap.keySet(); iterator =
          * keyset.iterator(); while (iterator.hasNext()) { String child_cui =

@@ -2,14 +2,14 @@
   String entry_type_src = type;
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
   {
-    Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+    Entity concept_src = (Entity) request.getSession().getAttribute("concept");
 %>
     <!-- Page content -->
 <%
 
-  Concept concept_neighborhood = null;
+  Entity concept_neighborhood = null;
   if (concept_neighborhood == null) {
-    concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+    concept_neighborhood = (Entity) request.getSession().getAttribute("concept");
     code = concept_neighborhood.getEntityCode();
 
   } else {
