@@ -9,7 +9,6 @@ import org.apache.log4j.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
-import org.LexGrid.LexBIG.DataModel.Core.Association; // Ambiguous with this
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
@@ -28,6 +27,7 @@ import gov.nih.nci.evs.browser.utils.test.*;
 import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
+import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.common.*;
 
@@ -455,7 +455,7 @@ public class DataUtils {
         return retstr;
     }
 
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -493,7 +493,7 @@ public class DataUtils {
                             (ResolvedConceptReference) matches
                                 .enumerateResolvedConceptReference()
                                 .nextElement();
-                        Concept entry = ref.getReferencedEntry();
+                        Entity entry = ref.getReferencedEntry();
                         return entry;
                     } catch (Exception ex1) {
                         _logger.error("Exception entry == null");
@@ -539,7 +539,7 @@ public class DataUtils {
         return cns;
     }
 
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code, String source) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -583,7 +583,7 @@ public class DataUtils {
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
 
-                Concept entry = ref.getReferencedEntry();
+                Entity entry = ref.getReferencedEntry();
 
                 return entry;
             }
@@ -663,7 +663,7 @@ public class DataUtils {
                     null, null, maxToReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
+                Enumeration<? extends ResolvedConceptReference> refEnum =
                     matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
@@ -1177,11 +1177,11 @@ public class DataUtils {
             for (int i = 0; i < relations.length; i++) {
                 Relations relation = relations[i];
                 if (relation.getContainerName().compareToIgnoreCase("roles") == 0) {
-                    org.LexGrid.relations.Association[] asso_array =
-                        relation.getAssociation();
+                    AssociationPredicate[] asso_array =
+                        relation.getAssociationPredicate();
                     for (int j = 0; j < asso_array.length; j++) {
-                        org.LexGrid.relations.Association association =
-                            (org.LexGrid.relations.Association) asso_array[j];
+                    	AssociationPredicate association =
+                            (AssociationPredicate) asso_array[j];
                         list.add(association.getAssociationName());
                     }
                 }
@@ -1347,7 +1347,7 @@ public class DataUtils {
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -1615,7 +1615,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     rcrl.getResolvedConceptReference();
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
-                    org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
+                    org.LexGrid.concepts.Entity ce = rcr.getReferencedEntry();
                     if (code == null) {
                         v.add(ce);
                     } else {
@@ -1690,21 +1690,21 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getSynonyms(String scheme, String version, String tag,
         String code, String sab) {
-        Concept concept = getConceptByCode(scheme, version, tag, code);
+        Entity concept = getConceptByCode(scheme, version, tag, code);
         return getSynonyms(concept, sab);
     }
 
     public static Vector getSynonyms(String scheme, String version, String tag,
         String code) {
-        Concept concept = getConceptByCode(scheme, version, tag, code);
+    	Entity concept = getConceptByCode(scheme, version, tag, code);
         return getSynonyms(concept, null);
     }
 
-    public static Vector getSynonyms(Concept concept) {
+    public static Vector getSynonyms(Entity concept) {
         return getSynonyms(concept, null);
     }
 
-    public static Vector getSynonyms(Concept concept, String sab) {
+    public static Vector getSynonyms(Entity concept, String sab) {
 
         if (concept == null)
             return null;
@@ -2071,7 +2071,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2132,7 +2132,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2228,7 +2228,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2388,7 +2388,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return hmap;
     }
 
-    private String findRepresentativeTerm(Concept c, String sab) {
+    private String findRepresentativeTerm(Entity c, String sab) {
         Vector synonyms = getSynonyms(c, sab);
         if (synonyms == null || synonyms.size() == 0) {
             // return null;
@@ -2508,7 +2508,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                         AssociatedConcept ac =
                             (AssociatedConcept) v.elementAt(i);
                         EntityDescription ed = ac.getEntityDescription();
-                        Concept c = ac.getReferencedEntry();
+                        Entity c = ac.getReferencedEntry();
                         if (!hset.contains(c.getEntityCode())) {
                             hset.add(c.getEntityCode());
                             // Find the highest ranked atom data
@@ -3860,7 +3860,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     for (int i = 0; i < rcrl.getResolvedConceptReferenceCount(); i++) {
                         ResolvedConceptReference rcr =
                             rcrl.getResolvedConceptReference(i);
-                        Concept c = rcr.getReferencedEntry();
+                        Entity c = rcr.getReferencedEntry();
                         if (c == null) {
                             _logger.warn("Concept is null.");
                         } else {
@@ -3894,7 +3894,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getConceptSources(String scheme, String version,
         String code) {
-        Concept c = getConceptByCode(scheme, version, null, code);
+    	Entity c = getConceptByCode(scheme, version, null, code);
         if (c == null)
             return null;
         Presentation[] presentations = c.getPresentation();
@@ -4064,7 +4064,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -4241,7 +4241,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     return null;
                 ResolvedConceptReference rcr =
                     rcrl.getResolvedConceptReference(0);
-                Concept c = rcr.getReferencedEntry();
+                Entity c = rcr.getReferencedEntry();
                 if (c == null) {
                     _logger.warn("Concept is null.");
                     return null;
@@ -4257,7 +4257,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return null;
     }
 
-    public static HashMap getPropertyValueHashMap(Concept c) {
+    public static HashMap getPropertyValueHashMap(Entity c) {
         if (c == null) {
             return null;
         }

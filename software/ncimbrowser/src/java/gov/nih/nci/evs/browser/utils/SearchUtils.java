@@ -670,7 +670,7 @@ public class SearchUtils {
                                         v.add(ce);
                                 }
                             } else {
-                                Concept ce = rcr.getReferencedEntry();
+                            	Entity ce = rcr.getReferencedEntry();
                                 if (ce == null) {
                                     _logger
                                         .warn("resolveIterator rcr.getReferencedEntry() returns null???");
@@ -920,7 +920,7 @@ System.out.println("cns.resolve");
         return cns;
     }
 
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code, String source) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -964,7 +964,7 @@ System.out.println("cns.resolve");
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
 
-                Concept entry = ref.getReferencedEntry();
+                Entity entry = ref.getReferencedEntry();
 
                 return entry;
             }
@@ -3016,7 +3016,7 @@ System.out.println("cns.resolve");
         // return iterator;
     }
 
-    public static Concept getConceptInIterator(
+    public static Entity getConceptInIterator(
         ResolvedConceptReferencesIterator iterator, int idx) {
         if (iterator == null)
             return null;
