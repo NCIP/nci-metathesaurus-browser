@@ -75,6 +75,7 @@
             <filterset>
                 <filter token="log.package" value="${log.package}"/>
                 <filter token="log.level" value="${log.level}"/>
+                <filter token="search.log.dir" value="${search.log.dir}"/>
             </filterset>
             <fileset dir="${conf.dir}">
                 <patternset>
