@@ -674,7 +674,7 @@
         <util-dot-on-dir dot-file.dir="target/reports/ivy" />
     </target>
 
-    <target name="deploy:hot" depends="build:all, set:jboss.war.temp.dir.location, invoke:garbagecollector" description="Hot deploys the deployment artifact">
+    <target name="deploy:hot" depends="build:all, re-configure, set:jboss.war.temp.dir.location, invoke:garbagecollector" description="Hot deploys the deployment artifact">
 
         <echo message="       Bin: ${application.base.path}/${jboss.binaries.relative.dir}/bin"/>
         <echo message="    Target: ${jboss.deploy.dir}"/>
@@ -761,6 +761,37 @@
 
             </else>
         </if>
+
+    </target>
+
+    <target name="re-configure" depends="build:all">
+
+        <echo message="Working dir = ${working.dir}"/>
+        <echo message="   Dist dir = ${ncimbrowser-webapp.dist.dir}"/>
+
+        <delete dir="${working.dir}/ncimbrowser-webapp"/>
+        <unzip src="${ncimbrowser-webapp.dist.dir}/${ncimbrowser-webapp.file.name}" dest="${working.dir}/ncimbrowser-webapp"/>
+
+        <!-- Backup log4j.xml file -->
+        <move file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml"
+            tofile="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp"
+        />
+
+        <!-- Re-configure log4j.xml -->
+        <copy tofile="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml" filtering="true" failonerror="true">
+            <file file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp"/>
+            <filterset>
+                <filter token="search.log.dir" value="${application.data.path}/${search.log.dir}"/>
+            </filterset>
+        </copy>
+        <delete file="${working.dir}/ncimbrowser-webapp/WEB-INF/classes/log4j.xml.tmp" failonerror="false" />
+
+        <!-- Re-pack the war file -->
+        <war destfile="${ncimbrowser-webapp.dist.dir}/${ncimbrowser-webapp.file.name}" compress="false" webxml="${working.dir}/ncimbrowser-webapp/WEB-INF/web.xml" >
+            <fileset dir="${working.dir}/ncimbrowser-webapp">
+                <include name="*/**" />
+            </fileset>
+        </war>
 
     </target>
 
