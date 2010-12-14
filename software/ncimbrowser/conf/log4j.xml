@@ -29,7 +29,6 @@
     </category>
 
     <category name="gov.nih.nci.evs.searchlog" additivity="false">
-        <!-- level value="SEARCH#gov.nih.nci.evs.searchlog.SearchLevel" / -->
         <priority value="SEARCH" class="gov.nih.nci.evs.searchlog.SearchLevel" />
         <appender-ref ref="SEARCHLOG" />
     </category>
