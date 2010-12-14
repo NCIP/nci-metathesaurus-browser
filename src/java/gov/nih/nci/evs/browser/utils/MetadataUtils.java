@@ -548,7 +548,7 @@ public class MetadataUtils {
     }
 
     public static NameAndValue[] getMetadataProperties(CodingScheme cs) {
-        String formalName = cs.getFormalName();
+        String cs_urn = cs.getCodingSchemeURI();
         String version = cs.getRepresentsVersion();
         Vector<NameAndValue> v = new Vector<NameAndValue>();
         try {
@@ -562,7 +562,7 @@ public class MetadataUtils {
                 AbsoluteCodingSchemeVersionReference acsvr = acdvra[i];
                 String urn = acsvr.getCodingSchemeURN();
                 String ver = acsvr.getCodingSchemeVersion();
-                if (urn.equals(formalName) && ver.equals(version)) {
+                if (urn.equals(cs_urn) && ver.equals(version)) {
                     // 100807 KLO
                     svc = svc.restrictToCodingScheme(acsvr);
                     MetadataPropertyList mdpl = svc.resolve();
