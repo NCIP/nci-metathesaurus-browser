@@ -3920,8 +3920,14 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return v;
     }
 
-    public static String getMetadataValue(String scheme, String propertyName) {
-        Vector v = getMetadataValues(scheme, propertyName);
+    public static String getMetadataValue(String scheme, String propertyName){
+        Vector v;
+		try {
+			v = getMetadataValues(scheme, propertyName);
+		} catch (Exception e) {
+			_logger.error(e.getMessage());
+			return null;
+		}
         if (v == null || v.size() == 0)
             return null;
         return (String) v.elementAt(0);
