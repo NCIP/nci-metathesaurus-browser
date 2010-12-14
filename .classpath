@@ -19,8 +19,6 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/mail.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/mail.jar.license.txt"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-1.1.9.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-1.1.9.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-security.jar"/>
@@ -60,5 +58,8 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-xml-1.5.7.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/sqlbuilder-2.0.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-client-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.0.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-2.0.0.jar"/>
 	<classpathentry kind="output" path="software/ncimbrowser/build/web/WEB-INF/classes"/>
 </classpath>
