@@ -297,10 +297,6 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
      if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
     	 term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();    	 
      }
-     
-     
-     System.out.println("****** 2: " + term_suggestion_application_url1);
-     
      if (term_suggestion_application_url1 != null) {
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
      }
