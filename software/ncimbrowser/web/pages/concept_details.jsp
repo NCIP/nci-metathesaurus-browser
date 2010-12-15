@@ -290,10 +290,17 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
          name = "ERROR: Invalid code.";
       }
 
-
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
-  if (term_suggestion_application_url1 == null) {
+  
+  if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
      term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
+     if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
+    	 term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();    	 
+     }
+     
+     
+     System.out.println("****** 2: " + term_suggestion_application_url1);
+     
      if (term_suggestion_application_url1 != null) {
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
      }

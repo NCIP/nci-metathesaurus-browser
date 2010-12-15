@@ -385,4 +385,9 @@ public class NCImBrowserProperties {
     public static int getMaxSearchTimeLimit() {
         return _max_search_time_limit;
     }
+
+    public static String getTermSuggestionApplicationUrl() {
+        return _term_suggestion_application_url;
+    }    
+    
 }
