@@ -341,8 +341,10 @@
             <filter token="max_search_time_limit" value="${max_search_time_limit}"/>
             <filter token="meddra_security_token" value="${meddra_security_token}"/>
         </filterset>
+
         <mkdir dir="${application.data.path}/${ncimbrowser.conf.path}" />
         <mkdir dir="${application.data.path}/${ehcache.cache.path}" />
+
         <copy todir="${application.data.path}/${ncimbrowser.conf.path}" filtering="true" overwrite="true">
             <filterset refid="embedded.filterset"/>
             <fileset dir="${ncimbrowser-webapp.dir.dist}/deploy">
@@ -745,6 +747,7 @@
 
     <target name="upgrade:common:init" depends="upgrade:jboss:init " unless="install.running">
     </target>
+
     <target name="upgrade:jboss:init" unless="install.running"
         depends="
         upgrade:jboss:init:prep,
@@ -761,6 +764,7 @@
             properties.list="${read.properties.list}"
             />
     </target>
+
     <target name="upgrade:common:init:prep" unless="install.running">
         <if>
             <not>
