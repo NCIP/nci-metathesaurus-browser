@@ -21,7 +21,19 @@
 	Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
-    <span class="textsubtitle-blue">Synonym Details</span><a name="SynonymsDetails"></a>
+	<table border="0" width="708px">
+		<tr>
+			<td class="textsubtitle-blue" align="left">Synonym Details:<a name="SynonymsDetails"></a></td>
+			<td align="right" class="texttitle-blue-rightJust">	
+				<h:form>			
+					<h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
+						<f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
+						<f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
+					</h:commandLink>
+				</h:form>				
+			</td>
+		</tr>
+	</table>    
       <table class="dataTable" border="0" width=1000>
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
