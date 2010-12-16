@@ -150,7 +150,19 @@
   }
 
 %>
-<p class="textsubtitle-blue">Terms and Properties</p>
+<table border="0" width="708px">
+	<tr>
+		<td class="textsubtitle-blue" align="left">Terms and Properties</td>
+		<td align="right" class="texttitle-blue-rightJust">	
+			<h:form>			
+				<h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
+					<f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
+					<f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
+				</h:commandLink>
+			</h:form>				
+		</td>
+	</tr>
+</table>
 <%
 if (retired_cui != null) {
 %>

@@ -3000,14 +3000,28 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
         try {
+        	
+        	_logger.info("************** metabrowser-extension *****************");
+        	
             mbs =
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
+            if (mbs == null) {
+            	_logger.error("Error! metabrowser-extension is null!");
+            	return null;
+            }           
             ms = System.currentTimeMillis();
             action = "Retrieving " + SOURCE_OF;
             ms = System.currentTimeMillis();
+            
+            _logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! getRelationshipsDisplay !!!!");
+            _logger.info("CUI: " + CUI);
+            _logger.info("Direction: " + Direction.SOURCEOF);
+            
             map = mbs.getRelationshipsDisplay(CUI, null, Direction.SOURCEOF);
 
+            _logger.info("Done !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! getRelationshipsDisplay !!!!");
+            
             delay = System.currentTimeMillis() - ms;
             Debug.println("Run time (ms) for " + action + " " + delay);
             DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
