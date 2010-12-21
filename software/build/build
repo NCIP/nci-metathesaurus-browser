@@ -46,6 +46,10 @@ case $1 in
         ant $DEBUG deploy:hot:jsp
         ;;
 
+    dev1ssh)
+        ssh jboss51d@ncias-d555-v.nci.nih.gov -i C:\NCI-Projects\ssh-keys\id_dsa_bda echo "Test worked!"
+        ;;
+
     clean)
         ant clean
         ;;
