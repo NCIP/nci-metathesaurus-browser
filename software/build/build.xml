@@ -204,6 +204,15 @@
             </resources>
         </copy>
 
+        <!-- Setup lexevs remote config file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <resources>
+                <file file="${conf.dir}/application-config-client.xml"/>
+            </resources>
+        </copy>
+
     </target>
 
     <target name="continuous-integration" description="calls wrapper targets for continuous integration build"
