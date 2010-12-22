@@ -63,6 +63,7 @@
     <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="project.compile.classpath"/>
     <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="project.compile.classpath"/>
     <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="project.compile.classpath"/>
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="project.compile.classpath"/>
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -306,14 +307,49 @@
         " >
     </target>
 
-    <target name="deploy:local:upgrade" depends="build:all" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
+    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
 
+        <antcall target="jboss:stop" />
 
+        <antcall target="-install:jboss:configure:properties-service" />
 
+        <copy todir="${application.data.path}/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
+            </resources>
+        </copy>
 
+        <copy todir="${application.data.path}/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
+            </resources>
+        </copy>
 
+        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/install/log4j.xml"/>
+            </resources>
+        </copy>
 
+        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
+            </resources>
+        </copy>
 
+        <sequential>
+            <copy
+                file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+                tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+                overwrite="true"
+                />
+        </sequential>
+
+        <antcall target="jboss:start" />
 
     </target>
 
@@ -364,6 +400,48 @@
             <arg value="${option}"/>
             <arg value='${jboss.server.path}/bin/${start}'/>
         </exec>
+
+    </target>
+
+    <target name="-install:jboss:configure:properties-service">
+
+        <!-- Check if already updated -->
+        <condition property="properties-service.updated">
+            <isfileselected file="${jboss.server.path}/server/default/deploy/properties-service.xml">
+                <contains text="NCImBrowserProperties" casesensitive="no"/>
+            </isfileselected>
+        </condition>
+
+        <!-- Backup file -->
+        <copy file="${jboss.server.path}/server/default/deploy/properties-service.xml"
+            tofile="${jboss.server.path}/server/default/deploy/properties-service.xml.bak"
+        />
+
+        <if>
+            <equals arg1="${properties-service.updated}" arg2="true"/>
+            <then>
+                <xmltask source="${jboss.server.path}/server/default/deploy/properties-service.xml"
+                    dest="${jboss.server.path}/server/default/deploy/properties-service.xml">
+                    <replace path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]">
+<![CDATA[<attribute name="Properties">
+    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}
+  </attribute>]]>
+                    </replace>
+                </xmltask>
+            </then>
+            <else>
+                <xmltask source="${jboss.server.path}/server/default/deploy/properties-service.xml"
+                    dest="${jboss.server.path}/server/default/deploy/properties-service.xml">
+                    <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
+<![CDATA[<attribute name="Properties">
+    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}
+  </attribute>]]>
+                    </insert>
+                </xmltask>
+            </else>
+        </if>
+
+        <echo message="properties-service.xml updated." />
 
     </target>
 
