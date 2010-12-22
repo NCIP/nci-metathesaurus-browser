@@ -21,6 +21,8 @@ if [ -z "$1" ]; then
     echo "  deploy       -- Hot deploy application"
     echo "  jsp          -- Hot deploy JSP files"
     echo "  config       -- Generates configuration files for a target environment"
+    echo "  stop         -- Shutdown JBoss"
+    echo "  start        -- Start JBoss"
     echo
     exit
 fi
@@ -52,6 +54,14 @@ case $1 in
 
     config)
         ant build:config
+        ;;
+
+    stop)
+        ant jboss:stop
+        ;;
+
+    start)
+        ant jboss:start
         ;;
 
     *)
