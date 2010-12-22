@@ -22,6 +22,8 @@ if "%1" == "" (
     echo   deploy       -- Hot deploy application
     echo   jsp          -- Hot deploy JSP files
     echo   config       -- Generates configuration files for a target environment
+    echo   stop         -- Shutdown JBoss
+    echo   start        -- Start JBoss
     goto DONE
 )
 
@@ -60,6 +62,16 @@ if "%1" == "clean" (
 
 if "%1" == "config" (
     ant %DEBUG% build:config
+    goto DONE
+)
+
+if "%1" == "stop" (
+    ant %DEBUG% jboss:stop
+    goto DONE
+)
+
+if "%1" == "start" (
+    ant %DEBUG% jboss:start
     goto DONE
 )
 

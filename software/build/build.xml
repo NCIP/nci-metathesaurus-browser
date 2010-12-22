@@ -59,6 +59,11 @@
         <pathelement path ="${webapp.classes.dir}"/>
     </path>
 
+    <!-- Task definitions -->
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="project.compile.classpath"/>
+    <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="project.compile.classpath"/>
+    <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="project.compile.classpath"/>
+
     <!--============================-->
     <!-- usage: show build targets  -->
     <!--============================-->
@@ -302,9 +307,64 @@
     </target>
 
     <target name="deploy:local:upgrade" depends="build:all" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
-        <exec dir="${data-bda-conapp.dist.dir}" executable="${pack.app.name}" osfamily="unix">
-            <arg value="-b" />
+
+
+
+
+
+
+
+
+    </target>
+
+    <target name="jboss:stop">
+
+        <if>
+            <equals arg1="${os.name}" arg2="windows"/>
+            <then>
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
+            </then>
+            <else>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
+            </else>
+        </if>
+
+        <echo message="Stopping JBoss server..." />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${jboss.server.path}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:type=Server" shutdown'/>
         </exec>
+
+    </target>
+
+    <target name="jboss:start">
+
+        <osfamily property="os.family"/>
+
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="start" value="run.bat" />
+            </then>
+            <else>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="start" value="start_jboss" />
+            </else>
+        </if>
+
+        <echo message="Starting JBoss server..." />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${jboss.server.path}/bin/${start}'/>
+        </exec>
+
     </target>
 
 </project>
