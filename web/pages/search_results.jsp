@@ -107,7 +107,11 @@ if (randomKey != null) {
           int page_size = 50;
           if (selectedResultsPerPage != null)
           {
-              page_size = Integer.parseInt(selectedResultsPerPage);
+        	  try {
+              	page_size = Integer.parseInt(selectedResultsPerPage);
+        	  } catch (Exception e) {
+        		// Do nothing, bad number  
+        	  }
           }
           int iend = page_num * page_size;
           int istart = iend - page_size;
