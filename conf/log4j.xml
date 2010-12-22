@@ -14,7 +14,7 @@
 
     <appender name="SEARCHLOG" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="DatePattern" value="'.'yyyy-MM"/>
-        <param name="File" value="@search.log.dir@/ncim-search.log"/>
+        <param name="File" value="@search.log.dir@"/>
         <param name="Threshold" value="FATAL" />
         <param name="Append" value="true"/>
         <layout class="org.apache.log4j.PatternLayout">
