@@ -360,20 +360,26 @@
             <then>
                 <property name="shell" value="cmd" />
                 <property name="option" value="/c" />
-                <property name="twiddle" value="twiddle.bat" />
+                <property name="stop" value="shutdown.bat" />
             </then>
             <else>
                 <property name="shell" value="/bin/bash" />
                 <property name="option" value="-c" />
-                <property name="twiddle" value="twiddle.sh" />
+                <property name="stop" value="stop_jboss" />
             </else>
         </if>
 
         <echo message="Stopping JBoss server..." />
-        <exec executable="${shell}" failonerror="true">
+        <exec executable="${shell}" failonerror="false" timeout="2000" vmlauncher="false">
             <arg value="${option}"/>
-            <arg value='${jboss.server.path}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:type=Server" shutdown'/>
+            <arg value='${jboss.server.path}/bin/${stop}'/>
         </exec>
+
+        <waitfor maxwait="2" maxwaitunit="minute">
+            <not>
+                <socket server="${jboss.server.hostname}" port="${jboss.server.jndi.port}"/>
+            </not>
+        </waitfor>
 
     </target>
 
@@ -400,6 +406,10 @@
             <arg value="${option}"/>
             <arg value='${jboss.server.path}/bin/${start}'/>
         </exec>
+
+        <waitfor maxwait="2" maxwaitunit="minute">
+            <socket server="${jboss.server.hostname}" port="${jboss.server.jndi.port}"/>
+        </waitfor>
 
     </target>
 
