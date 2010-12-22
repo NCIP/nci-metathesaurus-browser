@@ -3,11 +3,10 @@
 # **** Command file to invoke build.xml ****
 # ******************************************
 # Environment settings here...
-DEBUG=-Denable.install.debug=false
 TAG=-Danthill.build.tag_built=$USER
 
 if [ "$2" = "debug" ]; then
-   DEBUG="$DEBUG -debug"
+   DEBUG="-debug"
 fi
 clear
 
@@ -18,9 +17,10 @@ if [ -z "$1" ]; then
     echo "  clean        -- Remove classes directory for clean build"
     echo "  all          -- Normal build of application"
     echo "  upgrade      -- Build and upgrade application"
-    echo "  install      -- Builds, installs JBoss locally"
+    echo "  install      -- Installs JBoss locally"
     echo "  deploy       -- Hot deploy application"
     echo "  jsp          -- Hot deploy JSP files"
+    echo "  config       -- Generates configuration files for a target environment"
     echo
     exit
 fi
@@ -46,12 +46,12 @@ case $1 in
         ant $DEBUG deploy:hot:jsp
         ;;
 
-    dev1ssh)
-        ssh jboss51d@ncias-d555-v.nci.nih.gov -i C:\NCI-Projects\ssh-keys\id_dsa_bda echo "Test worked!"
-        ;;
-
     clean)
         ant clean
+        ;;
+
+    config)
+        ant build:config
         ;;
 
     *)

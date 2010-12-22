@@ -8,9 +8,17 @@
         These scripts require Java, Ant and SVN to work.
     </description>
 
-    <!-- Property file related properties and tasks -->
+    <!-- Property file names -->
     <property environment="env" />
     <property name="properties.file" value="project.properties" />
+    <property name="local.properties.file" value="local.properties" />
+
+    <!-- Local property file -->
+
+    <property file="${local.properties.file}" />
+    <echo message="Using local properties file of ${local.properties.file}." />
+
+    <!-- Project property filr -->
     <property file="${properties.file}" />
     <echo message="Using project properties file of ${properties.file}." />
     <available file="${properties.file}" property="properties.file.exists" />
@@ -18,6 +26,7 @@
 
     <!-- Application values -->
     <property name="project.name" value="ncimbrowser"/>
+    <property name="project.short.name" value="ncim" />
     <property name="webapp.war.name" value="${project.name}.war" />
     <property name="webapp.prop.file" value="NCImBrowserProperties.xml" />
 
@@ -126,23 +135,10 @@
         </javac>
 
         <!-- Copy internal property files -->
-        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no">
+        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" overwrite="true">
             <fileset dir="${src.dir}/java">
                 <patternset>
                     <include name="**/*.properties"/>
-                </patternset>
-            </fileset>
-        </copy>
-
-        <!-- Setup internal Log4j XML file -->
-        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" filtering="true">
-            <filterset>
-                <filter token="log.package" value="${log.package}"/>
-                <filter token="log.level" value="${log.level}"/>
-            </filterset>
-            <fileset dir="${conf.dir}">
-                <patternset>
-                    <include name="**/log4j.*"/>
                 </patternset>
             </fileset>
         </copy>
@@ -172,7 +168,9 @@
         </condition>
         <echo message="Tag: ${tag_built}" />
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy"
+        <!-- Setup Ehcache property file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${conf.dir}/ehcache.xml"/>
@@ -181,13 +179,14 @@
 
         <!-- Setup application property file with defaults, balance of which is set on deployment -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy"
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="anthill.build.tag_built" value="${tag_built}"/>
-                <filter token="ncim.build.info" value="Built: ${BUILD_DATE}"/>
+                <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
                 <filter token="debug.on" value="${debug.on}"/>
+                <filter token="ehcache.xml.file" value="@application.data.path@/${ehcache.cache.path}/${ehcache.xml.file}"/>
                 <filter token="maximum.return" value="${maximum.return}"/>
                 <filter token="maximum.tree.level" value="${maximum.tree.level}"/>
                 <filter token="pagination_time_out" value="${pagination_time_out}"/>
@@ -206,10 +205,86 @@
 
         <!-- Setup lexevs remote config file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy"
-             flatten="true" includeEmptyDirs="no" filtering="true">
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${conf.dir}/application-config-client.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Setup log4j file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="search.log.dir" value="@application.data.path@/${search.log.dir}/${project.short.name}-search.log"/>
+                <filter token="log.package" value="${log.package}"/>
+            </filterset>
+            <resources>
+                <file file="${conf.dir}/log4j.xml"/>
+            </resources>
+        </copy>
+
+    </target>
+
+    <target name="build:config" description="Generates configuration files for a target environment.">
+
+        <!-- Generate Log4j XML file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
+           filtering="true" overwrite="true">
+            <filterset>
+                <filter token="application.data.path" value="${application.data.path}"/>
+                <filter token="log.level" value="${log.level}"/>
+            </filterset>
+            <fileset dir="${dist.dir}/exploded/${project.name}-webapp/deploy">
+                <patternset>
+                    <include name="**/log4j.*"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <!-- Generate application property file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="ncit.url" value="${ncit.url}"/>
+                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+                <filter token="lg.config.file" value="${lg.config.file}"/>
+                <filter token="application.data.path" value="${application.data.path}"/>
+                <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
+                <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
+                <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
+                <filter token="term.suggestion.application.url" value="${term.suggestion.application.url}"/>
+                <filter token="meddra_security_token" value="${meddra_security_token}"/>
+            </filterset>
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/${webapp.prop.file}"/>
+            </resources>
+        </copy>
+
+        <!-- Generate Ehcache property file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
+            </filterset>
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/ehcache.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Generate lexevs remote config file -->
+
+        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <filterset>
+                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+            </filterset>
+            <resources>
+                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/application-config-client.xml"/>
             </resources>
         </copy>
 
