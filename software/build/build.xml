@@ -82,7 +82,7 @@
         <echo message="install                --&gt; Installs JBoss locally" />
         <echo message="deploy                 --&gt; Hot deploy application" />
         <echo message="jsp                    --&gt; Hot deploy JSP files" />
-        <echo message="config                 --&gt; Generates configuration files for a target environment" />
+        <echo message="build:config           --&gt; Generates configuration files for a target environment" />
         <echo message="" />
         <echo message="" />
         <echo message="${ant.version}" />
@@ -406,10 +406,6 @@
             <arg value="${option}"/>
             <arg value='${jboss.server.path}/bin/${start}'/>
         </exec>
-
-        <waitfor maxwait="2" maxwaitunit="minute">
-            <socket server="${jboss.server.hostname}" port="${jboss.server.jndi.port}"/>
-        </waitfor>
 
     </target>
 
