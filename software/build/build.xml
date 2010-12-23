@@ -375,6 +375,8 @@
             <arg value='${jboss.server.path}/bin/${stop}'/>
         </exec>
 
+        <!-- Wait for JBoss to acually stop -->
+
         <waitfor maxwait="2" maxwaitunit="minute">
             <not>
                 <socket server="${jboss.server.hostname}" port="${jboss.server.jndi.port}"/>
