@@ -59,11 +59,17 @@
         <pathelement path ="${webapp.classes.dir}"/>
     </path>
 
-    <!-- Task definitions -->
+    <!-- Ant Task definitions -->
     <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="project.compile.classpath"/>
     <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="project.compile.classpath"/>
     <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="project.compile.classpath"/>
     <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="project.compile.classpath"/>
+
+    <!-- BDA-Lite Task definitions -->
+    <taskdef name="Logo" classname="gov.nih.nci.bdalite.ant.Logo" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.StopJBoss" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.StartJBoss" classpathref="project.compile.classpath" />
+    <taskdef name="AddJBossProperty" classname="gov.nih.nci.bdalite.ant.jboss.AddJBossProperty" classpathref="project.compile.classpath" />
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -93,11 +99,6 @@
         <echo message="" />
     </target>
 
-    <target name="diagnostics" description="diagnostics">
-        <echoproperties />
-        <diagnostics />
-    </target>
-
     <!-- This will delete all of the files created by the build process -->
 
     <target name="clean" depends="-init">
@@ -109,13 +110,7 @@
 
     <target name="-init" description="Sets up build are and initalizes variables">
 
-        <echo message=" ______   ______   _______        _" />
-        <echo message="(____  \ (______) (_______)      | |     _    _     ___" />
-        <echo message=" ____)  ) _     _  _______  ____ | |    |_| _| |_  /   \" />
-        <echo message="|  __  ( | |   | ||  ___  ||____|| |     _ |_   _||  ___|"/>
-        <echo message="| |__)  )| |__/ / | |   | |      | |___ | |  | |  | |__ " />
-        <echo message="|______/ |_____/  |_|   |_|      |_____||_|  |_|   \___|" />
-
+        <Logo />
         <tstamp>
             <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
         </tstamp>
@@ -301,17 +296,11 @@
 
     </target>
 
-    <target name="continuous-integration" description="calls wrapper targets for continuous integration build"
-        depends="
-            build:all
-        " >
-    </target>
-
     <target name="deploy:local:upgrade" depends="build:all,build:config" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
 
         <antcall target="jboss:stop" />
 
-        <antcall target="-install:jboss:configure:properties-service" />
+        <antcall target="-configure:properties-service" />
 
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
@@ -355,101 +344,30 @@
 
     <target name="jboss:stop">
 
-        <if>
-            <equals arg1="${os.name}" arg2="windows"/>
-            <then>
-                <property name="shell" value="cmd" />
-                <property name="option" value="/c" />
-                <property name="stop" value="shutdown.bat" />
-            </then>
-            <else>
-                <property name="shell" value="/bin/bash" />
-                <property name="option" value="-c" />
-                <property name="stop" value="stop_jboss" />
-            </else>
-        </if>
-
-        <echo message="Stopping JBoss server..." />
-        <exec executable="${shell}" failonerror="false" timeout="2000" vmlauncher="false">
-            <arg value="${option}"/>
-            <arg value='${jboss.server.path}/bin/${stop}'/>
-        </exec>
-
-        <!-- Wait for JBoss to acually stop -->
-
-        <waitfor maxwait="2" maxwaitunit="minute">
-            <not>
-                <socket server="${jboss.server.hostname}" port="${jboss.server.jndi.port}"/>
-            </not>
-        </waitfor>
+        <JBossStop
+            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
+            stopscript="${jboss.server.stopscript}"
+        />
 
     </target>
 
     <target name="jboss:start">
 
-        <osfamily property="os.family"/>
-
-        <if>
-            <equals arg1="${os.family}" arg2="windows"/>
-            <then>
-                <property name="shell" value="cmd" />
-                <property name="option" value="/c" />
-                <property name="start" value="run.bat" />
-            </then>
-            <else>
-                <property name="shell" value="/bin/bash" />
-                <property name="option" value="-c" />
-                <property name="start" value="start_jboss" />
-            </else>
-        </if>
-
-        <echo message="Starting JBoss server..." />
-        <exec executable="${shell}" failonerror="true">
-            <arg value="${option}"/>
-            <arg value='${jboss.server.path}/bin/${start}'/>
-        </exec>
+        <JBossStart
+            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
+            startscript="${jboss.server.startscript}"
+        />
 
     </target>
 
-    <target name="-install:jboss:configure:properties-service">
+    <target name="-configure:properties-service">
 
-        <!-- Check if already updated -->
-        <condition property="properties-service.updated">
-            <isfileselected file="${jboss.server.path}/server/default/deploy/properties-service.xml">
-                <contains text="NCImBrowserProperties" casesensitive="no"/>
-            </isfileselected>
-        </condition>
-
-        <!-- Backup file -->
-        <copy file="${jboss.server.path}/server/default/deploy/properties-service.xml"
-            tofile="${jboss.server.path}/server/default/deploy/properties-service.xml.bak"
+        <AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+            value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
         />
-
-        <if>
-            <equals arg1="${properties-service.updated}" arg2="true"/>
-            <then>
-                <xmltask source="${jboss.server.path}/server/default/deploy/properties-service.xml"
-                    dest="${jboss.server.path}/server/default/deploy/properties-service.xml">
-                    <replace path="/server/mbean/attribute[contains(text(),'NCImBrowserProperties')]">
-<![CDATA[<attribute name="Properties">
-    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}
-  </attribute>]]>
-                    </replace>
-                </xmltask>
-            </then>
-            <else>
-                <xmltask source="${jboss.server.path}/server/default/deploy/properties-service.xml"
-                    dest="${jboss.server.path}/server/default/deploy/properties-service.xml">
-                    <insert path="/server/mbean[@code='org.jboss.varia.property.SystemPropertiesService']">
-<![CDATA[<attribute name="Properties">
-    gov.nih.nci.evs.browser.NCImBrowserProperties=${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}
-  </attribute>]]>
-                    </insert>
-                </xmltask>
-            </else>
-        </if>
-
-        <echo message="properties-service.xml updated." />
 
     </target>
 
