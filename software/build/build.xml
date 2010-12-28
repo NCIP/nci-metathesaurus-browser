@@ -74,6 +74,7 @@
     <taskdef name="JBossStopApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopApp" classpathref="project.compile.classpath" />
     <taskdef name="JBossStartApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStartApp" classpathref="project.compile.classpath" />
     <taskdef name="JBossRedeployApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossRedeployApp" classpathref="project.compile.classpath" />
+    <taskdef name="InputYesNo" classname="gov.nih.nci.bdalite.ant.console.InputYesNo" classpathref="project.compile.classpath" />
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -429,6 +430,12 @@
             name="gov.nih.nci.evs.browser.NCImBrowserProperties"
             value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
         />
+
+    </target>
+
+    <target name="deploy:local:install" depends="-init">
+
+        <fail message="Target 'deploy:local:install' has not been implemented yet."/>
 
     </target>
 
