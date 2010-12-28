@@ -70,6 +70,10 @@
     <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.StopJBoss" classpathref="project.compile.classpath" />
     <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.StartJBoss" classpathref="project.compile.classpath" />
     <taskdef name="AddJBossProperty" classname="gov.nih.nci.bdalite.ant.jboss.AddJBossProperty" classpathref="project.compile.classpath" />
+    <taskdef name="JBossTempDir" classname="gov.nih.nci.bdalite.ant.jboss.JBossTempDir" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStopApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopApp" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStartApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStartApp" classpathref="project.compile.classpath" />
+    <taskdef name="JBossRedeployApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossRedeployApp" classpathref="project.compile.classpath" />
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -86,7 +90,7 @@
         <echo message="build:all              --&gt; Normal build of application" />
         <echo message="deploy:local:upgrade   --&gt; Build and upgrade application" />
         <echo message="install                --&gt; Installs JBoss locally" />
-        <echo message="deploy                 --&gt; Hot deploy application" />
+        <echo message="deploy:hot             --&gt; Hot deploy application" />
         <echo message="jsp                    --&gt; Hot deploy JSP files" />
         <echo message="build:config           --&gt; Generates configuration files for a target environment" />
         <echo message="" />
@@ -163,7 +167,7 @@
 
     </target>
 
-    <target name="-dist" depends="-war" description="Copies external files distribution folder">
+    <target name="-dist" depends="-war" description="Copies external files to distribution folder">
 
         <echo message="Config folder: ${conf.dir}" />
 
@@ -233,7 +237,7 @@
 
     </target>
 
-    <target name="build:config" description="Generates configuration files for a target environment.">
+    <target name="build:config" description="Generates configuration files for a target environment using -D values.">
 
         <!-- Generate Log4j XML file -->
 
@@ -306,12 +310,6 @@
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
-            </resources>
-        </copy>
-
-        <copy todir="${application.data.path}/conf" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
                 <file file="${dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
             </resources>
         </copy>
@@ -320,25 +318,88 @@
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${dist.dir}/exploded/${project.name}-webapp/install/log4j.xml"/>
-            </resources>
-        </copy>
-
-        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
                 <file file="${dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
             </resources>
         </copy>
 
-        <sequential>
-            <copy
-                file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-                tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
-                overwrite="true"
-                />
-        </sequential>
+        <copy
+            file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+            overwrite="true"
+        />
 
         <antcall target="jboss:start" />
+
+    </target>
+
+
+    <target name="deploy:hot" depends="build:all">
+
+        <JBossStopApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+        <copy
+            file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+            overwrite="true"
+        />
+
+        <JBossStartApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+        <JBossRedeployApp
+            jbossbin="${jboss.server.path}/bin"
+            warfile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+    </target>
+
+    <target name="deploy:hot:jsp">
+
+        <JBossTempDir
+            tmpdir="${jboss.server.path}/server/default/tmp"
+            property="jboss.war.temp.dir.location"
+            warname="${webapp.war.name}"
+
+        />
+
+        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+        <echo message="    Source: ${webapp.dir}"/>
+
+        <JBossStopApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+            <fileset dir="${webapp.dir}">
+                <include name="**/*.jsp" />
+                <include name="**/*.jspf" />
+                <include name="**/*.css" />
+                <include name="**/*.js" />
+                <include name="**/*.jpg" />
+                <include name="**/*.gif" />
+                <include name="**/*.png" />
+                <include name="**/*.faces" />
+                <include name="**/*.tag" />
+                <include name="**/*.tagf" />
+            </fileset>
+        </copy>
+
+        <JBossStartApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
 
     </target>
 
