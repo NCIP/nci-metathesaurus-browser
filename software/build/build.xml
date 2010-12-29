@@ -16,11 +16,9 @@
     <!-- Local property file -->
 
     <property file="${local.properties.file}" />
-    <echo message="Using local properties file of ${local.properties.file}." />
 
     <!-- Project property filr -->
     <property file="${properties.file}" />
-    <echo message="Using project properties file of ${properties.file}." />
     <available file="${properties.file}" property="properties.file.exists" />
     <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist." />
 
@@ -92,7 +90,7 @@
         <echo message="deploy:local:upgrade   --&gt; Build and upgrade application" />
         <echo message="install                --&gt; Installs JBoss locally" />
         <echo message="deploy:hot             --&gt; Hot deploy application" />
-        <echo message="jsp                    --&gt; Hot deploy JSP files" />
+        <echo message="deploy:hot:jsp         --&gt; Hot deploy JSP files" />
         <echo message="build:config           --&gt; Generates configuration files for a target environment" />
         <echo message="" />
         <echo message="" />
@@ -115,10 +113,14 @@
 
     <target name="-init" description="Sets up build are and initalizes variables">
 
-        <Logo />
         <tstamp>
             <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
         </tstamp>
+
+        <!-- Display BDA-Lite Logo -->
+        <Logo />
+        <echo message="Using local properties file of ${local.properties.file}." />
+        <echo message="Using project properties file of ${properties.file}." />
 
     </target>
 
@@ -362,7 +364,7 @@
 
     </target>
 
-    <target name="deploy:hot:jsp">
+    <target name="deploy:hot:jsp" depends="-init">
 
         <JBossTempDir
             tmpdir="${jboss.server.path}/server/default/tmp"
