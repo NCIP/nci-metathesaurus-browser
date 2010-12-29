@@ -2,7 +2,7 @@
 
 <%
 String randomStr = iteratorBean.getRandomNumberString();
-request.getSession().setAttribute("matchText", iteratorBean.getMatchText());
+request.setAttribute("matchText", iteratorBean.getMatchText());
 String searchText = iteratorBean.getMatchText();
 %>
 
