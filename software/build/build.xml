@@ -339,22 +339,10 @@
 
     <target name="deploy:hot" depends="build:all">
 
-        <JBossStopApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
         <copy
             file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             overwrite="true"
-        />
-
-        <JBossStartApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
         />
 
         <JBossRedeployApp
@@ -407,17 +395,17 @@
 
     </target>
 
-    <target name="jboss:stop" depends="-init">
+    <target name="jboss:stop">
 
         <JBossStopRemote
             jbossbin="${jboss.server.path}/bin"
             host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
+            url="http://${jboss.server.hostname}:${jboss.server.port}"
         />
 
     </target>
 
-    <target name="jboss:start" depends="-init">
+    <target name="jboss:start">
 
         <JBossStart
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
