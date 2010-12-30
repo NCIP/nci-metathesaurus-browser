@@ -65,8 +65,9 @@
 
     <!-- BDA-Lite Task definitions -->
     <taskdef name="Logo" classname="gov.nih.nci.bdalite.ant.Logo" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.StopJBoss" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.StartJBoss" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.JBossStop" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStopRemote" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopRemote" classpathref="project.compile.classpath" />
+    <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.JBossStart" classpathref="project.compile.classpath" />
     <taskdef name="AddJBossProperty" classname="gov.nih.nci.bdalite.ant.jboss.AddJBossProperty" classpathref="project.compile.classpath" />
     <taskdef name="JBossTempDir" classname="gov.nih.nci.bdalite.ant.jboss.JBossTempDir" classpathref="project.compile.classpath" />
     <taskdef name="JBossStopApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopApp" classpathref="project.compile.classpath" />
@@ -408,9 +409,10 @@
 
     <target name="jboss:stop" depends="-init">
 
-        <JBossStop
+        <JBossStopRemote
+            jbossbin="${jboss.server.path}/bin"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
-            stopscript="${jboss.server.stopscript}"
         />
 
     </target>
