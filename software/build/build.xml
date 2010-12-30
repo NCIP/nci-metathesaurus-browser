@@ -406,7 +406,7 @@
 
     </target>
 
-    <target name="jboss:stop">
+    <target name="jboss:stop" depends="-init">
 
         <JBossStop
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
@@ -415,7 +415,7 @@
 
     </target>
 
-    <target name="jboss:start">
+    <target name="jboss:start" depends="-init">
 
         <JBossStart
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
