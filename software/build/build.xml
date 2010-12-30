@@ -65,6 +65,7 @@
 
     <!-- BDA-Lite Task definitions -->
     <taskdef name="Logo" classname="gov.nih.nci.bdalite.ant.Logo" classpathref="project.compile.classpath" />
+    <taskdef name="Usage" classname="gov.nih.nci.bdalite.ant.Usage" classpathref="project.compile.classpath" />
     <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.JBossStop" classpathref="project.compile.classpath" />
     <taskdef name="JBossStopRemote" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopRemote" classpathref="project.compile.classpath" />
     <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.JBossStart" classpathref="project.compile.classpath" />
@@ -80,32 +81,14 @@
     <!--============================-->
 
     <target name="usage" depends="-init" description="Explains how to use this build script">
-        <echo message="" />
-        <echo message="Build Script: ${ant.project.name}" />
-        <echo message="-----------------------------------" />
-        <echo message="" />
-        <echo message="Available targets are:" />
-        <echo message="" />
-        <echo message="clean                  --&gt; Remove classes directory for clean build" />
-        <echo message="build:all              --&gt; Normal build of application" />
-        <echo message="deploy:local:upgrade   --&gt; Build and upgrade application" />
-        <echo message="install                --&gt; Installs JBoss locally" />
-        <echo message="deploy:hot             --&gt; Hot deploy application" />
-        <echo message="deploy:hot:jsp         --&gt; Hot deploy JSP files" />
-        <echo message="build:config           --&gt; Generates configuration files for a target environment" />
-        <echo message="" />
-        <echo message="" />
-        <echo message="${ant.version}" />
-        <echo message="" />
-        <echo message="ANT base directory = [${basedir}]" />
-        <echo message="   Properties file = [${properties.file}]" />
-        <echo message="                OS = [${os.name}]" />
-        <echo message="" />
+
+        <Usage />
+
     </target>
 
     <!-- This will delete all of the files created by the build process -->
 
-    <target name="clean" depends="-init">
+    <target name="clean" depends="-init" description="Remove classes directory for clean build">
 
         <delete dir="${target.dir}" quiet="true" />
         <delete dir="${webapp.build.dir}" quiet="true" />
@@ -129,7 +112,7 @@
     <!-- build:all: Builds all the sub projects  -->
     <!--=========================================-->
 
-    <target name="build:all" description="Builds all the sub projects, putting artifacts in the project level target directory, used by distribution targets to make distributions"
+    <target name="build:all" description="Normal build of application"
         depends="
             clean,
             compile:application-code,
@@ -241,7 +224,7 @@
 
     </target>
 
-    <target name="build:config" description="Generates configuration files for a target environment using -D values.">
+    <target name="build:config" description="Generates configuration files for a target environment">
 
         <!-- Generate Log4j XML file -->
 
@@ -304,7 +287,7 @@
 
     </target>
 
-    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
+    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Build and upgrade application">
 
         <antcall target="jboss:stop" />
 
@@ -337,7 +320,7 @@
     </target>
 
 
-    <target name="deploy:hot" depends="build:all">
+    <target name="deploy:hot" depends="build:all" description="Hot deploy application">
 
         <copy
             file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
@@ -353,7 +336,7 @@
 
     </target>
 
-    <target name="deploy:hot:jsp" depends="-init">
+    <target name="deploy:hot:jsp" depends="-init" description="Hot deploy JSP files">
 
         <JBossTempDir
             tmpdir="${jboss.server.path}/server/default/tmp"
@@ -395,7 +378,7 @@
 
     </target>
 
-    <target name="jboss:stop">
+    <target name="jboss:stop" description="Shutdown JBoss">
 
         <JBossStopRemote
             jbossbin="${jboss.server.path}/bin"
@@ -405,7 +388,7 @@
 
     </target>
 
-    <target name="jboss:start">
+    <target name="jboss:start" description="Start JBoss">
 
         <JBossStart
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
@@ -425,7 +408,7 @@
 
     </target>
 
-    <target name="deploy:local:install" depends="-init">
+    <target name="deploy:local:install" depends="-init" description="Installs JBoss locally">
 
         <fail message="Target 'deploy:local:install' has not been implemented yet."/>
 
