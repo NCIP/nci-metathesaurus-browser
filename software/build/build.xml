@@ -76,6 +76,9 @@
     <taskdef name="JBossRedeployApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossRedeployApp" classpathref="project.compile.classpath" />
     <taskdef name="InputYesNo" classname="gov.nih.nci.bdalite.ant.console.InputYesNo" classpathref="project.compile.classpath" />
 
+    <!-- Display BDA-Lite Logo -->
+    <Logo />
+
     <!--============================-->
     <!-- usage: show build targets  -->
     <!--============================-->
@@ -101,8 +104,6 @@
             <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
         </tstamp>
 
-        <!-- Display BDA-Lite Logo -->
-        <Logo />
         <echo message="Using local properties file of ${local.properties.file}." />
         <echo message="Using project properties file of ${properties.file}." />
 
