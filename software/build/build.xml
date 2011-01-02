@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<project name="build" default="usage" basedir=".">
+<project name="build" default="usage" basedir="." xmlns:bda="antlib:gov.nih.nci.bdalite">
 
     <description>
         This is the master build file for the project.
@@ -64,20 +64,12 @@
     <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="project.compile.classpath"/>
 
     <!-- BDA-Lite Task definitions -->
-    <taskdef name="Logo" classname="gov.nih.nci.bdalite.ant.Logo" classpathref="project.compile.classpath" />
-    <taskdef name="Usage" classname="gov.nih.nci.bdalite.ant.Usage" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStop" classname="gov.nih.nci.bdalite.ant.jboss.JBossStop" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStopRemote" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopRemote" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStart" classname="gov.nih.nci.bdalite.ant.jboss.JBossStart" classpathref="project.compile.classpath" />
-    <taskdef name="AddJBossProperty" classname="gov.nih.nci.bdalite.ant.jboss.AddJBossProperty" classpathref="project.compile.classpath" />
-    <taskdef name="JBossTempDir" classname="gov.nih.nci.bdalite.ant.jboss.JBossTempDir" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStopApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStopApp" classpathref="project.compile.classpath" />
-    <taskdef name="JBossStartApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossStartApp" classpathref="project.compile.classpath" />
-    <taskdef name="JBossRedeployApp" classname="gov.nih.nci.bdalite.ant.jboss.JBossRedeployApp" classpathref="project.compile.classpath" />
-    <taskdef name="InputYesNo" classname="gov.nih.nci.bdalite.ant.console.InputYesNo" classpathref="project.compile.classpath" />
+    <taskdef uri="antlib:gov.nih.nci.bdalite"
+        resource="gov/nih/nci/bdalite/ant/bda-lite.xml"
+        classpathref="project.compile.classpath"/>
 
     <!-- Display BDA-Lite Logo -->
-    <Logo />
+    <bda:Logo />
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -85,7 +77,7 @@
 
     <target name="usage" depends="-init" description="Explains how to use this build script">
 
-        <Usage />
+        <bda:Usage />
 
     </target>
 
@@ -329,7 +321,7 @@
             overwrite="true"
         />
 
-        <JBossRedeployApp
+        <bda:JBossRedeployApp
             jbossbin="${jboss.server.path}/bin"
             warfile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             host="${jboss.server.hostname}:${jboss.server.jndi.port}"
@@ -339,7 +331,7 @@
 
     <target name="deploy:hot:jsp" depends="-init" description="Hot deploy JSP files">
 
-        <JBossTempDir
+        <bda:JBossTempDir
             tmpdir="${jboss.server.path}/server/default/tmp"
             property="jboss.war.temp.dir.location"
             warname="${webapp.war.name}"
@@ -350,7 +342,7 @@
         <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
         <echo message="    Source: ${webapp.dir}"/>
 
-        <JBossStopApp
+        <bda:JBossStopApp
             jbossbin="${jboss.server.path}/bin"
             warname="${project.name}"
             host="${jboss.server.hostname}:${jboss.server.jndi.port}"
@@ -371,7 +363,7 @@
             </fileset>
         </copy>
 
-        <JBossStartApp
+        <bda:JBossStartApp
             jbossbin="${jboss.server.path}/bin"
             warname="${project.name}"
             host="${jboss.server.hostname}:${jboss.server.jndi.port}"
@@ -381,7 +373,7 @@
 
     <target name="jboss:stop" description="Shutdown JBoss">
 
-        <JBossStopRemote
+        <bda:JBossStopRemote
             jbossbin="${jboss.server.path}/bin"
             host="${jboss.server.hostname}:${jboss.server.jndi.port}"
             url="http://${jboss.server.hostname}:${jboss.server.port}"
@@ -391,7 +383,7 @@
 
     <target name="jboss:start" description="Start JBoss">
 
-        <JBossStart
+        <bda:JBossStart
             url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
             startscript="${jboss.server.startscript}"
         />
@@ -400,7 +392,7 @@
 
     <target name="-configure:properties-service">
 
-        <AddJBossProperty
+        <bda:AddJBossProperty
             deploydir="${jboss.server.path}/server/default/deploy"
             backup="true"
             name="gov.nih.nci.evs.browser.NCImBrowserProperties"
