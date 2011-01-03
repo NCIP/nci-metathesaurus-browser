@@ -18,6 +18,7 @@ if [ -z "$1" ]; then
     echo "  all          -- Normal build of application"
     echo "  upgrade      -- Build and upgrade application"
     echo "  install      -- Installs JBoss locally"
+    echo "  uninstall    -- Uninstall the web application"
     echo "  deploy       -- Hot deploy application"
     echo "  jsp          -- Hot deploy JSP files"
     echo "  config       -- Generates configuration files for a target environment"
@@ -38,6 +39,10 @@ case $1 in
 
     install)
         ant $TAG $DEBUG deploy:local:install
+        ;;
+
+    uninstall)
+        ant $TAG $DEBUG deploy:local:uninstall
         ;;
 
     deploy)

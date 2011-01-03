@@ -19,6 +19,7 @@ if "%1" == "" (
     echo   all          -- Normal build of application
     echo   upgrade      -- Build and upgrade application
     echo   install      -- Builds, installs JBoss locally
+    echo   uninstall    -- Uninstall the web application
     echo   deploy       -- Hot deploy application
     echo   jsp          -- Hot deploy JSP files
     echo   config       -- Generates configuration files for a target environment
@@ -39,6 +40,11 @@ if "%1" == "upgrade" (
 
 if "%1" == "install" (
     ant %TAG% %DEBUG% deploy:local:install
+    goto DONE
+)
+
+if "%1" == "uninstall" (
+    ant %TAG% %DEBUG% deploy:local:uninstall
     goto DONE
 )
 
