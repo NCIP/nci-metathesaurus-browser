@@ -16,8 +16,9 @@
     <!-- Local property file -->
 
     <property file="${local.properties.file}" />
+    <available file="${local.properties.file}" property="local.properties.file.exists" />
 
-    <!-- Project property filr -->
+    <!-- Project property file -->
     <property file="${properties.file}" />
     <available file="${properties.file}" property="properties.file.exists" />
     <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist." />
@@ -411,9 +412,18 @@
 
     </target>
 
-    <target name="deploy:local:install" depends="-init" description="Installs JBoss locally">
+    <target name="deploy:local:install" depends="-init" description="Configures local.properties">
 
-        <fail message="Target 'deploy:local:install' has not been implemented. Please install JBoss as you normally would."/>
+        <if>
+            <isset property="xlocal.properties.file.exists"/>
+            <then>
+                <echo message="Please configure your local.properties file and run 'deploy:local:upgrade' to complete your installation." />
+            </then>
+            <else>
+                <echo message="Please create a local.properties file and run 'deploy:local:upgrade' to complete your installation." />
+                <echo message="An example local.properties can be found in the docs directory." />
+            </else>
+        </if>
 
     </target>
 
