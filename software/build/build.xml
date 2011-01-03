@@ -415,7 +415,7 @@
     <target name="deploy:local:install" depends="-init" description="Configures local.properties">
 
         <if>
-            <isset property="xlocal.properties.file.exists"/>
+            <isset property="local.properties.file.exists"/>
             <then>
                 <echo message="Please configure your local.properties file and run 'deploy:local:upgrade' to complete your installation." />
             </then>
