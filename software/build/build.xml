@@ -284,7 +284,12 @@
 
         <antcall target="jboss:stop" />
 
-        <antcall target="-configure:properties-service" />
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+            value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
+        />
 
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
@@ -312,6 +317,22 @@
 
     </target>
 
+    <target name="deploy:local:uninstall" description="Uninstall the web application">
+
+        <antcall target="jboss:stop" />
+
+        <bda:RemoveJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+        />
+
+        <delete dir="${application.data.path}/conf" quiet="true" />
+        <delete file="${jboss.server.path}/server/default/conf/log4j.xml" quiet="true" />
+        <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
+        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+
+    </target>
 
     <target name="deploy:hot" depends="build:all" description="Hot deploy application">
 
@@ -390,20 +411,9 @@
 
     </target>
 
-    <target name="-configure:properties-service">
-
-        <bda:AddJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
-            value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
-        />
-
-    </target>
-
     <target name="deploy:local:install" depends="-init" description="Installs JBoss locally">
 
-        <fail message="Target 'deploy:local:install' has not been implemented yet."/>
+        <fail message="Target 'deploy:local:install' has not been implemented. Please install JBoss as you normally would."/>
 
     </target>
 
