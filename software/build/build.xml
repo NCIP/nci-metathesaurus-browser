@@ -177,7 +177,7 @@
                 <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
                 <filter token="debug.on" value="${debug.on}"/>
-                <filter token="ehcache.xml.file" value="@application.data.path@/${ehcache.cache.path}/${ehcache.xml.file}"/>
+                <filter token="ehcache.xml.file" value="@application.data.path@/${ncimbrowser.conf.path}/${ehcache.xml.file}"/>
                 <filter token="maximum.return" value="${maximum.return}"/>
                 <filter token="maximum.tree.level" value="${maximum.tree.level}"/>
                 <filter token="pagination_time_out" value="${pagination_time_out}"/>
