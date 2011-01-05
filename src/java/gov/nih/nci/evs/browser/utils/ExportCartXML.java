@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 import org.LexGrid.commonTypes.Property;
-import org.LexGrid.concepts.Entity;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -148,7 +147,7 @@ public class ExportCartXML {
      */
     public void addTermTag(String name, String code, String codingScheme,
             Property[] pres, Property[] def, Property[] prop, Property[] com,
-            Vector<Entity> parents, Vector<Entity> children) {
+            Vector<String> parents, Vector<String> children) {
         if (doc == null) {
             _logger.info("Error addTermTag: document is null!");
             return;
@@ -200,10 +199,9 @@ public class ExportCartXML {
         // Add parent elements
         if (parents != null) {
             for (int x = 0; x < parents.size(); x++) {
-                Entity concept = parents.get(x);
+                String concept = parents.get(x);
                 Element parent = doc.createElement(TAG_PARENT);
-                parent.setAttribute(ATT_RESOURCE, ATT_RES_MARK + concept.getEntityDescription()
-                        .getContent());
+                parent.setAttribute(ATT_RESOURCE, ATT_RES_MARK + concept);
                 classtag.appendChild(parent);
             }
         }
@@ -211,10 +209,9 @@ public class ExportCartXML {
         // Add Children elements
         if (children != null) {
             for (int x = 0; x < children.size(); x++) {
-                Entity concept = children.get(x);
+                String concept = children.get(x);
                 Element child = doc.createElement(TAG_CHILD);
-                child.setAttribute(ATT_RESOURCE, ATT_RES_MARK + concept.getEntityDescription()
-                        .getContent());
+                child.setAttribute(ATT_RESOURCE, ATT_RES_MARK + concept);
                 classtag.appendChild(child);
             }
         }
