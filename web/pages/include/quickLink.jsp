@@ -39,7 +39,7 @@
            -->
 
 
-          <li><a href="<%=ql_ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
+          <li><a href="<%=ql_ncit_url%>start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
 
             <% if (term_suggestion_application_url2 != null && term_suggestion_application_url2.length() > 0) { %>
               <li><a href="<%=term_suggestion_application_url2%>?dictionary=<%=dictionary_encoded2%>" target="_blank" alt="Term Suggestion">Term Suggestion</a></li>
