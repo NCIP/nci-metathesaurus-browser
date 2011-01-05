@@ -1,25 +1,28 @@
 package gov.nih.nci.evs.browser.utils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.HashMap;
+import java.util.Arrays;
 
 import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.concepts.Entity;
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService;
+import org.LexGrid.lexevs.metabrowser.MetaBrowserService.Direction;
+import org.LexGrid.lexevs.metabrowser.model.RelationshipTabResults;
 import org.LexGrid.naming.SupportedHierarchy;
 
 import org.apache.log4j.Logger;
@@ -79,26 +82,41 @@ public class SearchCart {
     private static Logger _logger = Logger.getLogger(SearchUtils.class);
     private static LexBIGService lbSvc = null;
     private static LexBIGServiceConvenienceMethods lbscm = null;
+    private static MetaBrowserService mbs = null;
     private static String SEMANTIC_TYPE = "Semantic_Type";
 
     // Local constants
-    private static final int RESOLVEASSOCIATIONDEPTH = 1;
-    private static final int MAXTORETURN = 1000;
-    private static final String LB_EXTENSION = "LexBIGServiceConvenienceMethods";
-   
+    private static final String LB_EXTENSION = "LexBIGServiceConvenienceMethods"; 
+    private static final List<String> _hierAssocToParentNodes =
+        Arrays.asList("PAR", "isa", "branch_of", "part_of", "tributary_of");
+    private static final List<String> _hierAssocToChildNodes =
+        Arrays.asList("CHD", "inverse_isa");    
+    
     /**
      * Constructor
      * @throws LBException 
      */
 	public SearchCart() throws LBException {
+		
 		// Setup lexevs service
 		if (lbSvc == null) {
 			lbSvc = RemoteServerUtil.createLexBIGService();
 		}
+		
 		// Setup lexevs generic extension
 		lbscm = (LexBIGServiceConvenienceMethods) lbSvc
 				.getGenericExtension(LB_EXTENSION);
 		lbscm.setLexBIGService(lbSvc);
+		
+		// Setup Metabrowser extension
+		if (mbs == null) {
+			mbs = (MetaBrowserService) lbSvc
+					.getGenericExtension("metabrowser-extension");
+			if (mbs == null) {
+				_logger.error("Error! metabrowser-extension is null!");
+			}
+		}
+		
 	}
 
     /**
@@ -161,13 +179,9 @@ public class SearchCart {
      * @return
      * @throws LBException 
      */
-    public Vector<Entity> getParentConcepts(ResolvedConceptReference ref) throws Exception {    	
-        String scheme = ref.getCodingSchemeName();
-        String version = ref.getCodingSchemeVersion();
+    public Vector<String> getParentConcepts(ResolvedConceptReference ref) throws Exception {    	
         String code = ref.getCode();        
-        Vector<String> assoNames = getAssociationNames(scheme, version);
-        Vector<Entity> superconcepts = getAssociatedConcepts(scheme, version,
-                code, assoNames, true);       
+        Vector<String> superconcepts = getAssociatedConcepts(code, true);       
         return superconcepts;
     }
 
@@ -176,13 +190,9 @@ public class SearchCart {
      * @param ref
      * @return
      */
-    public Vector<Entity> getChildConcepts(ResolvedConceptReference ref) throws Exception {
-        String scheme = ref.getCodingSchemeName();
-        String version = ref.getCodingSchemeVersion();
+    public Vector<String> getChildConcepts(ResolvedConceptReference ref) throws Exception {
         String code = ref.getCode();
-        Vector<String> assoNames = getAssociationNames(scheme, version);
-        Vector<Entity> supconcepts = getAssociatedConcepts(scheme, version,
-                code, assoNames, false);
+        Vector<String> supconcepts = getAssociatedConcepts(code, false);
         return supconcepts;
     }
 
@@ -196,41 +206,36 @@ public class SearchCart {
      * @param forward
      * @return
      */
-    public Vector<Entity> getAssociatedConcepts(String scheme, String version,
-            String code, Vector<String> assocNames, boolean dir) {
+    public Vector<String> getAssociatedConcepts(String cui, boolean parents) {
 
-            CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-            if (version != null) csvt.setVersion(version);
-            boolean resolveForward;
-            boolean resolveBackward;            
+            Vector<String> v = new Vector<String>();
             
-            if (dir) {
-            	resolveForward = true;
-            	resolveBackward = false;
-            } else {
-            	resolveForward = false;
-            	resolveBackward = true;            	
-            }
-
-            Vector<Entity> v = new Vector<Entity>();
-
             try {
+           	
+            	Map<String, List<RelationshipTabResults>> map = null;
+            	map = mbs.getRelationshipsDisplay(cui, null, Direction.SOURCEOF);
+            	
+            	for (String rel : map.keySet()) {
+            		List<RelationshipTabResults> relations = map.get(rel);
 
-                CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-
-                // Restrict coded node graph to the given association
-                NameAndValueList nameAndValueList = createNameAndValueList(
-                        assocNames, null);
-                cng = cng.restrictToAssociations(nameAndValueList, null);
-
-                ConceptReference graphFocus =
-                    ConvenienceMethods.createConceptReference(code, scheme);
-
-                ResolvedConceptReferencesIterator iterator =
-                    codedNodeGraph2CodedNodeSetIterator(cng, graphFocus,
-                        resolveForward, resolveBackward, RESOLVEASSOCIATIONDEPTH,
-                        MAXTORETURN);
-                v = resolveIterator(iterator, MAXTORETURN, code);
+            		// Add parents	
+            		if (parents && _hierAssocToChildNodes.contains(rel)) {
+	                    for (RelationshipTabResults result : relations) {
+	                        String name = result.getName();
+	                    	if (!v.contains(name)) v.add(name);
+	                    }    
+                    
+            		}            			
+            		
+            		// Add children
+            		if (!parents && _hierAssocToParentNodes.contains(rel)) {
+	                    for (RelationshipTabResults result : relations) {
+	                    	String name = result.getName();
+	                    	if (!v.contains(name)) v.add(name);	                        
+	                    }                    
+            		}
+           		
+            	}
 
             } catch (Exception ex) {
                 _logger.warn(ex.getMessage());
@@ -365,27 +370,6 @@ public class SearchCart {
     // Internal utility methods
     // -----------------------------------------------------
 
-    /**
-     * Return a NameAndValueList from two vectors
-     * @param names
-     * @param values
-     * @return
-     */
-    private static NameAndValueList createNameAndValueList(Vector<String> names,
-            Vector<String> values) {
-        NameAndValueList nvList = new NameAndValueList();
-
-        for (int i = 0; i < names.size(); i++) {
-            NameAndValue nv = new NameAndValue();
-            nv.setName(names.elementAt(i));
-            if (values != null) {
-                nv.setContent(values.elementAt(i));
-            }
-            nvList.addNameAndValue(nv);
-        }
-        return nvList;
-    }    
-    
     /**
      * @param properties
      * @return

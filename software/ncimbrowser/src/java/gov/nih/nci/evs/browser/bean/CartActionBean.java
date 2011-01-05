@@ -250,10 +250,10 @@ public class CartActionBean {
                     _logger.debug("Exporting: " + ref.getCode());
 
                     // Add parent concepts
-                    Vector<Entity> parents = search.getParentConcepts(ref);
+                    Vector<String> parents = search.getParentConcepts(ref);
 
                     // Add child concepts
-                    Vector<Entity> children = search.getChildConcepts(ref);
+                    Vector<String> children = search.getChildConcepts(ref);
 
                     // Add terms and properties
                     Property[] pres = search.getPresentationValues(ref);
