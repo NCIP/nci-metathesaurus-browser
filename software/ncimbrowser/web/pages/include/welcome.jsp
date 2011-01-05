@@ -9,10 +9,10 @@
     version = "";
   String ncit_url = new DataUtils().getNCItURL();
   String html_compatable_description_value = DataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, "html_compatable_description");
- 
+
   if (html_compatable_description_value == null) {
-	  html_compatable_description_value = "WARNING: html_compatable_description metadata element not found.";
-  }  
+    html_compatable_description_value = "WARNING: html_compatable_description metadata element not found.";
+  }
 %>
 <div class="textbody">
   <table border="0" width="700px"><tr>
@@ -60,14 +60,14 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="<%=ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="NCI Term Browser">
+              <a href="<%=ncit_url%>start.jsf" target="_blank" alt="NCI Term Browser">
                 <img src="<%=basePath%>/images/EVSTermsBrowserTile.gif"
                   width="77" height="38px" alt="NCI Term Browser" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="<%=ncit_url%>/ncitbrowser/start.jsf" target="_blank" alt="Bio Portal">
+              <a href="<%=ncit_url%>start.jsf" target="_blank" alt="Bio Portal">
                 NCI Term Browser</a>:
                 NCI and other terminologies in an integrated environment.
             </td>
