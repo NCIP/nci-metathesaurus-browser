@@ -115,6 +115,16 @@
         " >
     </target>
 
+    <target name="build:dist" description="Build of application with completed configuration files"
+        depends="
+            clean,
+            compile:application-code,
+            -war,
+            -dist,
+            build:config
+        " >
+    </target>
+
     <target name="compile:application-code" depends="-init" description="Compiles all subproject code">
 
         <mkdir dir="${webapp.build.dir}" />
