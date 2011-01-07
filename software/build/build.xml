@@ -436,7 +436,24 @@
                 <if>
                     <isset property="begin.install"/>
                     <then>
-                        <antcall target="jboss:stop" />
+
+                        <available file="${jboss.server.path}" property="jboss.server.exists" />
+                        <if>
+                            <not><isset property="jboss.server.exists"/></not>
+                            <then>
+                                <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
+                                <mkdir dir="${temp.dir}"/>
+                                <get src="${jboss.download.url}" dest="${temp.dir}/${jboss.zip.name}"/>
+                                <unzip src="${temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
+                                <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
+                            </then>
+                            <else>
+                                <bda:ConsoleOutput message="JBoss present. Skipping download."/>
+                                <antcall target="jboss:stop" />
+                            </else>
+                        </if>
+
+                        <bda:ConsoleOutput message="Configuring JBoss..."/>
 
                         <bda:SetJBossServer
                             serverxml="${jboss.server.path}/server/default/deploy/jbossweb.sar/server.xml"
@@ -450,7 +467,8 @@
                         />
 
                         <bda:ConsoleOutput />
-                        <bda:ConsoleOutput message="  Install done. Please run 'deploy:local:upgrade' to deploy the application." />
+                        <bda:ConsoleOutput message="  Configuration complete." />
+                        <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
 
                     </then>
                     <else>
