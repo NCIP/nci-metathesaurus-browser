@@ -466,13 +466,20 @@
                             rmiport="${jboss.server.rmi.port}"
                         />
 
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                        />
+
                         <bda:ConsoleOutput />
                         <bda:ConsoleOutput message="  Configuration complete." />
                         <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
 
                     </then>
                     <else>
-                        <echo message="\nInstall aborted.\n" />
+                        <bda:ConsoleOutput message="" />
+                        <bda:ConsoleOutput message="Install aborted." />
                     </else>
                 </if>
             </then>
