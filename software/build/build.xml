@@ -472,6 +472,12 @@
                             xmx="${jboss.server.xmx}"
                         />
 
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf.bat"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                        />
+
                         <bda:ConsoleOutput />
                         <bda:ConsoleOutput message="  Configuration complete." />
                         <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
