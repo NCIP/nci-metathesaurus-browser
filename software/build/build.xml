@@ -324,6 +324,8 @@
             overwrite="true"
         />
 
+        <mkdir dir="${application.data.path}/log" />
+
         <antcall target="jboss:start" />
 
     </target>
@@ -422,15 +424,42 @@
 
     </target>
 
-    <target name="deploy:local:install" depends="-init" description="Configures local.properties">
+    <target name="deploy:local:install" depends="-init" description="Installs JBoss based on local.properties">
 
         <if>
             <isset property="local.properties.file.exists"/>
             <then>
-                <echo message="Please configure your local.properties file and run 'deploy:local:upgrade' to complete your installation." />
+                <bda:InputYesNo
+                    property="begin.install"
+                    prompt="Begin a new install?"
+                />
+                <if>
+                    <isset property="begin.install"/>
+                    <then>
+                        <antcall target="jboss:stop" />
+
+                        <bda:SetJBossServer
+                            serverxml="${jboss.server.path}/server/default/deploy/jbossweb.sar/server.xml"
+                            bindingsxml="${jboss.server.path}/server/default/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
+                            port="${jboss.server.port}"
+                            redirectport="${jboss.server.redirect.port}"
+                            ajpport="${jboss.server.ajp.port}"
+                            ajpredirectport="${jboss.server.ajp.redirect.port}"
+                            jndiport="${jboss.server.jndi.port}"
+                            rmiport="${jboss.server.rmi.port}"
+                        />
+
+                        <bda:ConsoleOutput />
+                        <bda:ConsoleOutput message="  Install done. Please run 'deploy:local:upgrade' to deploy the application." />
+
+                    </then>
+                    <else>
+                        <echo message="\nInstall aborted.\n" />
+                    </else>
+                </if>
             </then>
             <else>
-                <echo message="Please create a local.properties file and run 'deploy:local:upgrade' to complete your installation." />
+                <echo message="Please create a local.properties file and run 'deploy:local:install' again." />
                 <echo message="An example local.properties can be found in the docs directory." />
             </else>
         </if>

@@ -8,7 +8,7 @@ TAG=-Danthill.build.tag_built=$USER
 if [ "$2" = "debug" ]; then
    DEBUG="-debug"
 fi
-clear
+clear > /dev/null 2>&1
 
 if [ -z "$1" ]; then
     echo
