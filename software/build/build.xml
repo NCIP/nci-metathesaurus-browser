@@ -29,48 +29,26 @@
     <property name="webapp.war.name" value="${project.name}.war" />
     <property name="webapp.prop.file" value="NCImBrowserProperties.xml" />
 
+    <!-- BDA-Lite Task definitions -->
+    <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml">
+        <classpath>
+            <pathelement location="../${project.name}/extlib/bda-lite-1.0.jar"/>
+        </classpath>
+    </taskdef>
+
     <!-- BDA-Lite standard locations -->
-    <property name="build.dir" location="." />
-    <property name="software.dir" location=".." />
-    <property name="src.dir" value="${software.dir}/${project.name}/src" />
-    <property name="conf.dir" value="${software.dir}/${project.name}/conf" />
-    <property name="target.dir" location="${software.dir}/target" />
-    <property name="lib.dir" location="${software.dir}/${project.name}/lib" />
-    <property name="extlib.dir" location="${software.dir}/${project.name}/extlib" />
-    <property name="temp.dir" location="${target.dir}/temp" />
-    <property name="log.dir" location="${target.dir}/logs" />
-    <property name="dist.dir" location="${target.dir}/dist" />
-    <property name="working.dir" location="${target.dir}/working" />
+    <bda:BDAInit />
 
     <!-- Compile standard values -->
-    <property name="webapp.build.dir" value="${software.dir}/${project.name}/build/web" />
+    <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
     <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
-    <property name="webapp.dir" value="${software.dir}/${project.name}/web" />
-
-    <!-- Build class path -->
-    <path id="project.compile.classpath">
-        <fileset dir="${lib.dir}">
-            <include name="*.jar" />
-        </fileset>
-        <fileset dir="${extlib.dir}">
-            <include name="*.jar" />
-        </fileset>
-        <pathelement path ="${webapp.classes.dir}"/>
-    </path>
+    <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
 
     <!-- Ant Task definitions -->
-    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="project.compile.classpath"/>
-    <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="project.compile.classpath"/>
-    <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="project.compile.classpath"/>
-    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="project.compile.classpath"/>
-
-    <!-- BDA-Lite Task definitions -->
-    <taskdef uri="antlib:gov.nih.nci.bdalite"
-        resource="gov/nih/nci/bdalite/ant/bda-lite.xml"
-        classpathref="project.compile.classpath"/>
-
-    <!-- Display BDA-Lite Logo -->
-    <bda:Logo />
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="bda.project.compile.classpath"/>
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -86,7 +64,7 @@
 
     <target name="clean" depends="-init" description="Remove classes directory for clean build">
 
-        <delete dir="${target.dir}" quiet="true" />
+        <delete dir="${bda.target.dir}" quiet="true" />
         <delete dir="${webapp.build.dir}" quiet="true" />
 
     </target>
@@ -131,13 +109,14 @@
         <mkdir dir="${webapp.classes.dir}" />
 
         <!-- Compile java classes -->
-        <javac srcdir="${src.dir}" destdir="${webapp.classes.dir}" debug="true" includeantruntime="false">
-            <classpath refid="project.compile.classpath" />
+        <javac srcdir="${bda.src.dir}" destdir="${webapp.classes.dir}" debug="true" includeantruntime="false">
+            <classpath refid="bda.project.compile.classpath" />
+            <classpath path ="${webapp.classes.dir}"/>
         </javac>
 
         <!-- Copy internal property files -->
         <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" overwrite="true">
-            <fileset dir="${src.dir}/java">
+            <fileset dir="${bda.src.dir}/java">
                 <patternset>
                     <include name="**/*.properties"/>
                 </patternset>
@@ -148,11 +127,11 @@
 
     <target name="-war" depends="compile:application-code">
 
-        <mkdir dir="${dist.dir}/exploded/${project.name}-webapp" />
-        <mkdir dir="${dist.dir}/exploded/${project.name}-webapp/deploy" />
+        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp" />
+        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" />
 
-        <war destfile="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
-            <lib dir="${lib.dir}" includes="*.jar" />
+        <war destfile="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
+            <lib dir="${bda.lib.dir}" includes="*.jar" />
             <classes dir="${webapp.classes.dir}"/>
         </war>
 
@@ -160,7 +139,7 @@
 
     <target name="-dist" depends="-war" description="Copies external files to distribution folder">
 
-        <echo message="Config folder: ${conf.dir}" />
+        <echo message="Config folder: ${bda.conf.dir}" />
 
         <!-- Set default value of 'trunk' if Anthill tag is not set -->
 
@@ -171,16 +150,16 @@
 
         <!-- Setup Ehcache property file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${conf.dir}/ehcache.xml"/>
+                <file file="${bda.conf.dir}/ehcache.xml"/>
             </resources>
         </copy>
 
         <!-- Setup application property file with defaults, balance of which is set on deployment -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="anthill.build.tag_built" value="${tag_built}"/>
@@ -200,29 +179,29 @@
                 <filter token="max_search_time_limit" value="${max_search_time_limit}"/>
             </filterset>
             <resources>
-                <file file="${conf.dir}/${webapp.prop.file}"/>
+                <file file="${bda.conf.dir}/${webapp.prop.file}"/>
             </resources>
         </copy>
 
         <!-- Setup lexevs remote config file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${conf.dir}/application-config-client.xml"/>
+                <file file="${bda.conf.dir}/application-config-client.xml"/>
             </resources>
         </copy>
 
         <!-- Setup log4j file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="search.log.dir" value="@application.data.path@/${search.log.dir}/${project.short.name}-search.log"/>
                 <filter token="log.package" value="${log.package}"/>
             </filterset>
             <resources>
-                <file file="${conf.dir}/log4j.xml"/>
+                <file file="${bda.conf.dir}/log4j.xml"/>
             </resources>
         </copy>
 
@@ -232,13 +211,13 @@
 
         <!-- Generate Log4j XML file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
            filtering="true" overwrite="true">
             <filterset>
                 <filter token="application.data.path" value="${application.data.path}"/>
                 <filter token="log.level" value="${log.level}"/>
             </filterset>
-            <fileset dir="${dist.dir}/exploded/${project.name}-webapp/deploy">
+            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
                 <patternset>
                     <include name="**/log4j.*"/>
                 </patternset>
@@ -247,7 +226,7 @@
 
         <!-- Generate application property file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="ncit.url" value="${ncit.url}"/>
@@ -261,31 +240,31 @@
                 <filter token="meddra_security_token" value="${meddra_security_token}"/>
             </filterset>
             <resources>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/${webapp.prop.file}"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/${webapp.prop.file}"/>
             </resources>
         </copy>
 
         <!-- Generate Ehcache property file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
             </filterset>
             <resources>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/ehcache.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/ehcache.xml"/>
             </resources>
         </copy>
 
         <!-- Generate lexevs remote config file -->
 
-        <copy todir="${dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="false">
             <filterset>
                 <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
             </filterset>
             <resources>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/deploy/application-config-client.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/application-config-client.xml"/>
             </resources>
         </copy>
 
@@ -305,21 +284,21 @@
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
             </resources>
         </copy>
 
         <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/install/log4j.xml"/>
-                <file file="${dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
             </resources>
         </copy>
 
         <copy
-            file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             overwrite="true"
         />
@@ -350,7 +329,7 @@
     <target name="deploy:hot" depends="build:all" description="Hot deploy application">
 
         <copy
-            file="${dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             overwrite="true"
         />
@@ -442,9 +421,9 @@
                             <not><isset property="jboss.server.exists"/></not>
                             <then>
                                 <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
-                                <mkdir dir="${temp.dir}"/>
-                                <get src="${jboss.download.url}" dest="${temp.dir}/${jboss.zip.name}"/>
-                                <unzip src="${temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
+                                <mkdir dir="${bda.temp.dir}"/>
+                                <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
+                                <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
                                 <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
                             </then>
                             <else>
