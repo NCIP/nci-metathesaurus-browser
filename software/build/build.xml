@@ -32,7 +32,7 @@
     <!-- BDA-Lite Task definitions -->
     <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml">
         <classpath>
-            <pathelement location="../${project.name}/extlib/bda-lite-1.0.jar"/>
+            <pathelement location="../${project.name}/extlib/bda-lite-1.0.0.jar"/>
         </classpath>
     </taskdef>
 
