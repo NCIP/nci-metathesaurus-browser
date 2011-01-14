@@ -199,9 +199,17 @@
             <filterset>
                 <filter token="search.log.dir" value="@application.data.path@/${search.log.dir}/${project.short.name}-search.log"/>
                 <filter token="log.package" value="${log.package}"/>
+                <filter token="log4j.dtd.path" value="@application.data.path@/${ncimbrowser.conf.path}"/>
             </filterset>
             <resources>
-                <file file="${bda.conf.dir}/log4j.xml"/>
+                <file file="${bda.conf.dir}/${project.short.name}-log4j.xml"/>
+            </resources>
+        </copy>
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${bda.conf.dir}/log4j.dtd"/>
             </resources>
         </copy>
 
@@ -219,7 +227,16 @@
             </filterset>
             <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
                 <patternset>
-                    <include name="**/log4j.*"/>
+                    <include name="**/*-log4j.*"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
+           filtering="false" overwrite="true">
+            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
+                <patternset>
+                    <include name="**/*log4j.dtd"/>
                 </patternset>
             </fileset>
         </copy>
@@ -281,18 +298,26 @@
             value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
         />
 
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImlog4jProperties"
+            value="${application.data.path}/${ncimbrowser.conf.path}/${project.short.name}-log4j.xml"
+        />
+
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
                 <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${project.short.name}-log4j.xml"/>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.dtd"/>
             </resources>
         </copy>
 
         <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.xml"/>
                 <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
             </resources>
         </copy>
@@ -320,7 +345,6 @@
         />
 
         <delete dir="${application.data.path}/conf" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/conf/log4j.xml" quiet="true" />
         <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
         <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
 
