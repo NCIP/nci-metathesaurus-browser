@@ -48,4 +48,12 @@
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
 
+	<!--  Log4j init servlet -->
+
+	<servlet>
+	   <servlet-name>Log4JServlet</servlet-name>
+	   <servlet-class>gov.nih.nci.evs.browser.servlet.Log4JServlet</servlet-class>
+	   <load-on-startup>1</load-on-startup>
+	</servlet>
+
 </web-app>
