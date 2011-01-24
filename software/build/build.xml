@@ -144,8 +144,8 @@
 
         <!-- Set default value of 'trunk' if Anthill tag is not set -->
 
-        <condition property="app.tag.built" value="${anthill.buildlife.label}" else="trunk">
-            <isset property="anthill.buildlife.label" />
+        <condition property="app.tag.built" value="${Build-tag}" else="trunk">
+            <isset property="Build-tag" />
         </condition>
         <echo message="Tag: ${app.tag.built}" />
 
