@@ -139,13 +139,13 @@
 
     <target name="-dist" depends="-war" description="Copies external files to distribution folder">
 
-        <echo message="          Config folder: ${bda.conf.dir}" />
-        <echo message="anthill.buildlife.label: ${anthill.buildlife.label}" />
+        <echo message="Config folder: ${bda.conf.dir}" />
+        <echo message="    Build-tag: ${build-tag}" />
 
         <!-- Set default value of 'trunk' if Anthill tag is not set -->
 
-        <condition property="app.tag.built" value="${Build-tag}" else="trunk">
-            <isset property="Build-tag" />
+        <condition property="app.tag.built" value="${build-tag}" else="trunk">
+            <isset property="build-tag" />
         </condition>
         <echo message="Tag: ${app.tag.built}" />
 
