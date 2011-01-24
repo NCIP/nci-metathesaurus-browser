@@ -139,14 +139,15 @@
 
     <target name="-dist" depends="-war" description="Copies external files to distribution folder">
 
-        <echo message="Config folder: ${bda.conf.dir}" />
+        <echo message="          Config folder: ${bda.conf.dir}" />
+        <echo message="anthill.buildlife.label: ${anthill.buildlife.label}" />
 
         <!-- Set default value of 'trunk' if Anthill tag is not set -->
 
-        <condition property="tag_built" value="${anthill.build.tag_built}" else="trunk">
-            <isset property="anthill.build.tag_built" />
+        <condition property="app.tag.built" value="${anthill.buildlife.label}" else="trunk">
+            <isset property="anthill.buildlife.label" />
         </condition>
-        <echo message="Tag: ${tag_built}" />
+        <echo message="Tag: ${app.tag.built}" />
 
         <!-- Setup Ehcache property file -->
 
@@ -162,7 +163,7 @@
         <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
-                <filter token="anthill.build.tag_built" value="${tag_built}"/>
+                <filter token="app.build.tag" value="${app.tag.built}"/>
                 <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
                 <filter token="debug.on" value="${debug.on}"/>
