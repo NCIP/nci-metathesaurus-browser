@@ -12,9 +12,9 @@
     <property environment="env" />
     <property name="properties.file" value="project.properties" />
     <property name="local.properties.file" value="local.properties" />
+    <property environment="env"/>
 
     <!-- Local property file -->
-
     <property file="${local.properties.file}" />
     <available file="${local.properties.file}" property="local.properties.file.exists" />
 
