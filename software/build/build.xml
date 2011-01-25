@@ -12,9 +12,9 @@
     <property environment="env" />
     <property name="properties.file" value="project.properties" />
     <property name="local.properties.file" value="local.properties" />
+    <property environment="env"/>
 
     <!-- Local property file -->
-
     <property file="${local.properties.file}" />
     <available file="${local.properties.file}" property="local.properties.file.exists" />
 
@@ -143,10 +143,10 @@
 
         <!-- Set default value of 'trunk' if Anthill tag is not set -->
 
-        <condition property="tag_built" value="${anthill.build.tag_built}" else="trunk">
+        <condition property="app.tag.built" value="${anthill.build.tag_built}" else="Unknown or trunk">
             <isset property="anthill.build.tag_built" />
         </condition>
-        <echo message="Tag: ${tag_built}" />
+        <echo message="Tag: ${app.tag.built}" />
 
         <!-- Setup Ehcache property file -->
 
@@ -162,7 +162,7 @@
         <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
-                <filter token="anthill.build.tag_built" value="${tag_built}"/>
+                <filter token="app.build.tag" value="${app.tag.built}"/>
                 <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
                 <filter token="debug.on" value="${debug.on}"/>
