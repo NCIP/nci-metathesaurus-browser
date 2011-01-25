@@ -1833,7 +1833,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return _ncimAppVersion;
     }
 
-    public String getNCITAnthillBuildTagBuilt() {
+    public String getNCITAppBuildTag() {
         if (_ncitAnthillBuildTagBuilt != null) {
             return _ncitAnthillBuildTagBuilt;
         }
