@@ -194,7 +194,7 @@ public class TreeUtils {
             // be expanded.
 
             for (Iterator<Association> paths =
-                pathsFromRoot.iterateAssociation(); paths.hasNext();) {
+                (Iterator<Association>) pathsFromRoot.iterateAssociation(); paths.hasNext();) {
                 addPathFromRoot(ti, lbsvc, lbscm, scheme, csvt, paths.next(),
                     associationsToNavigate, associationsNavigatedFwd,
                     codesToDescriptions);
@@ -340,7 +340,7 @@ public class TreeUtils {
         // target associations (depending on direction). The associated
         // nodes define the children.
         for (Iterator<ResolvedConceptReference> nodes =
-            branch.iterateResolvedConceptReference(); nodes.hasNext();) {
+            (Iterator<ResolvedConceptReference>) branch.iterateResolvedConceptReference(); nodes.hasNext();) {
             ResolvedConceptReference node = nodes.next();
             AssociationList childAssociationList =
                 associationsNavigatedFwd ? node.getSourceOf() : node
@@ -348,7 +348,7 @@ public class TreeUtils {
 
             // Process each association defining children ...
             for (Iterator<Association> pathsToChildren =
-                childAssociationList.iterateAssociation(); pathsToChildren
+                (Iterator<Association>) childAssociationList.iterateAssociation(); pathsToChildren
                 .hasNext();) {
                 Association child = pathsToChildren.next();
                 String childNavText =
@@ -359,7 +359,7 @@ public class TreeUtils {
                 AssociatedConceptList branchItemList =
                     child.getAssociatedConcepts();
                 for (Iterator<AssociatedConcept> branchNodes =
-                    branchItemList.iterateAssociatedConcept(); branchNodes
+                    (Iterator<AssociatedConcept>) branchItemList.iterateAssociatedConcept(); branchNodes
                     .hasNext();) {
                     AssociatedConcept branchItemNode = branchNodes.next();
                     String branchItemCode = branchItemNode.getConceptCode();
@@ -591,7 +591,7 @@ public class TreeUtils {
                     null, -1, true);
 
             for (Iterator<ResolvedConceptReference> nodes =
-                branch.iterateResolvedConceptReference(); nodes.hasNext();) {
+                (Iterator<ResolvedConceptReference>) branch.iterateResolvedConceptReference(); nodes.hasNext();) {
                 ResolvedConceptReference node = nodes.next();
                 AssociationList childAssociationList =
                     associationsNavigatedFwd ? node.getSourceOf() : node
@@ -599,7 +599,7 @@ public class TreeUtils {
 
                 // Process each association defining children ...
                 for (Iterator<Association> pathsToChildren =
-                    childAssociationList.iterateAssociation(); pathsToChildren
+                    (Iterator<Association>) childAssociationList.iterateAssociation(); pathsToChildren
                     .hasNext();) {
                     Association child = pathsToChildren.next();
                     String childNavText =
@@ -619,7 +619,7 @@ public class TreeUtils {
 
                     List child_list = new ArrayList();
                     for (Iterator<AssociatedConcept> branchNodes =
-                        branchItemList.iterateAssociatedConcept(); branchNodes
+                        (Iterator<AssociatedConcept>) branchItemList.iterateAssociatedConcept(); branchNodes
                         .hasNext();) {
                         AssociatedConcept branchItemNode = branchNodes.next();
                         child_list.add(branchItemNode);
@@ -681,7 +681,7 @@ public class TreeUtils {
         return list;
     }
 
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -723,7 +723,7 @@ public class TreeUtils {
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
 
-                Concept entry = ref.getReferencedEntry();
+                Entity entry = ref.getReferencedEntry();
                 return entry;
             }
         } catch (Exception e) {

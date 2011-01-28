@@ -22,14 +22,14 @@
     Vector additionalproperties = new Vector();
     additionalproperties.add("CONCEPT_NAME");
     additionalproperties.add("primitive");
-    Concept curr_concept = (Concept) request.getSession().getAttribute("concept");
+    Entity curr_concept = (Entity) request.getSession().getAttribute("concept");
     String curr_concept_code = curr_concept.getEntityCode();
-    
+
     String retired_cui = (String) request.getSession().getAttribute("retired_cui");
     if (retired_cui != null) {
         request.getSession().removeAttribute("retired_cui");
     }
-    
+
     Boolean bool_obj = curr_concept.isIsActive();
     String isActive = bool_obj.toString();
 
@@ -63,20 +63,20 @@
                 for (int k=0; k<propertyvalues.size(); k++) {
                     String definition_str = (String) propertyvalues.elementAt(k);
                     Vector def_data = DataUtils.parseData(definition_str, "|");
-		    String def_description = (String) def_data.elementAt(0);
-		    String def_source = "";
-		    if (def_data.size() > 1) {
-		    	def_source = (String) def_data.elementAt(1);
-		    }
-		    if (def_source.compareTo("NCI") == 0) {
-		    new_propertyvalues.add(def_description + "|" + "NCIt");
-		}
+        String def_description = (String) def_data.elementAt(0);
+        String def_source = "";
+        if (def_data.size() > 1) {
+          def_source = (String) def_data.elementAt(1);
+        }
+        if (def_source.compareTo("NCI") == 0) {
+        new_propertyvalues.add(def_description + "|" + "NCIt");
+    }
             }
                 for (int k=0; k<propertyvalues.size(); k++) {
                     String definition_str = (String) propertyvalues.elementAt(k);
         Vector def_data = DataUtils.parseData(definition_str, "|");
         String def_description = (String) def_data.elementAt(0);
-        
+
         String def_source = "";
         if (def_data.size() > 1) {
            def_source = (String) def_data.elementAt(1);
@@ -92,7 +92,7 @@
 
     propertyvalues = new Vector();
     String concept_id = curr_concept.getEntityCode();
-    
+
     propertyvalues.add(concept_id);
     hmap.put("Code", propertyvalues);
 
@@ -148,21 +148,25 @@
       external_source_codes_linktext.add(displayItem.getHyperlinkText());
     }
   }
-  
+
 %>
-<p class="textsubtitle-blue">Terms and Properties</p>
+<table border="0" width="708px">
+	<tr>
+		<td class="textsubtitle-blue" align="left">Terms and Properties</td>
+	</tr>
+</table>
 <%
 if (retired_cui != null) {
 %>
     <p class="textbodyred"><b>Note: The CUI&nbsp;<i class="textbodyred"><%=retired_cui%></i>
          you searched for is obsolete.</b>
     </p>
-<%    
+<%
 }
 if (!bool_obj.equals(Boolean.TRUE) ||
   (concept_status != null &&
     concept_status.compareToIgnoreCase("Retired Concept") == 0)) // non-active
-   
+
 {
 %>
     <p class="textbody"><b>Concept Status:</b>&nbsp;<i class="textbodyred">Retired Concept</i></p>
@@ -196,7 +200,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
           value_wo_qualifier = value.substring(0, n);
           qualifier = value.substring(n+1, value.length());
-          
+
           value = value_wo_qualifier;
           if (qualifier.compareTo("") != 0) {
             propName_label = qualifier + " " + propName_label2;
@@ -212,8 +216,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 <%
       }
     } else if (propName_label.indexOf("Synonym") == -1) {
-    
-    
+
+
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
 
@@ -227,11 +231,11 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
           if (n != -1 && (propName_label.indexOf("Definition") != -1 || propName_label.indexOf("DEFINITION") != -1)) {
               value_wo_qualifier = value.substring(0, n);
         qualifier = value.substring(n+1, value.length());
-        
+
         value = value_wo_qualifier;
         if (qualifier.compareTo("") != 0) {
             propName_label = qualifier + " " + propName_label2;
-            
+
             if (qualifier.indexOf("PDQ") != -1) {
                 value = FormatUtils.reformatPDQDefinition(value);
             }
@@ -266,7 +270,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   presentation_hset.add("textualPresentation");
   presentation_hset.add("Synonym");
   presentation_hset.add("presentation");
- 
+
   for (int i=0; i<properties_to_display.size(); i++) {
     String propName = (String) properties_to_display.elementAt(i);
     String propName_label = (String) properties_to_display_label.elementAt(i);
@@ -276,7 +280,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
       value_vec = SortUtils.quickSort(value_vec);
-      
+
       if (value_vec != null && value_vec.size() > 0) {
         HashSet hset2 = new HashSet();
         int row=0;
@@ -340,7 +344,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   <b>External Source Codes:&nbsp;</b>
   <table class="datatable">
     <%
-    
+
       n = 0;
       for (int i=0; i<external_source_codes.size(); i++) {
         String propName = (String) external_source_codes.elementAt(i);
@@ -404,10 +408,10 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
          key_vec.add(prop_name);
       }
       key_vec = SortUtils.quickSort(key_vec);
-      
+
       n = 0;
       displayed_properties.add("textualPresentation");
-      
+
       boolean show_other_properties = false;
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
          prop_name = (String) key_vec.elementAt(key_lcv);
@@ -419,7 +423,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
             }
          }
       }
-     
+
 
 boolean has_other_properties = false;
 for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
@@ -442,7 +446,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
           '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
-         &nbsp; 
+         &nbsp;
       <i>(none)</i>
   <%
   } else {
@@ -482,7 +486,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
             value_vec = SortUtils.quickSort(value_vec);
             for (int j=0; j<value_vec.size(); j++) {
               String value = (String) value_vec.elementAt(j);
-              
+
               if (n % 2 == 0) {
                 %>
                   <tr class="dataRowDark">
@@ -497,7 +501,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
               String propertyValue = (String) value_source_vec.elementAt(0);
               String propertySource = (String) value_source_vec.elementAt(1);
               if (propertySource.compareTo("None") == 0) propertySource = "";
-              
+
               %>
                   <td><i><%=prop_name%></i></td>
                   <td><i><%=propertyValue%></i></td>
@@ -578,7 +582,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
   <a href=javascript:bookmark('<%= url %>','<%= bookmark_title %>')>
     <i><%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%></i>
   </a>
-  
+
 <%
     //NCImBrowserProperties properties = null;
     properties = NCImBrowserProperties.getInstance();

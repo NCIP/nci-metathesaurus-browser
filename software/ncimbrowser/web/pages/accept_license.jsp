@@ -1,13 +1,14 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
   <title>NCI Metathesaurus Browser</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -26,6 +27,7 @@
   String type = (String) request.getParameter("type");
 
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
+  if (licenseStmt == null) licenseStmt = " ";
 
   String base_path = request.getContextPath();
 
@@ -53,21 +55,44 @@
       <div class="pagecontent">
         <a name="evs-content" id="evs-content"></a>
         <p>
-          To access <b><%=display_name%></b>, please review and accept the copyright/license statement below:
+          <%
+          	if (display_name == null) {
+          %>
+          	No copyright/license statement has been found for this terminology.<br>
+          	Metadata 'short name' may not have been loaded.
+          <%
+          	} else {
+          %>          
+            To access <b><%=display_name%></b>, please review and accept the copyright/license statement below:
+          <%
+          	}
+          %>  
         </p>
+        <%
+        	if (display_name != null) {
+        %>        
         <textarea cols="87" rows="15" readonly align="left"><%=licenseStmt%></textarea>
         <p>
           If and only if you agree to these terms and conditions, click the Accept button to proceed.
         </p>
-          <form>
+        <%
+        	}
+        %>
+          <h:form>
+            <%
+            	if (display_name != null) {
+            %>
             <h:commandButton
               id="accept"
               value="accept"
               action="#{userSessionBean.acceptLicenseAction}"
-              image="#{facesContext.externalContext.requestContextPath}/images/accept.gif"
+              image="../images/accept.gif"
               alt="Accept">
             </h:commandButton>
             &nbsp;&nbsp;
+            <%
+            	}
+            %>
             <a href="javascript:window.close();">
               <img src="<%= request.getContextPath() %>/images/cancel.gif" border="0" alt="Cancel"/>
             </a>
@@ -76,7 +101,7 @@
             <input type="hidden" id="code" name="code" value="<%=code%>" />
             <input type="hidden" id="sab" name="sab" value="<%=sab%>" />
             <input type="hidden" id="type" name="type" value="<%=type%>" />
-          </form>
+          </h:form>
         <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>
       <!-- end Page content -->

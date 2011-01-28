@@ -6,7 +6,9 @@ request.getSession().setAttribute("matchText", iteratorBean.getMatchText());
 String searchText = iteratorBean.getMatchText();
 %>
 
-<FORM NAME="paginationForm" METHOD="POST" action="<%=request.getContextPath() %>/pages/search_results.jsf?matchText=<%=searchText%>&key=<%=randomStr%>" >
+<h:form id="paginationForm">
+  <input type="hidden" id="key" name="key" value="<%=randomStr%>" />
+  <input type="hidden" id="matchText" name="matchText" value="<%=searchText%>" />
   <table>
     <tr>
       <td class="textbody" align=left>
@@ -67,8 +69,9 @@ String searchText = iteratorBean.getMatchText();
       <td class="textbody" align=left>
         Show
         <h:selectOneMenu
-          id="id" value="#{userSessionBean.selectedResultsPerPage}"
-          valueChangeListener="#{userSessionBean.resultsPerPageChanged}" immediate="true" onchange="submit()"> 
+          value="#{userSessionBean.selectedResultsPerPage}"
+          valueChangeListener="#{userSessionBean.resultsPerPageChanged}"
+          onchange="submit()">
           <f:selectItems value="#{userSessionBean.resultsPerPageList}"/>
         </h:selectOneMenu>
         &nbsp;results per page
@@ -81,4 +84,4 @@ String searchText = iteratorBean.getMatchText();
       </td>
     </tr>
   </table>
-</form>
+</h:form>

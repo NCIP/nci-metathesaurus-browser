@@ -1,22 +1,23 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Concept"%>
+<%@ page import="org.LexGrid.concepts.Entity"%>
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
   String application_version = new DataUtils().getApplicationVersion();
-  String anthill_build_tag_built = new DataUtils().getNCITAnthillBuildTagBuilt();
+  String app_build_tag = new DataUtils().getNCITAppBuildTag();
   String evs_service_url = new DataUtils().getEVSServiceURL();
 %>
 <!--
    Build info: <%=ncim_build_info%>
  Version info: <%=application_version%>
-          Tag: <%=anthill_build_tag_built%>
+          Tag: <%=app_build_tag%>
    LexEVS URL: <%=evs_service_url%>
   -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html xmlns:c="http://java.sun.com/jsp/jstl/core">
   <head>
     <title>NCI Metathesaurus</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -32,7 +33,7 @@
       src="<%= request.getContextPath() %>/js/dropdown.js"></script>
   </head>
 
-  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <body onLoad="document.forms.searchTerm.matchText.focus();">
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
     <script type="text/javascript"

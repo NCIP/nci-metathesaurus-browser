@@ -39,7 +39,6 @@
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>
-
   <label for="matchText"/><input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
@@ -67,7 +66,7 @@
       <td align="left" class="textbody">
         <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%>><label for="algorithm1">Exact Match&nbsp;</label>
         <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%>><label for="algorithm2">Begins With&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%>><label for="algorithm3">Contains</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Contains" <%=check_c%>><label for="algorithm3">Contains</label>
       </td>
     </tr>
     <tr align="left">

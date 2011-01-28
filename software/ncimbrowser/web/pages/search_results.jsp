@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.LexGrid.concepts.*" %>
@@ -14,7 +15,7 @@
 <%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -24,7 +25,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body onLoad="document.forms.searchTerm.matchText.focus();">
 
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
@@ -106,7 +107,11 @@ if (randomKey != null) {
           int page_size = 50;
           if (selectedResultsPerPage != null)
           {
-              page_size = Integer.parseInt(selectedResultsPerPage);
+        	  try {
+              	page_size = Integer.parseInt(selectedResultsPerPage);
+        	  } catch (Exception e) {
+        		// Do nothing, bad number  
+        	  }
           }
           int iend = page_num * page_size;
           int istart = iend - page_size;

@@ -2,14 +2,14 @@
   String entry_type_src = type;
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
   {
-    Concept concept_src = (Concept) request.getSession().getAttribute("concept");
+    Entity concept_src = (Entity) request.getSession().getAttribute("concept");
 %>
     <!-- Page content -->
 <%
 
-  Concept concept_neighborhood = null;
+  Entity concept_neighborhood = null;
   if (concept_neighborhood == null) {
-    concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
+    concept_neighborhood = (Entity) request.getSession().getAttribute("concept");
     code = concept_neighborhood.getEntityCode();
 
   } else {
@@ -69,7 +69,11 @@
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
 %>
-    <p class="textsubtitle-blue">'<%=concept_neighborhood_name%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></p>
+	<table border="0" width="708px">
+		<tr>
+			<td class="textsubtitle-blue" align="left">'<%=concept_neighborhood_name%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
+		</tr>
+	</table> 
     <div>
       <table class="dataTable" border="0">
         <%

@@ -14,7 +14,7 @@
        <DisplayItem>
             <propertyName>NCIt Code</propertyName>
             <itemLabel>NCI Thesaurus Code</itemLabel>
-            <url>@ncit.url@/ncitbrowser/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
+            <url>@ncit.url@pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
             <hyperlinkText>see NCI Thesaurus info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
@@ -2271,7 +2271,7 @@
 
         <ConfigurableItem>
                  <key>NCIM_BUILD_INFO</key>
-                 <value>@ncim.build.info@</value>
+                 <value>@build.info@</value>
         </ConfigurableItem>
 
         <ConfigurableItem>
@@ -2280,8 +2280,8 @@
         </ConfigurableItem>
 
         <ConfigurableItem>
-                 <key>ANTHILL_BUILD_TAG_BUILT</key>
-                 <value>@anthill.build.tag_built@</value>
+                 <key>APP_BUILD_TAG</key>
+                 <value>@app.build.tag@</value>
         </ConfigurableItem>
 
         <ConfigurableItem>
@@ -2308,12 +2308,12 @@
                  <key>SLIDING_WINDOW_HALF_WIDTH</key>
                  <value>@sliding_window_half_width@</value>
         </ConfigurableItem>
-        
+
         <ConfigurableItem>
                  <key>SOURCE_HIERARCHIES</key>
                  <value>@source_hierarchies@</value>
         </ConfigurableItem>
- 
+
         <ConfigurableItem>
                  <key>SECURED_VOCABULARIES</key>
                  <value>@secured_vocabularies@</value>
@@ -2333,22 +2333,22 @@
                  <key>MAXIMUM_SEARCH_TIME_LIMIT</key>
                  <value>@max_search_time_limit@</value>
         </ConfigurableItem>
-        
+
     </ConfigurableItems>
 
     <MetadataElements>
-    
+
         <MetadataElement>
                  <name>html_compatable_description</name>
         </MetadataElement>
-        
-    </MetadataElements>    
+
+    </MetadataElements>
 
     <SecurityTokenHolders>
         <SecurityTokenHolder>
                  <name>MedDRA (Medical Dictionary for Regulatory Activities Terminology)</name>
                  <value>@meddra_security_token@</value>
         </SecurityTokenHolder>
-    </SecurityTokenHolders>    
-    
+    </SecurityTokenHolders>
+
 </root>

@@ -2,7 +2,7 @@
   String entry_type_rel = type;
   if (type.compareTo("relationship") == 0 || type.compareTo("all") == 0)
   {
-    Concept concept_curr = (Concept) request.getSession().getAttribute("concept");
+    Entity concept_curr = (Entity) request.getSession().getAttribute("concept");
     String scheme_curr = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));
     String version_curr = null;
     String code_curr = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
@@ -57,14 +57,18 @@
     Vector narrower_vec = (Vector) hmap.get("Narrower");
     Vector sibling_vec = (Vector) hmap.get("Sibling");
     //Vector sibling_vec = util.getSiblings(code_curr);
-    
+
     Vector other_vec = (Vector) hmap.get("Other");
 
     String label = "";
     String rel_value = "";
 
  %>
-  <p class="textsubtitle-blue">Relationships with other NCI Metathesaurus Concepts:</p>
+<table border="0" width="708px">
+	<tr>
+		<td class="textsubtitle-blue" align="left">Relationships with other NCI Metathesaurus Concepts:</td>
+	</tr>
+</table>  
 <%
   Object incomplete_obj = hmap.get(DataUtils.INCOMPLETE);
   String incomplete = "[Not Set]";
@@ -847,64 +851,64 @@
   <p>
     <%
       Vector sab_vec = DataUtils.getConceptSources(scheme_curr, version_curr, code_curr);
-      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr, code_curr, sab_vec, true); 
+      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr, code_curr, sab_vec, true);
       label = "Self-Referential Relationships:";
       if (self_referential_relationships != null && self_referential_relationships.size() > 0)
       {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a>
-	  <table class="dataTable">
-	    <th class="dataTableHeader" scope="col" align="left">Relationship
-	    </th>	  
-	    <th class="dataTableHeader" scope="col" align="left">Source AUI
-	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Source Term
-	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Target AUI
-	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Target Term
-	    </th>
-	    <th class="dataTableHeader" scope="col" align="left">Rel. Source
+    <table class="dataTable">
+      <th class="dataTableHeader" scope="col" align="left">Relationship
+      </th>
+      <th class="dataTableHeader" scope="col" align="left">Source AUI
+      </th>
+      <th class="dataTableHeader" scope="col" align="left">Source Term
+      </th>
+      <th class="dataTableHeader" scope="col" align="left">Target AUI
+      </th>
+      <th class="dataTableHeader" scope="col" align="left">Target Term
+      </th>
+      <th class="dataTableHeader" scope="col" align="left">Rel. Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
-        </a>	    
-	    </th>
-		  <%
-	      int m = 0;
-	      for (int i=0; i<self_referential_relationships.size(); i++) {
-		String s = (String) self_referential_relationships.get(i);
-		Vector ret_vec = DataUtils.parseData(s, "$");
-		String source_aui = (String) ret_vec.elementAt(0);
-		String source_term = (String) ret_vec.elementAt(1);
-		String self_rela = (String) ret_vec.elementAt(2);
-		String target_aui = (String) ret_vec.elementAt(3);
-		String target_term = (String) ret_vec.elementAt(4);
-		String rel_source = (String) ret_vec.elementAt(5);
+        </a>
+      </th>
+      <%
+        int m = 0;
+        for (int i=0; i<self_referential_relationships.size(); i++) {
+    String s = (String) self_referential_relationships.get(i);
+    Vector ret_vec = DataUtils.parseData(s, "$");
+    String source_aui = (String) ret_vec.elementAt(0);
+    String source_term = (String) ret_vec.elementAt(1);
+    String self_rela = (String) ret_vec.elementAt(2);
+    String target_aui = (String) ret_vec.elementAt(3);
+    String target_term = (String) ret_vec.elementAt(4);
+    String rel_source = (String) ret_vec.elementAt(5);
 
-		if (m % 2 == 0) {
-		    %>
-			<tr class="dataRowDark">
-		    <%
-	        } else {
-	        %>
-		    <tr class="dataRowLight">
-	        <%
-	        }
-	        m++;
-	         %>
-	          <td width=80><%=self_rela%></td>
-		  <td width=100><%=source_aui%></td>
-		  <td width=200><%=source_term%></td>
-		  <td width=100><%=target_aui%></td>
-		  <td width=200><%=target_term%></td>
-		  <td width=100><%=rel_source%></td>
-		</tr>
-	     <%
+    if (m % 2 == 0) {
+        %>
+      <tr class="dataRowDark">
+        <%
+          } else {
+          %>
+        <tr class="dataRowLight">
+          <%
+          }
+          m++;
+           %>
+            <td width=80><%=self_rela%></td>
+      <td width=100><%=source_aui%></td>
+      <td width=200><%=source_term%></td>
+      <td width=100><%=target_aui%></td>
+      <td width=200><%=target_term%></td>
+      <td width=100><%=rel_source%></td>
+    </tr>
+       <%
               }
              %>
          </table>
-      <%   
+      <%
       }
       %>
    </p>
