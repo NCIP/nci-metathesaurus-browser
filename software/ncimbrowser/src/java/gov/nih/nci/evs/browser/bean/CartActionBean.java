@@ -145,7 +145,7 @@ public class CartActionBean {
      * @return
      * @throws Exception
      */
-    public void addToCart() throws Exception {
+    public String addToCart() throws Exception {
         String code = null;
         String codingScheme = null;
         String nameSpace = null;
@@ -208,6 +208,8 @@ public class CartActionBean {
 
         if (!_cart.containsKey(code))
             _cart.put(code,item);
+       
+        return null;
     }
 
     /**

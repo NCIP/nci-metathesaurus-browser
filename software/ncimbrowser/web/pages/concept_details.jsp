@@ -308,24 +308,29 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
-   request.getSession().setAttribute("concept", c);
-   request.getSession().setAttribute("code", c.getEntityCode());
+        request.getSession().setAttribute("concept", c);
+        request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
-      <div class="texttitle-blue">
-
+      <h:form>    
+      <div class="texttitle-blue">	  	
       <table border="0" width="700px">
         <tr>
           <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
              <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+			 <br>
+			 <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
+			   <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
+			   <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
+			 </h:commandLink>			 			   
           </td>
         </tr>
-      </table>
-
+      </table>            
       </div>
-
       <hr>
+      <input type="hidden" name="type" value="<%=type %>">
+      </h:form>
       <%@ include file="/pages/include/typeLinks.jsp" %>
       <div class="tabTableContentContainer">
           <%@ include file="/pages/include/property.jsp" %>
