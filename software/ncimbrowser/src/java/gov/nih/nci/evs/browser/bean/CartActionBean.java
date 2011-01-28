@@ -157,7 +157,6 @@ public class CartActionBean {
         SearchCart search = new SearchCart();        
 
         // Get concept information from the Entity item passed in
-
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -182,7 +181,14 @@ public class CartActionBean {
         version = ref.getCodingSchemeVersion();
 
         // Get concept URL
-        url = request.getRequestURI() +  "?dictionary=" + codingScheme
+        String protocol = request.getScheme();
+        String domain = request.getServerName();
+        String port = Integer.toString(request.getServerPort());
+        if (port.equals("80")) port = ""; else port = ":" + port;
+        String path = request.getContextPath();
+        url = protocol + "://" + domain
+            + port + path
+            + "/pages/concept_details.jsf?dictionary=" + codingScheme
             + "&version=" + version
             + "&code=" + code;
 
@@ -293,7 +299,7 @@ public class CartActionBean {
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
         StringBuffer sb = new StringBuffer();
-
+        
         // Get Entities to be exported and build export file
         // in memory
 
