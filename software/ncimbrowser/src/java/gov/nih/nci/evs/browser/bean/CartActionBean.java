@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.browser.bean;
 
-import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import gov.nih.nci.evs.browser.utils.SearchCart;
 import gov.nih.nci.evs.browser.utils.SearchUtils;
 import gov.nih.nci.evs.browser.utils.ExportCartXML;
@@ -301,7 +300,7 @@ public class CartActionBean {
         if (_cart != null && _cart.size() > 0) {
             // Add header
             sb.append("Concept,");
-            sb.append("Vocabulary,");
+            sb.append("Terminology,");
             sb.append("Code,");
             sb.append("URL");
             sb.append("\r\n");
