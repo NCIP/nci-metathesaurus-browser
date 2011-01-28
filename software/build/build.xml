@@ -352,10 +352,48 @@
 
     <target name="deploy:hot" depends="build:all" description="Hot deploy application">
 
+        <bda:JBossStopApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
         <copy
             file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             overwrite="true"
+        />
+
+        <bda:JBossTempDir
+            tmpdir="${jboss.server.path}/server/default/tmp"
+            property="jboss.war.temp.dir.location"
+            warname="${webapp.war.name}"
+
+        />
+
+        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+        <echo message="    Source: ${webapp.dir}"/>
+
+        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+            <fileset dir="${webapp.dir}">
+                <include name="**/*.jsp" />
+                <include name="**/*.jspf" />
+                <include name="**/*.css" />
+                <include name="**/*.js" />
+                <include name="**/*.jpg" />
+                <include name="**/*.gif" />
+                <include name="**/*.png" />
+                <include name="**/*.faces" />
+                <include name="**/*.tag" />
+                <include name="**/*.tagf" />
+            </fileset>
+        </copy>
+
+        <bda:JBossStartApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
         />
 
         <bda:JBossRedeployApp
