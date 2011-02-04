@@ -29,12 +29,13 @@
     <property name="webapp.war.name" value="${project.name}.war" />
     <property name="webapp.prop.file" value="NCImBrowserProperties.xml" />
 
+    <path id="classpath">
+        <fileset dir="../${project.name}/extlib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
     <!-- BDA-Lite Task definitions -->
-    <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml">
-        <classpath>
-            <pathelement location="../${project.name}/extlib/bda-lite-1.0.0.jar"/>
-        </classpath>
-    </taskdef>
+    <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml" classpathref="classpath" />
 
     <!-- BDA-Lite standard locations -->
     <bda:BDAInit />
@@ -43,6 +44,7 @@
     <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
     <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
     <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
+    <property name="exploded.dir" value="${bda.dist.dir}/exploded/${project.name}-webapp" />
 
     <!-- Ant Task definitions -->
     <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda.project.compile.classpath"/>
@@ -137,7 +139,7 @@
 
     </target>
 
-    <target name="-dist" depends="-war" description="Copies external files to distribution folder">
+    <target name="-dist" description="Copies external files to distribution folder">
 
         <echo message="Config folder: ${bda.conf.dir}" />
 
@@ -217,24 +219,26 @@
 
     <target name="build:config" description="Generates configuration files for a target environment">
 
+        <available file="${exploded.dir}/deploy" property="deploy.exists" />
+        <fail unless="deploy.exists" message="Deploy folder not found. Please run build:dist first." />
         <!-- Generate Log4j XML file -->
 
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
+        <copy todir="${exploded.dir}/install" includeEmptyDirs="no"
            filtering="true" overwrite="true">
             <filterset>
                 <filter token="application.data.path" value="${application.data.path}"/>
                 <filter token="log.level" value="${log.level}"/>
             </filterset>
-            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
+            <fileset dir="${exploded.dir}/deploy">
                 <patternset>
                     <include name="**/*-log4j.*"/>
                 </patternset>
             </fileset>
         </copy>
 
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
+        <copy todir="${exploded.dir}/install" includeEmptyDirs="no"
            filtering="false" overwrite="true">
-            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
+            <fileset dir="${exploded.dir}/deploy">
                 <patternset>
                     <include name="**/*log4j.dtd"/>
                 </patternset>
@@ -243,7 +247,7 @@
 
         <!-- Generate application property file -->
 
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+        <copy todir="${exploded.dir}/install" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="ncit.url" value="${ncit.url}"/>
@@ -257,7 +261,7 @@
                 <filter token="meddra_security_token" value="${meddra_security_token}"/>
             </filterset>
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/deploy/${webapp.prop.file}"/>
             </resources>
         </copy>
 
@@ -269,19 +273,19 @@
                 <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
             </filterset>
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/ehcache.xml"/>
+                <file file="${exploded.dir}/deploy/ehcache.xml"/>
             </resources>
         </copy>
 
         <!-- Generate lexevs remote config file -->
 
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+        <copy todir="${exploded.dir}/install" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="false">
             <filterset>
                 <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
             </filterset>
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/application-config-client.xml"/>
+                <file file="${exploded.dir}/deploy/application-config-client.xml"/>
             </resources>
         </copy>
 
@@ -308,10 +312,10 @@
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${project.short.name}-log4j.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.dtd"/>
+                <file file="${exploded.dir}/install/ehcache.xml"/>
+                <file file="${exploded.dir}/install/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
+                <file file="${exploded.dir}/install/log4j.dtd"/>
             </resources>
         </copy>
 
@@ -352,55 +356,15 @@
 
     <target name="deploy:hot" depends="build:all" description="Hot deploy application">
 
-        <bda:JBossStopApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
+        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
 
         <copy
             file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
             overwrite="true"
         />
-
-        <bda:JBossTempDir
-            tmpdir="${jboss.server.path}/server/default/tmp"
-            property="jboss.war.temp.dir.location"
-            warname="${webapp.war.name}"
-
-        />
-
-        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
-        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
-        <echo message="    Source: ${webapp.dir}"/>
-
-        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
-            <fileset dir="${webapp.dir}">
-                <include name="**/*.jsp" />
-                <include name="**/*.jspf" />
-                <include name="**/*.css" />
-                <include name="**/*.js" />
-                <include name="**/*.jpg" />
-                <include name="**/*.gif" />
-                <include name="**/*.png" />
-                <include name="**/*.faces" />
-                <include name="**/*.tag" />
-                <include name="**/*.tagf" />
-            </fileset>
-        </copy>
-
-        <bda:JBossStartApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-        <bda:JBossRedeployApp
-            jbossbin="${jboss.server.path}/bin"
-            warfile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
+        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"/>
 
     </target>
 
@@ -478,15 +442,15 @@
                     <isset property="begin.install"/>
                     <then>
 
+                        <mkdir dir="${bda.temp.dir}"/>
+
                         <available file="${jboss.server.path}" property="jboss.server.exists" />
                         <if>
                             <not><isset property="jboss.server.exists"/></not>
                             <then>
                                 <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
-                                <mkdir dir="${bda.temp.dir}"/>
                                 <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
                                 <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
-                                <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
                             </then>
                             <else>
                                 <bda:ConsoleOutput message="JBoss present. Skipping download."/>
@@ -500,6 +464,7 @@
                             serverxml="${jboss.server.path}/server/default/deploy/jbossweb.sar/server.xml"
                             bindingsxml="${jboss.server.path}/server/default/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
                             port="${jboss.server.port}"
+                            bindaddress="${jboss.server.address}"
                             redirectport="${jboss.server.redirect.port}"
                             ajpport="${jboss.server.ajp.port}"
                             ajpredirectport="${jboss.server.ajp.redirect.port}"
@@ -518,6 +483,24 @@
                             xms="${jboss.server.xms}"
                             xmx="${jboss.server.xmx}"
                         />
+
+                        <mkdir dir="${jboss.server.path}/server/default/log" />
+
+                        <get src="${tools.download.url}/stop.sh" dest="${bda.temp.dir}/stop.sh"/>
+                        <get src="${tools.download.url}/start.sh" dest="${bda.temp.dir}/start.sh"/>
+
+                        <copy todir="${jboss.server.path}/bin" overwrite="true"
+                             flatten="true" includeEmptyDirs="no" filtering="true">
+                            <filterset>
+                                <filter token="jboss.server.path" value="${jboss.server.path}"/>
+                            </filterset>
+                            <resources>
+                                <file file="${bda.temp.dir}/stop.sh"/>
+                                <file file="${bda.temp.dir}/start.sh"/>
+                            </resources>
+                        </copy>
+
+                        <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
 
                         <bda:ConsoleOutput />
                         <bda:ConsoleOutput message="  Configuration complete." />
