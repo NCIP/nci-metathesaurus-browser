@@ -360,10 +360,10 @@
 
         <copy
             file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
             overwrite="true"
         />
-        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
+        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"/>
 
     </target>
