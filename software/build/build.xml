@@ -464,7 +464,7 @@
                         <bda:SetJBossServer
                             serverpath="${jboss.server.path}"
                             port="${jboss.server.port}"
-                            bindaddress="${jboss.server.address}"
+                            bindaddress="${jboss.server.bindaddress}"
                             redirectport="${jboss.server.redirect.port}"
                             ajpport="${jboss.server.ajp.port}"
                             ajpredirectport="${jboss.server.ajp.redirect.port}"
