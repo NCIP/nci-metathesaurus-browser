@@ -13,7 +13,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.searchTerm.matchText.focus();">
+<body onLoad="javascript:popupMessage();document.forms.searchTerm.matchText.focus();">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/wz_tooltip.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/tip_centerwindow.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/tip_followscroll.js"></script>
@@ -21,11 +21,16 @@
     <!-- Begin Skip Top Navigation -->
       <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
     <!-- End Skip Top Navigation -->
-  <script language="javascript" type="text/javascript">
-    function backButton() {
-      location.href = '<h:outputText value="#{CartActionBean.backurl}"/>';
-    }
-  </script>
+    <script language="javascript" type="text/javascript">
+      function backButton() {
+        location.href = '<h:outputText value="#{CartActionBean.backurl}"/>';
+      }    
+      function popupMessage() {
+         if (<h:outputText value="#{CartActionBean.messageflag}"/>) {
+         	alert('<h:outputText value="#{CartActionBean.message}"/>');
+         }	
+      }
+    </script>  
     <%
       String contactUsUrl = request.getContextPath() + "/pages/contact_us.jsf";
       String subsetsUrl = request.getContextPath() + "/pages/subset.jsf";
@@ -42,22 +47,24 @@
           <h:form>
           <table border="0" class="dataTable">
             <tr>
-              <td>
-            <table border="0">
-              <tr>
-                <td class="texttitle-blue">Cart</td>
-                <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>
-              </tr>
-            </table>
-          </td>
-          <td align="right">
-            <h:commandLink onclick="backButton();return false;" value="Back" title="Return to search" styleClass="texttitle-blue-small"/> |
-            <h:commandLink value="Remove Concept" action="#{CartActionBean.removeFromCart}" title="Remove concepts from the cart" styleClass="texttitle-blue-small"/> |
-            <h:commandLink value="Export XML" action="#{CartActionBean.exportCartXML}" title="Export cart contents in RDF/XML format" styleClass="texttitle-blue-small"/> |
-            <h:commandLink value="Export CSV" action="#{CartActionBean.exportCartCSV}" title="Generate a list of cart concepts in CSV format readable from Excel" styleClass="texttitle-blue-small"/>
-          </td>
-        </tr>
-      </table>
+              <td width="200px">
+	            <table border="0">
+	              <tr>
+	                <td class="texttitle-blue">Cart</td>
+	                <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>
+	              </tr>
+	            </table>
+          	  </td>
+	          <td align="right" nowrap>
+	            <h:commandLink onclick="backButton();return false;" value="Back" title="Return to search" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink value="Select All" action="#{CartActionBean.selectAllInCart}" title="Select all concepts" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink value="Unselect All" action="#{CartActionBean.unselectAllInCart}" title="Unselect all concepts" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink value="Remove" action="#{CartActionBean.removeFromCart}" title="Remove concepts from the cart" styleClass="texttitle-blue-small" onclick="if (!confirm('Are you sure?')) return false;"/> |
+	            <h:commandLink value="Export XML" action="#{CartActionBean.exportCartXML}" title="Export cart contents in RDF/XML format" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink value="Export CSV" action="#{CartActionBean.exportCartCSV}" title="Generate a list of cart concepts in CSV format readable from Excel" styleClass="texttitle-blue-small"/>
+	          </td>
+        	</tr>
+     	 </table>
       <hr/>
       <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
             <tr>
