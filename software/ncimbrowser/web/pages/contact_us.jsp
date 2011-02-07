@@ -112,7 +112,7 @@
                 }
               %>
             </p>
-            <form method="post">
+            <h:form>
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
                 <i><label for="subject">Subject of your email:</label></i>
@@ -137,7 +137,7 @@
                 action="#{userSessionBean.contactUs}" >
               </h:commandButton>
               &nbsp;&nbsp;<INPUT type="reset" value="Clear" alt="Clear">
-            </form>
+            </h:form>
             <a href="http://www.cancer.gov/policies/page3" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>
           </div>
