@@ -76,6 +76,8 @@ public class CartActionBean {
     private String _codingScheme = null;
     private HashMap<String, Concept> _cart = null;
     private String _backurl = null;
+    private boolean _messageflag = false;
+    private String _message = null;
 
     // Local constants
     static public final String XML_FILE_NAME = "cart.xml";
@@ -110,6 +112,22 @@ public class CartActionBean {
         return _cart.size();
     }
 
+    /**
+     * Return Popup message flag
+     * @return
+     */
+    public boolean getMessageflag() {
+    	return _messageflag;
+    }    
+
+    /**
+     * Return Popup message text
+     * @return
+     */
+    public String getMessage() {
+    	return _message;
+    }    
+    
     /**
      * Compute a back to url that is not the cart page
      * @return
@@ -154,6 +172,7 @@ public class CartActionBean {
         String version = null;
         String semanticType = null;
 
+        _messageflag = false;
         SearchCart search = new SearchCart();        
 
         // Get concept information from the Entity item passed in
@@ -215,32 +234,76 @@ public class CartActionBean {
     /**
      * Remove concept(s) from the Cart
      * @return
-     * @throws Exception
      */
-    public void removeFromCart() throws Exception {
+    public String removeFromCart() {
+    	_messageflag = false;
+    	
+    	if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = "Please select concepts to remove.";
+    	} else {    	
+	        if (_cart != null && _cart.size() > 0) {
+	            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+	                Concept item = (Concept)i.next();
+	                if (item.getSelected()) {
+	                    if (_cart.containsKey(item.code))
+	                        i.remove();
+	                }
+	            }
+	        }
+    	}
+        return null;
+    }
+
+    /**
+     * Unselect all concept(s) in the Cart
+     * @return
+     */
+    public String selectAllInCart() {
+        _messageflag = false;
         if (_cart != null && _cart.size() > 0) {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
-                if (item.getSelected()) {
-                    if (_cart.containsKey(item.code))
-                        i.remove();
-                }
+                item.setSelected(true);
             }
         }
-    }
+        return null;
+    }    
 
+    /**
+     * Unselect all concept(s) in the Cart
+     * @return
+     */
+    public String unselectAllInCart() {
+        _messageflag = false;
+        if (_cart != null && _cart.size() > 0) {
+            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+                Concept item = (Concept)i.next();
+                item.setSelected(false);
+            }
+        }
+        return null;
+    }    
+    
     /**
      * Export cart in XML format
      * @return
      * @throws Exception
      */
-    public void exportCartXML() throws Exception {
+    public String exportCartXML() throws Exception {
 
+        _messageflag = false;
         SearchCart search = new SearchCart();
         ExportCartXML xml = new ExportCartXML();
         ResolvedConceptReference ref = null;
         String sb = null;
 
+    	if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = "Please select concepts to export.";
+        	return null;
+    	}    		
+        
         // Get Entities to be exported and build export xml string
         // in memory
 
@@ -253,7 +316,7 @@ public class CartActionBean {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept) i.next();
                 ref = search.getConceptByCode(item.codingScheme, item.code);
-                if (ref != null) {
+                if (item.selected && ref != null) {
                     _logger.debug("Exporting: " + ref.getCode());
 
                     // Add parent concepts
@@ -289,6 +352,8 @@ public class CartActionBean {
             // Don't allow JSF to forward to cart.jsf
             FacesContext.getCurrentInstance().responseComplete();
         }
+        
+        return null;
     }
 
     /**
@@ -296,11 +361,18 @@ public class CartActionBean {
      * @return
      * @throws Exception
      */
-    public void exportCartCSV() throws Exception {
+    public String exportCartCSV() throws Exception {
 
+        _messageflag = false;
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
         StringBuffer sb = new StringBuffer();
+        
+    	if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = "Please select concepts to export.";  
+        	return null;
+    	} 
         
         // Get Entities to be exported and build export file
         // in memory
@@ -317,7 +389,7 @@ public class CartActionBean {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
                 ref = search.getConceptByCode(item.codingScheme,item.code);
-                if (ref != null) {
+                if (item.selected && ref != null) {
                     _logger.debug("Exporting: " + ref.getCode());
                     sb.append("\"" + clean(item.name) + "\",");
                     sb.append("\"" + clean(item.codingScheme) + "\",");
@@ -343,6 +415,8 @@ public class CartActionBean {
             // Don't allow JSF to forward to cart.jsf
             FacesContext.getCurrentInstance().responseComplete();
         }
+        
+        return null;
     }
 
     /**
@@ -431,6 +505,20 @@ public class CartActionBean {
     //* Utility methods
     //**
 
+    /**
+     * Test any concept in the cart has been selected
+     * @return
+     */
+    private boolean hasSelected() {
+        if (_cart != null && _cart.size() > 0) {
+            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+                Concept item = (Concept)i.next();
+                if (item.getSelected()) return true;
+            }
+        }
+        return false;
+    }    
+    
     /**
      * Dump contents of cart object
      * (non-Javadoc)
