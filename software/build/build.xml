@@ -143,12 +143,14 @@
 
         <echo message="Config folder: ${bda.conf.dir}" />
 
-        <!-- Set default value of 'trunk' if Anthill tag is not set -->
+        <!-- Set a default Ant Hill build tag if tag is not set -->
 
-        <condition property="app.tag.built" value="${anthill.build.tag_built}" else="Unknown or trunk">
-            <isset property="anthill.build.tag_built" />
-        </condition>
-        <echo message="Tag: ${app.tag.built}" />
+        <bda:PropertyTest
+            property="anthill.build.tag_built"
+            default="Unknown"
+        />
+
+        <echo message="Tag: ${anthill.build.tag_built}" />
 
         <!-- Setup Ehcache property file -->
 
@@ -164,7 +166,7 @@
         <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
-                <filter token="app.build.tag" value="${app.tag.built}"/>
+                <filter token="app.build.tag" value="${anthill.build.tag_built}"/>
                 <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
                 <filter token="debug.on" value="${debug.on}"/>
