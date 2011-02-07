@@ -323,7 +323,12 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 			 <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
 			   <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
 			   <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
-			 </h:commandLink>			 			   
+			 </h:commandLink>
+			 <c:choose>	
+			    <c:when test="${sessionScope.CartActionBean.count>0}">
+			   	  (<h:outputText value="#{CartActionBean.count}"/>)
+			   	</c:when>
+			 </c:choose>				 			 			   
           </td>
         </tr>
       </table>            
