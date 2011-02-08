@@ -187,9 +187,13 @@ public class CartActionBean {
                 .getExternalContext().getRequest();
 
         // Get Entity object
-        Entity curr_concept = null;
-        curr_concept = (Entity) request.getSession().getAttribute(_entity);
-        code = curr_concept.getEntityCode(); // Story identifier
+        Entity curr_concept = (Entity) request.getSession().getAttribute(_entity);
+        if (curr_concept == null) {
+        	// Called from a non search area
+        	_logger.error("*** Cart error: Entity object is null!");
+        	return null;
+        }
+        code = curr_concept.getEntityCode(); // Store identifier
 
         // Get coding scheme
         codingScheme = (String)request.getSession().getAttribute(_codingScheme);
