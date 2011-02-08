@@ -85,6 +85,11 @@ public class CartActionBean {
     static public final String CSV_FILE_NAME = "cart.csv";
     static public final String CSV_CONTENT_TYPE = "text/csv";
 
+    // Error messages
+    
+    static public final String NO_CONCEPTS = "No concepts in cart.";
+    static public final String NOTHING_SELECTED = "No concepts selected.";
+    
     // Getters & Setters
 
     /**
@@ -239,20 +244,22 @@ public class CartActionBean {
     public String removeFromCart() {
     	_messageflag = false;
     	
-    	if (!hasSelected()) {
+    	if (getCount() < 1) {
         	_messageflag = true;
-        	_message = "Please select concepts to remove.";
+        	_message = NO_CONCEPTS;    		
+    	} else if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = NOTHING_SELECTED;        	
     	} else {    	
-	        if (_cart != null && _cart.size() > 0) {
-	            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-	                Concept item = (Concept)i.next();
-	                if (item.getSelected()) {
-	                    if (_cart.containsKey(item.code))
-	                        i.remove();
-	                }
-	            }
-	        }
+            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+                Concept item = (Concept)i.next();
+                if (item.getSelected()) {
+                    if (_cart.containsKey(item.code))
+                        i.remove();
+                }
+            }
     	}
+	        
         return null;
     }
 
@@ -262,7 +269,11 @@ public class CartActionBean {
      */
     public String selectAllInCart() {
         _messageflag = false;
-        if (_cart != null && _cart.size() > 0) {
+        
+    	if (getCount() < 1) {
+        	_messageflag = true;
+        	_message = NO_CONCEPTS;    	 
+    	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
                 item.setSelected(true);
@@ -277,7 +288,14 @@ public class CartActionBean {
      */
     public String unselectAllInCart() {
         _messageflag = false;
-        if (_cart != null && _cart.size() > 0) {
+        
+    	if (getCount() < 1) {
+        	_messageflag = true;
+        	_message = NO_CONCEPTS;    		
+    	} else if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = NOTHING_SELECTED;        	
+    	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
                 item.setSelected(false);
@@ -294,65 +312,68 @@ public class CartActionBean {
     public String exportCartXML() throws Exception {
 
         _messageflag = false;
+                
         SearchCart search = new SearchCart();
         ExportCartXML xml = new ExportCartXML();
         ResolvedConceptReference ref = null;
         String sb = null;
 
+    	if (getCount() < 1) {
+        	_messageflag = true;
+        	_message = NO_CONCEPTS;
+        	return null;
+    	} 
     	if (!hasSelected()) {
         	_messageflag = true;
-        	_message = "Please select concepts to export.";
+        	_message = NOTHING_SELECTED;        
         	return null;
     	}    		
         
         // Get Entities to be exported and build export xml string
         // in memory
+    	
+        xml.addDocumentTag();
+        xml.addCommentTag();
 
-        if (_cart != null && _cart.size() > 0) {
+        // Add all terms from the cart
+        for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+            Concept item = (Concept) i.next();
+            ref = search.getConceptByCode(item.codingScheme, item.code);
+            if (item.selected && ref != null) {
+                _logger.debug("Exporting: " + ref.getCode());
 
-            xml.addDocumentTag();
-            xml.addCommentTag();
+                // Add parent concepts
+                Vector<String> parents = search.getParentConcepts(ref);
 
-            // Add all terms from the cart
-            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept) i.next();
-                ref = search.getConceptByCode(item.codingScheme, item.code);
-                if (item.selected && ref != null) {
-                    _logger.debug("Exporting: " + ref.getCode());
+                // Add child concepts
+                Vector<String> children = search.getChildConcepts(ref);
 
-                    // Add parent concepts
-                    Vector<String> parents = search.getParentConcepts(ref);
-
-                    // Add child concepts
-                    Vector<String> children = search.getChildConcepts(ref);
-
-                    // Add terms and properties
-                    Property[] pres = search.getPresentationValues(ref);
-                    Property[] def = search.getDefinitionValues(ref);
-                    Property[] prop = search.getPropertyValues(ref);
-                    Property[] comm = search.getCommentValues(ref);
-                    xml.addTermTag(item.name, item.code, item.codingScheme,
-                            pres, def, prop, comm, parents, children);
-                }
+                // Add terms and properties
+                Property[] pres = search.getPresentationValues(ref);
+                Property[] def = search.getDefinitionValues(ref);
+                Property[] prop = search.getPropertyValues(ref);
+                Property[] comm = search.getCommentValues(ref);
+                xml.addTermTag(item.name, item.code, item.codingScheme,
+                        pres, def, prop, comm, parents, children);
             }
-
-            // Send export XML string to browser
-
-            sb = xml.generateXMLString();
-            HttpServletResponse response = (HttpServletResponse) FacesContext
-                    .getCurrentInstance().getExternalContext().getResponse();
-            response.setContentType(XML_CONTENT_TYPE);
-            response.setHeader("Content-Disposition", "attachment; filename="
-                    + XML_FILE_NAME);
-            response.setContentLength(sb.length());
-            ServletOutputStream ouputStream = response.getOutputStream();
-            ouputStream.write(sb.toString().getBytes(), 0, sb.length());
-            ouputStream.flush();
-            ouputStream.close();
-
-            // Don't allow JSF to forward to cart.jsf
-            FacesContext.getCurrentInstance().responseComplete();
         }
+
+        // Send export XML string to browser
+
+        sb = xml.generateXMLString();
+        HttpServletResponse response = (HttpServletResponse) FacesContext
+                .getCurrentInstance().getExternalContext().getResponse();
+        response.setContentType(XML_CONTENT_TYPE);
+        response.setHeader("Content-Disposition", "attachment; filename="
+                + XML_FILE_NAME);
+        response.setContentLength(sb.length());
+        ServletOutputStream ouputStream = response.getOutputStream();
+        ouputStream.write(sb.toString().getBytes(), 0, sb.length());
+        ouputStream.flush();
+        ouputStream.close();
+
+        // Don't allow JSF to forward to cart.jsf
+        FacesContext.getCurrentInstance().responseComplete();
         
         return null;
     }
@@ -365,57 +386,61 @@ public class CartActionBean {
     public String exportCartCSV() throws Exception {
 
         _messageflag = false;
+        
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
         StringBuffer sb = new StringBuffer();
         
-    	if (!hasSelected()) {
+    	if (getCount() < 1) {
         	_messageflag = true;
-        	_message = "Please select concepts to export.";  
+        	_message = NO_CONCEPTS;
         	return null;
     	} 
+    	if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = NOTHING_SELECTED;        
+        	return null;
+    	}         
         
         // Get Entities to be exported and build export file
         // in memory
 
-        if (_cart != null && _cart.size() > 0) {
-            // Add header
-            sb.append("Concept,");
-            sb.append("Terminology,");
-            sb.append("Code,");
-            sb.append("URL");
-            sb.append("\r\n");
+        // Add header
+        sb.append("Concept,");
+        sb.append("Terminology,");
+        sb.append("Code,");
+        sb.append("URL");
+        sb.append("\r\n");
 
-            // Add concepts
-            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept)i.next();
-                ref = search.getConceptByCode(item.codingScheme,item.code);
-                if (item.selected && ref != null) {
-                    _logger.debug("Exporting: " + ref.getCode());
-                    sb.append("\"" + clean(item.name) + "\",");
-                    sb.append("\"" + clean(item.codingScheme) + "\",");
-                    sb.append("\"" + clean(item.code) + "\",");
-                    sb.append("\"" + clean(item.url) + "\"");
-                    sb.append("\r\n");
-                }
+        // Add concepts
+        for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+            Concept item = (Concept)i.next();
+            ref = search.getConceptByCode(item.codingScheme,item.code);
+            if (item.selected && ref != null) {
+                _logger.debug("Exporting: " + ref.getCode());
+                sb.append("\"" + clean(item.name) + "\",");
+                sb.append("\"" + clean(item.codingScheme) + "\",");
+                sb.append("\"" + clean(item.code) + "\",");
+                sb.append("\"" + clean(item.url) + "\"");
+                sb.append("\r\n");
             }
-
-            // Send export file to browser
-
-            HttpServletResponse response = (HttpServletResponse) FacesContext
-                    .getCurrentInstance().getExternalContext().getResponse();
-            response.setContentType(CSV_CONTENT_TYPE);
-            response.setHeader("Content-Disposition", "attachment; filename="
-                    + CSV_FILE_NAME);
-            response.setContentLength(sb.length());
-            ServletOutputStream ouputStream = response.getOutputStream();
-            ouputStream.write(sb.toString().getBytes(), 0, sb.length());
-            ouputStream.flush();
-            ouputStream.close();
-
-            // Don't allow JSF to forward to cart.jsf
-            FacesContext.getCurrentInstance().responseComplete();
         }
+
+        // Send export file to browser
+
+        HttpServletResponse response = (HttpServletResponse) FacesContext
+                .getCurrentInstance().getExternalContext().getResponse();
+        response.setContentType(CSV_CONTENT_TYPE);
+        response.setHeader("Content-Disposition", "attachment; filename="
+                + CSV_FILE_NAME);
+        response.setContentLength(sb.length());
+        ServletOutputStream ouputStream = response.getOutputStream();
+        ouputStream.write(sb.toString().getBytes(), 0, sb.length());
+        ouputStream.flush();
+        ouputStream.close();
+
+        // Don't allow JSF to forward to cart.jsf
+        FacesContext.getCurrentInstance().responseComplete();
         
         return null;
     }
