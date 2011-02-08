@@ -56,9 +56,9 @@
 	            </table>
           	  </td>
 	          <td align="right" nowrap>
-	            <h:commandLink onclick="backButton();return false;" value="Back" title="Return to search" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink onclick="backButton();return false;" value="Back" title="Return to previous screen" styleClass="texttitle-blue-small"/> |
 	            <h:commandLink value="Select All" action="#{CartActionBean.selectAllInCart}" title="Select all concepts" styleClass="texttitle-blue-small"/> |
-	            <h:commandLink value="Unselect All" action="#{CartActionBean.unselectAllInCart}" title="Unselect all concepts" styleClass="texttitle-blue-small"/> |
+	            <h:commandLink value="Clear" action="#{CartActionBean.unselectAllInCart}" title="Unselect all concepts" styleClass="texttitle-blue-small"/> |
 	            <h:commandLink value="Remove" action="#{CartActionBean.removeFromCart}" title="Remove concepts from the cart" styleClass="texttitle-blue-small" onclick="if (!confirm('Are you sure?')) return false;"/> |
 	            <h:commandLink value="Export XML" action="#{CartActionBean.exportCartXML}" title="Export cart contents in RDF/XML format" styleClass="texttitle-blue-small"/> |
 	            <h:commandLink value="Export CSV" action="#{CartActionBean.exportCartCSV}" title="Generate a list of cart concepts in CSV format readable from Excel" styleClass="texttitle-blue-small"/>
