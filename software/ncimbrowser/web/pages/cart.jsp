@@ -31,12 +31,25 @@
          }	
       }
       function confirmRemoveMessage() {
-		var elements = document.getElementsByName("cartFormId:checkboxId");
-		for (i=0;i<elements.length;i++) {
-			if (elements[i].checked) { 
-				return confirm("Are you sure?");
+        var count = <h:outputText value="#{CartActionBean.count}"/>;
+        var flag = false;  
+		var first = document.getElementById("cartFormId:checkboxId");
+		if (first != null) {
+			if (first.checked) { 
+				flag = true;
+			} else {
+				for (i=1;i<count;i++) {
+					var element = document.getElementById('cartFormId:checkboxIdj_id_' + i);
+					if (element.checked) {
+						flag = true;
+						break;
+					}
+				}		
 			}
-		}	
+		}
+		if (flag) { 
+			return confirm("Are you sure?");
+		}
 		return true;
       }
     </script>  
