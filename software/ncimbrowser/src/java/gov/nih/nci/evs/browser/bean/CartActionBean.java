@@ -125,6 +125,7 @@ public class CartActionBean {
      * @return
      */
     public String getMessage() {
+    	_messageflag = false;
     	return _message;
     }    
     
