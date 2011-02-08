@@ -30,6 +30,15 @@
          	alert('<h:outputText value="#{CartActionBean.message}"/>');
          }	
       }
+      function confirmRemoveMessage() {
+		var elements = document.getElementsByName("cartFormId:checkboxId");
+		for (i=0;i<elements.length;i++) {
+			if (elements[i].checked) { 
+				return confirm("Are you sure?");
+			}
+		}	
+		return true;
+      }
     </script>  
     <%
       String contactUsUrl = request.getContextPath() + "/pages/contact_us.jsf";
@@ -44,25 +53,37 @@
         <!-- Page content -->
         <div class="pagecontent">
           <a name="evs-content" id="evs-content"></a>
-          <h:form>
+          <h:form id="cartFormId">
           <table border="0" class="dataTable">
             <tr>
               <td width="200px">
-	            <table border="0">
+	            <table border="0" width="100%">
 	              <tr>
-	                <td class="texttitle-blue">Cart</td>
-	                <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>
+	                <td class="texttitle-blue" width="40">Cart</td>
+	                <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>	                
+	                <td class="texttitle-gray">
+	            		<h:commandLink value="Exit Cart" onclick="backButton();return false;" title="Return to previous screen" styleClass="texttitle-blue-small"/>    
+	                </td> 	                
 	              </tr>
 	            </table>
           	  </td>
-	          <td align="right" nowrap>
-	            <h:commandLink onclick="backButton();return false;" value="Back" title="Return to previous screen" styleClass="texttitle-blue-small"/> |
-	            <h:commandLink value="Select All" action="#{CartActionBean.selectAllInCart}" title="Select all concepts" styleClass="texttitle-blue-small"/> |
-	            <h:commandLink value="Clear" action="#{CartActionBean.unselectAllInCart}" title="Unselect all concepts" styleClass="texttitle-blue-small"/> |
-	            <h:commandLink value="Remove" action="#{CartActionBean.removeFromCart}" title="Remove concepts from the cart" styleClass="texttitle-blue-small" onclick="if (!confirm('Are you sure?')) return false;"/> |
-	            <h:commandLink value="Export XML" action="#{CartActionBean.exportCartXML}" title="Export cart contents in RDF/XML format" styleClass="texttitle-blue-small"/> |
-	            <h:commandLink value="Export CSV" action="#{CartActionBean.exportCartCSV}" title="Generate a list of cart concepts in CSV format readable from Excel" styleClass="texttitle-blue-small"/>
-	          </td>
+     	  	  <td align="right" valign="bottom" nowrap>          	  	
+	            <h:commandLink action="#{CartActionBean.selectAllInCart}" styleClass="texttitle-blue-small">
+	            	<h:graphicImage value="../images/selectall.gif" alt="Select All" title="Select all concepts" style="border: none" />
+	            </h:commandLink>&nbsp;
+	            <h:commandLink action="#{CartActionBean.unselectAllInCart}" styleClass="texttitle-blue-small">
+	            	<h:graphicImage value="../images/clearselections.gif" alt="Unselect" title="Unselect all concepts" style="border: none" />
+	            </h:commandLink>&nbsp;
+	            <h:commandLink action="#{CartActionBean.removeFromCart}" styleClass="texttitle-blue-small" onclick="return confirmRemoveMessage();">
+	            	<h:graphicImage value="../images/remove.gif" alt="Remove" title="Remove concepts from the cart" style="border: none" />
+	            </h:commandLink>&nbsp;
+	            <h:commandLink action="#{CartActionBean.exportCartXML}" styleClass="texttitle-blue-small">
+	            	<h:graphicImage value="../images/exportxml.gif" alt="Export XML" title="Export cart contents in RDF/XML format" style="border: none" />
+	            </h:commandLink>&nbsp;
+	            <h:commandLink action="#{CartActionBean.exportCartCSV}" styleClass="texttitle-blue-small">
+	            	<h:graphicImage value="../images/exportcsv.gif" alt="Export CSV" title="Generate a list of cart concepts in CSV format readable from Excel" style="border: none" />
+	            </h:commandLink>
+			  </td>      
         	</tr>
      	 </table>
       <hr/>
@@ -81,7 +102,7 @@
               <tr class="dataRowLight">
             </c:otherwise>
             </c:choose>
-              <td><h:selectBooleanCheckbox value="#{item.selected}"/></td>
+              <td><h:selectBooleanCheckbox id="checkboxId" value="#{item.selected}"/></td>
               <td>
                 <h:outputLink value="#{item.url}">${item.name}</h:outputLink>
               </td>
