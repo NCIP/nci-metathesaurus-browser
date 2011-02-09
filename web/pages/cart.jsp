@@ -115,7 +115,7 @@
               <tr class="dataRowLight">
             </c:otherwise>
             </c:choose>
-              <td><h:selectBooleanCheckbox id="checkboxId" value="#{item.selected}"/></td>
+              <td><h:selectBooleanCheckbox id="checkboxId" binding="#{item.checkbox}" onclick="submit()"/></td>
               <td>
                 <h:outputLink value="#{item.url}">${item.name}</h:outputLink>
               </td>

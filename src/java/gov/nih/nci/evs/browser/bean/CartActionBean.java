@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -156,7 +157,9 @@ public class CartActionBean {
         if (_cart == null) _init();
         return _cart.values();
     }
-
+   
+    // ******************** Class methods ************************
+    
     /**
      * Initialize the cart container
      */
@@ -257,7 +260,7 @@ public class CartActionBean {
     	} else {    	
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
-                if (item.getSelected()) {
+                if (item.getCheckbox().isSelected()) {
                     if (_cart.containsKey(item.code))
                         i.remove();
                 }
@@ -279,7 +282,7 @@ public class CartActionBean {
         	_message = NO_CONCEPTS;    	 
     	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept)i.next();
+                Concept item = (Concept)i.next();                
                 item.setSelected(true);
             }
         }
@@ -343,7 +346,7 @@ public class CartActionBean {
         for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
             Concept item = (Concept) i.next();
             ref = search.getConceptByCode(item.codingScheme, item.code);
-            if (item.selected && ref != null) {
+            if (item.getSelected() && ref != null) {
                 _logger.debug("Exporting: " + ref.getCode());
 
                 // Add parent concepts
@@ -420,7 +423,7 @@ public class CartActionBean {
         for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
             Concept item = (Concept)i.next();
             ref = search.getConceptByCode(item.codingScheme,item.code);
-            if (item.selected && ref != null) {
+            if (item.getSelected() && ref != null) {
                 _logger.debug("Exporting: " + ref.getCode());
                 sb.append("\"" + clean(item.name) + "\",");
                 sb.append("\"" + clean(item.codingScheme) + "\",");
@@ -458,10 +461,10 @@ public class CartActionBean {
         private String codingScheme = null;
         private String nameSpace = null;
         private String name = null;
-        private boolean selected = false;
         private String version = null;
         private String url = null;
         private String semanticType = null;
+        private HtmlSelectBooleanCheckbox _checkbox = null; 
 
         // Getters & setters
 
@@ -497,14 +500,6 @@ public class CartActionBean {
             this.name = name;
         }
 
-        public void setSelected(Boolean value) {
-            this.selected = value;
-        }
-
-        public Boolean getSelected() {
-            return this.selected;
-        }
-
         public String getVersion() {
             return this.version;
         }
@@ -527,6 +522,24 @@ public class CartActionBean {
 
         public void setSemanticType(String semanticType) {
             this.semanticType = semanticType;
+        }        
+      
+        public HtmlSelectBooleanCheckbox getCheckbox() {
+            return _checkbox;
+        }
+        
+        public void setCheckbox(HtmlSelectBooleanCheckbox checkbox) {
+            _checkbox = checkbox;
+        }
+
+        // *** Private Methods ***
+        
+        private void setSelected(boolean selected) {
+        	_checkbox.setSelected(selected);
+        }
+        
+        private boolean getSelected() {
+        	return _checkbox.isSelected();
         }        
         
     } // End of Concept
@@ -567,7 +580,7 @@ public class CartActionBean {
                 sb.append("\t      Version = " + item.version + "\n");
                 sb.append("\t   Name space = " + item.nameSpace + "\n");
                 sb.append("\t         Name = " + item.name + "\n");
-                sb.append("\t     Selected = " + item.selected + "\n");
+                sb.append("\t     Selected = " + item.getSelected() + "\n");
                 sb.append("\t          URL = " + item.url + "\n");
                 sb.append("\tSemantic Type = " + item.semanticType + "\n");                
             }
