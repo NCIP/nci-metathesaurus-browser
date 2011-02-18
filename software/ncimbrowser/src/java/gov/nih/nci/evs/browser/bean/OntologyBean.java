@@ -79,7 +79,7 @@ public class OntologyBean {
             return _rela_list;
         _rela_list = new ArrayList();
         if (_rela_vec == null) {
-            _rela_vec = getRELAs(_codingSchemeName, null);
+            _rela_vec = getRELAs(_codingSchemeName);
         }
         _rela_list.add(new SelectItem("", ""));
         for (int k = 0; k < _rela_vec.size(); k++) {
@@ -160,36 +160,29 @@ public class OntologyBean {
     public static Vector getRELAs() {
         if (_rela_vec != null)
             return _rela_vec;
-        return getRELAs(_codingSchemeName, null);
+        return getRELAs(_codingSchemeName);
     }
 
-    public static Vector getRELAs(String scheme, String version) {
+    public static Vector getRELAs(String scheme) {
         Vector v = new Vector();
         HashSet hset = new HashSet();
         LexBIGService lbs = RemoteServerUtil.createLexBIGService(false);
         LexBIGServiceMetadata lbsm = null;
         try {
             lbsm = lbs.getServiceMetadata();
+            
+            CodingScheme cs = getCodingScheme(scheme, null);
+            String uri = cs.getCodingSchemeURI();
+            String ver = cs.getRepresentsVersion();            
             lbsm =
                 lbsm
                     .restrictToCodingScheme(Constructors
-                        .createAbsoluteCodingSchemeVersionReference(scheme,
-                            version));
+                        .createAbsoluteCodingSchemeVersionReference(uri,
+                            ver));
 
             MetadataPropertyList mdpl = lbsm.resolve();
-            Set<String> relas = new HashSet<String>();
-            int rela_count = 0;
             for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
                 MetadataProperty prop = mdpl.getMetadataProperty(i);
-                /*
-                 * if(prop.getName().equals("dockey") &&
-                 * prop.getValue().equals("RELA")){ i++; rela_count++; prop =
-                 * mdpl.getMetadataProperty(i); if
-                 * (!hset.contains(prop.getValue())) {
-                 * relas.add(prop.getValue()); v.add(prop.getValue());
-                 * hset.add(prop.getValue()); } }
-                 */
-
                 if (prop.getName().equals("dockey")
                     && prop.getValue().equals("RELA")) {
                     i++;
@@ -416,12 +409,11 @@ public class OntologyBean {
 
     public static void main(String[] args) throws Exception {
         String scheme = "NCI Metathesaurus";
-        String version = null;
 
-        Vector rela_vec = getRELAs(scheme, version);
+        Vector rela_vec = getRELAs(scheme);
         dumpVector("Supported RELAs", rela_vec);
 
-        CodingScheme cs = getCodingScheme(scheme, version);
+        CodingScheme cs = getCodingScheme(scheme, null);
         Vector<String> properties = getSupportedPropertyNames(cs);
         dumpVector("Supported Properties", properties);
 
