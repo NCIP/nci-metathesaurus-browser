@@ -12,6 +12,7 @@ import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.History.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.Utility.*;
+import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.concepts.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
 
@@ -243,7 +244,9 @@ public class HistoryUtils {
         String vers, String ltag, String code) throws LBException {
 
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        HistoryService hs = lbSvc.getHistoryService(codingSchemeName);
+        CodingScheme cs = getCodingScheme("NCI Thesaurus", null);
+        String uri = cs.getCodingSchemeURI();
+        HistoryService hs = lbSvc.getHistoryService(uri);
         return getEditActions(lbSvc, hs, codingSchemeName, vers, ltag, code);
     }
 
@@ -288,10 +291,9 @@ public class HistoryUtils {
         Enumeration<NCIChangeEvent> enumeration = (Enumeration<NCIChangeEvent>) list.enumerateEntry();
         LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
-        int count = list.getEntryCount();
-
         Vector<String> v = new Vector<String>();
         HashSet<String> hset = new HashSet<String>();
+ 
         while (enumeration.hasMoreElements()) {
             NCIChangeEvent event = enumeration.nextElement();
             event =
@@ -676,6 +678,26 @@ public class HistoryUtils {
         return null;
     }
 
+	private static CodingScheme getCodingScheme(String codingScheme,
+			String version) {
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		if (version != null)
+			versionOrTag.setVersion(version);
+		CodingScheme cs = null;
+		try {
+			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+			try {
+				cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
+			} catch (Exception ex2) {
+				cs = null;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return cs;
+	}    
+    
     // C1065558|200808|RB|||C1040101|Y|
     // if the user search for C1065558, we should find C1040101 (merge)
 
@@ -716,30 +738,3 @@ public class HistoryUtils {
         }
     }
 }
-
-/*
- * //C0536142|200601|SY|||C1433544|Y| //LAS17 protein, S cerevisiae (CUI
- * C1433544)
- * 
- * 
- * 
- * Testing getEditActions ... Connect to
- * http://lexevsapi-qa.nci.nih.gov/lexevsapi50 NCIChangeEvent:
- * merge|2007-12-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2006-01-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2007-07-01|cellular process (Code C1325880) 3
- * 
- * 
- * Testing getAncestors ... Connect to
- * http://lexevsapi-qa.nci.nih.gov/lexevsapi50 NCIChangeEvent:
- * merge|2007-12-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2006-01-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2007-07-01|cellular process (Code C1325880) 3
- * 
- * 
- * Testing getDescendants ... Connect to
- * http://lexevsapi-qa.nci.nih.gov/lexevsapi50 NCIChangeEvent:
- * merge|2007-12-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2006-01-01|cellular process (Code C1325880) NCIChangeEvent:
- * merge|2007-07-01|cellular process (Code C1325880) 3
- */
