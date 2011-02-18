@@ -153,6 +153,7 @@ public class DataUtils {
     public String _ncitAnthillBuildTagBuilt = null;
     public String _evsServiceURL = null;
     public String _ncitURL = null;
+    public String _lexevs_version = null;
 
     private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
@@ -1892,6 +1893,24 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return _ncitURL;
     }
 
+    public String getLexVersion() {
+        if (_lexevs_version != null) {
+            return _lexevs_version;
+        }
+        String default_info = "N/A";
+        NCImBrowserProperties properties = null;
+        try {
+            properties = NCImBrowserProperties.getInstance();
+            _lexevs_version = properties.getProperty(NCImBrowserProperties.LEXEVS_VERSION);
+            if (_lexevs_version == null) {
+            	_lexevs_version = default_info;
+            }
+        } catch (Exception ex) {
+
+        }
+        return _lexevs_version;
+    }    
+    
     public static Vector<String> getMatchTypeListData(String codingSchemeName,
         String version) {
         Vector<String> v = new Vector<String>();
