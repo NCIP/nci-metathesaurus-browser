@@ -181,6 +181,7 @@
                 <filter token="subconcept_page_size" value="${subconcept_page_size}"/>
                 <filter token="max_search_iteration" value="${max_search_iteration}"/>
                 <filter token="max_search_time_limit" value="${max_search_time_limit}"/>
+                <filter token="lexevs_version" value="${lexevs_version}"/>
             </filterset>
             <resources>
                 <file file="${bda.conf.dir}/${webapp.prop.file}"/>

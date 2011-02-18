@@ -2334,6 +2334,11 @@
                  <value>@max_search_time_limit@</value>
         </ConfigurableItem>
 
+        <ConfigurableItem>
+                 <key>LEXEVS_VERSION</key>
+                 <value>@lexevs_version@</value>
+        </ConfigurableItem>
+
     </ConfigurableItems>
 
     <MetadataElements>
