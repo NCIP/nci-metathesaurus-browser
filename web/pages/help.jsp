@@ -7,6 +7,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%
   String ncit_url = new DataUtils().getNCItURL();
+  String lexevs_version = new DataUtils().getLexVersion();
 %>
 <html xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
@@ -258,7 +259,7 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This release, based on LexEVS, addresses most known data and performance issues. We are still
+          This release, based on LexEVS <%=lexevs_version %>, addresses most known data and performance issues. We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
           <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.0+Release+Notes" target="_blank">
