@@ -343,17 +343,30 @@
 
     <target name="deploy:local:uninstall" description="Uninstall the web application">
 
-        <antcall target="jboss:stop" />
-
-        <bda:RemoveJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+        <bda:InputYesNo
+            property="begin.uninstall"
+            prompt="Uninstall the application?"
         />
+        <if>
+            <isset property="begin.uninstall"/>
+            <then>
+                <antcall target="jboss:stop" />
 
-        <delete dir="${application.data.path}/conf" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+                />
+
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.evs.browser.NCImlog4jProperties"
+                />
+
+                <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+           </then>
+        </if>
 
     </target>
 
