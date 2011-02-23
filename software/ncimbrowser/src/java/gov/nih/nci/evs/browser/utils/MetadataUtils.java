@@ -140,6 +140,7 @@ public class MetadataUtils {
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static Vector getTermTypeDescriptionMetaData(String uri,
         String version) {
+    	
         Map<String, String> map = null;
         try {
             map = getTtyExpandedForm(uri, version);
@@ -164,16 +165,18 @@ public class MetadataUtils {
         LexBIGServiceMetadata lbsm = null;
         MetadataPropertyList mdpl = null;
         try {
+            CodingScheme cs = getCodingScheme(uri, version);
+            String urn = cs.getCodingSchemeURI();
             lbsm = lbs.getServiceMetadata();
             lbsm =
                 lbsm.restrictToCodingScheme(Constructors
-                    .createAbsoluteCodingSchemeVersionReference(uri, version));
+                    .createAbsoluteCodingSchemeVersionReference(urn, version));
 
             mdpl = lbsm.resolve();
         } catch (Exception e) {
+        	_logger.error(e.getMessage());
             return null;
         }
-
         for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
             MetadataProperty prop = mdpl.getMetadataProperty(i);
             if (prop.getName().equals("dockey")
@@ -635,6 +638,26 @@ public class MetadataUtils {
         }
     }
 
+	private static CodingScheme getCodingScheme(String codingScheme,
+			String version) {
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		if (version != null)
+			versionOrTag.setVersion(version);
+		CodingScheme cs = null;
+		try {
+			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+			try {
+				cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
+			} catch (Exception ex2) {
+				cs = null;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return cs;
+	} 
+    
     /**
      * Simple example to demonstrate extracting a specific Coding Scheme's
      * Metadata.

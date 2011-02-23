@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jakarta-regexp-1.4.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jcs-1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/jdom.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexbig.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/LexEVSSecurity.jar"/>
@@ -37,7 +36,6 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-pool-1.4.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-core.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-tree-2.0.3.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-beans.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-orm.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/log4j-1.2.15.jar"/>
@@ -58,9 +56,6 @@
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-xml-1.5.7.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/sqlbuilder-2.0.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-client-framework.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.0.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-2.0.0.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-tree-2.0.5.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.1.jar"/>
