@@ -95,11 +95,17 @@ public class MetadataUtils {
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         LexBIGServiceMetadata lbsm = null;
         MetadataPropertyList mdpl = null;
+        
+        CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, null);
+        String uri = cs.getCodingSchemeURI();
+        String representsVersion = cs.getRepresentsVersion();
+
         try {
             lbsm = lbs.getServiceMetadata();
-            lbsm =
-                lbsm.restrictToProperties(new String[] { SOURCE_ABBREVIATION });
-            mdpl = lbsm.resolve();
+            lbsm = lbsm.restrictToProperties(new String[] { SOURCE_ABBREVIATION});
+            lbsm = lbsm.restrictToCodingScheme(Constructors
+                        .createAbsoluteCodingSchemeVersionReference(uri,representsVersion));
+             mdpl = lbsm.resolve();
         } catch (Exception e) {
             return null;
         }
@@ -108,8 +114,9 @@ public class MetadataUtils {
 
         try {
             lbsm = lbs.getServiceMetadata();
-            lbsm =
-                lbsm.restrictToProperties(new String[] { SOURCE_DESCRIPTION });
+            lbsm = lbsm.restrictToProperties(new String[] { SOURCE_DESCRIPTION });            
+            lbsm = lbsm.restrictToCodingScheme(Constructors
+                    .createAbsoluteCodingSchemeVersionReference(uri,representsVersion));            
             mdpl = lbsm.resolve();
 
         } catch (Exception e) {
@@ -124,6 +131,7 @@ public class MetadataUtils {
             w.add(name + "|" + value);
         }
         w = SortUtils.quickSort(w);
+        
         return w;
     }
 
@@ -607,7 +615,7 @@ public class MetadataUtils {
             lbsm =
                 lbsm.restrictToCodingScheme(Constructors
                     .createAbsoluteCodingSchemeVersionReference(
-                        "NCI Metathesaurus", null));
+                    		Constants.CODING_SCHEME_NAME, null));
 
             MetadataPropertyList mdpl = lbsm.resolve();
             for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
