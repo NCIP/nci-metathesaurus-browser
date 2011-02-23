@@ -42,8 +42,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.searchTerm.matchText.focus();">
-
+<body>
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
     <script type="text/javascript"
@@ -292,11 +291,11 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       }
 
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
-  
+
   if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
      term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
-    	 term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();    	 
+       term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();
      }
      if (term_suggestion_application_url1 != null) {
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
@@ -312,26 +311,26 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
         request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
-      <h:form>    
-      <div class="texttitle-blue">	  	
+      <h:form>
+      <div class="texttitle-blue">
       <table border="0" width="700px">
         <tr>
           <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
              <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
-			 <br>
-			 <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
-			   <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
-			   <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
-			 </h:commandLink>
-			 <c:choose>	
-			    <c:when test="${sessionScope.CartActionBean.count>0}">
-			   	  (<h:outputText value="#{CartActionBean.count}"/>)
-			   	</c:when>
-			 </c:choose>				 			 			   
+       <br>
+       <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">
+         <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
+         <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
+       </h:commandLink>
+       <c:choose>
+          <c:when test="${sessionScope.CartActionBean.count>0}">
+            (<h:outputText value="#{CartActionBean.count}"/>)
+          </c:when>
+       </c:choose>
           </td>
         </tr>
-      </table>            
+      </table>
       </div>
       <hr>
       <input type="hidden" name="type" value="<%=type %>">
