@@ -447,6 +447,11 @@
         <to-view-id>/pages/concept_details.jsp</to-view-id>
       </navigation-case>
 
+      <navigation-case>
+         <from-outcome>showcart</from-outcome>
+         <to-view-id>/pages/cart.jsp</to-view-id>
+      </navigation-case>
+
   </navigation-rule>
 
   <managed-bean>
