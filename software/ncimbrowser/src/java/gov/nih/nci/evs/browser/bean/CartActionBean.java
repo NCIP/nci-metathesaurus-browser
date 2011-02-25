@@ -267,7 +267,7 @@ public class CartActionBean {
             }
     	}
 	        
-        return null;
+        return "showcart";
     }
 
     /**
@@ -464,7 +464,7 @@ public class CartActionBean {
         private String version = null;
         private String url = null;
         private String semanticType = null;
-        private HtmlSelectBooleanCheckbox _checkbox = null; 
+        private HtmlSelectBooleanCheckbox checkbox = null; 
 
         // Getters & setters
 
@@ -525,21 +525,22 @@ public class CartActionBean {
         }        
       
         public HtmlSelectBooleanCheckbox getCheckbox() {
-            return _checkbox;
+         	if (checkbox == null) checkbox = new HtmlSelectBooleanCheckbox();
+            return checkbox;
         }
         
         public void setCheckbox(HtmlSelectBooleanCheckbox checkbox) {
-            _checkbox = checkbox;
+            this.checkbox = checkbox;
         }
-
+      
         // *** Private Methods ***
         
         private void setSelected(boolean selected) {
-        	_checkbox.setSelected(selected);
+        	this.checkbox.setSelected(selected);
         }
         
         private boolean getSelected() {
-        	return _checkbox.isSelected();
+        	return this.checkbox.isSelected();
         }        
         
     } // End of Concept
