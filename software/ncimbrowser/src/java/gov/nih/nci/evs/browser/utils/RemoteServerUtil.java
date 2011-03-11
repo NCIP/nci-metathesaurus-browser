@@ -6,6 +6,7 @@ import org.LexGrid.LexBIG.caCore.interfaces.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.Impl.*;
 import org.apache.log4j.*;
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 
 import gov.nih.nci.system.client.*;
 import gov.nih.nci.evs.browser.properties.*;
@@ -243,4 +244,42 @@ public class RemoteServerUtil {
     public static String getServiceURL() {
         return _serviceURL;
     }
+    
+    public static LexEVSDistributed getLexEVSDistributed(String serviceUrl) {
+		try {
+			LexEVSDistributed distributed =
+				(LexEVSDistributed)
+				ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+
+			return distributed;
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+	}    
+    
+    public static LexEVSDistributed getLexEVSDistributed() {
+		String url = "http://ncias-d488-v.nci.nih.gov:29080/lexevsapi60";
+		NCImBrowserProperties properties = null;
+		try {
+            properties = NCImBrowserProperties.getInstance();
+            url = properties.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+            return getLexEVSDistributed(url);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+	}    
+    
+    public static LexEVSValueSetDefinitionServices getLexEVSValueSetDefinitionServices() {
+		try {
+			LexEVSDistributed distributed = getLexEVSDistributed();
+			LexEVSValueSetDefinitionServices vds = distributed.getLexEVSValueSetDefinitionServices();
+			return vds;
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+	}    
+    
 }

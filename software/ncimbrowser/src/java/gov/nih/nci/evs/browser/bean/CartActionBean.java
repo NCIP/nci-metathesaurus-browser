@@ -1,9 +1,14 @@
 package gov.nih.nci.evs.browser.bean;
 
+import gov.nih.nci.evs.browser.common.Constants;
+import gov.nih.nci.evs.browser.utils.RemoteServerUtil;
 import gov.nih.nci.evs.browser.utils.SearchCart;
 import gov.nih.nci.evs.browser.utils.SearchUtils;
 import gov.nih.nci.evs.browser.utils.ExportCartXML;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +26,12 @@ import org.LexGrid.concepts.Entity;
 import org.LexGrid.commonTypes.Property;
 
 import org.apache.log4j.Logger;
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
+import org.LexGrid.valueSets.DefinitionEntry;
+import org.LexGrid.valueSets.EntityReference;
+import org.LexGrid.valueSets.ValueSetDefinition; 
+import org.LexGrid.valueSets.ValueSetDefinitionReference;
+import org.LexGrid.valueSets.types.DefinitionOperator;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -321,9 +332,7 @@ public class CartActionBean {
         _messageflag = false;
                 
         SearchCart search = new SearchCart();
-        ExportCartXML xml = new ExportCartXML();
         ResolvedConceptReference ref = null;
-        String sb = null;
 
     	if (getCount() < 1) {
         	_messageflag = true;
@@ -338,47 +347,111 @@ public class CartActionBean {
         
         // Get Entities to be exported and build export xml string
         // in memory
-    	
-        xml.addDocumentTag();
-        xml.addCommentTag();
 
+		LexEVSValueSetDefinitionServices vsd_service = RemoteServerUtil
+				.getLexEVSValueSetDefinitionServices();
+	
+		// Instantiate VSD
+		ValueSetDefinition vsd = new ValueSetDefinition();
+		 
+		// Populate VSD meta-data
+		vsd.setValueSetDefinitionURI("EXPORT:VSDREF_CART");
+		vsd.setValueSetDefinitionName("VSDREF_CART");
+		vsd.setDefaultCodingScheme(Constants.CODING_SCHEME_NAME);
+		vsd.setConceptDomain("Concepts");
+		 
+		// Instantiate DefinitionEntry(Rule Set)
+		DefinitionEntry de = new DefinitionEntry();
+		 
+		// Assign the rule order(order this definitionEntry should be processed)
+		de.setRuleOrder(1L);
+		// Assign operator (OR, AND or SUBTRACT). This is to OR, AND or SUBTRACT the result of this definitionEntry from vsd resolution
+		de.setOperator(DefinitionOperator.OR);
+		 
+		// Instantiate ValueSetDefinitionReference which is one of the 4 definitionEntry (the other:CodingSchemeReference, EntityReference and PropertyReference) 
+		ValueSetDefinitionReference vsdRef = new ValueSetDefinitionReference();
+		 
+		// Assign referenced VSD
+		vsdRef.setValueSetDefinitionURI("EXPORT:CART_NODES");
+		 
+		// Add vsdReference to definitionEntry.
+		de.setValueSetDefinitionReference(vsdRef);
+		 
+		// add the definitionEntry to VSD. With this, we added the first definitionEntry to VSD
+		vsd.addDefinitionEntry(de);
+		 
         // Add all terms from the cart
         for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
             Concept item = (Concept) i.next();
+            
             ref = search.getConceptByCode(item.codingScheme, item.code);
+
+            String EC = ref.getEntity().getEntityCode();
+            String ECN = ref.getCodeNamespace();            
+            
             if (item.getSelected() && ref != null) {
                 _logger.debug("Exporting: " + ref.getCode());
 
-                // Add parent concepts
-                Vector<String> parents = search.getParentConcepts(ref);
+        		// Instantiate EntityReference which is one of the 4 definitionEntry
+        		EntityReference entityRef = new EntityReference();
+        		 
+        		// set appropriate values for entityReference
+        		entityRef.setEntityCode(EC);
+        		entityRef.setEntityCodeNamespace(ECN);
+        		entityRef.setLeafOnly(false);
+        		entityRef.setTransitiveClosure(false);
 
-                // Add child concepts
-                Vector<String> children = search.getChildConcepts(ref);
-
-                // Add terms and properties
-                Property[] pres = search.getPresentationValues(ref);
-                Property[] def = search.getDefinitionValues(ref);
-                Property[] prop = search.getPropertyValues(ref);
-                Property[] comm = search.getCommentValues(ref);
-                xml.addTermTag(item.name, item.code, item.codingScheme,
-                        pres, def, prop, comm, parents, children);
+        		// To add another definitionEntry to VSD, we fist re-instantiate DefinitionEntry
+        		de = new DefinitionEntry();
+        		 
+        		// Set the order and operator for this definitionEntry
+        		de.setRuleOrder(2L);
+        		de.setOperator(DefinitionOperator.OR);        		
+        		
+        		// add entityReference to definitionEntry
+        		de.setEntityReference(entityRef);
+        		 
+        		// add the second definitionEntry to VSD
+        		vsd.addDefinitionEntry(de);        
             }
-        }
+        }		
+		
+        // Build a buffer holding the XML data
+		
+        StringBuffer buf = new StringBuffer();		
+        
+		InputStream reader = vsd_service.exportValueSetResolution(vsd, null,
+			null, null, false);
 
-        // Send export XML string to browser
+		if (reader != null) {
+			buf = new StringBuffer();
+			try {
+				for (int c = reader.read(); c != -1; c = reader.read())
+					buf.append((char) c);
+			} catch (IOException e) {
+				throw e;
+			} finally {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					// ignored
+				}
+			}
+		}
+		
+		// Send export file to browser
 
-        sb = xml.generateXMLString();
         HttpServletResponse response = (HttpServletResponse) FacesContext
                 .getCurrentInstance().getExternalContext().getResponse();
         response.setContentType(XML_CONTENT_TYPE);
         response.setHeader("Content-Disposition", "attachment; filename="
                 + XML_FILE_NAME);
-        response.setContentLength(sb.length());
+        response.setContentLength(buf.length());
         ServletOutputStream ouputStream = response.getOutputStream();
-        ouputStream.write(sb.toString().getBytes(), 0, sb.length());
+        ouputStream.write(buf.toString().getBytes(), 0, buf.length());
         ouputStream.flush();
         ouputStream.close();
-
+	
         // Don't allow JSF to forward to cart.jsf
         FacesContext.getCurrentInstance().responseComplete();
         
