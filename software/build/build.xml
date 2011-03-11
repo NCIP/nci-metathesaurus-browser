@@ -492,12 +492,14 @@
                             runconf="${jboss.server.path}/bin/run.conf"
                             xms="${jboss.server.xms}"
                             xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
                         />
 
                         <bda:SetJBossRunConf
                             runconf="${jboss.server.path}/bin/run.conf.bat"
                             xms="${jboss.server.xms}"
                             xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
                         />
 
                         <get src="${tools.download.url}/stop.sh" dest="${bda.temp.dir}/stop.sh"/>
