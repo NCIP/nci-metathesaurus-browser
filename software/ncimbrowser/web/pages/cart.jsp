@@ -24,35 +24,35 @@
     <script language="javascript" type="text/javascript">
       function backButton() {
         location.href = '<h:outputText value="#{CartActionBean.backurl}"/>';
-      }    
+      }
       function popupMessage() {
          if (<h:outputText value="#{CartActionBean.messageflag}"/>) {
-         	alert('<h:outputText value="#{CartActionBean.message}"/>');
-         }	
+          alert('<h:outputText value="#{CartActionBean.message}"/>');
+         }
       }
       function confirmRemoveMessage() {
         var count = <h:outputText value="#{CartActionBean.count}"/>;
-        var flag = false;  
-		var first = document.getElementById("cartFormId:checkboxId");
-		if (first != null) {
-			if (first.checked) { 
-				flag = true;
-			} else {
-				for (i=1;i<count;i++) {
-					var element = document.getElementById('cartFormId:checkboxIdj_id_' + i);
-					if (element.checked) {
-						flag = true;
-						break;
-					}
-				}		
-			}
-		}
-		if (flag) { 
-			return confirm("Are you sure?");
-		}
-		return true;
+        var flag = false;
+    var first = document.getElementById("cartFormId:checkboxId");
+    if (first != null) {
+      if (first.checked) {
+        flag = true;
+      } else {
+        for (i=1;i<count;i++) {
+          var element = document.getElementById('cartFormId:checkboxIdj_id_' + i);
+          if (element.checked) {
+            flag = true;
+            break;
+          }
+        }
       }
-    </script>  
+    }
+    if (flag) {
+      return confirm("Are you sure?");
+    }
+    return true;
+      }
+    </script>
     <%
       String contactUsUrl = request.getContextPath() + "/pages/contact_us.jsf";
       String subsetsUrl = request.getContextPath() + "/pages/subset.jsf";
@@ -70,35 +70,35 @@
           <table border="0" class="dataTable">
             <tr>
               <td width="200px">
-	            <table border="0" width="100%">
-	              <tr>
-	                <td class="texttitle-blue" width="40">Cart</td>
-	                <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>	                
-	                <td class="texttitle-gray">
-	            		<h:commandLink value="Exit Cart" onclick="backButton();return false;" title="Return to previous screen" styleClass="texttitle-blue-small"/>    
-	                </td> 	                
-	              </tr>
-	            </table>
-          	  </td>
-     	  	  <td align="right" valign="bottom" nowrap>          	  	
-	            <h:commandLink action="#{CartActionBean.selectAllInCart}" styleClass="texttitle-blue-small">
-	            	<h:graphicImage value="../images/selectall.gif" alt="Select All" title="Select all concepts" style="border: none" />
-	            </h:commandLink>&nbsp;
-	            <h:commandLink action="#{CartActionBean.unselectAllInCart}" styleClass="texttitle-blue-small">
-	            	<h:graphicImage value="../images/clearselections.gif" alt="Unselect" title="Unselect all concepts" style="border: none" />
-	            </h:commandLink>&nbsp;
-	            <h:commandLink action="#{CartActionBean.removeFromCart}" styleClass="texttitle-blue-small" onclick="return confirmRemoveMessage();">
-	            	<h:graphicImage value="../images/remove.gif" alt="Remove" title="Remove concepts from the cart" style="border: none" />
-	            </h:commandLink>&nbsp;
-	            <h:commandLink action="#{CartActionBean.exportCartXML}" styleClass="texttitle-blue-small">
-	            	<h:graphicImage value="../images/exportxml.gif" alt="Export XML" title="Export cart contents in RDF/XML format" style="border: none" />
-	            </h:commandLink>&nbsp;
-	            <h:commandLink action="#{CartActionBean.exportCartCSV}" styleClass="texttitle-blue-small">
-	            	<h:graphicImage value="../images/exportcsv.gif" alt="Export CSV" title="Generate a list of cart concepts in CSV format readable from Excel" style="border: none" />
-	            </h:commandLink>
-			  </td>      
-        	</tr>
-     	 </table>
+              <table border="0" width="100%">
+                <tr>
+                  <td class="texttitle-blue" width="40">Cart</td>
+                  <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>
+                  <td class="texttitle-gray">
+                  <h:commandLink value="Exit Cart" onclick="backButton();return false;" title="Return to previous screen" styleClass="texttitle-blue-small"/>
+                  </td>
+                </tr>
+              </table>
+              </td>
+            <td align="right" valign="bottom" nowrap>
+              <h:commandLink action="#{CartActionBean.selectAllInCart}" styleClass="texttitle-blue-small">
+                <h:graphicImage value="../images/selectall.gif" alt="Select All" title="Select all concepts" style="border: none" />
+              </h:commandLink>&nbsp;
+              <h:commandLink action="#{CartActionBean.unselectAllInCart}" styleClass="texttitle-blue-small">
+                <h:graphicImage value="../images/clearselections.gif" alt="Unselect" title="Unselect all concepts" style="border: none" />
+              </h:commandLink>&nbsp;
+              <h:commandLink action="#{CartActionBean.removeFromCart}" styleClass="texttitle-blue-small" onclick="return confirmRemoveMessage();">
+                <h:graphicImage value="../images/remove.gif" alt="Remove" title="Remove concepts from the cart" style="border: none" />
+              </h:commandLink>&nbsp;
+              <h:commandLink action="#{CartActionBean.exportCartXML}" styleClass="texttitle-blue-small">
+                <h:graphicImage value="../images/exportxml.gif" alt="Export XML" title="Export cart contents in LexGrid XML format" style="border: none" />
+              </h:commandLink>&nbsp;
+              <h:commandLink action="#{CartActionBean.exportCartCSV}" styleClass="texttitle-blue-small">
+                <h:graphicImage value="../images/exportcsv.gif" alt="Export CSV" title="Generate a list of cart concepts in CSV format readable from Excel" style="border: none" />
+              </h:commandLink>
+        </td>
+          </tr>
+       </table>
       <hr/>
       <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
             <tr>
