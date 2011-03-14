@@ -43,34 +43,36 @@
 
     DataUtils util = new DataUtils();
 
-    HashMap hmap = null;//(HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
-    if (hmap == null) {
-      //hmap = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
-      hmap = util.getAssociationTargetHashMap(code_curr, sort_option);
-      request.getSession().setAttribute("AssociationTargetHashMap", hmap);
+    HashMap hmap_rel = null;//(HashMap) request.getSession().getAttribute("AssociationTargetHashMap");
+    if (hmap_rel == null) {
+      //hmap_rel = util.getAssociationTargetHashMap(scheme_curr, version_curr, code_curr, sort_option);
+      hmap_rel = util.getAssociationTargetHashMap(code_curr, sort_option);
+      request.getSession().setAttribute("AssociationTargetHashMap", hmap_rel);
     }
 
 
-    Vector superconcept_vec = (Vector) hmap.get("Parent");
-    Vector subconcept_vec = (Vector) hmap.get("Child");
-    Vector broader_vec = (Vector) hmap.get("Broader");
-    Vector narrower_vec = (Vector) hmap.get("Narrower");
-    Vector sibling_vec = (Vector) hmap.get("Sibling");
+    Vector superconcept_vec = (Vector) hmap_rel.get("Parent");
+    Vector subconcept_vec = (Vector) hmap_rel.get("Child");
+    Vector broader_vec = (Vector) hmap_rel.get("Broader");
+    Vector narrower_vec = (Vector) hmap_rel.get("Narrower");
+    Vector sibling_vec = (Vector) hmap_rel.get("Sibling");
     //Vector sibling_vec = util.getSiblings(code_curr);
 
-    Vector other_vec = (Vector) hmap.get("Other");
+    Vector other_vec = (Vector) hmap_rel.get("Other");
 
     String label = "";
     String rel_value = "";
 
  %>
 <table border="0" width="708px">
-	<tr>
-		<td class="textsubtitle-blue" align="left">Relationships with other NCI Metathesaurus Concepts:</td>
-	</tr>
-</table>  
+  <tr>
+    <td class="textsubtitle-blue" align="left">
+      Relationships with other NCI Metathesaurus Concepts:<a name="SynonymsDetails"></a>
+    </td>
+  </tr>
+</table>
 <%
-  Object incomplete_obj = hmap.get(DataUtils.INCOMPLETE);
+  Object incomplete_obj = hmap_rel.get(DataUtils.INCOMPLETE);
   String incomplete = "[Not Set]";
   if (incomplete_obj != null) {
       incomplete = (String) incomplete_obj;

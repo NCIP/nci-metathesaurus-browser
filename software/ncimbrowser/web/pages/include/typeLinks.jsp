@@ -55,6 +55,28 @@ _logger.warn("(*) concept_typelinks == null???");
         }
           %>
       </td>
+      <td width="119" height="21">
+        <%
+          if (data_type == null ||
+            (data_type != null && data_type.compareTo("synonym") != 0)) {
+        %>
+        <a id="a_synTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
+          <img name="sdTab"
+            src="<%=request.getContextPath() %>/images/tab_sd.gif"
+            width="119" height="21" border="0" alt="Synonym Details"
+            title="Synonym Details" />
+        </a>
+        <%
+          } else {
+        %>
+          <img name="sdTab"
+            src="<%=request.getContextPath() %>/images/tab_sd_clicked.gif"
+            width="119" height="21" border="0" alt="Synonym Details"
+            title="Synonym Details" />
+        <%
+          }
+        %>
+      </td>
       <td width="102" height="21">
         <%
           if (data_type == null ||
@@ -73,28 +95,6 @@ _logger.warn("(*) concept_typelinks == null???");
             src="<%=request.getContextPath() %>/images/tab_rel_clicked.gif"
             width="102" height="21" border="0" alt="Relationships"
             title="Relationships" />
-        <%
-          }
-        %>
-        </td>
-        <td width="119" height="21">
-        <%
-          if (data_type == null ||
-            (data_type != null && data_type.compareTo("synonym") != 0)) {
-        %>
-        <a id="a_synTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
-          <img name="sdTab"
-            src="<%=request.getContextPath() %>/images/tab_sd.gif"
-            width="119" height="21" border="0" alt="Synonym Details"
-            title="Synonym Details" />
-        </a>
-        <%
-          } else {
-        %>
-          <img name="sdTab"
-            src="<%=request.getContextPath() %>/images/tab_sd_clicked.gif"
-            width="119" height="21" border="0" alt="Synonym Details"
-            title="Synonym Details" />
         <%
           }
         %>
