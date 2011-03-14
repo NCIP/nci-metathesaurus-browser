@@ -127,7 +127,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
                      type.compareTo("synonym") != 0 &&
                      type.compareTo("sources") != 0 &&
                      type.compareTo("all") != 0) {
-                type = "properties";
+                     type = "properties";
             }
             request.getSession().setAttribute("type", type);
 
@@ -337,9 +337,21 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       </h:form>
       <%@ include file="/pages/include/typeLinks.jsp" %>
       <div class="tabTableContentContainer">
+          <% if (type.compareTo("properties") != 0 &&
+                 type.compareTo("relationship") != 0 &&
+                 type.compareTo("synonym") != 0 &&
+                 type.compareTo("sources") != 0 ) { %>
+          <H1 class="textsubtitle-blue">Table of Contents</H1>
+          <ul>
+            <li><A href="#properties">Terms &amp; Properties</A></li>
+            <li><A href="#SynonymsDetails">Synonym Details</A></li>
+            <li><A href="#relationships">Relationships</A></li>
+            <li><A href="#sources">By Source</A></li>
+          </ul>
+          <% } %>
           <%@ include file="/pages/include/property.jsp" %>
-          <%@ include file="/pages/include/relationship.jsp" %>
           <%@ include file="/pages/include/synonym.jsp" %>
+          <%@ include file="/pages/include/relationship.jsp" %>
           <%@ include file="/pages/include/sources.jsp" %>
       </div>
           <%

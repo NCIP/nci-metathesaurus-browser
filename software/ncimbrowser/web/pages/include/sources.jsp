@@ -69,12 +69,13 @@
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
 %>
-	<table border="0" width="708px">
-		<tr>
-			<td class="textsubtitle-blue" align="left">'<%=concept_neighborhood_name%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
-		</tr>
-	</table> 
+  <table border="0" width="708px">
+    <tr>
+      <td class="textsubtitle-blue" align="left">'<%=concept_neighborhood_name%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
+    </tr>
+  </table>
     <div>
+      <a name="sources"></a>
       <table class="dataTable" border="0">
         <%
         if (src_vec.size() > 0) {

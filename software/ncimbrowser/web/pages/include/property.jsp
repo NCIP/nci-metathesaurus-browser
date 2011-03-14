@@ -151,9 +151,11 @@
 
 %>
 <table border="0" width="708px">
-	<tr>
-		<td class="textsubtitle-blue" align="left">Terms and Properties</td>
-	</tr>
+  <tr>
+    <td class="textsubtitle-blue" align="left">
+      <A name="properties">Terms & Properties</A>
+    </td>
+  </tr>
 </table>
 <%
 if (retired_cui != null) {
