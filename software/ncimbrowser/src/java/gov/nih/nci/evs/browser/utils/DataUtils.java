@@ -1909,8 +1909,8 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
         }
         return _lexevs_version;
-    }    
-    
+    }
+
     public static Vector<String> getMatchTypeListData(String codingSchemeName,
         String version) {
         Vector<String> v = new Vector<String>();
@@ -3833,6 +3833,34 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
         return strbuf.toString();
     }
+
+
+    public static HashMap getSemanticTypes(String[] codes) {
+		MetaBrowserService mbs = null;
+		HashMap hmap = new HashMap();
+        try {
+            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+
+            if (lbSvc == null) {
+                _logger.warn("lbSvc = null");
+                return null;
+            }
+            mbs =
+                (MetaBrowserService) lbSvc
+                    .getGenericExtension("metabrowser-extension");
+            if (mbs == null) {
+                _logger.error("Error! metabrowser-extension is null!");
+                return null;
+            }
+		    List<SemanticTypeHolder> result = mbs.getSemanticType(Arrays.asList(codes));
+			for (SemanticTypeHolder semanticTypeHolder : result) {
+				hmap.put(semanticTypeHolder.getCui(), semanticTypeHolder.getSemanticType());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return hmap;
+	}
 
     public static HashMap getPropertyValuesForCodes(String scheme,
         String version, Vector codes, String propertyName) {
