@@ -169,15 +169,17 @@ if (randomKey != null) {
       List list = iteratorBean.getData(istart, iend);
       iterator_delay = System.currentTimeMillis() - ms0;
 
-                  Vector code_vec = new Vector();
+                  //Vector code_vec = new Vector();
+                  String[] code_array = new String[list.size()];
                   for (int k=0; k<list.size(); k++) {
                       ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
-                      code_vec.add(rcr.getConceptCode());
+                      code_array[k] = rcr.getConceptCode();
                   }
+                 
+                  HashMap type_hmap = DataUtils.getSemanticTypes(code_array);
+                  
+        //HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
-
-                  if (code_vec.size() > 0) {
-        HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
         for (int i=0; i<list.size(); i++) {
             ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
