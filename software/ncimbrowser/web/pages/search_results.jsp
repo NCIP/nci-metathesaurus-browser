@@ -157,6 +157,7 @@ if (randomKey != null) {
           //    sortOptionType = "false";
           //if (sortOptionType.compareToIgnoreCase("all") == 0) {
           boolean showSemanticType = true;
+          
           if (showSemanticType) {
           %>
       <th class="dataTableHeader" scope="col" align="left">Concept</th>
@@ -165,58 +166,51 @@ if (randomKey != null) {
           }
           %>
                 <%
-      long ms0 = System.currentTimeMillis();
-      List list = iteratorBean.getData(istart, iend);
-      iterator_delay = System.currentTimeMillis() - ms0;
+		      long ms0 = System.currentTimeMillis();
+		      List list = iteratorBean.getData(istart, iend);
+		      iterator_delay = System.currentTimeMillis() - ms0;
 
-                  //Vector code_vec = new Vector();
-                  String[] code_array = new String[list.size()];
-                  for (int k=0; k<list.size(); k++) {
-                      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
-                      code_array[k] = rcr.getConceptCode();
-                  }
-                 
-                  HashMap type_hmap = DataUtils.getSemanticTypes(code_array);
-                  
-        //HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
+			  //Vector code_vec = new Vector();
+			  String[] code_array = new String[list.size()];
+			  for (int k=0; k<list.size(); k++) {
+			      ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(k);
+			      code_array[k] = rcr.getConceptCode();
+			  }
+
+			  HashMap type_hmap = DataUtils.getSemanticTypes(code_array);
+
+		//HashMap type_hmap = DataUtils.getPropertyValuesForCodes(Constants.CODING_SCHEME_NAME, null, code_vec, "Semantic_Type");
 
 
-        for (int i=0; i<list.size(); i++) {
-            ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
-            String code = rcr.getConceptCode();
-            String name = rcr.getEntityDescription().getContent();
-            String semantic_type = "";
-            String t = (String) type_hmap.get(code);
-            if (t != null) semantic_type = t;
-            if (i % 2 == 0) {
-        %>
-          <tr class="dataRowDark">
-        <%
-            } else {
-        %>
-          <tr class="dataRowLight">
-        <%
-            }
-            %>
-          <td class="dataCellText" width=600>
-            <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
-          </td>
-          <td class="dataCellText" width=400>
-              <%=semantic_type%>
-          </td>
-        </tr>
-            <%
+			for (int i=0; i<list.size(); i++) {
+			    ResolvedConceptReference rcr = (ResolvedConceptReference) list.get(i);
+			    String code = rcr.getConceptCode();
+			    String name = rcr.getEntityDescription().getContent();
+			    String semantic_type = "";
+			    String t = (String) type_hmap.get(code);
 
-        }
-                  } else {
-                  %>
-                       <tr>
-                       <td class="textbodyred">
-                           WARNING: Application timeout.
-           </td>
-           </tr>
-                  <%
-                  }
+			    if (t != null) semantic_type = t;
+			    if (i % 2 == 0) {
+			%>
+			  <tr class="dataRowDark">
+			<%
+			    } else {
+			%>
+			  <tr class="dataRowLight">
+			<%
+			    }
+			    %>
+			  <td class="dataCellText" width=600>
+			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+			  </td>
+			  <td class="dataCellText" width=400>
+			      <%=semantic_type%>
+			  </td>
+			</tr>
+			    <%
+
+			}
+
                 %>
               </table>
             </td>
