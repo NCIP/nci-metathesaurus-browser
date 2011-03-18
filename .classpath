@@ -39,7 +39,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-tree-2.0.5.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-framework.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.1.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-2.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.5.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-2.0.5.jar"/>
 	<classpathentry kind="output" path="software/ncimbrowser/build/web/WEB-INF/classes"/>
 </classpath>
