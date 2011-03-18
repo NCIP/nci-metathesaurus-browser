@@ -64,10 +64,11 @@
     String rel_value = "";
 
  %>
+<a name="relationships"></a>
 <table border="0" width="708px">
   <tr>
     <td class="textsubtitle-blue" align="left">
-      Relationships with other NCI Metathesaurus Concepts:<a name="SynonymsDetails"></a>
+      Relationships with other NCI Metathesaurus Concepts:
     </td>
   </tr>
 </table>
