@@ -83,7 +83,7 @@ import org.LexGrid.valueSets.types.DefinitionOperator;
 public class CartActionBean {
 
     // Local class variables
-    private static Logger _logger = Logger.getLogger(SearchUtils.class);
+    private static Logger _logger = Logger.getLogger(CartActionBean.class);
     private String _entity = null;
     private String _codingScheme = null;
     private HashMap<String, Concept> _cart = null;
