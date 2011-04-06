@@ -1,14 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="org.LexGrid.concepts.Concept" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%
   String ncit_url = new DataUtils().getNCItURL();
 %>
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html>
 <head>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -18,7 +17,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.searchTerm.matchText.focus();">
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
     <script type="text/javascript"
@@ -261,8 +260,8 @@
           This release, based on LexEVS 5.1, addresses most known data and performance issues. We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.0+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.0 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+1.2+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 1.2 Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.

@@ -82,7 +82,8 @@ public class NCImBrowserProperties {
     public static final String NCIM_APP_VERSION = "APPLICATION_VERSION";
     public static final String TERM_SUGGESTION_APPLICATION_URL =
         "TERM_SUGGESTION_APPLICATION_URL";
-    public static final String APP_BUILD_TAG = "APP_BUILD_TAG";
+    public static final String ANTHILL_BUILD_TAG_BUILT =
+        "ANTHILL_BUILD_TAG_BUILT";
     public static final String NCIT_URL = "NCIT_URL";
 
     public static final String PAGINATION_TIME_OUT = "PAGINATION_TIME_OUT";
@@ -235,15 +236,15 @@ public class NCImBrowserProperties {
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_ITERATION);
                     if (_max_search_iteration_str != null) {
-                        _max_search_iteration = Integer.parseInt(_max_search_iteration_str);
-                    }
+                    	_max_search_iteration = Integer.parseInt(_max_search_iteration_str);
+				    }
 
                     String _max_search_time_limit_str =
                         NCImBrowserProperties
                             .getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_TIME_LIMIT);
                     if (_max_search_time_limit_str != null) {
-                        _max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
-                    }
+                    	_max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
+				    }
                 }
             }
         }
@@ -384,9 +385,4 @@ public class NCImBrowserProperties {
     public static int getMaxSearchTimeLimit() {
         return _max_search_time_limit;
     }
-
-    public static String getTermSuggestionApplicationUrl() {
-        return _term_suggestion_application_url;
-    }
-
 }

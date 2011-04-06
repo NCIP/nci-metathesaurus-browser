@@ -1404,7 +1404,7 @@ public class SourceTreeUtils {
 
     public String getPropertyNameByQualifierValue(AssociatedConcept ac,
         String qual_name, String qual_value) {
-    	Entity c = ac.getReferencedEntry();
+        Concept c = ac.getReferencedEntry();
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
             Presentation presentation = presentations[i];
@@ -1423,7 +1423,7 @@ public class SourceTreeUtils {
         return null;
     }
 
-    public static String getHighestRankedAtomName(Entity c, String sab) {
+    public static String getHighestRankedAtomName(Concept c, String sab) {
         int rank = -1;
         String name = "Not assigned";// c.getEntityDescription().getContent();
         Presentation[] presentations = c.getPresentation();
@@ -1564,7 +1564,7 @@ public class SourceTreeUtils {
                                             AssociatedConcept ac =
                                                 (AssociatedConcept) subconcept_list
                                                     .get(i);
-                                            Entity c = ac.getReferencedEntry();
+                                            Concept c = ac.getReferencedEntry();
                                             String concept_code =
                                                 c.getEntityCode();
                                             String concept_name =
@@ -1788,7 +1788,7 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            Entity c = DataUtils.getConceptByCode(scheme, version, null, code);
+            Concept c = DataUtils.getConceptByCode(scheme, version, null, code);
             if (c == null) {
                 _logger.warn("Concept not found ??? " + code);
                 return null;
@@ -1885,7 +1885,7 @@ public class SourceTreeUtils {
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String getAtomName(AssociatedConcept ac, String aui) {
-    	Entity c = ac.getReferencedEntry();
+        Concept c = ac.getReferencedEntry();
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
             Presentation presentation = (Presentation) presentations[i];

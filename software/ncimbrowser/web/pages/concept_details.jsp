@@ -1,6 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -17,7 +16,7 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
-<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="org.LexGrid.concepts.Presentation" %>
 <%@ page import="org.LexGrid.commonTypes.Source" %>
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
@@ -42,7 +41,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.searchTerm.matchText.focus();">
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
     <script type="text/javascript"
       src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
@@ -55,14 +54,14 @@
     <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
 <%
-Entity concept_details_c = null;
+Concept concept_details_c = null;
 String concept_details_code = null;
 Object concept_details_obj = request.getSession().getAttribute("concept");
 if (concept_details_obj == null) {
     concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
     request.getSession().setAttribute("code", concept_details_code);
 } else {
-    concept_details_c = (Entity) concept_details_obj;
+    concept_details_c = (Concept) concept_details_obj;
     concept_details_code = concept_details_c.getEntityCode();
 }
 
@@ -90,8 +89,8 @@ request.getSession().removeAttribute("new_search");
         <%@ include file="/pages/include/sub-header.jsp" %>
         <!-- Main box -->
         <div id="main-area">
-
-
+        
+        
         <%@ include file="/pages/include/content-header.jsp" %>
 
         <!-- Page content -->
@@ -103,7 +102,7 @@ request.getSession().removeAttribute("new_search");
     String type = concept_details_type;
     String sortBy = null;
     String name = null;
-    Entity c = null;
+    Concept c = null;
     String vers = null;
     String ltag = null;
     String sab = null;
@@ -291,13 +290,10 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
          name = "ERROR: Invalid code.";
       }
 
+
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
-  
-  if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
+  if (term_suggestion_application_url1 == null) {
      term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
-     if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
-    	 term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();    	 
-     }
      if (term_suggestion_application_url1 != null) {
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url1);
      }
@@ -308,29 +304,24 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 
         request.getSession().setAttribute("dictionary", dictionary);
         request.getSession().setAttribute("singleton", "false");
-        request.getSession().setAttribute("concept", c);
-        request.getSession().setAttribute("code", c.getEntityCode());
+   request.getSession().setAttribute("concept", c);
+   request.getSession().setAttribute("code", c.getEntityCode());
 
           %>
-      <h:form>    
-      <div class="texttitle-blue">	  	
+      <div class="texttitle-blue">
+
       <table border="0" width="700px">
         <tr>
           <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
              <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
-			 <br>
-			 <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">				
-			   <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
-			   <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
-			 </h:commandLink>			 			   
           </td>
         </tr>
-      </table>            
+      </table>
+
       </div>
+
       <hr>
-      <input type="hidden" name="type" value="<%=type %>">
-      </h:form>
       <%@ include file="/pages/include/typeLinks.jsp" %>
       <div class="tabTableContentContainer">
           <%@ include file="/pages/include/property.jsp" %>

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
-<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 
 <%
@@ -43,9 +43,9 @@
       <a name="evs-content" id="evs-content"></a>
 <%
   String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
-  Entity concept_neighborhood = null;
+  Concept concept_neighborhood = null;
   if (code == null) {
-    concept_neighborhood = (Entity) request.getSession().getAttribute("concept");
+    concept_neighborhood = (Concept) request.getSession().getAttribute("concept");
     code = concept_neighborhood.getEntityCode();
   } else {
           concept_neighborhood = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME, null, null, code);

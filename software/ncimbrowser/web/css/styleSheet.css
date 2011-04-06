@@ -171,13 +171,6 @@ h3
  font-weight: bold;
 }
 
-.texttitle-blue-small
-{
- font-size: 14px;
- color: #2F2F5F;
- font-family: arial, verdana, trebuchet ms, tahoma, sans-serif;
-}
-
 .textsubtitle-blue
 {
  font-size: 17px;
@@ -255,10 +248,10 @@ h3
 
 .datatable
 {
- table-layout: fixed;
+ font-size: 11px;
  width: 705px;
- word-wrap: break-word;
- font-size: 12px;
+ margin: 0;
+ padding: 0;
 }
 
 .datatableheader
@@ -326,14 +319,13 @@ h3
  width: 252px;
  height: 21px;
  margin-bottom: 3px;
- vertical-align: top;
+ vertical-align: bottom;
  font-size: 12px;
 }
 
 .searchbox-btn
 {
- vertical-align: top;
- margin-right: 3px;
+ vertical-align: middle;
 }
 
 .search-form

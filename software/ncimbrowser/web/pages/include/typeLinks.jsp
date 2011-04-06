@@ -3,13 +3,13 @@
 
 <%!
     private static Logger _logger = Utils.getJspLogger("typeLinks.jsp");
-%>
+%>     
 <%
-  Entity concept_typelinks = (Entity) request.getSession().getAttribute("concept");
+  Concept concept_typelinks = (Concept) request.getSession().getAttribute("concept");
   if (concept_typelinks == null) {
-_logger.warn("(*) concept_typelinks == null???");
+_logger.warn("(*) concept_typelinks == null???");  
   }
-
+  
   String concept_typelinks_id = concept_typelinks.getEntityCode();
 
   //request.getSession().setAttribute("code", concept_src_id);
@@ -143,8 +143,8 @@ _logger.warn("(*) concept_typelinks == null???");
         }
         %>
         </td>
-
-
+        
+        
         <td align="right" valign="top">
              &nbsp;
          </td>

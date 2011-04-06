@@ -71,27 +71,27 @@
 
   <label for="matchText" />
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
+        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)"  />
 
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       accesskey="13"
       onclick="javascript:cursor_wait();"
-      image="#{requestContextPath}/images/search.gif"
-      alt="Search"
-      styleClass="searchbox-btn"
-      tabindex="2">
+      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
+      alt="Search">
     </h:commandButton>
 
-    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp" styleClass="searchbox-btn" tabindex="3">
+
+    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
+
 
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> tabindex="4"/><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> tabindex="4"/><label for="algorithm2">Begins With&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Contains" <%=check_c%> tabindex="4"/><label for="algorithm3">Contains</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> /><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> /><label for="algorithm2">Begins With&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Containts" <%=check_c%> /><label for="algorithm3">Contains</label>
       </td>
     </tr>
     <tr align="left">
@@ -106,9 +106,9 @@
 
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> tabindex="5"/><label for="searchTarget1">Name/Code&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="5"/><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="5"/><label for="searchTarget3">Relationship</label>
+        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%> /><label for="searchTarget1">Name/Code&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> /><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> /><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -116,10 +116,11 @@
       <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr valign="top">
           <td align="left" class="textbody">
-            <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody" for="source"/>&nbsp;
+
+            <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody" for="source"/>
             <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
                valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-               immediate="true" onchange="submit()"  tabindex="6">
+               immediate="true" onchange="submit()" >
                <f:selectItems value="#{userSessionBean.sourceList}" />
             </h:selectOneMenu>
 

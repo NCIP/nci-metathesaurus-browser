@@ -1,541 +1,708 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<project name="build" default="usage" basedir="." xmlns:bda="antlib:gov.nih.nci.bdalite">
+<!-- bda-build-templage verison 1.5.13 -->
+
+<project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
     <description>
-        This is the master build file for the project.
+        This build file is part of the bda-build-template project. This is the master build file for the project.
         It should be placed in project/software/. This script wrappers sub projects to build, test and inspect code.
-        These scripts require Java, Ant and SVN to work.
+        Additionally this project manges creation of distributions and deployment locally or remotely.
+        Deployments will call the install.xml from the distribution to install or upgrade the application.
+        Lastly this script will run include targets that require manipulation of containers (selenium tests because
+        they require starting the application server container (and require a fully deployed application which this
+        process is responsible for). This build script assumes two sub-projects ncimbrowser-webapp. The API targets are
+        commented out and can be removed if not needed. Also support for both tomcat and jboss download, install
+        and configure are included.  These scripts require Java, Ant and SVN to work.
     </description>
 
-    <!-- Property file names -->
+    <!-- Property file related properties and tasks -->
     <property environment="env" />
-    <property name="properties.file" value="project.properties" />
-    <property name="local.properties.file" value="local.properties" />
-    <property environment="env"/>
-
-    <!-- Local property file -->
-    <property file="${local.properties.file}" />
-    <available file="${local.properties.file}" property="local.properties.file.exists" />
-
-    <!-- Project property file -->
-    <property file="${properties.file}" />
+    <!-- The project.properties stores properties that are shared between both build.xml and install.xml. Typically properties that are related to the distribution directories, or files. -->
+    <property file="local.properties" />
+    <property file="project.properties" />
+    <property name="properties.file" value="install.properties"/>
+    <echo message="Using properties file of ${properties.file}." />
     <available file="${properties.file}" property="properties.file.exists" />
-    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist." />
+    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist, please make sure that you pass in an accurate file name with the 'ant -Dproperties.file=somepath/somefile', otherwise the build will fail." />
+    <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=(.*[\w\d\/\{\}\\]+)[ \t]+\r*$" replace="\1=\2" />
+    <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=[ \t]+(.*[\w\d\/\{\}\\]+)\r*$" replace="\1=\2" />
+    <property file="${properties.file}" />
 
-    <!-- Application values -->
+    <!-- Set application.base.path based on platform -->
+    <condition property="application.base.path" value="${application.base.path.linux}">
+        <or>
+            <os family="unix" />
+            <os family="mac" />
+        </or>
+    </condition>
+    <condition property="application.base.path" value="${application.base.path.windows}">
+        <os family="windows" />
+    </condition>
+    <property name="jboss.home" value="${application.base.path}/${jboss.relative.path}"/>
+
+    <!-- Set application.data.path based on platform -->
+    <condition property="application.data.path" value="${application.data.path.linux}">
+        <or>
+            <os family="unix" />
+            <os family="mac" />
+        </or>
+    </condition>
+    <condition property="application.data.path" value="${application.data.path.windows}">
+        <os family="windows" />
+    </condition>
+
+    <!-- added for remote deployments since file is copied to root of install dir -->
+    <basename property="properties.file.name" file="${properties.file}" />
+    <!-- BDA standard structure -->
     <property name="project.name" value="ncimbrowser"/>
-    <property name="project.short.name" value="ncim" />
-    <property name="webapp.war.name" value="${project.name}.war" />
-    <property name="webapp.prop.file" value="NCImBrowserProperties.xml" />
+    <property name="build.dir" location="." />
+    <property name="software.dir" location=".." />
+    <property name="common.dir" location="${software.dir}/common" />
+    <property name="local.repo.dir" location="${software.dir}/local-ivy-repo" />
+    <property name="target.dir" location="${software.dir}/target" />
+    <property name="bda-download.dir" location="${target.dir}/bda-download" />
+    <property name="ivy.settings.dir" location="${common.dir}/ivy" />
+    <property name="lib.dir" location="${target.dir}/lib" />
+    <property name="temp.dir" location="${target.dir}/temp" />
+    <property name="reports.dir" location="${target.dir}/reports" />
+    <property name="bda-utils.dir" location="${target.dir}/bda-utils" />
+    <property name="log.dir" location="${target.dir}/logs" />
+    <property name="dist.dir" location="${target.dir}/dist" />
+    <property name="download.dir" location="${target.dir}/download" />
+    <property name="pt.dir" location="${target.dir}/persistent-transient" />
+    <property name="working.dir" location="${target.dir}/working" />
+    <property name="cacore-sdk.dir" location="${target.dir}/${cacore-sdk.binaries.relative.dir}"/>
+    <!-- Ivy Related props -->
+    <property name="ivy.settings.file" value="ivy-settings.xml" />
+    <property name="ivy.jar.file" value="ivy-2.0.0.jar" />
+    <!-- Properties that relate to how to call build targets from sub-projects-->
+    <!-- Working directory passed to Ant tasks -->
+    <property name="ncimbrowser-api.base.dir" value="${software.dir}/ncimbrowser" />
+    <property name="ncimbrowser-webapp.base.dir" value="${software.dir}/ncimbrowser" />
+    <!-- Build file names relative working dir above, if the basedir of the sub-project ant script is ".." you should set the *.basdir to and the build file should include the dir and build file name from the *.base.dir -->
+    <property name="ncimbrowser-webapp.build.file" value="build.xml" />
+    <property name="ncimbrowser-api.build.file" value="build.xml" />
+    <!-- The target name that should be called from the sub-project build file -->
+    <property name="ncimbrowser-api.build.target" value="build:all" />
+    <property name="ncimbrowser-webapp.build.target" value="dist" />
+    <!-- Maven comamnd line arguments, bda profile is inside profiles.xml that gets copied to ear folder before build to override exiting properties -->
+    <!-- Used by dist:*:prep to determin list of files to use for incremental build process.
+        Directory and files must be in svn to work.
+    -->
+    <!-- Distribution Structure properties, used to copy files into the distribution area.
+            Use project.propertie relative dir names becasue they are used by install also-->
+    <property name="dist.exploded.dir" value="${dist.dir}/exploded" />
+    <property name="ncimbrowser-api.dist.dir" value="${dist.exploded.dir}/${ncimbrowser-api.dist.relative.dir}" />
+    <property name="ncimbrowser-webapp.dist.dir" value="${dist.exploded.dir}/${ncimbrowser-webapp.dist.relative.dir}" />
+    <property name="tools.dist.dir" value="${dist.exploded.dir}/${tools.dist.relative.dir}" />
+    <property name="common.dist.dir" value="${dist.exploded.dir}/${common.dist.relative.dir}" />
+    <property name="jboss-conf.dist.dir" value="${dist.exploded.dir}/${jboss-conf.dist.relative.dir}" />
+    <!-- Selenium settings -->
+    <property name="selenium.jar" value="${lib.dir}/test-selenium/selenium-server-1.0-beta-1.jar" />
+    <property name="selenium.browser" value="*iexplore" />
+    <!--  What you would need for a ci server, recommend setting in local.properties
+    <property name="selenium.browser" value="*firefox /usr/lib64/firefox-1.5.0.12/firefox-bin"/>
+    -->
+    <property name="selenium.proxy.port" value="4444" />
+    <property name="selenium.report.dir" value="${reports.dir}/selenium" />
+    <property name="selenium.report.file" value="selenium-rpt.html" />
+    <property name="selenium.test.dir" value="${software.dir}/tests/functional/selenium" />
+    <property name="selenium.test.suite" value="${selenium.test.dir}/bdaTestSuite.html" />
+    <property name="selenium.url" value="http://${jboss.server.hostname}:${jboss.server.port}" />
+    <!-- Where to write files retrieved by get, into the distribution area.  The file names come from project.properties  -->
+    <property name="jboss.dest.file" value="${download.dir}/${jboss.binaries.file}" />
+    <!-- JBoss CP files -->
+    <property name="jbosscp.dest.file" value="${download.dir}/${jbosscp.binaries.file}" />
+    <available file="${jbosscp.dest.file}" property="jbosscp.tools.exists" />
+    <!-- Default install time targets passed by deploy targets to the installer, can be overridden by being set on the command line if different target is desitred.  -->
+    <property name="install.target" value="install" />
+    <property name="upgrade.target" value="upgrade" />
+    <!-- Where grand stores it's outputed pdf reports of build files -->
+    <property name="grand.rpt.dir" value="${common.dir}/grand" />
+    <!-- Hot deploy variables -->
+    <property name="jboss.deploy.dir"  value="${jboss.home}/server/${jboss.server.name}/deploy"/>
+    <property name="ncimbrowser-webapp.name"  value="ncimbrowser"/>
+    <property name="ncimbrowser-webapp.file.name"  value="${ncimbrowser-webapp.name}.war"/>
+    <property name="ncimbrowser-webapp.src.dir" value="${ncimbrowser-webapp.base.dir}/src/web"/>
+    <!-- retrive ivy files then retrieve bda files and librarires -->
+    <property name="commonlibrary.dir" value="" />
+    <property name="bda-download.file" value="bda-ivy-2.0.0-build.xml" />
+    <mkdir dir="${bda-download.dir}" />
+    <property name="bda-download.src.url" value="http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/${bda-download.file}" />
+    <get src="${bda-download.src.url}" dest="${bda-download.dir}/${bda-download.file}" />
+    <ant inheritAll="false" inheritRefs="false" antfile="${bda-download.file}" target="retrieve-bda" dir="${bda-download.dir}">
+        <property name="bda.version" value="${bda.version}" />
+        <property name="bda-utils.dir" location="${bda-utils.dir}" />
+        <property name="lib.dir" location="${lib.dir}" />
+        <property name="software.dir" location="${software.dir}" />
+        <property name="commonlibrary.dir" location="${commonlibrary.dir}" />
+    </ant>
 
-    <!-- BDA-Lite Task definitions -->
-    <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml">
-        <classpath>
-            <pathelement location="../${project.name}/extlib/bda-lite-1.0.0.jar"/>
-        </classpath>
-    </taskdef>
+    <!-- Paths -->
+    <path id="bda-utils.classpath">
+        <fileset dir="${bda-utils.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+    <path id="ivy.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
 
-    <!-- BDA-Lite standard locations -->
-    <bda:BDAInit />
+    <!-- Task definitions -->
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.classpath" />
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda-utils.classpath"/>
+    <!-- Includes- include BDA marcos -->
+    <import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
+    <!-- Start logging -->
+    <mkdir dir="${log.dir}" />
+    <tstamp>
+        <format property="install.time" pattern="yyyy-MM-dd-HH-mm" />
+    </tstamp>
+    <record name="${log.dir}/install-${install.time}.log" action="start" />
 
-    <!-- Compile standard values -->
-    <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
-    <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
-    <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
-
-    <!-- Ant Task definitions -->
-    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda.project.compile.classpath"/>
-    <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="bda.project.compile.classpath"/>
-    <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="bda.project.compile.classpath"/>
-    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="bda.project.compile.classpath"/>
+    <jboss-version/>
 
     <!--============================-->
     <!-- usage: show build targets  -->
     <!--============================-->
 
-    <target name="usage" depends="-init" description="Explains how to use this build script">
-
-        <bda:Usage />
-
+    <target name="usage" description="Explains how to use this build script">
+        <echo message="" />
+        <echo message="Build Script: ${ant.project.name}" />
+        <echo message="-----------------------------------" />
+        <echo message="" />
+        <echo message="Available targets are:" />
+        <echo message="" />
+        <echo message="clean                  --&gt; Remove classes directory for clean build" />
+        <echo message="build:all              --&gt; Normal build of application" />
+        <echo message="deploy:local:install   --&gt; Build and deploy application" />
+        <echo message="deploy:local:upgrade   --&gt; Build and upgrade application" />
+        <echo message="deploy:hot             --&gt; Redeploy application" />
+        <echo message="" />
+        <echo message="" />
+        <echo message="${ant.version}" />
+        <echo message="" />
+        <echo message="        JBoss home = [${jboss.home}]" />
+        <echo message="ANT base directory = [${basedir}]" />
+        <echo message="   Properties file = [${properties.file}]" />
+        <echo message="                OS = [${os.name}]" />
+        <echo message="" />
     </target>
 
-    <!-- This will delete all of the files created by the build process -->
-
-    <target name="clean" depends="-init" description="Remove classes directory for clean build">
-
-        <delete dir="${bda.target.dir}" quiet="true" />
-        <delete dir="${webapp.build.dir}" quiet="true" />
-
+    <target name="diagnostics" description="diagnostics">
+        <echoproperties />
+        <diagnostics />
     </target>
 
-    <target name="-init" description="Sets up build are and initalizes variables">
+    <target name="clean">
+        <delete dir="${dist.dir}" />
+        <delete dir="${temp.dir}" />
+        <delete dir="${ncimbrowser-api.base.dir}/build" />
+        <delete dir="${ncimbrowser-api.base.dir}/dist" />
+    </target>
 
-        <tstamp>
-            <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
-        </tstamp>
+    <target name="init" description="Sets up build are and initalizes variables">
+        <echo message=" ______   ______   _______ " />
+        <echo message="(____  \ (______) (_______)" />
+        <echo message=" ____)  ) _     _  _______ " />
+        <echo message="|  __  ( | |   | ||  ___  |" />
+        <echo message="| |__)  )| |__/ / | |   | |" />
+        <echo message="|______/ |_____/  |_|   |_|" />
+        <mkdir dir="${target.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.exploded.dir}" />
+        <mkdir dir="${ncimbrowser-webapp.dist.dir}" />
+        <mkdir dir="${common.dist.dir}" />
+        <mkdir dir="${tools.dist.dir}" />
+        <mkdir dir="${temp.dir}" />
+        <mkdir dir="${download.dir}" />
+        <mkdir dir="${pt.dir}" />
+        <available file="${jboss.dest.file}" property="jboss.tools.exists" />
+        <!-- If jboss is required to build, then check for jboss in jboss.home, then check for in jboss in working directory, if not found then download it into this that directory.  If found at any point set local.jboss.home to where it is found.  This can be passed to sub-projects so then can compile code against distribution.  This is especially important on AntHillPro server which will not have jboss present, thus will have to use a copy in the working area.  This also makes it easier to start the project, if the developer does not yet have jboss installed, build will download it and install it so build can proceed. -->
+        <if>
+            <equals arg1="${require.jboss}" arg2="true" />
+            <then>
+                <available file="${jboss.home}/lib/commons-httpclient.jar" property="rt.jboss.exists" />
+                <if>
+                    <isset property="rt.jboss.exists" />
+                    <then>
+                        <property name="local.jboss.home" location="${jboss.home}" />
+                        <echo message="JBOSS_HOME exists ${jboss.home}" />
+                    </then>
+                    <else>
+                        <property name="local.jboss.home" location="${pt.dir}/${jboss.binaries.relative.dir}" />
+                        <available file="${local.jboss.home}/lib/commons-httpclient.jar" property="local.jboss.exists" />
+                        <echo message="JBOSS_HOME does not exist checking for LOCAL_JBOSS_HOME ${local.jboss.home}" />
+                        <if>
+                            <not>
+                                <isset property="local.jboss.exists" />
+                            </not>
+                            <then>
+                                <echo message="LOCAL_JBOSS_HOME not found downloading." />
+                                <antcall target="dist:tools:retrieve:jboss" />
+                                <java jar="${tools.dir}/${jboss.binaries.file}" fork="true">
+                                    <arg line="-installGroup ejb3 installpath=${local.jboss.home}" />
+                                </java>
+                            </then>
+                            <else>
+                                <echo message="LOCAL_JBOSS_HOME found ${local.jboss.home}" />
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
 
-        <echo message="Using local properties file of ${local.properties.file}." />
-        <echo message="Using project properties file of ${properties.file}." />
+    <target name="ivy:clean" description="Cleans up the ivy cache of this project and all sub-projects">
+        <ivy:settings file="${ivy.settings.dir}/${ivy.settings.file}" />
+        <ivy:cleancache />
+        <ant inheritAll="false" inheritRefs="false" antfile="${bda-download.file}" target="ivy-cleancache" dir="${bda-download.dir}">
+                <property name="bda-utils.dir" value="${bda-utils.dir}" />
+                <property name="lib.dir" value="${lib.dir}" />
+                <property name="software.dir" value="${software.dir}" />
+                <property name="commonlibrary.dir" value="" />
+        </ant>
+        <!--
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="ivy-clean" dir="${bda-blueprints-webapp.base.dir}" />
+        -->
+    </target>
 
+    <target name="validate:pre:build">
+        <validate-pre-build/>
     </target>
 
     <!--=========================================-->
     <!-- build:all: Builds all the sub projects  -->
     <!--=========================================-->
 
-    <target name="build:all" description="Normal build of application"
+    <target name="build:all" description="Builds all the sub projects, putting artifacts in the project level target directory, used by distribution targets to make distributions"
         depends="
+            validate:pre:build,
             clean,
-            compile:application-code,
-            -war,
-            -dist
+            init,
+            build:ncimbrowser-webapp
         " >
     </target>
 
-    <target name="build:dist" description="Build of application with completed configuration files"
+    <target name="build:ncimbrowser-webapp" depends="init" description="Call webapp sub-projects build target to produce artifiacts">
+        <!-- setting the property in the ant call overrides the property in the sub-project allowing the artifact to be produced where needed -->
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="${ncimbrowser-webapp.build.target}" dir="${ncimbrowser-webapp.base.dir}">
+            <property name="dist.dir" value="${ncimbrowser-webapp.dist.dir}" />
+            <property name="lex.evs.api.url" value="${lex.evs.api.url}"/>
+        </ant>
+    </target>
+
+    <target name="dist" description="Makes all distributions: installer, upgrader and source"
         depends="
-            clean,
-            compile:application-code,
-            -war,
-            -dist,
-            build:config
+            build:all,
+            dist:installer,
+            dist:upgrader,
+            dist:src
+        ">
+    </target>
+
+    <target name="dist:src" description="Makes source distribution">
+        <!-- Add tasks here to zip up src into a distribution, may require some additoinal properties for distribution name" -->
+    </target>
+
+    <target name="dist:tools:retrieve" description="Downloads binary applications from commonlibrary repository"
+        depends="
+            init,
+            dist:tools:retrieve:jboss,
+            dist:tools:retrieve:jbosscp
         " >
     </target>
 
-    <target name="compile:application-code" depends="-init" description="Compiles all subproject code">
-
-        <mkdir dir="${webapp.build.dir}" />
-        <mkdir dir="${webapp.classes.dir}" />
-
-        <!-- Compile java classes -->
-        <javac srcdir="${bda.src.dir}" destdir="${webapp.classes.dir}" debug="true" includeantruntime="false">
-            <classpath refid="bda.project.compile.classpath" />
-            <classpath path ="${webapp.classes.dir}"/>
-        </javac>
-
-        <!-- Copy internal property files -->
-        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" overwrite="true">
-            <fileset dir="${bda.src.dir}/java">
-                <patternset>
-                    <include name="**/*.properties"/>
-                </patternset>
-            </fileset>
-        </copy>
-
-    </target>
-
-    <target name="-war" depends="compile:application-code">
-
-        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp" />
-        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" />
-
-        <war destfile="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
-            <lib dir="${bda.lib.dir}" includes="*.jar" />
-            <classes dir="${webapp.classes.dir}"/>
-        </war>
-
-    </target>
-
-    <target name="-dist" depends="-war" description="Copies external files to distribution folder">
-
-        <echo message="Config folder: ${bda.conf.dir}" />
-
-        <!-- Set default value of 'trunk' if Anthill tag is not set -->
-
-        <condition property="app.tag.built" value="${anthill.build.tag_built}" else="Unknown or trunk">
-            <isset property="anthill.build.tag_built" />
-        </condition>
-        <echo message="Tag: ${app.tag.built}" />
-
-        <!-- Setup Ehcache property file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${bda.conf.dir}/ehcache.xml"/>
-            </resources>
-        </copy>
-
-        <!-- Setup application property file with defaults, balance of which is set on deployment -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="true">
-            <filterset>
-                <filter token="app.build.tag" value="${app.tag.built}"/>
-                <filter token="build.info" value="Built: ${BUILD_DATE}"/>
-                <filter token="application.version" value="${application.version}"/>
-                <filter token="debug.on" value="${debug.on}"/>
-                <filter token="ehcache.xml.file" value="@application.data.path@/${ncimbrowser.conf.path}/${ehcache.xml.file}"/>
-                <filter token="maximum.return" value="${maximum.return}"/>
-                <filter token="maximum.tree.level" value="${maximum.tree.level}"/>
-                <filter token="pagination_time_out" value="${pagination_time_out}"/>
-                <filter token="sliding_window_half_width" value="${sliding_window_half_width}"/>
-                <filter token="minimum_search_string_length" value="${minimum_search_string_length}"/>
-                <filter token="source_hierarchies" value="${source_hierarchies}"/>
-                <filter token="secured_vocabularies" value="${secured_vocabularies}"/>
-                <filter token="subconcept_page_size" value="${subconcept_page_size}"/>
-                <filter token="max_search_iteration" value="${max_search_iteration}"/>
-                <filter token="max_search_time_limit" value="${max_search_time_limit}"/>
-            </filterset>
-            <resources>
-                <file file="${bda.conf.dir}/${webapp.prop.file}"/>
-            </resources>
-        </copy>
-
-        <!-- Setup lexevs remote config file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${bda.conf.dir}/application-config-client.xml"/>
-            </resources>
-        </copy>
-
-        <!-- Setup log4j file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="true">
-            <filterset>
-                <filter token="search.log.dir" value="@application.data.path@/${search.log.dir}/${project.short.name}-search.log"/>
-                <filter token="log.package" value="${log.package}"/>
-                <filter token="log4j.dtd.path" value="@application.data.path@/${ncimbrowser.conf.path}"/>
-            </filterset>
-            <resources>
-                <file file="${bda.conf.dir}/${project.short.name}-log4j.xml"/>
-            </resources>
-        </copy>
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${bda.conf.dir}/log4j.dtd"/>
-            </resources>
-        </copy>
-
-    </target>
-
-    <target name="build:config" description="Generates configuration files for a target environment">
-
-        <!-- Generate Log4j XML file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
-           filtering="true" overwrite="true">
-            <filterset>
-                <filter token="application.data.path" value="${application.data.path}"/>
-                <filter token="log.level" value="${log.level}"/>
-            </filterset>
-            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
-                <patternset>
-                    <include name="**/*-log4j.*"/>
-                </patternset>
-            </fileset>
-        </copy>
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" includeEmptyDirs="no"
-           filtering="false" overwrite="true">
-            <fileset dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy">
-                <patternset>
-                    <include name="**/*log4j.dtd"/>
-                </patternset>
-            </fileset>
-        </copy>
-
-        <!-- Generate application property file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="true">
-            <filterset>
-                <filter token="ncit.url" value="${ncit.url}"/>
-                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
-                <filter token="lg.config.file" value="${lg.config.file}"/>
-                <filter token="application.data.path" value="${application.data.path}"/>
-                <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
-                <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
-                <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
-                <filter token="term.suggestion.application.url" value="${term.suggestion.application.url}"/>
-                <filter token="meddra_security_token" value="${meddra_security_token}"/>
-            </filterset>
-            <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/${webapp.prop.file}"/>
-            </resources>
-        </copy>
-
-        <!-- Generate Ehcache property file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="true">
-            <filterset>
-                <filter token="ehcache.cache.path" value="${application.data.path}/${ehcache.cache.path}"/>
-            </filterset>
-            <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/ehcache.xml"/>
-            </resources>
-        </copy>
-
-        <!-- Generate lexevs remote config file -->
-
-        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
-             flatten="true" includeEmptyDirs="no" filtering="false">
-            <filterset>
-                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
-            </filterset>
-            <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/deploy/application-config-client.xml"/>
-            </resources>
-        </copy>
-
-    </target>
-
-    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Build and upgrade application">
-
-        <antcall target="jboss:stop" />
-
-        <bda:AddJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
-            value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
-        />
-
-        <bda:AddJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImlog4jProperties"
-            value="${application.data.path}/${ncimbrowser.conf.path}/${project.short.name}-log4j.xml"
-        />
-
-        <copy todir="${application.data.path}/conf" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ehcache.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${project.short.name}-log4j.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.dtd"/>
-            </resources>
-        </copy>
-
-        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
-            </resources>
-        </copy>
-
-        <copy
-            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
-            overwrite="true"
-        />
-
-        <mkdir dir="${application.data.path}/log" />
-
-        <antcall target="jboss:start" />
-
-    </target>
-
-    <target name="deploy:local:uninstall" description="Uninstall the web application">
-
-        <antcall target="jboss:stop" />
-
-        <bda:RemoveJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
-        />
-
-        <delete dir="${application.data.path}/conf" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
-
-    </target>
-
-    <target name="deploy:hot" depends="build:all" description="Hot deploy application">
-
-        <bda:JBossStopApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-        <copy
-            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
-            overwrite="true"
-        />
-
-        <bda:JBossTempDir
-            tmpdir="${jboss.server.path}/server/default/tmp"
-            property="jboss.war.temp.dir.location"
-            warname="${webapp.war.name}"
-
-        />
-
-        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
-        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
-        <echo message="    Source: ${webapp.dir}"/>
-
-        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
-            <fileset dir="${webapp.dir}">
-                <include name="**/*.jsp" />
-                <include name="**/*.jspf" />
-                <include name="**/*.css" />
-                <include name="**/*.js" />
-                <include name="**/*.jpg" />
-                <include name="**/*.gif" />
-                <include name="**/*.png" />
-                <include name="**/*.faces" />
-                <include name="**/*.tag" />
-                <include name="**/*.tagf" />
-            </fileset>
-        </copy>
-
-        <bda:JBossStartApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-        <bda:JBossRedeployApp
-            jbossbin="${jboss.server.path}/bin"
-            warfile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-    </target>
-
-    <target name="deploy:hot:jsp" depends="-init" description="Hot deploy JSP files">
-
-        <bda:JBossTempDir
-            tmpdir="${jboss.server.path}/server/default/tmp"
-            property="jboss.war.temp.dir.location"
-            warname="${webapp.war.name}"
-
-        />
-
-        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
-        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
-        <echo message="    Source: ${webapp.dir}"/>
-
-        <bda:JBossStopApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
-            <fileset dir="${webapp.dir}">
-                <include name="**/*.jsp" />
-                <include name="**/*.jspf" />
-                <include name="**/*.css" />
-                <include name="**/*.js" />
-                <include name="**/*.jpg" />
-                <include name="**/*.gif" />
-                <include name="**/*.png" />
-                <include name="**/*.faces" />
-                <include name="**/*.tag" />
-                <include name="**/*.tagf" />
-            </fileset>
-        </copy>
-
-        <bda:JBossStartApp
-            jbossbin="${jboss.server.path}/bin"
-            warname="${project.name}"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-        />
-
-    </target>
-
-    <target name="jboss:stop" description="Shutdown JBoss">
-
-        <bda:JBossStopRemote
-            jbossbin="${jboss.server.path}/bin"
-            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
-            url="http://${jboss.server.hostname}:${jboss.server.port}"
-        />
-
-    </target>
-
-    <target name="jboss:start" description="Start JBoss">
-
-        <bda:JBossStart
-            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
-            startscript="${jboss.server.startscript}"
-        />
-
-    </target>
-
-    <target name="deploy:local:install" depends="-init" description="Installs JBoss based on local.properties">
-
+    <target name="dist:tools:retrieve:jboss" unless="jboss.tools.exists" description="Downloads JBOSS from binary repository and verifies checksum">
+        <get src="${jboss.src.url}" dest="${jboss.dest.file}" />
+        <get src="${jboss.src.url}.MD5" dest="${jboss.dest.file}.MD5" />
+        <checksum file="${jboss.dest.file}" verifyProperty="jboss.cksum.ok" />
         <if>
-            <isset property="local.properties.file.exists"/>
+            <equals arg1="${jboss.cksum.ok}" arg2="true" />
             <then>
-                <bda:InputYesNo
-                    property="begin.install"
-                    prompt="Begin a new install?"
-                />
-                <if>
-                    <isset property="begin.install"/>
-                    <then>
-
-                        <available file="${jboss.server.path}" property="jboss.server.exists" />
-                        <if>
-                            <not><isset property="jboss.server.exists"/></not>
-                            <then>
-                                <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
-                                <mkdir dir="${bda.temp.dir}"/>
-                                <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
-                                <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
-                                <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
-                            </then>
-                            <else>
-                                <bda:ConsoleOutput message="JBoss present. Skipping download."/>
-                                <antcall target="jboss:stop" />
-                            </else>
-                        </if>
-
-                        <bda:ConsoleOutput message="Configuring JBoss..."/>
-
-                        <bda:SetJBossServer
-                            serverxml="${jboss.server.path}/server/default/deploy/jbossweb.sar/server.xml"
-                            bindingsxml="${jboss.server.path}/server/default/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
-                            port="${jboss.server.port}"
-                            redirectport="${jboss.server.redirect.port}"
-                            ajpport="${jboss.server.ajp.port}"
-                            ajpredirectport="${jboss.server.ajp.redirect.port}"
-                            jndiport="${jboss.server.jndi.port}"
-                            rmiport="${jboss.server.rmi.port}"
-                        />
-
-                        <bda:SetJBossRunConf
-                            runconf="${jboss.server.path}/bin/run.conf"
-                            xms="${jboss.server.xms}"
-                            xmx="${jboss.server.xmx}"
-                        />
-
-                        <bda:SetJBossRunConf
-                            runconf="${jboss.server.path}/bin/run.conf.bat"
-                            xms="${jboss.server.xms}"
-                            xmx="${jboss.server.xmx}"
-                        />
-
-                        <bda:ConsoleOutput />
-                        <bda:ConsoleOutput message="  Configuration complete." />
-                        <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
-
-                    </then>
-                    <else>
-                        <bda:ConsoleOutput message="" />
-                        <bda:ConsoleOutput message="Install aborted." />
-                    </else>
-                </if>
+                <echo message="Downloaded jboss sucessfully" />
             </then>
             <else>
-                <echo message="Please create a local.properties file and run 'deploy:local:install' again." />
-                <echo message="An example local.properties can be found in the docs directory." />
+                <fail message="Failed to download jboss file sucessfully." />
             </else>
         </if>
+    </target>
 
+    <target name="dist:tools:retrieve:jboss-bindings"  description="Downloads JBOSS bindings filefrom binary repository and verifies checksum">
+        <get src="${jboss-bindings.src.url}" dest="${dist.exploded.dir}/${jboss-bindings.file}" />
+    </target>
+
+    <target name="dist:tools:retrieve:jbosscp" unless="jbosscp.tools.exists" description="Downloads JBOSS Cumulative Patch from binary repository and verifies checksum">
+        <echoproperties prefix="jbosscp"/>
+        <if>
+            <isset property="jbosscp.src.url"/>
+            <then>
+                    <get src="${jbosscp.src.url}" dest="${jbosscp.dest.file}" />
+            </then>
+            <else>
+                    <echo message="jbosscp.src.url not set skipping download of jboss cumulative patch"/>
+            </else>
+        </if>
+    </target>
+
+    <target name="dist:installer:prep" depends="dist:tools:retrieve,dist:tools:retrieve:jboss-bindings"
+            description="Copies artifacts not generated by sub-project builds into the install distribution area">
+        <dist-prep />
+    </target>
+
+    <target name="dist:installer" depends="dist:installer:prep" description="Produces zip file based on installer distribution area. Zip is used by deploy:remote:* or external installations">
+        <delete file="${dist.dir}/${ncimbrowser-webapp.install.zip.file}" />
+        <!-- Set environment name to external -->
+        <replaceregexp file="${dist.exploded.dir}/install.properties" byline="true" match="^(env.name)=.*" replace="\1=external" />
+        <obfuscate-properties-file
+            properties.file="${dist.exploded.dir}/install.properties"
+            required.property.list="application.base.path.linux,application.base.path.windows,application.data.path.linux,application.data.path.windows,mail.smtp.host,jboss.server.hostname"
+            optional.property.list="ldap.url,ldap.basedn"
+            delete.property.list="exclude.jboss.backup"
+            />
+        <zip destfile="${dist.dir}/${ncimbrowser-webapp.install.zip.file}" basedir="${dist.exploded.dir}" />
+    </target>
+
+    <!-- For non DAC upgrades
+        <target name="dist:upgrader:prep" depends="build:all,dist:tools:retrieve:jboss-bindings" description="Copies artifacts not generated by sub-project builds into the install distribution area">
+      -->
+
+    <!-- for DAC Upgrades  -->
+    <target name="dist:upgrader:prep" depends="build:all,dist:tools:retrieve" description="Copies artifacts not generated by sub-project builds into the install distribution area">
+        <!-- For DAC upgrades -->
+        <dist-prep
+            copy.tools.flag="Y"
+            default.target="upgrade"
+            />
+    </target>
+
+    <target name="dist:upgrader" depends="dist:upgrader:prep" description="Produces zip file based on installer distribution area. Zip is used by deploy:remote:* or external installations">
+        <delete file="${dist.dir}/${ncimbrowser-webapp.upgrade.zip.file}" />
+        <!-- Set environment name to external -->
+        <copy todir="${dist.exploded.dir}" overwrite="true">
+                <fileset dir="${build.dir}">
+                        <include name="upgrade.properties" />
+                </fileset>
+        </copy>
+        <delete file="${dist.exploded.dir}/install.properties"/>
+        <replaceregexp file="${dist.exploded.dir}/upgrade.properties" byline="true" match="^(env.name)=.*" replace="\1=external" />
+
+        <obfuscate-properties-file
+                properties.file="${dist.exploded.dir}/upgrade.properties"
+                comment.property.list="application.base.path.windows,application.base.path.linux,jboss.relative.path,tomcat.relative.path"
+                uncomment.property.list="application.base.path,tomcat.home,jboss.home"
+                required.property.list="application.base.path,jboss.home,jboss.server.name,tomcat.home"
+                optional.property.list=""
+                delete.property.list=""
+                />
+        <replaceregexp file="${dist.exploded.dir}/build.xml" byline="true" match="(&lt;property name=&quot;properties.file&quot;\s+value=&quot;).*(&quot;\s*\/&gt;)" replace="\1upgrade.properties\2" />
+        <zip destfile="${dist.dir}/${ncimbrowser-webapp.upgrade.zip.file}" basedir="${dist.exploded.dir}" />
+    </target>
+
+    <target name="deploy:local:install" depends="build:all,dist:installer:prep" description="Installs and configures the application and required binaries and re-creates the datbase  on the local machine. Used for developer desktops and ci environments.">
+        <!--
+          * Will use the target from install.xml specified in ${install.target} (defaults to install unless passed in on command line).
+          * If you want properties to be used at install time they must be included in a proeprties file.
+          * Calls ant from exec task to ensure properties are do not carry over from current ant runtime and also to emulate a manual install.
+          * This target will use differnt properties based on linux (linux-install.properties) or windows (windows-install.properties) installs.
+          * It only supports using those properties files for now, so if you want to change install time properites edit these files.
+        -->
+        <deploy-local
+            target.name="${install.target}"
+        />
+    </target>
+
+    <target name="deploy:local:upgrade" depends="build:all,dist:upgrader:prep" description="Upgrades and configures the application on the local machine. Used for developer desktops and ci environments.">
+        <!--
+          * Will use the target from install.xml specified in ${upgrade.target} (defaults to install unless passed in on command line).
+          * Calls ant from exec task to ensure properties are do not carry over from current ant runtime and also to emulate a manual install, if you want properties to be used at install time they must be included in a proeprties file.
+          * This target will use differnt properties based on linux (linux-upgrade.properties) or windows (windows-upgrade.properties) installs.
+          * It only supports using those properties files for now, so if you want to change install time properites edit these files.
+        -->
+        <deploy-local
+            target.name="${upgrade.target}"
+        />
+    </target>
+
+    <target name="deploy:remote:install" description="Installs and configures the application and required binaries and re-creates the datbase  on a remote machine. Used for NCI tiers (dev, qa, stg, prod)"
+        depends="
+            build:all,
+            dist:installer
+        ">
+        <!--
+          * Will use the target from install.xml specified in ${install.target} (defaults to install unless passed in on command line).
+          * Requires specifying -Dproperties.file=@file@ on the command line to point installer to correct enviornment to install into.
+          * Calls ant from exec task to ensure properties are do not carry over from current ant runtime and also to emulate a manual install, if you want properties to be used at install time they must be included in a proeprties file.
+        -->
+        <!-- Call macro to deploy files on desired server -->
+        <deploy-files dist.file="${ncimbrowser-webapp.install.zip.file}" />
+        <!-- SSH to machine ant run ant command line to install application -->
+        <remote-ssh remotesshcommand=". .bash_profile;cd ${ssh.dir.temp}; ant -Dproperties.file=${properties.file.name} -Dforce.reinstall=true ${install.target}" />
+    </target>
+
+    <target name="deploy:remote:upgrade" description="Installs and configures the application and required binaries and re-creates the datbase  on a remote machine. Used for NCI tiers (dev, qa, stg, prod)"
+        depends="
+            build:all,
+            dist:upgrader
+        ">
+        <!--
+          * Will use the target from install.xml specified in ${upgrade.target} (defaults to upgrade unless passed in on command line).
+          * Requires specifying -Dproperties.file=@file@ on the command line to point installer to correct enviornment to install into.
+          * Calls ant from exec task to ensure properties are do not carry over from current ant runtime and also to emulate a manual install, if you want properties to be used at install time they must be included in a proeprties file.
+        -->
+        <!-- Call macro to deploy files on desired server -->
+        <deploy-files dist.file="${ncimbrowser-webapp.upgrade.zip.file}" />
+        <!-- SSH to machine ant run ant command line to install application -->
+        <remote-ssh remotesshcommand=". .bash_profile;cd ${ssh.dir.temp}; ant -Dproperties.file=${properties.file.name} -Dforce.reinstall=true ${upgrade.target}" />
+    </target>
+
+    <target name="report:grand" depends="dist:installer:prep" description="Generates target flow diagrams for build files">
+        <!-- Temporary fix to make grand work for install.xml -->
+        <report-grand
+            build.file.location="build.xml"
+            output.file.dir="${grand.rpt.dir}"
+            output.file.name="generic-root-build.xml" />
+        <report-grand
+            build.file.location="${dist.exploded.dir}/build.xml"
+            output.file.dir="${grand.rpt.dir}"
+            output.file.name="generic-root-install.xml" />
+    </target>
+
+    <target name="test:all" description="Runs test target for all sub-projects"
+        depends="
+            clean,
+            init,
+            test:ncimbrowser-api,
+            test:ncimbrowser-webapp
+        " >
+    </target>
+
+    <target name="test:ncimbrowser-api" depends="init" description="Calls test target for sub-project">
+        <!--
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-api.test.file}"
+            target="test"
+            dir="${ncimbrowser-api.base.dir}" >
+            <property name="dist" value="${ncimbrowser-api.dist.dir}" />
+        </ant>
+        -->
+    </target>
+
+    <target name="test:ncimbrowser-webapp" depends="init" description="Calls test target for sub-project">
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.test.file}" target="test" dir="${ncimbrowser-webapp.base.dir}">
+            <property name="dist.dir" value="${ncimbrowser-webapp.dist.dir}" />
+        </ant>
+    </target>
+
+    <target name="static-analysis:all" description="Runs static-analysis target for all sub-projects"
+        depends="
+            clean,
+            init,
+            static-analysis:ncimbrowser-api,
+            static-analysis:ncimbrowser-webapp
+        " >
+    </target>
+
+    <target name="static-analysis:ncimbrowser-api" depends="init" description="Calls static-analysis target for sub-project">
+        <!--
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-api.build.file}"
+            target="static-analysis"
+            dir="${ncimbrowser-api.base.dir}" >
+            <property name="dist" value="${ncimbrowser-api.dist.dir}" />
+        </ant>
+        -->
+    </target>
+
+    <target name="static-analysis:ncimbrowser-webapp" depends="init" description="Calls static-analysis target for sub-project">
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="static-analysis" dir="${ncimbrowser-webapp.base.dir}">
+            <property name="dist.dir" value="${ncimbrowser-webapp.dist.dir}" />
+        </ant>
+    </target>
+
+    <target name="continuous-integration" description="calls wrapper targets for continuous integration build"
+        depends="
+            build:all,
+            static-analysis:all
+        " >
+    </target>
+
+    <target name="init:ivy" description="Initializes ivy-repo.based on ivy definition file and ivy settings file">
+        <mkdir dir="${local.repo.dir}" />
+        <property name="ivy.dep.file" value="${ivy.settings.dir}/ivy-test.xml" />
+        <ivy:settings file="${ivy.settings.dir}/ivy.settings.xml" />
+    </target>
+
+    <target name="ivy-test-selenium" depends="init:ivy" description="Downloads selenium libraries from ivy into library directory">
+        <ivy:resolve refresh="true" conf="test-selenium" />
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision].[ext]" conf="test-selenium" />
+        <path id="project.test.selenium.classpath">
+            <fileset dir="${lib.dir}/test-selenium">
+                <include name="*.jar" />
+            </fileset>
+        </path>
+    </target>
+
+    <target name="test:seleniumrc:start">
+        <echo message="${lib.dir}/test-selenium/selenium-server-0.9.0.jar" />
+        <java jar="${lib.dir}/test-selenium/selenium-server-0.9.0.jar" fork="true" spawn="true" />
+    </target>
+
+    <target name="test:seleniumrc:stop" description="Stops selenuimrc server when using selenium from java">
+        <get taskname="selenium-shutdown" src="http://localhost:${selenium.proxy.port}/selenium-server/driver/?cmd=shutDown" dest="${temp.dir}/result.txt" ignoreerrors="true" />
+    </target>
+
+    <target name="test:selenium:init" description="Sets up environment for running selenium tests">
+        <mkdir dir="${selenium.report.dir}" />
+        <if>
+            <not>
+                <socket server="${jboss.server.hostname}" port="${jboss.server.port}" />
+            </not>
+            <then>
+                <jboss-start-jboss />
+            </then>
+        </if>
+    </target>
+
+    <target name="test:selenium" description="Wrapper target to selenium test suite"
+        depends="
+            ivy-test-selenium,
+            test:selenium:init,
+            test:selenium:run,
+            test:seleniumrc:stop
+        " >
+    </target>
+
+    <target name="test:selenium:run" description="Executes selenium test suite">
+        <!-- Another optoin  for running tests
+        <java jar="${selenium.jar}" fork="true">
+            <arg line=" -htmlSuite &quot;${selenium.browser}&quot;"/>
+            <arg line=" &quot;${selenium.url}&quot;"/>
+            <arg line=" &quot;${selenium.test.suite}&quot;"/>
+            <arg line=" &quot;${selenium.report.dir}/${selenium.report.file}&quot;"/>
+            <arg line=" -timeout 30"/>
+            <arg line=" -log ${temp.dir}/selenium-debug.log"/>
+        </java>
+        -->
+        <osfamily property="os.family" />
+        <if>
+            <equals arg1="${os.family}" arg2="unix" />
+            <then>
+                <echo message="To be able to selenium tests on Unix platforms you need to meet the following conditions." />
+                <echo message="You need to be logged in on the console running X (developer linux or mac workstation)." />
+                <echo message=" If you are running it from a server that does not have a console (like a CI server) you need to be running at runlevel 3, running and xframe buffer ('Xvfb :1 -screen 0 1024x768x24', should be setup on a CI server) and have your DISPLAY environment variable sto to match your frame buffer ('DISPLAY=:1.0', should be set in .bash_profile on CI server)." />
+                <fail unless="env.DISPLAY" message="DISPLAY environment variable not set, please set it as outlined above and run again." />
+            </then>
+        </if>
+        <taskdef resource="selenium-ant.properties" classpathref="project.test.selenium.classpath" />
+        <selenese suite="${selenium.test.suite}" browser="${selenium.browser}" results="${selenium.report.dir}/${selenium.report.file}" multiWindow="falsE" timeoutInSeconds="60" port="${selenium.proxy.port}" startURL="${selenium.url}" />
+    </target>
+
+    <target name="test:acceptance:fitnesse" description="Runs fitnesse acceptance tests">
+        <antcall target="test:selenium:init" />
+        <!--
+        <antcall target="test:seleniumrc:start" />
+        -->
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncimbrowser-webapp.build.file}" target="test:acceptance:fitnesse" dir="${ncimbrowser-webapp.base.dir}" />
+        <!--
+        <antcall target="test:seleniumrc:stop" />
+        -->
+    </target>
+
+    <target name="ivy-resolve-all" depends="init:ivy" description="Downloads all libraries included in the ivy definition file from ivy into local lib directory">
+        <ivy:resolve refresh="true" />
+    </target>
+
+    <target name="report:ivy" description="Runs ivy reports on all dependencies in the ivy defnintion file, also produces dependency diagrams"
+        depends="
+            ivy-resolve-all
+        ">
+        <property name="ivy.report.dir" value="${reports.dir}/ivy" />
+        <delete dir="${ivy.report.dir}" />
+        <mkdir dir="${ivy.report.dir}" />
+        <ivy:report outputpattern="target/reports/ivy/[organisation]-[module]-[conf].[ext]" dot="true" graph="false" />
+        <util-dot-on-dir dot-file.dir="target/reports/ivy" />
+    </target>
+
+    <target name="deploy:hot" depends="build:all,dist:installer:prep" description="Hot deploys the deployment artifact">
+        <deploy-local
+            target.name="install:hot"
+        />
+    </target>
+
+    <target name="deploy:hot:jsp" description="Copies all current JSP code to the deployed application for quick update">
+        <for param="toDir">
+            <path>
+                <dirset dir="${jboss.deploy.dir}/../tmp/deploy" includes="tmp*${ncimbrowser-webapp.name}*" />
+            </path>
+            <sequential>
+                <copy todir="@{toDir}" overwrite="true">
+                    <fileset dir="${ncimbrowser-webapp.src.dir}">
+                        <include name="**/*.jsp" />
+                        <include name="**/*.jspf" />
+                        <include name="**/*.css" />
+                        <include name="**/*.js" />
+                        <include name="**/*.jpg" />
+                        <include name="**/*.gif" />
+                        <include name="**/*.png" />
+                        <include name="**/*.faces" />
+                        <include name="**/*.tag" />
+                        <include name="**/*.tagf" />
+                    </fileset>
+                </copy>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="ivy:module:add2repo">
+        <!-- you would want to use this value instead and you can get rid of the mkdir below
+        <property name="ivy-repo.base.dir" location="${software.dir}/../../ivy-repo"/>
+        -->
+        <mkdir dir="${user.home}/tmp"/>
+        <ivy-module-add2repo
+            ivy-repo.base.dir="${user.home}/tmp/ivy-repo"
+            ivy.add.org="ncicb"
+            ivy.add.module="ssaksa-test-module3"
+            ivy.add.version="0.1.0"
+            ivy.add.module.src.dir="${build.dir}"
+            ivy.add.module.src.file.list="build.xml"
+            ivy.add.xml.src.location="${build.dir}/install.xml"
+            />
+    </target>
+
+    <target name="report:uml">
+        <property name="uml.dir" value="${reports.dir}/uml"/>
+        <path id="ncimbrowser.classpath.ref">
+            <fileset dir="${lib.dir}/runtime">
+                <include name="**/*.jar" />
+            </fileset>
+        </path>
+        <generate-uml
+            uml.dir="${uml.dir}"
+            src.java.dir="${ncimbrowser-webapp.base.dir}/src/java"
+            uml.source.path="ncimbrowser.classpath.ref"
+            />
+    </target>
+
+    <target name="findfiles">
+            <exec executable="sh" failonerror="true">
+                    <arg line=" -c 'find /local/AnthillPro/work/ncit-autodeploy.trunk.dev/trunk/software/target/bda-utils  -maxdepth 2 -ls'"/>
+            </exec>
+    </target>
+
+    <target name="printfile">
+            <loadfile
+                    property="file.contents"
+                    srcFile="/local/AnthillPro/work/ncit-autodeploy.trunk.dev/trunk/software/build/build.xml">
+                    <filterchain>
+                            <linecontainsregexp>
+                                    <regexp pattern=".*"/>
+                            </linecontainsregexp>
+                    </filterchain>
+            </loadfile>
+            <echo message="${file.contents}"/>
     </target>
 
 </project>

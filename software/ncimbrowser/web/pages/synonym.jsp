@@ -15,7 +15,7 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.DisplayItem" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="org.LexGrid.concepts.Presentation" %>
 <%@ page import="org.LexGrid.commonTypes.Source" %>
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
@@ -63,7 +63,7 @@
           <a name="evs-content" id="evs-content"></a>
           <%
             String dictionary = null;
-            Entity c = (Entity) request.getSession().getAttribute("concept");
+            Concept c = (Concept) request.getSession().getAttribute("concept");
             String name = c.getEntityDescription().getContent();
             String code = c.getEntityCode();
             String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));

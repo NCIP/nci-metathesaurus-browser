@@ -1,10 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.io.*" %>
 <%@ page import="java.util.*"%>
-<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="org.LexGrid.concepts.Concept" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.*" %>
@@ -14,7 +13,7 @@
 <%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html>
 <head>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -24,7 +23,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.advancedSearchForm.matchText.focus();">
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
   <script type="text/javascript"
@@ -113,7 +112,7 @@
         selectSearchOption = bean.getSearchType();
         if (selectSearchOption == null)
             selectSearchOption = defaultSearchOption;
-
+        
         adv_search_algorithm = bean.getAlgorithm();
         adv_search_source = bean.getSelectedSource();
         selectProperty = bean.getSelectedProperty();
@@ -244,7 +243,7 @@
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
                       accesskey="13"
                       onclick="javascript:cursor_wait();"
-                      image="#{requestContextPath}/images/search.gif"
+                      image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
                       alt="Search">
                     </h:commandButton>
 
@@ -254,7 +253,7 @@
                     <tr valign="top" align="left"><td align="left" class="textbody">
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Containts" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
                     </td></tr>
                   </table>
                 </td></tr>

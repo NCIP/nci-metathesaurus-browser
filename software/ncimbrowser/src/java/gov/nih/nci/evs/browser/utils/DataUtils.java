@@ -9,6 +9,7 @@ import org.apache.log4j.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.DataModel.Core.Association; // Ambiguous with this
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
@@ -27,7 +28,6 @@ import gov.nih.nci.evs.browser.utils.test.*;
 import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
-import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.common.*;
 
@@ -455,7 +455,7 @@ public class DataUtils {
         return retstr;
     }
 
-    public static Entity getConceptByCode(String codingSchemeName,
+    public static Concept getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -493,7 +493,7 @@ public class DataUtils {
                             (ResolvedConceptReference) matches
                                 .enumerateResolvedConceptReference()
                                 .nextElement();
-                        Entity entry = ref.getReferencedEntry();
+                        Concept entry = ref.getReferencedEntry();
                         return entry;
                     } catch (Exception ex1) {
                         _logger.error("Exception entry == null");
@@ -539,7 +539,7 @@ public class DataUtils {
         return cns;
     }
 
-    public static Entity getConceptByCode(String codingSchemeName,
+    public static Concept getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code, String source) {
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -583,7 +583,7 @@ public class DataUtils {
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
 
-                Entity entry = ref.getReferencedEntry();
+                Concept entry = ref.getReferencedEntry();
 
                 return entry;
             }
@@ -663,7 +663,7 @@ public class DataUtils {
                     null, null, maxToReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<? extends ResolvedConceptReference> refEnum =
+                Enumeration<ResolvedConceptReference> refEnum =
                     matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
@@ -1061,7 +1061,7 @@ public class DataUtils {
         return null;
     }
 
-    public static Vector getPropertyNamesByType(Entity concept,
+    public static Vector getPropertyNamesByType(Concept concept,
         String property_type) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
@@ -1091,7 +1091,7 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector getPropertyValues(Entity concept,
+    public static Vector getPropertyValues(Concept concept,
         String property_type, String property_name) {
         Vector v = new Vector();
         org.LexGrid.commonTypes.Property[] properties = null;
@@ -1177,11 +1177,11 @@ public class DataUtils {
             for (int i = 0; i < relations.length; i++) {
                 Relations relation = relations[i];
                 if (relation.getContainerName().compareToIgnoreCase("roles") == 0) {
-                    AssociationPredicate[] asso_array =
-                        relation.getAssociationPredicate();
+                    org.LexGrid.relations.Association[] asso_array =
+                        relation.getAssociation();
                     for (int j = 0; j < asso_array.length; j++) {
-                        AssociationPredicate association =
-                            (AssociationPredicate) asso_array[j];
+                        org.LexGrid.relations.Association association =
+                            (org.LexGrid.relations.Association) asso_array[j];
                         list.add(association.getAssociationName());
                     }
                 }
@@ -1240,7 +1240,7 @@ public class DataUtils {
         return names;
     }
 
-    public String getPreferredName(Entity c) {
+    public String getPreferredName(Concept c) {
 
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
@@ -1347,7 +1347,7 @@ public class DataUtils {
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
+                    matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -1426,7 +1426,7 @@ public class DataUtils {
 
             Vector superconcept_vec = getSuperconcepts(scheme, version, code);
             for (int i = 0; i < superconcept_vec.size(); i++) {
-                Entity c = (Entity) superconcept_vec.elementAt(i);
+                Concept c = (Concept) superconcept_vec.elementAt(i);
                 // String pt = getPreferredName(c);
                 String pt = c.getEntityDescription().getContent();
                 superconceptList.add(pt + "|" + c.getEntityCode());
@@ -1437,7 +1437,7 @@ public class DataUtils {
 
             Vector subconcept_vec = getSubconcepts(scheme, version, code);
             for (int i = 0; i < subconcept_vec.size(); i++) {
-                Entity c = (Entity) subconcept_vec.elementAt(i);
+                Concept c = (Concept) subconcept_vec.elementAt(i);
                 // String pt = getPreferredName(c);
                 String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
@@ -1615,7 +1615,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     rcrl.getResolvedConceptReference();
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
-                    org.LexGrid.concepts.Entity ce = rcr.getReferencedEntry();
+                    org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
                     if (code == null) {
                         v.add(ce);
                     } else {
@@ -1690,21 +1690,21 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getSynonyms(String scheme, String version, String tag,
         String code, String sab) {
-        Entity concept = getConceptByCode(scheme, version, tag, code);
+        Concept concept = getConceptByCode(scheme, version, tag, code);
         return getSynonyms(concept, sab);
     }
 
     public static Vector getSynonyms(String scheme, String version, String tag,
         String code) {
-        Entity concept = getConceptByCode(scheme, version, tag, code);
+        Concept concept = getConceptByCode(scheme, version, tag, code);
         return getSynonyms(concept, null);
     }
 
-    public static Vector getSynonyms(Entity concept) {
+    public static Vector getSynonyms(Concept concept) {
         return getSynonyms(concept, null);
     }
 
-    public static Vector getSynonyms(Entity concept, String sab) {
+    public static Vector getSynonyms(Concept concept, String sab) {
 
         if (concept == null)
             return null;
@@ -1833,7 +1833,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return _ncimAppVersion;
     }
 
-    public String getNCITAppBuildTag() {
+    public String getNCITAnthillBuildTagBuilt() {
         if (_ncitAnthillBuildTagBuilt != null) {
             return _ncitAnthillBuildTagBuilt;
         }
@@ -1843,7 +1843,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
             properties = NCImBrowserProperties.getInstance();
             _ncitAnthillBuildTagBuilt =
                 properties
-                    .getProperty(NCImBrowserProperties.APP_BUILD_TAG);
+                    .getProperty(NCImBrowserProperties.ANTHILL_BUILD_TAG_BUILT);
             if (_ncitAnthillBuildTagBuilt == null) {
                 _ncitAnthillBuildTagBuilt = default_info;
             }
@@ -2071,7 +2071,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
+                    matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2132,7 +2132,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
+                    matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2228,7 +2228,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
+                    matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -2388,7 +2388,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return hmap;
     }
 
-    private String findRepresentativeTerm(Entity c, String sab) {
+    private String findRepresentativeTerm(Concept c, String sab) {
         Vector synonyms = getSynonyms(c, sab);
         if (synonyms == null || synonyms.size() == 0) {
             // return null;
@@ -2508,7 +2508,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                         AssociatedConcept ac =
                             (AssociatedConcept) v.elementAt(i);
                         EntityDescription ed = ac.getEntityDescription();
-                        Entity c = ac.getReferencedEntry();
+                        Concept c = ac.getReferencedEntry();
                         if (!hset.contains(c.getEntityCode())) {
                             hset.add(c.getEntityCode());
                             // Find the highest ranked atom data
@@ -3000,27 +3000,13 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
         try {
-
-            _logger.info("************** metabrowser-extension *****************");
-
             mbs =
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
-            if (mbs == null) {
-                _logger.error("Error! metabrowser-extension is null!");
-                return null;
-            }
             ms = System.currentTimeMillis();
             action = "Retrieving " + SOURCE_OF;
             ms = System.currentTimeMillis();
-
-            _logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! getRelationshipsDisplay !!!!");
-            _logger.info("CUI: " + CUI);
-            _logger.info("Direction: " + Direction.SOURCEOF);
-
             map = mbs.getRelationshipsDisplay(CUI, null, Direction.SOURCEOF);
-
-            _logger.info("Done !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! getRelationshipsDisplay !!!!");
 
             delay = System.currentTimeMillis() - ms;
             Debug.println("Run time (ms) for " + action + " " + delay);
@@ -3253,8 +3239,8 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         // KLO, testing
         Vector sibling_vector = getSiblings(CUI);
         if (sort_option != null) {
-            sibling_vector = sortRelationshipData(sibling_vector, (String) sort_option.elementAt(4));
-        }
+        	sibling_vector = sortRelationshipData(sibling_vector, (String) sort_option.elementAt(4));
+	    }
 
         //new_rel_hmap.put("Sibling", getSiblings(CUI));
         new_rel_hmap.put("Sibling", sibling_vector);
@@ -3874,7 +3860,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     for (int i = 0; i < rcrl.getResolvedConceptReferenceCount(); i++) {
                         ResolvedConceptReference rcr =
                             rcrl.getResolvedConceptReference(i);
-                        Entity c = rcr.getReferencedEntry();
+                        Concept c = rcr.getReferencedEntry();
                         if (c == null) {
                             _logger.warn("Concept is null.");
                         } else {
@@ -3908,7 +3894,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector getConceptSources(String scheme, String version,
         String code) {
-        Entity c = getConceptByCode(scheme, version, null, code);
+        Concept c = getConceptByCode(scheme, version, null, code);
         if (c == null)
             return null;
         Presentation[] presentations = c.getPresentation();
@@ -3934,14 +3920,8 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return v;
     }
 
-    public static String getMetadataValue(String scheme, String propertyName){
-        Vector v;
-        try {
-            v = getMetadataValues(scheme, propertyName);
-        } catch (Exception e) {
-            _logger.error(e.getMessage());
-            return null;
-        }
+    public static String getMetadataValue(String scheme, String propertyName) {
+        Vector v = getMetadataValues(scheme, propertyName);
         if (v == null || v.size() == 0)
             return null;
         return (String) v.elementAt(0);
@@ -4084,7 +4064,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
-                    (Enumeration<ResolvedConceptReference>) matches.enumerateResolvedConceptReference();
+                    matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
@@ -4261,7 +4241,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
                     return null;
                 ResolvedConceptReference rcr =
                     rcrl.getResolvedConceptReference(0);
-                Entity c = rcr.getReferencedEntry();
+                Concept c = rcr.getReferencedEntry();
                 if (c == null) {
                     _logger.warn("Concept is null.");
                     return null;
@@ -4277,7 +4257,7 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
         return null;
     }
 
-    public static HashMap getPropertyValueHashMap(Entity c) {
+    public static HashMap getPropertyValueHashMap(Concept c) {
         if (c == null) {
             return null;
         }
@@ -4476,12 +4456,12 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
             assocLabel = lbscm
                 .getAssociationReverseName(assoName, "NCI Metathesaurus", null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
         return assocLabel;
-    }
+	}
 
 
 }

@@ -1,7 +1,6 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
-<%@ page import="org.LexGrid.concepts.Entity" %>
 <%
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
@@ -18,14 +17,10 @@
  
   if (type.compareTo("synonym") == 0 || type.compareTo("all") == 0)
   {
-	Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
+    Concept syn_details_concept = (Concept) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
-	<table border="0" width="708px">
-		<tr>
-			<td class="textsubtitle-blue" align="left">Synonym Details:<a name="SynonymsDetails"></a></td>
-		</tr>
-	</table>    
+    <span class="textsubtitle-blue">Synonym Details</span><a name="SynonymsDetails"></a>
       <table class="dataTable" border="0" width=1000>
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
@@ -98,7 +93,7 @@
           </th>
         </tr>
         <%
-          Entity concept_syn = (Entity) request.getSession().getAttribute("concept");
+          Concept concept_syn = (Concept) request.getSession().getAttribute("concept");
           Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
           //if (synonyms == null) {
               synonyms = new DataUtils().getSynonyms(concept_syn);
@@ -178,7 +173,7 @@
 	              } else {
 %>	  
                           <td>
-			  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
+			  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/ncitbrowser/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
 			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			      <%=term_source_code%>
 			  </a> 

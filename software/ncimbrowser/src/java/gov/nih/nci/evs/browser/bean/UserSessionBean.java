@@ -6,9 +6,9 @@ import javax.faces.event.*;
 import javax.faces.model.*;
 import javax.servlet.http.*;
 
+import org.LexGrid.concepts.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
-import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.properties.*;
@@ -133,7 +133,14 @@ public class UserSessionBean extends Object {
             bean = new SearchStatusBean();
             request.setAttribute("searchStatusBean", bean);
         }
-
+        /*
+         * String matchText = (String) request.getParameter("matchText"); if
+         * (matchText == null || matchText.length() == 0) { String message =
+         * "Please enter a search string.";
+         * //request.getSession().setAttribute("message", message);
+         * request.setAttribute("message", message); return "message"; }
+         * matchText = matchText.trim(); bean.setMatchText(matchText);
+         */
         String matchType =
             (String) request.getParameter("adv_search_type");
 
@@ -198,7 +205,7 @@ public class UserSessionBean extends Object {
         } catch (Exception ex) {
         }
         Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<Entity> v = null;
+        Vector<org.LexGrid.concepts.Concept> v = null;
 
         boolean excludeDesignation = true;
         boolean designationOnly = false;
@@ -228,6 +235,12 @@ public class UserSessionBean extends Object {
         _logger.debug("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
+            /*
+             * _logger.debug("Advanced Search: "); _logger.debug("searchType: "
+             * + searchType); _logger.debug("matchText: " + matchText);
+             * _logger.debug("adv_search_algorithm: " + adv_search_algorithm);
+             * _logger.debug("adv_search_source: " + adv_search_source);
+             */
 
             String property_type =
                 (String) request.getParameter("selectPropertyType");
@@ -238,6 +251,7 @@ public class UserSessionBean extends Object {
             String property_name = selectProperty;
             if (property_name != null) {
                 property_name = property_name.trim();
+                // if (property_name.length() == 0) property_name = null;
                 if (property_name.compareTo("ALL") == 0)
                     property_name = null;
             }
@@ -284,6 +298,9 @@ public class UserSessionBean extends Object {
                 rel_search_association = null;
 			}
 
+
+
+
             if (rel_search_rela != null) {
 				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
 					String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
@@ -296,13 +313,31 @@ public class UserSessionBean extends Object {
 				}
             }
 
+            /*
+             * String rel_search_direction = (String)
+             * request.getParameter("rel_search_direction");
+             *
+             * //boolean direction = false; int search_direction =
+             * Constants.SEARCH_BOTH_DIRECTION; if (rel_search_direction != null
+             * && rel_search_direction.compareTo("source") == 0) {
+             * search_direction = Constants.SEARCH_SOURCE; //direction = true; }
+             * else if (rel_search_direction != null &&
+             * rel_search_direction.compareTo("target") == 0) { search_direction
+             * = Constants.SEARCH_TARGET; //direction = true; }
+             */
+
             int search_direction = Constants.SEARCH_SOURCE;
+
+            //_logger.debug("AdvancedSearchAction search_direction "
+            //    + search_direction);
 
             searchFields =
                 SearchFields.setRelationship(schemes, matchText, searchTarget,
                     rel_search_association, rel_search_rela, source,
                     matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
+
+            //_logger.debug("AdvancedSearchAction key " + key);
 
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -345,10 +380,12 @@ public class UserSessionBean extends Object {
                 } else {
                     _logger.warn("(*) qualifiers == null");
                 }
-
-				wrapper = new SearchUtils().searchByRELA(scheme,
-					version, matchText, source, matchAlgorithm,
-					inverse_rel_search_association, rel_search_rela, maxToReturn);
+                //if (rel_search_rela != null && rel_search_rela.compareTo("") != 0) {
+					//_logger.debug("search by RELA");
+					wrapper = new SearchUtils().searchByRELA(scheme,
+						version, matchText, source, matchAlgorithm,
+						inverse_rel_search_association, rel_search_rela, maxToReturn);
+				//}
 
                 if (wrapper == null) {
 					_logger.debug("searchByAssociations");
@@ -405,6 +442,12 @@ public class UserSessionBean extends Object {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
+                /*
+                 * wrapper = new SearchUtils().searchByName(scheme, version,
+                 * matchText, source, matchAlgorithm, ranking, maxToReturn,
+                 * SearchUtils.NameSearchType.Code);
+                 */
+
                 wrapper =
                     new SearchUtils().searchByCode(scheme, version, matchText,
                         source, matchAlgorithm, ranking, maxToReturn);
@@ -421,8 +464,11 @@ public class UserSessionBean extends Object {
             }
         }
 
+        //request.setAttribute("key", key);
         request.getSession().setAttribute("key", key);
+
         request.getSession().setAttribute("matchText", matchText);
+
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -460,21 +506,25 @@ public class UserSessionBean extends Object {
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
+
                 String match_size = Integer.toString(size);
+                ;// Integer.toString(v.size());
                 request.getSession().setAttribute("match_size", match_size);
                 request.getSession().setAttribute("page_string", "1");
+
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
                 return "search_results";
             } else if (size == 1) {
                 request.getSession().setAttribute("singleton", "true");
                 request.getSession().setAttribute("dictionary",
                     Constants.CODING_SCHEME_NAME);
+                // Concept c = (Concept) v.elementAt(0);
                 int pageNumber = 1;
                 List list = iteratorBean.getData(1);
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) list.get(0);
 
-                Entity c = null;
+                Concept c = null;
                 if (ref == null) {
                     String msg =
                         "Error: Null ResolvedConceptReference encountered.";
@@ -494,6 +544,7 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("code", ref.getConceptCode());
                 request.getSession().setAttribute("concept", c);
                 request.getSession().setAttribute("type", "properties");
+
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
                 return "concept_details";
             }
@@ -504,11 +555,12 @@ public class UserSessionBean extends Object {
 
         if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
 
+        //if (matchAlgorithm.compareTo("exactMatch") == 0) {
             String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
-                Entity c =
+                Concept c =
                     DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
                         null, null, newCUI);
                 request.getSession().setAttribute("code", newCUI);
@@ -564,20 +616,30 @@ public class UserSessionBean extends Object {
         // request.getSession().setAttribute("ranking",
         // Boolean.toString(ranking));
 
+//        String source = (String) request.getParameter("source");
+
 		String source = (String) request.getSession().getAttribute("selectedSource");
 
         if (source == null) {
             source = "ALL";
         }
+        // request.getSession().setAttribute("source", source);
+        //setSelectedSource(source);
 
         if (NCImBrowserProperties._debugOn) {
             try {
                 _logger.debug(Utils.SEPARATOR);
                 _logger.debug("* criteria: " + matchText);
+                //_logger.debug("* matchType: " + matchtype);
                 _logger.debug("* source: " + source);
+                // _logger.debug("* ranking: " + ranking);
+                // _logger.debug("* sortOption: " + sortOption);
             } catch (Exception e) {
             }
         }
+
+
+
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
         String max_str = null;
@@ -705,11 +767,14 @@ public class UserSessionBean extends Object {
 				}
 			}
 		}
+       //request.setAttribute("key", key);
 
         request.getSession().setAttribute("key", key);
+
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
         request.getSession().setAttribute("matchText", matchText);
+
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -729,20 +794,23 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("search_results", v);
 
                 String match_size = Integer.toString(size);
+                ;// Integer.toString(v.size());
                 request.getSession().setAttribute("match_size", match_size);
                 request.getSession().setAttribute("page_string", "1");
+
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
                 return "search_results";
             } else if (size == 1) {
                 request.getSession().setAttribute("singleton", "true");
                 request.getSession().setAttribute("dictionary",
                     Constants.CODING_SCHEME_NAME);
+                // Concept c = (Concept) v.elementAt(0);
                 int pageNumber = 1;
                 List list = iteratorBean.getData(1);
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) list.get(0);
 
-                Entity c = null;
+                Concept c = null;
                 if (ref == null) {
                     String msg =
                         "Error: Null ResolvedConceptReference encountered.";
@@ -770,14 +838,16 @@ public class UserSessionBean extends Object {
 
         // [#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
+
         // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
 
+        //if (matchAlgorithm.compareTo("exactMatch") == 0) {
         if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
             String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
-                Entity c =
+                Concept c =
                     DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
                         null, null, newCUI);
                 request.getSession().setAttribute("code", newCUI);
@@ -803,44 +873,58 @@ public class UserSessionBean extends Object {
 
     public List getResultsPerPageList() {
         _resultsPerPageList = new ArrayList();
-        _resultsPerPageList.add(new SelectItem("10","10"));
-        _resultsPerPageList.add(new SelectItem("25","25"));
-        _resultsPerPageList.add(new SelectItem("50","50"));
-        _resultsPerPageList.add(new SelectItem("75","75"));
-        _resultsPerPageList.add(new SelectItem("100","100"));
-        _resultsPerPageList.add(new SelectItem("250","250"));
-        _resultsPerPageList.add(new SelectItem("500","500"));
+        _resultsPerPageList.add(new SelectItem("10"));
+        _resultsPerPageList.add(new SelectItem("25"));
+        _resultsPerPageList.add(new SelectItem("50"));
+        _resultsPerPageList.add(new SelectItem("75"));
+        _resultsPerPageList.add(new SelectItem("100"));
+        _resultsPerPageList.add(new SelectItem("250"));
+        _resultsPerPageList.add(new SelectItem("500"));
 
-        _selectedResultsPerPage = getSelectedResultsPerPage();
- 
+        _selectedResultsPerPage =
+            ((SelectItem) _resultsPerPageList.get(2)).getLabel(); // default to
+        // 50
+
+        for (int i = 0; i < _selectedResultsPerPage.length(); i++) {
+            SelectItem item = (SelectItem) _resultsPerPageList.get(i);
+            String label = item.getLabel();
+            int k = Integer.parseInt(label);
+            if (k == Constants.DEFAULT_PAGE_SIZE) {
+                _selectedResultsPerPage = label;
+                break;
+            }
+        }
         return _resultsPerPageList;
     }
 
     public void setSelectedResultsPerPage(String selectedResultsPerPage) {
- 
-    	if (selectedResultsPerPage == null)
-        	_selectedResultsPerPage = String.valueOf(Constants.DEFAULT_PAGE_SIZE);
-    	else
-    		_selectedResultsPerPage = selectedResultsPerPage;
-
+        if (selectedResultsPerPage == null)
+            return;
+        _selectedResultsPerPage = selectedResultsPerPage;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedResultsPerPage",
             selectedResultsPerPage);
-    
     }
 
     public String getSelectedResultsPerPage() {
-        
-    	if (_selectedResultsPerPage == null || _selectedResultsPerPage.length() < 1)
-    		_selectedResultsPerPage = String.valueOf(Constants.DEFAULT_PAGE_SIZE);
-
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        String s =
+            (String) request.getSession()
+                .getAttribute("selectedResultsPerPage");
+        if (s != null) {
+            _selectedResultsPerPage = s;
+        } else {
+            _selectedResultsPerPage = "50";
+            request.getSession().setAttribute("selectedResultsPerPage", "50");
+        }
         return _selectedResultsPerPage;
     }
 
     public void resultsPerPageChanged(ValueChangeEvent event) {
-
         if (event.getNewValue() == null) {
             return;
         }
@@ -871,6 +955,8 @@ public class UserSessionBean extends Object {
         if (event.getNewValue() == null)
             return;
         String newValue = (String) event.getNewValue();
+
+        // _logger.debug("algorithmChanged; " + newValue);
         setSelectedAlgorithm(newValue);
     }
 
@@ -952,6 +1038,8 @@ public class UserSessionBean extends Object {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
+
+//      request.getSession().removeAttribute("selectedSource");
         request.getSession().setAttribute("selectedSource", selectedSource);
 
         _selectedSource = selectedSource;
@@ -974,6 +1062,8 @@ public class UserSessionBean extends Object {
     public void sourceSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() != null) {
             String source = (String) event.getNewValue();
+             //_logger.debug("==================== sourceSelectionChanged to: "
+             //+ source);
             setSelectedSource(source);
         }
 
@@ -993,9 +1083,11 @@ public class UserSessionBean extends Object {
          if (value != null)
              setSelectedSearchTarget(value);
 
+
          String prev_type = (String) request.getSession().getAttribute("prev_type");
          request.getSession().setAttribute("type", prev_type);
          request.getSession().removeAttribute("prev_type");
+
 
     }
 
