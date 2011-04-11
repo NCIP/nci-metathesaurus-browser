@@ -928,7 +928,7 @@ public class SearchUtils {
                 // required.
 
                 SortOptionList sortCriteria = null;
-                boolean resolveConcepts = true;
+                boolean resolveConcepts = false;
                 LocalNameList filterOptions = null;
                 propertyTypes = null;
                 try {
@@ -1442,7 +1442,7 @@ public class SearchUtils {
             LocalNameList restrictToProperties = new LocalNameList();
             SortOptionList sortCriteria = null;
             try {
-                boolean resolveConcepts = true;
+                boolean resolveConcepts = false;
                 try {
                     long ms = System.currentTimeMillis(), delay = 0;
                     iterator =
@@ -2149,7 +2149,7 @@ public class SearchUtils {
             LocalNameList restrictToProperties = new LocalNameList();
             SortOptionList sortCriteria = null;
             try {
-                boolean resolveConcepts = true;
+                boolean resolveConcepts = false;
                 try {
                     long ms = System.currentTimeMillis(), delay = 0;
                     iterator =
