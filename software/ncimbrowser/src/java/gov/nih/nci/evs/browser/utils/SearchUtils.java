@@ -875,6 +875,9 @@ public class SearchUtils {
         }
 
         ResolvedConceptReferencesIterator iterator = null;
+
+
+
         if (nameSearchType == NameSearchType.All
             || nameSearchType == NameSearchType.Name) {
             CodedNodeSet cns = null;
@@ -903,6 +906,7 @@ public class SearchUtils {
                 // LocalNameList contextList = null;
                 try {
 
+                    long restriction_ms = System.currentTimeMillis();
                     cns =
                         cns.restrictToMatchingDesignations(matchText,
                             SearchDesignationOption.ALL, matchAlgorithm, null);
@@ -919,6 +923,10 @@ public class SearchUtils {
                         cns.restrictToProperties(null, propertyTypes,
                             sourceList, null, null);
 */
+
+		            System.out.println("searchByName restriction delay (ms): "
+					     + (System.currentTimeMillis() - restriction_ms));
+
 
                 } catch (Exception ex) {
                     return null;

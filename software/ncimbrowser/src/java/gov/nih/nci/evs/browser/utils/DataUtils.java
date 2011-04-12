@@ -440,6 +440,8 @@ public class DataUtils {
                 _sourceListData.add(source.getLocalId());
             }
 
+            _sourceListData = SortUtils.quickSort(_sourceListData);
+
             return _sourceListData;
         } catch (Exception ex) {
             ex.printStackTrace();
