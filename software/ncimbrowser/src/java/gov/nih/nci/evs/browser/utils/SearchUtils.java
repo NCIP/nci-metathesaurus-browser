@@ -902,19 +902,23 @@ public class SearchUtils {
 
                 // LocalNameList contextList = null;
                 try {
-                    LocalNameList sourceList = null;
-                    if (source != null
-                        && source.compareToIgnoreCase("ALL") != 0) {
-                        sourceList = new LocalNameList();
-                        sourceList.addEntry(source);
-                    }
 
                     cns =
                         cns.restrictToMatchingDesignations(matchText,
                             SearchDesignationOption.ALL, matchAlgorithm, null);
+
+                    LocalNameList sourceList = null;
+                    if (source != null && source.compareToIgnoreCase("ALL") != 0) {
+                        sourceList = new LocalNameList();
+                        sourceList.addEntry(source);
+                        cns = restrictToSource(cns, source);
+                    }
+/*
+
                     cns =
                         cns.restrictToProperties(null, propertyTypes,
                             sourceList, null, null);
+*/
 
                 } catch (Exception ex) {
                     return null;
@@ -922,10 +926,13 @@ public class SearchUtils {
 
                 LocalNameList restrictToProperties = null;// new
                                                           // LocalNameList();
+                /*
                 LocalNameList propertyNames =
                     Constructors.createLocalNameList("Semantic_Type");
                 // boolean resolveConcepts = true; // Semantic_Type is no longer
                 // required.
+                */
+                LocalNameList propertyNames = null;
 
                 SortOptionList sortCriteria = null;
                 boolean resolveConcepts = false;
@@ -934,7 +941,7 @@ public class SearchUtils {
                 try {
                     try {
                         long ms = System.currentTimeMillis(), delay = 0;
-                        cns = restrictToSource(cns, source);
+
                         // iterator = cns.resolve(sortCriteria, propertyNames,
                         // restrictToProperties, null, resolveConcepts);
                         iterator =
@@ -2008,7 +2015,7 @@ public class SearchUtils {
                     if (code.indexOf("@") == -1) {
                         codeList.addConceptReference(ref);
                         knt_concept++;
-                    } 
+                    }
                 }
             }
 
@@ -2055,7 +2062,7 @@ public class SearchUtils {
                     if (code.indexOf("@") == -1) {
                         codeList.addConceptReference(ref);
                         knt_concept++;
-                    } 
+                    }
                 }
             }
             if (knt_concept == 0)

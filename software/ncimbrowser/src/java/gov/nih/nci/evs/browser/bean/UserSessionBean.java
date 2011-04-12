@@ -630,10 +630,16 @@ public class UserSessionBean extends Object {
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
 			} else {
+
+				long ms = System.currentTimeMillis();
 				wrapper =
 					new SearchUtils().searchByName(scheme, version,
 						matchText, source, matchAlgorithm, ranking,
 						maxToReturn);
+		        System.out.println("searchByName Run time (ms): "
+					+ (System.currentTimeMillis() - ms));
+
+
 				if (wrapper != null) {
 					iterator = wrapper.getIterator();
 					if (iterator != null) {
@@ -812,12 +818,12 @@ public class UserSessionBean extends Object {
         _resultsPerPageList.add(new SelectItem("500","500"));
 
         _selectedResultsPerPage = getSelectedResultsPerPage();
- 
+
         return _resultsPerPageList;
     }
 
     public void setSelectedResultsPerPage(String selectedResultsPerPage) {
- 
+
     	if (selectedResultsPerPage == null)
         	_selectedResultsPerPage = String.valueOf(Constants.DEFAULT_PAGE_SIZE);
     	else
@@ -828,11 +834,11 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedResultsPerPage",
             selectedResultsPerPage);
-    
+
     }
 
     public String getSelectedResultsPerPage() {
-        
+
     	if (_selectedResultsPerPage == null || _selectedResultsPerPage.length() < 1)
     		_selectedResultsPerPage = String.valueOf(Constants.DEFAULT_PAGE_SIZE);
 
