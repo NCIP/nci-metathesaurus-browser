@@ -234,11 +234,8 @@
                 <table>
                   <tr><td>
                     <label for="matchText"/>
-                    <!--
-                    <input CLASS="searchbox-input" name="matchText" id="matchText" value="<%=search_string%>" />
-                     -->
 
-    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=search_string%>" onFocus="active=true"
+    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
@@ -311,8 +308,8 @@
                 <tr><td>
                   <table>
                   <% if (selectSearchOption.equals("Property")) { %>
-                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>" />
-                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>" />
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=HTTPUtils.cleanXSS(rel_search_association)%>" />
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=HTTPUtils.cleanXSS(rel_search_rela)%>" />
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
@@ -353,7 +350,7 @@
                     </tr>
 
                   <% } else if (selectSearchOption.equals("Relationship")) { %>
-                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>" />
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=HTTPUtils.cleanXSS(selectProperty)%>" />
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
@@ -427,9 +424,9 @@
                       </td>
                     </tr>
                   <% } else { %>
-                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=selectProperty%>" />
-                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=rel_search_association%>" />
-                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=rel_search_rela%>" />
+                    <input type="hidden" name="selectProperty" id="selectProperty" value="<%=HTTPUtils.cleanXSS(selectProperty)%>" />
+                    <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=HTTPUtils.cleanXSS(rel_search_association)%>" />
+                    <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=HTTPUtils.cleanXSS(rel_search_rela)%>" />
                   <% }%>
 
                   </table>
@@ -437,7 +434,7 @@
 
               </table>
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
-              <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=adv_search_type%>" />
+              <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=HTTPUtils.cleanXSS(adv_search_type)%>" />
 
             <!--
             </form>
