@@ -83,14 +83,15 @@ public class HTTPUtils {
         }
 
         // Remove XSS attacks
-        value = replaceAll(value, "<\\s*script\\s*>.*</\\s*script\\s*>", "");
-        value = value.replaceAll(".*<\\s*iframe.*>", "");
+        value = replaceAll(value, "<\\s*(?i)script\\s*>.*</\\s*(?i)script\\s*>", "");
+        value = value.replaceAll(".*<\\s*(?i)iframe.*>", "");
+        value = value.replaceAll(".*<\\s*(?i)img.*>", "");
         value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
         value = value.replaceAll("'", "&#39;");
         value = value.replaceAll("eval\\((.*)\\)", "");
         value =
-            replaceAll(value, "[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']",
+            replaceAll(value, "[\\\"\\\'][\\s]*(?i)javascript:(.*)[\\\"\\\']",
                 "\"\"");
         value = value.replaceAll("\"", "&quot;");
         return value;
