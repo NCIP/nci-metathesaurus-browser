@@ -244,7 +244,7 @@ public class RemoteServerUtil {
     public static String getServiceURL() {
         return _serviceURL;
     }
-    
+
     public static LexEVSDistributed getLexEVSDistributed(String serviceUrl) {
 		try {
 			LexEVSDistributed distributed =
@@ -256,8 +256,8 @@ public class RemoteServerUtil {
             e.printStackTrace();
         }
         return null;
-	}    
-    
+	}
+
     public static LexEVSDistributed getLexEVSDistributed() {
 		String url = "http://ncias-d488-v.nci.nih.gov:29080/lexevsapi60";
 		NCImBrowserProperties properties = null;
@@ -269,8 +269,9 @@ public class RemoteServerUtil {
             ex.printStackTrace();
         }
         return null;
-	}    
-    
+	}
+
+    /*
     public static LexEVSValueSetDefinitionServices getLexEVSValueSetDefinitionServices() {
 		try {
 			LexEVSDistributed distributed = getLexEVSDistributed();
@@ -280,6 +281,41 @@ public class RemoteServerUtil {
             e.printStackTrace();
         }
         return null;
-	}    
-    
+	}
+	*/
+
+    public static LexEVSValueSetDefinitionServices getLexEVSValueSetDefinitionServices() {
+
+		NCItBrowserProperties properties = null;
+		try {
+            properties = NCItBrowserProperties.getInstance();
+            String serviceUrl = properties.getProperty(NCItBrowserProperties.EVS_SERVICE_URL);
+            if (serviceUrl == null || serviceUrl.compareTo("") == 0 || serviceUrl.compareToIgnoreCase("null") == 0) {
+				return LexEVSValueSetDefinitionServicesImpl.defaultInstance();
+			}
+			LexEVSDistributed distributed = getLexEVSDistributed();
+			LexEVSValueSetDefinitionServices vds = distributed.getLexEVSValueSetDefinitionServices();
+			return vds;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+	}
+
+
+    public static LexEVSValueSetDefinitionServices getLexEVSValueSetDefinitionServices(String serviceUrl) {
+		try {
+			LexEVSDistributed distributed =
+				(LexEVSDistributed)
+				ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+
+			LexEVSValueSetDefinitionServices vds = distributed.getLexEVSValueSetDefinitionServices();
+			return vds;
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+	}
+
 }
