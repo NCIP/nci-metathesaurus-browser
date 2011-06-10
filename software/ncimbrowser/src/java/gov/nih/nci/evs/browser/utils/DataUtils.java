@@ -1552,8 +1552,6 @@ public class DataUtils {
         CodedNodeSet cns = null;
         try {
 
-System.out.println("codedNodeGraph2CodedNodeSetIterator toNodeList ");
-
             cns =
                 cng.toNodeList(graphFocus, resolveForward, resolveBackward,
                     resolveAssociationDepth, maxToReturn);
@@ -1572,14 +1570,8 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator toNodeList ");
             ResolvedConceptReferencesIterator iterator = null;
             try {
 
-System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
-
-
                 iterator =
                     cns.resolve(sortCriteria, propertyNames, propertyTypes);
-
-
- System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve DONE  ");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2766,13 +2758,15 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
 
     public static Vector sortRelationshipData(Vector relationships,
         String sortBy) {
+
         if (sortBy == null)
             sortBy = "name";
         HashMap hmap = new HashMap();
         Vector key_vec = new Vector();
-        String delim = "  ";
+        String delim = "|";
         for (int n = 0; n < relationships.size(); n++) {
             String s = (String) relationships.elementAt(n);
+
             Vector ret_vec = DataUtils.parseData(s, "|");
             String relationship_name = (String) ret_vec.elementAt(0);
             String target_concept_name = (String) ret_vec.elementAt(1);
@@ -2799,11 +2793,13 @@ System.out.println("codedNodeGraph2CodedNodeSetIterator cns.resolve  ");
             hmap.put(key, s);
             key_vec.add(key);
         }
+
         key_vec = SortUtils.quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
             v.add((String) hmap.get(s));
+
         }
         return v;
     }
