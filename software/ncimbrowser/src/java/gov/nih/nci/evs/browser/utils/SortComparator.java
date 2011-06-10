@@ -109,7 +109,7 @@ public class SortComparator implements Comparator<Object> {
 
         return c.toString();
     }
-
+/*
     public int compare(Object object1, Object object2) {
         // case insensitive sort
         String key1 = getKey(object1, _sort_option).toLowerCase();
@@ -122,4 +122,45 @@ public class SortComparator implements Comparator<Object> {
         else
             return key1.compareTo(key2);
     }
+*/
+
+    private String replaceCharacter(String s, char from, char to) {
+		if (s == null) return null;
+		int ascii_from = (int) from;
+		int ascii_to   = (int) to;
+		String t = "";
+		for (int i=0; i<s.length(); i++) {
+			char c = s.charAt(i);
+			int ascii_c = (int) c;
+
+			if (ascii_c == ascii_from) {
+				t = t + to;
+			} else {
+				t = t + c;
+			}
+		}
+	    return t;
+	}
+
+    public int compare(Object object1, Object object2) {
+        // case insensitive sort
+        String key1 = getKey(object1, _sort_option);
+        String key2 = getKey(object2, _sort_option);
+
+        if (key1 == null || key2 == null)
+            return 0;
+        key1 = getKey(object1, _sort_option).toLowerCase();
+        key2 = getKey(object2, _sort_option).toLowerCase();
+
+        key1 = replaceCharacter(key1, ' ', '~');
+        key1 = replaceCharacter(key1, '|', ' ');
+        key1 = replaceCharacter(key1, '$', ' ');
+
+        key2 = replaceCharacter(key2, ' ', '~');
+        key2 = replaceCharacter(key2, '|', ' ');
+        key2 = replaceCharacter(key2, '$', ' ');
+
+        return key1.compareTo(key2);
+    }
+
 }
