@@ -50,6 +50,7 @@
           <A HREF="#searchavdhelp">Advanced Search</A><br>
           <A HREF="#searchresults">Search Results</A><br>
           <A HREF="#conceptdetails">Concept Details</A><br>
+          <A HREF="#cartfunctionality">Cart and Export Functionality</A><br>
           <A HREF="#hierarchy">View Hierarchy</A><br>
           <A HREF="#sources">Sources</A><br>
           <A HREF="#knownissues">Known Issues</A><br>
@@ -213,6 +214,64 @@
             displays from other sources will be provided in a later browser release.
          </ul>
         </p>
+        
+        
+        <p class="textbody">
+          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><h2><A NAME="cartfunctionality">Cart and Export Functionality</A></h2></td>
+            <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
+          </tr></table>
+          <!-- ************* Cart and Export Functionality ************** -->
+          The <b>Cart</b> and <b>Export</b> functionality is available from within the detailed <b>Concept Page</b> of any concept 
+          that is selected for viewing.  The purpose of the <b>Cart</b> and <b>Export</b> functionality is to allow the user 
+          to collect and save one or more concepts so that they can be exported to a file. The following instructions
+          apply to the <b>Cart</b> and <b>Export</b> functionality. 
+          <br><br>
+        
+        <ul>
+        <li>
+	In order to place a concept you are viewing into the <b>Cart</b>, 
+	click on the <b>Add to Cart</b> link on the right hand side of the concept details 
+	(note that the <b>Add to Cart</b> link appears on all of the tabbed pages: <b>Terms & Properties</b>, 
+	<b>Synonym Details</b>, <b>Relationships</b>, <b>By Source</b>, and <b>View All</b>). 
+	</li>
+	<li>
+	Once you have placed a concept into the <b>Cart</b>, a link called <b>Cart</b> will appear underneath the Search Box at the 
+	top of the page, next to <b>Visited Concepts</b>; from this point forward, this link will remain there regardless 
+	of the Metathesaurus Browser page you are on (provided that the <b>Cart</b> is not emptied; if the <b>Cart</b> is emptied, 
+	the link will disappear). 
+	</li>
+	<li>	
+	If you click on the <b>Cart</b> link, you will be taken to the <b>Cart</b> page: 
+		<ul>
+			<li>
+			The number next to the word <b>Cart</b> on the left indicates the number of concepts you have placed in the cart. 
+			</li>
+			<li>
+			The concepts you have placed in the cart are listed by concept <b>Name</b> (on the left) and concept <b>Semantic Types</b> (on the right). 
+			</li>
+			<li>
+			If you want to <b>remove</b> a particular concept from the <b>Cart</b>, check the box on the left of the concept's name and then click <b>Remove</b>. 
+			This will also work for removing several selected concepts at once. 
+			</li>
+		</ul>	
+	</li>
+	<li>	
+	Concepts you have accumulated on the <b>Cart</b> page can be exported to a file in two formats: 
+		<ul>
+			<li>
+			<b>Export XML</b> will export cart contents in XML format. 
+			</li>
+			<li>	
+			<b>Export CSV</b> (Comma Separated Values) will generate a list of cart contents in CSV format readable from Excel. 
+			</li>
+		</ul>
+	</li>
+	</ul>         
+        </p>        
+        
+        
+        
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="hierarchy">View Hierarchy</A></h2></td>
@@ -253,6 +312,14 @@
           This page is also displayed if you click on the <b>?</b> icon above  the source information in the
           <b>Relationships, Synonym Details,</b> and <b>By Source</b> tabs.
         </p>
+        
+       
+        
+
+
+
+        
+        
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
