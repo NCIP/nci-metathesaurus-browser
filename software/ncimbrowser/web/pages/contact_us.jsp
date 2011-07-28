@@ -18,9 +18,9 @@
   </head>
   <%
     String ncicb_contact_url = new DataUtils().getNCICBContactURL();
-    String subject = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("subject"));
-    String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("message"));
-    String emailaddress = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("emailaddress"));
+    String subject = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("subject"));
+    String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String)request.getParameter("message"));
+    String emailaddress = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String)request.getParameter("emailaddress"));
     if (subject == null) subject = "";
     if (message == null) message = "";
     if (emailaddress == null) emailaddress = "";

@@ -66,7 +66,7 @@
             Entity c = (Entity) request.getSession().getAttribute("concept");
             String name = c.getEntityDescription().getContent();
             String code = c.getEntityCode();
-            String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));
+            String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sortBy"));
 
 _logger.debug("Sortby: " + sort_by);
 

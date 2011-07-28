@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Entity" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -19,12 +19,12 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
 <%
-  String dictionary = (String) request.getParameter("dictionary");
+  String dictionary = HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
   String display_name = DataUtils.getMetadataValue(dictionary, "display_name");
-  String code = (String) request.getParameter("code");
-  String sab = (String) request.getParameter("sab");
+  String code = HTTPUtils.cleanXSS((String) request.getParameter("code"));
+  String sab = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
 
-  String type = (String) request.getParameter("type");
+  String type = HTTPUtils.cleanXSS((String) request.getParameter("type"));
 
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
   if (licenseStmt == null) licenseStmt = " ";
