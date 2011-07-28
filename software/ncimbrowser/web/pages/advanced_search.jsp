@@ -82,7 +82,7 @@
         <%@ include file="/pages/include/content-header-alt.jsp" %>
 <%
     String defaultSearchOption = "Name";
-    String refresh = request.getParameter("refresh");
+    String refresh = HTTPUtils.cleanXSS((String) request.getParameter("refresh"));
     boolean refresh_page = false;
     if (refresh != null) {
         refresh_page = true;
@@ -101,13 +101,13 @@
 
     if (refresh_page) {
         // Note: Called when the user selects "Search By" fields.
-        selectSearchOption = (String) request.getParameter("opt");
-        search_string = (String) request.getParameter("text");
-        adv_search_algorithm = (String) request.getParameter("algorithm");
-        adv_search_source = (String) request.getParameter("sab");
-        rel_search_association = (String) request.getParameter("rel");
-        rel_search_rela = (String) request.getParameter("rela");
-        selectProperty = (String) request.getParameter("prop");
+        selectSearchOption = HTTPUtils.cleanXSS((String) request.getParameter("opt"));
+        search_string = HTTPUtils.cleanXSS((String) request.getParameter("text"));
+        adv_search_algorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
+        adv_search_source = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
+        rel_search_association = HTTPUtils.cleanXSS((String) request.getParameter("rel"));
+        rel_search_rela = HTTPUtils.cleanXSS((String) request.getParameter("rela"));
+        selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("prop"));
     } else {
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         selectSearchOption = bean.getSearchType();

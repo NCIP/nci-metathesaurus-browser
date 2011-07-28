@@ -61,7 +61,7 @@
 String key = null;
 String randomKey = (String) request.getSession().getAttribute("key");
 if (randomKey == null) {
-    randomKey = (String) request.getParameter("key");
+    randomKey = HTTPUtils.cleanXSS((String) request.getParameter("key"));
 }
 
 

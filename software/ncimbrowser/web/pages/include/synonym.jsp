@@ -30,7 +30,7 @@
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
-              String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS(request.getParameter("sortBy"));
+              String sort_by = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sortBy"));
               if (sort_by == null) {
                   sort_by = "name";
               }

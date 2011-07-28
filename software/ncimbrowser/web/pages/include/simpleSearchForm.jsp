@@ -34,7 +34,7 @@
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
   onsubmit="javascript:disableAnchor();">
 <%
-    String match_text = (String) request.getParameter("searchText");
+    String match_text = HTTPUtils.cleanXSS((String) request.getParameter("searchText"));
     if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
