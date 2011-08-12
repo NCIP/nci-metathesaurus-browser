@@ -19,19 +19,33 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
 <%
+
   String dictionary = HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
+  String dictionary_0 = dictionary;
+  if (dictionary_0 != null) {
+	  dictionary_0 = dictionary_0.replaceAll("&#40;", "(");
+	  dictionary_0 = dictionary_0.replaceAll("&#41;", ")");
+	  dictionary_0 = dictionary_0.replaceAll("%20", " ");
+	  dictionary = dictionary_0;
+  }
+    
+  
   String display_name = DataUtils.getMetadataValue(dictionary, "display_name");
+ 
+  
   String code = HTTPUtils.cleanXSS((String) request.getParameter("code"));
   String sab = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
 
   String type = HTTPUtils.cleanXSS((String) request.getParameter("type"));
 
   String licenseStmt = LicenseBean.resolveCodingSchemeCopyright(dictionary, null);
+  
+
   if (licenseStmt == null) licenseStmt = " ";
 
   String base_path = request.getContextPath();
 
-  if (dictionary != null) dictionary = dictionary.replaceAll("%20", " ");
+  //if (dictionary != null) dictionary = dictionary.replaceAll("%20", " ");
 %>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <f:view>
