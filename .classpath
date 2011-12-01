@@ -2,44 +2,137 @@
 <classpath>
 	<classpathentry kind="src" path="software/ncimbrowser/src/java"/>
 	<classpathentry kind="src" path="software/ncimbrowser/web/pages"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/acegi-security-1.0.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/args4j-2.0.12.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/arq.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/aspectjrt-1.6.8.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/aspectjweaver-1.6.8.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/axis.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/c3p0-0.9.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-CQL-cql.1.0-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-data-common-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-data-utils-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-metadata-data-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-sdkQuery4-beans-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/caGrid-sdkQuery4-processor-1.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-1.3.1-core.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-bean-serializer.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-codegen-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-codegen-anttask-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/castor-xml-schema-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/cglib-2.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/claml-model.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/clm-4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/common-util-1.0.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-beanutils-1.8.0.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/jcs-1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/jstl.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexbig.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/LexEVSSecurity.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/mail.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/mail.jar.license.txt"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-client-framework.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-grid-remoting.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-security.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/extlib/jsf-api.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/extlib/jsf-impl.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/extlib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/extlib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/antlr-2.7.7.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/asm-3.2.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/cglib-2.2.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-discovery-0.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/commons-pool-1.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/compass-2.2.0.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/concurrent.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/csmapi-4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/DdlUtils-1.0-PATCHED.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/ehcache-core-2.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/ejb3-persistence-1.0.2.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/freemarker-2.3.9.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/GroboUtils-5-core.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hibernate-annotations-3.4.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hibernate-commons-annotations-3.3.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hibernate-core-3.3.2.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hibernate-validator-3.1.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/hsqldb-1.8.0.10.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/ibatis-sqlmap-2.3.4.726.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/icu4j-3_6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/iri.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jakarta-regexp-1.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/javassist-3.8.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxen-1.1-beta-6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxen-core-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxen-jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxme-api-0.3.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jcs-1.3.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jena-2.5.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/json-20080701.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jsr250-api-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexbig.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-core.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-tree-2.0.5.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-beans.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-orm.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/looks-2.1.3.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/lucene-analyzers-2.4.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lucene-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lucene-queries-2.4.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lucene-regex-2.4.1.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/lucene-snowball-2.4.1.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/mysql-connector-java-5.1.10.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevs-tree-2.0.5.jar"/>
-	<classpathentry kind="lib" path="software/ncimbrowser/lib/lexevsapi60-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/mail.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-distributed-client-2.0.5.jar"/>
 	<classpathentry kind="lib" path="software/ncimbrowser/lib/metabrowser-extension-local-client-2.0.5.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/mmbase.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/MSSOUserValidator.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/mysql-connector-java-5.1.10.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/ognl-2.7.3.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/orphanNodesAlg.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/persistence-api-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/prefuse-2006.07.15-mod.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/protege-owl.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/protege.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/relaxngDatatype-20030807.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/rmiio-2.0.2.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/saxpath-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-client-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-core.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-grid-jaas-executor.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-grid-jaas.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-grid-remoting.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-security.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-web-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sdk-ws-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/slf4j-log4j12-1.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-aop-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-aspects-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-batch-core-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-batch-infrastructure-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-oxm-1.5.7.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-test-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-web-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-webmvc-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/spring-xml-1.5.7.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/sqlbuilder-2.0.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/struts2-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/struts2-core-2.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/velocity-1.6.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/xsdlib-20030807.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/lib/xwork-2.0-beta-1.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/ant-contrib-1.0nci.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/bda-lite-1.0.0.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/jsf-api.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/jsf-impl.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="software/ncimbrowser/extlib/xmltask-1.15.1.jar"/>
 	<classpathentry kind="output" path="software/ncimbrowser/build/web/WEB-INF/classes"/>
 </classpath>
