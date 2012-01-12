@@ -32,6 +32,18 @@
          <servlet-name>ajax</servlet-name>
          <url-pattern>/ajax</url-pattern>
     </servlet-mapping>
+    
+    
+     <servlet>
+        <servlet-name>redirect</servlet-name>
+        <servlet-class>gov.nih.nci.evs.browser.servlet.RedirectServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+         <servlet-name>redirect</servlet-name>
+         <url-pattern>/redirect</url-pattern>
+    </servlet-mapping>   
 
     <!-- Faces Servlet -->
 

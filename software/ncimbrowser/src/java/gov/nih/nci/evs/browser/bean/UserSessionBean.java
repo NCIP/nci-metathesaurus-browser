@@ -1084,13 +1084,21 @@ public class UserSessionBean extends Object {
         String code = (String) request.getParameter("code");
         String sab = (String) request.getParameter("sab");
 
+System.out.println("(*) acceptLicenseAction dictionary " + dictionary);
+System.out.println("(*) acceptLicenseAction code " + code);
+System.out.println("(*) acceptLicenseAction sab " + sab);
+
         if (dictionary != null && code != null) {
             LicenseBean licenseBean =
                 (LicenseBean) request.getSession().getAttribute("licenseBean");
             if (licenseBean == null) {
                 licenseBean = new LicenseBean();
             }
+
+System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
+
             licenseBean.addLicenseAgreement(dictionary);
+
             request.getSession().setAttribute("licenseBean", licenseBean);
 
             request.getSession().setAttribute("term_browser_dictionary",
