@@ -130,15 +130,15 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             
 	    boolean licenseAgreementAccepted = false;
-	    String formal_name = null;
+	    String formal_name = MetadataUtils.getSABFormalName(term_source);
 	    boolean isLicensed = DataUtils.checkIsLicensed(term_source);
 	    String cs_name = Constants.CODING_SCHEME_NAME;
 	    String view_in_source_hierarchy_label = "View In Source Hierarchy";
 	    if (term_source != null) {
 	        view_in_source_hierarchy_label = "View In " + term_source + " Hierarchy";
 	    }
+	    
 	    if (term_source != null && isLicensed ) {
-	        formal_name = MetadataUtils.getSABFormalName(term_source);
 	        licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
 	    }
 	
@@ -150,6 +150,7 @@
 	    if (!isLicensed) {
 	        licenseAgreementAccepted = true;
 	    }
+	    
       
         %>
             <tr class="<%=rowColor%>">
@@ -161,59 +162,35 @@
                // source code 
 		if (term_browser_formalname == null) {
 %>
-
 			  <td class="dataCellText" width=125><%=term_source_code%></td>
 <%
 		} else {
-		      if (!licenseAgreementAccepted) {
-		      
 %>		      
 	                  <td>
-			  <a href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&code=<%=term_source_code%>',
+			  <a href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=details&dictionary=<%=formal_name%>&code=<%=term_source_code%>&sab=<%=term_source%>',
 			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			      <%=term_source_code%>
 			  </a>
 			  </td>
 <%			  
-	              } else {
-%>	  
-                          <td>
-			  <a href="#" onclick="javascript:window.open('<%=nciterm_browser_url%>/pages/concept_details.jsf?dictionary=<%=term_browser_formalname%>&code=<%=term_source_code%>',
-			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-			      <%=term_source_code%>
-			  </a> 
-			  </td>
-			  
-<%			  
-	    	      }
 		}
-               // tree 
+                // tree 
 		if (source_hierarchy_available) {
-		      if (!licenseAgreementAccepted) {
 %>		      
-                              <td>
-			      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+	                  <td>
+			  <a class="icon_blue" href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=tree&dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy',
+			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" title="<%=view_in_source_hierarchy_label%>" alt="<%=view_in_source_hierarchy_label%>" border="0"/>
-			      </a>
-			      </td>
-<%			  
-	              } else {
-%>	              
-	                      <td>
-		      <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-		      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_in_source_hierarchy_label%>" title="<%=view_in_source_hierarchy_label%>" border="0"/>
-		      </a>
-			      </td>
+			  </a>
+			  </td>
 <%                  
-	    	      }
+
 		} else {
 %>		
-		      <td>&nbsp;</td>
+		      <td></td>
 <%		
 		}
- 
 %>
-                  
 
             </tr>
         <%
