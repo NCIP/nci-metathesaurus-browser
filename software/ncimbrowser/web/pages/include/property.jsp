@@ -360,6 +360,14 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         if (value_vec != null && value_vec.size() > 0) {
           for (int j=0; j<value_vec.size(); j++) {
             String value = (String) value_vec.elementAt(j);
+            
+            // remove source qualifier:
+            if (value.indexOf("|") != -1) {
+                Vector value_src_vec = DataUtils.parseData(value);
+                value = (String) value_src_vec.elementAt(0);
+            }
+            
+            
             if (n % 2 == 0) {
               %>
                 <tr class="dataRowDark">

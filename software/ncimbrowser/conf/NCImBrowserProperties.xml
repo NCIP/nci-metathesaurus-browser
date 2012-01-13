@@ -182,19 +182,19 @@
        <DisplayItem>
             <propertyName>PDQ_Closed_Trial_Search_ID</propertyName>
             <itemLabel>PDQ Closed Trial Search ID</itemLabel>
-            <url>null</url>
-            <hyperlinkText>see NCI PDQ closed clinical trial info</hyperlinkText>
+            <url>http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?idtype=1&amp;closed=1&amp;id=</url>
+            <hyperlinkText>check for NCI PDQ closed clinical trial info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
        <DisplayItem>
             <propertyName>PDQ_Open_Trial_Search_ID</propertyName>
             <itemLabel>PDQ Open Trial Search ID</itemLabel>
-            <url>null</url>
-            <hyperlinkText>see NCI PDQ open clinical trial info</hyperlinkText>
+            <url>http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?idtype=1&amp;id=</url>
+            <hyperlinkText>check for NCI PDQ open clinical trial info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
-
+       
        <DisplayItem>
             <propertyName>PubMedID_Primary_Reference</propertyName>
             <itemLabel>PubMedID Primary Reference</itemLabel>
