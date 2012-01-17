@@ -150,10 +150,11 @@
   }
 
 %>
+<A name="properties"></A>
 <table border="0" width="708px">
   <tr>
     <td class="textsubtitle-blue" align="left">
-      <A name="properties">Terms & Properties</A>
+      Terms & Properties
     </td>
   </tr>
 </table>
