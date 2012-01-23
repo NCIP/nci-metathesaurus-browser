@@ -95,8 +95,10 @@ public class MetadataUtils {
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         LexBIGServiceMetadata lbsm = null;
         MetadataPropertyList mdpl = null;
-        
-        CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, null);
+
+		String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+        CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
+
         String uri = cs.getCodingSchemeURI();
         String representsVersion = cs.getRepresentsVersion();
 
@@ -114,9 +116,9 @@ public class MetadataUtils {
 
         try {
             lbsm = lbs.getServiceMetadata();
-            lbsm = lbsm.restrictToProperties(new String[] { SOURCE_DESCRIPTION });            
+            lbsm = lbsm.restrictToProperties(new String[] { SOURCE_DESCRIPTION });
             lbsm = lbsm.restrictToCodingScheme(Constructors
-                    .createAbsoluteCodingSchemeVersionReference(uri,representsVersion));            
+                    .createAbsoluteCodingSchemeVersionReference(uri,representsVersion));
             mdpl = lbsm.resolve();
 
         } catch (Exception e) {
@@ -131,7 +133,7 @@ public class MetadataUtils {
             w.add(name + "|" + value);
         }
         w = SortUtils.quickSort(w);
-        
+
         return w;
     }
 
@@ -148,7 +150,7 @@ public class MetadataUtils {
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static Vector getTermTypeDescriptionMetaData(String uri,
         String version) {
-    	
+
         Map<String, String> map = null;
         try {
             map = getTtyExpandedForm(uri, version);
@@ -205,15 +207,17 @@ public class MetadataUtils {
     public static Vector getMetadataNameValuePairs(String codingSchemeName,
         String version, String urn) {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-
         if (version == null) {
+			/*
             try {
                 CodingScheme cs =
-                    lbSvc.resolveCodingScheme(codingSchemeName, null);
+                    lbSvc.resolveCodingScheme(codingSchemeName, version);
                 version = cs.getRepresentsVersion();
             } catch (Exception ex) {
 
             }
+            */
+            version = DataUtils.getVocabularyVersionByTag(codingSchemeName, "PRODUCTION");
         }
 
         MetadataPropertyList mdpl =
@@ -605,17 +609,36 @@ public class MetadataUtils {
 
     }
 
+
     public static Vector getPropertyDescriptions() {
         if (_propertyDescriptionsVec != null)
             return _propertyDescriptionsVec;
         try {
+			String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+			System.out.println("Version: " + version);
+
             _propertyDescriptionsVec = new Vector();
             LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+
             LexBIGServiceMetadata lbsm = lbs.getServiceMetadata();
+
+//[#31764] NCIm Properties not displaying
+
+            CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
+            String urn = cs.getCodingSchemeURI();
+            lbsm = lbs.getServiceMetadata();
+            lbsm =
+                lbsm.restrictToCodingScheme(Constructors
+                    .createAbsoluteCodingSchemeVersionReference(urn, version));
+/*
+
+
+
             lbsm =
                 lbsm.restrictToCodingScheme(Constructors
                     .createAbsoluteCodingSchemeVersionReference(
-                    		Constants.CODING_SCHEME_NAME, null));
+                    		CODING_SCHEME_NAME, version));
+*/
 
             MetadataPropertyList mdpl = lbsm.resolve();
             for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
@@ -646,6 +669,8 @@ public class MetadataUtils {
         }
     }
 
+
+
 	private static CodingScheme getCodingScheme(String codingScheme,
 			String version) {
 		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -664,8 +689,61 @@ public class MetadataUtils {
 			ex.printStackTrace();
 		}
 		return cs;
-	} 
-    
+	}
+
+    public static String getVocabularyVersionByTag(String codingSchemeName,
+        String ltag) {
+
+        if (codingSchemeName == null)
+            return null;
+        String version = null;
+        int knt = 0;
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
+            CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
+            for (int i = 0; i < csra.length; i++) {
+                CodingSchemeRendering csr = csra[i];
+                CodingSchemeSummary css = csr.getCodingSchemeSummary();
+                if (css.getFormalName().compareTo(codingSchemeName) == 0
+                    || css.getLocalName().compareTo(codingSchemeName) == 0
+                    || css.getCodingSchemeURI().compareTo(codingSchemeName) == 0) {
+					version = css.getRepresentsVersion();
+                    knt++;
+
+                    if (ltag == null)
+                        return version;
+                    RenderingDetail rd = csr.getRenderingDetail();
+                    CodingSchemeTagList cstl = rd.getVersionTags();
+                    java.lang.String[] tags = cstl.getTag();
+                    // KLO, 102409
+                    if (tags == null)
+                        return version;
+
+                    if (tags != null && tags.length > 0) {
+                        for (int j = 0; j < tags.length; j++) {
+                            String version_tag = (String) tags[j];
+
+                            if (version_tag != null && version_tag.compareToIgnoreCase(ltag) == 0) {
+                                return version;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        _logger.warn("Version corresponding to tag " + ltag + " is not found "
+            + " in " + codingSchemeName);
+        if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
+            & knt == 1) {
+            _logger.warn("\tUse " + version + " as default.");
+            return version;
+        }
+        return null;
+    }
+
     /**
      * Simple example to demonstrate extracting a specific Coding Scheme's
      * Metadata.
