@@ -25,6 +25,12 @@
   String neighborhood_sab = null;
   Vector source_vec = dataUtils.getSources(Constants.CODING_SCHEME_NAME, null, null, code);
 
+
+  String default_source = (String) request.getSession().getAttribute("selectedSource");
+  if (default_source == null) {
+      default_source = "null";
+  }
+        
   if (source_vec != null && source_vec.size() == 1) {
       neighborhood_sab = (String) source_vec.elementAt(0);
   } else {
@@ -32,7 +38,10 @@
   }
 
   if (neighborhood_sab == null) {
-      if (source_vec.contains("NCI")) {
+      // [#28784] If a single source is selected, make it the default source selection in the By Source tab
+      if (source_vec.contains(default_source)) {
+          neighborhood_sab = default_source;  
+      } else if (source_vec.contains("NCI")) {
           neighborhood_sab = "NCI";
       } else {
           neighborhood_sab = (String) source_vec.elementAt(0);
@@ -48,9 +57,7 @@
   Vector src_vec = new Vector();
   for (int k=0; k<source_vec.size(); k++) {
       String src = (String) source_vec.elementAt(k);
-      //if (src.compareTo(neighborhood_sab) != 0) {
-          src_vec.add(src);
-      //}
+      src_vec.add(src);
   }
 
   String concept_neighborhood_name = concept_neighborhood.getEntityDescription().getContent();
@@ -79,6 +86,9 @@
       <table class="dataTable" border="0">
         <%
         if (src_vec.size() > 0) {
+        
+
+        
         String nci_src_name = "NCI";
         %>
         <tr>
@@ -88,6 +98,7 @@
           for (int n=0; n<src_vec.size(); n++)
           {
               String s = (String) src_vec.elementAt(n);
+              
               if (s.compareTo(nci_src_name) == 0) {
                   if (neighborhood_sab.compareTo(nci_src_name) == 0) {
                   %>
@@ -99,8 +110,8 @@
        <%=s%>
     </a>&nbsp;
     <%
-      }
-        }
+                  }
+              }
           }
           for (int n=0; n<src_vec.size(); n++)
           {

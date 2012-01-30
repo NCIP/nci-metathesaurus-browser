@@ -144,6 +144,15 @@ public class UserSessionBean extends Object {
         bean.setAlgorithm(matchAlgorithm);
 
         String source = (String) request.getParameter("adv_search_source");
+
+        if (source == null) {
+            //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
+            request.getSession().removeAttribute("selectedSource");
+        } else {
+			request.getSession().setAttribute("selectedSource", source);
+		}
+
+
         bean.setSelectedSource(source);
 
         String selectSearchOption =
@@ -568,7 +577,11 @@ public class UserSessionBean extends Object {
 
         if (source == null) {
             source = "ALL";
-        }
+            //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
+            request.getSession().removeAttribute("selectedSource");
+        } else {
+			request.getSession().setAttribute("selectedSource", source);
+		}
 
         if (NCImBrowserProperties._debugOn) {
             try {
