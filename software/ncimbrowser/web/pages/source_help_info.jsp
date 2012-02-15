@@ -91,6 +91,38 @@ some of which are proprietary and included, by permission, for non-commercial us
   </li>
 </ul>
 </p>
+
+
+<p>
+Additional information on many of these sources can be found on related pages.
+<ul>
+  <li>
+    Many are described at: 
+    <a href="https://wiki.nci.nih.gov/display/VKC/Index+of+Terminologies" target="_blank">https://wiki.nci.nih.gov/display/VKC/Index+of+Terminologies</a>
+  </li>
+  <li>
+    NCI Term Browser sources are described in more detail
+    at: <a href="http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf</a>
+  </li>
+
+  <li>
+    Sources with tagged content in NCI Thesaurus are listed at:
+    <a href="http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
+  </li>
+
+  <li>
+    UMLS Metathesaurus sources are described in detail at:
+    <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank">http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
+  </li>
+  
+  <li>
+    Statistical profiles of sources included in NCI Thesaurus and NCI Metathesaurus are
+    at: <a href="https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development" target="_blank">https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development</a>
+  </li>
+</ul>
+</p>
+
+
             </td></tr>
           </table>
           <br/>

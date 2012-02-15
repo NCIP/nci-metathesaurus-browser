@@ -69,7 +69,6 @@
   -->
   <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();" >
 
-  <label for="matchText" />
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
 

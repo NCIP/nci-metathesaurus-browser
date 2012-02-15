@@ -233,8 +233,6 @@
 
                 <table>
                   <tr><td>
-                    <label for="matchText"/>
-
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
