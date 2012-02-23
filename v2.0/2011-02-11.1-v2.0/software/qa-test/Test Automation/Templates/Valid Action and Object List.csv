@@ -1,0 +1,17 @@
+Action Type,Action Description,Object Type,Object Description,Link,Webedit,webedit_secure,webtable,webradiogroup,webcheckbox,weblist,webelement,image,webfile,webbutton,webarea,dynamiclink,checktextonpagetrim,checktextonpageexact,winbutton
+click,Click on button or link,link,Object Type Link,click,enter,enter,verify,select,check,select,verify,click,enter,click,click,click,verify,verify,click
+enter,Enter text value,webedit,Object Type webedit,verify_property,verify,verify,none,verify,uncheck,verify,none,none,verify,verify,none,verify_property,none,none,verify
+None,Not required in test,webedit_secure,Object Type webedit_secure,none,none,none,,none,verify,none,,,none,none,,none,,,none
+select,Select value from drop down,webtable,Object Type webtable,,,,,,none,,,,,,,,,,
+verify,Verify the value provided,webradiogroup,Object Type webradiogroup,,,,,,,,,,,,,,,,
+verify_property,Verify the property,webcheckbox,Object Type webcheckbox,,,,,,,,,,,,,,,,
+uncheck,uncheck the box,weblist,Object Type weblist,,,,,,,,,,,,,,,,
+check,check the box,webelement,Object Type webelement,,,,,,,,,,,,,,,,
+,,image,Object Type image,,,,,,,,,,,,,,,,
+,,webfile,Object Type webfile,,,,,,,,,,,,,,,,
+,,webbutton,Object Type webbutton,,,,,,,,,,,,,,,,
+,,webarea,Object Type webarea,,,,,,,,,,,,,,,,
+,,dynamiclink,Object Type dynamiclink,,,,,,,,,,,,,,,,
+,,checktextonpagetrim,Object Type checktextonpagetrim,,,,,,,,,,,,,,,,
+,,checktextonpageexact,Object Type checktextonpageexact,,,,,,,,,,,,,,,,
+,,winbutton,Object Type winbutton,,,,,,,,,,,,,,,,
