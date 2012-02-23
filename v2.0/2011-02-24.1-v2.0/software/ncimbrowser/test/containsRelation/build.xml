@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<project name="ncimtest" basedir="." default="usage">
+  <!-- ================================================================== -->
+  <!-- Set properties file                                                -->
+  <!-- ================================================================== -->
+  <property environment="enviro"/>
+  <property name="app.name" value="ncimtest"/>
+  <property name="source.dir" value="src/java"/>
+  <property name="bin.dir" value="classes"/>
+  <property name="lib.dir" value="../../lib"/>
+  <property name="lib2.dir" value="./lib"/>
+  <property name="target.dir" value="target"/>
+  <property name="script_list" value="**/*.sh,**/*.conf,**/*.properties"/>
+  <property name="properties.file" value="build.properties"/>
+  <property name="project.jar" value="${lib2.dir}/tmp.jar"/>
+
+  <!-- ================================================================== -->
+  <!-- Get run time                                                       -->
+  <!-- ================================================================== -->
+  <tstamp>
+    <format property="TODAY_US" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
+  </tstamp>
+  <basename property="tag" file="${basedir}" />
+
+  <!-- ================================================================== -->
+  <!-- Set common values                                                  -->
+  <!-- ================================================================== -->
+  <patternset id="webapp.files">
+    <exclude name="**/.nci"/>
+  </patternset>
+  <condition property="os_is_windows">
+    <equals arg1="${os.name}" arg2="Windows XP" />
+  </condition>
+
+  <!-- ================================================================== -->
+  <!-- Build class path                                                   -->
+  <!-- ================================================================== -->
+  <path id="base.classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${lib2.dir}">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <!-- ================================================================== -->
+  <!-- Ant property file                                                  -->
+  <!-- ================================================================== -->
+  <property file="${properties.file}"/>
+
+  <!-- ================================================================== -->
+  <!-- Usage: show build targets                                          -->
+  <!-- ================================================================== -->
+  <target name="usage">
+    <echo>
+-----------------------------------------------------------
+Build for: ${app.name}
+Available targets are:
+  * build   --> Compile java classes
+  * clean   --> Removes target folder
+  * package --> Package up files for remote deployment
+  * pack    --> Same as target package
+
+-----------------------------------------------------------
+${ant.version}
+  * Base Directory: ${basedir}
+  * TAG: ${tag}
+  * OS: ${os.name}
+  * Properties file: ${properties.file}
+    </echo>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- build: assemble components                                         -->
+  <!-- ================================================================== -->
+  <target name="build" depends="pre-build" description="Assemble components.">
+    <antcall target="-mk.bin.dir"/>
+    <javac srcdir="${source.dir}"
+        destdir="${bin.dir}"
+        classpathref="base.classpath"
+        debug="on"
+    />
+
+    <copy todir="${bin.dir}"
+        flatten="no"
+        preservelastmodified="yes"
+        overwrite="true">
+      <fileset dir="${source.dir}">
+        <exclude name="**/.svn"/>
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </target>
+	
+  <target name="pre-build">
+    <jar destfile="${project.jar}"
+        basedir="../../build/web/WEB-INF/classes">
+      <include name="org/**"/>
+      <include name="gov/**"/>
+      <manifest>
+        <attribute name="Built-By" value="NCI"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="-mk.bin.dir" description="Create target folder subtask.">
+    <echo message="Building 'target' and 'bin' folders..." />
+    <mkdir dir="${bin.dir}" />
+    <echo message="" />
+  </target>
+
+  <target name="-test.bin.dir" description="Check if bin folder was created.">
+    <available file="${bin.dir}"
+        type="dir"
+        property="bin.dir.exists"
+        value="true"
+    />
+    <fail unless="bin.dir.exists">
+      &gt;
+      Error: ${bin.dir} directory does not exist.
+      Execute an 'ant build' prior to running this command..
+    </fail>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Clean: clean package area                                          -->
+  <!-- ================================================================== -->
+  <target name="clean" description="Clean all build products.">
+    <delete dir="@search.log.dir@" quiet="true" />
+    <delete dir="${bin.dir}" quiet="true" />
+    <delete dir="${target.dir}" quiet="true" />
+    <delete file="${project.jar}" quiet="true" />
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- package: package up target area                                    -->
+  <!-- ================================================================== -->
+  <target name="pack">
+    <antcall target="package"/>
+  </target>
+
+  <target name="package" description="Package up files for deployment.">
+    <mkdir dir="${target.dir}" />
+    <delete file="${target.dir}/${app.name}.jar" quiet="true" />
+    <echo message="Packaging files [${target.dir}]..." />
+
+    <!-- Copy export executables -->
+    <copy todir="${target.dir}">
+      <fileset dir="${bin.dir}">
+        <include name="**/*.class"/>
+        <include name="**/*.properties"/>
+      </fileset>
+      <fileset dir=".">
+        <include name="*.sh"/>
+        <include name="*.cmd"/>
+        <include name="*.bat"/>
+      </fileset>
+    </copy>
+
+    <!-- Convert scripts to unix format -->
+    <fixcrlf srcDir="${target.dir}"
+        eol="lf"
+        eof="remove"
+        includes="${script_list}"
+    />
+
+    <!-- Jar up as a lib -->
+    <jar destfile="${target.dir}/${app.name}.jar"
+        basedir="${target.dir}">
+      <include name="org/**"/>
+      <include name="gov/**"/>
+      <manifest>
+        <attribute name="Built-By" value="NCI"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="-unjar.lib.dir" 
+      unless="edu.dir.exists" 
+      description="Unjar lib folder">
+    <unzip dest="${target.dir}">
+      <fileset dir="${lib.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </unzip>
+  </target>
+</project>
