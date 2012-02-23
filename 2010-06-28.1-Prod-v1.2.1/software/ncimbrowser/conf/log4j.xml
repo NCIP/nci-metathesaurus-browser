@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM ".\log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="DEBUG" />
+        <param name="Append" value="false"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%-5p [%c{1}:%L] %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="SEARCHLOG" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="DatePattern" value="'.'yyyy-MM"/>
+        <param name="File" value="@search.log.dir@/ncim-search.log"/>
+        <param name="Threshold" value="FATAL" />
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{MM-dd-yyyy HH:mm:ss}|%m%n" />
+        </layout>
+    </appender>
+
+    <category name="com.mchange.v2.c3p0">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </category>
+
+    <category name="gov.nih.nci.evs.searchlog" additivity="false">
+        <!-- level value="SEARCH#gov.nih.nci.evs.searchlog.SearchLevel" / -->
+        <priority value="SEARCH" class="gov.nih.nci.evs.searchlog.SearchLevel" />
+        <appender-ref ref="SEARCHLOG" />
+    </category>
+
+    <logger name="org.hibernate">
+        <level value="info" />
+    </logger>
+
+    <logger name="org.apache">
+        <level value="warn" />
+    </logger>
+
+    <logger name="gov.nih.nci.evs.browser">
+        <level value="debug" />
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="error" />
+    </logger>
+
+    <root>
+        <priority value="error" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SEARCHLOG" />
+    </root>
+
+</log4j:configuration>
