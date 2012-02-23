@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- bda-build-templage verison 1.5.13 -->
+
+<project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+
+    <description>
+        Debug targets
+    </description>
+
+    <target name="findfiles">
+            <exec executable="sh" failonerror="true">
+                    <arg line="-c 'find /local/AnthillPro/work/ncimbrowser-autodeploy-bda.trunk.dev/trunk/software/target/bda-utils -maxdepth 2 -ls'"/>
+            </exec>
+    </target>
+
+    <target name="printfile">
+            <loadfile
+                    property="file.contents"
+                    srcFile="/local/AnthillPro/work/ncimbrowser-autodeploy-bda.trunk.dev/trunk/software/build/build.xml">
+                    <filterchain>
+                            <linecontainsregexp>
+                                    <regexp pattern=".*"/>
+                            </linecontainsregexp>
+                    </filterchain>
+            </loadfile>
+            <echo message="${file.contents}"/>
+    </target>
+
+</project>
