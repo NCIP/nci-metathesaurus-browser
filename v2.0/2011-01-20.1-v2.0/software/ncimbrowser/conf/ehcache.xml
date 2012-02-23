@@ -1,0 +1,22 @@
+<ehcache>
+<diskStore path="@ehcache.cache.path@"/>
+
+<cacheManagerEventListenerFactory class="" properties=""/>
+
+<defaultCache
+        maxElementsInMemory="100"
+        eternal="false"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="7200"
+        overflowToDisk="true"
+        />
+
+<cache name="subconcepts"
+maxElementsInMemory="1000"
+eternal="false"
+timeToIdleSeconds="1800"
+timeToLiveSeconds="7200"
+overflowToDisk="true"
+/>
+
+</ehcache>
