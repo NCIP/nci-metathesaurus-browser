@@ -1,0 +1,2298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <DisplayItems>
+
+       <DisplayItem>
+            <propertyName>Code</propertyName>
+            <itemLabel>Concept Unique Identifier (CUI)</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>NCIt Code</propertyName>
+            <itemLabel>NCI Thesaurus Code</itemLabel>
+            <url>@ncit.url@/pages/concept_details.jsf?dictionary=NCI%20Thesaurus&amp;code=</url>
+            <hyperlinkText>see NCI Thesaurus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Semantic_Type</propertyName>
+            <itemLabel>Semantic Type</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>definition</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>DEFINITION</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>ALT_DEFINITION</propertyName>
+            <itemLabel>Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+      <DisplayItem>
+            <propertyName>ALT_LONG_DEFINITION</propertyName>
+            <itemLabel>Alternative Long Definition</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Preferred_Name</propertyName>
+            <itemLabel>Preferred Name</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Display_Name</propertyName>
+            <itemLabel>Display Name</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>textualPresentation</propertyName>
+            <itemLabel>Synonym</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>NCI_META_CUI</propertyName>
+            <itemLabel>NCI Metathesaurus CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>UMLS_CUI</propertyName>
+            <itemLabel>NCI Metathesaurus CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>FULL_SYN</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Synonym</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>presentation</propertyName>
+            <itemLabel>Synonyms &amp; Abbreviations</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>false</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>CAS_Registry</propertyName>
+            <itemLabel>CAS Registry Number</itemLabel>
+            <url>http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno=</url>
+            <hyperlinkText>see NLM ChemIDplus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>FDA_UNII_Code</propertyName>
+            <itemLabel>FDA UNII Code</itemLabel>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>GenBank_Accession_Number</propertyName>
+            <itemLabel>GenBank Accession Number</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=search&amp;term=+</url>
+            <hyperlinkText>see GenBank info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>EntrezGene_ID</propertyName>
+            <itemLabel>EntrezGene ID</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&amp;cmd=ShowDetailView&amp;TermToSearch=</url>
+            <hyperlinkText>see NCBI EntrezGene info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>NCI_META_CUI</propertyName>
+            <itemLabel>NCI META CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>NSC_Code</propertyName>
+            <itemLabel>NSC Code</itemLabel>
+            <url>http://dtp.nci.nih.gov/dtpstandard/servlet/dwindex?searchtype=NSC&amp;searchlist=</url>
+            <hyperlinkText>see NCI DTP info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>OMIM_Number</propertyName>
+            <itemLabel>OMIM Number</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov:80/entrez/dispomim.cgi?id=</url>
+            <hyperlinkText>see OMIM info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PDQ_Closed_Trial_Search_ID</propertyName>
+            <itemLabel>PDQ Closed Trial Search ID</itemLabel>
+            <url>null</url>
+            <hyperlinkText>see NCI PDQ closed clinical trial info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PDQ_Open_Trial_Search_ID</propertyName>
+            <itemLabel>PDQ Open Trial Search ID</itemLabel>
+            <url>null</url>
+            <hyperlinkText>see NCI PDQ open clinical trial info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>PubMedID_Primary_Reference</propertyName>
+            <itemLabel>PubMedID Primary Reference</itemLabel>
+            <url>http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=</url>
+            <hyperlinkText>see PubMed Primary Reference info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>Swiss_Prot</propertyName>
+            <itemLabel>Swiss Prot</itemLabel>
+            <url>http://us.expasy.org/cgi-bin/sprot-search-ac?</url>
+            <hyperlinkText>see UniProt/Swiss-Prot info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+       <DisplayItem>
+            <propertyName>UMLS_CUI</propertyName>
+            <itemLabel>UMLS CUI</itemLabel>
+            <url>http://ncimeta.nci.nih.gov/MetaServlet/servlet/ResultServlet?cui=</url>
+            <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
+            <isExternalCode>true</isExternalCode>
+       </DisplayItem>
+
+    </DisplayItems>
+
+    <TermGroupRanks>
+
+        <TermGroupRank>
+            <index>0333</index>
+            <source>NCIMTH</source>
+            <termgroup>PN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0332</index>
+            <source>MTH</source>
+            <termgroup>PN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0331</index>
+            <source>MTH</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0330</index>
+            <source>MTH</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0329</index>
+            <source>MTH</source>
+            <termgroup>RT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0328</index>
+            <source>MTH</source>
+            <termgroup>CV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0327</index>
+            <source>NCI</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0326</index>
+            <source>NCI</source>
+            <termgroup>HD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0325</index>
+            <source>NCI</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0324</index>
+            <source>NCI</source>
+            <termgroup>AD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0323</index>
+            <source>NCI</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0322</index>
+            <source>NCI</source>
+            <termgroup>CSN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0321</index>
+            <source>NCI</source>
+            <termgroup>CCN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0320</index>
+            <source>NCI</source>
+            <termgroup>CNU</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0319</index>
+            <source>NCI</source>
+            <termgroup>CA3</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0318</index>
+            <source>NCI</source>
+            <termgroup>CA2</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0317</index>
+            <source>NCI</source>
+            <termgroup>BN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0316</index>
+            <source>NCI</source>
+            <termgroup>CCS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0315</index>
+            <source>NCI</source>
+            <termgroup>DN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0314</index>
+            <source>NCI</source>
+            <termgroup>FBD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0313</index>
+            <source>NCI</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0312</index>
+            <source>MSH</source>
+            <termgroup>MH</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0311</index>
+            <source>MSH</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0310</index>
+            <source>MSH</source>
+            <termgroup>EP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0309</index>
+            <source>MSH</source>
+            <termgroup>EN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0308</index>
+            <source>MSH</source>
+            <termgroup>PM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0307</index>
+            <source>MSH</source>
+            <termgroup>NM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0306</index>
+            <source>MSH</source>
+            <termgroup>N1</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0305</index>
+            <source>MSH</source>
+            <termgroup>CE</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0304</index>
+            <source>SNOMEDCT</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0303</index>
+            <source>SNOMEDCT</source>
+            <termgroup>PTGB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0302</index>
+            <source>SNOMEDCT</source>
+            <termgroup>FN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0301</index>
+            <source>SNOMEDCT</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0300</index>
+            <source>SNOMEDCT</source>
+            <termgroup>SYGB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0299</index>
+            <source>SNOMEDCT</source>
+            <termgroup>SB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0298</index>
+            <source>NCBI</source>
+            <termgroup>USN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0297</index>
+            <source>NCBI</source>
+            <termgroup>SCN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0296</index>
+            <source>NCBI</source>
+            <termgroup>USY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0295</index>
+            <source>NCBI</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0294</index>
+            <source>NCBI</source>
+            <termgroup>UCN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0293</index>
+            <source>NCBI</source>
+            <termgroup>CMN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0292</index>
+            <source>NCBI</source>
+            <termgroup>EQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0291</index>
+            <source>NCBI</source>
+            <termgroup>UE</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0290</index>
+            <source>RXNORM</source>
+            <termgroup>SCD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0289</index>
+            <source>RXNORM</source>
+            <termgroup>SBD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0288</index>
+            <source>RXNORM</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0287</index>
+            <source>RXNORM</source>
+            <termgroup>OCD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0286</index>
+            <source>RXNORM</source>
+            <termgroup>SCDF</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0285</index>
+            <source>RXNORM</source>
+            <termgroup>SBDF</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0284</index>
+            <source>RXNORM</source>
+            <termgroup>SCDC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0283</index>
+            <source>RXNORM</source>
+            <termgroup>BN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0282</index>
+            <source>RXNORM</source>
+            <termgroup>IN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0281</index>
+            <source>RXNORM</source>
+            <termgroup>DF</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0280</index>
+            <source>RXNORM</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0279</index>
+            <source>RXNORM</source>
+            <termgroup>SBDC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0278</index>
+            <source>MTHFDA</source>
+            <termgroup>CD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0277</index>
+            <source>SNOMEDCT</source>
+            <termgroup>MTH_FN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0276</index>
+            <source>SNOMEDCT</source>
+            <termgroup>MTH_PTGB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0275</index>
+            <source>SNOMEDCT</source>
+            <termgroup>MTH_SYGB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0274</index>
+            <source>SNOMEDCT</source>
+            <termgroup>MTH_PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0273</index>
+            <source>SNOMEDCT</source>
+            <termgroup>MTH_SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0272</index>
+            <source>HUGO</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0271</index>
+            <source>HUGO</source>
+            <termgroup>ACR</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0270</index>
+            <source>HUGO</source>
+            <termgroup>SYN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0269</index>
+            <source>CSP</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0268</index>
+            <source>CSP</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0267</index>
+            <source>CSP</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0266</index>
+            <source>CSP</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0265</index>
+            <source>MTHSPL</source>
+            <termgroup>DP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0264</index>
+            <source>MTHSPL</source>
+            <termgroup>SU</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0263</index>
+            <source>MTHSPL</source>
+            <termgroup>MTH_RXN_DP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0262</index>
+            <source>USPMG</source>
+            <termgroup>HC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0261</index>
+            <source>USPMG</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0260</index>
+            <source>USPMG</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0259</index>
+            <source>VANDF</source>
+            <termgroup>CD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0258</index>
+            <source>VANDF</source>
+            <termgroup>IN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0257</index>
+            <source>VANDF</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0256</index>
+            <source>UWDA</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0255</index>
+            <source>UWDA</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0254</index>
+            <source>CDT</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0253</index>
+            <source>CDT</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0252</index>
+            <source>ICD10AE</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0251</index>
+            <source>ICD10</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0250</index>
+            <source>ICD10AE</source>
+            <termgroup>PX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0249</index>
+            <source>ICD10</source>
+            <termgroup>PX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0248</index>
+            <source>ICD10AE</source>
+            <termgroup>PS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0247</index>
+            <source>ICD10</source>
+            <termgroup>PS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0246</index>
+            <source>ICD10AE</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0245</index>
+            <source>ICD10</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0244</index>
+            <source>ICD10AE</source>
+            <termgroup>HX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0243</index>
+            <source>ICD10</source>
+            <termgroup>HX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0242</index>
+            <source>ICD10AE</source>
+            <termgroup>HS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0241</index>
+            <source>ICD10</source>
+            <termgroup>HS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0240</index>
+            <source>ICD9CM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0239</index>
+            <source>ICD9CM</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0238</index>
+            <source>ICD9CM</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0237</index>
+            <source>LNC</source>
+            <termgroup>LX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0236</index>
+            <source>LNC</source>
+            <termgroup>LN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0235</index>
+            <source>LNC</source>
+            <termgroup>LO</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0234</index>
+            <source>LNC</source>
+            <termgroup>CX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0233</index>
+            <source>LNC</source>
+            <termgroup>OSN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0232</index>
+            <source>LNC</source>
+            <termgroup>HC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0231</index>
+            <source>LNC</source>
+            <termgroup>CN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0230</index>
+            <source>LNC</source>
+            <termgroup>SX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0229</index>
+            <source>LNC</source>
+            <termgroup>SN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0228</index>
+            <source>LNC</source>
+            <termgroup>LS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0227</index>
+            <source>LNC</source>
+            <termgroup>HS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0226</index>
+            <source>LNC</source>
+            <termgroup>OLX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0225</index>
+            <source>LNC</source>
+            <termgroup>OOSN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0224</index>
+            <source>LNC</source>
+            <termgroup>XM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0223</index>
+            <source>NDFRT</source>
+            <termgroup>CD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0222</index>
+            <source>NDFRT</source>
+            <termgroup>CDC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0221</index>
+            <source>NDFRT</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0220</index>
+            <source>NDFRT</source>
+            <termgroup>IN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0219</index>
+            <source>NDFRT</source>
+            <termgroup>INP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0218</index>
+            <source>NDFRT</source>
+            <termgroup>DI</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0217</index>
+            <source>NDFRT</source>
+            <termgroup>PE</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0216</index>
+            <source>NDFRT</source>
+            <termgroup>MOA</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0215</index>
+            <source>NDFRT</source>
+            <termgroup>DF</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0214</index>
+            <source>NDFRT</source>
+            <termgroup>PK</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0213</index>
+            <source>NDFRT</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0212</index>
+            <source>GO</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0211</index>
+            <source>GO</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0210</index>
+            <source>GO</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0209</index>
+            <source>GO</source>
+            <termgroup>BSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0208</index>
+            <source>GO</source>
+            <termgroup>NSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0207</index>
+            <source>GO</source>
+            <termgroup>OBS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0206</index>
+            <source>GO</source>
+            <termgroup>ONS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0205</index>
+            <source>CBO</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0204</index>
+            <source>GO</source>
+            <termgroup>MTH_BSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0203</index>
+            <source>GO</source>
+            <termgroup>MTH_NSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0202</index>
+            <source>GO</source>
+            <termgroup>MTH_OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0201</index>
+            <source>GO</source>
+            <termgroup>MTH_PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0200</index>
+            <source>GO</source>
+            <termgroup>MTH_RLS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0199</index>
+            <source>GO</source>
+            <termgroup>ORS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0198</index>
+            <source>GO</source>
+            <termgroup>RLS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0197</index>
+            <source>GO</source>
+            <termgroup>IS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0196</index>
+            <source>GO</source>
+            <termgroup>MTH_IS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0195</index>
+            <source>GO</source>
+            <termgroup>MTH_SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0194</index>
+            <source>AOT</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0193</index>
+            <source>AOT</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0192</index>
+            <source>HL7V3.0</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0191</index>
+            <source>HL7V3.0</source>
+            <termgroup>NPT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0190</index>
+            <source>MEDLINEPLUS</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0189</index>
+            <source>MEDLINEPLUS</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0188</index>
+            <source>HL7V3.0</source>
+            <termgroup>MTH_NPT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0187</index>
+            <source>HL7V3.0</source>
+            <termgroup>MTH_PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0186</index>
+            <source>HL7V3.0</source>
+            <termgroup>ONP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0185</index>
+            <source>HL7V3.0</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0184</index>
+            <source>UMD</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0183</index>
+            <source>UMD</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0182</index>
+            <source>UMD</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0181</index>
+            <source>UMD</source>
+            <termgroup>RT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0180</index>
+            <source>UMD</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0179</index>
+            <source>MTHFDA</source>
+            <termgroup>MTH_RXN_CD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0178</index>
+            <source>CCS</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0177</index>
+            <source>CCS</source>
+            <termgroup>MD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0176</index>
+            <source>CCS</source>
+            <termgroup>SD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0175</index>
+            <source>CCS</source>
+            <termgroup>MV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0174</index>
+            <source>CCS</source>
+            <termgroup>SP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0173</index>
+            <source>CCS</source>
+            <termgroup>XM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0172</index>
+            <source>DXP</source>
+            <termgroup>DI</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0171</index>
+            <source>DXP</source>
+            <termgroup>FI</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0170</index>
+            <source>DXP</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0169</index>
+            <source>MCM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0168</index>
+            <source>MCM</source>
+            <termgroup>RT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0167</index>
+            <source>RAM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0166</index>
+            <source>RAM</source>
+            <termgroup>RT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0165</index>
+            <source>CST</source>
+            <termgroup>GT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0164</index>
+            <source>CST</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0163</index>
+            <source>MDR</source>
+            <termgroup>HG</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0162</index>
+            <source>MDR</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0161</index>
+            <source>MDR</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0160</index>
+            <source>MDR</source>
+            <termgroup>LT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0159</index>
+            <source>MDR</source>
+            <termgroup>MTH_HG</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0158</index>
+            <source>MDR</source>
+            <termgroup>MTH_HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0157</index>
+            <source>MDR</source>
+            <termgroup>MTH_LT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0156</index>
+            <source>MDR</source>
+            <termgroup>MTH_OL</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0155</index>
+            <source>MDR</source>
+            <termgroup>MTH_OS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0154</index>
+            <source>MDR</source>
+            <termgroup>MTH_PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0153</index>
+            <source>MDR</source>
+            <termgroup>MTH_SMQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0152</index>
+            <source>MDR</source>
+            <termgroup>OL</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0151</index>
+            <source>MDR</source>
+            <termgroup>OS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0150</index>
+            <source>MDR</source>
+            <termgroup>SMQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0149</index>
+            <source>MDR</source>
+            <termgroup>XM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0148</index>
+            <source>CST</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0147</index>
+            <source>CST</source>
+            <termgroup>SC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0146</index>
+            <source>HCPCS</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0145</index>
+            <source>HCPCS</source>
+            <termgroup>MP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0144</index>
+            <source>HCPCS</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0143</index>
+            <source>HCPCS</source>
+            <termgroup>OM</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0142</index>
+            <source>QMR</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0141</index>
+            <source>PNDS</source>
+            <termgroup>DX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0140</index>
+            <source>PNDS</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0139</index>
+            <source>PNDS</source>
+            <termgroup>IV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0138</index>
+            <source>PNDS</source>
+            <termgroup>PS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0137</index>
+            <source>OMIM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0136</index>
+            <source>OMIM</source>
+            <termgroup>ACR</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0135</index>
+            <source>OMIM</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0134</index>
+            <source>OMIM</source>
+            <termgroup>ETAV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0133</index>
+            <source>OMIM</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0132</index>
+            <source>OMIM</source>
+            <termgroup>PTAV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0131</index>
+            <source>OMIM</source>
+            <termgroup>PTCS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0130</index>
+            <source>OMIM</source>
+            <termgroup>SYN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0129</index>
+            <source>PNDS</source>
+            <termgroup>PX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0128</index>
+            <source>ICPC</source>
+            <termgroup>PX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0127</index>
+            <source>ICPC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0126</index>
+            <source>ICPC</source>
+            <termgroup>PC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0125</index>
+            <source>ICPC</source>
+            <termgroup>CX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0124</index>
+            <source>ICPC</source>
+            <termgroup>CP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0123</index>
+            <source>ICPC</source>
+            <termgroup>CC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0122</index>
+            <source>ICPC</source>
+            <termgroup>CO</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0121</index>
+            <source>ICPC</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0120</index>
+            <source>ICPC</source>
+            <termgroup>CS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0119</index>
+            <source>ICPC</source>
+            <termgroup>PS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0118</index>
+            <source>AOD</source>
+            <termgroup>DE</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0117</index>
+            <source>AOD</source>
+            <termgroup>DS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0116</index>
+            <source>AOD</source>
+            <termgroup>FN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0115</index>
+            <source>AOD</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0114</index>
+            <source>AOD</source>
+            <termgroup>ES</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0113</index>
+            <source>AOD</source>
+            <termgroup>EX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0112</index>
+            <source>AOD</source>
+            <termgroup>NP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0111</index>
+            <source>AOD</source>
+            <termgroup>NS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0110</index>
+            <source>AOD</source>
+            <termgroup>NX</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0109</index>
+            <source>AOD</source>
+            <termgroup>XD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0108</index>
+            <source>COSTAR</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0107</index>
+            <source>MTH</source>
+            <termgroup>DT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0106</index>
+            <source>MTHICD9</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0105</index>
+            <source>MTHMST</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0104</index>
+            <source>MTHMST</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0103</index>
+            <source>SPN</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0102</index>
+            <source>MTHHH</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0101</index>
+            <source>MSH</source>
+            <termgroup>HS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0100</index>
+            <source>MSH</source>
+            <termgroup>PCE</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0099</index>
+            <source>MSH</source>
+            <termgroup>PEN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0098</index>
+            <source>MSH</source>
+            <termgroup>PEP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0097</index>
+            <source>MSH</source>
+            <termgroup>PXQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0096</index>
+            <source>MSH</source>
+            <termgroup>TQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0095</index>
+            <source>MSH</source>
+            <termgroup>XQ</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0094</index>
+            <source>MSH</source>
+            <termgroup>DEV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0093</index>
+            <source>MSH</source>
+            <termgroup>DSV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0092</index>
+            <source>MSH</source>
+            <termgroup>QAB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0091</index>
+            <source>MSH</source>
+            <termgroup>QEV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0090</index>
+            <source>MSH</source>
+            <termgroup>QSV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0089</index>
+            <source>ICPC2ICD10ENG</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0088</index>
+            <source>MTHICPC2ICD107B</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0087</index>
+            <source>MTHICPC2ICD10AE</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0086</index>
+            <source>FDA</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0085</index>
+            <source>FDA</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0084</index>
+            <source>FDA</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0083</index>
+            <source>ICH</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0082</index>
+            <source>ICH</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0081</index>
+            <source>ICH</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0080</index>
+            <source>NCI-HL7</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0079</index>
+            <source>NCI-HL7</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0078</index>
+            <source>NCI-HL7</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0077</index>
+            <source>UCUM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0076</index>
+            <source>UCUM</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0075</index>
+            <source>UCUM</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0074</index>
+            <source>PDQ</source>
+            <termgroup>MTH_PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0073</index>
+            <source>PDQ</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0072</index>
+            <source>PDQ</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0071</index>
+            <source>CBO</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0070</index>
+            <source>PDQ</source>
+            <termgroup>PSC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0069</index>
+            <source>PDQ</source>
+            <termgroup>MTH_SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0068</index>
+            <source>PDQ</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0067</index>
+            <source>PDQ</source>
+            <termgroup>CU</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0066</index>
+            <source>PDQ</source>
+            <termgroup>DN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0065</index>
+            <source>PDQ</source>
+            <termgroup>MTH_LV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0064</index>
+            <source>PDQ</source>
+            <termgroup>LV</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0063</index>
+            <source>PDQ</source>
+            <termgroup>MTH_ACR</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0062</index>
+            <source>PDQ</source>
+            <termgroup>ACR</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0061</index>
+            <source>PDQ</source>
+            <termgroup>MTH_AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0060</index>
+            <source>PDQ</source>
+            <termgroup>AB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0059</index>
+            <source>PDQ</source>
+            <termgroup>BN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0058</index>
+            <source>PDQ</source>
+            <termgroup>MTH_BN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0057</index>
+            <source>PDQ</source>
+            <termgroup>FBD</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0056</index>
+            <source>PDQ</source>
+            <termgroup>OP</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0055</index>
+            <source>PDQ</source>
+            <termgroup>CAS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0054</index>
+            <source>PDQ</source>
+            <termgroup>MTH_CHN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0053</index>
+            <source>PDQ</source>
+            <termgroup>CHN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0052</index>
+            <source>PDQ</source>
+            <termgroup>MTH_CON</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0051</index>
+            <source>PDQ</source>
+            <termgroup>CON</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0050</index>
+            <source>PDQ</source>
+            <termgroup>IND</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0049</index>
+            <source>PDQ</source>
+            <termgroup>NSC</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0048</index>
+            <source>PDQ</source>
+            <termgroup>IS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0047</index>
+            <source>DCP</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0046</index>
+            <source>DCP</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0045</index>
+            <source>NCI-GLOSS</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0044</index>
+            <source>NCI-GLOSS</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0043</index>
+            <source>ICDO</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0042</index>
+            <source>ICDO</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0041</index>
+            <source>ICDO</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0040</index>
+            <source>ICDO</source>
+            <termgroup>ET</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0039</index>
+            <source>CTCAE</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0038</index>
+            <source>CTEP</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0037</index>
+            <source>CTEP</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0036</index>
+            <source>RADLEX</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0035</index>
+            <source>RADLEX</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0034</index>
+            <source>RADLEX</source>
+            <termgroup>AT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0033</index>
+            <source>RADLEX</source>
+            <termgroup>AS</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0032</index>
+            <source>RENI</source>
+            <termgroup>DN</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0031</index>
+            <source>CRCH</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0030</index>
+            <source>CRCH</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0029</index>
+            <source>BioC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0028</index>
+            <source>DICOM</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0027</index>
+            <source>CDISC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0026</index>
+            <source>CDISC</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0025</index>
+            <source>CDC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0024</index>
+            <source>DTP</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0023</index>
+            <source>DTP</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0022</index>
+            <source>JAX</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0021</index>
+            <source>PMA</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0020</index>
+            <source>JAX</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0019</index>
+            <source>KEGG</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0018</index>
+            <source>ELC</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0017</index>
+            <source>ELC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0016</index>
+            <source>MDBCAC</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0015</index>
+            <source>MDBCAC</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0014</index>
+            <source>MGED</source>
+            <termgroup>PT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0013</index>
+            <source>MGED</source>
+            <termgroup>HT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0012</index>
+            <source>MGED</source>
+            <termgroup>SY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0011</index>
+            <source>MGED</source>
+            <termgroup>DPT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0010</index>
+            <source>MGED</source>
+            <termgroup>DHT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0009</index>
+            <source>MGED</source>
+            <termgroup>DSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0008</index>
+            <source>SRC</source>
+            <termgroup>RPT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0007</index>
+            <source>SRC</source>
+            <termgroup>RHT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0006</index>
+            <source>SRC</source>
+            <termgroup>RAB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0005</index>
+            <source>SRC</source>
+            <termgroup>RSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0004</index>
+            <source>SRC</source>
+            <termgroup>VPT</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0003</index>
+            <source>SRC</source>
+            <termgroup>VAB</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0002</index>
+            <source>SRC</source>
+            <termgroup>VSY</termgroup>
+        </TermGroupRank>
+
+        <TermGroupRank>
+            <index>0001</index>
+            <source>SRC</source>
+            <termgroup>SSN</termgroup>
+        </TermGroupRank>
+
+    </TermGroupRanks>
+
+    <ConfigurableItems>
+        <ConfigurableItem>
+                 <key>DEBUG_ON</key>
+                 <value>@debug.on@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>EVS_SERVICE_URL</key>
+                 <value>@lex.evs.api.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>LG_CONFIG_FILE</key>
+                 <value>@lg.config.file@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_RETURN</key>
+                 <value>@maximum.return@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAXIMUM_TREE_LEVEL</key>
+                 <value>@maximum.tree.level@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>EHCACHE_XML_PATHNAME</key>
+                 <value>@ehcache.xml.file@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>MAIL_SMTP_SERVER</key>
+                 <value>@mail.smtp.server@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCICB_CONTACT_URL</key>
+                 <value>@ncicb.contact.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>TERMINOLOGY_SUBSET_DOWNLOAD_URL</key>
+                 <value>@terminology.subset.download.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCIM_BUILD_INFO</key>
+                 <value>@ncim.build.info@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>APPLICATION_VERSION</key>
+                 <value>@application.version@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>ANTHILL_BUILD_TAG_BUILT</key>
+                 <value>@anthill.build.tag_built@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>TERM_SUGGESTION_APPLICATION_URL</key>
+                 <value>@term.suggestion.application.url@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
+                 <key>NCIT_URL</key>
+                 <value>@ncit.url@</value>
+        </ConfigurableItem>
+    </ConfigurableItems>
+
+</root>
