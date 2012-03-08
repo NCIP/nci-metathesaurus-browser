@@ -39,6 +39,7 @@
     var emptyRootDiv;
     var treeStatusDiv;
     var nodes = [];
+    var currOpener;
 
     function load(url,target) {
       if (target != '')
@@ -58,6 +59,7 @@
       treeStatusDiv = new YAHOO.widget.Module("treeStatus", {visible:true} );
       resetTreeStatus();
 
+      currOpener = opener;
       initTree();
     }
 
@@ -171,7 +173,7 @@
       //buildGraph(ontology_node_id, ontology_display_name, graph_type);
 
       if (ontology_node_id.indexOf("|") != -1) return;
-      load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20Metathesaurus&code=' + ontology_node_id,top.opener);
+      load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20Metathesaurus&code=' + ontology_node_id, currOpener);
 
     }
 
