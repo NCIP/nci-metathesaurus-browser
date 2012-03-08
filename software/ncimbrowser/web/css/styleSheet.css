@@ -163,6 +163,29 @@ h3
  width: 383px;
 }
 
+.vocabularynamebanner
+{
+ float: left;
+ width: 383px;
+ height: 130px;
+ background-image: url(../images/thesaurus_browser_logo.gif);
+ background-repeat: no-repeat;
+ text-decoration: none;
+ cursor: pointer;
+}
+
+.vocabularynamelong
+{
+ position: relative;
+ left: 12px;
+ top: 105px;
+ width: 336px;
+ font-family: Arial, Verdana, Helvetica, sans-serif;
+ font-size: 10px;
+ font-weight: bold;
+ color: #2F2F5F;
+}
+
 .texttitle-blue
 {
  font-size: 20px;

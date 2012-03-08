@@ -59,7 +59,11 @@
     <div id="main-area">
       <!-- Thesaurus, banner search area -->
       <div class="bannerarea">
-        <div class="banner"><a href="<%=base_path%>/start.jsf"><img src="<%=base_path%>/images/thesaurus_browser_logo.gif" width="383" height="130" border="0"/></a></div>
+	    <a href="<%=basePath%>" style="text-decoration: none;">
+	      <div class="vocabularynamebanner">
+	        <span class="vocabularynamelong"><%=DataUtils.getApplicationVersionJspDisplay()%></span>
+	      </div>
+	    </a>        
       </div>
       <!-- end Thesaurus, banner search area -->
       <!-- Quick links bar -->
