@@ -2280,6 +2280,11 @@
         </ConfigurableItem>
 
         <ConfigurableItem>
+                 <key>APPLICATION_VERSION_DISPLAY</key>
+                 <value>@application.version.display@</value>
+        </ConfigurableItem>
+
+        <ConfigurableItem>
                  <key>APP_BUILD_TAG</key>
                  <value>@app.build.tag@</value>
         </ConfigurableItem>
