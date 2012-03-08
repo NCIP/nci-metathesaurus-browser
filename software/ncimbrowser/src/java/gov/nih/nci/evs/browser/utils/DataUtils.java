@@ -150,6 +150,7 @@ public class DataUtils {
     public String _terminologySubsetDownloadURL = null;
     public String _ncimBuildInfo = null;
     public String _ncimAppVersion = null;
+    public String _ncimAppVersionDisplay = null;
     public String _ncitAnthillBuildTagBuilt = null;
     public String _evsServiceURL = null;
     public String _ncitURL = null;
@@ -1826,6 +1827,25 @@ public class DataUtils {
         }
 
         return _ncimAppVersion;
+    }
+    
+    public String getApplicationVersionDisplay() {
+        if (_ncimAppVersionDisplay != null)
+            return _ncimAppVersionDisplay;
+
+        try {
+            NCImBrowserProperties properties = NCImBrowserProperties.getInstance();
+            String value =
+                properties.getProperty(NCImBrowserProperties.NCIM_APP_VERSION_DISPLAY);
+            if (value == null)
+                return _ncimAppVersionDisplay = "";
+            String version = getApplicationVersion();
+            value = value.replace("$application.version", version);
+            return _ncimAppVersionDisplay = value;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return _ncimAppVersionDisplay = "";
+        }
     }
 
     public String getNCITAppBuildTag() {

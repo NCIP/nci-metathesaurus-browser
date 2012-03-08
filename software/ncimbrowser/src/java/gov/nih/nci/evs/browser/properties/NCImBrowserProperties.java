@@ -80,6 +80,7 @@ public class NCImBrowserProperties {
         "TERMINOLOGY_SUBSET_DOWNLOAD_URL";
     public static final String NCIM_BUILD_INFO = "NCIM_BUILD_INFO";
     public static final String NCIM_APP_VERSION = "APPLICATION_VERSION";
+    public static final String NCIM_APP_VERSION_DISPLAY = "APPLICATION_VERSION_DISPLAY";
     public static final String LEXEVS_VERSION = "LEXEVS_VERSION";
     public static final String TERM_SUGGESTION_APPLICATION_URL =
         "TERM_SUGGESTION_APPLICATION_URL";

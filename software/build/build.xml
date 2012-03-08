@@ -169,6 +169,7 @@
                 <filter token="app.build.tag" value="${anthill.build.tag_built}"/>
                 <filter token="build.info" value="Built: ${BUILD_DATE}"/>
                 <filter token="application.version" value="${application.version}"/>
+                <filter token="application.version.display" value="${application.version.display}"/>
                 <filter token="debug.on" value="${debug.on}"/>
                 <filter token="ehcache.xml.file" value="@application.data.path@/${ncimbrowser.conf.path}/${ehcache.xml.file}"/>
                 <filter token="maximum.return" value="${maximum.return}"/>
