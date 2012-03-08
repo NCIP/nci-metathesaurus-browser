@@ -1,15 +1,24 @@
 //function alert() {} 
 
-function goToAnchor() {
-   var qstr = location.search.replace(/\?/,"&");
-   var pair = qstr.split("&");
+function checkAll(field)
+{
+for (i = 0; i < field.length; i++)
+	field[i].checked = true ;
+}
 
-   for (var i=1; i<pair.length; i++) {
-      var item = pair[i].split("=");
-      if (item[0] == "anchor") {
-          location.href = item[1];
-      }
-   }
+function uncheckAll(field)
+{
+for (i = 0; i < field.length; i++)
+	field[i].checked = false ;
+}
+
+function checkAllButOne(field, label)
+{
+for (i = 0; i < field.length; i++)
+    if (field[i].value.indexOf(label) == -1)
+	field[i].checked = true;
+    else
+        field[i].checked = false;
 }
 
 function printPage(text){
@@ -36,10 +45,20 @@ function bookmark(url,title){
 
 }
 
+function openNewWindow(url) {
+    window.open(url, '_blank', 'top=100, left=100, height=740, width=780, status=no, menubar=yes, resizable=yes, scrollbars=yes, toolbar=yes, location=no, directories=no');
+}
+
+function statusBarText(message){
+  //window.status = message;
+  window.status = message;
+  return true;
+}
+
 function openQuickLinkSite(url) {
     if (url != "#")
     {
-        window.open (url, "_blank", "alwaysRaised,dependent,status,scrollbars,resizable,width=800,height=600"); 
+        window.open (url, "", "alwaysRaised,dependent,status,scrollbars,resizable,width=800,height=600"); 
     }
 }
 
@@ -262,6 +281,8 @@ function savemenustate(){
 	document.cookie=cookiename+"="+cookievalue
 }
 
+
+
 function submitEnter(commandId,e)
 {
         var keycode;
@@ -275,14 +296,26 @@ function submitEnter(commandId,e)
         if (keycode == 13) {
                 document.getElementById(commandId).click();
                 return false;
-                
         } else
                 return true;
 }
 
 
 
+function show_coding_scheme_combo() {
+    var coding_scheme_combo = document.getElementById("selectedOntology");
+    coding_scheme_combo.style.visibility = "visible";  
+}
 
+
+
+function show_concept_domain_combo() {
+    var coding_scheme_combo = document.getElementById("selectedOntology");
+    coding_scheme_combo.style.visibility = "hidden";  
+}
+
+
+	
 if (window.addEventListener)
 	window.addEventListener("load", onloadfunction, false)
 else if (window.attachEvent)
