@@ -1829,7 +1829,7 @@ public class DataUtils {
         return _ncimAppVersion;
     }
     
-    public String getApplicationVersionDisplay() {
+    private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
 
@@ -1848,6 +1848,14 @@ public class DataUtils {
         }
     }
 
+    private static String _applicationVersionDisplay = null;
+    public static String getApplicationVersionJspDisplay() {
+        if (_applicationVersionDisplay == null)
+            _applicationVersionDisplay =
+                HTTPUtils.cleanXSS(new DataUtils().getApplicationVersionDisplay());
+        return _applicationVersionDisplay;
+    }
+    
     public String getNCITAppBuildTag() {
         if (_ncitAnthillBuildTagBuilt != null) {
             return _ncitAnthillBuildTagBuilt;
