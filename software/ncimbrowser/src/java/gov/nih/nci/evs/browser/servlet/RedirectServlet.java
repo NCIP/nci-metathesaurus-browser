@@ -137,13 +137,13 @@ public final class RedirectServlet extends HttpServlet {
         String type = (String) request.getParameter("type");
 
 	    boolean licenseAgreementAccepted = false;
-	    String formal_name = null;
+	    String formal_name = MetadataUtils.getSABFormalName(term_source);
 	    boolean isLicensed = DataUtils.checkIsLicensed(term_source);
 
 	    String cs_name = Constants.CODING_SCHEME_NAME;
 
 	    if (term_source != null && isLicensed ) {
-	        formal_name = MetadataUtils.getSABFormalName(term_source);
+	        //formal_name = MetadataUtils.getSABFormalName(term_source);
 	        licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(formal_name);
 	    }
 
@@ -159,6 +159,7 @@ public final class RedirectServlet extends HttpServlet {
 				  response.sendRedirect(response.encodeRedirectURL(url));
 
  	          } else {
+
 				  String url = nciterm_browser_url + "/ConceptReport.jsp?"
 														+ "dictionary=" + formal_name
 														+ "&code=" + code
