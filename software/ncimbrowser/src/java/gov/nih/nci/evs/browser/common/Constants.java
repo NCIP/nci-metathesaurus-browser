@@ -88,16 +88,16 @@ public class Constants {
     public static final List<String> REL =
         Arrays
             .asList(new String[] {
-                "Parent\tPAR\tAnother concept&apos;s term subsumes a term in the current concept as a subtype, part, or otherwise.",
-                "Child\tCHD\tAnother concept&apos;s term is subsumed by a term in the current concept as its subtype, part, or otherwise.",
-                "Broader\tRB\tAnother concept&apos;s term is broader than a term in the current concept in some less specific way.",
-                "Narrower\tRN\tAnother concept&apos;s term is narrower than a term in the current concept in some less specific way.",
-                "Sibling\tSIB\tAnother concept&apos;s term is subsumed by a parent shared with the a term in the current concept.",
-                "Other\tAQ\tAnother concept&apos;s term is an allowable qualifier of the a term in the current concept.",
-                "Other\tQB\tAnother concept&apos;s term is qualified by a term in the current concept.",
-                "Other\tRO\tAnother concept&apos;s term is related in some other way.",
-                "Other\tRQ\tAnother concept&apos;s term is related and possibly synonymous with a term in the current concept.",
-                "Other\tSY\tAnother concept&apos;s term is synonymous with a term in the current concept." });
+                "Parent\tPAR\tAnother concept&#39s term subsumes a term in the current concept as a subtype, part, or otherwise.",
+                "Child\tCHD\tAnother concept&#39s term is subsumed by a term in the current concept as its subtype, part, or otherwise.",
+                "Broader\tRB\tAnother concept&#39s term is broader than a term in the current concept in some less specific way.",
+                "Narrower\tRN\tAnother concept&#39s term is narrower than a term in the current concept in some less specific way.",
+                "Sibling\tSIB\tAnother concept&#39s term is subsumed by a parent shared with the a term in the current concept.",
+                "Other\tAQ\tAnother concept&#39s term is an allowable qualifier of the a term in the current concept.",
+                "Other\tQB\tAnother concept&#39s term is qualified by a term in the current concept.",
+                "Other\tRO\tAnother concept&#39s term is related in some other way.",
+                "Other\tRQ\tAnother concept&#39s term is related and possibly synonymous with a term in the current concept.",
+                "Other\tSY\tAnother concept&#39s term is synonymous with a term in the current concept." });
 
     public static final List<String> RELA =
         Arrays.asList(new String[] {
