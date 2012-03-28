@@ -138,7 +138,7 @@
               </h:commandButton>
               &nbsp;&nbsp;<INPUT type="reset" value="Clear" alt="Clear">
             </h:form>
-            <a href="http://www.cancer.gov/policies/page3" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
+            <a href="http://www.cancer.gov/global/web/policies/page2" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>
           </div>
           <!-- end Page content -->
