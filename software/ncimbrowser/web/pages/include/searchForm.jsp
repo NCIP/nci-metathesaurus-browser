@@ -118,7 +118,7 @@
             <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody" for="source"/>&nbsp;
             <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
                valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-               immediate="true" tabindex="6">
+               immediate="true" onchange="submit();" tabindex="6">
                <f:selectItems value="#{userSessionBean.sourceList}" />
             </h:selectOneMenu>
 
