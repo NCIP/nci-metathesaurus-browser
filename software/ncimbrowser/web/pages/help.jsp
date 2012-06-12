@@ -329,8 +329,8 @@
           This release, based on LexEVS <%=lexevs_version %>, addresses most known data and performance issues. We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.0+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.0 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.1+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 2.1 Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
