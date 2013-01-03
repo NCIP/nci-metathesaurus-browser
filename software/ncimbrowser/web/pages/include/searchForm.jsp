@@ -81,7 +81,7 @@
       tabindex="2">
     </h:commandButton>
 
-    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp" styleClass="searchbox-btn" tabindex="3">
+    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp" styleClass="searchbox-btn" alt="Help" tabindex="3">
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
 

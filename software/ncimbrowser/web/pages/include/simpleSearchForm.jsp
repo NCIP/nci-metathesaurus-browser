@@ -46,7 +46,7 @@
       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
       alt="Search">
     </h:commandButton>
-    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp">
+    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp" alt="Help" >
       <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
     </h:outputLink>
 <%
