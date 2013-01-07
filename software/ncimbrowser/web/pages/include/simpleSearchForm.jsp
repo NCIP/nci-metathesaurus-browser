@@ -46,9 +46,16 @@
       image="#{facesContext.externalContext.requestContextPath}/images/search.gif"
       alt="Search">
     </h:commandButton>
-    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp" alt="Help" >
-      <h:graphicImage value="/images/search-help.gif" style="border-width:0;" />
-    </h:outputLink>
+
+  <h:outputLink
+    value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp"
+    tabindex="3">
+    <h:graphicImage value="/images/search-help.gif" styleClass="searchbox-btn" alt="Search Help"
+    style="border-width:0;"/>
+  </h:outputLink>
+  
+
+    
 <%
     String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
