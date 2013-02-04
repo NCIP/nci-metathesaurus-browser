@@ -181,16 +181,16 @@ public class SearchStatusBean extends Object {
     private String _selectedSource = null;
     private List _sourceList = null;
 
-    public void setSelectedSource(String selectedSource, 
+    public void setSelectedSource(String selectedSource,
         boolean updateUserSessionBean) {
         _selectedSource = selectedSource;
-        
+
         if (updateUserSessionBean) {
             UserSessionBean bean = BeanUtils.getUserSessionBean();
             bean.setSelectedSource(selectedSource);
         }
     }
-    
+
     public void setSelectedSource(String selectedSource) {
         setSelectedSource(selectedSource, true);
     }
@@ -308,11 +308,14 @@ public class SearchStatusBean extends Object {
     public List getRelationshipList() {
         if (_relationshipList == null) {
             _relationshipList = OntologyBean.getAssociationNameList();
-            _relationshipList.add(0, new SelectItem("ALL", "ALL"));
-            if (_relationshipList != null && _relationshipList.size() > 0) {
-                _selectedRelationship =
-                    ((SelectItem) _relationshipList.get(0)).getLabel();
-            }
+            if (_relationshipList != null) {
+				_relationshipList.add(0, new SelectItem("ALL", "ALL"));
+				//if (_relationshipList != null && _relationshipList.size() > 0) {
+				if (_relationshipList.size() > 0) {
+					_selectedRelationship =
+						((SelectItem) _relationshipList.get(0)).getLabel();
+				}
+		    }
         }
         return _relationshipList;
     }
@@ -379,7 +382,7 @@ public class SearchStatusBean extends Object {
             bean.setSelectedAlgorithm(_algorithm);
         }
     }
-    
+
     public void setAlgorithm(String algorithm) {
         setAlgorithm(algorithm, true);
     }
@@ -389,7 +392,7 @@ public class SearchStatusBean extends Object {
     }
 
     private String _searchType;
-    
+
     private String mapSearchTypeToSimpleSearch(String searchType) {
         if (searchType.toLowerCase().startsWith("relationship"))
             return "relationships";
@@ -397,10 +400,10 @@ public class SearchStatusBean extends Object {
             return "properties";
         else return "names";
     }
-    
+
     public void setSearchType(String searchType, boolean updateUserSessionBean) {
         _searchType = searchType;
-        
+
         if (updateUserSessionBean) {
             String value = mapSearchTypeToSimpleSearch(searchType);
             UserSessionBean bean = BeanUtils.getUserSessionBean();
@@ -411,7 +414,7 @@ public class SearchStatusBean extends Object {
     public void setSearchType(String searchType) {
         setSearchType(searchType, true);
     }
-    
+
     private String mapSearchTypeToAdvanceSearch(String searchType) {
         if (searchType.toLowerCase().startsWith("relationship"))
             return "Relationship";
@@ -419,12 +422,12 @@ public class SearchStatusBean extends Object {
             return "Property";
         else return "Name";
     }
-    
+
     public void setSearchTarget(String searchTarget) {
         String value = mapSearchTypeToAdvanceSearch(searchTarget);
         _searchType = value;
     }
-    
+
     public String getSearchType() {
         return _searchType;
     }

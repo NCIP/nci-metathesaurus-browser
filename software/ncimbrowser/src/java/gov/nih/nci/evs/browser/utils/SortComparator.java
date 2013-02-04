@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.browser.utils;
 
+import java.io.*;
 import java.util.*;
 
 import org.LexGrid.LexBIG.DataModel.Core.*;
@@ -55,7 +56,7 @@ import org.LexGrid.concepts.Entity;
  *
  */
 
-public class SortComparator implements Comparator<Object> {
+public class SortComparator implements Serializable, Comparator<Object> {
 
     private static final int SORT_BY_NAME = 1;
     private static final int SORT_BY_CODE = 2;

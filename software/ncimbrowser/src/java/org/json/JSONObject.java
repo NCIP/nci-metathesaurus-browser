@@ -263,6 +263,7 @@ public class JSONObject implements Serializable {
 	    		this.put(name, value);
     		} catch (Exception e) {
     			/* forget about it */
+    			e.printStackTrace();
     		}
     	}
     }
@@ -1152,7 +1153,8 @@ public class JSONObject implements Serializable {
      * @throws JSONException If the value is or contains an invalid number.
      */
     static String valueToString(Object value) throws JSONException {
-        if (value == null || value.equals(null)) {
+        //if (value == null || value.equals(null)) {
+		if (value == null || value.equals("null")) {
             return "null";
         }
         if (value instanceof JSONString) {
@@ -1162,10 +1164,14 @@ public class JSONObject implements Serializable {
             } catch (Exception e) {
             	throw new JSONException(e);
             }
+            /*
             if (o instanceof String) {
 	        	return (String)o;
 	        }
             throw new JSONException("Bad value from toJSONString: " + o);
+            */
+            if (o == null) return null;
+            return (String) o;
         }
         if (value instanceof Number) {
             return numberToString((Number) value);
@@ -1194,15 +1200,21 @@ public class JSONObject implements Serializable {
      */
      static String valueToString(Object value, int indentFactor, int indent)
             throws JSONException {
-        if (value == null || value.equals(null)) {
+        //if (value == null || value.equals(null)) {
+		if (value == null || value.equals("null")) {
             return "null";
         }
         try {
 	        if (value instanceof JSONString) {
 		        Object o = ((JSONString)value).toJSONString();
+
+				if (o == null) return null;
+				return (String) o;
+		        /*
 		        if (o instanceof String) {
 		        	return (String)o;
 		        }
+		        */
 	        }
         } catch (Exception e) {
         	/* forget about it */
