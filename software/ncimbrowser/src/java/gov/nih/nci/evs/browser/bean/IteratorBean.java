@@ -10,6 +10,8 @@ import org.apache.log4j.*;
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.properties.*;
 
+import gov.nih.nci.evs.browser.utils.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -115,8 +117,13 @@ public class IteratorBean extends Object {
     }
 
     public String getRandomNumberString() {
+		if (_randomNumberString != null) return _randomNumberString;
+
+		int randomNumber = DataUtils.getNextRandomNumber();//new Random().nextInt();
+		_randomNumberString = Integer.toString(randomNumber);
         return _randomNumberString;
-    }
+    };
+
 
     public void initialize() {
         try {
@@ -129,8 +136,8 @@ public class IteratorBean extends Object {
 
             }
 
-            int randomNumber = new Random().nextInt();
-            _randomNumberString = Integer.toString(randomNumber);
+            //int randomNumber = new Random().nextInt();
+            _randomNumberString = getRandomNumberString();//Integer.toString(randomNumber);
 
             _pageNumber = 1;
             /*
@@ -218,7 +225,8 @@ public class IteratorBean extends Object {
                 dt = System.currentTimeMillis() - ms;
                 ms = System.currentTimeMillis();
                 total_delay = total_delay + dt;
-                if (total_delay > NCImBrowserProperties.getPaginationTimeOut() * 60 * 1000) {
+                //if (total_delay > NCImBrowserProperties.getPaginationTimeOut() * 60 * 1000) {
+				if (total_delay > 1000L * NCImBrowserProperties.getPaginationTimeOut() * 60) {
                     _timeout = true;
 
                     _logger.debug("Time out at: " + _lastResolved);
@@ -271,7 +279,7 @@ public class IteratorBean extends Object {
             osWriter.write("(" + k + ") " + ref.getConceptCode() + ":"
                 + ref.getEntityDescription().getContent() + "\n");
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
     }
 

@@ -24,42 +24,42 @@ import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -67,9 +67,9 @@ import org.apache.log4j.*;
 /**
  * @author EVS Team
  * @version 1.0
- * 
+ *
  *          Modification history Initial implementation kim.ong@ngc.com
- * 
+ *
  */
 
 public class SourceTreeUtils {
@@ -95,6 +95,7 @@ public class SourceTreeUtils {
 
     }
 
+/*
     public static Vector getSupportedSources(String codingScheme, String version) {
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -107,6 +108,17 @@ public class SourceTreeUtils {
         }
         return null;
     }
+*/
+    public static Vector getSupportedSources(String codingScheme, CodingSchemeVersionOrTag csvt) {
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            return getSupportedSources(lbSvc, codingScheme, csvt);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static Vector getSupportedSources(LexBIGService lbSvc,
         String codingScheme, CodingSchemeVersionOrTag versionOrTag) {
@@ -185,7 +197,7 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
@@ -311,7 +323,7 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
@@ -398,7 +410,7 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
@@ -527,15 +539,17 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
-            String[] associationsToNavigate =
-                hierarchyDefn.getAssociationNames();
+            //String[] associationsToNavigate =
+            //    hierarchyDefn.getAssociationNames();
+
             boolean associationsNavigatedFwd =
                 hierarchyDefn.getIsForwardNavigable();
 
-            NameAndValueList nameAndValueList =
-                createNameAndValueList(associationsToNavigate, null);
+            //NameAndValueList nameAndValueList =
+            //    createNameAndValueList(associationsToNavigate, null);
+
             ResolvedConceptReferenceList matches = null;
 
             CodedNodeSet.PropertyType[] propertyTypes =
@@ -671,7 +685,8 @@ public class SourceTreeUtils {
 
         Vector<String> v = null;
 
-        if (code != null && code.compareTo("") != 0) {
+        //if (code != null && code.compareTo("") != 0) {
+		if (code.compareTo("") != 0) {
             qualifierList = new NameAndValueList();
             NameAndValue nv = new NameAndValue();
             nv.setName("source-code");
@@ -729,7 +744,7 @@ public class SourceTreeUtils {
             pw.println("(" + k + ") " + ref.getConceptCode() + ":"
                 + ref.getEntityDescription().getContent() + "\n");
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
     }
 
@@ -738,7 +753,7 @@ public class SourceTreeUtils {
             _logger.debug("(" + k + ") " + ref.getConceptCode() + ":"
                 + ref.getEntityDescription().getContent() + "\n");
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
     }
 
@@ -911,9 +926,11 @@ public class SourceTreeUtils {
                     + source, -1, true);
             if (iterator != null) {
                 try {
-                    int numRemaining = iterator.numberRemaining();
+                    //int numRemaining = iterator.numberRemaining();
+                    /*
                     if (iterator == null)
                         return null;
+                    */
                     try {
                         while (iterator.hasNext()) {
                             ResolvedConceptReference[] refs =
@@ -924,14 +941,14 @@ public class SourceTreeUtils {
                             }
                         }
                     } catch (Exception ex) {
-
+						ex.printStackTrace();
                     }
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return null;
     }
@@ -987,7 +1004,7 @@ public class SourceTreeUtils {
             getRootInSRC(scheme, csvt.getVersion(), sab);
         String rootName =
             SRC_root.getReferencedEntry().getEntityDescription().getContent();
-        String rootCode = SRC_root.getCode();
+        //String rootCode = SRC_root.getCode();
 
         // Dummy root (place holder)
         TreeItem ti = new TreeItem("<Root>", "Root node", null);
@@ -1267,44 +1284,44 @@ public class SourceTreeUtils {
             printTree(ti, code, 0);
 
         } catch (Exception e) {
-
+			e.printStackTrace();
         }
     }
 
     /*
      * C0879923
-     * 
+     *
      * presentation: HTLV1 IgG Ser Ql RepresentationalForm: OSN Source: LNC
-     * 
+     *
      * Qualifier name: LUI Qualifier value: L1740213 Qualifier name: SUI
      * Qualifier value: S0130345 Qualifier name: AUI Qualifier value: A0155015
      * Qualifier name: source-code Qualifier value: 22360-2 Qualifier name:
      * SUPPRESS Qualifier value: N Qualifier name: mrrank Qualifier value: 255
-     * 
+     *
      * presentation: human t-cell lymphotropic virus-1 Antibody.immunoglobulin
      * G:Arbitrary Concentration:Point in time:Serum:Ordinal
      * RepresentationalForm: LX Source: LNC
-     * 
-     * 
+     *
+     *
      * Qualifier name: LUI Qualifier value: L3810313 Qualifier name: SUI
      * Qualifier value: S4356848 Qualifier name: AUI Qualifier value: A8393666
      * Qualifier name: source-code Qualifier value: 22360-2 Qualifier name:
      * mrrank Qualifier value: 259 Qualifier name: SUPPRESS Qualifier value: N
-     * 
-     * 
+     *
+     *
      * presentation: HTLV 1 Ab.IgG:ACnc:Pt:Ser:Ord RepresentationalForm: LN
      * Source: LNC
-     * 
+     *
      * Qualifier name: SUI Qualifier value: S4449216 Qualifier name: AUI
      * Qualifier value: A8490332 Qualifier name: source-code Qualifier value:
      * 22360-2 Qualifier name: mrrank Qualifier value: 258 Qualifier name:
      * SUPPRESS Qualifier value: N Qualifier name: LUI Qualifier value: L0095099
-     * 
-     * 
+     *
+     *
      * Associations: (C0879923) analyzed_by Serum (C0229671) qualifiers:
      * RUI:R43827205 STYPE1:AUI STYPE2:AUI SUPPRESS:N rela:analyzed_by
      * source:LNC source-aui:A8490332 target-aui:A7791940
-     * 
+     *
      * has_expanded_form human t-cell lymphotropic virus-1
      * Antibody.immunoglobulin G:Arbitrary Concentration:Point in
      * time:Serum:Ordinal (C0879923) qualifiers: RUI:R44116328 STYPE1:AUI
@@ -1312,27 +1329,27 @@ public class SourceTreeUtils {
      * source:LNC source-aui:A8490332 // HTLV 1 Ab.IgG:ACnc:Pt:Ser:Ord
      * target-aui:A0155015 // HTLV1 IgG Ser Ql (extracted from Presentation
      * data)
-     * 
-     * 
+     *
+     *
      * C0879923
-     * 
+     *
      * HTLV1 IgG Ser Ql
-     * 
+     *
      * Hyperlink NCI Metathesaurus, LNC, A8490332 Hyperlink NCI Metathesaurus,
      * LNC, A0155015
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * (*) Reconstructing source hierarchy based on NCIm can be overly
      * complicated. source-aui -->[rela]-->target-aui (direction)
-     * 
+     *
      * What rela values are part of source hierarchy? e.g., is the rela
      * has_expanded_form a part of LNC hierarchy? What about the direction? Is
      * there an inverse rela, is_expanded_form_of???
-     * 
+     *
      * [A] -->(has_expanded_form)-->[B} implies [A] is a subconcept of [B]?, or
      * [B] is a subconcept of [A]?
-     * 
+     *
      * Where are these data stored?
      */
 
@@ -1370,24 +1387,24 @@ public class SourceTreeUtils {
     // //////////////////////////////////////////////////////////////////////////
     /*
      * Logical Observation Identifiers Names and Codes (CUI C1136323)
-     * 
+     *
      * LOINCCLASSTYPES (CUI CL403889)
-     * 
+     *
      * Laboratory Class (CUI C1314970)
-     * 
+     *
      * Microbiology procedure (CUI C0085672)
-     * 
+     *
      * HTLV1 IgG Ser Ql
-     * 
+     *
      * rela:has_expanded_form self-referencing:true (*) source:LNC
      * source-aui:A8490332 // HTLV 1 Ab.IgG:ACnc:Pt:Ser:Ord target-aui:A0155015
      * // HTLV1 IgG Ser Ql (extracted from Presentation data)
-     * 
+     *
      * public String getAtom2AtomRelationships(AssociatedConcept ac, String sab)
      * { Vector v = new Vector(); String rela = null; String source = null;
      * String self_referencing = null; String source_aui = null; String
      * target_aui = null;
-     * 
+     *
      * for (NameAndValue qual : ac.getAssociationQualifiers().getNameAndValue())
      * { String qualifier_name = qual.getName(); String qualifier_value =
      * qual.getContent(); if (qualifier_name.compareTo("source") == 0) source =
@@ -1467,8 +1484,10 @@ public class SourceTreeUtils {
 
     public static PrintWriter openPrintWriter(String outputfile) {
         try {
-            PrintWriter pw =
-                new PrintWriter(new BufferedWriter(new FileWriter(outputfile)));
+            //PrintWriter pw =
+            //    new PrintWriter(new BufferedWriter(new FileWriter(outputfile)));
+
+            PrintWriter pw  = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputfile), "UTF-8"), true);
 
             return pw;
         } catch (Exception e) {
@@ -1479,7 +1498,7 @@ public class SourceTreeUtils {
 
     public static void closeWriter(PrintWriter pw) {
         if (pw == null) {
-            pw.println("WARNING: closeWriter is not open.");
+            System.out.println("WARNING: closeWriter is not open.");
             return;
         }
         pw.close();
@@ -1499,14 +1518,17 @@ public class SourceTreeUtils {
         String version = null;
 
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        /*
         if (version != null)
             csvt.setVersion(version);
+        */
 
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         String relation = null;
         // String association = "CHD";
         boolean searchInactive = true;
-        Vector sources = getSupportedSources(scheme, version);
+        //Vector sources = getSupportedSources(scheme, version);
+        Vector sources = getSupportedSources(scheme, csvt);
         if (sources != null) {
             pw.println("Number of NCIm Supported Sources: " + sources.size());
         } else {
@@ -1531,8 +1553,9 @@ public class SourceTreeUtils {
                     + source);
                 if (iterator != null) {
                     try {
-                        if (iterator == null)
-                            break;
+                        //if (iterator == null)
+                        //    break;
+
                         int knt = 0;
                         try {
                             while (iterator.hasNext()) {
@@ -1550,7 +1573,7 @@ public class SourceTreeUtils {
                                         getSubconceptsInTree(scheme, version,
                                             ref.getConceptCode(), source);
 
-                                    if (subconcept_list != null) {
+                                    //if (subconcept_list != null) {
                                         if (subconcept_list.size() > 0) {
                                             src_with_roots.add(source);
                                         } else {
@@ -1574,9 +1597,12 @@ public class SourceTreeUtils {
                                                 + concept_name + " ("
                                                 + concept_code + ")");
                                         }
+                                        /*
                                     } else {
                                         src_without_roots.add(source);
                                     }
+                                    */
+
                                 }
                             }
                         } catch (Exception ex) {
@@ -1592,6 +1618,7 @@ public class SourceTreeUtils {
 
             } catch (Exception ex) {
                 pw.println("getCodingSchemeRoot throws exception??? ");
+                ex.printStackTrace();
             }
         }
 
@@ -1623,7 +1650,7 @@ public class SourceTreeUtils {
     }
 
     public HashMap getChildren(String CUI, String SAB) {
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
 
@@ -1665,7 +1692,9 @@ public class SourceTreeUtils {
         } catch (Exception e) {
 
         }
-        hmap.put(ti._code, ti);
+        if (ti != null) {
+        	hmap.put(ti._code, ti);
+		}
         return hmap;
     }
 
@@ -1686,14 +1715,15 @@ public class SourceTreeUtils {
             if (hierarchies == null || hierarchies.length == 0)
                 return null;
 
-            SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
-
+//            SupportedHierarchy hierarchyDefn = hierarchies[0];
+            //String hier_id = hierarchyDefn.getLocalId();
+/*
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
+
             boolean associationsNavigatedFwd =
                 hierarchyDefn.getIsForwardNavigable();
-
+*/
             // String code = "C1140168";
             ResolvedConceptReference SRC_root =
                 getRootInSRC(scheme, csvt.getVersion(), sab);
@@ -1756,7 +1786,7 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
@@ -1773,10 +1803,10 @@ public class SourceTreeUtils {
 
     public HashMap getSubconcepts(String scheme, String version, String code,
         String sab, String[] asso_names, boolean associationsNavigatedFwd) {
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
-        Vector w = new Vector();
+        //Vector w = new Vector();
 
         long ms = System.currentTimeMillis();
         // Set<String> codesToExclude = Collections.EMPTY_SET;
@@ -1909,7 +1939,7 @@ public class SourceTreeUtils {
 
     public static String getSelfReferentialRelationship(String associationName,
         AssociatedConcept ac, String sab) {
-        Vector v = new Vector();
+        //Vector v = new Vector();
         String rela = associationName;
         String source = null;
         String self_referencing = null;
@@ -2037,7 +2067,7 @@ public class SourceTreeUtils {
                 return null;
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            //String hier_id = hierarchyDefn.getLocalId();
 
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
@@ -2101,8 +2131,7 @@ public class SourceTreeUtils {
                     _logger.warn("matches == null ??? ");
                     return list;
                 }
-                if (matches != null
-                    && matches.getResolvedConceptReferenceCount() > 0) {
+                if (matches.getResolvedConceptReferenceCount() > 0) {
                     ResolvedConceptReference ref =
                         (ResolvedConceptReference) matches
                             .enumerateResolvedConceptReference().nextElement();
@@ -2117,38 +2146,40 @@ public class SourceTreeUtils {
                             if (associations != null) {
                                 for (int i = 0; i < associations.length; i++) {
                                     Association assoc = associations[i];
-                                    String associationName =
-                                        lbscm
-                                            .getAssociationNameFromAssociationCode(
-                                                scheme, csvt, assoc
-                                                    .getAssociationName());
                                     if (assoc != null) {
-                                        if (assoc.getAssociatedConcepts() != null) {
-                                            AssociatedConcept[] acl =
-                                                assoc.getAssociatedConcepts()
-                                                    .getAssociatedConcept();
-                                            if (acl != null) {
-                                                for (int j = 0; j < acl.length; j++) {
-                                                    AssociatedConcept ac =
-                                                        acl[j];
-                                                    if (ac != null
-                                                        && !ac.getConceptCode()
-                                                            .startsWith("@")) {
-                                                        // _logger.debug("\t" +
-                                                        // ac.getCode());
-                                                        String t =
-                                                            getSelfReferentialRelationship(
-                                                                associationName,
-                                                                ac, source);
-                                                        if (t != null) {
-                                                            // _logger.debug(t);
-                                                            list.add(t);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+										String associationName =
+											lbscm
+												.getAssociationNameFromAssociationCode(
+													scheme, csvt, assoc
+														.getAssociationName());
+										//if (assoc != null) {
+											if (assoc.getAssociatedConcepts() != null) {
+												AssociatedConcept[] acl =
+													assoc.getAssociatedConcepts()
+														.getAssociatedConcept();
+												if (acl != null) {
+													for (int j = 0; j < acl.length; j++) {
+														AssociatedConcept ac =
+															acl[j];
+														if (ac != null
+															&& !ac.getConceptCode()
+																.startsWith("@")) {
+															// _logger.debug("\t" +
+															// ac.getCode());
+															String t =
+																getSelfReferentialRelationship(
+																	associationName,
+																	ac, source);
+															if (t != null) {
+																// _logger.debug(t);
+																list.add(t);
+															}
+														}
+													}
+												}
+											}
+										//}
+								    }
                                 }
                             }
                         }
@@ -2179,7 +2210,7 @@ public class SourceTreeUtils {
  * (CUI C0947764) Musculoskeletal and connective tissue disorders (CUI C0263660)
  * Medical Dictionary for Regulatory Activities Terminology (MedDRA) (CUI
  * C1140263)
- * 
+ *
  * SourceTreeUtils buildPathsToRoot scheme: NCI Metathesaurus SourceTreeUtils
  * buildPathsToRoot sab: MDR SourceTreeUtils buildPathsToRoot maxLevel: 2
  * SourceTreeUtils buildPathsToRoot root_name: Cartilage disorders

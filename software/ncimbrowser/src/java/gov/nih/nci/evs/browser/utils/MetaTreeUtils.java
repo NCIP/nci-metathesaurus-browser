@@ -628,7 +628,7 @@ public class MetaTreeUtils {
         Set<String> codesToExclude, String[] associationsToNavigate,
         boolean associationsNavigatedFwd) throws LBException {
 
-        long ms = System.currentTimeMillis();
+        //long ms = System.currentTimeMillis();
         HashSet hset = new HashSet();
 
         try {
@@ -937,10 +937,10 @@ public class MetaTreeUtils {
         HashMap hmap =
             getSubconcepts(scheme, version, code, sab, _hierAssocToParentNodes,
                 false);
-
+/*
         if (hmap == null)
             return 0;
-
+*/
         Set keyset = hmap.keySet();
         Object[] objs = keyset.toArray();
 
@@ -1361,7 +1361,8 @@ public class MetaTreeUtils {
         if (rcr == null) {
             Util_displayMessage("Unable to resolve a concept for CUI = '"
                 + code + "'");
-            System.exit(1);
+            //System.exit(1);
+            return;
         }
 
         String name = null;
@@ -1408,7 +1409,7 @@ public class MetaTreeUtils {
         HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
-        Vector w = new Vector();
+        //Vector w = new Vector();
 
         long ms = System.currentTimeMillis();
 
@@ -2008,7 +2009,7 @@ public class MetaTreeUtils {
                 }
             }
         } catch (Exception e) {
-
+			e.printStackTrace();
         }
     }
 
@@ -2159,12 +2160,12 @@ public class MetaTreeUtils {
         TreeItem ti = new TreeItem(code, name);
         ti._expandable = false;
 
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         Vector w = new Vector();
 
-        long ms = System.currentTimeMillis();
-        Set<String> codesToExclude = Collections.EMPTY_SET;
+        //long ms = System.currentTimeMillis();
+        //Set<String> codesToExclude = Collections.EMPTY_SET;
 
         List<String> par_chd_assoc_list = new ArrayList();
         par_chd_assoc_list.add("CHD");

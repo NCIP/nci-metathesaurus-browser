@@ -296,7 +296,7 @@ public class SearchByAssociationIteratorDecorator implements
 
         // int total = quickIterator.numberRemaining() +
         // currentChildren.size();
-        int total = _currentChildren.size();
+        //int total = _currentChildren.size();
         // _logger.debug("SearchByAssociationIteratorDecorator: total: " +
         // total);
 
@@ -546,7 +546,8 @@ public class SearchByAssociationIteratorDecorator implements
                 dt = System.currentTimeMillis() - ms;
                 ms = System.currentTimeMillis();
                 total_delay = total_delay + dt;
-                if (total_delay > _maxTimeLimit * 60 * 1000) {
+                //if (total_delay > _maxTimeLimit * 60 * 1000) {
+				if (total_delay > 1000L * _maxTimeLimit * 60) {
 					if (_numIteration < _maxIteration) {
 						_maxIteration = _numIteration;
 					}

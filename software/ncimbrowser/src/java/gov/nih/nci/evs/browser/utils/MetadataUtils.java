@@ -427,6 +427,7 @@ public class MetadataUtils {
             if (lbSvc == null) {
                 _logger
                     .warn("Unable to connect to instantiate LexBIGService ???");
+                return;
             }
             CodingSchemeRenderingList csrl = null;
             try {
@@ -439,98 +440,108 @@ public class MetadataUtils {
             }
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+            if (csrs == null) return;
+            if (csrs.length == 0) return;
             for (int i = 0; i < csrs.length; i++) {
                 int j = i + 1;
                 CodingSchemeRendering csr = csrs[i];
-                CodingSchemeSummary css = csr.getCodingSchemeSummary();
-                String formalname = css.getFormalName();
-                String css_local_name = css.getLocalName();
-                Boolean isActive = null;
-                if (csr == null) {
-                    _logger.warn("\tcsr == null???");
-                } else if (csr.getRenderingDetail() == null) {
-                    _logger.warn("\tcsr.getRenderingDetail() == null");
-                } else if (csr.getRenderingDetail().getVersionStatus() == null) {
-                    _logger
-                        .warn("\tcsr.getRenderingDetail().getVersionStatus() == null");
-                } else {
-                    isActive =
-                        csr.getRenderingDetail().getVersionStatus().equals(
-                            CodingSchemeVersionStatus.ACTIVE);
-                }
+                if (csr != null) {
+					CodingSchemeSummary css = csr.getCodingSchemeSummary();
+					String formalname = css.getFormalName();
+					String css_local_name = css.getLocalName();
+					Boolean isActive = null;
+					/*
+					if (csr == null) {
+						_logger.warn("\tcsr == null???");
+					} else
+					*/
 
-                String representsVersion = css.getRepresentsVersion();
-                if ((includeInactive && isActive == null)
-                    || (isActive != null && isActive.equals(Boolean.TRUE))
-                    || (includeInactive && (isActive != null && isActive
-                        .equals(Boolean.FALSE)))) {
-                    CodingSchemeVersionOrTag vt =
-                        new CodingSchemeVersionOrTag();
-                    vt.setVersion(representsVersion);
-                    try {
-                        CodingScheme cs =
-                            lbSvc.resolveCodingScheme(formalname, vt);
+					if (csr.getRenderingDetail() == null) {
+						_logger.warn("\tcsr.getRenderingDetail() == null");
+					} else if (csr.getRenderingDetail().getVersionStatus() == null) {
+						_logger
+							.warn("\tcsr.getRenderingDetail().getVersionStatus() == null");
+					} else {
+						isActive =
+							csr.getRenderingDetail().getVersionStatus().equals(
+								CodingSchemeVersionStatus.ACTIVE);
+					}
 
-                        if (cs != null) {
-                            NameAndValue[] nvList =
-                                MetadataUtils.getMetadataProperties(cs);
-                            if (nvList != null) {
-                                Vector metadataProperties = new Vector();
-                                for (int k = 0; k < nvList.length; k++) {
-                                    NameAndValue nv = (NameAndValue) nvList[k];
-                                    metadataProperties.add(nv.getName() + "|"
-                                        + nv.getContent());
-                                }
-                                vocabulary_count++;
-                                _logger.info("(" + vocabulary_count + ") "
-                                    + formalname);
-                                _formalName2MetadataHashMap.put(formalname,
-                                    metadataProperties);
-                            }
+					String representsVersion = css.getRepresentsVersion();
+					if ((includeInactive && isActive == null)
+						|| (isActive != null && isActive.equals(Boolean.TRUE))
+						|| (includeInactive && (isActive != null && isActive
+							.equals(Boolean.FALSE)))) {
+						CodingSchemeVersionOrTag vt =
+							new CodingSchemeVersionOrTag();
+						vt.setVersion(representsVersion);
+						try {
+							CodingScheme cs =
+								lbSvc.resolveCodingScheme(formalname, vt);
 
-                            String[] localnames = cs.getLocalName();
-                            boolean contains_css_local_name = false;
-                            for (int m = 0; m < localnames.length; m++) {
-                                String localname = localnames[m];
-                                _logger.info("\tlocal name: " + localname);
-                                _localname2FormalnameHashMap.put(localname,
-                                    formalname);
-                                if (localname.compareTo(css_local_name) == 0) {
-                                    contains_css_local_name = true;
-                                }
-                            }
-                            _localname2FormalnameHashMap.put(formalname,
-                                formalname);
-                            if (!contains_css_local_name) {
-                                _logger.info("\tlocal name: " + css_local_name);
-                                _localname2FormalnameHashMap.put(css_local_name,
-                                    formalname);
-                            }
+							if (cs != null) {
+								NameAndValue[] nvList =
+									MetadataUtils.getMetadataProperties(cs);
+								if (nvList != null) {
+									Vector metadataProperties = new Vector();
+									for (int k = 0; k < nvList.length; k++) {
+										NameAndValue nv = (NameAndValue) nvList[k];
+										metadataProperties.add(nv.getName() + "|"
+											+ nv.getContent());
+									}
+									vocabulary_count++;
+									_logger.info("(" + vocabulary_count + ") "
+										+ formalname);
+									_formalName2MetadataHashMap.put(formalname,
+										metadataProperties);
+								}
 
-                            _logger.info("\trepresentsVersion: " + representsVersion);
-                            String version = "[Not Set]";
-                            if (nvList != null) {
-                                for (int k = 0; k < nvList.length; k++) {
-                                    NameAndValue nv = (NameAndValue) nvList[k];
-                                    if (nv.getName().equals("version"))
-                                        version = nv.getContent();
-                                }
-                            }
-                            _logger.info("\tMetadata version: " + version);
-                        }
-                    } catch (Exception ex) {
-                        _logger.warn("\tUnable to resolve coding scheme "
-                            + formalname
-                            + " possibly due to missing security token.");
-                        _logger
-                            .warn("\t\tAccess to " + formalname + " denied.");
-                    }
-                } else {
-                    _logger.warn("\tWARNING: setCodingSchemeMap discards "
-                        + formalname);
-                    _logger.warn("\t\trepresentsVersion " + representsVersion);
-                }
-                _logger.info("\n");
+								String[] localnames = cs.getLocalName();
+								boolean contains_css_local_name = false;
+								for (int m = 0; m < localnames.length; m++) {
+									String localname = localnames[m];
+									_logger.info("\tlocal name: " + localname);
+									_localname2FormalnameHashMap.put(localname,
+										formalname);
+									if (localname.compareTo(css_local_name) == 0) {
+										contains_css_local_name = true;
+									}
+								}
+								_localname2FormalnameHashMap.put(formalname,
+									formalname);
+								if (!contains_css_local_name) {
+									_logger.info("\tlocal name: " + css_local_name);
+									_localname2FormalnameHashMap.put(css_local_name,
+										formalname);
+								}
+
+								_logger.info("\trepresentsVersion: " + representsVersion);
+								String version = "[Not Set]";
+
+								//if (nvList != null) {
+									for (int k = 0; k < nvList.length; k++) {
+										NameAndValue nv = (NameAndValue) nvList[k];
+										if (nv.getName().equals("version"))
+											version = nv.getContent();
+									}
+								//}
+								_logger.info("\tMetadata version: " + version);
+							}
+						} catch (Exception ex) {
+							_logger.warn("\tUnable to resolve coding scheme "
+								+ formalname
+								+ " possibly due to missing security token.");
+							_logger
+								.warn("\t\tAccess to " + formalname + " denied.");
+							ex.printStackTrace();
+						}
+					} else {
+						_logger.warn("\tWARNING: setCodingSchemeMap discards "
+							+ formalname);
+						_logger.warn("\t\trepresentsVersion " + representsVersion);
+					}
+					_logger.info("\n");
+			    }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -720,7 +731,8 @@ public class MetadataUtils {
                     if (tags == null)
                         return version;
 
-                    if (tags != null && tags.length > 0) {
+                    //if (tags != null && tags.length > 0) {
+					if (tags.length > 0) {
                         for (int j = 0; j < tags.length; j++) {
                             String version_tag = (String) tags[j];
 

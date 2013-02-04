@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 import org.LexGrid.valueSets.DefinitionEntry;
 import org.LexGrid.valueSets.EntityReference;
-import org.LexGrid.valueSets.ValueSetDefinition; 
+import org.LexGrid.valueSets.ValueSetDefinition;
 import org.LexGrid.valueSets.ValueSetDefinitionReference;
 import org.LexGrid.valueSets.types.DefinitionOperator;
 
@@ -98,10 +98,10 @@ public class CartActionBean {
     static public final String CSV_CONTENT_TYPE = "text/csv";
 
     // Error messages
-    
+
     static public final String NO_CONCEPTS = "No concepts in cart.";
     static public final String NOTHING_SELECTED = "No concepts selected.";
-    
+
     // Getters & Setters
 
     /**
@@ -135,7 +135,7 @@ public class CartActionBean {
      */
     public boolean getMessageflag() {
     	return _messageflag;
-    }    
+    }
 
     /**
      * Return Popup message text
@@ -144,8 +144,8 @@ public class CartActionBean {
     public String getMessage() {
     	_messageflag = false;
     	return _message;
-    }    
-    
+    }
+
     /**
      * Compute a back to url that is not the cart page
      * @return
@@ -168,9 +168,9 @@ public class CartActionBean {
         if (_cart == null) _init();
         return _cart.values();
     }
-   
+
     // ******************** Class methods ************************
-    
+
     /**
      * Initialize the cart container
      */
@@ -193,7 +193,7 @@ public class CartActionBean {
         String semanticType = null;
 
         _messageflag = false;
-        SearchCart search = new SearchCart();        
+        SearchCart search = new SearchCart();
 
         // Get concept information from the Entity item passed in
         HttpServletRequest request =
@@ -236,7 +236,7 @@ public class CartActionBean {
             + "&code=" + code;
 
         // Get Semantic type
-        semanticType = search.getSemanticType(curr_concept.getEntityCode()); 
+        semanticType = search.getSemanticType(curr_concept.getEntityCode());
 
         // Add concept to cart
         if (_cart == null) _init();
@@ -251,7 +251,7 @@ public class CartActionBean {
 
         if (!_cart.containsKey(code))
             _cart.put(code,item);
-       
+
         return null;
     }
 
@@ -261,14 +261,14 @@ public class CartActionBean {
      */
     public String removeFromCart() {
     	_messageflag = false;
-    	
+
     	if (getCount() < 1) {
         	_messageflag = true;
-        	_message = NO_CONCEPTS;    		
+        	_message = NO_CONCEPTS;
     	} else if (!hasSelected()) {
         	_messageflag = true;
-        	_message = NOTHING_SELECTED;        	
-    	} else {    	
+        	_message = NOTHING_SELECTED;
+    	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
                 if (item.getCheckbox().isSelected()) {
@@ -277,7 +277,7 @@ public class CartActionBean {
                 }
             }
     	}
-	        
+
         return "showcart";
     }
 
@@ -287,18 +287,18 @@ public class CartActionBean {
      */
     public String selectAllInCart() {
         _messageflag = false;
-        
+
     	if (getCount() < 1) {
         	_messageflag = true;
-        	_message = NO_CONCEPTS;    	 
+        	_message = NO_CONCEPTS;
     	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept)i.next();                
+                Concept item = (Concept)i.next();
                 item.setSelected(true);
             }
         }
         return null;
-    }    
+    }
 
     /**
      * Unselect all concept(s) in the Cart
@@ -306,13 +306,13 @@ public class CartActionBean {
      */
     public String unselectAllInCart() {
         _messageflag = false;
-        
+
     	if (getCount() < 1) {
         	_messageflag = true;
-        	_message = NO_CONCEPTS;    		
+        	_message = NO_CONCEPTS;
     	} else if (!hasSelected()) {
         	_messageflag = true;
-        	_message = NOTHING_SELECTED;        	
+        	_message = NOTHING_SELECTED;
     	} else {
             for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
@@ -320,8 +320,8 @@ public class CartActionBean {
             }
         }
         return null;
-    }    
-    
+    }
+
     /**
      * Export cart in XML format
      * @return
@@ -330,7 +330,7 @@ public class CartActionBean {
     public String exportCartXML() throws Exception {
 
         _messageflag = false;
-                
+
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
 
@@ -338,88 +338,89 @@ public class CartActionBean {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
         	return null;
-    	} 
+    	}
     	if (!hasSelected()) {
         	_messageflag = true;
-        	_message = NOTHING_SELECTED;        
+        	_message = NOTHING_SELECTED;
         	return null;
-    	}    		
-        
+    	}
+
         // Get Entities to be exported and build export xml string
         // in memory
 
 		LexEVSValueSetDefinitionServices vsd_service = RemoteServerUtil
 				.getLexEVSValueSetDefinitionServices();
-	
+
 		// Instantiate VSD
 		ValueSetDefinition vsd = new ValueSetDefinition();
-		 
+
 		// Populate VSD meta-data
 		vsd.setValueSetDefinitionURI("EXPORT:VSDREF_CART");
 		vsd.setValueSetDefinitionName("VSDREF_CART");
 		vsd.setDefaultCodingScheme(Constants.CODING_SCHEME_NAME);
 		vsd.setConceptDomain("Concepts");
-		 
+
 		// Instantiate DefinitionEntry(Rule Set)
 		DefinitionEntry de = new DefinitionEntry();
-		 
+
 		// Assign the rule order(order this definitionEntry should be processed)
 		de.setRuleOrder(1L);
 		// Assign operator (OR, AND or SUBTRACT). This is to OR, AND or SUBTRACT the result of this definitionEntry from vsd resolution
 		de.setOperator(DefinitionOperator.OR);
-		 
-		// Instantiate ValueSetDefinitionReference which is one of the 4 definitionEntry (the other:CodingSchemeReference, EntityReference and PropertyReference) 
+
+		// Instantiate ValueSetDefinitionReference which is one of the 4 definitionEntry (the other:CodingSchemeReference, EntityReference and PropertyReference)
 		ValueSetDefinitionReference vsdRef = new ValueSetDefinitionReference();
-		 
+
 		// Assign referenced VSD
 		vsdRef.setValueSetDefinitionURI("EXPORT:CART_NODES");
-		 
+
 		// Add vsdReference to definitionEntry.
 		de.setValueSetDefinitionReference(vsdRef);
-		 
+
 		// add the definitionEntry to VSD. With this, we added the first definitionEntry to VSD
 		vsd.addDefinitionEntry(de);
-		 
+
         // Add all terms from the cart
         for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
             Concept item = (Concept) i.next();
-            
+
             ref = search.getConceptByCode(item.codingScheme, item.code);
+            if (ref != null) {
+				String EC = ref.getEntity().getEntityCode();
+				String ECN = ref.getCodeNamespace();
 
-            String EC = ref.getEntity().getEntityCode();
-            String ECN = ref.getCodeNamespace();            
-            
-            if (item.getSelected() && ref != null) {
-                _logger.debug("Exporting: " + ref.getCode());
+				if (item.getSelected()) {
+					_logger.debug("Exporting: " + ref.getCode());
 
-        		// Instantiate EntityReference which is one of the 4 definitionEntry
-        		EntityReference entityRef = new EntityReference();
-        		 
-        		// set appropriate values for entityReference
-        		entityRef.setEntityCode(EC);
-        		entityRef.setEntityCodeNamespace(ECN);
-        		entityRef.setLeafOnly(false);
-        		entityRef.setTransitiveClosure(false);
+					// Instantiate EntityReference which is one of the 4 definitionEntry
+					EntityReference entityRef = new EntityReference();
 
-        		// To add another definitionEntry to VSD, we fist re-instantiate DefinitionEntry
-        		de = new DefinitionEntry();
-        		 
-        		// Set the order and operator for this definitionEntry
-        		de.setRuleOrder(2L);
-        		de.setOperator(DefinitionOperator.OR);        		
-        		
-        		// add entityReference to definitionEntry
-        		de.setEntityReference(entityRef);
-        		 
-        		// add the second definitionEntry to VSD
-        		vsd.addDefinitionEntry(de);        
-            }
-        }		
-		
+					// set appropriate values for entityReference
+					entityRef.setEntityCode(EC);
+					entityRef.setEntityCodeNamespace(ECN);
+					entityRef.setLeafOnly(false);
+					entityRef.setTransitiveClosure(false);
+
+					// To add another definitionEntry to VSD, we fist re-instantiate DefinitionEntry
+					de = new DefinitionEntry();
+
+					// Set the order and operator for this definitionEntry
+					de.setRuleOrder(2L);
+					de.setOperator(DefinitionOperator.OR);
+
+					// add entityReference to definitionEntry
+					de.setEntityReference(entityRef);
+
+					// add the second definitionEntry to VSD
+					vsd.addDefinitionEntry(de);
+				}
+			}
+        }
+
         // Build a buffer holding the XML data
-		
-        StringBuffer buf = new StringBuffer();		
-        
+
+        StringBuffer buf = new StringBuffer();
+
 		InputStream reader = vsd_service.exportValueSetResolution(vsd, null,
 			null, null, false);
 
@@ -438,7 +439,7 @@ public class CartActionBean {
 				}
 			}
 		}
-		
+
 		// Send export file to browser
 
         HttpServletResponse response = (HttpServletResponse) FacesContext
@@ -448,13 +449,14 @@ public class CartActionBean {
                 + XML_FILE_NAME);
         response.setContentLength(buf.length());
         ServletOutputStream ouputStream = response.getOutputStream();
-        ouputStream.write(buf.toString().getBytes(), 0, buf.length());
+        //ouputStream.write(buf.toString().getBytes(), 0, buf.length());
+        ouputStream.write(buf.toString().getBytes("UTF-8"), 0, buf.length());
         ouputStream.flush();
         ouputStream.close();
-	
+
         // Don't allow JSF to forward to cart.jsf
         FacesContext.getCurrentInstance().responseComplete();
-        
+
         return null;
     }
 
@@ -466,22 +468,22 @@ public class CartActionBean {
     public String exportCartCSV() throws Exception {
 
         _messageflag = false;
-        
+
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
         StringBuffer sb = new StringBuffer();
-        
+
     	if (getCount() < 1) {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
         	return null;
-    	} 
+    	}
     	if (!hasSelected()) {
         	_messageflag = true;
-        	_message = NOTHING_SELECTED;        
+        	_message = NOTHING_SELECTED;
         	return null;
-    	}         
-        
+    	}
+
         // Get Entities to be exported and build export file
         // in memory
 
@@ -515,13 +517,14 @@ public class CartActionBean {
                 + CSV_FILE_NAME);
         response.setContentLength(sb.length());
         ServletOutputStream ouputStream = response.getOutputStream();
-        ouputStream.write(sb.toString().getBytes(), 0, sb.length());
+        //ouputStream.write(sb.toString().getBytes(), 0, sb.length());
+        ouputStream.write(sb.toString().getBytes("UTF-8"), 0, sb.length());
         ouputStream.flush();
         ouputStream.close();
 
         // Don't allow JSF to forward to cart.jsf
         FacesContext.getCurrentInstance().responseComplete();
-        
+
         return null;
     }
 
@@ -537,7 +540,7 @@ public class CartActionBean {
         private String version = null;
         private String url = null;
         private String semanticType = null;
-        private HtmlSelectBooleanCheckbox checkbox = null; 
+        private HtmlSelectBooleanCheckbox checkbox = null;
 
         // Getters & setters
 
@@ -595,27 +598,27 @@ public class CartActionBean {
 
         public void setSemanticType(String semanticType) {
             this.semanticType = semanticType;
-        }        
-      
+        }
+
         public HtmlSelectBooleanCheckbox getCheckbox() {
          	if (checkbox == null) checkbox = new HtmlSelectBooleanCheckbox();
             return checkbox;
         }
-        
+
         public void setCheckbox(HtmlSelectBooleanCheckbox checkbox) {
             this.checkbox = checkbox;
         }
-      
+
         // *** Private Methods ***
-        
+
         private void setSelected(boolean selected) {
         	this.checkbox.setSelected(selected);
         }
-        
+
         private boolean getSelected() {
         	return this.checkbox.isSelected();
-        }        
-        
+        }
+
     } // End of Concept
 
     //**
@@ -634,8 +637,8 @@ public class CartActionBean {
             }
         }
         return false;
-    }    
-    
+    }
+
     /**
      * Dump contents of cart object
      * (non-Javadoc)
@@ -656,7 +659,7 @@ public class CartActionBean {
                 sb.append("\t         Name = " + item.name + "\n");
                 sb.append("\t     Selected = " + item.getSelected() + "\n");
                 sb.append("\t          URL = " + item.url + "\n");
-                sb.append("\tSemantic Type = " + item.semanticType + "\n");                
+                sb.append("\tSemantic Type = " + item.semanticType + "\n");
             }
         } else {
             sb.append("Cart is empty.");

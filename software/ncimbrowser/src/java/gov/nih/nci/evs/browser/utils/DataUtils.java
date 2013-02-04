@@ -138,13 +138,13 @@ public class DataUtils {
         Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
             "in", "nos", "the", "to", "with" });
 
-    public static String TYPE_ROLE = "type_role";
-    public static String TYPE_ASSOCIATION = "type_association";
-    public static String TYPE_SUPERCONCEPT = "type_superconcept";
-    public static String TYPE_SUBCONCEPT = "type_subconcept";
-    public static String TYPE_SIBLINGCONCEPT = "type_siblingconcept";
-    public static String TYPE_BROADERCONCEPT = "type_broaderconcept";
-    public static String TYPE_NARROWERCONCEPT = "type_narrowerconcept";
+    public static final String TYPE_ROLE = "type_role";
+    public static final String TYPE_ASSOCIATION = "type_association";
+    public static final String TYPE_SUPERCONCEPT = "type_superconcept";
+    public static final String TYPE_SUBCONCEPT = "type_subconcept";
+    public static final String TYPE_SIBLINGCONCEPT = "type_siblingconcept";
+    public static final String TYPE_BROADERCONCEPT = "type_broaderconcept";
+    public static final String TYPE_NARROWERCONCEPT = "type_narrowerconcept";
 
     public String _ncicbContactURL = null;
     public String _terminologySubsetDownloadURL = null;
@@ -190,6 +190,15 @@ public class DataUtils {
         MetadataUtils.initialize();
         return _formalName2MetadataHashMap;
     }
+
+    public static Random rand = null;
+
+    public static int getNextRandomNumber() {
+		if (rand == null) {
+			rand = new Random();
+		}
+		return rand.nextInt();
+	}
 
     /*
      * public static HashMap getFormalName2MetadataHashMap() { if
@@ -568,8 +577,9 @@ public class DataUtils {
                     lbSvc.getCodingSchemeConcepts(codingSchemeName,
                         versionOrTag);
             } catch (Exception e1) {
-                // e1.printStackTrace();
+                e1.printStackTrace();
             }
+            if (cns == null) return null;
 
             cns = cns.restrictToCodes(crefs);
             cns = restrictToSource(cns, source);
@@ -632,8 +642,10 @@ public class DataUtils {
         Vector superconcept_vec =
             getAssociationSourceCodes(scheme, version, code,
                 hierarchicalAssoName);
+                /*
         if (superconcept_vec == null)
             return null;
+            */
         // SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
         return superconcept_vec;
 
@@ -726,6 +738,8 @@ public class DataUtils {
 
             CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
             csvt.setVersion(version);
+
+            /*
             String desc = null;
             try {
                 desc =
@@ -739,6 +753,7 @@ public class DataUtils {
                 desc = "<not found>";
 
             }
+            */
 
             // Iterate through all hierarchies and levels ...
             String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
@@ -769,7 +784,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-            // ex.printStackTrace();
+            ex.printStackTrace();
         }
         return v;
     }
@@ -788,6 +803,7 @@ public class DataUtils {
             lbscm.setLexBIGService(lbSvc);
             CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
             csvt.setVersion(version);
+            /*
             String desc = null;
             try {
                 desc =
@@ -799,6 +815,7 @@ public class DataUtils {
             } catch (Exception e) {
                 desc = "<not found>";
             }
+            */
 
             // Iterate through all hierarchies and levels ...
             String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
@@ -882,8 +899,10 @@ public class DataUtils {
                     CodingSchemeTagList cstl = rd.getVersionTags();
                     java.lang.String[] tags = cstl.getTag();
                     // KLO, 102409
+                    /*
                     if (tags == null)
                         return version;
+                        */
 
                     if (tags != null && tags.length > 0) {
                         for (int j = 0; j < tags.length; j++) {
@@ -915,8 +934,10 @@ public class DataUtils {
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-            if (csrl == null)
+            if (csrl == null) {
                 _logger.warn("csrl is NULL");
+                return null;
+			}
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i = 0; i < csrs.length; i++) {
@@ -1305,7 +1326,7 @@ public class DataUtils {
         // Perform the query ...
         ResolvedConceptReferenceList matches = null;
 
-        List list = new ArrayList();// getSupportedRoleNames(lbSvc, scheme,
+        //List list = new ArrayList();// getSupportedRoleNames(lbSvc, scheme,
         // version);
 
         ArrayList roleList = new ArrayList();
@@ -1669,12 +1690,12 @@ public class DataUtils {
         lbscm.setLexBIGService(lbSvc);
         ResolvedConceptReferenceList roots =
             lbscm.getHierarchyRoots(scheme, csvt, hierarchyID);
-        List list = ResolvedConceptReferenceList2List(roots);
+        List list = resolvedConceptReferenceList2List(roots);
         SortUtils.quickSort(list);
         return list;
     }
 
-    public List ResolvedConceptReferenceList2List(
+    public List resolvedConceptReferenceList2List(
         ResolvedConceptReferenceList rcrl) {
         ArrayList list = new ArrayList();
         for (int i = 0; i < rcrl.getResolvedConceptReferenceCount(); i++) {
@@ -1828,7 +1849,7 @@ public class DataUtils {
 
         return _ncimAppVersion;
     }
-    
+
     private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
@@ -1855,7 +1876,7 @@ public class DataUtils {
                 HTTPUtils.cleanXSS(new DataUtils().getApplicationVersionDisplay());
         return _applicationVersionDisplay;
     }
-    
+
     public String getNCITAppBuildTag() {
         if (_ncitAnthillBuildTagBuilt != null) {
             return _ncitAnthillBuildTagBuilt;
@@ -2077,16 +2098,17 @@ public class DataUtils {
         HashMap hmap = new HashMap();
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
-
+/*
             if (lbSvc == null) {
                 _logger.warn("lbSvc == null???");
                 return hmap;
             }
-
+*/
             CodingSchemeVersionOrTag versionOrTag =
                 new CodingSchemeVersionOrTag();
             if (vers != null)
@@ -2210,7 +2232,7 @@ public class DataUtils {
             }
 
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
         return hmap;
     }
@@ -2226,16 +2248,17 @@ public class DataUtils {
         HashMap hmap = new HashMap();
         try {
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
-
+/*
             if (lbSvc == null) {
                 Debug.println("lbSvc == null???");
                 return hmap;
             }
-
+*/
             CodingSchemeVersionOrTag versionOrTag =
                 new CodingSchemeVersionOrTag();
             if (vers != null)
@@ -2265,7 +2288,9 @@ public class DataUtils {
                 // matches.getResolvedConceptReferenceCount());
                 // _logger.debug("(*) Incomplete? " + incomplete);
                 hmap.put(INCOMPLETE, incomplete.toString());
-            }
+            } else {
+				return null;
+			}
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -2299,7 +2324,7 @@ public class DataUtils {
                                             + directionalLabel);
                                 }
 
-                                Vector v = new Vector();
+                                //Vector v = new Vector();
                                 AssociatedConcept[] acl =
                                     assoc.getAssociatedConcepts()
                                         .getAssociatedConcept();
@@ -2374,7 +2399,7 @@ public class DataUtils {
                                                 + directionalLabel);
                                     }
 
-                                    Vector v = new Vector();
+                                    //Vector v = new Vector();
                                     AssociatedConcept[] acl =
                                         assoc.getAssociatedConcepts()
                                             .getAssociatedConcept();
@@ -2424,7 +2449,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
         return hmap;
     }
@@ -3317,47 +3342,51 @@ public class DataUtils {
         Map<String, List<BySourceTabResults>> map,
         Map<String, List<BySourceTabResults>> map2) {
         HashMap hmap = new HashMap();
-        for (String rel : map.keySet()) {
-            List<BySourceTabResults> relations = map.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                for (BySourceTabResults result : relations) {
-                    String rela = result.getRela();
-                    String cui = result.getCui();
-                    String source = result.getSource();
-                    String name = result.getTerm();
-                    Vector v = null;
-                    if (hmap.containsKey(cui)) {
-                        v = (Vector) hmap.get(cui);
-                    } else {
-                        v = new Vector();
-                    }
-                    // check if v.contains result
-                    v.add(result);
-                    hmap.put(cui, v);
-                }
-            }
-        }
+        if (map != null) {
+			for (String rel : map.keySet()) {
+				List<BySourceTabResults> relations = map.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					for (BySourceTabResults result : relations) {
+						String rela = result.getRela();
+						String cui = result.getCui();
+						String source = result.getSource();
+						String name = result.getTerm();
+						Vector v = null;
+						if (hmap.containsKey(cui)) {
+							v = (Vector) hmap.get(cui);
+						} else {
+							v = new Vector();
+						}
+						// check if v.contains result
+						v.add(result);
+						hmap.put(cui, v);
+					}
+				}
+			}
+		}
 
-        for (String rel : map2.keySet()) {
-            List<BySourceTabResults> relations = map2.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                for (BySourceTabResults result : relations) {
-                    String rela = result.getRela();
-                    String cui = result.getCui();
-                    String source = result.getSource();
-                    String name = result.getTerm();
-                    Vector v = null;
-                    if (hmap.containsKey(cui)) {
-                        v = (Vector) hmap.get(cui);
-                    } else {
-                        v = new Vector();
-                    }
-                    // check if v.contains result
-                    v.add(result);
-                    hmap.put(cui, v);
-                }
-            }
-        }
+        if (map2 != null) {
+			for (String rel : map2.keySet()) {
+				List<BySourceTabResults> relations = map2.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					for (BySourceTabResults result : relations) {
+						String rela = result.getRela();
+						String cui = result.getCui();
+						String source = result.getSource();
+						String name = result.getTerm();
+						Vector v = null;
+						if (hmap.containsKey(cui)) {
+							v = (Vector) hmap.get(cui);
+						} else {
+							v = new Vector();
+						}
+						// check if v.contains result
+						v.add(result);
+						hmap.put(cui, v);
+					}
+				}
+			}
+	    }
         return hmap;
     }
 
@@ -3405,7 +3434,7 @@ public class DataUtils {
         par_chd_assoc_list.add("RB");
         // par_chd_assoc_list.add("RN");
 
-        Vector ret_vec = new Vector();
+        //Vector ret_vec = new Vector();
 
         Vector parent_asso_vec =
             new Vector(Arrays.asList(_hierAssocToParentNodes));
@@ -3417,7 +3446,7 @@ public class DataUtils {
         Vector nt_vec = new Vector(Arrays.asList(_assocToNTNodes));
 
         Vector w = new Vector();
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashSet rel_hset = new HashSet();
         HashSet hasSubtype_hset = new HashSet();
 
@@ -3474,7 +3503,7 @@ public class DataUtils {
             Debug.println("Run time (ms) for " + action + " " + delay);
             DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         action = "Sort synonyms by CUI";
@@ -3494,213 +3523,217 @@ public class DataUtils {
 
         ms_find_highest_rank_atom_delay = 0;
         String t = null;
-        for (String rel : map.keySet()) {
-            List<BySourceTabResults> relations = map.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                String category = "Other";
-                /*
-                 * if (parent_asso_vec.contains(rel)) category = "Parent"; else
-                 * if (child_asso_vec.contains(rel)) category = "Child"; else if
-                 * (bt_vec.contains(rel)) category = "Broader"; else if
-                 * (nt_vec.contains(rel)) category = "Narrower";
-                 */
-                if (parent_asso_vec.contains(rel))
-                    category = "Child";
-                else if (child_asso_vec.contains(rel))
-                    category = "Parent";
-                else if (bt_vec.contains(rel))
-                    category = "Narrower";
-                else if (nt_vec.contains(rel))
-                    category = "Broader";
+        if (map != null) {
+			for (String rel : map.keySet()) {
+				List<BySourceTabResults> relations = map.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					String category = "Other";
+					/*
+					 * if (parent_asso_vec.contains(rel)) category = "Parent"; else
+					 * if (child_asso_vec.contains(rel)) category = "Child"; else if
+					 * (bt_vec.contains(rel)) category = "Broader"; else if
+					 * (nt_vec.contains(rel)) category = "Narrower";
+					 */
+					if (parent_asso_vec.contains(rel))
+						category = "Child";
+					else if (child_asso_vec.contains(rel))
+						category = "Parent";
+					else if (bt_vec.contains(rel))
+						category = "Narrower";
+					else if (nt_vec.contains(rel))
+						category = "Broader";
 
-                else if (sibling_asso_vec.contains(rel))
-                    category = "Sibling";
+					else if (sibling_asso_vec.contains(rel))
+						category = "Sibling";
 
-                for (BySourceTabResults result : relations) {
-                    String code = result.getCui();
-                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
-                        // check CUI_hashmap containsKey(rel$code)???
-                        if (!CUI_hashset.contains(rel + "$" + code)) {
-                            String rela = result.getRela();
-                            if (rela == null || rela.compareTo("null") == 0) {
-                                rela = " ";
-                            }
-                            Vector v = (Vector) cui2SynonymsMap.get(code);
-                            ms_find_highest_rank_atom =
-                                System.currentTimeMillis();
-                            BySourceTabResults top_atom =
-                                findHighestRankedAtom(v, sab);
-                            ms_find_highest_rank_atom_delay =
-                                ms_find_highest_rank_atom_delay
-                                    + (System.currentTimeMillis() - ms_find_highest_rank_atom);
+					for (BySourceTabResults result : relations) {
+						String code = result.getCui();
+						if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
+							// check CUI_hashmap containsKey(rel$code)???
+							if (!CUI_hashset.contains(rel + "$" + code)) {
+								String rela = result.getRela();
+								if (rela == null || rela.compareTo("null") == 0) {
+									rela = " ";
+								}
+								Vector v = (Vector) cui2SynonymsMap.get(code);
+								ms_find_highest_rank_atom =
+									System.currentTimeMillis();
+								BySourceTabResults top_atom =
+									findHighestRankedAtom(v, sab);
+								ms_find_highest_rank_atom_delay =
+									ms_find_highest_rank_atom_delay
+										+ (System.currentTimeMillis() - ms_find_highest_rank_atom);
 
-                            /*
-                             * if (top_atom == null) { Concept c =
-                             * getConceptByCode("NCI Metathesaurus", null, null,
-                             * code); t = c.getEntityDescription().getContent()
-                             * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
-                             * Constants.EXTERNAL_TERM_SOURCE + "|" +
-                             * Constants.EXTERNAL_TERM_SOURCE_CODE; } else { t =
-                             * top_atom.getTerm() + "|" + top_atom.getType() +
-                             * "|" + top_atom.getSource() + "|" +
-                             * top_atom.getCode(); } t = t + "|" + code + "|" +
-                             * rela + "|" + category;
-                             *
-                             * w.add(t);
-                             */
+								/*
+								 * if (top_atom == null) { Concept c =
+								 * getConceptByCode("NCI Metathesaurus", null, null,
+								 * code); t = c.getEntityDescription().getContent()
+								 * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
+								 * Constants.EXTERNAL_TERM_SOURCE + "|" +
+								 * Constants.EXTERNAL_TERM_SOURCE_CODE; } else { t =
+								 * top_atom.getTerm() + "|" + top_atom.getType() +
+								 * "|" + top_atom.getSource() + "|" +
+								 * top_atom.getCode(); } t = t + "|" + code + "|" +
+								 * rela + "|" + category;
+								 *
+								 * w.add(t);
+								 */
 
-                            if (top_atom == null) {
-                                for (int k = 0; k < v.size(); k++) {
-                                    top_atom =
-                                        (BySourceTabResults) v.elementAt(k);
-                                    t =
-                                        top_atom.getTerm() + "|"
-                                            + top_atom.getType() + "|"
-                                            + top_atom.getSource() + "|"
-                                            + top_atom.getCode();
-                                    t =
-                                        t + "|" + code + "|"
-                                            + top_atom.getRela() + "|"
-                                            + category;
-                                    w.add(t);
-                                }
-                            } else {
-                                t =
-                                    top_atom.getTerm() + "|"
-                                        + top_atom.getType() + "|"
-                                        + top_atom.getSource() + "|"
-                                        + top_atom.getCode();
-                                t =
-                                    t + "|" + code + "|" + rela + "|"
-                                        + category;
-                                w.add(t);
-                            }
+								if (top_atom == null) {
+									for (int k = 0; k < v.size(); k++) {
+										top_atom =
+											(BySourceTabResults) v.elementAt(k);
+										t =
+											top_atom.getTerm() + "|"
+												+ top_atom.getType() + "|"
+												+ top_atom.getSource() + "|"
+												+ top_atom.getCode();
+										t =
+											t + "|" + code + "|"
+												+ top_atom.getRela() + "|"
+												+ category;
+										w.add(t);
+									}
+								} else {
+									t =
+										top_atom.getTerm() + "|"
+											+ top_atom.getType() + "|"
+											+ top_atom.getSource() + "|"
+											+ top_atom.getCode();
+									t =
+										t + "|" + code + "|" + rela + "|"
+											+ category;
+									w.add(t);
+								}
 
-                            CUI_hashset.add(rel + "$" + code);
+								CUI_hashset.add(rel + "$" + code);
 
-                            // Temporarily save non-RO other relationships
-                            if (category.compareTo("Other") == 0
-                                && rela.compareTo("RO") != 0) {
-                                if (!rel_hset.contains(code)) {
-                                    rel_hset.add(code);
-                                }
-                            }
+								// Temporarily save non-RO other relationships
+								if (category.compareTo("Other") == 0
+									&& rela.compareTo("RO") != 0) {
+									if (!rel_hset.contains(code)) {
+										rel_hset.add(code);
+									}
+								}
 
-                            if (category.compareTo("Child") == 0
-                                && rela.compareTo("CHD") != 0) {
-                                if (!hasSubtype_hset.contains(code)) {
-                                    hasSubtype_hset.add(code);
-                                }
-                            }
+								if (category.compareTo("Child") == 0
+									&& rela.compareTo("CHD") != 0) {
+									if (!hasSubtype_hset.contains(code)) {
+										hasSubtype_hset.add(code);
+									}
+								}
 
-                        }
-                    }
-                }
-            }
-        }
+							}
+						}
+					}
+				}
+			}
+		}
 
         // *** do the same for map2
-        for (String rel : map2.keySet()) {
-            List<BySourceTabResults> relations = map2.get(rel);
-            if (rel.compareTo(INCOMPLETE) != 0) {
-                String category = "Other";
-                /*
-                 * if (parent_asso_vec.contains(rel)) category = "Parent"; else
-                 * if (child_asso_vec.contains(rel)) category = "Child"; else if
-                 * (bt_vec.contains(rel)) category = "Broader"; else if
-                 * (nt_vec.contains(rel)) category = "Narrower";
-                 */
+        if (map2 != null) {
+			for (String rel : map2.keySet()) {
+				List<BySourceTabResults> relations = map2.get(rel);
+				if (rel.compareTo(INCOMPLETE) != 0) {
+					String category = "Other";
+					/*
+					 * if (parent_asso_vec.contains(rel)) category = "Parent"; else
+					 * if (child_asso_vec.contains(rel)) category = "Child"; else if
+					 * (bt_vec.contains(rel)) category = "Broader"; else if
+					 * (nt_vec.contains(rel)) category = "Narrower";
+					 */
 
-                if (parent_asso_vec.contains(rel))
-                    category = "Child";
-                else if (child_asso_vec.contains(rel))
-                    category = "Parent";
-                else if (bt_vec.contains(rel))
-                    category = "Narrower";
-                else if (nt_vec.contains(rel))
-                    category = "Broader";
+					if (parent_asso_vec.contains(rel))
+						category = "Child";
+					else if (child_asso_vec.contains(rel))
+						category = "Parent";
+					else if (bt_vec.contains(rel))
+						category = "Narrower";
+					else if (nt_vec.contains(rel))
+						category = "Broader";
 
-                else if (sibling_asso_vec.contains(rel))
-                    category = "Sibling";
+					else if (sibling_asso_vec.contains(rel))
+						category = "Sibling";
 
-                for (BySourceTabResults result : relations) {
-                    String code = result.getCui();
+					for (BySourceTabResults result : relations) {
+						String code = result.getCui();
 
-                    if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
-                        if (!CUI_hashset.contains(rel + "$" + code)) {
-                            String rela = result.getRela();
-                            if (rela == null || rela.compareTo("null") == 0) {
-                                rela = " ";
-                            }
-                            Vector v = (Vector) cui2SynonymsMap.get(code);
+						if (code.compareTo(CUI) != 0 && code.indexOf("@") == -1) {
+							if (!CUI_hashset.contains(rel + "$" + code)) {
+								String rela = result.getRela();
+								if (rela == null || rela.compareTo("null") == 0) {
+									rela = " ";
+								}
+								Vector v = (Vector) cui2SynonymsMap.get(code);
 
-                            ms_find_highest_rank_atom =
-                                System.currentTimeMillis();
-                            BySourceTabResults top_atom =
-                                findHighestRankedAtom(v, sab);
-                            ms_find_highest_rank_atom_delay =
-                                ms_find_highest_rank_atom_delay
-                                    + (System.currentTimeMillis() - ms_find_highest_rank_atom);
-                            /*
-                             * if (top_atom == null) { Concept c =
-                             * getConceptByCode("NCI Metathesaurus", null, null,
-                             * code); t = c.getEntityDescription().getContent()
-                             * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
-                             * Constants.EXTERNAL_TERM_SOURCE + "|" +
-                             * Constants.EXTERNAL_TERM_SOURCE_CODE; } else { t =
-                             * top_atom.getTerm() + "|" + top_atom.getType() +
-                             * "|" + top_atom.getSource() + "|" +
-                             * top_atom.getCode(); }
-                             */
-                            if (top_atom == null) {
-                                for (int k = 0; k < v.size(); k++) {
-                                    top_atom =
-                                        (BySourceTabResults) v.elementAt(k);
-                                    t =
-                                        top_atom.getTerm() + "|"
-                                            + top_atom.getType() + "|"
-                                            + top_atom.getSource() + "|"
-                                            + top_atom.getCode();
-                                    t =
-                                        t + "|" + code + "|"
-                                            + top_atom.getRela() + "|"
-                                            + category;
-                                    w.add(t);
-                                }
-                            } else {
-                                t =
-                                    top_atom.getTerm() + "|"
-                                        + top_atom.getType() + "|"
-                                        + top_atom.getSource() + "|"
-                                        + top_atom.getCode();
-                                t =
-                                    t + "|" + code + "|" + rela + "|"
-                                        + category;
-                                w.add(t);
-                            }
+								ms_find_highest_rank_atom =
+									System.currentTimeMillis();
+								BySourceTabResults top_atom =
+									findHighestRankedAtom(v, sab);
+								ms_find_highest_rank_atom_delay =
+									ms_find_highest_rank_atom_delay
+										+ (System.currentTimeMillis() - ms_find_highest_rank_atom);
+								/*
+								 * if (top_atom == null) { Concept c =
+								 * getConceptByCode("NCI Metathesaurus", null, null,
+								 * code); t = c.getEntityDescription().getContent()
+								 * + "|" + Constants.EXTERNAL_TERM_TYPE + "|" +
+								 * Constants.EXTERNAL_TERM_SOURCE + "|" +
+								 * Constants.EXTERNAL_TERM_SOURCE_CODE; } else { t =
+								 * top_atom.getTerm() + "|" + top_atom.getType() +
+								 * "|" + top_atom.getSource() + "|" +
+								 * top_atom.getCode(); }
+								 */
+								if (top_atom == null) {
+									for (int k = 0; k < v.size(); k++) {
+										top_atom =
+											(BySourceTabResults) v.elementAt(k);
+										t =
+											top_atom.getTerm() + "|"
+												+ top_atom.getType() + "|"
+												+ top_atom.getSource() + "|"
+												+ top_atom.getCode();
+										t =
+											t + "|" + code + "|"
+												+ top_atom.getRela() + "|"
+												+ category;
+										w.add(t);
+									}
+								} else {
+									t =
+										top_atom.getTerm() + "|"
+											+ top_atom.getType() + "|"
+											+ top_atom.getSource() + "|"
+											+ top_atom.getCode();
+									t =
+										t + "|" + code + "|" + rela + "|"
+											+ category;
+									w.add(t);
+								}
 
-                            // w.add(t);
-                            CUI_hashset.add(rel + "$" + code);
+								// w.add(t);
+								CUI_hashset.add(rel + "$" + code);
 
-                            // Temporarily save non-RO other relationships
-                            if (category.compareTo("Other") == 0
-                                && rela.compareTo("RO") != 0) {
-                                if (!rel_hset.contains(code)) {
-                                    rel_hset.add(code);
-                                }
-                            }
+								// Temporarily save non-RO other relationships
+								if (category.compareTo("Other") == 0
+									&& rela.compareTo("RO") != 0) {
+									if (!rel_hset.contains(code)) {
+										rel_hset.add(code);
+									}
+								}
 
-                            if (category.compareTo("Child") == 0
-                                && rela.compareTo("CHD") != 0) {
-                                if (!hasSubtype_hset.contains(code)) {
-                                    hasSubtype_hset.add(code);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+								if (category.compareTo("Child") == 0
+									&& rela.compareTo("CHD") != 0) {
+									if (!hasSubtype_hset.contains(code)) {
+										hasSubtype_hset.add(code);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+	    }
 
         long total_categorization_delay = System.currentTimeMillis() - ms;
         String action_atom = "Find highest rank atom delay";
@@ -3918,13 +3951,14 @@ public class DataUtils {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            if (cns == null) return null;
 
             try {
                 LocalNameList propertyNames = new LocalNameList();
                 propertyNames.addEntry(propertyName);
                 CodedNodeSet.PropertyType[] propertyTypes = null;
 
-                long ms = System.currentTimeMillis(), delay = 0;
+                //long ms = System.currentTimeMillis(), delay = 0;
                 SortOptionList sortOptions = null;
                 LocalNameList filterOptions = null;
                 boolean resolveObjects = true; // needs to be set to true
@@ -4315,6 +4349,7 @@ public class DataUtils {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            if (cns == null) return null;
 
             try {
                 SortOptionList sortOptions = null;
@@ -4323,7 +4358,7 @@ public class DataUtils {
                 ResolvedConceptReferenceList rcrl =
                     cns.resolveToList(sortOptions, filterOptions, null, null,
                         resolveObjects, 1);
-                HashMap hmap = new HashMap();
+                //HashMap hmap = new HashMap();
 
                 if (rcrl == null) {
                     _logger.warn("Concept not found.");
@@ -4452,7 +4487,7 @@ public class DataUtils {
         List results = new ArrayList<RelationshipTabResults>();
 
         try {
-            cs = getCodingScheme("NCI Metathesaurus", null);
+            //cs = getCodingScheme("NCI Metathesaurus", null);
 
             MetaBrowserService mbs = null;
             try {

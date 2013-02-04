@@ -206,7 +206,7 @@ public class UserSessionBean extends Object {
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
         }
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
+        //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Entity> v = null;
 
         boolean excludeDesignation = true;
@@ -565,6 +565,12 @@ public class UserSessionBean extends Object {
         setSelectedAlgorithm(matchAlgorithm);
 
         String searchTarget = (String) request.getParameter("searchTarget");
+        if (searchTarget == null || searchTarget.length() == 0) {
+            String message = "Please specify a search target.";
+            request.getSession().setAttribute("message", message);
+            return "message";
+        }
+
         setSelectedSearchTarget(searchTarget);
 
         // Remove ranking check box (KLO, 092409)
@@ -589,6 +595,7 @@ public class UserSessionBean extends Object {
                 _logger.debug("* criteria: " + matchText);
                 _logger.debug("* source: " + source);
             } catch (Exception e) {
+				e.printStackTrace();
             }
         }
         String scheme = Constants.CODING_SCHEME_NAME;
@@ -603,7 +610,7 @@ public class UserSessionBean extends Object {
         } catch (Exception ex) {
 
         }
-        Utils.StopWatch stopWatch = new Utils.StopWatch();
+        //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
 
         boolean excludeDesignation = true;
@@ -791,7 +798,9 @@ public class UserSessionBean extends Object {
         // Test case: C0536142|200601|SY|||C1433544|Y|
         // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
 
-        if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
+        //if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
+        if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
+
             String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
@@ -868,9 +877,11 @@ public class UserSessionBean extends Object {
     }
 
     public String linkAction() {
+		/*
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
+        */
         return "";
     }
 
@@ -1036,9 +1047,10 @@ public class UserSessionBean extends Object {
         _conceptSourceListData =
             DataUtils.getSources(codingSchemeName, version, null, code);
         _conceptSourceList = new ArrayList();
+        /*
         if (_conceptSourceListData == null)
             return _conceptSourceList;
-
+        */
         for (int i = 0; i < _conceptSourceListData.size(); i++) {
             String t = (String) _conceptSourceListData.elementAt(i);
             _conceptSourceList.add(new SelectItem(t));
@@ -1079,12 +1091,14 @@ public class UserSessionBean extends Object {
     }
 
     public String viewNeighborhoodAction() {
+		/*
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-        String sab = getSelectedConceptSource();
-        String code = (String) request.getParameter("code");
+        //String sab = getSelectedConceptSource();
+        //String code = (String) request.getParameter("code");
+        */
         return "neighborhood";
 
     }
@@ -1097,9 +1111,9 @@ public class UserSessionBean extends Object {
         String code = (String) request.getParameter("code");
         String sab = (String) request.getParameter("sab");
 
-System.out.println("(*) acceptLicenseAction dictionary " + dictionary);
-System.out.println("(*) acceptLicenseAction code " + code);
-System.out.println("(*) acceptLicenseAction sab " + sab);
+//System.out.println("(*) acceptLicenseAction dictionary " + dictionary);
+//System.out.println("(*) acceptLicenseAction code " + code);
+//System.out.println("(*) acceptLicenseAction sab " + sab);
 
         if (dictionary != null && code != null) {
             LicenseBean licenseBean =
