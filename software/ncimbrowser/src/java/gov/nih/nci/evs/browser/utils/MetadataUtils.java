@@ -15,6 +15,9 @@ import org.LexGrid.LexBIG.DataModel.Core.types.*;
 import gov.nih.nci.evs.browser.common.*;
 import org.apache.log4j.*;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -157,8 +160,18 @@ public class MetadataUtils {
             if (map == null)
                 return null;
             Vector v = new Vector();
+
+			Iterator it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry thisEntry = (Entry) it.next();
+				String key = (String) thisEntry.getKey();
+				String value = (String) thisEntry.getValue();
+/*
+
             for (String key : map.keySet()) {
                 String value = (String) map.get(key);
+*/
+
                 v.add(key + "|" + value);
             }
             v = SortUtils.quickSort(v);

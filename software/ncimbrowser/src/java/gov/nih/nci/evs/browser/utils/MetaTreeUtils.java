@@ -19,6 +19,9 @@ import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -986,9 +989,16 @@ public class MetaTreeUtils {
         }
         int knt = 0;
         HashSet hset = new HashSet();
-        for (String rel : map.keySet()) {
-            // _logger.debug("(***) rel: " + rel);
-            List<BySourceTabResults> relations = map.get(rel);
+
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+			Entry thisEntry = (Entry) it.next();
+			String rel = (String) thisEntry.getKey();
+			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+        //for (String rel : map.keySet()) {
+            //List<BySourceTabResults> relations = map.get(rel);
+
             for (BySourceTabResults result : relations) {
                 String code = result.getCui();
                 if (code.compareTo(CUI) != 0 && !hset.contains(code)) {
@@ -1030,9 +1040,14 @@ public class MetaTreeUtils {
             return false;
         }
 
-        for (String rel : map.keySet()) {
-            // _logger.debug("(***) rel: " + rel);
-            List<BySourceTabResults> relations = map.get(rel);
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+			Entry thisEntry = (Entry) it.next();
+			String rel = (String) thisEntry.getKey();
+			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+        //for (String rel : map.keySet()) {
+            //List<BySourceTabResults> relations = map.get(rel);
             for (BySourceTabResults result : relations) {
                 String code = result.getCui();
                 if (code.compareTo(CUI) != 0) {
@@ -1195,12 +1210,22 @@ public class MetaTreeUtils {
             }
 
             HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+
+
+			Iterator iterator = cui2SynonymsMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry thisEntry = (Entry) iterator.next();
+				String child_cui = (String) thisEntry.getKey();
+				Vector v = (Vector) thisEntry.getValue();
+/*
             Set keyset = cui2SynonymsMap.keySet();
             Iterator iterator = keyset.iterator();
             while (iterator.hasNext()) {
                 String child_cui = (String) iterator.next();
-                TreeItem sub = null;
                 Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+*/
+
+                TreeItem sub = null;
                 // temporary
                 BySourceTabResults result =
                     DataUtils.findHighestRankedAtom(v, sab);
@@ -1828,8 +1853,16 @@ public class MetaTreeUtils {
     public static HashMap createCUI2SynonymsHahMap(
         Map<String, List<BySourceTabResults>> map) {
         HashMap hmap = new HashMap();
+
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+			Entry thisEntry = (Entry) it.next();
+			String rel = (String) thisEntry.getKey();
+			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+/*
         for (String rel : map.keySet()) {
             List<BySourceTabResults> relations = map.get(rel);
+*/
             for (BySourceTabResults result : relations) {
                 String rela = result.getRela();
                 String cui = result.getCui();
@@ -1902,14 +1935,22 @@ public class MetaTreeUtils {
         }
 
         HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
+
+        Iterator iterator = cui2SynonymsMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+			Entry thisEntry = (Entry) iterator.next();
+			String parent_cui = (String) thisEntry.getKey();
+        /*
         Set keyset = cui2SynonymsMap.keySet();
         Iterator iterator = keyset.iterator();
-
         while (iterator.hasNext()) {
             String parent_cui = (String) iterator.next();
+        */
             // KLO, 020210
             if (parent_cui.compareTo(_nciThesaurusCui) != 0) {
-                Vector v = (Vector) cui2SynonymsMap.get(parent_cui);
+                //Vector v = (Vector) cui2SynonymsMap.get(parent_cui);
+                Vector v = (Vector) thisEntry.getValue();
+
                 BySourceTabResults result =
                     DataUtils.findHighestRankedAtom(v, sab);
                 // BySourceTabResults result = findHighestRankedAtom(v, sab);
@@ -2063,16 +2104,23 @@ public class MetaTreeUtils {
          */
         HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
         ti._expandable = false;
+
+        Iterator iterator = cui2SynonymsMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+			Entry thisEntry = (Entry) iterator.next();
+			String child_cui = (String) thisEntry.getKey();
+/*
         Set keyset = cui2SynonymsMap.keySet();
         Iterator iterator = keyset.iterator();
         while (iterator.hasNext()) {
             String child_cui = (String) iterator.next();
-            // _logger.debug("\tchild_cui: " + child_cui);
+*/
             TreeItem sub = null;
             if (code2Tree.containsKey(child_cui)) {
                 sub = (TreeItem) code2Tree.get(child_cui);
             } else {
-                Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+                //Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+                Vector v = (Vector) thisEntry.getValue();
                 BySourceTabResults result =
                     DataUtils.findHighestRankedAtom(v, sab);
                 // BySourceTabResults result = findHighestRankedAtom(v, sab);
@@ -2190,12 +2238,22 @@ public class MetaTreeUtils {
 
         HashMap cui2SynonymsMap = createCUI2SynonymsHahMap(map);
         ti._expandable = false;
+
+        Iterator iterator = cui2SynonymsMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+			Entry thisEntry = (Entry) iterator.next();
+			String child_cui = (String) thisEntry.getKey();
+/*
+
         Set keyset = cui2SynonymsMap.keySet();
         Iterator iterator = keyset.iterator();
         while (iterator.hasNext()) {
             String child_cui = (String) iterator.next();
+*/
+
             TreeItem sub = null;
-            Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+            //Vector v = (Vector) cui2SynonymsMap.get(child_cui);
+            Vector v = (Vector) thisEntry.getValue();
             BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
             if (result == null) {
                 result = (BySourceTabResults) v.elementAt(0);

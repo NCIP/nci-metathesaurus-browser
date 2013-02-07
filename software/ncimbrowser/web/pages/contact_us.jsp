@@ -5,6 +5,10 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+
+<%@ page import="nl.captcha.Captcha" %>
+<%@ page import="nl.captcha.audio.AudioCaptcha" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html xmlns:c="http://java.sun.com/jsp/jstl/core">
   <head>
@@ -15,16 +19,77 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
+    
+    
+    <script>
+    function getContextPath() {
+	return "<%=request.getContextPath()%>";
+    }
+
+    function loadAudio() {
+        var path = getContextPath() + "/audio.wav?bogus=";
+        document.getElementById("audioCaptcha").src = path + new Date().getTime();
+        document.getElementById("audioSupport").innerHTML = document.createElement('audio').canPlayType("audio/wav");
+    }
+    </script>
+    
+    
   </head>
   <%
+  
+    boolean audio_captcha_background_noise_on = true;
+    String audio_captcha_str = "audio.wav";
+    if (!NCImBrowserProperties.isAudioCaptchaBackgroundNoiseOn()) {
+        audio_captcha_background_noise_on = false;
+        audio_captcha_str = "nci.audio.wav";
+    }
+    
+    String captcha_option = "default";
+    String alt_captcha_option = "audio";
+    String opt = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("captcha_option"));
+    if (opt != null && opt.compareTo("audio") == 0) {
+          captcha_option = "audio";
+          alt_captcha_option = "default";
+    }    
+
+  Captcha captcha = (Captcha) request.getSession().getAttribute("captcha");
+  AudioCaptcha ac = null;  
+  
+    String errorMsg = (String) request.getSession().getAttribute("errorMsg");
+    if (errorMsg != null) {
+        request.getSession().removeAttribute("errorMsg");
+    }  
+  
+  String retry = (String) request.getSession().getAttribute("retry");
+  if (retry != null && retry.compareTo("true") == 0) {
+        request.getSession().removeAttribute("retry");
+  }
+  
+if (captcha_option.compareTo("default") == 0) {
+  	captcha = new Captcha.Builder(200, 50)
+	        .addText()
+	        .addBackground()
+	        //.addNoise()
+		.gimp()
+		//.addBorder()
+                .build();
+	request.getSession().setAttribute(Captcha.NAME, captcha);
+} 
+   
+    
+    System.out.println("captcha_option: " + captcha_option);
+    System.out.println("alt_captcha_option: " + alt_captcha_option);  
+  
+  
     String ncicb_contact_url = new DataUtils().getNCICBContactURL();
     String subject = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("subject"));
     String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String)request.getParameter("message"));
     String emailaddress = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String)request.getParameter("emailaddress"));
+    String answer  = "";
     if (subject == null) subject = "";
     if (message == null) message = "";
     if (emailaddress == null) emailaddress = "";
-    String errorMsg = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("errorMsg"));
+    //String errorMsg = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getAttribute("errorMsg"));
     if (errorMsg == null) errorMsg = "";
     boolean error = errorMsg.length() > 0;
   %>
@@ -112,7 +177,68 @@
                 }
               %>
             </p>
-            <h:form>
+            <h:form id="contact_form" >
+            
+
+<p>            
+      <table> 
+      
+      
+<%
+String answer_label = "Enter the characters appearing in the above image";
+
+if (captcha_option.compareTo("default") == 0) {
+%>
+      <tr>
+      <td class="textbody">
+             <img src="<c:url value="/simpleCaptcha.png"  />" alt="simpleCaptcha.png">
+             
+       &nbsp;<h:commandLink value="Unable to read this image?" action="#{userSessionBean.regenerateCaptchaImage}" />
+       <br/>             
+      </td>
+      </tr>
+
+       
+
+<%
+} else {
+      answer_label = "Enter the numbers you hear from the audio";
+%>
+
+<tr>
+<td>
+<p class="textbody">Click 
+
+
+<a href="<%=request.getContextPath()%>/<%=audio_captcha_str%> ">here</a> to listen to the audio. 
+</td>
+</tr>
+
+
+<%
+} 
+%>
+
+      <tr>
+      <td class="textbody"> 
+          <%=answer_label%>: <i class="warningMsgColor">*</i> 
+          <input type="text" id="answer" name="answer" value="<%=HTTPUtils.cleanXSS(answer)%>"/>&nbsp;
+      </td>
+      </tr> 
+      
+      
+      <tr>
+      <td class="textbody">
+       <h:commandLink value="Prefer an alternative form of CAPTCHA?" action="#{userSessionBean.switchCaptchaMode}" />
+       <br/>             
+      </td>
+      </tr>
+      
+
+      </table>              
+</p> 
+
+            
               <p>
                 <% if (error) %> <i style="color:#FF0000;">* Required)</i>
                 <i><label for="subject">Subject of your email:</label></i>
@@ -137,6 +263,12 @@
                 action="#{userSessionBean.contactUs}" >
               </h:commandButton>
               &nbsp;&nbsp;<INPUT type="reset" value="Clear" alt="Clear">
+              
+              
+
+<input type="hidden" name="captcha_option" id="captcha_option" value="<%=alt_captcha_option%>">
+              
+              
             </h:form>
             <a href="http://www.cancer.gov/global/web/policies/page2" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>

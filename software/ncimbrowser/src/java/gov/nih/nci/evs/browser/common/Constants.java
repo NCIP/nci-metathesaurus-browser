@@ -85,6 +85,10 @@ public class Constants {
     public static final String USE_MORE_SPECIFIC_SEARCH_CRITERIA
         = "Please use more specific search; for example, enter multiple words in the search string field, or use the Exact Match algorithm instead.";
 
+
+    public static final String PLEASE_COMPLETE_DATA_ENTRIES = "Please complete data entries.";
+    public static final String INVALID_EMAIL_ADDRESS = "Invalid email address.";
+
     public static final List<String> REL =
         Arrays
             .asList(new String[] {

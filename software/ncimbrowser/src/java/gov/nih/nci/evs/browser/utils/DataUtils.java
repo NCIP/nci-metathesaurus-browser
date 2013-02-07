@@ -30,6 +30,8 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.common.*;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -2510,8 +2512,11 @@ public class DataUtils {
         Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
-        Set keyset = hmap.keySet();
-        Iterator it = keyset.iterator();
+        //Set keyset = hmap.keySet();
+        //Iterator it = keyset.iterator();
+
+        Iterator it = hmap.entrySet().iterator();
+
         HashSet rel_hset = new HashSet();
 
         HashSet hasSubtype_hset = new HashSet();
@@ -2532,9 +2537,13 @@ public class DataUtils {
 
         while (it.hasNext()) {
             ms_categorization = System.currentTimeMillis();
-            String rel_rela = (String) it.next();
+            //String rel_rela = (String) it.next();
 
             // _logger.debug("rel_rela: " + rel_rela);
+
+
+            Entry thisEntry = (Entry) it.next();
+			String rel_rela = (String) thisEntry.getKey();
 
             if (rel_rela.compareTo(INCOMPLETE) != 0) {
 
@@ -2566,7 +2575,9 @@ public class DataUtils {
                     ms_categorization_delay
                         + (System.currentTimeMillis() - ms_categorization);
 
-                Object obj = hmap.get(rel_rela);
+                //Object obj = hmap.get(rel_rela);
+                Object obj = thisEntry.getValue();
+
                 if (obj != null) {
                     Vector v = (Vector) obj;
                     // For each related concept:
@@ -2858,11 +2869,17 @@ public class DataUtils {
     }
 
     public void removeRedundantRecords(HashMap hmap) {
-        Set keyset = hmap.keySet();
-        Iterator it = keyset.iterator();
+        //Set keyset = hmap.keySet();
+        //Iterator it = keyset.iterator();
+        Iterator it = hmap.entrySet().iterator();
         while (it.hasNext()) {
-            String rel = (String) it.next();
-            Vector v = (Vector) hmap.get(rel);
+            //String rel = (String) it.next();
+            //Vector v = (Vector) hmap.get(rel);
+
+			Entry thisEntry = (Entry) it.next();
+			String rel = (String) thisEntry.getKey();
+			Vector v = (Vector) thisEntry.getValue();
+
             HashSet hset = new HashSet();
             Vector u = new Vector();
             for (int k = 0; k < v.size(); k++) {
@@ -3117,8 +3134,16 @@ public class DataUtils {
         action =
             "Categorizing relationships into six categories; finding source data for each relationship";
 
-        for (String rel : map.keySet()) {
-            List<RelationshipTabResults> relations = map.get(rel);
+
+        Iterator rel_it = map.entrySet().iterator();
+        while (rel_it.hasNext()) {
+			Entry thisEntry = (Entry) rel_it.next();
+			String rel = (String) thisEntry.getKey();
+			List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+
+        //for (String rel : map.keySet()) {
+            //List<RelationshipTabResults> relations = map.get(rel);
+
             if (rel.compareTo(INCOMPLETE) != 0) {
                 String category = "Other";
                 /*
@@ -3161,8 +3186,14 @@ public class DataUtils {
             }
         }
 
-        for (String rel : map2.keySet()) {
-            List<RelationshipTabResults> relations = map2.get(rel);
+        Iterator rel_it2 = map2.entrySet().iterator();
+        while (rel_it2.hasNext()) {
+			Entry thisEntry = (Entry) rel_it2.next();
+			String rel = (String) thisEntry.getKey();
+			List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+
+        //for (String rel : map2.keySet()) {
+            //List<RelationshipTabResults> relations = map2.get(rel);
             if (rel.compareTo(INCOMPLETE) != 0) {
                 String category = "Other";
                 /*
@@ -3343,8 +3374,16 @@ public class DataUtils {
         Map<String, List<BySourceTabResults>> map2) {
         HashMap hmap = new HashMap();
         if (map != null) {
-			for (String rel : map.keySet()) {
-				List<BySourceTabResults> relations = map.get(rel);
+
+
+			Iterator it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry thisEntry = (Entry) it.next();
+				String rel = (String) thisEntry.getKey();
+				List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+			//for (String rel : map.keySet()) {
+				//List<BySourceTabResults> relations = map.get(rel);
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
 						String rela = result.getRela();
@@ -3366,8 +3405,16 @@ public class DataUtils {
 		}
 
         if (map2 != null) {
-			for (String rel : map2.keySet()) {
-				List<BySourceTabResults> relations = map2.get(rel);
+
+			Iterator it = map2.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry thisEntry = (Entry) it.next();
+				String rel = (String) thisEntry.getKey();
+				List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+			//for (String rel : map2.keySet()) {
+				//List<BySourceTabResults> relations = map2.get(rel);
+
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
 						String rela = result.getRela();
@@ -3524,8 +3571,15 @@ public class DataUtils {
         ms_find_highest_rank_atom_delay = 0;
         String t = null;
         if (map != null) {
-			for (String rel : map.keySet()) {
-				List<BySourceTabResults> relations = map.get(rel);
+
+			Iterator it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry thisEntry = (Entry) it.next();
+				String rel = (String) thisEntry.getKey();
+				List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+			//or (String rel : map.keySet()) {
+				//List<BySourceTabResults> relations = map.get(rel);
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					String category = "Other";
 					/*
@@ -3632,8 +3686,15 @@ public class DataUtils {
 
         // *** do the same for map2
         if (map2 != null) {
-			for (String rel : map2.keySet()) {
-				List<BySourceTabResults> relations = map2.get(rel);
+
+			Iterator it = map2.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry thisEntry = (Entry) it.next();
+				String rel = (String) thisEntry.getKey();
+				List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
+
+			//for (String rel : map2.keySet()) {
+				//List<BySourceTabResults> relations = map2.get(rel);
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					String category = "Other";
 					/*
@@ -4505,8 +4566,16 @@ public class DataUtils {
                     return null;
                 }
 
-                for (String rel : map.keySet()) {
-                    List<RelationshipTabResults> relations = map.get(rel);
+
+				Iterator it = map.entrySet().iterator();
+				while (it.hasNext()) {
+					Entry thisEntry = (Entry) it.next();
+					String rel = (String) thisEntry.getKey();
+					List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+
+                //for (String rel : map.keySet()) {
+                    //List<RelationshipTabResults> relations = map.get(rel);
+
                     for (RelationshipTabResults result : relations) {
                         results.add(result);
                     }
