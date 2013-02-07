@@ -115,6 +115,20 @@
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
 
+    <navigation-case>
+       <description>contact_us_message</description>
+       <from-action>#{userSessionBean.contactUs}</from-action>
+       <from-outcome>retry</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+       <description>reset captcha mode</description>
+       <from-action>#{userSessionBean.switchCaptchaMode}</from-action>
+       <from-outcome>resetCaptcha</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>  
+    
   </navigation-rule>
 
   <navigation-rule>
@@ -408,6 +422,10 @@
        <to-view-id>/pages/contact_us.jsp</to-view-id>
     </navigation-case>
 
+
+  
+    
+    
   </navigation-rule>
 
   <navigation-rule>

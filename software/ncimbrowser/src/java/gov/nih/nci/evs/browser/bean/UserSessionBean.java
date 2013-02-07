@@ -16,6 +16,9 @@ import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.searchlog.*;
 import org.apache.log4j.*;
 
+import nl.captcha.Captcha;
+import nl.captcha.audio.AudioCaptcha;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -929,7 +932,7 @@ public class UserSessionBean extends Object {
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         bean.setSearchTarget(searchTarget);
     }
-
+/*
     public String contactUs() throws Exception {
         String msg = "Your message was successfully sent.";
         HttpServletRequest request =
@@ -951,7 +954,7 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("message", Utils.toHtml(msg));
         return "message";
     }
-
+*/
     // //////////////////////////////////////////////////////////////
     // source
     // //////////////////////////////////////////////////////////////
@@ -1140,6 +1143,228 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
             String message = "Unidentifiable vocabulary name, or code";
             request.getSession().setAttribute("warning", message);
             return "message";
+        }
+    }
+
+
+    public String regenerateCaptchaImage() throws Exception {
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+			String answer = request.getParameter("answer");
+            String subject = request.getParameter("subject");
+            String message = request.getParameter("message");
+            String from    = request.getParameter("emailaddress");
+
+		request.getSession().setAttribute("answer", answer);
+		request.getSession().setAttribute("subject", subject);
+		request.getSession().setAttribute("message", message);
+		request.getSession().setAttribute("emailaddress", from);
+
+		request.getSession().setAttribute("retry", "true");
+
+        return "retry";
+	}
+
+	public boolean isNull(String s) {
+		if (s == null) return true;
+		s = s.trim();
+		if (s.compareTo("") == 0) return true;
+		return false;
+	}
+
+	public String switchCaptchaMode() {
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+
+		String answer = request.getParameter("answer");
+		String subject = request.getParameter("subject");
+		String message = request.getParameter("message");
+		String from    = request.getParameter("emailaddress");
+
+		request.getSession().setAttribute("answer", answer);
+		request.getSession().setAttribute("subject", subject);
+		request.getSession().setAttribute("message", message);
+		request.getSession().setAttribute("emailaddress", from);
+
+        String captcha_option = (String) request.getParameter("captcha_option");
+        if (isNull(captcha_option)) {
+			captcha_option = "default";
+		}
+        request.getSession().setAttribute("captcha_option", captcha_option);
+        return "resetCaptcha";
+	}
+
+    public String contactUs() throws Exception {
+
+        String msg = "Your message was successfully sent.";
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+
+        request.getSession().removeAttribute("errorMsg");
+        request.getSession().removeAttribute("errorType");
+        request.getSession().removeAttribute("retry");
+
+		String answer = request.getParameter("answer");
+		String subject = request.getParameter("subject");
+		String message = request.getParameter("message");
+		String from    = request.getParameter("emailaddress");
+
+		request.getSession().setAttribute("answer", answer);
+		request.getSession().setAttribute("subject", subject);
+		request.getSession().setAttribute("message", message);
+		request.getSession().setAttribute("emailaddress", from);
+
+		if (isNull(answer) || isNull(subject) || isNull(message) || isNull(from)) {
+			msg = Constants.PLEASE_COMPLETE_DATA_ENTRIES;
+			request.getSession().setAttribute("errorMsg", msg);
+			request.getSession().setAttribute("retry", "true");
+			return "retry";
+		}
+
+		boolean emailAddressValid = MailUtils.isValidEmailAddress(from);
+		if (!emailAddressValid) {
+			msg = Constants.INVALID_EMAIL_ADDRESS;
+			request.getSession().setAttribute("errorMsg", msg);
+			request.getSession().setAttribute("retry", "true");
+			return "retry";
+		}
+
+        String captcha_option = (String) request.getParameter("captcha_option");
+        if (isNull(captcha_option)) {
+			captcha_option = "default";
+		}
+		if (captcha_option.compareTo("audio") == 0) {
+			captcha_option = "default";
+		} else {
+			captcha_option = "audio";
+		}
+
+
+        try {
+    		String retstr = null;
+    		if (captcha_option.compareTo("audio") == 0) {
+				retstr = validateAudioCaptcha(request, "incomplete");
+			} else {
+				retstr = validateCaptcha(request, "incomplete");
+			}
+
+            String recipients[] = MailUtils.getRecipients();
+            MailUtils.postMail(from, recipients, subject, message);
+			request.getSession().setAttribute("message", msg);
+
+        } catch (NoReloadException e) {
+            msg = e.getMessage();
+            request.getSession().setAttribute("errorMsg", Utils.toHtml(msg));
+            request.getSession().setAttribute("errorType", "user");
+            return "retry";
+
+        } catch (InvalidCaptChaInputException e) {
+            msg = e.getMessage();
+            request.getSession().setAttribute("errorMsg", Utils.toHtml(msg));
+            request.getSession().setAttribute("answer", "");
+            request.getSession().setAttribute("errorType", "user");
+            return "retry";
+
+        } catch (Exception e) {
+            msg = "Your message was not sent.\n";
+            msg += "    (If possible, please contact NCI systems team.)\n";
+            msg += "\n";
+            msg += e.getMessage();
+            request.getSession().setAttribute("errorMsg", Utils.toHtml(msg));
+            request.getSession().setAttribute("errorType", "system");
+            e.printStackTrace();
+            return "error";
+        }
+        return "message";
+    }
+
+
+    private String validateCaptcha(HttpServletRequest request,
+        String returnIncompleteState) throws Exception {
+        Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
+        if (captcha == null) {
+            captcha = new Captcha.Builder(200, 50).addText().addBackground()
+                // .addNoise()
+                .gimp()
+                // .addBorder()
+                .build();
+            request.getSession().setAttribute(Captcha.NAME, captcha);
+        }
+
+        // Do this so we can capture non-Latin chars
+        request.setCharacterEncoding("UTF-8");
+        String answer = request.getParameter("answer");
+        if (answer == null || answer.length() == 0) {
+            throw new NoReloadException(
+                "Please enter the characters appearing in the image.");
+        }
+
+        request.getSession().removeAttribute("reload");
+        if (!captcha.isCorrect(answer)) {
+            throw new InvalidCaptChaInputException(
+                "WARNING: The string you entered does not match"
+                    + " with what is shown in the image. Please try again.");
+
+		} else {
+			System.out.println("Correct Captcha answer: " + answer);
+		}
+
+        request.getSession().removeAttribute(Captcha.NAME);
+        return null;
+    }
+
+
+    private String validateAudioCaptcha(HttpServletRequest request,
+        String returnIncompleteState) throws Exception {
+
+        AudioCaptcha captcha = (AudioCaptcha) request.getSession().getAttribute(AudioCaptcha.NAME);
+        if (captcha == null) {
+			AudioCaptcha ac = new AudioCaptcha.Builder()
+				.addAnswer()
+				.addNoise()
+				.build();
+
+			request.getSession().setAttribute(AudioCaptcha.NAME, ac);
+		}
+
+        // Do this so we can capture non-Latin chars
+        request.setCharacterEncoding("UTF-8");
+        String answer = request.getParameter("answer");
+
+        if (answer == null || answer.length() == 0) {
+            throw new NoReloadException(
+                "Please enter the numbers you heard in the audio.");
+        }
+
+        request.getSession().removeAttribute("reload");
+        if (!captcha.isCorrect(answer)) {
+            throw new InvalidCaptChaInputException(
+                "WARNING: The numbers you entered does not match"
+                    + " with what is set in the audio. Please try again.");
+		} else {
+			System.out.println("Correct AudioCaptcha answer: " + answer);
+		}
+
+        request.getSession().removeAttribute(AudioCaptcha.NAME);
+        return null;
+    }
+
+
+    private class NoReloadException extends Exception {
+        private static final long serialVersionUID = 1L;
+        public NoReloadException(String text) {
+            super(text);
+        }
+    }
+
+
+    private class InvalidCaptChaInputException extends Exception {
+        private static final long serialVersionUID = 2L;
+        public InvalidCaptChaInputException(String text) {
+            super(text);
         }
     }
 

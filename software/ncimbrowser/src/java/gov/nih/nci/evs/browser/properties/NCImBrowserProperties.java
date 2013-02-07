@@ -127,6 +127,9 @@ public class NCImBrowserProperties {
     private static String _license_page_option = null;
     private static int _subconcept_page_size = 1000;
 
+    public static final String AUDIO_CAPTCHA_BACKGROUND_NOISE_ON = "AUDIO_CAPTCHA_BACKGROUND_NOISE_ON";
+    public static  boolean _audio_captcha_background_noise_on = true;
+
     /**
      * Private constructor for singleton pattern.
      */
@@ -148,6 +151,10 @@ public class NCImBrowserProperties {
                     loadProperties();
 
                     _debugOn = Boolean.parseBoolean(getProperty(DEBUG_ON));
+
+                    if (getProperty(AUDIO_CAPTCHA_BACKGROUND_NOISE_ON) != null) {
+                    	_audio_captcha_background_noise_on = Boolean.parseBoolean(getProperty(AUDIO_CAPTCHA_BACKGROUND_NOISE_ON));
+					}
 
                     String max_str =
                         NCImBrowserProperties
@@ -389,6 +396,10 @@ public class NCImBrowserProperties {
 
     public static String getTermSuggestionApplicationUrl() {
         return _term_suggestion_application_url;
+    }
+
+    public static boolean isAudioCaptchaBackgroundNoiseOn() {
+        return _audio_captcha_background_noise_on;
     }
 
 }

@@ -1,11 +1,11 @@
 package gov.nih.nci.evs.browser.utils;
-
+/*
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.Arrays;
-
+*/
 import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
@@ -26,8 +26,9 @@ import org.LexGrid.lexevs.metabrowser.model.RelationshipTabResults;
 import org.LexGrid.naming.SupportedHierarchy;
 
 import org.apache.log4j.Logger;
-
 import gov.nih.nci.evs.browser.common.Constants;
+import java.util.Map.Entry;
+import java.util.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -86,28 +87,28 @@ public class SearchCart {
     private static String SEMANTIC_TYPE = "Semantic_Type";
 
     // Local constants
-    private static final String LB_EXTENSION = "LexBIGServiceConvenienceMethods"; 
+    private static final String LB_EXTENSION = "LexBIGServiceConvenienceMethods";
     private static final List<String> _hierAssocToParentNodes =
         Arrays.asList("PAR", "isa", "branch_of", "part_of", "tributary_of");
     private static final List<String> _hierAssocToChildNodes =
-        Arrays.asList("CHD", "inverse_isa");    
-    
+        Arrays.asList("CHD", "inverse_isa");
+
     /**
      * Constructor
-     * @throws LBException 
+     * @throws LBException
      */
 	public SearchCart() throws LBException {
-		
+
 		// Setup lexevs service
 		if (lbSvc == null) {
 			lbSvc = RemoteServerUtil.createLexBIGService();
 		}
-		
+
 		// Setup lexevs generic extension
 		lbscm = (LexBIGServiceConvenienceMethods) lbSvc
 				.getGenericExtension(LB_EXTENSION);
 		lbscm.setLexBIGService(lbSvc);
-		
+
 		// Setup Metabrowser extension
 		if (mbs == null) {
 			mbs = (MetaBrowserService) lbSvc
@@ -116,7 +117,7 @@ public class SearchCart {
 				_logger.error("Error! metabrowser-extension is null!");
 			}
 		}
-		
+
 	}
 
     /**
@@ -177,11 +178,11 @@ public class SearchCart {
      * Returns list of Parent Concepts
      * @param ref
      * @return
-     * @throws LBException 
+     * @throws LBException
      */
-    public Vector<String> getParentConcepts(ResolvedConceptReference ref) throws Exception {    	
-        String code = ref.getCode();        
-        Vector<String> superconcepts = getAssociatedConcepts(code, true);       
+    public Vector<String> getParentConcepts(ResolvedConceptReference ref) throws Exception {
+        String code = ref.getCode();
+        Vector<String> superconcepts = getAssociatedConcepts(code, true);
         return superconcepts;
     }
 
@@ -209,32 +210,38 @@ public class SearchCart {
     public Vector<String> getAssociatedConcepts(String cui, boolean parents) {
 
             Vector<String> v = new Vector<String>();
-            
+
             try {
-           	
+
             	Map<String, List<RelationshipTabResults>> map = null;
             	map = mbs.getRelationshipsDisplay(cui, null, Direction.SOURCEOF);
-            	
-            	for (String rel : map.keySet()) {
-            		List<RelationshipTabResults> relations = map.get(rel);
 
-            		// Add parents	
+				Iterator it = map.entrySet().iterator();
+				while (it.hasNext()) {
+					Entry thisEntry = (Entry) it.next();
+					String rel = (String) thisEntry.getKey();
+					List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+
+            	//for (String rel : map.keySet()) {
+            		//List<RelationshipTabResults> relations = map.get(rel);
+
+            		// Add parents
             		if (parents && _hierAssocToChildNodes.contains(rel)) {
 	                    for (RelationshipTabResults result : relations) {
 	                        String name = result.getName();
 	                    	if (!v.contains(name)) v.add(name);
-	                    }    
-                    
-            		}            			
-            		
+	                    }
+
+            		}
+
             		// Add children
             		if (!parents && _hierAssocToParentNodes.contains(rel)) {
 	                    for (RelationshipTabResults result : relations) {
 	                    	String name = result.getName();
-	                    	if (!v.contains(name)) v.add(name);	                        
-	                    }                    
+	                    	if (!v.contains(name)) v.add(name);
+	                    }
             		}
-           		
+
             	}
 
             } catch (Exception ex) {
@@ -351,21 +358,21 @@ public class SearchCart {
     public Property[] getCommentValues(ResolvedConceptReference ref) {
         return returnProperties(ref.getReferencedEntry().getComment());
     }
-    
+
 	/**
-	 * Return Semantic Type of the concept code passed in  
-	 * 
+	 * Return Semantic Type of the concept code passed in
+	 *
 	 * @param conceptCode
 	 * @return
 	 */
 	public String getSemanticType(String conceptCode) {
 		Vector<String> code_vec = new Vector<String>();
-		code_vec.add(conceptCode);		
+		code_vec.add(conceptCode);
 		HashMap<?, ?> map = DataUtils.getPropertyValuesForCodes(
 				Constants.CODING_SCHEME_NAME, null, code_vec, SEMANTIC_TYPE);
 		return (String) map.get(conceptCode);
-	}  
-    
+	}
+
     // -----------------------------------------------------
     // Internal utility methods
     // -----------------------------------------------------

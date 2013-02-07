@@ -53,6 +53,75 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+
+
+
+	<servlet>
+	<servlet-name>AudioCaptcha</servlet-name>
+	<servlet-class>nl.captcha.servlet.AudioCaptchaServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+	<servlet-name>NCIAudioCaptcha</servlet-name>
+	<servlet-class>gov.nih.nci.evs.browser.servlet.NCIAudioCaptchaServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	
+	<servlet>
+	<servlet-name>SimpleCaptcha</servlet-name>
+	<servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
+		<init-param>
+		    <param-name>captcha-width</param-name>
+		    <param-value>240</param-value>
+		</init-param>
+		<init-param>
+		    <param-name>captcha-height</param-name>
+		    <param-value>60</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
+	<servlet-name>StickyCaptcha</servlet-name>
+	<servlet-class>nl.captcha.servlet.StickyCaptchaServlet</servlet-class>
+		<init-param>
+		    <!-- Optional; defaults to 200. -->
+		    <param-name>captcha-width</param-name>
+		    <param-value>250</param-value>
+		</init-param>
+		<init-param>
+		    <!-- Optional; defaults to 50. -->
+		    <param-name>captcha-height</param-name>
+		    <param-value>75</param-value>
+		</init-param>
+		<init-param>
+		    <!-- Time To Live, in ms. Optional; Defaults to 600000ms. -->
+		    <param-name>ttl</param-name>
+		    <param-value>100000</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AudioCaptcha</servlet-name>
+		<url-pattern>/audio.wav</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>NCIAudioCaptcha</servlet-name>
+		<url-pattern>/nci.audio.wav</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet-mapping>
+		<servlet-name>SimpleCaptcha</servlet-name>
+		<url-pattern>/simpleCaptcha.png</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>StickyCaptcha</servlet-name>
+		<url-pattern>/stickyCaptcha.png</url-pattern>
+	</servlet-mapping>
+	
     <!-- Faces Servlet Mapping -->
 
     <servlet-mapping>
