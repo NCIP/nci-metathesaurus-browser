@@ -122,7 +122,7 @@ if (captcha_option.compareTo("default") == 0) {
               <tr>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td>Telephone:</td>
-                <td>240-276-5541 or Toll-Free: 1-888.478.4423</td>
+                <td>240-276-5541 or Toll-Free: 1-888-478-4423</td>
               </tr>
               <tr>
                 <td/>
