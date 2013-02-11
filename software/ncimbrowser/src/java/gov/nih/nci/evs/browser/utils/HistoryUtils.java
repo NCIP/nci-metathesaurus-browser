@@ -62,8 +62,7 @@ import org.apache.log4j.*;
 
 public class HistoryUtils {
     private static Logger _logger = Logger.getLogger(HistoryUtils.class);
-    private static DateFormat _dataFormatter =
-        new SimpleDateFormat("yyyy-MM-dd");
+    //private static DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Vector<String> getTableHeader() {
         Vector<String> v = new Vector<String>();
@@ -137,6 +136,7 @@ public class HistoryUtils {
 
         Enumeration<NCIChangeEvent> enumeration = (Enumeration<NCIChangeEvent>) list.enumerateEntry();
         LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+        DateFormat _dataFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
         Vector<String> v = new Vector<String>();
         HashSet<String> hset = new HashSet<String>();
@@ -162,6 +162,7 @@ public class HistoryUtils {
                     desc = rCode;
                 }
             }
+
             String info = type + "|" + _dataFormatter.format(date) + "|" + desc;
             if (hset.contains(info))
                 continue;

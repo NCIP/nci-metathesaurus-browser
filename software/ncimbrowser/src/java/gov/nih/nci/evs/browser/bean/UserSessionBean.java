@@ -189,7 +189,7 @@ public class UserSessionBean extends Object {
         matchText = matchText.trim();
         bean.setMatchText(matchText);
 
-        if (NCImBrowserProperties._debugOn) {
+        if (NCImBrowserProperties.get_debugOn()) {
             _logger.debug(Utils.SEPARATOR);
             _logger.debug("* criteria: " + matchText);
             _logger.debug("* source: " + source);
@@ -592,7 +592,7 @@ public class UserSessionBean extends Object {
 			request.getSession().setAttribute("selectedSource", source);
 		}
 
-        if (NCImBrowserProperties._debugOn) {
+        if (NCImBrowserProperties.get_debugOn()) {
             try {
                 _logger.debug(Utils.SEPARATOR);
                 _logger.debug("* criteria: " + matchText);
@@ -1353,7 +1353,7 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
     }
 
 
-    private class NoReloadException extends Exception {
+    private static class NoReloadException extends Exception {
         private static final long serialVersionUID = 1L;
         public NoReloadException(String text) {
             super(text);
@@ -1361,7 +1361,7 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
     }
 
 
-    private class InvalidCaptChaInputException extends Exception {
+    private static class InvalidCaptChaInputException extends Exception {
         private static final long serialVersionUID = 2L;
         public InvalidCaptChaInputException(String text) {
             super(text);

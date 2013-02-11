@@ -104,11 +104,11 @@ public class NCImBrowserProperties {
     private static NCImBrowserProperties NCImBrowserProperties = null;
     private static Properties properties = new Properties();
 
-    public static boolean _debugOn = false;
-    public static int _maxToReturn = 1000;
-    public static int _maxTreeLevel = 1000;
-    public static int _max_search_iteration = 100;
-    public static int _max_search_time_limit = 4; // in minutes
+    private static boolean _debugOn = false;
+    private static int _maxToReturn = 1000;
+    private static int _maxTreeLevel = 1000;
+    private static int _max_search_iteration = 100;
+    private static int _max_search_time_limit = 4; // in minutes
 
     private static String _service_url = null;
     private static String _lg_config_file = null;
@@ -128,7 +128,145 @@ public class NCImBrowserProperties {
     private static int _subconcept_page_size = 1000;
 
     public static final String AUDIO_CAPTCHA_BACKGROUND_NOISE_ON = "AUDIO_CAPTCHA_BACKGROUND_NOISE_ON";
-    public static  boolean _audio_captcha_background_noise_on = true;
+    private static boolean _audio_captcha_background_noise_on = true;
+
+
+
+    static {
+		try {
+			NCImBrowserProperties = new NCImBrowserProperties();
+			loadProperties();
+
+			_debugOn = Boolean.parseBoolean(getProperty(DEBUG_ON));
+
+			if (getProperty(AUDIO_CAPTCHA_BACKGROUND_NOISE_ON) != null) {
+				_audio_captcha_background_noise_on = Boolean.parseBoolean(getProperty(AUDIO_CAPTCHA_BACKGROUND_NOISE_ON));
+			}
+
+			String max_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MAXIMUM_RETURN);
+			_maxToReturn = Integer.parseInt(max_str);
+
+			String max_tree_level_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MAXIMUM_TREE_LEVEL);
+			_maxTreeLevel = Integer.parseInt(max_tree_level_str);
+
+			_service_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.EVS_SERVICE_URL);
+			// _logger.debug("EVS_SERVICE_URL: " + service_url);
+
+			_lg_config_file =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.LG_CONFIG_FILE);
+			// _logger.debug("LG_CONFIG_FILE: " + lg_config_file);
+
+			// sort_by_score =
+			// NCImBrowserProperties.getProperty(NCImBrowserProperties.SORT_BY_SCORE);
+			_ncicb_contact_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.NCICB_CONTACT_URL);
+			_mail_smtp_server =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MAIL_SMTP_SERVER);
+			_terminology_subset_download_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
+			_term_suggestion_application_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLICATION_URL);
+
+			String pagination_time_out_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.PAGINATION_TIME_OUT);
+			if (pagination_time_out_str != null) {
+				_pagination_time_out =
+					Integer.parseInt(pagination_time_out_str);
+			}
+
+			String minimum_search_string_length_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MINIMUM_SEARCH_STRING_LENGTH);
+			if (minimum_search_string_length_str != null) {
+				_minimum_search_string_length =
+					Integer.parseInt(minimum_search_string_length_str);
+			}
+
+			String sliding_window_half_width_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.SLIDING_WINDOW_HALF_WIDTH);
+			if (sliding_window_half_width_str != null) {
+				int sliding_window_halfwidth =
+					Integer.parseInt(sliding_window_half_width_str);
+				if (sliding_window_halfwidth > 1) {
+					_sliding_window_half_width =
+						sliding_window_halfwidth;
+				}
+			}
+			_term_browser_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.NCIT_URL);
+			_source_hierarchies =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.SOURCE_HIERARCHIES);
+			_secured_vocabularies =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.SECURED_VOCABULARIES);
+
+			_license_page_option =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.LICENSE_PAGE_OPTION);
+
+			String subconcept_page_size_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.SUBCONCEPT_PAGE_SIZE);
+			if (subconcept_page_size_str != null) {
+				_subconcept_page_size =
+					Integer.parseInt(subconcept_page_size_str);
+			}
+
+			String _max_search_iteration_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_ITERATION);
+			if (_max_search_iteration_str != null) {
+				_max_search_iteration = Integer.parseInt(_max_search_iteration_str);
+			}
+
+			String _max_search_time_limit_str =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.MAXIMUM_SEARCH_TIME_LIMIT);
+			if (_max_search_time_limit_str != null) {
+				_max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
+			}
+	    } catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+
+    public static boolean get_debugOn() {
+		return _debugOn;
+	}
+
+    public static int get_maxToReturn() {
+        return _maxToReturn;
+	}
+
+    public static int get_maxTreeLevel() {
+        return _maxTreeLevel;
+	}
+
+    public static int get_max_search_iteration() {
+        return _max_search_iteration;
+	}
+
+	public static int get_max_search_time_limit() {
+        return _max_search_time_limit;
+	}
+
 
     /**
      * Private constructor for singleton pattern.
@@ -144,9 +282,10 @@ public class NCImBrowserProperties {
      * @throws Exception the exception
      */
     public static NCImBrowserProperties getInstance() throws Exception {
+		/*
         if (NCImBrowserProperties == null) {
             synchronized (NCImBrowserProperties.class) {
-                if (NCImBrowserProperties == null) {
+                //if (NCImBrowserProperties == null) {
                     NCImBrowserProperties = new NCImBrowserProperties();
                     loadProperties();
 
@@ -253,9 +392,10 @@ public class NCImBrowserProperties {
                     if (_max_search_time_limit_str != null) {
                         _max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
                     }
-                }
+                //}
             }
         }
+        */
 
         return NCImBrowserProperties;
     }

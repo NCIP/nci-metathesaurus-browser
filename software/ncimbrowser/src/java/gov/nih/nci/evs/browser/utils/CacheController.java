@@ -95,14 +95,22 @@ public class CacheController {
     private static Cache _cache = null;
     private static CacheManager _cacheManager = null;
 
+    static {
+		_cacheManager = getCacheManager();
+	}
+
+
+
     public CacheController(String cacheName) {
-        _cacheManager = getCacheManager();
+        //_cacheManager = getCacheManager();
+
         if (!_cacheManager.cacheExists(cacheName)) {
             _cacheManager.addCache(cacheName);
         }
-
         _cache = _cacheManager.getCache(cacheName);
     }
+
+
 
     public static CacheController getInstance() {
         synchronized (CacheController.class) {

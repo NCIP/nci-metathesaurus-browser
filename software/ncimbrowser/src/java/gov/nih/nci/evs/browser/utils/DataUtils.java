@@ -175,11 +175,12 @@ public class DataUtils {
     private static String[] META_ASSOCIATIONS =
         new String[] { "AQ", "CHD", "RB", "RO", "RQ", "SIB", "SY" };
 
-    public static HashMap _formalName2MetadataHashMap = null;
+    //public static HashMap _formalName2MetadataHashMap = null;
+    private static HashMap _formalName2MetadataHashMap = null;
 
     public DataUtils() {
         // Do nothing
-        _formalName2MetadataHashMap = null;
+        // _formalName2MetadataHashMap = null;
     }
 
     public static void setFormalName2MetadataHashMap(HashMap hmap) {
@@ -193,12 +194,19 @@ public class DataUtils {
         return _formalName2MetadataHashMap;
     }
 
-    public static Random rand = null;
+    //public static Random rand = null;
+    private static Random rand = null;
+
+    static {
+		rand = new Random();
+	}
 
     public static int getNextRandomNumber() {
+		/*
 		if (rand == null) {
 			rand = new Random();
 		}
+		*/
 		return rand.nextInt();
 	}
 
@@ -256,7 +264,19 @@ public class DataUtils {
      * return formalName2MetadataHashMap; }
      */
 
+     static {
+        Vector<String> v =
+            getSupportedAssociationNames(Constants.CODING_SCHEME_NAME, null);
+        ASSOCIATION_NAMES = new String[v.size()];
+        for (int i = 0; i < v.size(); i++) {
+            String s = (String) v.elementAt(i);
+            ASSOCIATION_NAMES[i] = s;
+        }
+	 }
+
+
     public static String[] getAllAssociationNames() {
+		/*
         if (ASSOCIATION_NAMES != null)
             return null;
         Vector<String> v =
@@ -266,7 +286,9 @@ public class DataUtils {
             String s = (String) v.elementAt(i);
             ASSOCIATION_NAMES[i] = s;
         }
-        return ASSOCIATION_NAMES;
+        //return ASSOCIATION_NAMES;
+        */
+        return Arrays.copyOf(ASSOCIATION_NAMES, ASSOCIATION_NAMES.length);
     }
 
     public static Vector<String> getSupportedAssociationNames(
@@ -417,18 +439,18 @@ public class DataUtils {
         return null;
     }
 
+
     public static Vector<String> getSourceListData(String codingSchemeName,
         String version) {
         if (_sourceListData != null)
             return _sourceListData;
+
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
-            // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null)
                 return null;
@@ -441,7 +463,6 @@ public class DataUtils {
                 return null;
             _sourceListData.add("ALL");
 
-            // Insert your code here
             SupportedSource[] sources =
                 scheme.getMappings().getSupportedSource();
             if (sources == null)
@@ -674,7 +695,7 @@ public class DataUtils {
                 cng.restrictToAssociations(nameAndValueList,
                     nameAndValueList_qualifier);
 
-            int maxToReturn = NCImBrowserProperties._maxToReturn;
+            int maxToReturn = NCImBrowserProperties.get_maxToReturn();
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                     code, scheme), false, true, 1, 1, new LocalNameList(),
@@ -1147,11 +1168,16 @@ public class DataUtils {
         for (int i = 0; i < properties.length; i++) {
             Property p = (Property) properties[i];
             if (property_name.compareTo(p.getPropertyName()) == 0) {
-                String t = p.getValue().getContent();
+                //String t = p.getValue().getContent();
+                StringBuffer buf = new StringBuffer();
+                buf.append(p.getValue().getContent());
+
                 Source[] sources = p.getSource();
                 if (sources != null && sources.length > 0) {
                     Source src = sources[0];
-                    t = t + "|" + src.getContent();
+                    //t = t + "|" + src.getContent();
+                    buf.append("|" + src.getContent());
+
                 } else {
                     if (property_name.compareToIgnoreCase("definition") == 0) {
                         _logger.warn("*** WARNING: " + property_name
@@ -1171,9 +1197,10 @@ public class DataUtils {
                                 // _logger.debug("\t*** qualifier_value: "
                                 // + qualifier_value);
                                 if (qualifier_name.compareTo("source") == 0) {
-                                    t = t + "|" + qualifier_value;
+                                    //t = t + "|" + qualifier_value;
                                     // _logger.debug("*** SOURCE: " +
                                     // qualifier_value);
+                                    buf.append("|" + qualifier_value);
                                     break;
                                 }
                             }
@@ -1183,6 +1210,7 @@ public class DataUtils {
                         }
                     }
                 }
+                String t = buf.toString();
                 v.add(t);
             }
         }
@@ -1366,7 +1394,7 @@ public class DataUtils {
                         .createNameAndValueList(sab, SOURCE));
             }
 
-            int maxToReturn = NCImBrowserProperties._maxToReturn;
+            int maxToReturn = NCImBrowserProperties.get_maxToReturn();
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                     code, scheme), true, false, 1, 1, _noopList, null, null,
@@ -2178,7 +2206,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils._hierAssocToChildNodes),
+                                .createNameAndValueList(MetaTreeUtils.getHierAssociationToChildNodes()),
                             Constructors.createNameAndValueList("source",
                                 source));
             } else {
@@ -2186,7 +2214,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils._hierAssocToChildNodes),
+                                .createNameAndValueList(MetaTreeUtils.getHierAssociationToChildNodes()),
                             null);
             }
 
@@ -2694,7 +2722,7 @@ public class DataUtils {
         Debug.println("Run time (ms) for " + action + " " + delay);
         DBG.debugDetails(delay, action, "getNeighborhoodSynonyms");
 
-        DBG.debugDetails("Max Return", NCImBrowserProperties._maxToReturn);
+        DBG.debugDetails("Max Return", NCImBrowserProperties.get_maxToReturn());
         return u;
 
     }
@@ -3994,7 +4022,9 @@ public class DataUtils {
 
             CodingSchemeVersionOrTag versionOrTag =
                 new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(version);
+            if (version != null) {
+				versionOrTag.setVersion(version);
+			}
 
             ConceptReferenceList crefs = new ConceptReferenceList();
             for (int i = 0; i < codes.size(); i++) {
@@ -4048,14 +4078,18 @@ public class DataUtils {
                         } else {
                             // _logger.debug(c.getEntityDescription().getContent());
                             Property[] properties = c.getProperty();
-                            String values = "";
+                            //String values = "";
+                            StringBuffer buf = new StringBuffer();
                             for (int j = 0; j < properties.length; j++) {
                                 Property prop = properties[j];
-                                values = values + prop.getValue().getContent();
+                                //values = values + prop.getValue().getContent();
+                                buf.append(prop.getValue().getContent());
                                 if (j < properties.length - 1) {
-                                    values = values + "; ";
+                                    //values = values + "; ";
+                                    buf.append("; ");
                                 }
                             }
+                            String values = buf.toString();
                             hmap.put(rcr.getCode(), values);
                         }
                     }

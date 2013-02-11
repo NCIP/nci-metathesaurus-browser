@@ -16,42 +16,42 @@ import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -72,11 +72,8 @@ public class OntologyBean {
 
     private static String _codingSchemeName = "NCI Metathesaurus";
 
-    // NameAndValueList associationNameAndValueList = null;
 
-    public static List getRELAList() {
-        if (_rela_list != null)
-            return _rela_list;
+    static {
         _rela_list = new ArrayList();
         if (_rela_vec == null) {
             _rela_vec = getRELAs(_codingSchemeName);
@@ -86,19 +83,61 @@ public class OntologyBean {
             String value = (String) _rela_vec.elementAt(k);
             _rela_list.add(new SelectItem(value, value));
         }
+	}
+
+
+    public static List getRELAList() {
+		/*
+        if (_rela_list != null)
+            return _rela_list;
+
+        _rela_list = new ArrayList();
+        if (_rela_vec == null) {
+            _rela_vec = getRELAs(_codingSchemeName);
+        }
+        _rela_list.add(new SelectItem("", ""));
+        for (int k = 0; k < _rela_vec.size(); k++) {
+            String value = (String) _rela_vec.elementAt(k);
+            _rela_list.add(new SelectItem(value, value));
+        }
+        */
         return _rela_list;
     }
 
+
+    static {
+        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        _association_name_vec = getSupportedAssociationNames(cs);
+	}
+
+
     public static Vector getAssociationNames() {
+		/*
         if (_association_name_vec != null) {
             return _association_name_vec;
         }
         CodingScheme cs = getCodingScheme(_codingSchemeName, null);
         _association_name_vec = getSupportedAssociationNames(cs);
+        */
         return _association_name_vec;
     }
 
+
+    static {
+        _association_name_list = new ArrayList();
+        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        if (_association_name_vec == null) {
+            _association_name_vec = getSupportedAssociationNames(cs);
+        }
+        for (int k = 0; k < _association_name_vec.size(); k++) {
+            String value = (String) _association_name_vec.elementAt(k);
+            _association_name_list.add(new SelectItem(value, value));
+        }
+    }
+
+
     public static List getAssociationNameList() {
+		/*
         if (_association_name_list != null)
             return _association_name_list;
         _association_name_list = new ArrayList();
@@ -109,11 +148,27 @@ public class OntologyBean {
         for (int k = 0; k < _association_name_vec.size(); k++) {
             String value = (String) _association_name_vec.elementAt(k);
             _association_name_list.add(new SelectItem(value, value));
-        }
+        }*/
         return _association_name_list;
     }
 
+
+    static {
+        _property_name_list = new ArrayList();
+        _property_name_list.add(new SelectItem("ALL", "ALL"));
+
+        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        Vector<String> properties = getSupportedPropertyNames(cs);
+        for (int k = 0; k < properties.size(); k++) {
+            String value = (String) properties.elementAt(k);
+            _property_name_list.add(new SelectItem(value, value));
+        }
+	}
+
+
+
     public static List getPropertyNameList() {
+		/*
         if (_property_name_list != null)
             return _property_name_list;
         _property_name_list = new ArrayList();
@@ -125,10 +180,26 @@ public class OntologyBean {
             String value = (String) properties.elementAt(k);
             _property_name_list.add(new SelectItem(value, value));
         }
+        */
         return _property_name_list;
     }
 
+    static {
+        _source_list = new ArrayList();
+        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        _source_list.add(new SelectItem("ALL", "ALL"));
+
+        Vector<String> sources = getSupportedSources(cs);
+        for (int k = 0; k < sources.size(); k++) {
+            String value = (String) sources.elementAt(k);
+            _source_list.add(new SelectItem(value, value));
+        }
+	}
+
+
+
     public static List getSourceList() {
+		/*
         if (_source_list != null)
             return _source_list;
         _source_list = new ArrayList();
@@ -140,10 +211,25 @@ public class OntologyBean {
             String value = (String) sources.elementAt(k);
             _source_list.add(new SelectItem(value, value));
         }
+        */
         return _source_list;
     }
 
+
+    static {
+        _property_type_list = new ArrayList();
+        _property_type_list.add(new SelectItem("ALL", "ALL"));
+
+        Vector<String> propertytypes = getSupportedPropertyTypes();
+        for (int k = 0; k < propertytypes.size(); k++) {
+            String value = (String) propertytypes.elementAt(k);
+            _property_type_list.add(new SelectItem(value, value));
+        }
+	}
+
+
     public static List getPropertyTypeList() {
+		/*
         if (_property_type_list != null)
             return _property_type_list;
         _property_type_list = new ArrayList();
@@ -154,6 +240,7 @@ public class OntologyBean {
             String value = (String) propertytypes.elementAt(k);
             _property_type_list.add(new SelectItem(value, value));
         }
+        */
         return _property_type_list;
     }
 
@@ -163,6 +250,8 @@ public class OntologyBean {
         return getRELAs(_codingSchemeName);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static Vector getRELAs(String scheme) {
         Vector v = new Vector();
         HashSet hset = new HashSet();
@@ -170,10 +259,10 @@ public class OntologyBean {
         LexBIGServiceMetadata lbsm = null;
         try {
             lbsm = lbs.getServiceMetadata();
-            
+
             CodingScheme cs = getCodingScheme(scheme, null);
             String uri = cs.getCodingSchemeURI();
-            String ver = cs.getRepresentsVersion();            
+            String ver = cs.getRepresentsVersion();
             lbsm =
                 lbsm
                     .restrictToCodingScheme(Constructors

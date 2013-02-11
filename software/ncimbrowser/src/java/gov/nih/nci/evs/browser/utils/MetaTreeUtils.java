@@ -66,14 +66,14 @@ import java.util.Map.Entry;
 
 public class MetaTreeUtils {
     private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
-    private static String[] _hierAssocToParentNodes =
+    private static final String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
-    private static String[] _hierAssociationToParentNodes = new String[] { "PAR" };
+    private static final String[] _hierAssociationToParentNodes = new String[] { "PAR" };
 
     // static String[] _hierAssocToChildNodes = new String[] { "CHD",
     // "hasSubtype" };
-    public static String[] _hierAssocToChildNodes = new String[] { "CHD" };
+    private static final String[] _hierAssocToChildNodes = new String[] { "CHD" };
     private static SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
 
@@ -91,6 +91,14 @@ public class MetaTreeUtils {
 
     public MetaTreeUtils() {
     }
+
+    public static String[] getHierAssociationToParentNodes() {
+		return Arrays.copyOf(_hierAssociationToParentNodes,_hierAssociationToParentNodes.length);
+	}
+
+    public static String[] getHierAssociationToChildNodes() {
+		return Arrays.copyOf(_hierAssocToChildNodes, _hierAssocToChildNodes.length);
+	}
 
     // /////////////////
     // Source Roots //
@@ -1325,11 +1333,14 @@ public class MetaTreeUtils {
     }
 
     public static void dumpTreeItem(TreeItem ti, int level) {
-        String indent = "";
-        for (int i = 0; i < level; i++) {
-            indent = indent + "\t";
-        }
+        //String indent = "";
+        StringBuffer buf = new StringBuffer();
 
+        for (int i = 0; i < level; i++) {
+            //indent = indent + "\t";
+            buf.append("\t");
+        }
+        String indent = buf.toString();
         _logger.debug(indent + ti._text + " (" + ti._code + ")");
         try {
             for (String association : ti._assocToChildMap.keySet()) {
@@ -1582,7 +1593,8 @@ public class MetaTreeUtils {
     }
 
     protected String getAssociationSourceString(AssociatedConcept ac) {
-        String sources = "";
+        //String sources = "";
+        StringBuffer buf = new StringBuffer();
         NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
         int knt = 0;
         for (int i = 0; i < nvl.length; i++) {
@@ -1590,12 +1602,15 @@ public class MetaTreeUtils {
             if (nv.getName().compareToIgnoreCase("source") == 0) {
                 knt++;
                 if (knt == 1) {
-                    sources = sources + nv.getContent();
+                    //sources = sources + nv.getContent();
+                    buf.append(nv.getContent());
                 } else {
-                    sources = sources + " ;" + nv.getContent();
+                    //sources = sources + " ;" + nv.getContent();
+                    buf.append(" ;" + nv.getContent());
                 }
             }
         }
+        String sources = buf.toString();
         return sources;
     }
 

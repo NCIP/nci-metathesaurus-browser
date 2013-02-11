@@ -77,9 +77,9 @@ public class MetadataUtils {
     private static HashMap _localname2FormalnameHashMap = null;
     private static HashMap _sab2DefinitionHashMap = null;
 
-    public static HashMap _formalName2MetadataHashMap = null;
+    private static HashMap _formalName2MetadataHashMap = null;
 
-    public static Vector _propertyDescriptionsVec = null;
+    private static Vector _propertyDescriptionsVec = null;
 
     public static boolean isMetadataAvailable() {
         if (_formalName2MetadataHashMap == null)
@@ -633,13 +633,63 @@ public class MetadataUtils {
 
     }
 
+    static {
+        try {
+			String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+
+            _propertyDescriptionsVec = new Vector();
+            LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+            LexBIGServiceMetadata lbsm = lbs.getServiceMetadata();
+
+//[#31764] NCIm Properties not displaying
+
+            CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
+            String urn = cs.getCodingSchemeURI();
+            lbsm = lbs.getServiceMetadata();
+            lbsm =
+                lbsm.restrictToCodingScheme(Constructors
+                    .createAbsoluteCodingSchemeVersionReference(urn, version));
+
+            MetadataPropertyList mdpl = lbsm.resolve();
+            for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
+                MetadataProperty prop = mdpl.getMetadataProperty(i);
+                if (prop.getName().equals("dockey")
+                    && prop.getValue().equals("ATN")) {
+                    i++;
+                    String propertyName =
+                        mdpl.getMetadataProperty(i).getValue();
+                    i++;
+                    if (mdpl.getMetadataProperty(i).getValue().equals(
+                        "expanded_form")) {
+                        i++;
+                        String propertyValue =
+                            mdpl.getMetadataProperty(i).getValue();
+                        String t = propertyName + "|" + propertyValue;
+                        if (!_propertyDescriptionsVec.contains(t)) {
+                            _propertyDescriptionsVec.add(t);
+                        }
+                    }
+                }
+            }
+            _propertyDescriptionsVec =
+                SortUtils.quickSort(_propertyDescriptionsVec);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+	}
+
+
+
 
     public static Vector getPropertyDescriptions() {
+		/*
         if (_propertyDescriptionsVec != null)
             return _propertyDescriptionsVec;
         try {
 			String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
-			System.out.println("Version: " + version);
+			//System.out.println("Version: " + version);
 
             _propertyDescriptionsVec = new Vector();
             LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -654,16 +704,6 @@ public class MetadataUtils {
             lbsm =
                 lbsm.restrictToCodingScheme(Constructors
                     .createAbsoluteCodingSchemeVersionReference(urn, version));
-/*
-
-
-
-            lbsm =
-                lbsm.restrictToCodingScheme(Constructors
-                    .createAbsoluteCodingSchemeVersionReference(
-                    		CODING_SCHEME_NAME, version));
-*/
-
             MetadataPropertyList mdpl = lbsm.resolve();
             for (int i = 0; i < mdpl.getMetadataPropertyCount(); i++) {
                 MetadataProperty prop = mdpl.getMetadataProperty(i);
@@ -691,6 +731,8 @@ public class MetadataUtils {
         } catch (Exception ex) {
             return null;
         }
+        */
+        return _propertyDescriptionsVec;
     }
 
 

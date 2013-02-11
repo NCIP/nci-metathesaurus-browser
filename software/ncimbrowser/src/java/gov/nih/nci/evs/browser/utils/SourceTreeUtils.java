@@ -1623,23 +1623,32 @@ public class SourceTreeUtils {
         }
 
         pw.println("Sources with roots: ");
-        String t = "|";
+        //String t = "|";
+
+        StringBuffer buf = new StringBuffer();
+        buf.append("|");
+
         for (int i = 0; i < src_with_roots.size(); i++) {
             String src = (String) src_with_roots.elementAt(i);
             int j = i + 1;
             pw.println("(" + j + "): " + src);
-            t = t + src + "|";
+            //t = t + src + "|";
+            buf.append(src + "|");
         }
+        String t = buf.toString();
         pw.println(t);
 
         pw.println("\nSources without roots: ");
-        t = "|";
+        //t = "|";
+        buf = new StringBuffer();
         for (int i = 0; i < src_without_roots.size(); i++) {
             String src = (String) src_without_roots.elementAt(i);
             int j = i + 1;
             pw.println("(" + j + "): " + src);
-            t = t + src + "|";
+            //t = t + src + "|";
+            buf.append(src + "|");
         }
+        t = buf.toString();
         pw.println(t);
 
         closeWriter(pw);
