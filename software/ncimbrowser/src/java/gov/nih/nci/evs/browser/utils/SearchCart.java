@@ -81,8 +81,8 @@ public class SearchCart {
 
     // Local variables
     private static Logger _logger = Logger.getLogger(SearchUtils.class);
-    private static LexBIGService lbSvc = null;
-    private static LexBIGServiceConvenienceMethods lbscm = null;
+    //private static LexBIGService lbSvc = null;
+    //private static LexBIGServiceConvenienceMethods lbscm = null;
     private static MetaBrowserService mbs = null;
     private static String SEMANTIC_TYPE = "Semantic_Type";
 
@@ -98,16 +98,18 @@ public class SearchCart {
      * @throws LBException
      */
 	public SearchCart() throws LBException {
-
+/*
 		// Setup lexevs service
 		if (lbSvc == null) {
 			lbSvc = RemoteServerUtil.createLexBIGService();
 		}
 
 		// Setup lexevs generic extension
+
 		lbscm = (LexBIGServiceConvenienceMethods) lbSvc
 				.getGenericExtension(LB_EXTENSION);
 		lbscm.setLexBIGService(lbSvc);
+
 
 		// Setup Metabrowser extension
 		if (mbs == null) {
@@ -117,7 +119,7 @@ public class SearchCart {
 				_logger.error("Error! metabrowser-extension is null!");
 			}
 		}
-
+*/
 	}
 
     /**
@@ -131,6 +133,7 @@ public class SearchCart {
         ResolvedConceptReferencesIterator iterator = null;
 
         try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             cns = lbSvc.getCodingSchemeConcepts(codingScheme, null);
             ConceptReferenceList crefs =
                 createConceptReferenceList(new String[] { code }, codingScheme);
@@ -212,6 +215,12 @@ public class SearchCart {
             Vector<String> v = new Vector<String>();
 
             try {
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				MetaBrowserService mbs = (MetaBrowserService) lbSvc
+						.getGenericExtension("metabrowser-extension");
+				if (mbs == null) {
+					_logger.error("Error! metabrowser-extension is null!");
+				}
 
             	Map<String, List<RelationshipTabResults>> map = null;
             	map = mbs.getRelationshipsDisplay(cui, null, Direction.SOURCEOF);
@@ -332,8 +341,11 @@ public class SearchCart {
     public Vector<String> getAssociationNames(String scheme, String version) {
         Vector<String> association_vec = new Vector<String>();
         try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(version);
+            if (version != null) {
+				versionOrTag.setVersion(version);
+			}
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
 
             SupportedHierarchy[] hierarchies = cs.getMappings().getSupportedHierarchy();

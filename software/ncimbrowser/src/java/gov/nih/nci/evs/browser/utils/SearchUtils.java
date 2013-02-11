@@ -1202,7 +1202,9 @@ public class SearchUtils {
         float totalWords = wordsToCompare.size();
         float matchScore = 0;
         float position = 0;
-        String s = "";
+        //String s = "";
+        StringBuffer buf = new StringBuffer();
+
         int k = 0;
         for (Iterator<String> words = wordsToCompare.listIterator(); words
             .hasNext(); position++) {
@@ -1217,12 +1219,15 @@ public class SearchUtils {
                     matchScore += ((position / 10) + 1);
                 }
             }
-            s = s + word;
+            buf.append(word);
+            //s = s + word;
             if (k < wordsToCompare.size() - 1)
-                s = s + " ";
+                //s = s + " ";
+                buf.append(" ");
             k++;
         }
 
+        String s = buf.toString();
         if (s.indexOf(target) == -1) {
             return (float) 0.0;
         }

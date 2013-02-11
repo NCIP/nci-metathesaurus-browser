@@ -129,17 +129,21 @@ public class SortComparator implements Serializable, Comparator<Object> {
 		if (s == null) return null;
 		int ascii_from = (int) from;
 		int ascii_to   = (int) to;
-		String t = "";
+		//String t = "";
+		StringBuffer buf = new StringBuffer();
 		for (int i=0; i<s.length(); i++) {
 			char c = s.charAt(i);
 			int ascii_c = (int) c;
 
 			if (ascii_c == ascii_from) {
-				t = t + to;
+				//t = t + to;
+				buf.append(to);
 			} else {
-				t = t + c;
+				//t = t + c;
+				buf.append(c);
 			}
 		}
+		String t = buf.toString();
 	    return t;
 	}
 

@@ -532,7 +532,7 @@ public class CartActionBean {
      * Subclass to hold contents of the cart
      * @author garciawa2
      */
-    public class Concept {
+    public static class Concept {
         private String code = null;
         private String codingScheme = null;
         private String nameSpace = null;
