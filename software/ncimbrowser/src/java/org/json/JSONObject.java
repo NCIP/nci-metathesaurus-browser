@@ -115,9 +115,18 @@ public class JSONObject implements Serializable {
          * @return true if the object parameter is the JSONObject.NULL object
          *  or null.
          */
+
         public boolean equals(Object object) {
-            return object == null || object == this;
+			if (object == null || getClass() != object.getClass()) return false;
+
+            //return object == null || object == this;
+            return object == this;
         }
+
+
+        public int hashCode() {
+			return 0;
+		}
 
 
         /**
@@ -134,7 +143,6 @@ public class JSONObject implements Serializable {
      * The hash map where the JSONObject's properties are kept.
      */
     private HashMap myHashMap;
-
 
     /**
      * It is sometimes more convenient and less ambiguous to have a

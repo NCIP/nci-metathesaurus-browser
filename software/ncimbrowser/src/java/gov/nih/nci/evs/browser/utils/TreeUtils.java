@@ -798,6 +798,15 @@ public class TreeUtils {
 
             // Set reverse directional name, if available.
             String dirName = assoc.getDirectionalName();
+            if (dirName != null) {
+                try {
+                    rAssoc.setDirectionalName(lbscm.getAssociationReverseName(assoc
+                        .getAssociationName(), scheme, csvt));
+                } catch (LBException e) {
+					e.printStackTrace();
+                }
+			}
+            /*
             if (dirName != null)
                 try {
                     rAssoc.setDirectionalName(lbscm.isForwardName(scheme, csvt,
@@ -808,6 +817,7 @@ public class TreeUtils {
                 } catch (LBException e) {
 					e.printStackTrace();
                 }
+            */
 
             // Save code desc for future reference when setting up
             // concept references in recursive calls ...

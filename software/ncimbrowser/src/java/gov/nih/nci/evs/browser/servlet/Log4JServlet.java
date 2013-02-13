@@ -64,27 +64,33 @@ public class Log4JServlet extends HttpServlet {
 
 		String logfile = System.getProperty("gov.nih.nci.evs.browser.NCImlog4jProperties");
 		System.out.println("NCIM Logger prop file = [" + logfile + "]");
+
+		InputStream log4JConfig = null;
 		try{
-			InputStream log4JConfig = new FileInputStream(logfile);
+			log4JConfig = new FileInputStream(logfile);
 			Document doc = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder()
 				.parse(log4JConfig);
 
 			DOMConfigurator.configure( doc.getDocumentElement() );
 			isInit = true;
-		}
-		catch(ParserConfigurationException e){
+		} catch(ParserConfigurationException e){
 			System.out.println( "*** Error: Failed to parse log4j configuration file!" );
 			e.printStackTrace();
-		}
-		catch(SAXException e){
+		} catch(SAXException e){
 			System.out.println( "*** SAX Error: Failed to parse log4j configuration file!" );
 			e.printStackTrace();
-		}
-		catch( IOException e){
+		} catch( IOException e){
 			System.out.println( "*** IO Error: log4j configuration file!" );
 			e.printStackTrace();
+		} finally {
+			try {
+				log4JConfig.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
+
 	}
 
 

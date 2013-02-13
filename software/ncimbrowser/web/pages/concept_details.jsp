@@ -29,6 +29,10 @@
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
 
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Map.Entry" %>
+
+
 <%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -183,14 +187,22 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
          name = rcr.getEntityDescription().getContent();
 
                Vector semantic_types = new DataUtils().getPropertyValues(c, "GENERIC", "Semantic_Type");
-               String semantic_type = "";
+               
+               //String semantic_type = "";
+               StringBuffer buf = new StringBuffer();
+               
                if (semantic_types != null && semantic_types.size() > 0) {
-      for (int j=0; j<semantic_types.size(); j++) {
-          String t = (String) semantic_types.elementAt(j);
-          semantic_type = semantic_type + t;
-          if (j < semantic_types.size()-1) semantic_type = semantic_type + ";";
-      }
+		      for (int j=0; j<semantic_types.size(); j++) {
+			  String t = (String) semantic_types.elementAt(j);
+			  buf.append(t);
+			  //semantic_type = semantic_type + t;
+			  if (j < semantic_types.size()-1) {
+			      //semantic_type = semantic_type + ";";
+			      buf.append(";");
+			  }
+		      }
                }
+               String semantic_type = buf.toString();
         if (i % 2 == 0) {
     %>
       <tr class="dataRowDark">

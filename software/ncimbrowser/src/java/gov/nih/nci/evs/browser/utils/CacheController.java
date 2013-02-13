@@ -95,8 +95,13 @@ public class CacheController {
     private static Cache _cache = null;
     private static CacheManager _cacheManager = null;
 
+    private static final String TREE_CACHE = "treeCache";
+
     static {
 		_cacheManager = getCacheManager();
+		if (_cacheManager != null) {
+			_cache = _cacheManager.getCache(TREE_CACHE);
+		}
 	}
 
 
@@ -107,7 +112,7 @@ public class CacheController {
         if (!_cacheManager.cacheExists(cacheName)) {
             _cacheManager.addCache(cacheName);
         }
-        _cache = _cacheManager.getCache(cacheName);
+        //_cache = _cacheManager.getCache(cacheName);
     }
 
 
@@ -115,12 +120,29 @@ public class CacheController {
     public static CacheController getInstance() {
         synchronized (CacheController.class) {
             if (_instance == null) {
-                _instance = new CacheController("treeCache");
+                _instance = new CacheController(TREE_CACHE);
             }
         }
         return _instance;
     }
 
+
+    static {
+        try {
+            NCImBrowserProperties properties =
+                NCImBrowserProperties.getInstance();
+            String ehcache_xml_pathname =
+                properties
+                    .getProperty(NCImBrowserProperties.EHCACHE_XML_PATHNAME);
+            _cacheManager = new CacheManager(ehcache_xml_pathname);
+            //return _cacheManager;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+
+/*
     private static CacheManager getCacheManager() {
         if (_cacheManager != null)
             return _cacheManager;
@@ -138,6 +160,12 @@ public class CacheController {
         }
         return null;
     }
+*/
+
+    private static CacheManager getCacheManager() {
+        return _cacheManager;
+	}
+
 
     public String[] getCacheNames() {
         return getCacheManager().getCacheNames();
