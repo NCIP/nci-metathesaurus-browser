@@ -117,7 +117,7 @@ if (randomKey != null) {
           int istart = iend - page_size;
 
           int size = iteratorBean.getSize();
-          String match_size = new Integer(size).toString();
+          String match_size = Integer.valueOf(size).toString();
 
           if (iend > size) iend = size;
           int num_pages = size / page_size;

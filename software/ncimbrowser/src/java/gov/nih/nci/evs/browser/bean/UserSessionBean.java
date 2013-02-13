@@ -966,9 +966,10 @@ public class UserSessionBean extends Object {
     public List getSourceList() {
         if (_sourceList != null)
             return _sourceList;
-        String codingSchemeName = Constants.CODING_SCHEME_NAME;
-        String version = null;
-        _sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+        //tring codingSchemeName = Constants.CODING_SCHEME_NAME;
+        //String version = null;
+        //_sourceListData = DataUtils.getSourceListData(codingSchemeName, version);
+        _sourceListData = DataUtils.getSourceListData();
         _sourceList = new ArrayList();
         if (_sourceListData != null) {
             for (int i = 0; i < _sourceListData.size(); i++) {

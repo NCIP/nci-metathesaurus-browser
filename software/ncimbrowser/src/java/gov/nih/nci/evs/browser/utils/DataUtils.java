@@ -440,6 +440,40 @@ public class DataUtils {
     }
 
 
+    static {
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            CodingScheme scheme = null;
+            CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+            if (lbSvc != null) {
+				scheme = lbSvc.resolveCodingScheme(Constants.CODING_SCHEME_NAME, vt);
+				if (scheme != null && scheme.getMappings() != null) {
+					_sourceListData = new Vector<String>();
+					_sourceListData.add("ALL");
+
+					SupportedSource[] sources =
+						scheme.getMappings().getSupportedSource();
+					if (sources != null) {
+						for (int i = 0; i < sources.length; i++) {
+							SupportedSource source = sources[i];
+							_sourceListData.add(source.getLocalId());
+						}
+					}
+
+            		_sourceListData = SortUtils.quickSort(_sourceListData);
+				}
+			}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+
+    public static Vector<String> getSourceListData() {
+		return _sourceListData;
+	}
+
+
+/*
     public static Vector<String> getSourceListData(String codingSchemeName,
         String version) {
         if (_sourceListData != null)
@@ -481,6 +515,9 @@ public class DataUtils {
         }
         return null;
     }
+*/
+
+
 
     public static String int2String(Integer int_obj) {
         if (int_obj == null) {

@@ -410,13 +410,13 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 
 <%
       hmap = DataUtils.getPropertyValueHashMap(curr_concept);
-      Set keyset = hmap.keySet();
-      Iterator iterator = keyset.iterator();
       Vector key_vec = new Vector();
       String prop_name = null;
+      Iterator iterator = hmap.entrySet().iterator();
       while (iterator.hasNext()) {
-         prop_name = (String) iterator.next();
-         key_vec.add(prop_name);
+ 	  Entry thisEntry = (Entry) iterator.next();
+ 	  prop_name = (String) thisEntry.getKey();
+          key_vec.add(prop_name);
       }
       key_vec = SortUtils.quickSort(key_vec);
 

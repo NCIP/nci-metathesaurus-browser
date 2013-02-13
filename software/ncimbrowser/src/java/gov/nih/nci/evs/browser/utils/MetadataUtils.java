@@ -397,15 +397,21 @@ public class MetadataUtils {
     }
 
     public static String getSABFormalName(String sab) {
+		/*
         if (_sab2FormalNameHashMap == null) {
             initialize();
         }
         return (String) _sab2FormalNameHashMap.get(sab);
-    }
+        */
+        if (_sab2FormalNameHashMap == null) {
+            return null;
+        }
+        return (String) _sab2FormalNameHashMap.get(sab);    }
 
     public static String getSABDefinition(String sab) {
         if (_sab2DefinitionHashMap == null) {
-            initialize();
+            //initialize();
+            return null;
         }
         return (String) _sab2DefinitionHashMap.get(sab);
     }
@@ -422,8 +428,13 @@ public class MetadataUtils {
     }
 
     public static void initialize() {
-        if (_sab2FormalNameHashMap != null)
-            return;
+
+	}
+
+
+    static {
+        //if (_sab2FormalNameHashMap != null)
+        //    return;
 
         _logger.info("initialize ...");
         _sab2FormalNameHashMap = new HashMap();
@@ -437,11 +448,13 @@ public class MetadataUtils {
         int vocabulary_count = 0;
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
+            /*
             if (lbSvc == null) {
                 _logger
                     .warn("Unable to connect to instantiate LexBIGService ???");
                 return;
             }
+            */
             CodingSchemeRenderingList csrl = null;
             try {
                 csrl = lbSvc.getSupportedCodingSchemes();
@@ -449,12 +462,14 @@ public class MetadataUtils {
                 ex.printStackTrace();
                 _logger.error("lbSvc.getSupportedCodingSchemes() FAILED..."
                     + ex.getCause());
-                return;
+               // return;
             }
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+            /*
             if (csrs == null) return;
             if (csrs.length == 0) return;
+            */
             for (int i = 0; i < csrs.length; i++) {
                 int j = i + 1;
                 CodingSchemeRendering csr = csrs[i];
@@ -576,7 +591,7 @@ public class MetadataUtils {
             _sab2DefinitionHashMap.put(abbr, def);
         }
         DataUtils.setFormalName2MetadataHashMap(_formalName2MetadataHashMap);
-        return;
+        //return;
     }
 
     public static NameAndValue createNameAndValue(String name, String value) {
