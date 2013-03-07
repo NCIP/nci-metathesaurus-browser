@@ -227,8 +227,10 @@ public final class AjaxServlet extends HttpServlet {
         else if (action.equals("build_tree")) {
             if (ontology_display_name == null)
                 ontology_display_name = "NCI Thesaurus";
+
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
+
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;// new JSONArray();
 
@@ -252,7 +254,6 @@ public final class AjaxServlet extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             response.getWriter().write(json.toString());
             _logger.debug("Run time (milliseconds): "
                 + (System.currentTimeMillis() - ms));

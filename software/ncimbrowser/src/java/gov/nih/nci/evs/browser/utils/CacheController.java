@@ -97,24 +97,28 @@ public class CacheController {
 
     private static final String TREE_CACHE = "treeCache";
 
+/*
     static {
 		_cacheManager = getCacheManager();
 		if (_cacheManager != null) {
 			_cache = _cacheManager.getCache(TREE_CACHE);
+			if (_cache == null) {
+				System.out.println("_cache == NULL???");
+                _cacheManager.addCache(TREE_CACHE);
+			}
 		}
 	}
-
+*/
 
 
     public CacheController(String cacheName) {
-        //_cacheManager = getCacheManager();
-
+        _cacheManager = getCacheManager();
         if (!_cacheManager.cacheExists(cacheName)) {
             _cacheManager.addCache(cacheName);
+            _cache = _cacheManager.getCache(TREE_CACHE);
         }
         //_cache = _cacheManager.getCache(cacheName);
     }
-
 
 
     public static CacheController getInstance() {
@@ -142,7 +146,7 @@ public class CacheController {
         }
 	}
 
-/*
+
     private static CacheManager getCacheManager() {
         if (_cacheManager != null)
             return _cacheManager;
@@ -160,12 +164,15 @@ public class CacheController {
         }
         return null;
     }
-*/
 
+/*
     private static CacheManager getCacheManager() {
+		if (_cacheManager == null) {
+			_cacheManager = new CacheManager(TREE_CACHE);
+		}
         return _cacheManager;
 	}
-
+*/
 
     public String[] getCacheNames() {
         return getCacheManager().getCacheNames();
