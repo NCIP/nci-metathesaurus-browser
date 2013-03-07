@@ -80,7 +80,7 @@ some of which are proprietary and included, by permission, for non-commercial us
     The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in
     NCI Enterprise Vocabulary Services, but requires licensing for other purposes.
     Terms of use for SNOMED CT are contained in Appendix 2, SNOMED CT Affiliate Licence Agreement, of the License for Use of the UMLS Metathesaurus.
-    (see <a href="http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" alt="SNOMED CT License">http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html</a>).
+    (see <a href="http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" alt="SNOMED CT License">SNOMED CT license agreement</a>).
   </li>
 
   <li>
