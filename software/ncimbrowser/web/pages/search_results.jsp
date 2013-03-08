@@ -98,10 +98,12 @@ if (randomKey != null) {
           if (page_number != null && new_search == Boolean.FALSE)
           {
               page_string = page_number;
+              request.getSession().setAttribute("page_string", page_string);
           }
 
           request.getSession().setAttribute("new_search", Boolean.FALSE);
           int page_num = Integer.parseInt(page_string);
+          
           int next_page_num = page_num + 1;
           int prev_page_num = page_num - 1;
           int page_size = 50;
