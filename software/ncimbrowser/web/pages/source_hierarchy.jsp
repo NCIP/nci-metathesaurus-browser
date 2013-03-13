@@ -458,6 +458,10 @@
       private static Logger _logger = Utils.getJspLogger("source_hierarchy.jsp");
   %>
   <f:view>
+    <!-- Begin Skip Top Navigation -->
+        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <!-- End Skip Top Navigation --> 
+  
     <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
@@ -466,6 +470,7 @@
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
+        <a name="evs-content" id="evs-content"></a>
         <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td valign="top">
