@@ -191,7 +191,7 @@ if (captcha_option.compareTo("default") == 0) {
 %>
       <tr>
       <td class="textbody">
-             <img src="<c:url value="/simpleCaptcha.png"  />" alt="simpleCaptcha.png">
+             <img src="<c:url value="/nci.simpleCaptcha.png"  />" alt="nci.simpleCaptcha.png">
              
        &nbsp;<h:commandLink value="Unable to read this image?" action="#{userSessionBean.regenerateCaptchaImage}" />
        <br/>             
