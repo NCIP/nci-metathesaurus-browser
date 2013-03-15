@@ -138,15 +138,15 @@ public class UserSessionBean extends Object {
         }
 
         String matchType =
-            (String) request.getParameter("adv_search_type");
+            HTTPUtils.cleanXSS((String) request.getParameter("adv_search_type"));
 
         bean.setSearchType(matchType);
 
         String matchAlgorithm =
-            (String) request.getParameter("adv_search_algorithm");
+            HTTPUtils.cleanXSS((String) request.getParameter("adv_search_algorithm"));
         bean.setAlgorithm(matchAlgorithm);
 
-        String source = (String) request.getParameter("adv_search_source");
+        String source = HTTPUtils.cleanXSS((String) request.getParameter("adv_search_source"));
 
         if (source == null) {
             //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
@@ -159,27 +159,27 @@ public class UserSessionBean extends Object {
         bean.setSelectedSource(source);
 
         String selectSearchOption =
-            (String) request.getParameter("selectSearchOption");
+            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
         bean.setSelectedSearchOption(selectSearchOption);
 
-        String selectProperty = (String) request.getParameter("selectProperty");
+        String selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("selectProperty"));
         bean.setSelectedProperty(selectProperty);
 
         String rel_search_association =
-            (String) request.getParameter("rel_search_association");
+            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_association"));
         bean.setSelectedAssociation(rel_search_association);
 
         String rel_search_rela =
-            (String) request.getParameter("rel_search_rela");
+            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_rela"));
         bean.setSelectedRELA(rel_search_rela);
 
         FacesContext.getCurrentInstance().getExternalContext().getRequestMap()
             .put("searchStatusBean", bean);
         request.setAttribute("searchStatusBean", bean);
 
-        String searchTarget = (String) request.getParameter("searchTarget");
+        String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
-        String matchText = (String) request.getParameter("matchText");
+        String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
             // request.getSession().setAttribute("message", message);
@@ -236,13 +236,13 @@ public class UserSessionBean extends Object {
         SearchFields searchFields = null;
         String key = null;
 
-        String searchType = (String) request.getParameter("selectSearchOption");
+        String searchType = HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
         _logger.debug("SearchUtils.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
 
             String property_type =
-                (String) request.getParameter("selectPropertyType");
+                HTTPUtils.cleanXSS((String) request.getParameter("selectPropertyType"));
             if (property_type != null && property_type.compareTo("ALL") == 0) {
                 property_type = null;
             }
@@ -548,7 +548,7 @@ public class UserSessionBean extends Object {
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-        String matchText = (String) request.getParameter("matchText");
+        String matchText = HTTPUtils.cleanXSS((String) request.getParameter("matchText"));
         _logger.debug("matchText: " + matchText);
 
         if (matchText != null) {
@@ -564,10 +564,10 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        String matchAlgorithm = (String) request.getParameter("algorithm");
+        String matchAlgorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
         setSelectedAlgorithm(matchAlgorithm);
 
-        String searchTarget = (String) request.getParameter("searchTarget");
+        String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
         if (searchTarget == null || searchTarget.length() == 0) {
             String message = "Please specify a search target.";
             request.getSession().setAttribute("message", message);
@@ -1015,15 +1015,15 @@ public class UserSessionBean extends Object {
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-         String value = request.getParameter("matchText");
+         String value = HTTPUtils.cleanXSS((String) request.getParameter("matchText"));
          if (value != null)
          	request.getSession().setAttribute("matchText", value);
 
-         value = request.getParameter("algorithm");
+         value = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
          if (value != null)
              setSelectedAlgorithm(value);
 
-         value = request.getParameter("searchTarget");
+         value = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
          if (value != null)
              setSelectedSearchTarget(value);
 
@@ -1111,13 +1111,9 @@ public class UserSessionBean extends Object {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-        String dictionary = (String) request.getParameter("dictionary");
-        String code = (String) request.getParameter("code");
-        String sab = (String) request.getParameter("sab");
-
-//System.out.println("(*) acceptLicenseAction dictionary " + dictionary);
-//System.out.println("(*) acceptLicenseAction code " + code);
-//System.out.println("(*) acceptLicenseAction sab " + sab);
+        String dictionary = HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
+        String code = HTTPUtils.cleanXSS((String) request.getParameter("code"));
+        String sab = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
 
         if (dictionary != null && code != null) {
             LicenseBean licenseBean =
@@ -1125,8 +1121,6 @@ public class UserSessionBean extends Object {
             if (licenseBean == null) {
                 licenseBean = new LicenseBean();
             }
-
-System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
 
             licenseBean.addLicenseAgreement(dictionary);
 
@@ -1152,10 +1146,10 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-			String answer = request.getParameter("answer");
-            String subject = request.getParameter("subject");
-            String message = request.getParameter("message");
-            String from    = request.getParameter("emailaddress");
+			String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
+            String subject = HTTPUtils.cleanXSS((String) request.getParameter("subject"));
+            String message = HTTPUtils.cleanXSS((String) request.getParameter("message"));
+            String from    = HTTPUtils.cleanXSS((String) request.getParameter("emailaddress"));
 
 		request.getSession().setAttribute("answer", answer);
 		request.getSession().setAttribute("subject", subject);
@@ -1174,28 +1168,40 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
 		return false;
 	}
 
+
 	public String switchCaptchaMode() {
+
+		System.out.println("switchCaptchaMode");
+
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-		String answer = request.getParameter("answer");
-		String subject = request.getParameter("subject");
-		String message = request.getParameter("message");
-		String from    = request.getParameter("emailaddress");
+		String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
+		String subject = HTTPUtils.cleanXSS((String) request.getParameter("subject"));
+		String message = HTTPUtils.cleanXSS((String) request.getParameter("message"));
+		String from    = HTTPUtils.cleanXSS((String) request.getParameter("emailaddress"));
 
 		request.getSession().setAttribute("answer", answer);
 		request.getSession().setAttribute("subject", subject);
 		request.getSession().setAttribute("message", message);
 		request.getSession().setAttribute("emailaddress", from);
 
-        String captcha_option = (String) request.getParameter("captcha_option");
+        String captcha_option = HTTPUtils.cleanXSS((String) request.getParameter("captcha_option"));
+
         if (isNull(captcha_option)) {
 			captcha_option = "default";
 		}
+		if (captcha_option.compareTo("default") == 0) {
+			captcha_option = "audio";
+		} else {
+			captcha_option = "default";
+		}
+
         request.getSession().setAttribute("captcha_option", captcha_option);
-        return "resetCaptcha";
+        return "retry";
 	}
+
 
     public String contactUs() throws Exception {
 
@@ -1208,10 +1214,10 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
         request.getSession().removeAttribute("errorType");
         request.getSession().removeAttribute("retry");
 
-		String answer = request.getParameter("answer");
-		String subject = request.getParameter("subject");
-		String message = request.getParameter("message");
-		String from    = request.getParameter("emailaddress");
+		String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
+		String subject = HTTPUtils.cleanXSS((String) request.getParameter("subject"));
+		String message = HTTPUtils.cleanXSS((String) request.getParameter("message"));
+		String from    = HTTPUtils.cleanXSS((String) request.getParameter("emailaddress"));
 
 		request.getSession().setAttribute("answer", answer);
 		request.getSession().setAttribute("subject", subject);
@@ -1233,16 +1239,11 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
 			return "retry";
 		}
 
-        String captcha_option = (String) request.getParameter("captcha_option");
+        String captcha_option = HTTPUtils.cleanXSS((String) request.getParameter("captcha_option"));
         if (isNull(captcha_option)) {
 			captcha_option = "default";
 		}
-		if (captcha_option.compareTo("audio") == 0) {
-			captcha_option = "default";
-		} else {
-			captcha_option = "audio";
-		}
-
+		request.getSession().setAttribute("captcha_option", captcha_option);
 
         try {
     		String retstr = null;
@@ -1282,11 +1283,11 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
         return "message";
     }
 
-
     private String validateCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
         Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
         if (captcha == null) {
+			System.out.println("@@@@@@@@@@@@@@ captcha == null @@@@@@@@@@@@@@@");
             captcha = new Captcha.Builder(200, 50).addText().addBackground()
                 // .addNoise()
                 .gimp()
@@ -1297,10 +1298,10 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
 
         // Do this so we can capture non-Latin chars
         request.setCharacterEncoding("UTF-8");
-        String answer = request.getParameter("answer");
+        String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
         if (answer == null || answer.length() == 0) {
             throw new NoReloadException(
-                "Please enter the characters appearing in the image.");
+                "Please enter the characters appearing in the image. ");
         }
 
         request.getSession().removeAttribute("reload");
@@ -1308,20 +1309,16 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
             throw new InvalidCaptChaInputException(
                 "WARNING: The string you entered does not match"
                     + " with what is shown in the image. Please try again.");
-
 		} else {
 			System.out.println("Correct Captcha answer: " + answer);
-		}
-
-        request.getSession().removeAttribute(Captcha.NAME);
+		}        request.getSession().removeAttribute(Captcha.NAME);
         return null;
     }
 
-
     private String validateAudioCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
-
         AudioCaptcha captcha = (AudioCaptcha) request.getSession().getAttribute(AudioCaptcha.NAME);
+/*
         if (captcha == null) {
 			AudioCaptcha ac = new AudioCaptcha.Builder()
 				.addAnswer()
@@ -1330,10 +1327,10 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
 
 			request.getSession().setAttribute(AudioCaptcha.NAME, ac);
 		}
-
+*/
         // Do this so we can capture non-Latin chars
         request.setCharacterEncoding("UTF-8");
-        String answer = request.getParameter("answer");
+        String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
 
         if (answer == null || answer.length() == 0) {
             throw new NoReloadException(
@@ -1368,5 +1365,21 @@ System.out.println("(*) acceptLicenseAction addLicenseAgreement " + dictionary);
             super(text);
         }
     }
+
+    public String clearContactUs() {
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+
+		request.getSession().setAttribute("errorMsg", "");
+		request.getSession().setAttribute("answer", "");
+		request.getSession().setAttribute("subject", "");
+		request.getSession().setAttribute("message", "");
+		request.getSession().setAttribute("emailaddress", "");
+
+        return "retry";
+
+    }
+
 
 }

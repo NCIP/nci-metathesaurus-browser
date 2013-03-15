@@ -123,11 +123,26 @@
     </navigation-case>
     
     <navigation-case>
-       <description>reset captcha mode</description>
+       <description>switchCaptchaMode</description>
        <from-action>#{userSessionBean.switchCaptchaMode}</from-action>
-       <from-outcome>resetCaptcha</from-outcome>
+       <from-outcome>retry</from-outcome>
        <to-view-id>/pages/contact_us.jsp</to-view-id>
-    </navigation-case>  
+    </navigation-case> 
+    
+     <navigation-case>
+       <description>clearContactUs</description>
+       <from-action>#{userSessionBean.clearContactUs}</from-action>
+       <from-outcome>retry</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case>    
+    
+     <navigation-case>
+       <description>regenerateCaptchaImage</description>
+       <from-action>#{userSessionBean.regenerateCaptchaImage}</from-action>
+       <from-outcome>retry</from-outcome>
+       <to-view-id>/pages/contact_us.jsp</to-view-id>
+    </navigation-case> 
+    
     
   </navigation-rule>
 
