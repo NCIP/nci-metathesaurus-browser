@@ -1170,9 +1170,6 @@ public class UserSessionBean extends Object {
 
 
 	public String switchCaptchaMode() {
-
-		System.out.println("switchCaptchaMode");
-
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();

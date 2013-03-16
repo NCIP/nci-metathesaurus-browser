@@ -5,6 +5,7 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 
@@ -14,9 +15,9 @@
 
 
 <%!
-  private static final String TELEPHONE = "301.451.4384 or Toll-Free: 888.478.4423";
-  private static final String MAIL_TO = "ncicb@pop.nci.nih.gov";
-  private static final String NCICB_URL = "http://ncicb.nci.nih.gov/support";
+  private static final String TELEPHONE = Constants.TELEPHONE;
+  private static final String MAIL_TO = Constants.MAIL_TO;
+  private static final String NCICB_URL = Constants.NCICB_URL;
   
   // List of attribute name(s):
     public static final String SUBJECT = "subject";
