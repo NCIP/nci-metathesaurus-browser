@@ -51,8 +51,8 @@ import java.util.*;
  */
 public class Constants {
 
-    public static final String TELEPHONE = "301.451.4384 or Toll-Free: 888.478.4423";
-    public static final String MAIL_TO = "ncicb@pop.nci.nih.gov";
+    public static final String TELEPHONE = "240-276-5541 or Toll-Free: 1-888-478-4423";
+    public static final String MAIL_TO = "ncicbiit@mail.nih.gov";
     public static final String NCICB_URL = "http://ncicb.nci.nih.gov/support";
 
     // Application version
