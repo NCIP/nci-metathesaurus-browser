@@ -130,13 +130,6 @@ public final class RedirectServlet extends HttpServlet {
 
         String nciterm_browser_url = NCImBrowserProperties.getTermBrowserURL();
 
-/*
-        String action = (String) request.getParameter("action");
-        String dictionary = (String) request.getParameter("dictionary");
-        String code = (String) request.getParameter("code");
-        String term_source = (String) request.getParameter("sab");
-        String type = (String) request.getParameter("type");
-*/
         //KLO, 020413
         String action = HTTPUtils.cleanXSS((String) request.getParameter("action"));
         String dictionary = HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));

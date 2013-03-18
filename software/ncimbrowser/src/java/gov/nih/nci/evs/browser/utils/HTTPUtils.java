@@ -205,7 +205,7 @@ public class HTTPUtils {
     public static String getRefererParmDecode(HttpServletRequest request) {
         String refurl = "N/A";
         try {
-            String iref = request.getParameter(REFERER);
+            String iref = (String) request.getParameter(REFERER);
             if (iref != null)
                 refurl =
                     URLDecoder.decode(request.getParameter(REFERER), "UTF-8");
