@@ -53,7 +53,7 @@ public class Constants {
 
     public static final String TELEPHONE = "301.451.4384 or Toll-Free: 888.478.4423";
     public static final String MAIL_TO = "ncicb@pop.nci.nih.gov";
-    public static final String NCICB_URL = "http://ncicbiit@mail.nih.gov/support";
+    public static final String NCICB_URL = "http://ncicb.nci.nih.gov/support";
 
     // Application version
     public static final int MAJOR_VER = 1;
