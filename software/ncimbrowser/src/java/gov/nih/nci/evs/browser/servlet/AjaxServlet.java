@@ -114,11 +114,11 @@ public final class AjaxServlet extends HttpServlet {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         // Determine request by attributes
-        String action = request.getParameter("action");// DataConstants.ACTION);
-        String node_id = request.getParameter("ontology_node_id");// DataConstants.ONTOLOGY_NODE_ID);
+        String action = HTTPUtils.cleanXSS((String)request.getParameter("action"));// DataConstants.ACTION);
+        String node_id = HTTPUtils.cleanXSS((String)request.getParameter("ontology_node_id"));// DataConstants.ONTOLOGY_NODE_ID);
         String ontology_display_name =
-            request.getParameter("ontology_display_name");// DataConstants.ONTOLOGY_DISPLAY_NAME);
-        String ontology_source = request.getParameter("ontology_source");
+            HTTPUtils.cleanXSS((String)request.getParameter("ontology_display_name"));// DataConstants.ONTOLOGY_DISPLAY_NAME);
+        String ontology_source = HTTPUtils.cleanXSS((String)request.getParameter("ontology_source"));
 
         long ms = System.currentTimeMillis();
         if (action.equals("expand_tree")) {
