@@ -1142,6 +1142,10 @@ public class UserSessionBean extends Object {
     }
 
 
+/////////////////////////////////////////////////////////////////////////////
+// CAPTCHA
+/////////////////////////////////////////////////////////////////////////////
+
     public String regenerateCaptchaImage() throws Exception {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
