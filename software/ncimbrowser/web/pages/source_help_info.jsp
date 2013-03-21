@@ -128,6 +128,11 @@ Additional information on many of these sources can be found on related pages.
           </table>
           <br/>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
+             <tr class="dataRowDark">
+               <th scope="col" align="left">Source</th>
+               <th scope="col" align="left">Description</th>
+             </tr>
+          
             <%
               String propertyName = "son";//"formalName";
               //Vector abbr_vec = new MetadataUtils().getMetadataForCodingSchemes(Constants.CODING_SCHEME_NAME, propertyName);
@@ -139,12 +144,11 @@ Additional information on many of these sources can be found on related pages.
        Vector w = DataUtils.parseData(t, "|");
        String abbr = (String) w.elementAt(0);
        String def = (String) w.elementAt(1);
-       String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
+       String rowColor = (n%2 == 0) ? "dataRowLight" : "dataRowDark";
         %>
           <tr class="<%=rowColor%>">
-      <td><%=abbr%></td>
-      <td>&nbsp;</td>
-      <td><%=def%></td>
+	      <td><%=abbr%></td>
+	      <td><%=def%></td>
           </tr>
         <%
         prev_t = t;
