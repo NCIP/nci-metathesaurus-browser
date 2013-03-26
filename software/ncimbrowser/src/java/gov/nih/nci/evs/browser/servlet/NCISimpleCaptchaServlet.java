@@ -42,12 +42,13 @@ public class NCISimpleCaptchaServlet extends SimpleCaptchaServlet {
     private static int _width = 200;
     private static int _height = 50;
 
-    private static final List<Color> COLORS = new ArrayList<Color>(2);
+    //private static final List<Color> COLORS = new ArrayList<Color>(2);
+    private static final List<Color> COLORS = new ArrayList<Color>(1);
     private static final List<Font> FONTS = new ArrayList<Font>(3);
 
     static {
         COLORS.add(Color.BLACK);
-        COLORS.add(Color.BLUE);
+        //COLORS.add(Color.BLUE);
 
         FONTS.add(new Font("Geneva", Font.ITALIC, 48));
         FONTS.add(new Font("Courier", Font.BOLD, 48));
@@ -69,7 +70,8 @@ public class NCISimpleCaptchaServlet extends SimpleCaptchaServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        ColoredEdgesWordRenderer wordRenderer = new ColoredEdgesWordRenderer(COLORS, FONTS);
+        //ColoredEdgesWordRenderer wordRenderer = new ColoredEdgesWordRenderer(COLORS, FONTS);
+        ColoredEdgesWordRenderer wordRenderer = new ColoredEdgesWordRenderer(COLORS, FONTS, 1f);
         Captcha captcha = new Captcha.Builder(_width, _height).addText(wordRenderer)
                 //.gimp()
                 .addNoise()
