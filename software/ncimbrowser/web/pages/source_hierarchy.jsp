@@ -470,7 +470,6 @@
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <a name="evs-content" id="evs-content"></a>
         <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td valign="top">
@@ -496,18 +495,6 @@ if (ontology_sab == null) {
 }
 ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
 
-/*
-String SABFormalName = MetadataUtils.getSABFormalName(ontology_sab);
-LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
-if (licenseBean == null) {
-    licenseBean = new LicenseBean();
-    request.getSession().setAttribute("licenseBean", licenseBean);
-}
-
-boolean licenseAgreementAccepted = licenseBean.licenseAgreementAccepted(SABFormalName);
-boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
-*/
-
         if (ontology_sab.compareTo("NCI") == 0) {
 %>
            <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
@@ -521,6 +508,8 @@ boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
 %>
 
         <div id="popupContentArea">
+          <a name="evs-content" id="evs-content"></a>
+         
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody">
               <td class="pageTitle" align="left">
@@ -539,6 +528,7 @@ boolean isLicensed = licenseBean.isLicensed(SABFormalName, null);
 
               </td>
               <td class="pageTitle" align="right">
+               
                 <font size="1" color="red" align="right">
                   <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer"><i>Send to Printer</i></a>
                 </font>
