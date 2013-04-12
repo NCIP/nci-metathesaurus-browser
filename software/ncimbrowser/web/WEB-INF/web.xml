@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
+
+<!--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-metathesaurus-browser/LICENSE.txt for details.
+L-->
+
 <!DOCTYPE web-app PUBLIC
   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   "http://java.sun.com/dtd/web-app_2_3.dtd">

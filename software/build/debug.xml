@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
+<!--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-metathesaurus-browser/LICENSE.txt for details.
+L-->
+
 <!-- bda-build-templage verison 1.5.13 -->
 
 <project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
