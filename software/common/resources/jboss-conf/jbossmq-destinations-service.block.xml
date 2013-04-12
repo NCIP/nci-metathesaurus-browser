@@ -1,3 +1,10 @@
+<!--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-metathesaurus-browser/LICENSE.txt for details.
+L-->
+
 <server>
 <mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=imageQueue">
 	<depends optional-attribute-name="DestinationManager">
