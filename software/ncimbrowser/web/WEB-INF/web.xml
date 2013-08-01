@@ -1,12 +1,4 @@
 <?xml version="1.0"?>
-
-<!--L
-  Copyright Northrop Grumman Information Technology.
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/nci-metathesaurus-browser/LICENSE.txt for details.
-L-->
-
 <web-app version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -53,6 +45,19 @@ L-->
          <url-pattern>/redirect</url-pattern>
     </servlet-mapping>   
 
+
+    <servlet>
+        <servlet-name>sessionServlet</servlet-name>
+        <servlet-class>gov.nih.nci.evs.browser.servlet.SessionServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+         <servlet-name>sessionServlet</servlet-name>
+         <url-pattern>/sessionServlet</url-pattern>
+    </servlet-mapping>
+    
+    
     <!-- Faces Servlet -->
 
     <servlet>

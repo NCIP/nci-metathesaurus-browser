@@ -1,10 +1,3 @@
-<%--L
-  Copyright Northrop Grumman Information Technology.
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/nci-metathesaurus-browser/LICENSE.txt for details.
-L--%>
-
 <%
   String entry_type_src = type;
   if (type.compareTo("sources") == 0 || type.compareTo("all") == 0)
