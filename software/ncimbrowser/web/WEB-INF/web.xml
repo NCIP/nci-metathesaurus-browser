@@ -45,7 +45,7 @@
          <url-pattern>/redirect</url-pattern>
     </servlet-mapping>   
 
-
+<!--
     <servlet>
         <servlet-name>sessionServlet</servlet-name>
         <servlet-class>gov.nih.nci.evs.browser.servlet.SessionServlet</servlet-class>
@@ -56,7 +56,8 @@
          <servlet-name>sessionServlet</servlet-name>
          <url-pattern>/sessionServlet</url-pattern>
     </servlet-mapping>
-    
+-->
+
     
     <!-- Faces Servlet -->
 
