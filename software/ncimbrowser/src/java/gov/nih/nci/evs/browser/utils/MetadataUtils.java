@@ -18,6 +18,13 @@ import org.apache.log4j.*;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.lexgrid.resolvedvalueset.LexEVSResolvedValueSetService;
+import org.lexgrid.resolvedvalueset.impl.LexEVSResolvedValueSetServiceImpl;
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
+
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.commonTypes.Properties;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -432,6 +439,15 @@ public class MetadataUtils {
 	}
 
 
+	private static boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
+		for (Property prop: cs.getProperties().getProperty()) {
+			if (prop.getPropertyName().equalsIgnoreCase(LexEVSValueSetDefinitionServices.RESOLVED_AGAINST_CODING_SCHEME_VERSION)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
     static {
         //if (_sab2FormalNameHashMap != null)
         //    return;
@@ -466,10 +482,6 @@ public class MetadataUtils {
             }
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
-            /*
-            if (csrs == null) return;
-            if (csrs.length == 0) return;
-            */
             for (int i = 0; i < csrs.length; i++) {
                 int j = i + 1;
                 CodingSchemeRendering csr = csrs[i];
@@ -478,12 +490,6 @@ public class MetadataUtils {
 					String formalname = css.getFormalName();
 					String css_local_name = css.getLocalName();
 					Boolean isActive = null;
-					/*
-					if (csr == null) {
-						_logger.warn("\tcsr == null???");
-					} else
-					*/
-
 					if (csr.getRenderingDetail() == null) {
 						_logger.warn("\tcsr.getRenderingDetail() == null");
 					} else if (csr.getRenderingDetail().getVersionStatus() == null) {
@@ -505,9 +511,10 @@ public class MetadataUtils {
 						vt.setVersion(representsVersion);
 						try {
 							CodingScheme cs =
-								lbSvc.resolveCodingScheme(formalname, vt);
+								//lbSvc.resolveCodingScheme(formalname, vt);
+								getCodingScheme(formalname, representsVersion);
 
-							if (cs != null) {
+							if (cs != null && !isResolvedValueSetCodingScheme(cs)) {
 								NameAndValue[] nvList =
 									MetadataUtils.getMetadataProperties(cs);
 								if (nvList != null) {
@@ -554,15 +561,16 @@ public class MetadataUtils {
 									}
 								//}
 								_logger.info("\tMetadata version: " + version);
-							}
+						    }
 						} catch (Exception ex) {
 							_logger.warn("\tUnable to resolve coding scheme "
 								+ formalname
 								+ " possibly due to missing security token.");
 							_logger
 								.warn("\t\tAccess to " + formalname + " denied.");
-							ex.printStackTrace();
+							//ex.printStackTrace();
 						}
+
 					} else {
 						_logger.warn("\tWARNING: setCodingSchemeMap discards "
 							+ formalname);
@@ -749,7 +757,6 @@ public class MetadataUtils {
         */
         return _propertyDescriptionsVec;
     }
-
 
 
 	private static CodingScheme getCodingScheme(String codingScheme,
