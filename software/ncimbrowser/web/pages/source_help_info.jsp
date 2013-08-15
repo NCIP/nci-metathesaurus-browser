@@ -77,6 +77,12 @@ some of which are proprietary and included, by permission, for non-commercial us
   </li>
 
   <li>
+    The International Organization for Standardization (ISO) allows reference use of its 3166-2 codes in NCI Enterprise Vocabulary Services, 
+    but requires licensing for other purposes
+    (see <a href="http://www.iso.org/iso/home/standards/country_codes.htm" target="_blank">http://www.iso.org/iso/home/standards/country_codes.htm</a>).
+  </li>
+
+  <li>
     The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in
     NCI Enterprise Vocabulary Services, but requires licensing for other purposes.
     Terms of use for SNOMED CT are contained in Appendix 2, SNOMED CT Affiliate Licence Agreement, of the License for Use of the UMLS Metathesaurus.
