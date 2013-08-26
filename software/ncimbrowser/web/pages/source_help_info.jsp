@@ -103,10 +103,7 @@ some of which are proprietary and included, by permission, for non-commercial us
 <p>
 Additional information on many of these sources can be found on related pages.
 <ul>
-  <li>
-    Many are described at: 
-    <a href="https://wiki.nci.nih.gov/display/VKC/Index+of+Terminologies" target="_blank">https://wiki.nci.nih.gov/display/VKC/Index+of+Terminologies</a>
-  </li>
+
   <li>
     NCI Term Browser sources are described in more detail
     at: <a href="http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf</a>
@@ -120,6 +117,11 @@ Additional information on many of these sources can be found on related pages.
   <li>
     UMLS Metathesaurus sources are described in detail at:
     <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank">http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
+  </li>
+
+  <li>
+    Many are described at: 
+    <a href="https://wiki.nci.nih.gov/x/FgjrAw" target="_blank">https://wiki.nci.nih.gov/x/FgjrAw</a>
   </li>
   
   <li>
