@@ -62,7 +62,7 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
-          3,600,000 terms from more than 70 terminologies. It contains most public domain vocabularies from
+          4,000,000 terms from more than 75 terminologies. It contains most public domain vocabularies from
           the National Library of Medicine's <a href="http://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
@@ -73,8 +73,7 @@
           <b>The NCIm Browser</b>
           is for the retrieval of concepts from the NCI Metathesaurus, and for viewing the contents, structure,
           and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
-          user community. This release adds some advanced search options, additional information from source
-          terminologies, and other features requested by users.
+          user community. This 2.3 release switches to using the new LexEVS 6.1 terminology server without significant changes that would affect users. 
           <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a>
           to provide feedback and get additional help on the NCIm Browser.
           <br><br>
@@ -107,7 +106,8 @@
               words have to be found in the same order you provided. For example, if you do a <b>Contains</b>
               search on <span style="font-family:monospace;">Melanoma Corneal</span> no results will be returned, but if you search on
               <span style="font-family:monospace;">Corneal Melanoma</span> you get the detail page
-              for <i>Corneal Melanoma</i>.
+              for <i>Corneal Melanoma</i>. 
+              Note that the companion 2.3 NCI Term Browser release now uses a faster and more flexible <b>Contains</b> search on <b>Name</b> that can search NCIm for multiple words found in any order (select NCIm using the check box on the NCI Term Browser home page).
             </ul>
             <li><b>Match method radio buttons</b> select how your search string will be matched.
             <ul>
@@ -326,7 +326,9 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This release, based on LexEVS <%=lexevs_version %>, addresses most known data and performance issues. We are still
+          This 2.3 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
+          does not yet address some of the search and other enhancements made in the companion 2.3 Term Browser; we plan to add these in the next release.  
+          We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
           <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.3+Release+Notes" target="_blank">
@@ -335,7 +337,7 @@
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
           Suggestions to add a new concept or make changes to an existing concept can also be made using the
-          <b>Term Suggestion</b> link below the Search box or the <b>Suggest changes to this concept</b> link
+          <b>Suggest changes to this concept</b> link
           in the upper right of all concept details pages.
         </p>
         <p class="textbody">
@@ -345,11 +347,9 @@
           </tr></table>
           <!-- ************* Additional Information ************** -->
           Additional information about NCIm and EVS can be found on the
-          <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a>,
+          <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a> and 
           <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a>
-          sites and
-          <a href="https://cabig.nci.nih.gov/concepts/EVS/" target="_blank">EVS caBIG Web</a>,
-          sites.
+          sites. 
         </p>
         <br>
         <%@ include file="/pages/include/nciFooter.jsp" %>
