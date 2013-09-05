@@ -7,13 +7,15 @@
   String ql_ncit_url = new DataUtils().getNCItURL();
 
   String term_suggestion_application_url2 = (String) request.getSession().getAttribute("term_suggestion_application_url");
-  if (term_suggestion_application_url2 == null) {
+  if (DataUtils.isNull(term_suggestion_application_url2)) {
+  
      term_suggestion_application_url2 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url2 != null) {
          //request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url);
          request.getSession().setAttribute("term_suggestion_application_url", term_suggestion_application_url2);
      }
   }
+  
   String dictionaryName = Constants.CODING_SCHEME_NAME;
   String dictionary_encoded2 = dictionaryName.replaceAll(" ", "%20");
 

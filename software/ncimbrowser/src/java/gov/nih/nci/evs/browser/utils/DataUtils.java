@@ -4731,5 +4731,13 @@ public class DataUtils {
         return assocLabel;
     }
 
+    public static boolean isNull(String value) {
+		if (value == null || value.compareToIgnoreCase("null") == 0) return true;
+		return false;
+	}
 
+    public static boolean isNullOrBlank(String value) {
+		if (value == null || value.compareToIgnoreCase("null") == 0 || value.compareTo("") == 0) return true;
+		return false;
+	}
 }
