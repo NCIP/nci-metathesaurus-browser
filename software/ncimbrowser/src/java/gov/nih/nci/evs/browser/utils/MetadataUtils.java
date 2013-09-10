@@ -138,12 +138,15 @@ public class MetadataUtils {
 
         Vector v2 = getMetadataCodingSchemeNames(mdpl);
         Vector w = new Vector();
-        for (int i = 0; i < v.size(); i++) {
-            String name = (String) v.get(i);
-            String value = (String) v2.get(i);
-            w.add(name + "|" + value);
-        }
-        w = SortUtils.quickSort(w);
+
+        if (v != null) {
+			for (int i = 0; i < v.size(); i++) {
+				String name = (String) v.get(i);
+				String value = (String) v2.get(i);
+				w.add(name + "|" + value);
+			}
+			w = SortUtils.quickSort(w);
+	    }
 
         return w;
     }
@@ -586,18 +589,20 @@ public class MetadataUtils {
 
         Vector abbr_vec = getMetadataForCodingSchemes();
         _sab2DefinitionHashMap = new HashMap();
-        for (int n = 0; n < abbr_vec.size(); n++) {
-            String t = (String) abbr_vec.elementAt(n);
-            Vector w = parseData(t, "|");
-            String abbr = (String) w.elementAt(0);
-            String def = (String) w.elementAt(1);
-            if (_localname2FormalnameHashMap.get(abbr) != null) {
-                String formalname =
-                    (String) _localname2FormalnameHashMap.get(abbr);
-                _sab2FormalNameHashMap.put(abbr, formalname);
-            }
-            _sab2DefinitionHashMap.put(abbr, def);
-        }
+        if (abbr_vec != null) {
+			for (int n = 0; n < abbr_vec.size(); n++) {
+				String t = (String) abbr_vec.elementAt(n);
+				Vector w = parseData(t, "|");
+				String abbr = (String) w.elementAt(0);
+				String def = (String) w.elementAt(1);
+				if (_localname2FormalnameHashMap.get(abbr) != null) {
+					String formalname =
+						(String) _localname2FormalnameHashMap.get(abbr);
+					_sab2FormalNameHashMap.put(abbr, formalname);
+				}
+				_sab2DefinitionHashMap.put(abbr, def);
+			}
+	    }
         DataUtils.setFormalName2MetadataHashMap(_formalName2MetadataHashMap);
         //return;
     }
