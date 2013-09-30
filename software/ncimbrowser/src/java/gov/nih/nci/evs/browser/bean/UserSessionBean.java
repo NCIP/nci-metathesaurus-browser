@@ -1114,6 +1114,8 @@ response.setContentType("text/html;charset=utf-8");
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         String dictionary = HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
+        dictionary = dictionary.replaceAll("&#40;", "\\(").replaceAll("&#41;", "\\)");
+
         String code = HTTPUtils.cleanXSS((String) request.getParameter("code"));
         String sab = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
 
