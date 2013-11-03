@@ -383,8 +383,8 @@ public class UserSessionBean extends Object {
                     iteratorBeanManager.addIteratorBean(iteratorBean);
                 }
             }
-
         } else if (searchType != null && searchType.compareTo("Name") == 0) {
+
             searchFields =
                 SearchFields.setName(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
@@ -393,10 +393,20 @@ public class UserSessionBean extends Object {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
-                wrapper =
-                    new SearchUtils().searchByName(scheme, version, matchText,
-                        source, matchAlgorithm, ranking, maxToReturn,
-                        SearchUtils.NameSearchType.Name);
+
+				if (SimpleSearchUtils.searchAllSources(source) && SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
+					try {
+						wrapper = new SimpleSearchUtils().search(scheme, version, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				} else {
+					wrapper =
+						new SearchUtils().searchByName(scheme, version, matchText,
+							source, matchAlgorithm, ranking, maxToReturn,
+							SearchUtils.NameSearchType.Name);
+				}
+
                 if (wrapper != null) {
                     iterator = wrapper.getIterator();
                     if (iterator != null) {
@@ -404,6 +414,8 @@ public class UserSessionBean extends Object {
                         iteratorBean.setKey(key);
                         iteratorBean.setMatchText(matchText);
                         iteratorBeanManager.addIteratorBean(iteratorBean);
+
+                        request.getSession().setAttribute("key", key);
                     }
                 }
             }
@@ -417,17 +429,30 @@ public class UserSessionBean extends Object {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
-                wrapper =
-                    new SearchUtils().searchByCode(scheme, version, matchText,
-                        source, matchAlgorithm, ranking, maxToReturn);
+                /*
+                 * wrapper = new SearchUtils().searchByName(scheme, version,
+                 * matchText, source, matchAlgorithm, ranking, maxToReturn,
+                 * SearchUtils.NameSearchType.Code);
+                 */
+			    schemes = new Vector();
+			    Vector versions = new Vector();
+			    schemes.add(scheme);
+			    versions.add(version);
+
+                wrapper = new CodeSearchUtils().searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
 
                 if (wrapper != null) {
                     iterator = wrapper.getIterator();
                     if (iterator != null) {
                         iteratorBean = new IteratorBean(iterator);
                         iteratorBean.setKey(key);
+
                         iteratorBean.setMatchText(matchText);
+
+
                         iteratorBeanManager.addIteratorBean(iteratorBean);
+
+                        request.getSession().setAttribute("key", key);
                     }
                 }
             }
@@ -649,7 +674,12 @@ response.setContentType("text/html;charset=utf-8");
         ResolvedConceptReferencesIterator iterator = null;
         Vector schemes = new Vector();
         schemes.add(scheme);
+
+        Vector versions = new Vector();
+        versions.add(version);
+
         boolean ranking = true;
+
 
         SearchFields searchFields = null;
         String key = null;
@@ -659,32 +689,66 @@ response.setContentType("text/html;charset=utf-8");
 				source, matchAlgorithm, maxToReturn);
 		key = searchFields.getKey();
 
-		if (searchTarget.compareTo("names") == 0) {
+        if (searchTarget.compareTo("names") == 0) {
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                //ResolvedConceptReferencesIteratorWrapper wrapper = null;
+                try {
+					boolean isSimpleSearchSupported = SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
+					System.out.println("isSimpleSearchSupported: " + isSimpleSearchSupported);
 
-			if (iteratorBeanManager.containsIteratorBean(key)) {
-				iteratorBean = iteratorBeanManager.getIteratorBean(key);
-				iterator = iteratorBean.getIterator();
-			} else {
+					if (SimpleSearchUtils.searchAllSources(source) && SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
 
-				long ms = System.currentTimeMillis();
-				wrapper =
-					new SearchUtils().searchByName(scheme, version,
-						matchText, source, matchAlgorithm, ranking,
-						maxToReturn);
-		        System.out.println("searchByName Run time (ms): "
-					+ (System.currentTimeMillis() - ms));
+System.out.println("calling SimpleSearchUtils().search ...");
 
-
-				if (wrapper != null) {
-					iterator = wrapper.getIterator();
-					if (iterator != null) {
-						iteratorBean = new IteratorBean(iterator);
-						iteratorBean.setKey(key);
-						iteratorBean.setMatchText(matchText);
-						iteratorBeanManager.addIteratorBean(iteratorBean);
+						wrapper = new SimpleSearchUtils().search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+				    } else {
+						wrapper = new SearchUtils()
+							.searchByNameOrCode(schemes, versions, matchText, source,
+								matchAlgorithm, ranking, maxToReturn, SearchUtils.SEARCH_BY_NAME_ONLY);
 					}
+				} catch (Exception ex) {
+                    ex.printStackTrace();
 				}
-			}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+                    }
+                }
+            }
+
+        } else if (searchTarget.compareTo("codes") == 0) {
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                //ResolvedConceptReferencesIteratorWrapper wrapper = null;
+                try {
+					wrapper = new CodeSearchUtils().searchByCode(
+						schemes, versions, matchText,
+						source, matchAlgorithm, ranking, maxToReturn, false);
+
+				} catch (Exception ex) {
+                    //ex.printStackTrace();
+				}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+                    }
+                }
+            }
 
 		} else if (searchTarget.compareTo("properties") == 0) {
 			if (iteratorBeanManager.containsIteratorBean(key)) {

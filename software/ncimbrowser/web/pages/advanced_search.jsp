@@ -35,6 +35,8 @@
     function cursor_wait() {
         document.body.style.cursor = 'wait';
     }
+    
+    
     function refresh() {
       var text = document.forms["advancedSearchForm"].matchText.value;
       algorithm = "exactMatch";
@@ -57,6 +59,7 @@
       var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
       var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
       var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
+      
       window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1"
           + "&opt="+ selectSearchOption
           + "&text="+ text
@@ -66,6 +69,81 @@
           + "&rel="+ rel_search_association
           + "&rela="+ rel_search_rela;
     }
+    
+    
+    function refresh_code() {
+
+      var text = escape(document.forms["advancedSearchForm"].matchText.value);
+ 
+      var selectSearchOption = "Code";
+      var algorithm = "exactMatch";
+      var adv_search_source = document.forms["advancedSearchForm"].adv_search_source.value;
+
+      var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
+      var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
+
+      var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
+      var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
+      
+      window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1"
+          + "&opt="+ selectSearchOption
+          + "&text="+ text
+          + "&algorithm="+ algorithm
+          + "&sab="+ adv_search_source
+          + "&prop="+ selectProperty
+          + "&rel="+ rel_search_association
+          + "&rela="+ rel_search_rela;
+    }    
+    
+    
+    
+    
+     function refresh_algorithm() {
+       var text = escape(document.forms["advancedSearchForm"].matchText.value);
+ 
+       var algorithm = "exactMatch";
+       var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
+       for (var i=0; i<algorithmObj.length; i++) {
+         if (algorithmObj[i].checked) {
+            algorithm = algorithmObj[i].value;
+            break;
+         }
+       }  
+
+       var selectSearchOption = "";
+       var selectSearchOptionObj = document.forms["advancedSearchForm"].selectSearchOption;
+       for (var i=0; i<selectSearchOptionObj.length; i++) {
+         if (selectSearchOptionObj[i].checked) {
+           selectSearchOption = selectSearchOptionObj[i].value;
+           break;
+         }
+       }
+      
+      
+      if (algorithm != "exactMatch" && selectSearchOption == "Code") {
+          selectSearchOption = "Name";
+      }
+            
+      
+      var adv_search_source = document.forms["advancedSearchForm"].adv_search_source.value;
+      var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
+      var selectProperty = document.forms["advancedSearchForm"].selectProperty.value;
+
+      var rel_search_association = document.forms["advancedSearchForm"].rel_search_association.value;
+      var rel_search_rela = document.forms["advancedSearchForm"].rel_search_rela.value;
+
+      window.location.href="/ncimbrowser/pages/advanced_search.jsf?refresh=1"
+          + "&opt="+ selectSearchOption
+          + "&text="+ text
+          + "&algorithm="+ algorithm
+          + "&sab="+ adv_search_source
+          + "&prop="+ selectProperty
+          + "&rel="+ rel_search_association
+          + "&rela="+ rel_search_rela;
+    }        
+    
+    
+    
   </script>
   <%!
       private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
@@ -108,6 +186,10 @@
         rel_search_association = HTTPUtils.cleanXSS((String) request.getParameter("rel"));
         rel_search_rela = HTTPUtils.cleanXSS((String) request.getParameter("rela"));
         selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("prop"));
+        
+        
+        
+        
     } else {
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         selectSearchOption = bean.getSearchType();
@@ -192,7 +274,7 @@
         check__e = "checked";
     else if (adv_search_algorithm.compareTo("startsWith") == 0)
         check__s= "checked";
-    else if (adv_search_algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
+    else if (adv_search_algorithm.compareTo("lucene") == 0)
         check__b= "checked";
     else
         check__c = "checked";
@@ -247,12 +329,21 @@
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
                     <tr valign="top" align="left"><td align="left" class="textbody">
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> /><label for="adv_search_algorithm3">Contains</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
+                     
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="3" onclick="refresh_algorithm()"; >
+                      Lucene
                     </td></tr>
                   </table>
                 </td></tr>
+
+
+<%
+if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
+%>
+
 
                 <tr><td>
                   <h:outputLabel for="adv_search_source" id="rel_search_source_Label" value="Source" styleClass="textbody">
@@ -288,6 +379,15 @@
                   </h:outputLabel>
                 </td></tr>
 
+
+<%
+} else {
+%>
+    <input type="hidden" name="adv_search_source" id="adv_search_source" value="<%=HTTPUtils.cleanXSS(adv_search_source)%>">
+<%
+}
+%>
+
                 <tr><td>
                   &nbsp;&nbsp;
                 </td></tr>
@@ -297,10 +397,18 @@
                 </td></tr>
 
                 <tr valign="top" align="left"><td align="left" class="textbody">
-                  <input type="radio" name="selectSearchOption" id="selectSearchOption1" value="Code" alt="Code" <%=check_c2%> onclick="javascript:refresh()" /><label for="selectSearchOption1">Code&nbsp;</label>
                   <input type="radio" name="selectSearchOption" id="selectSearchOption2" value="Name" alt="Name" <%=check_n2%> onclick="javascript:refresh()" /><label for="selectSearchOption2">Name&nbsp;</label>
+
+<%
+if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
+%>
+                  <input type="radio" name="selectSearchOption" id="selectSearchOption1" value="Code" alt="Code" <%=check_c2%> onclick="refresh_code()" /><label for="selectSearchOption1">Code&nbsp;</label>
                   <input type="radio" name="selectSearchOption" id="selectSearchOption3" value="Property" alt="Property" <%=check_p2%> onclick="javascript:refresh()" /><label for="selectSearchOption3">Property&nbsp;</label>
                   <input type="radio" name="selectSearchOption" id="selectSearchOption4" value="Relationship" alt="Relationship" <%=check_r2%> onclick="javascript:refresh()" /><label for="selectSearchOption4">Relationship</label>
+<%
+}
+%>
+
                 </td></tr>
 
                 <tr><td>
@@ -430,13 +538,63 @@
                   </table>
                 </td></tr>
 
+
+
+
+<%
+if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) { 
+%>
+
+<tr><td>
+<p>
+<table>
+   <tr><td class="textbody">&nbsp;Examples:</td></tr>
+   <tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Wildcard (multiple characters): heart*</i>
+       </td>
+   </tr>
+   <tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Wildcard (single character): he?rt</i>
+       </td>
+   </tr>
+   <tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Fuzzy match: heart~</i>
+       </td>
+   </tr>
+   <tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Boolean: heart AND attack</i>
+       </td>
+   </tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Boosting: heart^5 AND attack</i>
+       </td>
+   </tr>
+   <tr>
+       <td class="textbody">&nbsp;&nbsp;
+<i>Negation: heart -attack</i>
+       </td>
+   </tr>
+
+</table>
+</p>
+</td></tr>
+
+<%
+}
+%>
+
+
+
+
               </table>
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
               <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=HTTPUtils.cleanXSS(adv_search_type)%>" />
 
-            <!--
-            </form>
-            -->
+
             </h:form>
 
           </td></tr>

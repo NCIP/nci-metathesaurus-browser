@@ -29,6 +29,43 @@
     if (obj6 != null) obj6.removeAttribute('href');
 
   }
+  
+  
+    function onCodeButtonPressed(formname) {
+	  var algorithmObj = document.forms[formname].algorithm;
+	  for (var j=0; j<algorithmObj.length; j++) {
+		  algorithm = algorithmObj[j].value;
+		  if (algorithm == "exactMatch") {
+			 algorithmObj[j].checked = true;
+		  }
+	  }
+    }
+
+    function getSearchTarget(formname) {
+          var searchTargetObj = document.forms[formname].searchTarget;
+	  for (var j=0; j<searchTargetObj.length; j++) {
+	      if (searchTargetObj[j].checked == true) {
+	         return searchTargetObj[j].value;
+	      }
+	  }
+    }
+
+    function onAlgorithmChanged(formname) {
+      var curr_target = getSearchTarget(formname);
+      if (curr_target != "codes") return;
+
+          var searchTargetObj = document.forms[formname].searchTarget;
+	  for (var j=0; j<searchTargetObj.length; j++) {
+		  target = searchTargetObj[j].value;
+		  if (target == "codes") {
+			  searchTargetObj[0].checked = true;
+			  return;
+		  }
+	  }
+    }	  
+  
+  
+  
 </script>
 
 <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form"
@@ -91,9 +128,10 @@
      %>
     <tr valign="top" align="left">
       <td align="left" class="textbody">
-        <input type="radio" name="searchTarget" id="searchTarget1" value="names" alt="Names" <%=check_n%>><label for="searchTarget1">Name/Code&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%>><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%>><label for="searchTarget3">Relationship</label>
+	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         <%=check_n%>  tabindex="5">Name&nbsp;
+	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"         <%=check_cd%> tabindex="5" onclick="onCodeButtonPressed('searchTerm');" >Code&nbsp;
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="5"/><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="5"/><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
