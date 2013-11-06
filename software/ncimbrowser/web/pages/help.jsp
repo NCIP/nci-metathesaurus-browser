@@ -73,9 +73,20 @@
           <b>The NCIm Browser</b>
           is for the retrieval of concepts from the NCI Metathesaurus, and for viewing the contents, structure,
           and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
-          user community. This 2.3 release switches to using the new LexEVS 6.1 terminology server without significant changes that would affect users. 
+          user community. 
+          
+          This 2.4 release uses the new LexEVS 6.1 terminology server without significant changes that would affect users. 
+
+ 			The Search box separates Name and Code search, search performance 
+			is better, and single-terminology Advanced Search offers new 
+			Lucene options to search with wildcards, negation, boolean operators, 
+			and fuzzy matching.            
+          
+          
           <a href="<%= request.getContextPath() %>/pages/contact_us.jsf">Contact Us</a>
           to provide feedback and get additional help on the NCIm Browser.
+        
+          
           <br><br>
           <b>This help file</b> provides basic information about how to use the NCIm Browser effectively. It also provides
           pointers on how to learn more about NCIm and related resources. The following typeface font conventions are used
@@ -121,11 +132,19 @@
             </ul>
             <li><b>Match target radio buttons</b> select what category of concept information is searched
             <ul>
-              <li><b>Name/Code</b> is the default: Search text is matched to a concept's preferred name, synonyms, acronyms, or codes. Unless stated otherwise, all search examples in this Help page use the default name/code search.
-              <li><b>Property</b> will match to other direct property attributes of a concept, such as definitions.
+                <li><b>Name</b> button is the default: Search text 
+                    is matched to a concept's preferred name, synonyms, or
+                    acronyms. Unless stated otherwise, all 
+                    search examples in this Help page use the default 
+                    name search.</li>
+                <li><b>Code</b> button is for searching concepts by code: Search text 
+                    is matched to a concept code, or source code. The search is case-insensitive.</li>     
+                    
+              
+              <li><b>Property</b> will match to other direct property attributes of a concept, such as definitions.</li> 
               <li><b>Relationship</b> will return concepts that have relationships to concepts that match
               by name/code (e.g., an exact relationship search on <span style="font-family:monospace;">toe</span>
-              does not return the concept <i>toe</i>, but does return <i>toenail</i> and other related concepts).
+              does not return the concept <i>toe</i>, but does return <i>toenail</i> and other related concepts).</li> 
             </ul>
             <li><b>Source</b> drop-down box: You can choose to limit your search to concepts with terms from
             a specific source. For example, if you only want to find <i>breast cancer</i> concepts that
@@ -152,7 +171,12 @@
           separate page.  Most options and selections are the same as those described under "Search" above.
           The key differences are:
           <ul>
-            <li><b>Code</b> and <b>Name</b> are searched separately.
+          
+		    <li><b>Lucene</b>: This option, new to the NCIm Browser 2.3 release, 
+			allows use of Name search options not available elsewhere, 
+			including wildcards, Boolean operators, negation, and fuzzy search 
+			(click the radio button to see examples).</li>          
+
             <li><b>Property</b> search offers a drop down list of all specific properties in NCIm, so that
             they can be selected and searched individually.
             <li><b>Relationship</b> search offers drop down lists of broad relationship labels (RELs) and
@@ -312,13 +336,7 @@
           This page is also displayed if you click on the <b>?</b> icon above  the source information in the
           <b>Relationships, Synonym Details,</b> and <b>By Source</b> tabs.
         </p>
-        
-       
-        
-
-
-
-        
+    
         
         <p class="textbody">
           <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
@@ -326,13 +344,21 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This 2.3 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
-          does not yet address some of the search and other enhancements made in the companion 2.3 Term Browser; we plan to add these in the next release.  
+          This 2.4 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
+          
+          now addresses some of the search and other enhancements made in the companion 2.3 Term Browser. 
+         
+ 			The Search box separates Name and Code search, search performance 
+			is better, and single-terminology Advanced Search offers new 
+			Lucene options to search with wildcards, negation, boolean operators, 
+			and fuzzy matching.  
+         
+          
           We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.3+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.3 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.4+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 2.4 Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
