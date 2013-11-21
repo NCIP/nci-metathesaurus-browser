@@ -472,6 +472,17 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
          </a>
 
   <table class="datatable">
+  
+          <th class="dataTableHeader" scope="col" align="left">
+                 Name
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+                 Value
+          </th>
+          <th class="dataTableHeader" scope="col" align="left">
+                 Source
+          </th>  
+  
     <%
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
         prop_name = (String) key_vec.elementAt(key_lcv);
