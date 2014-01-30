@@ -96,6 +96,7 @@
 <%
     String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
+    /*
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
       check_e = "checked";
     else if (algorithm.compareTo("startsWith") == 0)
@@ -104,13 +105,24 @@
       check_b= "checked";
     else
       check_c = "checked";
+    */
+
+    if (algorithm == null || algorithm.compareTo("contains") == 0)
+      check_c = "checked";
+    else if (algorithm.compareTo("startsWith") == 0)
+      check_s= "checked";
+    else if (algorithm.compareTo("DoubleMetaphoneLuceneQuery") == 0)
+      check_b= "checked";
+    else
+      check_e = "checked";
+      
  %>
   <table border="0" cellspacing="0" cellpadding="0">
     <tr valign="top" align="left">
       <td align="left" class="textbody">
+        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Contains" <%=check_c%>><label for="algorithm3">Contains</label>
         <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%>><label for="algorithm1">Exact Match&nbsp;</label>
         <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%>><label for="algorithm2">Begins With&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Contains" <%=check_c%>><label for="algorithm3">Contains</label>
       </td>
     </tr>
     <tr align="left">

@@ -83,7 +83,7 @@
     </tr>
   </table>
     <div>      
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
         <%
         if (src_vec.size() > 0) {
         
@@ -139,7 +139,7 @@
            <td>
 <br/>
      <span class="textsubtitle-blue-small">Synonyms</span><a name="Synonyms"></a>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -233,7 +233,7 @@ if (neighborhood_atoms.size() == 0) {
 <%
 } else {
 %>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
         <tr>
           <th class="dataTableHeader" scope="col" align="left" valign="top" nowrap>
               <%

@@ -263,7 +263,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 <p>
 <b>Synonyms &amp; Abbreviations:</b>
 <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(see Synonym Details)</a>
-<table class="datatable">
+<table class="datatable_960">
 <%
   HashSet presentation_hset = new HashSet();
   presentation_hset.add("textualPresentation");
@@ -345,7 +345,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
   %>
 
   <b>External Source Codes:&nbsp;</b>
-  <table class="datatable">
+  <table class="datatable_960">
     <%
 
       n = 0;
@@ -471,7 +471,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
 
-  <table class="datatable">
+  <table class="datatable_960">
   
           <th class="dataTableHeader" scope="col" align="left">
                  Name
@@ -573,7 +573,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
   %>
 
 
-  <table class="datatable">
+  <table class="datatable_960">
 
     <%
     if (primitive != null) {

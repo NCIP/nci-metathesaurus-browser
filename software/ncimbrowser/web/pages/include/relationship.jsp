@@ -110,7 +110,7 @@
       } else {
  %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Parent"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -236,7 +236,7 @@
       } else {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Child"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -362,7 +362,7 @@
       } else {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Broader"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -488,7 +488,7 @@
       } else {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Narrower"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -613,7 +613,7 @@
       } else {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Sibling"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -738,7 +738,7 @@
       } else {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Other"></a>
-  <table class="dataTable">
+  <table class="datatable_960">
     <th class="dataTableHeader" scope="col" align="left">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
@@ -860,7 +860,7 @@
       {
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Self"></a>
-    <table class="dataTable">
+    <table class="datatable_960">
       <th class="dataTableHeader" scope="col" align="left">Relationship
       </th>
       <th class="dataTableHeader" scope="col" align="left">Source AUI

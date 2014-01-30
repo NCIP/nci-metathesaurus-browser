@@ -92,7 +92,7 @@ _logger.debug("set Sortby to: " + sort_by);
 
     <h2>Synonym Details</h2>
     <div>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -188,7 +188,7 @@ _logger.debug("set Sortby to: " + sort_by);
         </div>
         <!-- end Page content -->
       </div>
-      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5" alt="Mainbox Bottom" /></div>
+      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
       <!-- end Main box -->
     </div>
   </f:view>

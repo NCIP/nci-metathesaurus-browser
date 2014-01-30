@@ -80,6 +80,7 @@
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
     String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
+    /*
     if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
       check_e = "checked";
     else if (algorithm.compareTo("startsWith") == 0)
@@ -88,7 +89,17 @@
       check_b= "checked";
     else
       check_c = "checked";
+    */
 
+    if (algorithm == null || algorithm.compareTo("contains") == 0)
+      check_c = "checked";
+    else if (algorithm.compareTo("startsWith") == 0)
+      check_s= "checked";
+    else if (algorithm.compareTo("lucene") == 0)
+      check_b= "checked";
+    else
+      check_e = "checked";    
+    
         String searchTarget = (String) request.getSession().getAttribute("searchTarget");
         String check_n = "", check_cd ="", check_p = "" , check_r ="";
         if (searchTarget == null || searchTarget.compareTo("names") == 0)
@@ -130,9 +141,9 @@
   <table border="0" cellspacing="0" cellpadding="0" width="340px">
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
+        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    <%=check_c%> tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Contains
         <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> tabindex="4"/><label for="algorithm1">Exact Match&nbsp;</label>
         <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Begins With&nbsp;
-        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    <%=check_c%> tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Contains
 
       </td>
     </tr>

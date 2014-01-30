@@ -158,8 +158,11 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 
             multipleCUIs = true;
     %>
-
+<!--
     <table width="700px">
+ -->   
+    <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
+
       <tr>
         <table>
           <tr>
@@ -178,7 +181,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       </tr>
       <tr>
         <td class="textbody">
-          <table class="dataTable" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
+          <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
       <%
 
 
@@ -328,7 +331,11 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
           %>
       <h:form>
       <div class="texttitle-blue">
+      <!--
       <table border="0" width="700px">
+      -->
+      
+      <table border="0" width="900px">
         <tr>
           <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
@@ -388,7 +395,7 @@ request.getSession().removeAttribute("type");
         </div>
         <!-- end Page content -->
       </div>
-      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5" alt="Mainbox Bottom" /></div>
+      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
       <!-- end Main box -->
     </div>
   </f:view>

@@ -15,7 +15,11 @@
   }
 %>
 <div class="textbody">
-  <table border="0" width="700px"><tr>
+<!--
+  <table border="0" width="700px">
+ -->
+  <table class="datatable_960" border="0" width="100%">
+  <tr>
     <td><div class="texttitle-blue">Welcome</div></td>
     <td><div class="texttitle-blue-rightJust">Version: <%= version %></div></td>
   </tr></table>

@@ -26,7 +26,7 @@
 			<td class="textsubtitle-blue" align="left">Synonym Details:<a name="SynonymsDetails"></a></td>
 		</tr>
 	</table>    
-      <table class="dataTable" border="0" width=1000>
+      <table class="datatable_960" border="0" width="100%">
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%

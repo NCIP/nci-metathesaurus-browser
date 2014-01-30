@@ -96,7 +96,7 @@
 %>
     <h2>Concept information of `<%=concept_neighborhood_name%>' from <%=neighborhood_sab%></h2>
     <div>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
         <%
         if (src_vec.size() > 0) {
         %>
@@ -133,7 +133,7 @@
         <tr>
            <td>
 <br/><b>Synonyms</b>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
 
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
@@ -238,7 +238,7 @@ if (neighborhood_atoms.size() == 0) {
 <%
 } else {
 %>
-      <table class="dataTable" border="0">
+      <table class="datatable_960" border="0">
 
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
@@ -396,7 +396,7 @@ if (neighborhood_atoms.size() == 0) {
       </div>
       <!-- end Page content -->
     </div>
-    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5" alt="Mainbox Bottom" /></div>
+    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
     <!-- end Main box -->
   </div>
 </f:view>

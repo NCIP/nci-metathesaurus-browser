@@ -266,10 +266,11 @@
     if (selectProperty == null) selectProperty = "ALL";
     if (adv_search_source == null) adv_search_source = "ALL";
     if (search_string == null) search_string = "";
-    if (adv_search_algorithm == null) adv_search_algorithm = "exactMatch";
+    if (adv_search_algorithm == null) adv_search_algorithm = "contains";
 
 
     String check__e = "", check__b = "", check__s = "" , check__c ="";
+    /*
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
         check__e = "checked";
     else if (adv_search_algorithm.compareTo("startsWith") == 0)
@@ -278,6 +279,17 @@
         check__b= "checked";
     else
         check__c = "checked";
+    */
+
+    if (adv_search_algorithm == null || adv_search_algorithm.compareTo("contains") == 0)
+        check__c = "checked";
+    else if (adv_search_algorithm.compareTo("startsWith") == 0)
+        check__s= "checked";
+    else if (adv_search_algorithm.compareTo("lucene") == 0)
+        check__b= "checked";
+    else
+        check__e = "checked";
+        
 
     String check_n2 = "", check_c2 = "", check_p2 = "" , check_r2 ="";
 
@@ -329,11 +341,10 @@
                   <tr><td>
                      <table border="0" cellspacing="0" cellpadding="0">
                     <tr valign="top" align="left"><td align="left" class="textbody">
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
-                     
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="3" onclick="refresh_algorithm()"; >
+                     <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="3" onclick="refresh_algorithm()"; >
                       Lucene
                     </td></tr>
                   </table>
@@ -603,7 +614,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
       </div>
       <!-- end Page content -->
     </div>
-    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="745" height="5" alt="Mainbox Bottom" /></div>
+    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
     <!-- end Main box -->
   </div>
 </f:view>

@@ -579,7 +579,7 @@ public class MetadataUtils {
 							+ formalname);
 						_logger.warn("\t\trepresentsVersion " + representsVersion);
 					}
-					_logger.info("\n");
+					//_logger.info("\n");
 			    }
             }
         } catch (Exception e) {
