@@ -122,13 +122,16 @@
             </ul>
             <li><b>Match method radio buttons</b> select how your search string will be matched.
             <ul>
-              <li><b>Exact Match</b> is the default: Only terms or codes that are identical will match.
-              <li><b>Begins With</b> can be selected to find all terms or codes that start with the words
-              or characters you enter.
-              <li><b>Contains</b> will search for what you enter anywhere within a term or code (e.g.,
-              <span style="font-family:monospace;">carcinoma</span> will match <i>adenocarcinoma</i>).
+
+              <li><b>Contains</b> is the default. It will search for what you enter anywhere within a term or code (e.g.,
+              <span style="font-family:monospace;">carcinoma</span> will match <i>adenocarcinoma</i>).</li> 
               <li>Concept Codes will only match if they exactly match what you enter, even if you
-              select <b>Begins With</b> or <b>Contains</b>.
+              select <b>Begins With</b> or <b>Contains</b>.</li> 
+              
+              <li><b>Exact Match</b> Only terms or codes that are identical will match.</li> 
+              <li><b>Begins With</b> can be selected to find all terms or codes that start with the words
+              or characters you enter.</li> 
+              
             </ul>
             <li><b>Match target radio buttons</b> select what category of concept information is searched
             <ul>
