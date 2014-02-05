@@ -57,7 +57,7 @@
           <A HREF="#additionalinformation">Additional Information</A>
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="introduction">Introduction</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -98,7 +98,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="searchhelp">Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -118,7 +118,6 @@
               search on <span style="font-family:monospace;">Melanoma Corneal</span> no results will be returned, but if you search on
               <span style="font-family:monospace;">Corneal Melanoma</span> you get the detail page
               for <i>Corneal Melanoma</i>. 
-              Note that the companion 2.3 NCI Term Browser release now uses a faster and more flexible <b>Contains</b> search on <b>Name</b> that can search NCIm for multiple words found in any order (select NCIm using the check box on the NCI Term Browser home page).
             </ul>
             <li><b>Match method radio buttons</b> select how your search string will be matched.
             <ul>
@@ -165,7 +164,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="searchavdhelp">Advanced Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -175,7 +174,7 @@
           The key differences are:
           <ul>
           
-		    <li><b>Lucene</b>: This option, new to the NCIm Browser 2.3 release, 
+		    <li><b>Lucene</b>: This option, new to the NCIm Browser 2.4 release, 
 			allows use of Name search options not available elsewhere, 
 			including wildcards, Boolean operators, negation, and fuzzy search 
 			(click the radio button to see examples).</li>          
@@ -194,7 +193,7 @@
           Advanced Search options will continue to grow in future releases.
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="searchresults">Search Results</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -214,7 +213,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="conceptdetails">Concept Details</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -244,7 +243,7 @@
         
         
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="cartfunctionality">Cart and Export Functionality</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -300,7 +299,7 @@
         
         
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="hierarchy">View Hierarchy</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -324,7 +323,7 @@
           in a separate window.
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="sources">Sources</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -342,14 +341,13 @@
     
         
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
           This 2.4 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
-          
-          now addresses some of the search and other enhancements made in the companion 2.3 Term Browser. 
+          now addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 
 			is better, and single-terminology Advanced Search offers new 
@@ -370,7 +368,7 @@
           in the upper right of all concept details pages.
         </p>
         <p class="textbody">
-          <table width="725px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
             <td><h2><A NAME="additionalinformation">Additional Information</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
