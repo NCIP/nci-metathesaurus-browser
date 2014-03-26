@@ -2,13 +2,19 @@
 
 <%
 String randomStr = iteratorBean.getRandomNumberString();
+
+
 request.getSession().setAttribute("matchText", iteratorBean.getMatchText());
 String searchText = iteratorBean.getMatchText();
+System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchText);
+
+
 %>
 
 <h:form id="paginationForm">
   <input type="hidden" id="key" name="key" value="<%=randomStr%>" />
   <input type="hidden" id="matchText" name="matchText" value="<%=searchText%>" />
+  
   <table>
     <tr>
       <td class="textbody" align=left>

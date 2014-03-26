@@ -849,7 +849,6 @@ public class MetadataUtils {
 			}
 
 			if (mdpl == null) return null;
-			//System.out.println("\tmdpl.getMetadataPropertyCount() = " + mdpl.getMetadataPropertyCount());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

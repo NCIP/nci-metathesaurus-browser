@@ -93,6 +93,10 @@ public class SearchStatusBean extends Object {
         // "advancedSearchOption", selectedSearchOption);
 
         _selectedSearchOption = selectedSearchOption;
+
+
+        setSearchType(selectedSearchOption);
+
     }
 
     public String getSelectedSearchOption() {
@@ -398,17 +402,23 @@ public class SearchStatusBean extends Object {
             return "relationships";
         else if (searchType.toLowerCase().startsWith("propert"))
             return "properties";
+
+        else if (searchType.toLowerCase().startsWith("code"))
+            return "codes";
+
         else return "names";
     }
 
     public void setSearchType(String searchType, boolean updateUserSessionBean) {
         _searchType = searchType;
 
+/*
         if (updateUserSessionBean) {
             String value = mapSearchTypeToSimpleSearch(searchType);
             UserSessionBean bean = BeanUtils.getUserSessionBean();
             bean.setSelectedSearchTarget(value);
         }
+*/
     }
 
     public void setSearchType(String searchType) {

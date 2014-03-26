@@ -1,6 +1,7 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <script type="text/javascript">
@@ -72,7 +73,11 @@
   onsubmit="javascript:disableAnchor();">
 <%
     String match_text = HTTPUtils.cleanXSS((String) request.getParameter("searchText"));
-    if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
+    if (DataUtils.isNull(match_text)) {
+        match_text = (String) request.getSession().getAttribute("matchText");
+    }
+    
+    if (DataUtils.isNull(match_text)) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>

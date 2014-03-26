@@ -138,7 +138,8 @@ public class UserSessionBean extends Object {
         }
 
         String matchType =
-            HTTPUtils.cleanXSS((String) request.getParameter("adv_search_type"));
+            //HTTPUtils.cleanXSS((String) request.getParameter("adv_search_type"));
+            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
 
         bean.setSearchType(matchType);
 
@@ -155,12 +156,13 @@ public class UserSessionBean extends Object {
 			request.getSession().setAttribute("selectedSource", source);
 		}
 
-
         bean.setSelectedSource(source);
 
+/*
         String selectSearchOption =
             HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
         bean.setSelectedSearchOption(selectSearchOption);
+*/
 
         String selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("selectProperty"));
         bean.setSelectedProperty(selectProperty);
@@ -173,9 +175,8 @@ public class UserSessionBean extends Object {
             HTTPUtils.cleanXSS((String) request.getParameter("rel_search_rela"));
         bean.setSelectedRELA(rel_search_rela);
 
-        FacesContext.getCurrentInstance().getExternalContext().getRequestMap()
-            .put("searchStatusBean", bean);
-        request.setAttribute("searchStatusBean", bean);
+
+        //request.setAttribute("searchStatusBean", bean);
 
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
@@ -188,6 +189,13 @@ public class UserSessionBean extends Object {
         }
         matchText = matchText.trim();
         bean.setMatchText(matchText);
+
+
+FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
+
+
+request.getSession().setAttribute("searchStatusBean", bean);
+
 
         if (NCImBrowserProperties.get_debugOn()) {
             _logger.debug(Utils.SEPARATOR);
@@ -237,7 +245,7 @@ public class UserSessionBean extends Object {
         String key = null;
 
         String searchType = HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
-        _logger.debug("SearchUtils.java searchType: " + searchType);
+        _logger.debug("UserSessionBean.java searchType: " + searchType);
 
         if (searchType != null && searchType.compareTo("Property") == 0) {
 
@@ -388,6 +396,8 @@ public class UserSessionBean extends Object {
             searchFields =
                 SearchFields.setName(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
+
+
             key = searchFields.getKey();
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
@@ -469,6 +479,9 @@ public class UserSessionBean extends Object {
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
+
+//FacesContext.getCurrentInstance().getExternalContext().getRequestMap().set("searchStatusBean", bean);
+
             int size = iteratorBean.getSize();
             if (size < 0) {
 				int num_iteration = (-1) * size;
@@ -484,7 +497,6 @@ public class UserSessionBean extends Object {
 					"WARNING: No match found, but only able to test the first " + num_iteration + " out of " + matchingConceptCount + " matching target concepts. "
 					+ " Consider using a more specific search or a different relationship.";
 
-				System.out.println(msg);
 				request.setAttribute("message", msg);
 				return "message";
 			}
@@ -591,6 +603,7 @@ response.setContentType("text/html;charset=utf-8");
         if (matchText != null) {
             matchText = matchText.trim();
             request.getSession().setAttribute("matchText", matchText);
+
         }
 
         // [#19965] Error message is not displayed when Search Criteria is not
@@ -602,16 +615,22 @@ response.setContentType("text/html;charset=utf-8");
         }
 
         String matchAlgorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
-        setSelectedAlgorithm(matchAlgorithm);
+
+        request.getSession().setAttribute("selectedAlgorithm", matchAlgorithm);
+        //setSelectedAlgorithm(matchAlgorithm);
 
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
         if (searchTarget == null || searchTarget.length() == 0) {
             String message = "Please specify a search target.";
             request.getSession().setAttribute("message", message);
             return "message";
-        }
+        } else {
+			request.getSession().setAttribute("searchTarget", searchTarget);
+		}
 
-        setSelectedSearchTarget(searchTarget);
+        //setSelectedSearchTarget(searchTarget);
+
+
 
         // Remove ranking check box (KLO, 092409)
         // String rankingStr = (String) request.getParameter("ranking");
@@ -697,12 +716,7 @@ response.setContentType("text/html;charset=utf-8");
                 //ResolvedConceptReferencesIteratorWrapper wrapper = null;
                 try {
 					boolean isSimpleSearchSupported = SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
-					System.out.println("isSimpleSearchSupported: " + isSimpleSearchSupported);
-
 					if (SimpleSearchUtils.searchAllSources(source) && SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
-
-System.out.println("calling SimpleSearchUtils().search ...");
-
 						wrapper = new SimpleSearchUtils().search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
 				    } else {
 						wrapper = new SearchUtils()
@@ -719,6 +733,7 @@ System.out.println("calling SimpleSearchUtils().search ...");
                     if (iterator != null) {
                         iteratorBean = new IteratorBean(iterator);
                         iteratorBean.setKey(key);
+                        iteratorBean.setMatchText(matchText);
                         iteratorBeanManager.addIteratorBean(iteratorBean);
                     }
                 }
@@ -745,6 +760,7 @@ System.out.println("calling SimpleSearchUtils().search ...");
                     if (iterator != null) {
                         iteratorBean = new IteratorBean(iterator);
                         iteratorBean.setKey(key);
+                        iteratorBean.setMatchText(matchText);
                         iteratorBeanManager.addIteratorBean(iteratorBean);
                     }
                 }
@@ -774,7 +790,6 @@ System.out.println("calling SimpleSearchUtils().search ...");
 
 			if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
 				String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
-				System.out.println(msg);
 				request.getSession().setAttribute("message", msg);
 				return "message";
 			}
@@ -824,6 +839,11 @@ System.out.println("calling SimpleSearchUtils().search ...");
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
+
+
+
+
+
             int size = iteratorBean.getSize();
 
             // Write a search log entry
@@ -874,6 +894,12 @@ HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
 		.getExternalContext().getResponse();
 response.setContentType("text/html;charset=utf-8");
+
+
+
+
+
+
 
                 return "concept_details";
             }
@@ -997,11 +1023,13 @@ response.setContentType("text/html;charset=utf-8");
 
     public void setSelectedAlgorithm(String selectedAlgorithm) {
         _selectedAlgorithm = selectedAlgorithm;
+        /* KLO 032614
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedAlgorithm",
             selectedAlgorithm);
+        */
 
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         bean.setAlgorithm(_selectedAlgorithm, false);
@@ -1012,10 +1040,12 @@ response.setContentType("text/html;charset=utf-8");
     }
 
     public void setSelectedSearchTarget(String searchTarget) {
+		/*
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
         request.getSession().setAttribute("searchTarget", searchTarget);
+        */
 
         SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         bean.setSearchTarget(searchTarget);
@@ -1356,7 +1386,6 @@ response.setContentType("text/html;charset=utf-8");
         String returnIncompleteState) throws Exception {
         Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
         if (captcha == null) {
-			System.out.println("@@@@@@@@@@@@@@ captcha == null @@@@@@@@@@@@@@@");
             captcha = new Captcha.Builder(200, 50).addText().addBackground()
                 // .addNoise()
                 .gimp()
@@ -1378,9 +1407,8 @@ response.setContentType("text/html;charset=utf-8");
             throw new InvalidCaptChaInputException(
                 "WARNING: The string you entered does not match"
                     + " with what is shown in the image. Please try again.");
-		} else {
-			System.out.println("Correct Captcha answer: " + answer);
-		}        request.getSession().removeAttribute(Captcha.NAME);
+		}
+		request.getSession().removeAttribute(Captcha.NAME);
         return null;
     }
 
@@ -1411,10 +1439,7 @@ response.setContentType("text/html;charset=utf-8");
             throw new InvalidCaptChaInputException(
                 "WARNING: The numbers you entered does not match"
                     + " with what is set in the audio. Please try again.");
-		} else {
-			System.out.println("Correct AudioCaptcha answer: " + answer);
 		}
-
         request.getSession().removeAttribute(AudioCaptcha.NAME);
         return null;
     }

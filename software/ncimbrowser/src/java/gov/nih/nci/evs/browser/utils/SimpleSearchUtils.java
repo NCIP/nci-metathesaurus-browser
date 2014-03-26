@@ -147,13 +147,9 @@ public class SimpleSearchUtils {
 
 		SearchExtension extension = getSearchExtension();
         if (extension == null) {
-System.out.println("search extension is not available.");
+			System.out.println("search extension is not available.");
 			return false;
 		}
-
-System.out.println("isSimpleSearchSupported algorithm: " +  algorithm);
-System.out.println("isSimpleSearchSupported target: " +  target);
-
 
 		if (algorithm == null|| target == null) return false;
 
@@ -224,9 +220,6 @@ System.out.println("isSimpleSearchSupported target: " +  target);
 	    if (searchOption != BY_CODE && searchOption != BY_NAME) return null;
 	    if (searchOption != BY_CODE && algorithm == null) return null;
 
-
-System.out.println("continue search ...Step 1");
-
 		LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
 
 		if (lbSvc == null) {
@@ -238,12 +231,9 @@ System.out.println("continue search ...Step 1");
 			searchExtension = (SearchExtension) lbSvc.getGenericExtension("SearchExtension");
 		} catch (Exception e){
 			_logger.warn("SearchExtension is not available.");
-
-System.out.println("SearchExtension is not available.");
+			System.out.println("SearchExtension is not available.");
 			return null;
 		}
-
-System.out.println("continue search ...Step 2");
 
         Set<CodingSchemeReference> includes = new HashSet();
 

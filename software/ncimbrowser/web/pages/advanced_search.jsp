@@ -160,6 +160,7 @@
         <%@ include file="/pages/include/content-header-alt.jsp" %>
 <%
     String defaultSearchOption = "Name";
+    String defaultAlgorithm = "contains";
     String refresh = HTTPUtils.cleanXSS((String) request.getParameter("refresh"));
     boolean refresh_page = false;
     if (refresh != null) {
@@ -191,28 +192,36 @@
         
         
     } else {
-        SearchStatusBean bean = BeanUtils.getSearchStatusBean();
-        selectSearchOption = bean.getSearchType();
-        if (selectSearchOption == null)
-            selectSearchOption = defaultSearchOption;
+        //SearchStatusBean bean = BeanUtils.getSearchStatusBean();
+        SearchStatusBean bean = (SearchStatusBean) request.getSession().getAttribute("searchStatusBean");
+        if (bean != null) {
+		selectSearchOption = bean.getSearchType();
+		adv_search_algorithm = bean.getAlgorithm();
+		adv_search_source = bean.getSelectedSource();
+		selectProperty = bean.getSelectedProperty();
+		//search_string = bean.getMatchText();
+		search_string = (String) request.getSession().getAttribute("matchText");
+		rel_search_association = bean.getSelectedAssociation();
+		rel_search_rela = bean.getSelectedRELA();
 
-        adv_search_algorithm = bean.getAlgorithm();
-        adv_search_source = bean.getSelectedSource();
-        selectProperty = bean.getSelectedProperty();
-        //search_string = bean.getMatchText();
-        search_string = (String) request.getSession().getAttribute("matchText");
-        rel_search_association = bean.getSelectedAssociation();
-        rel_search_rela = bean.getSelectedRELA();
+		_logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
+		_logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
+		_logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
+		_logger.debug("advanced_search.jsp search_string: " + search_string);
+		_logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
+		_logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+        }
+        
+	if (selectSearchOption == null)
+	    selectSearchOption = defaultSearchOption;
+        
 
-        _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
-        _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
-        _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
-        _logger.debug("advanced_search.jsp search_string: " + search_string);
-        _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
-        _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+	if (adv_search_algorithm == null)
+	    adv_search_algorithm = defaultAlgorithm;
+        
     }
 
-    if (selectSearchOption == null || selectSearchOption.compareTo("null") == 0) {
+    if (DataUtils.isNull(selectSearchOption)) {
         selectSearchOption = defaultSearchOption;
     }
 
@@ -239,6 +248,9 @@
             bean = (SearchStatusBean) bean_obj;
 
             selectSearchOption = bean.getSearchType();
+            
+            
+            
             if (selectSearchOption == null)
                 selectSearchOption = defaultSearchOption;
 
@@ -270,17 +282,6 @@
 
 
     String check__e = "", check__b = "", check__s = "" , check__c ="";
-    /*
-    if (adv_search_algorithm == null || adv_search_algorithm.compareTo("exactMatch") == 0)
-        check__e = "checked";
-    else if (adv_search_algorithm.compareTo("startsWith") == 0)
-        check__s= "checked";
-    else if (adv_search_algorithm.compareTo("lucene") == 0)
-        check__b= "checked";
-    else
-        check__c = "checked";
-    */
-
     if (adv_search_algorithm == null || adv_search_algorithm.compareTo("contains") == 0)
         check__c = "checked";
     else if (adv_search_algorithm.compareTo("startsWith") == 0)
@@ -292,7 +293,6 @@
         
 
     String check_n2 = "", check_c2 = "", check_p2 = "" , check_r2 ="";
-
     if (selectSearchOption == null || selectSearchOption.compareTo("Name") == 0)
       check_n2 = "checked";
     else if (selectSearchOption.compareTo("Code") == 0)

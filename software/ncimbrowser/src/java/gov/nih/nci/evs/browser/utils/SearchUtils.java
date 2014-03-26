@@ -931,13 +931,6 @@ public class SearchUtils {
                         sourceList.addEntry(source);
                         cns = restrictToSource(cns, source);
                     }
-/*
-
-                    cns =
-                        cns.restrictToProperties(null, propertyTypes,
-                            sourceList, null, null);
-*/
-
 		            System.out.println("searchByName restriction delay (ms): "
 					     + (System.currentTimeMillis() - restriction_ms));
 
@@ -2456,8 +2449,6 @@ public class SearchUtils {
             boolean resolveForward = false;
             boolean resolveBackward = true;
             int resolveAssociationDepth = 0;
-
-            System.out.println("Calling resolveCodedNodeGraph");
             iterator = resolveCodedNodeGraph(lbSvc, scheme, version, cng, RESOLVE_SOURCE, -1);
 
             if (iterator != null) {

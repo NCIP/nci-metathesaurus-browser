@@ -79,21 +79,22 @@ if (randomKey != null) {
         iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
 } 
 
-          String matchText = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+          String matchText = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+request.getSession().setAttribute("match_match", matchText);
+          
+/*
+	    if (iteratorBean == null) {
+		_logger.warn("iteratorBean NOT FOUND???" + key);
+	    } else {
+		request.getSession().setAttribute("matchText", matchText);
+	    }
+*/
 
-    if (iteratorBean == null) {
-        _logger.warn("iteratorBean NOT FOUND???" + key);
-    } else {
-        //matchText = iteratorBean.getMatchText();
-        //KLO
-        request.getSession().setAttribute("matchText", matchText);
-    }
-
-          page_string = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
+          page_string = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("page_string"));
 
           Boolean new_search = (Boolean) request.getSession().getAttribute("new_search");
-          String page_number = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("page_number"));
-          String selectedResultsPerPage = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedResultsPerPage"));
+          String page_number = HTTPUtils.cleanXSS((String) request.getParameter("page_number"));
+          String selectedResultsPerPage = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedResultsPerPage"));
 
           if (page_number != null && new_search == Boolean.FALSE)
           {
@@ -154,7 +155,7 @@ if (randomKey != null) {
               <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
 
           <%
-          //String sortOptionType = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
+          //String sortOptionType = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("sortOptionType"));
           //if (sortOptionType == null)
           //    sortOptionType = "false";
           //if (sortOptionType.compareToIgnoreCase("all") == 0) {

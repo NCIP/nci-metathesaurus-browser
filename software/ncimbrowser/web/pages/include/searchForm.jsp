@@ -1,6 +1,7 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <script type="text/javascript">
@@ -74,22 +75,13 @@
     String userAgent = request.getHeader("user-agent");
     boolean isIE = userAgent != null && userAgent.toLowerCase().contains("msie");
 
-    String match_text = (String) request.getSession().getAttribute("matchText");
-    if (match_text == null || match_text.compareTo("null") == 0) match_text = "";
-
+    String _match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_text"));
+    String match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
+    
+    if (DataUtils.isNull(match_text)) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
-    String algorithm = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
+    String algorithm = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
-    /*
-    if (algorithm == null || algorithm.compareTo("exactMatch") == 0)
-      check_e = "checked";
-    else if (algorithm.compareTo("startsWith") == 0)
-      check_s= "checked";
-    else if (algorithm.compareTo("lucene") == 0)
-      check_b= "checked";
-    else
-      check_c = "checked";
-    */
 
     if (algorithm == null || algorithm.compareTo("contains") == 0)
       check_c = "checked";
