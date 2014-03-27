@@ -327,7 +327,7 @@
 
                 <table>
                   <tr><td>
-    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
+    <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"

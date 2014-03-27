@@ -180,7 +180,9 @@ public class UserSessionBean extends Object {
 
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
-        String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
+        //String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
+        String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("adv_matchText"));
+
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
             // request.getSession().setAttribute("message", message);
