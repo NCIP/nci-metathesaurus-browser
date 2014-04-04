@@ -109,7 +109,7 @@
           <ul>
             <li><b>Text Box:</b> Enter the exact string of characters you want to search for.
             <ul>
-              <li>Search is not case sensitive (e.g., aids will match <i>aids</i>, <i>Aids</i>, and <i>AIDS</i>).
+              <li>Search is not case sensitive (e.g., aids will match <i>aids</i>, <i>Aids</i>, and <i>AIDS</i>), except for Code searches, which are case sensitive (e.g., c298 will not match <i>C298</i>). 
               <li>There are no wildcard characters. All characters are matched literally (e.g., searching
               for <b>Begins With</b> <span style="font-family:monospace;">NAT2*</span> will match <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
               <li>Do not use quotes - they will be searched for literally, as characters to be matched.
@@ -140,7 +140,7 @@
                     search examples in this Help page use the default 
                     name search.</li>
                 <li><b>Code</b> button is for searching concepts by code: Search text 
-                    is matched to a concept code, or source code. </li>     
+                    is matched to a concept code, or source code. The search is case-sensitive.</li>     
                     
               
               <li><b>Property</b> will match to other direct property attributes of a concept, such as definitions.</li> 
