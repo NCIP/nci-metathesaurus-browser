@@ -78,7 +78,7 @@
           This 2.4 release uses the new LexEVS 6.1 terminology server without significant changes that would affect users. 
 
  			The Search box separates Name and Code search, search performance 
-			is better, and single-terminology Advanced Search offers new 
+			is better, and Advanced Search offers new 
 			Lucene options to search with wildcards, negation, boolean operators, 
 			and fuzzy matching.            
           
@@ -122,13 +122,13 @@
             <li><b>Match method radio buttons</b> select how your search string will be matched.
             <ul>
 
-              <li><b>Contains</b> is the default. It will search for what you enter anywhere within a term or code (e.g.,
+              <li><b>Contains</b> is the default. It will search for what you enter anywhere within a term (e.g.,
               <span style="font-family:monospace;">carcinoma</span> will match <i>adenocarcinoma</i>).</li> 
               <li>Concept Codes will only match if they exactly match what you enter, even if you
               select <b>Begins With</b> or <b>Contains</b>.</li> 
               
               <li><b>Exact Match</b> Only terms or codes that are identical will match.</li> 
-              <li><b>Begins With</b> can be selected to find all terms or codes that start with the words
+              <li><b>Begins With</b> can be selected to find all terms that start with the words
               or characters you enter.</li> 
               
             </ul>
@@ -140,7 +140,7 @@
                     search examples in this Help page use the default 
                     name search.</li>
                 <li><b>Code</b> button is for searching concepts by code: Search text 
-                    is matched to a concept code, or source code. The search is case-insensitive.</li>     
+                    is matched to a concept code, or source code. </li>     
                     
               
               <li><b>Property</b> will match to other direct property attributes of a concept, such as definitions.</li> 
@@ -252,7 +252,6 @@
           that is selected for viewing.  The purpose of the <b>Cart</b> and <b>Export</b> functionality is to allow the user 
           to collect and save one or more concepts so that they can be exported to a file. The following instructions
           apply to the <b>Cart</b> and <b>Export</b> functionality. 
-          <br><br>
         
         <ul>
         <li>
@@ -350,13 +349,12 @@
           now addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 
-			is better, and single-terminology Advanced Search offers new 
+			is better, and Advanced Search offers new 
 			Lucene options to search with wildcards, negation, boolean operators, 
 			and fuzzy matching.  
          
           
-          We are still
-          working on remaining issues of data, functionality and documentation.  For the latest updates of
+          For the latest updates of
           known issues, see
           <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.4+Release+Notes" target="_blank">
           NCI Metathesaurus Browser 2.4 Release Notes.
