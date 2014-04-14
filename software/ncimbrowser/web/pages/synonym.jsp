@@ -31,7 +31,7 @@
 <html>
 <head>
   <title>NCI Metathesaurus</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -162,9 +162,15 @@ _logger.debug("set Sortby to: " + sort_by);
         </tr>
 
         <%
+        
+        
+//System.out.println("synonyms.size(): " + synonyms.size());
+        
+        
           for (int n=0; n<synonyms.size(); n++)
           {
             String s = (String) synonyms.elementAt(n);
+//System.out.println("synonym: " + s);
             Vector synonym_data = DataUtils.parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);

@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+
 <%@ page import="java.util.Vector"%>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
@@ -67,10 +68,13 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
             </td></tr>
           </table>
 
-
           <br/>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
-            <%
+          
+          
+          <table width="570px" >
+             <th class="dataTableHeader" scope="col" align="left">Abbreviation</th>
+             <th class="dataTableHeader" scope="col" align="left">Definition</th>
+           <%
               Vector abbr_vec = new MetadataUtils().getPropertyDescriptions();
               String prev_t = "";
               for (int n=0; n<abbr_vec.size(); n++) {
@@ -82,9 +86,8 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
        String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
           <tr class="<%=rowColor%>">
-      <td><%=abbr%></td>
-      <td>&nbsp;</td>
-      <td><%=def%></td>
+	      <td><%=abbr%></td>
+	      <td><%=def%></td>
           </tr>
         <%
         prev_t = t;
@@ -95,7 +98,7 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
           <br/>
 
         </div>
-        <!-- End of Term Type content -->
+        <!-- End of content -->
       </div>
   </div>
   </f:view>

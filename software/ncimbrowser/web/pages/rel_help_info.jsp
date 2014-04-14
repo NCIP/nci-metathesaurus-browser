@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ page contentType="text/html;charset=windows-1252"%>
+
+<%@ page contentType="text/html; charset=UTF-8" %>
+
 <%@ page import="java.util.Arrays"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Vector"%>
@@ -76,10 +78,10 @@
                 between its own terms and terms from other sources.  The browser Relationships tab presents these relationships at
                 the NCIm concept level: Based on all terms in the current concept, it displays relationships pointing to other NCIm
                 concepts and shows the source that asserts each  relationship.  The By Source tab shows the specific term being
-                pointed to by relationships from the selected source, including that term’s source (sometimes different), type,
+                pointed to by relationships from the selected source, including that term's source (sometimes different), type,
                 and code.  Depending on user feedback, a future browser release may show as well the source-specific term from the
                 current concept for which the relationship was asserted.  The browser omits relationships asserted between two terms
-                in the same concept (such terms are seen together with their term types in the concept’s Synonyms listing).
+                in the same concept (such terms are seen together with their term types in the concept's Synonyms listing).
               </p>
               <p>
                 <b>The Relationship (REL)</b>labels in NCIm are listed below, grouped by the broader categories used to report them:

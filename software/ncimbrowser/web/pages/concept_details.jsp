@@ -32,14 +32,17 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Map.Entry" %>
 
-
 <%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
+
+<%@ page contentType="text/html; charset=UTF-8" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
   <title>NCI Metathesaurus</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
@@ -158,9 +161,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
 
             multipleCUIs = true;
     %>
-<!--
-    <table width="700px">
- -->   
+ 
     <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
 
       <tr>

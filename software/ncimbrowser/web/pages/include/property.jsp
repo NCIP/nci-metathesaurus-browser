@@ -290,8 +290,12 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
         for (int j=0; j<value_vec.size(); j++) {
           String value = (String) value_vec.elementAt(j);
           int n = value.indexOf("|");
-          if (n != -1) value = value.substring(0, n);
+          if (n != -1) {
+              value = value.substring(0, n);
+          }
+
           String valueLC = value.toLowerCase();
+         
           if (hset2.contains(valueLC))
              continue;
           hset2.add(valueLC);

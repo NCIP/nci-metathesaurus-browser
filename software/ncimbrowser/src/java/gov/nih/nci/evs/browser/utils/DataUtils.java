@@ -2,6 +2,7 @@ package gov.nih.nci.evs.browser.utils;
 
 import java.io.*;
 import java.util.*;
+import java.text.*;
 import java.sql.*;
 
 import org.apache.commons.lang.*;
@@ -4735,4 +4736,5 @@ public class DataUtils {
 		if (value == null || value.compareToIgnoreCase("null") == 0 || value.compareTo("") == 0) return true;
 		return false;
 	}
+
 }

@@ -61,6 +61,7 @@ _logger.warn("(*) concept_typelinks == null???");
             (data_type != null && data_type.compareTo("synonym") != 0)) {
         %>
         <a id="a_synTab" href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">
+              
           <img name="sdTab"
             src="<%=request.getContextPath() %>/images/tab_sd.gif"
             width="119" height="21" border="0" alt="Synonym Details"

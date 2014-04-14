@@ -1,7 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=windows-1252"%>
+
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -183,7 +184,7 @@
             <b>Begins With</b> <i>melanoma</i> will show <i>Cutaneous Melanoma</i> in the results list because that concept contains a synonym of <i>Melanoma of the Skin</i>.)
             <li>If there are too many results to show on one page, you can page through the results with a default of 50 per page. To
             change the default number, use the <b>Show results per page</b> drop-down menu at the bottom of the results page.
-            <li>Click on the name to see a concept’s details.
+            <li>Click on the name to see a concept's details.
           </ul>
         </p>
         <p class="textbody">
@@ -194,7 +195,7 @@
           <!-- ************* Concept Details ************** -->
           Detailed information on the selected concept is grouped and shown on several related pages:
          <ul>
-            <li>Tabbed information gives the concept’s meaning, labels, and direct relationships:
+            <li>Tabbed information gives the concept's meaning, labels, and direct relationships:
             <ul>
               <li><b>Terms & Properties</b>: Gives definitions, synonyms, abbreviations, codes, and other information.
               <li><b>Relationships</b>: Shows how other concepts are directly related to this concept, where a source
@@ -205,7 +206,7 @@
               a different source, select the link for that source at the top of the page. NOTE: Select the <b>?</b>
               icon next to the Source header to view a list of the source abbreviations and full names. The Relationships
               section shows the specific term being pointed to by relationships from the selected source, including that
-              term’s source (sometimes different), type, and code.
+              term's source (sometimes different), type, and code.
               <li><b>View All</b>: Combines all of the above information on a single page.
             </ul>
             <li><b>In NCIt Hierarchy</b>: Click the button to see where the concept is found within the NCIt hierarchy as
@@ -290,7 +291,7 @@
             <li>At first, only the top level nodes of the hierarchy are shown.
             <li>At each level, concepts are listed alphabetically by concept name.
             <li>Browse through the levels by clicking on the + next to each concept.
-            <li>Click on the concept name itself to see the concept’s details in the main browser window.
+            <li>Click on the concept name itself to see the concept's details in the main browser window.
           </ul>
           <b>Source</b> drop-down box: If you select a source with a concept hierarchy that can be viewed, an
           icon will appear to the right of the source selection box; click on the icon to view the hierarchy

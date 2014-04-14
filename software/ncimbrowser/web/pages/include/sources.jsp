@@ -202,6 +202,7 @@
             String s = (String) neighborhood_synonyms.elementAt(n);
             Vector synonym_data = DataUtils.parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
+           
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
             String term_source_code = (String) synonym_data.elementAt(3);
@@ -350,6 +351,7 @@ if (neighborhood_atoms.size() == 0) {
         String s = (String) neighborhood_atoms.elementAt(i);
         Vector synonym_data = DataUtils.parseData(s, "|");
         String term_name = (String) synonym_data.elementAt(0);
+        
         String term_type = (String) synonym_data.elementAt(1);
         String term_source = (String) synonym_data.elementAt(2);
         String term_source_code = (String) synonym_data.elementAt(3);

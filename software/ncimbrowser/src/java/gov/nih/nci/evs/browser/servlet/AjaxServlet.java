@@ -58,6 +58,11 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import gov.nih.nci.evs.browser.utils.*;
 import org.apache.log4j.*;
+import org.LexGrid.concepts.Entity;
+
+import gov.nih.nci.evs.browser.common.*;
+
+import javax.faces.context.*;
 
 public final class AjaxServlet extends HttpServlet {
     private static Logger _logger = Logger.getLogger(AjaxServlet.class);
@@ -115,6 +120,7 @@ public final class AjaxServlet extends HttpServlet {
             throws IOException, ServletException {
         // Determine request by attributes
         String action = HTTPUtils.cleanXSS((String)request.getParameter("action"));// DataConstants.ACTION);
+        if (action == null) action = "concept";
         String node_id = HTTPUtils.cleanXSS((String)request.getParameter("ontology_node_id"));// DataConstants.ONTOLOGY_NODE_ID);
         String ontology_display_name =
             HTTPUtils.cleanXSS((String)request.getParameter("ontology_display_name"));// DataConstants.ONTOLOGY_DISPLAY_NAME);
@@ -259,5 +265,32 @@ public final class AjaxServlet extends HttpServlet {
                 + (System.currentTimeMillis() - ms));
             return;
         }
+
+        else if (action.equals("concept")) {
+ 			String concept_detail_scheme = HTTPUtils.cleanXSS((String)request.getParameter("dictionary"));
+			String concept_detail_code = HTTPUtils.cleanXSS((String)request.getParameter("code"));
+			String concept_detail_type = HTTPUtils.cleanXSS((String)request.getParameter("type"));
+
+			Entity c = DataUtils.getConceptByCode(
+							Constants.CODING_SCHEME_NAME, null, null, concept_detail_code);
+
+			request.getSession().setAttribute("code", concept_detail_code);
+			request.getSession().setAttribute("concept", c);
+			request.getSession().setAttribute("type", "properties");
+			request.getSession().setAttribute("new_search", Boolean.TRUE);
+
+			response.setContentType("text/html;charset=utf-8");
+
+			String response_page_url = request.getContextPath()
+			                         + "/pages/concept_details.jsf?dictionary="
+									 + concept_detail_scheme
+									 + "&code="
+									 + concept_detail_code
+									 + "&type="
+									 + concept_detail_type;
+	        response.sendRedirect(response_page_url);
+	    }
+
+
     }
 }

@@ -2,6 +2,11 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 <%@ page import="org.LexGrid.concepts.Entity" %>
+
+
+<%@ page contentType="text/html; charset=UTF-8" %>
+
+
 <%
   HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
@@ -99,17 +104,16 @@
         </tr>
         <%
           Entity concept_syn = (Entity) request.getSession().getAttribute("concept");
-          Vector synonyms = (Vector) request.getSession().getAttribute("synonyms");
-          //if (synonyms == null) {
-              synonyms = new DataUtils().getSynonyms(concept_syn);
-          //    request.getSession().setAttribute("synonyms", synonyms);
-          //}
+
+          Vector synonyms = new DataUtils().getSynonyms(concept_syn);
+
           synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           
-          
+         
           for (int n=0; n<synonyms.size(); n++)
           {
             String s = (String) synonyms.elementAt(n);
+           
             Vector synonym_data = DataUtils.parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);
@@ -154,7 +158,7 @@
       
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText" width=675><%=term_name%></td>
+              <td class="dataCellText" width=675 ><%=term_name%></td>
               <td class="dataCellText" width=100><%=term_source%></td>
               <td class="dataCellText" width=100><%=term_type%></td>
 
