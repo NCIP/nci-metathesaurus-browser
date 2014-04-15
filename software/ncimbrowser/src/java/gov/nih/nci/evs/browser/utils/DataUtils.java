@@ -4737,4 +4737,24 @@ public class DataUtils {
 		return false;
 	}
 
+    public static String wrapWord(String line) {
+		if (line == null) return null;
+		if (line.indexOf(" ") != -1) return line;
+        Vector v = parseData(line, "_");
+        if (v.size() > 8) {
+			StringBuffer buf = new StringBuffer();
+			for (int i=0; i<4; i++) {
+				String t = (String) v.elementAt(i);
+				buf.append(t + "_");
+			}
+			buf.append(" ");
+			for (int i=4; i<v.size(); i++) {
+				String t = (String) v.elementAt(i);
+				buf.append(t + "_");
+			}
+			String s = buf.toString();
+			return s.substring(0, s.length()-1);
+		}
+        return line;
+    }
 }

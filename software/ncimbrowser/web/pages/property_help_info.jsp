@@ -82,6 +82,8 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
                  if (t.compareTo(prev_t) != 0) {
        Vector w = DataUtils.parseData(t, "|");
        String abbr = (String) w.elementAt(0);
+       abbr = DataUtils.wrapWord(abbr); 
+       
        String def = (String) w.elementAt(1);
        String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
