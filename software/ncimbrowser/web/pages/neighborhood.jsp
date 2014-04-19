@@ -4,7 +4,7 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
-
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
 %>
@@ -94,7 +94,7 @@
   neighborhood_synonyms = new DataUtils().sortSynonyms(neighborhood_synonyms, sort_by);
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
 %>
-    <h2>Concept information of `<%=concept_neighborhood_name%>' from <%=neighborhood_sab%></h2>
+    <h2>Concept information of `<%=DataUtils.encodeTerm(concept_neighborhood_name)%>' from <%=neighborhood_sab%></h2>
     <div>
       <table class="datatable_960" border="0">
         <%
@@ -214,7 +214,7 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText"><%=term_name%></td>
+              <td class="dataCellText"><%=DataUtils.encodeTerm(term_name)%></td>
               <td class="dataCellText"><%=term_source%></td>
               <td class="dataCellText"><%=term_type%></td>
               <td class="dataCellText"><%=term_source_code%></td>
@@ -368,7 +368,7 @@ if (neighborhood_atoms.size() == 0) {
         </a>
           </td>
 
-          <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_name%></a></td>
+          <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=DataUtils.encodeTerm(term_name)%></a></td>
           <td class="dataCellText"><%=term_source%></td>
           <td class="dataCellText"><%=term_type%></td>
           <td class="dataCellText"><a href="<%=request.getContextPath() %>/pages/neighborhood.jsf?code=<%=cui%>&&sab=<%=neighborhood_sab%>"><%=term_source_code%></a></td>

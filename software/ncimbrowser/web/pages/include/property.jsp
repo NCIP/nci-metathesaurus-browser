@@ -1,4 +1,4 @@
-<%@ page import="gov.nih.nci.evs.browser.utils.SortUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 
 <%
   List displayItemList = null;
@@ -309,7 +309,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
             <%
           }
             %>
-                <td><%=value%></td>
+                <td><%=DataUtils.encodeTerm(value)%></td>
               </tr>
             <%
         }
@@ -504,7 +504,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
             }
             n++;
             %>
-                  <td><i><%=prop_name%></i></td>
+                  <td><i><%=DataUtils.encodeTerm(prop_name)%></i></td>
                   <td><i>None</i></td>
                 </tr>
             <%
@@ -529,7 +529,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
               if (propertySource.compareTo("None") == 0) propertySource = "";
 
               %>
-                  <td><i><%=prop_name%></i></td>
+                  <td><i><%=DataUtils.encodeTerm(prop_name)%></i></td>
                   <td><i><%=propertyValue%></i></td>
                   <td><i><%=propertySource%></i></td>
                 </tr>

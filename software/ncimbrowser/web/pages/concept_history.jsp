@@ -83,7 +83,7 @@ _logger.debug("concept_history.jsp rows " + rows.size());
         <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Metathesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
           <!-- History content -->
-          <div class="pageTitle"><b><%=concept_name%> (CUI <%=code%>)</b></div>
+          <div class="pageTitle"><b><%=DataUtils.encodeTerm(concept_name)%> (CUI <%=code%>)</b></div>
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="textbody">
               <td align="left" class="texttitle-gray">

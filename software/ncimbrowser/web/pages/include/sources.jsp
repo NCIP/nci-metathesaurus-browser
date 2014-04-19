@@ -79,7 +79,7 @@
   <a name="sources"></a>
   <table border="0" width="708px">
     <tr>
-      <td class="textsubtitle-blue" align="left">'<%=concept_neighborhood_name%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
+      <td class="textsubtitle-blue" align="left">'<%=DataUtils.encodeTerm(concept_neighborhood_name)%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
     </tr>
   </table>
     <div>      
@@ -102,7 +102,7 @@
               if (s.compareTo(nci_src_name) == 0) {
                   if (neighborhood_sab.compareTo(nci_src_name) == 0) {
                   %>
-                     <b><%=nci_src_name%>&nbsp;</b>
+                     <b><%=DataUtils.encodeTerm(nci_src_name)%>&nbsp;</b>
                   <%
                   } else {
               %>
@@ -209,7 +209,7 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText"><%=term_name%></td>
+              <td class="dataCellText"><%=DataUtils.encodeTerm(term_name)%></td>
               <td class="dataCellText" width=60><%=term_source%></td>
               <td class="dataCellText" width=50><%=term_type%></td>
               <td class="dataCellText" width=50><%=term_source_code%></td>
@@ -375,7 +375,7 @@ if (neighborhood_atoms.size() == 0) {
         </a>
           </td>
 
-          <td class="dataCellText" width=130><a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>"><%=term_name%></a></td>
+          <td class="dataCellText" width=130><a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.CODING_SCHEME_NAME%>&code=<%=cui%>"><%=DataUtils.encodeTerm(term_name)%></a></td>
           <td class="dataCellText" width=60><%=term_source%></td>
           <td class="dataCellText" width=50><%=term_type%></td>
           <%

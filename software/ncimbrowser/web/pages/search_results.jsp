@@ -206,7 +206,7 @@ request.getSession().setAttribute("match_match", matchText);
 			    }
 			    %>
 			  <td class="dataCellText" width=600>
-			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=name%></a>
+			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=DataUtils.encodeTerm(name)%></a>
 			  </td>
 			  <td class="dataCellText" width=400>
 			      <%=semantic_type%>

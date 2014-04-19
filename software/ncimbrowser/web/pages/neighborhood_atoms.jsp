@@ -5,6 +5,8 @@
 
 <%@ page import="java.util.Vector"%>
 <%@ page import="org.LexGrid.concepts.Concept" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+
 <%
   String ncim_build_info = new DataUtils().getNCIMBuildInfo();
 %>
@@ -124,7 +126,7 @@
         <tr class="<%=rowColor%>">
           <td class="dataCellText"><%=term_source_code%></td>
           <td class="dataCellText"><%=term_type%></td>
-          <td class="dataCellText"><%=term_name%></td>
+          <td class="dataCellText"><%=DataUtils.encodeTerm(term_name)%></td>
         </tr>
     <%
       }

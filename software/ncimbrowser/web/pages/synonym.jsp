@@ -83,7 +83,7 @@ _logger.debug("set Sortby to: " + sort_by);
             synonyms = new DataUtils().sortSynonyms(synonyms, sort_by);
           %>
           <div class="texttitle-blue">
-            <%=name%> (Code <%=code%>)
+            <%=DataUtils.encodeTerm(name)%> (Code <%=code%>)
           </div>
           <hr>
           <%@ include file="/pages/include/typeLinks.jsp" %>
@@ -179,7 +179,7 @@ _logger.debug("set Sortby to: " + sort_by);
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText"><%=term_name%></td>
+              <td class="dataCellText"><%=DataUtils.encodeTerm(term_name)%></td>
               <td class="dataCellText"><%=term_source%></td>
               <td class="dataCellText"><%=term_type%></td>
               <td class="dataCellText"><%=term_source_code%></td>

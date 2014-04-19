@@ -4757,4 +4757,29 @@ public class DataUtils {
 		}
         return line;
     }
+
+
+
+	public static String replaceChar(String t, char from, String to) {
+		if (t == null) return null;
+		StringBuffer buf = new StringBuffer();
+		for (int i=0; i<t.length(); i++) {
+		    char c = t.charAt(i);
+		    if (c == from) {
+				buf.append(to);
+			} else {
+			    buf.append(String.valueOf(c));
+			}
+		}
+		return buf.toString();
+	}
+
+	public static String encodeTerm(String t) {
+		if (t == null) return t;
+		if (t.indexOf("<") == -1 && t.indexOf(">") == -1) return t;
+		String s = replaceChar(t, '<', "&#60");
+		s = replaceChar(s, '>', "&#62");
+		return s;
+	}
+
 }

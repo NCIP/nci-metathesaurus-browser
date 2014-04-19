@@ -2,6 +2,7 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 <%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 
 
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -158,7 +159,7 @@
       
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText" width=675 ><%=term_name%></td>
+              <td class="dataCellText" width=675 ><%=DataUtils.encodeTerm(term_name)%></td>
               <td class="dataCellText" width=100><%=term_source%></td>
               <td class="dataCellText" width=100><%=term_type%></td>
 

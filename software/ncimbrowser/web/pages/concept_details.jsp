@@ -221,7 +221,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
         }
         %>
       <td class="dataCellText">
-        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=name%></a>
+        <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?type=sources&code=<%=code%>&sab=<%=sab%>&sourcecode=<%=sourcecode%>"><%=DataUtils.encodeTerm(name)%></a>
       </td>
       <td class="dataCellText">
           <%=semantic_type%>
@@ -338,7 +338,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       
       <table border="0" width="900px">
         <tr>
-          <td class="texttitle-blue"><%=name%> (CUI <%=code%>)</td>
+          <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
              <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
        <br>
@@ -381,7 +381,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
           } else {
           %>
       <div class="textbody">
-          <%=name%>
+          <%=DataUtils.encodeTerm(name)%>
       </div>
     <%
           }
