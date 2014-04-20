@@ -1,6 +1,7 @@
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="java.util.Vector"%>
+
 <%
     NCImBrowserProperties properties = null;
     properties = NCImBrowserProperties.getInstance();
@@ -29,12 +30,9 @@
       Vector visitedConcepts = (Vector) request.getSession().getAttribute("visitedConcepts");
       if (visitedConcepts != null && visitedConcepts.size() > 0) {
           String visitedConceptsStr = DataUtils.getVisitedConceptLink(visitedConcepts);
-          
-System.out.println("(**) menuBar.jsp visitedConceptsStr: " + visitedConceptsStr);
-
-          
-          
-      %> <%=visitedConceptsStr%> <%
+      %> 
+      <%=visitedConceptsStr%>
+      <%
       }
       %>&nbsp;
     </td>

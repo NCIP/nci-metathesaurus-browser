@@ -3963,12 +3963,16 @@ public class DataUtils {
         return null;
     }
 
-    public static String htmlEntityEncode(String s) {
+    public static String encodeTerm(String s) {
+		if (s == null) return null;
+		if (StringUtils.isAlphanumeric(s)) return s;
+
         StringBuilder buf = new StringBuilder(s.length());
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0'
-                && c <= '9') {
+            //if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0'
+            //    && c <= '9') {
+			if (Character.isLetterOrDigit(c)) {
                 buf.append(c);
             } else {
                 buf.append("&#").append((int) c).append(";");
@@ -3991,7 +3995,7 @@ public class DataUtils {
             String code = (String) w.elementAt(0);
             String name = (String) w.elementAt(1);
 
-            name = htmlEntityEncode(name);
+            name = encodeTerm(name);
 
             strbuf.append("<li>");
             line =
@@ -4759,8 +4763,6 @@ public class DataUtils {
         return line;
     }
 
-
-
 	public static String replaceChar(String t, char from, String to) {
 		if (t == null) return null;
 		StringBuffer buf = new StringBuffer();
@@ -4774,16 +4776,4 @@ public class DataUtils {
 		}
 		return buf.toString();
 	}
-
-	public static String encodeTerm(String t) {
-		/*
-		if (t == null) return t;
-		if (t.indexOf("<") == -1 && t.indexOf(">") == -1) return t;
-		String s = replaceChar(t, '<', "&#60;");
-		s = replaceChar(s, '>', "&#62;");
-		return s;
-		*/
-		return htmlEntityEncode(t);
-	}
-
 }
