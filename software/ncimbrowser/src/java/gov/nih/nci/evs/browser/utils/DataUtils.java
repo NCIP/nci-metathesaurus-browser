@@ -3990,6 +3990,7 @@ public class DataUtils {
             String scheme = Constants.CODING_SCHEME_NAME;
             String code = (String) w.elementAt(0);
             String name = (String) w.elementAt(1);
+
             name = htmlEntityEncode(name);
 
             strbuf.append("<li>");
@@ -4775,11 +4776,14 @@ public class DataUtils {
 	}
 
 	public static String encodeTerm(String t) {
+		/*
 		if (t == null) return t;
 		if (t.indexOf("<") == -1 && t.indexOf(">") == -1) return t;
-		String s = replaceChar(t, '<', "&#60");
-		s = replaceChar(s, '>', "&#62");
+		String s = replaceChar(t, '<', "&#60;");
+		s = replaceChar(s, '>', "&#62;");
 		return s;
+		*/
+		return htmlEntityEncode(t);
 	}
 
 }
