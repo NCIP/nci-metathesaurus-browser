@@ -2039,7 +2039,7 @@ public class DataUtils {
         Vector source_vec = new Vector();
         for (int i = 0; i < sources.size(); i++) {
             String s = (String) sources.elementAt(i);
-            Vector ret_vec = DataUtils.parseData(s, "|");
+            Vector ret_vec = parseData(s, "|");
             String name = (String) ret_vec.elementAt(0);
             String type = (String) ret_vec.elementAt(1);
             String src = (String) ret_vec.elementAt(2);
@@ -2122,7 +2122,7 @@ public class DataUtils {
         String delim = "  ";
         for (int n = 0; n < synonyms.size(); n++) {
             String s = (String) synonyms.elementAt(n);
-            Vector synonym_data = DataUtils.parseData(s, "|");
+            Vector synonym_data = parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
@@ -2613,7 +2613,7 @@ public class DataUtils {
 
             if (rel_rela.compareTo(INCOMPLETE) != 0) {
 
-                Vector u = DataUtils.parseData(rel_rela, "|");
+                Vector u = parseData(rel_rela, "|");
                 String rel = (String) u.elementAt(0);
                 String rela = (String) u.elementAt(1);
 
@@ -2797,7 +2797,7 @@ public class DataUtils {
         String delim = "  ";
         for (int n = 0; n < synonyms.size(); n++) {
             String s = (String) synonyms.elementAt(n);
-            Vector synonym_data = DataUtils.parseData(s, "|");
+            Vector synonym_data = parseData(s, "|");
             String term_name = (String) synonym_data.elementAt(0);
             String term_type = (String) synonym_data.elementAt(1);
             String term_source = (String) synonym_data.elementAt(2);
@@ -2897,7 +2897,7 @@ public class DataUtils {
         for (int n = 0; n < relationships.size(); n++) {
             String s = (String) relationships.elementAt(n);
 
-            Vector ret_vec = DataUtils.parseData(s, "|");
+            Vector ret_vec = parseData(s, "|");
             String relationship_name = (String) ret_vec.elementAt(0);
             String target_concept_name = (String) ret_vec.elementAt(1);
             String target_concept_code = (String) ret_vec.elementAt(2);
@@ -3970,8 +3970,6 @@ public class DataUtils {
         StringBuilder buf = new StringBuilder(s.length());
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            //if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0'
-            //    && c <= '9') {
 			if (Character.isLetterOrDigit(c)) {
                 buf.append(c);
             } else {
@@ -3980,6 +3978,34 @@ public class DataUtils {
         }
         return buf.toString();
     }
+
+
+//&#32;&lt;
+
+// Reference: http://www.walterzorn.de/en/tooltip_old/tooltip_e.htm
+// (whilespace after & is intentional)
+    public static String encode_term(String s) {
+		if (s == null) return null;
+		if (StringUtils.isAlphanumeric(s)) return s;
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == 60) {
+				buf.append("&lt; ");
+			} else if (c == 62) {
+				buf.append("&gt;");
+			} else if (c == 38) {
+				buf.append("&amp;");
+			} else if (c == 32) {
+				buf.append("&#32;");
+			} else {
+				buf.append(c);
+			}
+        }
+        String t = buf.toString();
+        return t;
+    }
+
 
     // [#23318] Maintain a history of visited concepts
     public static String getVisitedConceptLink(Vector concept_vec) {
@@ -3990,12 +4016,13 @@ public class DataUtils {
         for (int i = 0; i < concept_vec.size(); i++) {
             int j = concept_vec.size() - i - 1;
             String concept_data = (String) concept_vec.elementAt(j);
-            Vector w = DataUtils.parseData(concept_data, "|");
+            Vector w = parseData(concept_data, "|");
             String scheme = Constants.CODING_SCHEME_NAME;
             String code = (String) w.elementAt(0);
             String name = (String) w.elementAt(1);
 
-            name = encodeTerm(name);
+            //name = encodeTerm(name);
+            name = encode_term(name);
 
             strbuf.append("<li>");
             line =
