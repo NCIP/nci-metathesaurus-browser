@@ -66,13 +66,22 @@ response.setContentType("text/html;charset=utf-8");
 
 Entity concept_details_c = null;
 String concept_details_code = null;
-Object concept_details_obj = request.getSession().getAttribute("concept");
-if (concept_details_obj == null) {
-    concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
-    request.getSession().setAttribute("code", concept_details_code);
-} else {
-    concept_details_c = (Entity) concept_details_obj;
-    concept_details_code = concept_details_c.getEntityCode();
+Object concept_details_obj = null;
+
+Object req_parameter_code = request.getParameter("code");
+if (req_parameter_code != null) {
+    concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) req_parameter_code);
+}
+
+if (concept_details_code == null) {
+	concept_details_obj = request.getSession().getAttribute("concept");
+	if (concept_details_obj == null) {
+	    concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
+	    request.getSession().setAttribute("code", concept_details_code);
+	} else {
+	    concept_details_c = (Entity) concept_details_obj;
+	    concept_details_code = concept_details_c.getEntityCode();
+	}
 }
 
 
@@ -246,7 +255,11 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       if (dictionary == null) {
           dictionary = Constants.CODING_SCHEME_NAME;
       }
-      code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
+      if (concept_details_code != null) {
+          code = concept_details_code;
+      } else {
+      	  code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("code"));
+      }
     } else {
       dictionary = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("dictionary"));
       if (dictionary == null) {
