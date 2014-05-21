@@ -664,7 +664,7 @@ public class CacheController {
         nodeArray = HashMap2JSONArray(hmap);
         return nodeArray;
     }
-
+/*
     public HashMap getRemainingSubconcepts(String CUI, String SAB,
         int records_to_skip) {
         HashSet hset = new HashSet();
@@ -746,6 +746,78 @@ public class CacheController {
         }
         return hmap;
     }
+*/
+
+    public HashMap getRemainingSubconcepts(String CUI, String SAB, int records_to_skip) {
+        HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+        int max = 100;//NCImBrowserProperties.getSubconceptPageSize();
+        Vector v = new Vector();
+        String childNavText = "CHD";
+        boolean hasMoreChildren = false;
+        int knt0 = 0;
+
+        try {
+            LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+            MetaBrowserService mbs =
+                (MetaBrowserService) lbs
+                    .getGenericExtension("metabrowser-extension");
+            MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+            MetaTreeNode focus = tree.getCurrentFocus();
+
+            Iterator iterator = focus.getChildren();
+            if (iterator == null) {
+                hmap.put(ti._code, ti);
+                return hmap;
+            }
+
+            Vector childNodes = new Vector();
+            while (iterator.hasNext()) {
+				MetaTreeNode child = (MetaTreeNode) iterator.next();
+				TreeItem childItem =
+					new TreeItem(child.getCui(), child.getName());
+				childItem._expandable = true;
+				if (isLeaf(child)) {
+					childItem._expandable = false;
+				}
+				childNodes.add(childItem);
+			}
+			childNodes = SortUtils.quickSort(childNodes);
+
+            ti = new TreeItem(focus.getCui(), focus.getName());
+            if (isLeaf(focus)) {
+                ti._expandable = false;
+                hmap.put(ti._code, ti);
+                return hmap;
+            } else {
+                ti._expandable = true;
+            }
+
+            int knt = 0;
+            for (int i=records_to_skip; i<childNodes.size(); i++) {
+				knt++;
+				if (knt > max) break;
+				TreeItem childItem = (TreeItem) childNodes.elementAt(i);
+				ti.addChild(childNavText, childItem);
+			}
+
+			if (knt + records_to_skip < childNodes.size()) {
+				int to_skip = (records_to_skip + knt) - 1;
+                String t = CUI + "|" + SAB + "|" + to_skip;
+                TreeItem childItem = new TreeItem(t, "...");
+                childItem._expandable = true;
+                ti.addChild(childNavText, childItem);
+			}
+
+            hmap.put(ti._code, ti);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hmap;
+    }
+
 
     public HashMap getRemainingSubconcepts(String CUI, String SAB,
         String nodes_to_exclude_str, int batch_number) {
@@ -892,6 +964,11 @@ public class CacheController {
                 List<TreeItem> children = ti._assocToChildMap.get(association);
 
                 SortUtils.quickSort(children);
+                TreeItem firstChildren = (TreeItem) children.get(0);
+                if (firstChildren._text.startsWith("...")) {
+					firstChildren = children.remove(0);
+					children.add(firstChildren);
+				}
 
                 for (TreeItem childItem : children) {
                     JSONObject nodeObject = new JSONObject();

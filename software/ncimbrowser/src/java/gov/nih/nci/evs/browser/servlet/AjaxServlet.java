@@ -144,9 +144,8 @@ public final class AjaxServlet extends HttpServlet {
                         // nodesArray =
                         // CacheController.getInstance().getRemainingSubconcepts(ontology_display_name,
                         // null, parent_id, node_id);
-                        nodesArray =
-                            CacheController.getInstance()
-                                .getRemainingSubconcepts(node_id_0);
+                        nodesArray = CacheController.getInstance().getRemainingSubconcepts(node_id_0);
+
                         if (nodesArray != null) {
                             json.put("nodes", nodesArray);
                         }
@@ -159,7 +158,6 @@ public final class AjaxServlet extends HttpServlet {
                         + (System.currentTimeMillis() - ms));
                     return;
                 }
-
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
                 JSONObject json = new JSONObject();
@@ -170,10 +168,13 @@ public final class AjaxServlet extends HttpServlet {
                             CacheController.getInstance().getSubconcepts(
                                 ontology_display_name, null, node_id);
                     } else {
+						/*
                         nodesArray =
                             CacheController.getInstance()
                                 .getSubconceptsBySource(ontology_display_name,
                                     null, node_id, ontology_source);
+                        */
+                        nodesArray = CacheController.getInstance().getRemainingSubconcepts(node_id_0 + "|" + ontology_source + "|0");
                     }
 
                     if (nodesArray != null) {
