@@ -24,7 +24,7 @@
  
   if (type.compareTo("synonym") == 0 || type.compareTo("all") == 0)
   {
-	Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
+    Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
 	<table border="0" width="708px">
@@ -33,6 +33,12 @@
 		</tr>
 	</table>    
       <table class="datatable_960" border="0" width="100%">
+      
+  <col width="530">
+  <col width="120">
+  <col width="80">
+  <col width="200">      
+      
         <tr>
           <th class="dataTableHeader" scope="col" align="left">
               <%
@@ -159,49 +165,47 @@
       
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellText" width=675 ><%=DataUtils.encodeTerm(term_name)%></td>
-              <td class="dataCellText" width=100><%=term_source%></td>
-              <td class="dataCellText" width=100><%=term_type%></td>
+              <td class="dataCellTextwrap" ><%=DataUtils.encodeTerm(term_name)%></td>
+              <td class="dataCellText" ><%=term_source%></td>
+              <td class="dataCellText" ><%=term_type%></td>
 
 <%
                // source code 
 		if (term_browser_formalname == null) {
 %>
-			  <td class="dataCellText" width=125><%=term_source_code%></td>
+			  <td class="dataCellText" >
+			      <%=term_source_code%>
+			  </td>
 <%
 		} else {
 %>		      
-	                  <td>
+	                  <td class="dataCellText" width=125>
 			  <a href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=details&dictionary=<%=formal_name%>&code=<%=term_source_code%>&sab=<%=term_source%>',
 			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
 			      <%=term_source_code%>
 			  </a>
-			  </td>
-<%			  
+		                <%	  
+				if (source_hierarchy_available) {
+		                %>		          
+		                          &nbsp;
+					  <a class="icon_blue" href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=tree&dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy',
+					  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+					      <img src="<%=basePath%>/images/visualize.gif" width="12px" height="12px" title="<%=view_in_source_hierarchy_label%>" alt="<%=view_in_source_hierarchy_label%>" border="0"/>
+					  </a>
+                                <%
+				} 
+				%>
+			  </td> 
+                <%			   
 		}
-                // tree 
-		if (source_hierarchy_available) {
-%>		      
-	                  <td>
-			  <a class="icon_blue" href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=tree&dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy',
-			  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-			      <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" title="<%=view_in_source_hierarchy_label%>" alt="<%=view_in_source_hierarchy_label%>" border="0"/>
-			  </a>
-			  </td>
-<%                  
-
-		} else {
-%>		
-		      <td></td>
-<%		
-		}
-%>
-
+		%>	  
             </tr>
-        <%
-          }
-        %>
+            
+	<%			   
+	}
+	%>            
+            
       </table>
-    <%
+<%
   }
 %>

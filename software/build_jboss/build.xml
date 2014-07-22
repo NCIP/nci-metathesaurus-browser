@@ -139,15 +139,8 @@ L-->
         <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp" />
         <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" />
 
-        <copy
-                    file="${bda.conf.dir}/application-config-client.xml"
-                    tofile="${webapp.classes.dir}/application-config-client.xml"
-                    overwrite="true">
-        </copy>
-
         <war destfile="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
             <lib dir="${bda.lib.dir}" includes="*.jar" />
-            <lib dir="../${project.name}/extlib"> <exclude name="servlet-api.jar"/> </lib>
             <classes dir="${webapp.classes.dir}"/>
         </war>
 
@@ -309,53 +302,159 @@ L-->
 
     </target>
 
-    <target name="tomcat:stop" description="Shutdown Tomcat">
+    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Build and upgrade application">
 
-        <bda:TomcatStop
-            stopscript="${tomcat.server.stopscript}"
-            host="${tomcat.server.hostname}:${tomcat.server.jndi.port}"
-            url="http://${tomcat.server.hostname}:${tomcat.server.port}"
+        <antcall target="jboss:stop" />
+
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+            value="${application.data.path}/${ncimbrowser.conf.path}/${webapp.prop.file}"
         />
 
-    </target>
-
-    <target name="tomcat:start" description="Start Tomcat">
-    
-        <bda:TomcatStart
-            url="http://${tomcat.server.hostname}:${tomcat.server.port}/${project.name}"
-            startscript="${tomcat.server.startscript}"
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.evs.browser.NCImlog4jProperties"
+            value="${application.data.path}/${ncimbrowser.conf.path}/${project.short.name}-log4j.xml"
         />
-        
-    </target>  
 
-    <target name="deploy:hot" depends="build:all" description="Hot deploy application">
-        <delete file="${tomcat.server.path}/webapps/${webapp.war.name}" quiet="true" />
-        <delete dir="${tomcat.server.path}/webapps/${project.name}" quiet="true" />
+        <copy todir="${application.data.path}/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${exploded.dir}/install/ehcache.xml"/>
+                <file file="${exploded.dir}/install/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
+                <file file="${exploded.dir}/install/log4j.dtd"/>
+            </resources>
+        </copy>
+
+        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
+            </resources>
+        </copy>
 
         <copy
             file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${tomcat.server.path}/webapps/${webapp.war.name}.bak"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
             overwrite="true"
         />
-        <move file="${tomcat.server.path}/webapps/${webapp.war.name}.bak"
-            tofile="${tomcat.server.path}/webapps/${webapp.war.name}"/>
+
+        <mkdir dir="${application.data.path}/log" />
+
+        <antcall target="jboss:start" />
+
+    </target>
+
+    <target name="deploy:local:uninstall" description="Uninstall the web application">
+
+        <bda:InputYesNo
+            property="begin.uninstall"
+            prompt="Uninstall the application?"
+        />
+        <if>
+            <isset property="begin.uninstall"/>
+            <then>
+                <antcall target="jboss:stop" />
+
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.evs.browser.NCImBrowserProperties"
+                />
+
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.evs.browser.NCImlog4jProperties"
+                />
+
+                <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+           </then>
+        </if>
+
+    </target>
+
+    <target name="deploy:hot" depends="build:all" description="Hot deploy application">
+
+        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+
+        <copy
+            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
+            overwrite="true"
+        />
+        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"/>
 
     </target>
 
     <target name="deploy:hot:jsp" depends="-init" description="Hot deploy JSP files">
-        <delete file="${tomcat.server.path}/webapps/${webapp.war.name}" quiet="true" />
-        <delete dir="${tomcat.server.path}/webapps/${project.name}" quiet="true" />
 
-        <copy
-            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${tomcat.server.path}/webapps/${webapp.war.name}.bak"
-            overwrite="true"
+        <bda:JBossTempDir
+            tmpdir="${jboss.server.path}/server/default/tmp"
+            property="jboss.war.temp.dir.location"
+            warname="${webapp.war.name}"
+
         />
-        <move file="${tomcat.server.path}/webapps/${webapp.war.name}.bak"
-            tofile="${tomcat.server.path}/webapps/${webapp.war.name}"/>
+
+        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+        <echo message="    Source: ${webapp.dir}"/>
+
+        <bda:JBossStopApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+            <fileset dir="${webapp.dir}">
+                <include name="**/*.jsp" />
+                <include name="**/*.jspf" />
+                <include name="**/*.css" />
+                <include name="**/*.js" />
+                <include name="**/*.jpg" />
+                <include name="**/*.gif" />
+                <include name="**/*.png" />
+                <include name="**/*.faces" />
+                <include name="**/*.tag" />
+                <include name="**/*.tagf" />
+            </fileset>
+        </copy>
+
+        <bda:JBossStartApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
     </target>
 
-    <target name="deploy:local:install" depends="-init" description="Installs Tomcat based on local.properties">
+    <target name="jboss:stop" description="Shutdown JBoss">
+
+        <bda:JBossStopRemote
+            jbossbin="${jboss.server.path}/bin"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+            url="http://${jboss.server.hostname}:${jboss.server.port}"
+        />
+
+    </target>
+
+    <target name="jboss:start" description="Start JBoss">
+
+        <bda:JBossStart
+            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
+            startscript="${jboss.server.startscript}"
+        />
+
+    </target>
+
+    <target name="deploy:local:install" depends="-init" description="Installs JBoss based on local.properties">
+
         <if>
             <isset property="local.properties.file.exists"/>
             <then>
@@ -366,31 +465,73 @@ L-->
                 <if>
                     <isset property="begin.install"/>
                     <then>
-                        <bda:ConsoleOutput message="mkdir ${bda.temp.dir}" />
+
                         <mkdir dir="${bda.temp.dir}"/>
-                        <available file="${tomcat.server.path}" property="tomcat.server.exists" />
+
+                        <available file="${jboss.server.path}" property="jboss.server.exists" />
                         <if>
-                            <not><isset property="tomcat.server.exists"/></not>
+                            <not><isset property="jboss.server.exists"/></not>
                             <then>
-                                <bda:ConsoleOutput message="Downloading ${tomcat.download.url}..."/>
-                                <get src="${tomcat.download.url}" dest="${bda.temp.dir}/${tomcat.zip.name}"/>
-                                <unzip src="${bda.temp.dir}/${tomcat.zip.name}" dest="${tomcat.server.path}/.." />
-                                <move file="${tomcat.server.path}/../${tomcat.server.inst}" tofile="${tomcat.server.path}"/>
+                                <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
+                                <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
+                                <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
+                                <mkdir dir="${jboss.server.path}/server/default/log" />
                             </then>
                             <else>
-                                <bda:ConsoleOutput message="Tomcat present. Skipping download."/>
-                                <antcall target="tomcat:stop" />
+                                <bda:ConsoleOutput message="JBoss present. Skipping download."/>
+                                <antcall target="jboss:stop" />
                             </else>
                         </if>
-                        <bda:ConsoleOutput message="Configuring Tomcat..."/>
 
-                        <bda:SetTomcatServer
-                            deploydir="${tomcat.server.path}"
-                            backup="true"
-                            port="${tomcat.server.port}"
-                            bindaddress="${tomcat.server.bindaddress}"
-                            redirectport="${tomcat.server.redirect.port}"
+                        <bda:ConsoleOutput message="Configuring JBoss..."/>
+
+                        <bda:SetJBossServer
+                            serverpath="${jboss.server.path}"
+                            port="${jboss.server.port}"
+                            bindaddress="${jboss.server.bindaddress}"
+                            redirectport="${jboss.server.redirect.port}"
+                            ajpport="${jboss.server.ajp.port}"
+                            ajpredirectport="${jboss.server.ajp.redirect.port}"
+                            jndiport="${jboss.server.jndi.port}"
+                            rmiport="${jboss.server.rmi.port}"
                         />
+
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
+                        />
+
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf.bat"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
+                        />
+
+                        <get src="${tools.download.url}/stop.sh" dest="${bda.temp.dir}/stop.sh"/>
+                        <get src="${tools.download.url}/start.sh" dest="${bda.temp.dir}/start.sh"/>
+
+                        <copy todir="${jboss.server.path}/bin" overwrite="true"
+                             flatten="true" includeEmptyDirs="no" filtering="true">
+                            <filterset>
+                                <filter token="jboss.server.path" value="${jboss.server.path}"/>
+                                <filter token="jboss.server.hostname" value="${jboss.server.hostname}"/>
+                                <filter token="jboss.server.jndi.port" value="${jboss.server.jndi.port}"/>
+                            </filterset>
+                            <resources>
+                                <file file="${bda.temp.dir}/stop.sh"/>
+                                <file file="${bda.temp.dir}/start.sh"/>
+                            </resources>
+                        </copy>
+
+                        <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
+
+                        <bda:ConsoleOutput />
+                        <bda:ConsoleOutput message="  Configuration complete." />
+                        <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
+
                     </then>
                     <else>
                         <bda:ConsoleOutput message="" />
@@ -403,113 +544,7 @@ L-->
                 <echo message="An example local.properties can be found in the docs directory." />
             </else>
         </if>
-    </target>
-
-    <target name="deploy:local:upgrade" depends="build:all" description="Build and upgrade application">
-
-          <antcall target="tomcat:stop" />
-          <delete file="${tomcat.server.path}/webapps/${webapp.war.name}" quiet="true" />
-          <delete dir="${tomcat.server.path}/webapps/${project.name}" quiet="true" />
-
-        <bda:AddTomcatProperty
-            deploydir="${tomcat.server.path}"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImBrowserProperties"
-            value="${application.data.path}/${web.app.conf.path}/${webapp.prop.file}"
-        />
-
-        <bda:AddTomcatProperty
-            deploydir="${tomcat.server.path}"
-            backup="true"
-            name="gov.nih.nci.evs.browser.NCImlog4jProperties"
-            value="${application.data.path}/${web.app.conf.path}/${project.short.name}-log4j.xml"
-        />
-
-        <antcall target="-deploy:configfiles" />
-        <antcall target="tomcat:start" />
 
     </target>
 
-    <target name="-deploy:configfiles" depends="build:config" description="Deploy configuration files.">
-        <copy todir="${application.data.path}/conf" overwrite="true"
-              flatten="true" includeEmptyDirs="no" filtering="false">
-            <resources>
-                <file file="${exploded.dir}/install/${webapp.prop.file}"/>
-                <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
-                <file file="${exploded.dir}/install/log4j.dtd"/>
-            </resources>
-        </copy>
-        <copy
-            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${tomcat.server.path}/webapps/${webapp.war.name}"
-            overwrite="true"
-        />
-    </target>
-
-    <target name="deploy:local:uninstall" description="Uninstall the web application">
-        <bda:InputYesNo
-            property="begin.uninstall"
-            prompt="Uninstall the application?"
-        />
-        <if>
-            <isset property="begin.uninstall"/>
-            <then>
-                <antcall target="tomcat:stop" />
-
-                <bda:RemoveTomcatProperty
-                    deploydir="${tomcat.server.path}"
-                    backup="true"
-                    name="gov.nih.nci.evs.browser.NCImBrowserProperties"
-                />
-
-                <bda:RemoveTomcatProperty
-                    deploydir="${tomcat.server.path}"
-                    backup="true"
-                    name="gov.nih.nci.evs.browser.NCImlog4jProperties"
-                />
-
-                <delete file="${tomcat.server.path}/webapps/${webapp.war.name}" quiet="true" />
-                <delete dir="${tomcat.server.path}/webapps/${project.name}" quiet="true" />
-           </then>
-        </if>
-    </target>
-
-
-	<taskdef name="list" classname="org.apache.catalina.ant.ListTask">
-	    <classpath refid="bda.project.compile.classpath"/>
-	</taskdef>
-	<target name="list" description="List Tomcat applications">
-	    <list url="${tomcat.manager.url}/text"
-		     username="${tomcat.manager.username}"
-		     password="${tomcat.manager.password}"/>
-	</target>
-
-	<taskdef name="serverinfo" classname="org.apache.catalina.ant.ServerinfoTask">
-	    <classpath refid="bda.project.compile.classpath"/>
-	</taskdef>
-	<target name="serverinfo" description="Tomcat Server Info">
-	    <serverinfo url="${tomcat.manager.url}/text"
-		     username="${tomcat.manager.username}"
-		     password="${tomcat.manager.password}"/>
-	</target>
-
-	<taskdef name="session" classname="org.apache.catalina.ant.SessionsTask">
-	    <classpath refid="bda.project.compile.classpath"/>
-	</taskdef>
-	<target name="session" description="Tomcat Application Session Info">
-	    <session path="/${project.name}"
-		     url="${tomcat.manager.url}/text"
-		     username="${tomcat.manager.username}"
-		     password="${tomcat.manager.password}"/>
-	</target>
-
-	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
-	    <classpath refid="bda.project.compile.classpath"/>
-	</taskdef>
-	<target name="undeploy" description="Undeploy Tomcat Application">
-	    <undeploy path="/${project.name}"
-		     url="${tomcat.manager.url}/text"
-		     username="${tomcat.manager.username}"
-		     password="${tomcat.manager.password}"/>
-	</target>
 </project>

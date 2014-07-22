@@ -9,9 +9,7 @@
     
   </a>
 </div>
-<!--
-<div class="mainbox-top"><img src="<%=basePath%>/images/mainbox-top.gif" width="960" height="5" alt="Box"/></div>
--->
-<div class="mainbox-top"><img src="<%=basePath%>/images/mainbox-top.gif" width="960" height="5" alt="Box"/></div>
+
+<div class="mainbox-top"><img src="<%=basePath%>/images/mainbox-top.gif" width="962" height="5" alt="Box"/></div>
 
 <!-- end EVS Logo -->
