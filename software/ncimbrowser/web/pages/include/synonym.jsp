@@ -1,5 +1,5 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.NCImMetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
@@ -9,7 +9,7 @@
 
 
 <%
-  HashMap hmap = MetadataUtils.getSAB2FormalNameHashMap();
+  HashMap hmap = NCImMetadataUtils.getSAB2FormalNameHashMap();
   String entry_type_syn = type;
   String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 
@@ -141,7 +141,7 @@
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             
 	    boolean licenseAgreementAccepted = false;
-	    String formal_name = MetadataUtils.getSABFormalName(term_source);
+	    String formal_name = NCImMetadataUtils.getSABFormalName(term_source);
 	    boolean isLicensed = DataUtils.checkIsLicensed(term_source);
 	    String cs_name = Constants.CODING_SCHEME_NAME;
 	    String view_in_source_hierarchy_label = "View In Source Hierarchy";

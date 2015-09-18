@@ -1,5 +1,5 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.NCImMetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
@@ -192,8 +192,8 @@
 
    <%
 
-   if (!MetadataUtils.isMetadataAvailable()) {
-       MetadataUtils.initialize();
+   if (!NCImMetadataUtils.isMetadataAvailable()) {
+       NCImMetadataUtils.initialize();
    }
 
    String selectedSource = "ALL";
@@ -207,7 +207,7 @@
     if (sf_available_hierarchies != null && selectedSource.compareTo("ALL") != 0 && sf_available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
       boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
       boolean licenseAgreementAccepted = false;
-      String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+      String formal_name = NCImMetadataUtils.getSABFormalName(selectedSource);
       String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
 
       LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");

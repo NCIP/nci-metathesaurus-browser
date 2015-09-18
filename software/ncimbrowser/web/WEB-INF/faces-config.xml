@@ -49,6 +49,13 @@
     </navigation-case>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -87,6 +94,13 @@
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
 
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -150,6 +164,13 @@
     <from-view-id>/pages/search_results.jsp</from-view-id>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -188,6 +209,14 @@
 
   <navigation-rule>
     <from-view-id>/pages/concept_details.jsp</from-view-id>
+    
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case>     
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -247,6 +276,13 @@
     </navigation-case>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -286,6 +322,14 @@
        <to-view-id>/pages/concept_details.jsp</to-view-id>
     </navigation-case>
 
+
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -312,6 +356,13 @@
     </navigation-case>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -337,6 +388,13 @@
     </navigation-case>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -354,6 +412,13 @@
   <navigation-rule>
     <from-view-id>/pages/error_handler.jsp</from-view-id>
 
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -379,6 +444,13 @@
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
 
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
@@ -409,6 +481,13 @@
        <to-view-id>/pages/advanced_search.jsp</to-view-id>
     </navigation-case>
 
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
     <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.advancedSearchAction}</from-action>
@@ -453,6 +532,13 @@
     </navigation-case>
 
     <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
+    <navigation-case>
        <description>Search</description>
        <from-action>#{userSessionBean.searchAction}</from-action>
        <from-outcome>search_results</from-outcome>
@@ -489,6 +575,13 @@
          <from-action>#{CartActionBean.addToCartAction}</from-action>
       </navigation-case>
 
+    <navigation-case>
+       <description>Appscan</description>
+       <from-action>#{userSessionBean.searchAction}</from-action>
+       <from-outcome>invalid_parameter</from-outcome>
+       <to-view-id>/pages/appscan_response.jsp</to-view-id>
+    </navigation-case> 
+    
       <navigation-case>
          <description>Search</description>
          <from-action>#{userSessionBean.searchAction}</from-action>

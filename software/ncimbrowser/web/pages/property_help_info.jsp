@@ -75,7 +75,7 @@ The NCI Metathesaurus (NCIm) includes the properties listed below:
              <th class="dataTableHeader" scope="col" align="left">Abbreviation</th>
              <th class="dataTableHeader" scope="col" align="left">Definition</th>
            <%
-              Vector abbr_vec = new MetadataUtils().getPropertyDescriptions();
+              Vector abbr_vec = new NCImMetadataUtils().getPropertyDescriptions();
               String prev_t = "";
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);

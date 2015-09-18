@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.browser.bean;
 
+import gov.nih.nci.evs.searchlog.*;
+
 import java.util.*;
 import javax.faces.context.*;
 import javax.faces.event.*;
@@ -18,6 +20,8 @@ import org.apache.log4j.*;
 
 import nl.captcha.Captcha;
 import nl.captcha.audio.AudioCaptcha;
+
+import org.LexGrid.LexBIG.LexBIGService.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -128,6 +132,12 @@ public class UserSessionBean extends Object {
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
+        request.getSession().removeAttribute("error_msg");
+        boolean retval = HTTPUtils.validateRequestParameters(request);
+        if (!retval) {
+			return "invalid_parameter";
+		}
+
         SearchStatusBean bean =
             (SearchStatusBean) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequestMap().get("searchStatusBean");
@@ -142,28 +152,19 @@ public class UserSessionBean extends Object {
             HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
 
         bean.setSearchType(matchType);
-
         String matchAlgorithm =
             HTTPUtils.cleanXSS((String) request.getParameter("adv_search_algorithm"));
         bean.setAlgorithm(matchAlgorithm);
 
         String source = HTTPUtils.cleanXSS((String) request.getParameter("adv_search_source"));
-
         if (source == null) {
             //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
             request.getSession().removeAttribute("selectedSource");
+            source = "ALL";
         } else {
 			request.getSession().setAttribute("selectedSource", source);
 		}
-
         bean.setSelectedSource(source);
-
-/*
-        String selectSearchOption =
-            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
-        bean.setSelectedSearchOption(selectSearchOption);
-*/
-
         String selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("selectProperty"));
         bean.setSelectedProperty(selectProperty);
 
@@ -175,13 +176,11 @@ public class UserSessionBean extends Object {
             HTTPUtils.cleanXSS((String) request.getParameter("rel_search_rela"));
         bean.setSelectedRELA(rel_search_rela);
 
-
         //request.setAttribute("searchStatusBean", bean);
 
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
-        //String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
-        String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("adv_matchText"));
+        String matchText = HTTPUtils.cleanMatchTextXSS((String)  request.getParameter("adv_matchText"));
 
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
@@ -192,17 +191,14 @@ public class UserSessionBean extends Object {
         matchText = matchText.trim();
         bean.setMatchText(matchText);
 
-
 FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
-
-
 request.getSession().setAttribute("searchStatusBean", bean);
 
 
         if (NCImBrowserProperties.get_debugOn()) {
             _logger.debug(Utils.SEPARATOR);
             _logger.debug("* criteria: " + matchText);
-            _logger.debug("* source: " + source);
+            _logger.debug("******* source: " + source);
         }
 
         String scheme = Constants.CODING_SCHEME_NAME;
@@ -242,7 +238,6 @@ request.getSession().setAttribute("searchStatusBean", bean);
         IteratorBean iteratorBean = null;
         ResolvedConceptReferencesIterator iterator = null;
         boolean ranking = true;
-
         SearchFields searchFields = null;
         String key = null;
 
@@ -280,8 +275,9 @@ request.getSession().setAttribute("searchStatusBean", bean);
                 if (property_name != null)
                     property_names = new String[] { property_name };
                 excludeDesignation = false;
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 wrapper =
-                    new SearchUtils().searchByProperties(scheme, version,
+                    new SearchUtils(lbSvc).searchByProperties(scheme, version,
                         matchText, property_types, property_names, source,
                         matchAlgorithm, excludeDesignation, ranking,
                         maxToReturn);
@@ -367,15 +363,16 @@ request.getSession().setAttribute("searchStatusBean", bean);
                 } else {
                     _logger.warn("(*) qualifiers == null");
                 }
-
-				wrapper = new SearchUtils().searchByRELA(scheme,
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SearchUtils searchUtils = new SearchUtils(lbSvc);
+				wrapper = new SearchUtils(lbSvc).searchByRELA(scheme,
 					version, matchText, source, matchAlgorithm,
 					inverse_rel_search_association, rel_search_rela, maxToReturn);
 
                 if (wrapper == null) {
 					_logger.debug("searchByAssociations");
 					wrapper =
-						new SearchUtils().searchByAssociations(scheme, version,
+						searchUtils.searchByAssociations(scheme, version,
 							matchText, associationsToNavigate,
 							association_qualifier_names,
 							association_qualifier_values, search_direction, source,
@@ -394,27 +391,34 @@ request.getSession().setAttribute("searchStatusBean", bean);
                 }
             }
         } else if (searchType != null && searchType.compareTo("Name") == 0) {
-
             searchFields =
                 SearchFields.setName(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
-
 
             key = searchFields.getKey();
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
             } else {
-
-				if (SimpleSearchUtils.searchAllSources(source) && SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
+				if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
 					try {
-						wrapper = new SimpleSearchUtils().search(scheme, version, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+						iterator = new SimpleSearchUtils(lbSvc).search(scheme, version, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+						wrapper = null;
+						if (iterator != null) {
+							wrapper = new ResolvedConceptReferencesIteratorWrapper(iterator);
+						}
+
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 				} else {
+
+
+
 					wrapper =
-						new SearchUtils().searchByName(scheme, version, matchText,
+						new SearchUtils(lbSvc).searchByName(scheme, version, matchText,
 							source, matchAlgorithm, ranking, maxToReturn,
 							SearchUtils.NameSearchType.Name);
 				}
@@ -450,7 +454,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
 			    Vector versions = new Vector();
 			    schemes.add(scheme);
 			    versions.add(version);
-
+                //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 wrapper = new CodeSearchUtils().searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
 
                 if (wrapper != null) {
@@ -472,6 +476,9 @@ request.getSession().setAttribute("searchStatusBean", bean);
 
         request.getSession().setAttribute("key", key);
         request.getSession().setAttribute("matchText", matchText);
+        request.getSession().setAttribute("selectedSource", source);
+
+
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -481,9 +488,6 @@ request.getSession().setAttribute("searchStatusBean", bean);
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
-
-//FacesContext.getCurrentInstance().getExternalContext().getRequestMap().set("searchStatusBean", bean);
-
             int size = iteratorBean.getSize();
             if (size < 0) {
 				int num_iteration = (-1) * size;
@@ -515,6 +519,9 @@ request.getSession().setAttribute("searchStatusBean", bean);
                 request.getSession().setAttribute("match_size", match_size);
                 request.getSession().setAttribute("page_string", "1");
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
+
+                request.getSession().setAttribute("new_search", Boolean.TRUE);
+
                 return "search_results";
             } else if (size == 1) {
                 request.getSession().setAttribute("singleton", "true");
@@ -560,8 +567,9 @@ response.setContentType("text/html;charset=utf-8");
         // Test case: C0536142|200601|SY|||C1433544|Y|
 
         if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
-
-            String newCUI = HistoryUtils.getReferencedCUI(matchText);
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+                        null, matchText);
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
@@ -583,14 +591,13 @@ response.setContentType("text/html;charset=utf-8");
                 return "concept_details";
             }
         }
-
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
             message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
         }
+
         request.setAttribute("message", message);
         return "no_match";
-
     }
 
     public String searchAction() {
@@ -599,7 +606,13 @@ response.setContentType("text/html;charset=utf-8");
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-        String matchText = HTTPUtils.cleanXSS((String) request.getParameter("matchText"));
+        request.getSession().removeAttribute("error_msg");
+        boolean retval = HTTPUtils.validateRequestParameters(request);
+        if (!retval) {
+			return "invalid_parameter";
+		}
+
+        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
         _logger.debug("matchText: " + matchText);
 
         if (matchText != null) {
@@ -717,11 +730,18 @@ response.setContentType("text/html;charset=utf-8");
             } else {
                 //ResolvedConceptReferencesIteratorWrapper wrapper = null;
                 try {
-					boolean isSimpleSearchSupported = SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
-					if (SimpleSearchUtils.searchAllSources(source) && SimpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
-						wrapper = new SimpleSearchUtils().search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
+					boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
+					if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
+						iterator = simpleSearchUtils.search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+						wrapper = null;
+						if (iterator != null) {
+							wrapper = new ResolvedConceptReferencesIteratorWrapper(iterator);
+						}
+
 				    } else {
-						wrapper = new SearchUtils()
+						wrapper = new SearchUtils(lbSvc)
 							.searchByNameOrCode(schemes, versions, matchText, source,
 								matchAlgorithm, ranking, maxToReturn, SearchUtils.SEARCH_BY_NAME_ONLY);
 					}
@@ -773,8 +793,9 @@ response.setContentType("text/html;charset=utf-8");
 				iteratorBean = iteratorBeanManager.getIteratorBean(key);
 				iterator = iteratorBean.getIterator();
 			} else {
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 				wrapper =
-					new SearchUtils().searchByProperties(scheme, version,
+					new SearchUtils(lbSvc).searchByProperties(scheme, version,
 						matchText, source, matchAlgorithm,
 						excludeDesignation, ranking, maxToReturn);
 				if (wrapper != null) {
@@ -805,13 +826,14 @@ response.setContentType("text/html;charset=utf-8");
 			} else {
 				//[GF#28946] Contains relationship results possibly missing some concepts
 				//KLO, 062310
-				wrapper = new SearchUtils().searchByRELA(scheme,
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				wrapper = new SearchUtils(lbSvc).searchByRELA(scheme,
 					version, matchText, source, matchAlgorithm,
 					null, null, maxToReturn);
 
 				if (wrapper == null) {
 					wrapper =
-						new SearchUtils().searchByAssociations(scheme, version,
+						new SearchUtils(lbSvc).searchByAssociations(scheme, version,
 							matchText, source, matchAlgorithm, designationOnly,
 							ranking, maxToReturn);
 				}
@@ -913,8 +935,10 @@ response.setContentType("text/html;charset=utf-8");
 
         //if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
         if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
-
-            String newCUI = HistoryUtils.getReferencedCUI(matchText);
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+                null, matchText);
+            //String newCUI = HistoryUtils.getReferencedCUI(matchText);
 
             if (newCUI != null) {
                 _logger.debug("Searching for " + newCUI);
@@ -1113,7 +1137,7 @@ response.setContentType("text/html;charset=utf-8");
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-         String value = HTTPUtils.cleanXSS((String) request.getParameter("matchText"));
+         String value = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
          if (value != null)
          	request.getSession().setAttribute("matchText", value);
 
@@ -1354,8 +1378,13 @@ response.setContentType("text/html;charset=utf-8");
 				retstr = validateCaptcha(request, "incomplete");
 			}
 
-            String recipients[] = MailUtils.getRecipients();
-            MailUtils.postMail(from, recipients, subject, message);
+            //String recipients[] = MailUtils.getRecipients();
+            //MailUtils.postMail(from, recipients, subject, message);
+
+            String recipientStr = NCImBrowserProperties.getNCICB_CONTACT_URL();
+            String mail_smtp_server = NCImBrowserProperties.getMAIL_SMTP_SERVER();
+            MailUtils.postMail(from, recipientStr, subject, message, mail_smtp_server);
+
 			request.getSession().setAttribute("message", msg);
 
         } catch (NoReloadException e) {

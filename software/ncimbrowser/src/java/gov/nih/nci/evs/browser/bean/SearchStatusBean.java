@@ -182,7 +182,7 @@ public class SearchStatusBean extends Object {
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////
-    private String _selectedSource = null;
+    private String _selectedSource = "ALL";
     private List _sourceList = null;
 
     public void setSelectedSource(String selectedSource,

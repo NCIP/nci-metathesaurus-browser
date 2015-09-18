@@ -33,7 +33,7 @@
           Vector def_vec = new Vector();
           Vector v = (Vector) request.getSession().getAttribute("TermTypeMetaData");
           if (v == null) {
-            v = MetadataUtils.getTermTypeDescriptionMetaData("NCI Metathesaurus", null);
+            v = NCImMetadataUtils.getTermTypeDescriptionMetaData("NCI Metathesaurus", null);
             if (v != null) {
                 request.getSession().setAttribute("TermTypeMetaData", v);
             } else {

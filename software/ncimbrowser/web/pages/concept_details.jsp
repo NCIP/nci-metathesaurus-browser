@@ -28,6 +28,8 @@
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
+<%@ page import="org.LexGrid.LexBIG.LexBIGService.*" %>
+
 
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Map.Entry" %>
@@ -161,7 +163,8 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
     sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
     sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
     int maxToReturn = 100;
-    ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
+    LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+    ResolvedConceptReferencesIterator iterator = new SearchUtils(lbSvc).findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
           IteratorBean iteratorBean = new IteratorBean(iterator);
           iteratorBean.setIterator(iterator);
 
@@ -325,7 +328,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
 
   if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
-     term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
+     term_suggestion_application_url1 = NCImMetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
        term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();
      }

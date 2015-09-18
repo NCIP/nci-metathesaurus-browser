@@ -841,6 +841,13 @@ public class Constants {
             "Other\tSY\tplain_text_form_of",
             "Other\tSY\tsort_version_of" });
 
+    public static final String[] HARZARD_CHARS = {"/SCRIPT", "CAST(", "EXEC(", "IMG SRC=", "BODY ONLOAD",
+                                 "/IFRAME ", "IFRAME ", "INPUT TYPE", "IMG DYNSRC", "IMG LOWSRC", "ALERT(",
+                                 "JAVASCRIPT:ALERT", "BGSOUND SRC", "BR SIZE", "LINK REL",
+                                 "META HTTP-EQUIV", "STYLE=", "XSS:EXPRESSION", "XSS STYLE",
+                                 "DIV STYLE", "BASE HREF", "OBJECT TYPE", "XML ID",
+                                 "SPAN DATASRC", "A HREF=", "$WHERE", "SLEEP(", "$QUERY", ";DECLARE", "VARCHAR(", "E-"};
+
     private Constants() {
         // Prevent class from being explicitly instantiated
     }

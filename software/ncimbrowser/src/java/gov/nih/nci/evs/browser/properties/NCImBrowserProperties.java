@@ -429,8 +429,13 @@ public class NCImBrowserProperties {
         return _displayItemList;
     }
 
-    public List getTermGroupRankList() {
+    //KLO
+    public static List getTermGroupRankList() {
         return _termGroupRankList;
+    }
+
+    public static HashMap getTermGroupRankHashMap() {
+        return _termGroupRankHashMap;
     }
 
     public static String getRank(String term_type, String term_source) {
@@ -540,6 +545,14 @@ public class NCImBrowserProperties {
 
     public static boolean isAudioCaptchaBackgroundNoiseOn() {
         return _audio_captcha_background_noise_on;
+    }
+
+    public static String getMAIL_SMTP_SERVER() {
+        return _mail_smtp_server;
+    }
+
+    public static String getNCICB_CONTACT_URL() {
+        return _ncicb_contact_url;
     }
 
 }

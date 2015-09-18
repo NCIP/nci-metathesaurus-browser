@@ -1,12 +1,18 @@
 package gov.nih.nci.evs.browser.utils;
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
-import java.util.regex.*;
 
 import javax.faces.context.*;
 import javax.servlet.http.*;
+
+import java.io.*;
+import java.net.*;
+import java.util.regex.*;
+
+import org.apache.log4j.*;
+
+import gov.nih.nci.evs.browser.common.*;
+import gov.nih.nci.evs.browser.properties.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -57,8 +63,13 @@ import javax.servlet.http.*;
  *
  */
 public class HTTPUtils {
+    private static Logger _logger = Logger.getLogger(HTTPUtils.class);
+    private static final String REFERER = "referer";
+    private static final int MAX_FONT_SIZE = 29;
+    private static final int MIN_FONT_SIZE = 22;
+    private static final int MAX_STR_LEN = 18;
 
-    private final static String REFERER = "referer";
+    public  static final int ABS_MAX_STR_LEN = 40;
 
     /**
      * Remove potentially bad XSS syntax
@@ -66,36 +77,151 @@ public class HTTPUtils {
      * @param value
      * @return
      */
+
+/*
     public static String cleanXSS(String value) {
 
         if (value == null || value.length() < 1)
             return value;
 
-        try {
-            value = URLDecoder.decode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // Do nothing, just use the input
-        } catch (IllegalArgumentException e) {
-            // Do nothing, just use the input
-            // Note: The following exception was triggered:
-            // java.lang.IllegalArgumentException: URLDecoder: Illegal hex
-            // characters in escape (%) pattern - For input string: "^&".
-        }
-
         // Remove XSS attacks
-        value = replaceAll(value, "<\\s*(?i)script\\s*>.*</\\s*(?i)script\\s*>", "");
-        value = value.replaceAll(".*<\\s*(?i)iframe.*>", "");
-        value = value.replaceAll(".*<\\s*(?i)img.*>", "");
+        value = replaceAll(value, "<\\s*script\\s*>.*</\\s*script\\s*>", "");
+        value = replaceAll(value, ".*<\\s*iframe.*>", "");
         value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
         value = value.replaceAll("'", "&#39;");
         value = value.replaceAll("eval\\((.*)\\)", "");
         value =
-            replaceAll(value, "[\\\"\\\'][\\s]*(?i)javascript:(.*)[\\\"\\\']",
+            replaceAll(value, "[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']",
                 "\"\"");
         value = value.replaceAll("\"", "&quot;");
         return value;
 
+    }
+*/
+
+    public void HTTPUtils() {
+
+	}
+
+    public static boolean isPositiveEven(int num) {
+		return ((num % 2) == 0 && num > 0);
+	}
+
+	public static int getCount(String s, char c) {
+		int num = 0;
+		if (s == null) return num;
+		for (int i=0; i<s.length(); i++) {
+			char ch = s.charAt(i);
+			if (ch == c) num++;
+		}
+		return num;
+	}
+
+	public static boolean checkPotentialMaliciousContent(String s) {
+		if (s == null) return false;
+		char c1 = '<';
+		char c2 = '>';
+		char c3 = '/';
+		int k1 = getCount(s, c1);
+		int k2 = getCount(s, c2);
+		int k3 = getCount(s, c3);
+		if (isPositiveEven(k1) && isPositiveEven(k2) && k3 > 0) {
+            return maybeMalicious(s, c3, c2);
+		}
+		return false;
+	}
+
+
+	public static boolean maybeMalicious(String s, char c1, char c2) {
+		//</script>
+		if (s == null) return false;
+		String s1 = Character.toString(c1);
+		String s2 = Character.toString(c2);
+
+		int n1 = s.lastIndexOf(s1);
+		int n2 = s.lastIndexOf(s2);
+
+		if (n1 == -1 || n2 == -1) return false;
+		if (n1 > n2) return false;
+		return true;
+	}
+
+    public static String cleanMatchTextXSS(String value) {
+		if (value == null) return null;
+		value = value.trim();
+		if (value.compareTo(">") == 0) return cleanXSS(value);
+		if (value.compareTo("<") == 0) return cleanXSS(value);
+
+		boolean retval = checkPotentialMaliciousContent(value);
+		if (retval) {
+			value = cleanXSS(value);
+		}
+		System.out.println("matchText: " + value);
+		value = value.replaceAll(":", " ");
+		return value;
+	}
+
+
+    public static String cleanXSS(String value) {
+        if (value == null) return null;
+        value = value.trim();
+        if (value.length() == 0) return value;
+
+        // Remove XSS attacks
+        value = replaceAll(value, "<\\s*script\\s*>.*</\\s*script\\s*>", "");
+        value = replaceAll(value, ".*<\\s*iframe.*>", "");
+        value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        //value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+
+        //[NCITERM-679] Terms with apostrophes return no results.
+        //value = value.replaceAll("'", "&#39;");
+        value = value.replaceAll("eval\\((.*)\\)", "");
+        value =
+            replaceAll(value, "[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']",
+                "\"\"");
+        value = value.replaceAll("\"", "&quot;");
+        return value;
+
+    }
+
+
+
+
+    public static String appendNCIT(String link) {
+    	String nciturl = null;
+    	if (link.contains("/ncitbrowser")) return link;
+    	if (link.endsWith("/"))	link = nciturl + "ncitbrowser";
+    	//link = nciturl + "/ncitbrowser";
+    	else link = nciturl + "/ncitbrowser";
+    	return link;
+    }
+
+    /**
+     * Calculate a max font size for the length of the text to be
+     * 	displayed.
+     * @param value
+     * @param width
+     * @return
+     */
+    public static int maxFontSize(String value) {
+    	int size;
+		if (value == null || value.length() == 0)
+			size = MAX_FONT_SIZE;
+		else if (value.length() >= MAX_STR_LEN)
+			size = MIN_FONT_SIZE;
+		else {
+			// Calculate an intermediate font size
+			/*
+			size = MIN_FONT_SIZE
+					+ Math.round((MAX_FONT_SIZE / MAX_STR_LEN)
+							/ (MIN_FONT_SIZE / value.length()));
+		    */
+			size = MIN_FONT_SIZE
+					+ Math.round(((float) MAX_FONT_SIZE / (float) MAX_STR_LEN)
+							/ ((float) MIN_FONT_SIZE / (float) value.length()));
+		}
+    	return size;
     }
 
     /**
@@ -112,6 +238,397 @@ public class HTTPUtils {
         return string;
 
     }
+
+    public static void printRequestSessionAttributes() {
+        _logger.debug(" ");
+        _logger.debug(Utils.SEPARATOR);
+        _logger.debug("Request Session Attribute(s):");
+
+        try {
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+
+            HttpSession session = request.getSession();
+            Enumeration<?> enumeration =
+                SortUtils.sort(session.getAttributeNames());
+            int i = 0;
+            while (enumeration.hasMoreElements()) {
+                String name = (String) enumeration.nextElement();
+                Object value = session.getAttribute(name);
+                _logger.debug("  " + i + ") " + name + ": " + value);
+                ++i;
+            }
+        } catch (Exception e) {
+            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public static void printRequestAttributes() {
+        _logger.debug(" ");
+        _logger.debug(Utils.SEPARATOR);
+        _logger.debug("Request Attribute(s):");
+
+        try {
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+
+            Enumeration<?> enumeration =
+                SortUtils.sort(request.getAttributeNames());
+            int i = 0;
+            while (enumeration.hasMoreElements()) {
+                String name = (String) enumeration.nextElement();
+                Object value = request.getAttribute(name);
+                _logger.debug("  " + i + ") " + name + ": " + value);
+                ++i;
+            }
+        } catch (Exception e) {
+            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public static void printRequestParameters() {
+        _logger.debug(" ");
+        _logger.debug(Utils.SEPARATOR);
+        _logger.debug("Request Parameter(s):");
+
+        try {
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+
+            Enumeration<?> enumeration =
+                SortUtils.sort(request.getParameterNames());
+            int i = 0;
+            while (enumeration.hasMoreElements()) {
+                String name = (String) enumeration.nextElement();
+
+                //Object value = cleanXSS((String) request.getParameter(name));
+                String value = (String) request.getParameter(name);
+                //_logger.debug("  " + i + ") " + name + ": " + value);
+                System.out.println("name: " + name + " value: " + value.toString());
+
+                ++i;
+            }
+        } catch (Exception e) {
+			e.printStackTrace();
+            //_logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public static void printRequestParameters(HttpServletRequest request) {
+        _logger.debug(" ");
+        _logger.debug(Utils.SEPARATOR);
+        _logger.debug("Request Parameter(s):");
+
+        try {
+            Enumeration<?> enumeration =
+                SortUtils.sort(request.getParameterNames());
+            int i = 0;
+            while (enumeration.hasMoreElements()) {
+                String name = (String) enumeration.nextElement();
+
+                //Object value = cleanXSS((String) request.getParameter(name));
+                String value = (String) request.getParameter(name);
+                //_logger.debug("  " + i + ") " + name + ": " + value);
+                System.out.println("name: " + name + " value: " + value.toString());
+
+                ++i;
+            }
+        } catch (Exception e) {
+			e.printStackTrace();
+            //_logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public static void printAttributes() {
+        printRequestSessionAttributes();
+        printRequestAttributes();
+        printRequestParameters();
+        _logger.debug(" ");
+    }
+
+    public static String convertJSPString(String t) {
+        // Convert problem characters to JavaScript Escaped values
+        if (t == null) {
+            return "";
+        }
+
+        if (t.compareTo("") == 0) {
+            return "";
+        }
+
+        String sigleQuoteChar = "'";
+        String doubleQuoteChar = "\"";
+
+        String dq = "&quot;";
+
+        t = t.replaceAll(sigleQuoteChar, "\\" + sigleQuoteChar);
+        t = t.replaceAll(doubleQuoteChar, "\\" + dq);
+        t = t.replaceAll("\r", "\\r"); // replace CR with \r;
+        t = t.replaceAll("\n", "\\n"); // replace LF with \n;
+
+        return cleanXSS(t);
+    }
+
+    /**
+     * @param request
+     * @return
+     */
+    public static String getRefererParmEncode(HttpServletRequest request) {
+        String iref = request.getHeader(REFERER);
+        String referer = "N/A";
+        if (iref != null)
+            try {
+                referer = URLEncoder.encode(iref, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                // return N/A if encoding is not supported.
+            }
+        return cleanXSS(referer);
+    }
+
+    /**
+     * @param request
+     * @return
+     */
+    public static String getRefererParmDecode(HttpServletRequest request) {
+        String refurl = "N/A";
+        try {
+            String iref = cleanXSS((String) request.getParameter(REFERER));
+            if (iref != null)
+                refurl =
+                    URLDecoder.decode(request.getParameter(REFERER), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // return N/A if encoding is not supported.
+        }
+        return cleanXSS(refurl);
+    }
+
+    /**
+     * @param request
+     */
+    public static void clearRefererParm(HttpServletRequest request) {
+        request.setAttribute(REFERER, null);
+    }
+
+    /**
+     * @return
+     */
+    public static HttpServletRequest getRequest() {
+        return (HttpServletRequest) FacesContext.getCurrentInstance()
+            .getExternalContext().getRequest();
+    }
+
+
+	public static String encode(String in) {
+		String retVal = "";
+		try {
+		    retVal = URLEncoder.encode(in, "UTF8");
+		} catch (UnsupportedEncodingException ex) {
+		    ex.printStackTrace();
+		}
+		return retVal;
+	}
+
+    public static String decode(String t) {
+		String retVal = "";
+		try {
+        	retVal = URLDecoder.decode(t, "UTF-8");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return retVal;
+	}
+
+	public static boolean isValueSetURI(String key) {
+		if (key == null) return false;
+		if (ValueSetDefinitionConfig.getValueSetConfig(key) != null) return true;
+		return false;
+	}
+
+	// type: name=1; value=2
+	public static String createErrorMessage(int type, String name) {
+		if (type == 1) {
+			//return "WARNING: Unknown parameter name encountered - '" + cleanXSS(name) + "'.";
+			return "WARNING: Invalid parameter name encountered -- please check your URL and try again. ";
+		} else {
+			return "WARNING: Invalid parameter value encountered - " + " (name: " + cleanXSS(name) + ").";
+		}
+	}
+
+	public static String createErrorMessage(String name, String value) {
+		//return "WARNING: Invalid parameter value encountered - " + cleanXSS(value) + " (name: " + cleanXSS(name) + ").";
+		return "WARNING: Invalid parameter name and/or value encountered -- please check your URL and try again. ";
+	}
+
+	public static boolean validateRequestParameters(HttpServletRequest request) {
+		List list = HTTPParameterConstants.HTTP_REQUEST_PARAMETER_NAME_LIST;
+		String value = null;
+        try {
+            Enumeration<?> enumeration =
+                SortUtils.sort(request.getParameterNames());
+            while (enumeration.hasMoreElements()) {
+				String name = (String) enumeration.nextElement();
+
+                Boolean isDynamic = isDynamicId(name);
+                Boolean issearchFormParameter = isSearchFormParameter(name);
+
+                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
+					if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+						if (name.endsWith("value=")) return true;
+                        if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
+							System.out.println("WARNING: parameter name: " + name + " is not in the list.");
+							String error_msg = createErrorMessage(1, name);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+						value = (String) request.getParameter(name);
+						Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
+						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+							String error_msg = createErrorMessage(name, value);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+
+						bool_obj = containsPercentSign(name, value);
+						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+							String error_msg = createErrorMessage(name, value);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+
+						bool_obj = validateValueSetCheckBox(name, value);
+						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+							String error_msg = createErrorMessage(name, value);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+
+						bool_obj = containsHarzardCharacters(value);
+						// Cross-Site Scripting:
+						if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
+							String error_msg = createErrorMessage(2, name);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+					}
+			    }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+	}
+
+
+
+	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
+		if (name == null || value == null || value.length() == 0) return null;
+
+
+		if (name.compareTo("adv_search_algorithm") == 0) {
+			if (HTTPParameterConstants.adv_search_algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("algorithm") == 0) {
+			if (HTTPParameterConstants.algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("direction") == 0) {
+			if (HTTPParameterConstants.direction_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+
+		} else if (name.compareTo("searchTarget") == 0) {
+			if (HTTPParameterConstants.searchTarget_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("selectSearchOption") == 0) {
+			if (HTTPParameterConstants.selectSearchOption_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		}
+		return null;
+	}
+
+    public static Boolean containsPercentSign(String name, String value) {
+		if (name == null || value == null) return null;
+		if (!name.endsWith(".x")
+		    && !name.endsWith(".y")
+		    && name.compareTo("javax.faces.ViewState") != 0) {
+		    return null;
+		}
+		if (value.indexOf("%") == -1) return Boolean.TRUE;
+		return Boolean.FALSE;
+	}
+
+    public static Boolean validateValueSetCheckBox(String name, String value) {
+		if (name == null || value == null) return null;
+		if (!name.startsWith("TVS_") && !name.startsWith("http:")) {
+		    return null;
+		}
+
+		if (isValueSetURI(name)) {
+			if (value.compareTo("on") != 0 && value.compareTo("off") != 0) {
+				return Boolean.FALSE;
+			}
+		}
+
+		if (value.compareTo("on") == 0 || value.compareTo("off") == 0) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+    public static Boolean containsHarzardCharacters(String value) {
+		if (value == null) return Boolean.FALSE;
+		String s = decode(value).toUpperCase();
+		s = s.trim();
+		for (int i=0; i<Constants.HARZARD_CHARS.length; i++) {
+			String t = Constants.HARZARD_CHARS[i];
+			if (s.indexOf(t) != -1) {
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
+	}
+
+	public static Boolean isDynamicId(String id) {
+		if (id == null) return null;
+		if (id.startsWith("j_id_jsp_")) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	public static Boolean isSearchFormParameter(String name) {
+		if (name == null) return null;
+		String nm = name.toLowerCase();
+		if (nm.endsWith("search.x") || nm.endsWith("search.y")) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	public static String createErrorMsg(String name, String value) {
+		String error_msg = "WARNING: Invalid parameter value encountered - " + value +
+		   " (name: " + name + ").";
+		return error_msg;
+	}
+
+
 
     /**
      * @param name
@@ -136,14 +653,6 @@ public class HTTPUtils {
 			e.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * @return
-     */
-    public static HttpServletRequest getRequest() {
-        return (HttpServletRequest) FacesContext.getCurrentInstance()
-            .getExternalContext().getRequest();
     }
 
     /**
@@ -180,73 +689,6 @@ public class HTTPUtils {
         if (value == null || value.trim().length() <= 0 || value.equals("null"))
             return defaultValue;
         return value;
-    }
-
-    /**
-     * @param request
-     * @return
-     */
-    public static String getRefererParmEncode(HttpServletRequest request) {
-        String iref = cleanXSS((String) request.getHeader(REFERER));
-        String referer = "N/A";
-        if (iref != null)
-            try {
-                referer = URLEncoder.encode(iref, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                // return N/A if encoding is not supported.
-            }
-        return cleanXSS(referer);
-    }
-
-    /**
-     * @param request
-     * @return
-     */
-    public static String getRefererParmDecode(HttpServletRequest request) {
-        String refurl = "N/A";
-        try {
-            String iref = cleanXSS((String) request.getParameter(REFERER));
-            if (iref != null)
-                refurl =
-                    URLDecoder.decode(request.getParameter(REFERER), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // return N/A if encoding is not supported.
-        }
-        return cleanXSS(refurl);
-    }
-
-    /**
-     * @param request
-     */
-    public static void clearRefererParm(HttpServletRequest request) {
-        request.setAttribute(REFERER, null);
-    }
-
-    /**
-     * @param t
-     * @return
-     */
-    public static String convertJSPString(String t) {
-        // Convert problem characters to JavaScript Escaped values
-        if (t == null) {
-            return "";
-        }
-
-        if (t.compareTo("") == 0) {
-            return "";
-        }
-
-        String sigleQuoteChar = "'";
-        String doubleQuoteChar = "\"";
-
-        String dq = "&quot;";
-
-        t = t.replaceAll(sigleQuoteChar, "\\" + sigleQuoteChar);
-        t = t.replaceAll(doubleQuoteChar, "\\" + dq);
-        t = t.replaceAll("\r", "\\r"); // replace CR with \r;
-        t = t.replaceAll("\n", "\\n"); // replace LF with \n;
-
-        return t;
     }
 
 }

@@ -21,6 +21,7 @@ import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 
 import org.apache.commons.lang.*;
 import org.apache.log4j.*;
+import org.json.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -73,54 +74,45 @@ import org.apache.log4j.*;
  */
 
 public class SourceTreeUtils {
-    private static Logger _logger = Logger.getLogger(SourceTreeUtils.class);
+    private  Logger _logger = Logger.getLogger(SourceTreeUtils.class);
 
     // protected final Logger logger = Logger.getLogger(getClass());
-    private static String[] _hierAssocToParentNodes =
+    private  String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
-    private static String[] _hierAssociationToParentNodes = new String[] { "PAR" };
-    private static String[] _hierAssocToChildNodes = new String[] { "CHD" };
+    private  String[] _hierAssociationToParentNodes = new String[] { "PAR" };
+    private  String[] _hierAssocToChildNodes = new String[] { "CHD" };
 
-    public static final boolean DIRECTION_FORWARD = true;
+    public final boolean DIRECTION_FORWARD = true;
 
-    private static SortOptionList _sortByCode =
+    private  SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
     private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
 
     private int _maxLevel = 50;
     private int _maxLinks = 300;
 
-    public SourceTreeUtils() {
+    private LexBIGService lbSvc = null;
+    private LexBIGServiceConvenienceMethods lbscm = null;
+    private MetaBrowserService mbs = null;
 
-    }
-
-/*
-    public static Vector getSupportedSources(String codingScheme, String version) {
+    public SourceTreeUtils(LexBIGService lbSvc) {
+        this.lbSvc = lbSvc;
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-            if (version != null)
-                csvt.setVersion(version);
-            return getSupportedSources(lbSvc, codingScheme, csvt);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-*/
-    public static Vector getSupportedSources(String codingScheme, CodingSchemeVersionOrTag csvt) {
-        try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            return getSupportedSources(lbSvc, codingScheme, csvt);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
+			this.lbscm =
+					(LexBIGServiceConvenienceMethods) lbSvc
+						.getGenericExtension("LexBIGServiceConvenienceMethods");
+			this.lbscm.setLexBIGService(lbSvc);
+
+			this.mbs = (MetaBrowserService) lbSvc.getGenericExtension("metabrowser-extension");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
     }
 
 
-    public static Vector getSupportedSources(LexBIGService lbSvc,
+    public Vector getSupportedSources(
         String codingScheme, CodingSchemeVersionOrTag versionOrTag) {
         Vector v = new Vector();
         try {
@@ -145,8 +137,7 @@ public class SourceTreeUtils {
         return v;
     }
 
-    public static NameAndValueList createNameAndValueList(String[] names,
-        String[] values) {
+    public NameAndValueList createNameAndValueList(String[] names, String[] values) {
         NameAndValueList nvList = new NameAndValueList();
         for (int i = 0; i < names.length; i++) {
             NameAndValue nv = new NameAndValue();
@@ -163,17 +154,17 @@ public class SourceTreeUtils {
 
     // Tree traversal -- detect and avoid loops (intra-CUI)
 
-    public static ArrayList getNextLevelTreeNodeNamesAndCodes(String scheme,
+    public ArrayList getNextLevelTreeNodeNamesAndCodes(String scheme,
         String version, String code, String source) {
         return getTreeNodeNamesAndCodes(scheme, version, code, source, true);
     }
 
-    public static ArrayList getPrevLevelTreeNodeNamesAndCodes(String scheme,
+    public ArrayList getPrevLevelTreeNodeNamesAndCodes(String scheme,
         String version, String code, String source) {
         return getTreeNodeNamesAndCodes(scheme, version, code, source, false);
     }
 
-    public static ArrayList getTreeNodeNamesAndCodes(String scheme,
+    public ArrayList getTreeNodeNamesAndCodes(String scheme,
         String version, String code, String source, boolean direction) {
         ArrayList list = new ArrayList();
 
@@ -182,12 +173,6 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
-
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
@@ -294,7 +279,7 @@ public class SourceTreeUtils {
         return list;
     }
 
-    public static ArrayList getSubconceptsInTree(String scheme, String version,
+    public ArrayList getSubconceptsInTree(String scheme, String version,
         String code, String source) {
         return getAssociatedConceptsInTree(scheme, version, code, source, true);
     }
@@ -303,7 +288,7 @@ public class SourceTreeUtils {
         return focus.getExpandedState().equals(ExpandedState.LEAF);
     }
 
-    public static ArrayList getSuperconceptsInTree(String scheme,
+    public ArrayList getSuperconceptsInTree(String scheme,
         String version, String code, String source) {
 
         ArrayList list = new ArrayList();
@@ -313,7 +298,6 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
@@ -382,17 +366,16 @@ public class SourceTreeUtils {
 
     }
 
-    public static ArrayList getAssociatedConceptsInTree(String scheme,
+    public ArrayList getAssociatedConceptsInTree(String scheme,
         String version, String code, String source, boolean direction) {
         return getAssociatedConceptsInTree(scheme, version, code, source,
             direction, 1, 1, false);
     }
 
-    public static ArrayList getAssociatedConceptsInTree(String scheme,
+    public ArrayList getAssociatedConceptsInTree(String scheme,
         String version, String code, String source, boolean direction,
         int resolveCodedEntryDepth, int resolveAssociationDepth,
         boolean keepLastAssociationLevelUnresolved) {
-
         ArrayList list = new ArrayList();
 
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
@@ -400,18 +383,17 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
+
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            if (hierarchies == null || hierarchies.length == 0)
+            if (hierarchies == null || hierarchies.length == 0) {
                 return null;
+			}
 
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            //String hier_id = hierarchyDefn.getLocalId();
-
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
             boolean associationsNavigatedFwd =
@@ -452,15 +434,17 @@ public class SourceTreeUtils {
                 ex.printStackTrace();
             }
 
+            if (matches == null) {
+				System.out.println("matches: NULL???");
+			} else if ( matches.getResolvedConceptReferenceCount() == 0 ) {
+				System.out.println("No match");
+			}
             // Analyze the result ...
             if (matches != null
                 && matches.getResolvedConceptReferenceCount() > 0) {
-
                 ResolvedConceptReference[] rcra =
                     matches.getResolvedConceptReference();
-
                 for (int k = 0; k < rcra.length; k++) {
-
                     // ResolvedConceptReference ref =
                     // (ResolvedConceptReference)
                     // matches.enumerateResolvedConceptReference().nextElement();
@@ -514,7 +498,7 @@ public class SourceTreeUtils {
         return list;
     }
 
-    public static ArrayList getRootConceptNamesAndCodes(String scheme,
+    public ArrayList getRootConceptNamesAndCodes(String scheme,
         String version, String source) {
         ArrayList list = new ArrayList();
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
@@ -522,12 +506,6 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
-
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null) {
                 _logger.warn("CodingScheme is NULL??? " + scheme);
@@ -637,7 +615,7 @@ public class SourceTreeUtils {
         return list;
     }
 
-    public static LocalNameList vector2LocalNameList(Vector<String> v) {
+    public LocalNameList vector2LocalNameList(Vector<String> v) {
         if (v == null)
             return null;
         LocalNameList list = new LocalNameList();
@@ -648,7 +626,7 @@ public class SourceTreeUtils {
         return list;
     }
 
-    private static CodedNodeSet restrictToActiveStatus(CodedNodeSet cns,
+    private CodedNodeSet restrictToActiveStatus(CodedNodeSet cns,
         boolean activeOnly) {
         if (cns == null)
             return null;
@@ -665,13 +643,11 @@ public class SourceTreeUtils {
         }
     }
 
-    public static ResolvedConceptReferencesIterator findConceptWithSourceCodeMatching(
+    public ResolvedConceptReferencesIterator findConceptWithSourceCodeMatching(
         String scheme, String version, String sourceAbbr, String code,
         int maxToReturn, boolean searchInactive) {
         if (sourceAbbr == null || code == null)
             return null;
-
-        LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
         CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
         versionOrTag.setVersion(version);
 
@@ -738,7 +714,7 @@ public class SourceTreeUtils {
         return null;
     }
 
-    protected static void displayRef(PrintWriter pw, int k,
+    protected void displayRef(PrintWriter pw, int k,
         ResolvedConceptReference ref) {
         try {
             pw.println("(" + k + ") " + ref.getConceptCode() + ":"
@@ -748,7 +724,7 @@ public class SourceTreeUtils {
         }
     }
 
-    protected static void displayRef(int k, ResolvedConceptReference ref) {
+    protected void displayRef(int k, ResolvedConceptReference ref) {
         try {
             _logger.debug("(" + k + ") " + ref.getConceptCode() + ":"
                 + ref.getEntityDescription().getContent() + "\n");
@@ -776,23 +752,6 @@ public class SourceTreeUtils {
         }
     }
 
-    public static Vector<String> parseData(String line) {
-        String tab = "|";
-        return parseData(line, tab);
-    }
-
-    public static Vector<String> parseData(String line, String tab) {
-        Vector data_vec = new Vector();
-        StringTokenizer st = new StringTokenizer(line, tab);
-        while (st.hasMoreTokens()) {
-            String value = st.nextToken();
-            if (value.compareTo("null") == 0)
-                value = " ";
-            data_vec.add(value);
-        }
-        return data_vec;
-    }
-
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Paths to roots (View in Source Hierarchy) Traverse up until the unique
     // SRC V-<sab> concept is reached.
@@ -813,7 +772,7 @@ public class SourceTreeUtils {
         CodingSchemeVersionOrTag csvt, String code) throws LBException {
 
         CodedNodeSet cns =
-            RemoteServerUtil.createLexBIGService().getCodingSchemeConcepts(
+            lbSvc.getCodingSchemeConcepts(
                 scheme, csvt);
         cns =
             cns.restrictToMatchingProperties(ConvenienceMethods
@@ -878,7 +837,7 @@ public class SourceTreeUtils {
         return matches.toArray(new Presentation[matches.size()]);
     }
 
-    protected String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm,
+    protected String getDirectionalLabel(
         String scheme, CodingSchemeVersionOrTag csvt, Association assoc,
         boolean navigatedFwd) throws LBException {
 
@@ -890,35 +849,29 @@ public class SourceTreeUtils {
                 scheme, csvt) : lbscm.getAssociationReverseName(
                 associationName, scheme, csvt);
 
-        if (StringUtils.isBlank(assocLabel))
+        if (org.apache.commons.lang.StringUtils.isBlank(assocLabel))
             assocLabel =
                 (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
         return assocLabel;
     }
-
+/*
     protected String getDirectionalLabel(String scheme,
         CodingSchemeVersionOrTag csvt, Association assoc, boolean navigatedFwd)
             throws LBException {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm =
-            (LexBIGServiceConvenienceMethods) lbSvc
-                .getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm.setLexBIGService(lbSvc);
-
         String assocLabel =
             navigatedFwd ? lbscm.getAssociationForwardName(assoc
                 .getAssociationName(), scheme, csvt) : lbscm
                 .getAssociationReverseName(assoc.getAssociationName(), scheme,
                     csvt);
-        if (StringUtils.isBlank(assocLabel))
+        if (org.apache.commons.lang.StringUtils.isBlank(assocLabel))
             assocLabel =
                 (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
         return assocLabel;
     }
-
+*/
     // ====================================================================================================================
 
-    public static ResolvedConceptReference getRootInSRC(String scheme,
+    public ResolvedConceptReference getRootInSRC(String scheme,
         String version, String source) {
         try {
             ResolvedConceptReferencesIterator iterator =
@@ -956,18 +909,12 @@ public class SourceTreeUtils {
     public HashMap getTreePathData(String scheme, String version, String sab,
         String code, int maxLevel) throws LBException {
         long ms = System.currentTimeMillis();
-
-        LexBIGService lbsvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm =
-            (LexBIGServiceConvenienceMethods) lbsvc
-                .getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm.setLexBIGService(lbsvc);
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
 
         HashMap map =
-            getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
+            getTreePathData(scheme, csvt, sab, code, maxLevel);
         _logger.debug("Run time (milliseconds) getTreePathData: "
             + (System.currentTimeMillis() - ms));
 
@@ -975,15 +922,13 @@ public class SourceTreeUtils {
 
     }
 
-    public HashMap getTreePathData(LexBIGService lbsvc,
-        LexBIGServiceConvenienceMethods lbscm, String scheme,
+    public HashMap getTreePathData(String scheme,
         CodingSchemeVersionOrTag csvt, String sab, String focusCode)
             throws LBException {
-        return getTreePathData(lbsvc, lbscm, scheme, csvt, sab, focusCode, -1);
+        return getTreePathData(scheme, csvt, sab, focusCode, -1);
     }
 
-    public HashMap getTreePathData(LexBIGService lbsvc,
-        LexBIGServiceConvenienceMethods lbscm, String scheme,
+    public HashMap getTreePathData(String scheme,
         CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel)
             throws LBException {
         HashMap hmap = new HashMap();
@@ -1013,7 +958,7 @@ public class SourceTreeUtils {
             // Identify the set of all codes on path from root
             // to the focus code ...
             TreeItem[] pathsFromRoot =
-                buildPathsToRoot(lbsvc, lbscm, rcr, scheme, csvt, sab, maxLevel);
+                buildPathsToRoot(rcr, scheme, csvt, sab, maxLevel);
             pathsResolved = pathsFromRoot.length;
 
             for (TreeItem rootItem : pathsFromRoot) {
@@ -1045,8 +990,7 @@ public class SourceTreeUtils {
         return hmap;
     }
 
-    protected TreeItem[] buildPathsToRoot(LexBIGService lbsvc,
-        LexBIGServiceConvenienceMethods lbscm, ResolvedConceptReference rcr,
+    protected TreeItem[] buildPathsToRoot(ResolvedConceptReference rcr,
         String scheme, CodingSchemeVersionOrTag csvt, String sab, int maxLevel)
             throws LBException {
 
@@ -1243,11 +1187,11 @@ public class SourceTreeUtils {
         }
     }
 
-    public static void Util_displayMessage(String msg) {
+    public void Util_displayMessage(String msg) {
         _logger.debug(msg);
     }
 
-    protected static void printTree(TreeItem ti, String focusCode, int depth) {
+    protected void printTree(TreeItem ti, String focusCode, int depth) {
         StringBuffer indent = new StringBuffer();
         for (int i = 0; i < depth * 2; i++)
             indent.append("| ");
@@ -1255,12 +1199,12 @@ public class SourceTreeUtils {
         StringBuffer codeAndText =
             new StringBuffer(indent).append(
                 focusCode.equals(ti._code) ? ">" : " ").append(ti._code).append(
-                ':').append(StringUtils.abbreviate(ti._text, 120)).append(
+                ':').append(org.apache.commons.lang.StringUtils.abbreviate(ti._text, 120)).append(
                 ti._expandable ? " [+]" : "");
         if (ti._auis != null)
             for (String line : ti._auis.split("\\|"))
                 codeAndText.append('\n').append(indent).append("    {").append(
-                    StringUtils.abbreviate(line, 120)).append('}');
+                    org.apache.commons.lang.StringUtils.abbreviate(line, 120)).append('}');
         Util_displayMessage(codeAndText.toString());
 
         indent.append("| ");
@@ -1273,7 +1217,7 @@ public class SourceTreeUtils {
         }
     }
 
-    public static void dumpTreeItems(HashMap hmap) {
+    public void dumpTreeItems(HashMap hmap) {
 
         try {
             Set keyset = hmap.keySet();
@@ -1353,10 +1297,10 @@ public class SourceTreeUtils {
      * Where are these data stored?
      */
 
-    protected String getCodeDescription(LexBIGService lbsvc, String scheme,
+    protected String getCodeDescription(String scheme,
         CodingSchemeVersionOrTag csvt, String code) throws LBException {
 
-        CodedNodeSet cns = lbsvc.getCodingSchemeConcepts(scheme, csvt);
+        CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, csvt);
         cns =
             cns.restrictToCodes(Constructors.createConceptReferenceList(code,
                 scheme));
@@ -1379,7 +1323,7 @@ public class SourceTreeUtils {
         return "<Not assigned>";
     }
 
-    protected static String getCodeDescription(ResolvedConceptReference ref,
+    protected String getCodeDescription(ResolvedConceptReference ref,
         String sab) throws LBException {
         return getHighestRankedAtomName(ref.getReferencedEntry(), sab);
     }
@@ -1440,7 +1384,7 @@ public class SourceTreeUtils {
         return null;
     }
 
-    public static String getHighestRankedAtomName(Entity c, String sab) {
+    public String getHighestRankedAtomName(Entity c, String sab) {
         int rank = -1;
         String name = "Not assigned";// c.getEntityDescription().getContent();
         Presentation[] presentations = c.getPresentation();
@@ -1482,13 +1426,9 @@ public class SourceTreeUtils {
 
     // //////////////////////////////////////////////////////////////////////////
 
-    public static PrintWriter openPrintWriter(String outputfile) {
+    public PrintWriter openPrintWriter(String outputfile) {
         try {
-            //PrintWriter pw =
-            //    new PrintWriter(new BufferedWriter(new FileWriter(outputfile)));
-
             PrintWriter pw  = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputfile), "UTF-8"), true);
-
             return pw;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1496,7 +1436,7 @@ public class SourceTreeUtils {
         }
     }
 
-    public static void closeWriter(PrintWriter pw) {
+    public void closeWriter(PrintWriter pw) {
         if (pw == null) {
             System.out.println("WARNING: closeWriter is not open.");
             return;
@@ -1504,7 +1444,8 @@ public class SourceTreeUtils {
         pw.close();
     }
 
-    public static void dumpRootConceptsBySource(String outputfile) {
+/*
+    public void dumpRootConceptsBySource(String outputfile) {
         PrintWriter pw = openPrintWriter(outputfile);
         if (pw == null)
             return;
@@ -1518,17 +1459,12 @@ public class SourceTreeUtils {
         String version = null;
 
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-        /*
-        if (version != null)
-            csvt.setVersion(version);
-        */
-
-        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         String relation = null;
         // String association = "CHD";
         boolean searchInactive = true;
         //Vector sources = getSupportedSources(scheme, version);
         Vector sources = getSupportedSources(scheme, csvt);
+
         if (sources != null) {
             pw.println("Number of NCIm Supported Sources: " + sources.size());
         } else {
@@ -1536,12 +1472,18 @@ public class SourceTreeUtils {
             return;
         }
 
-        int lcv = 0;
-        for (int k = 0; k < sources.size(); k++) {
-            lcv++;
-            // if (lcv > 5) break;
+        sources = SortUtils.quickSort(sources);
 
+        System.out.println("sources.size(): " + sources.size());
+
+        int max = sources.size();
+        max = 2;
+
+        int lcv = 0;
+        for (int k = 0; k < max; k++) {
+            lcv++;
             String source = (String) sources.elementAt(k);
+            System.out.println("(" + lcv + ") " + source);
             int k1 = k + 1;
             pw.println("\n(" + k1 + ")" + source);
             _logger.debug("(" + k1 + ")" + source);
@@ -1562,16 +1504,24 @@ public class SourceTreeUtils {
                                 ResolvedConceptReference[] refs =
                                     iterator.next(100)
                                         .getResolvedConceptReference();
+
                                 for (ResolvedConceptReference ref : refs) {
                                     knt++;
                                     displayRef(pw, knt, ref);
-                                    pw.println("\n\tRoots:");
+
                                     // ArrayList subconcept_list =
                                     // getNextLevelTreeNodeNamesAndCodes(scheme,
                                     // version, ref.getConceptCode(), source);
                                     ArrayList subconcept_list =
                                         getSubconceptsInTree(scheme, version,
                                             ref.getConceptCode(), source);
+
+                                    if (subconcept_list == null) {
+										pw.println("\tsubconcept_list: NULL???");
+
+									} else {
+										pw.println("\n\tNumber of roots: " + subconcept_list.size());
+										pw.println("\tRoots:");
 
                                     //if (subconcept_list != null) {
                                         if (subconcept_list.size() > 0) {
@@ -1597,16 +1547,11 @@ public class SourceTreeUtils {
                                                 + concept_name + " ("
                                                 + concept_code + ")");
                                         }
-                                        /*
-                                    } else {
-                                        src_without_roots.add(source);
-                                    }
-                                    */
-
+									}
                                 }
                             }
                         } catch (Exception ex) {
-
+                            ex.printStackTrace();
                         }
 
                     } catch (Exception ex) {
@@ -1657,17 +1602,13 @@ public class SourceTreeUtils {
         _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
 
     }
+*/
 
     public HashMap getChildren(String CUI, String SAB) {
         //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
-
         try {
-            LexBIGService lbs = RemoteServerUtil.createLexBIGService();
-            MetaBrowserService mbs =
-                (MetaBrowserService) lbs
-                    .getGenericExtension("metabrowser-extension");
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
             MetaTreeNode focus = tree.getCurrentFocus();
             ti = new TreeItem(focus.getCui(), focus.getName());
@@ -1710,12 +1651,6 @@ public class SourceTreeUtils {
     public List getSourceHierarchyRoots(String scheme,
         CodingSchemeVersionOrTag csvt, String sab) throws LBException {
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
-
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
@@ -1774,14 +1709,6 @@ public class SourceTreeUtils {
     public HashMap getSubconcepts(String scheme, String version, String code,
         String sab) {
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            /*
-             * LexBIGServiceConvenienceMethods lbscm =
-             * (LexBIGServiceConvenienceMethods) lbSvc
-             * .getGenericExtension("LexBIGServiceConvenienceMethods");
-             * lbscm.setLexBIGService(lbSvc);
-             */
-
             CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
             if (version != null)
                 csvt.setVersion(version);
@@ -1826,8 +1753,9 @@ public class SourceTreeUtils {
         if (version != null)
             csvt.setVersion(version);
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            Entity c = DataUtils.getConceptByCode(scheme, version, null, code);
+
+            //Entity c = DataUtils.getConceptByCode(scheme, version, null, code);
+            Entity c = new ConceptDetails(lbSvc).getConceptByCode(scheme, version, code);
             if (c == null) {
                 _logger.warn("Concept not found ??? " + code);
                 return null;
@@ -1923,7 +1851,7 @@ public class SourceTreeUtils {
     // self-referential relationships
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static String getAtomName(AssociatedConcept ac, String aui) {
+    public String getAtomName(AssociatedConcept ac, String aui) {
     	Entity c = ac.getReferencedEntry();
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
@@ -1946,7 +1874,7 @@ public class SourceTreeUtils {
         return null;
     }
 
-    public static String getSelfReferentialRelationship(String associationName,
+    public String getSelfReferentialRelationship(String associationName,
         AssociatedConcept ac, String sab) {
         //Vector v = new Vector();
         String rela = associationName;
@@ -1986,7 +1914,7 @@ public class SourceTreeUtils {
         return null;
     }
 
-    public static ConceptReferenceList createConceptReferenceList(
+    public ConceptReferenceList createConceptReferenceList(
         String[] codes, String codingSchemeName) {
         if (codes == null) {
             return null;
@@ -2001,7 +1929,7 @@ public class SourceTreeUtils {
         return list;
     }
 
-    public static ArrayList getIntraCUIRelationships(String scheme,
+    public ArrayList getIntraCUIRelationships(String scheme,
         String version, String code, String source, boolean direction) {
 
         int resolveCodedEntryDepth = 1;
@@ -2014,7 +1942,7 @@ public class SourceTreeUtils {
 
     }
 
-    public static ArrayList getIntraCUIRelationships(String scheme,
+    public ArrayList getIntraCUIRelationships(String scheme,
         String version, String code, String source, boolean direction,
         int resolveCodedEntryDepth, int resolveAssociationDepth,
         boolean keepLastAssociationLevelUnresolved) {
@@ -2028,7 +1956,7 @@ public class SourceTreeUtils {
             keepLastAssociationLevelUnresolved);
     }
 
-    public static ArrayList getIntraCUIRelationships(String scheme,
+    public ArrayList getIntraCUIRelationships(String scheme,
         String version, String code, Vector sources, boolean direction) {
 
         int resolveCodedEntryDepth = 1;
@@ -2041,7 +1969,7 @@ public class SourceTreeUtils {
 
     }
 
-    public static ArrayList getIntraCUIRelationships(String scheme,
+    public ArrayList getIntraCUIRelationships(String scheme,
         String version, String code, Vector sources, boolean direction,
         int resolveCodedEntryDepth, int resolveAssociationDepth,
         boolean keepLastAssociationLevelUnresolved) {
@@ -2055,7 +1983,6 @@ public class SourceTreeUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingScheme cs = null;
             try {
                 cs = lbSvc.resolveCodingScheme(scheme, csvt);
@@ -2065,10 +1992,6 @@ public class SourceTreeUtils {
 
             if (cs == null)
                 return null;
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
 
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
@@ -2206,11 +2129,275 @@ public class SourceTreeUtils {
 
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
+    public String getChildrenJSON(String CUI, String SAB) {
+		HashMap hmap = getChildren(CUI, SAB);
+		if (hmap == null) return null;
+		TreeItem root = (TreeItem) hmap.get(CUI);
+		return JSON2TreeItem.treeItem2Json(root);
+	}
 
-        SourceTreeUtils test = new SourceTreeUtils();
+
+    public String getSourceRootsJSON(String CUI, String SAB) {
+		HashMap hmap = getSourceRoots(CUI, SAB);
+		if (hmap == null) return null;
+		TreeItem root = (TreeItem) hmap.get(CUI);
+		return JSON2TreeItem.treeItem2Json(root);
+	}
+
+    public HashMap getSourceRoots(String CUI, String SAB) {
+        HashSet hset = new HashSet();
+        HashMap hmap = new HashMap();
+        TreeItem ti = null;
+        Vector v = new Vector();
+        String childNavText = "CHD";
+        boolean hasMoreChildren = false;
+        try {
+            //LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+            MetaBrowserService mbs =
+                (MetaBrowserService) lbSvc
+                    .getGenericExtension("metabrowser-extension");
+            MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+            MetaTreeNode focus = tree.getCurrentFocus();
+            ti = new TreeItem(focus.getCui(), focus.getName());
+            if (isLeaf(focus)) {
+                ti._expandable = false;
+                hmap.put(ti._code, ti);
+                return hmap;
+            } else {
+                ti._expandable = true;
+            }
+
+            Iterator iterator = focus.getChildren();
+            if (iterator == null) {
+                hmap.put(ti._code, ti);
+                return hmap;
+            }
+
+            int knt = 0;
+            hasMoreChildren = false;
+            while (iterator.hasNext()) {
+                MetaTreeNode child = (MetaTreeNode) iterator.next();
+                if (!hset.contains(child.getCui())) {
+                    TreeItem childItem =
+                        new TreeItem(child.getCui(), child.getName());
+                    childItem._expandable = true;
+                    if (isLeaf(child)) {
+                        childItem._expandable = false;
+                    }
+                    v.add(childItem);
+                    hset.add(child.getCui());
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        v = SortUtils.quickSort(v);
+        for (int i = 0; i < v.size(); i++) {
+            TreeItem childItem = (TreeItem) v.elementAt(i);
+            ti.addChild(childNavText, childItem);
+        }
+        if (ti != null) {
+        	hmap.put(ti._code, ti);
+		}
+        return hmap;
+    }
+
+    private JSONArray HashMap2JSONArray(HashMap hmap) {
+        JSONArray nodesArray = null;
+        try {
+            nodesArray = new JSONArray();
+            Set keyset = hmap.keySet();
+            Object[] objs = keyset.toArray();
+            String code = (String) objs[0];
+            TreeItem ti = (TreeItem) hmap.get(code);
+            String json = JSON2TreeItem.treeItem2Json(ti);
+            return new JSONArray(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nodesArray;
+	}
+
+
+    public JSONArray getSourceRoots(String scheme, String version, String sab) {
+        HashMap map = null;
+        //String key = scheme + "$" + version + "$" + sab;
+        JSONArray nodeArray = null;
+		ResolvedConceptReference src_root =
+			getRootInSRC(scheme, version, sab);
+		if (src_root == null)
+			return null;
+
+		map = getSourceRoots(src_root.getConceptCode(), sab);
+		nodeArray = HashMap2JSONArray(map);
+        return nodeArray;
+    }
+
+
+
+
+/*
+    public void getRootConceptsBySource(String outputfile) {
+        PrintWriter pw = openPrintWriter(outputfile);
+        if (pw == null)
+            return;
+        long ms = System.currentTimeMillis();
+        _logger.debug(outputfile + " opened.");
+        _logger.debug("Writing root concepts by source - please wait.");
+
+        Vector src_with_roots = new Vector();
+        Vector src_without_roots = new Vector();
+        String scheme = "NCI Metathesaurus";
+        String version = null;
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        String relation = null;
+        // String association = "CHD";
+        boolean searchInactive = true;
+        //Vector sources = getSupportedSources(scheme, version);
+        Vector sources = getSupportedSources(scheme, csvt);
+
+        if (sources != null) {
+            pw.println("Number of NCIm Supported Sources: " + sources.size());
+        } else {
+            pw.println("getSupportedSources returns null??? ");
+            return;
+        }
+
+        sources = SortUtils.quickSort(sources);
+
+        System.out.println("sources.size(): " + sources.size());
+
+        int max = sources.size();
+        max = 2;
+
+        int lcv = 0;
+        for (int k = 0; k < max; k++) {
+            lcv++;
+            String source = (String) sources.elementAt(k);
+            System.out.println("(" + lcv + ") " + source);
+            int k1 = k + 1;
+            pw.println("\n(" + k1 + ")" + source);
+            _logger.debug("(" + k1 + ")" + source);
+            try {
+                ResolvedConceptReferencesIterator iterator =
+                    findConceptWithSourceCodeMatching(scheme, version, "SRC",
+                        "V-" + source, -1, searchInactive);
+                pw.println("Concepts in SRC with code matching: " + "V-"
+                    + source);
+                if (iterator != null) {
+                    try {
+                        int knt = 0;
+                        try {
+                            while (iterator.hasNext()) {
+                                ResolvedConceptReference[] refs =
+                                    iterator.next(100)
+                                        .getResolvedConceptReference();
+
+                                for (ResolvedConceptReference ref : refs) {
+                                    knt++;
+                                    displayRef(pw, knt, ref);
+                                    HashMap hmap = getSourceRoots(ref.getConceptCode(), source);
+                                    TreeItem ti = (TreeItem) hmap.get(ref.getConceptCode());
+                                    if (ti != null) {
+										printTree(pw, ti, 0);
+										String json = getSourceRootsJSON(ref.getConceptCode(), source);
+										pw.println(json);
+									}
+								}
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    pw.println("iterator == null??? ");
+                }
+
+            } catch (Exception ex) {
+                pw.println("getCodingSchemeRoot throws exception??? ");
+                ex.printStackTrace();
+            }
+        }
+
+        pw.println("Sources with roots: ");
+        //String t = "|";
+
+        StringBuffer buf = new StringBuffer();
+        buf.append("|");
+
+        for (int i = 0; i < src_with_roots.size(); i++) {
+            String src = (String) src_with_roots.elementAt(i);
+            int j = i + 1;
+            pw.println("(" + j + "): " + src);
+            //t = t + src + "|";
+            buf.append(src + "|");
+        }
+        String t = buf.toString();
+        pw.println(t);
+
+        pw.println("\nSources without roots: ");
+        //t = "|";
+        buf = new StringBuffer();
+        for (int i = 0; i < src_without_roots.size(); i++) {
+            String src = (String) src_without_roots.elementAt(i);
+            int j = i + 1;
+            pw.println("(" + j + "): " + src);
+            //t = t + src + "|";
+            buf.append(src + "|");
+        }
+        t = buf.toString();
+        pw.println(t);
+
+        closeWriter(pw);
+        _logger.debug("Output file " + outputfile + " generated.");
+
+        _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
+
+    }
+*/
+
+    public static void printTree(PrintWriter pw, TreeItem ti, int depth) {
+		if (ti == null) return;
+
+        StringBuffer indent = new StringBuffer();
+        for (int i = 0; i < depth * 2; i++) {
+            indent.append("\t");
+		}
+
+        StringBuffer codeAndText = new StringBuffer();
+
+        codeAndText.append(indent);
+        codeAndText.append("").append(ti._code)
+                .append(':').append(ti._text).append(ti._expandable ? " [+]" : "");
+
+        pw.println(codeAndText);
+
+        for (String association : ti._assocToChildMap.keySet()) {
+            List<TreeItem> children = ti._assocToChildMap.get(association);
+            for (int i=0; i<children.size(); i++) {
+				TreeItem childItem = (TreeItem) children.get(i);
+                printTree(pw, childItem, depth + 1);
+			}
+        }
+    }
+
+
+
+    public static void main(String[] args) {
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        SourceTreeUtils test = new SourceTreeUtils(lbSvc);
         String outputfile = "src_roots_new.out";
-        test.dumpRootConceptsBySource(outputfile);
+        //test.dumpRootConceptsBySource(outputfile);
+        //test.getRootConceptsBySource(outputfile);
+
+        String cui = "C0017446";
+        String sab = "AOD";
+        String json = test.getChildrenJSON(cui, sab);
+        System.out.println(json);
     }
 }
 

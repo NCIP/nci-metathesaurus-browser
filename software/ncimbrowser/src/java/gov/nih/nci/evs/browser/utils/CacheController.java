@@ -212,8 +212,9 @@ public class CacheController {
         }
         if (nodeArray == null) {
             _logger.debug("Not in cache -- calling getSubconcepts...");
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             map =
-                new MetaTreeUtils().getRemainingSubconcepts(scheme, version,
+                new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version,
                     code, NCI_SOURCE, null);
 
             nodeArray = HashMap2JSONArray(map);
@@ -233,8 +234,9 @@ public class CacheController {
         String code, String subconcept_code) {
         HashMap map = null;
         JSONArray nodeArray = null;
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         map =
-            new MetaTreeUtils().getRemainingSubconcepts(scheme, version, code,
+            new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version, code,
                 NCI_SOURCE, subconcept_code);
         nodeArray = HashMap2JSONArray(map);
         return nodeArray;
@@ -268,8 +270,9 @@ public class CacheController {
                     csvt.setVersion(version);
                 // list = new DataUtils().getSourceHierarchyRoots(scheme, csvt,
                 // NCI_SOURCE);
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 list =
-                    (new MetaTreeUtils()).getSourceHierarchyRoots(scheme, csvt,
+                    (new MetaTreeUtils(lbSvc)).getSourceHierarchyRoots(scheme, csvt,
                         NCI_SOURCE);
                 // SortUtils.quickSort(list);
 
@@ -306,11 +309,6 @@ public class CacheController {
             }
         }
         if (nodeArray == null) {
-            // _logger.debug("Not in cache -- calling getSubconceptsBySource..."
-            // );
-            // KLO, 041210
-            // map = new SourceTreeUtils().getSubconcepts(scheme, version, code,
-            // sab);
             map = getChildrenExt(code, sab);
             nodeArray = HashMap2JSONArray(map);
             if (fromCache) {
@@ -350,8 +348,9 @@ public class CacheController {
                 CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
                 if (version != null)
                     csvt.setVersion(version);
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
                 list =
-                    (new SourceTreeUtils()).getSourceHierarchyRoots(scheme,
+                    (new SourceTreeUtils(lbSvc)).getSourceHierarchyRoots(scheme,
                         csvt, sab);
 
                 nodeArray = list2JSONArray(list);
@@ -381,9 +380,10 @@ public class CacheController {
             rootsArray =
                 getRootConceptsBySource(ontology_display_name, version, sab);
             try {
-                SourceTreeUtils util = new SourceTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SourceTreeUtils util = new SourceTreeUtils(lbSvc);
                 HashMap hmap =
-                    util.getTreePathData(ontology_display_name, null, sab,
+                    util.getTreePathData(ontology_display_name, version, sab,
                         node_id, maxLevel);
                 Set keyset = hmap.keySet();
                 Object[] objs = keyset.toArray();
@@ -401,9 +401,10 @@ public class CacheController {
             return rootsArray;
         } else {
             try {
-                SourceTreeUtils util = new SourceTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SourceTreeUtils util = new SourceTreeUtils(lbSvc);
                 HashMap hmap =
-                    util.getTreePathData(ontology_display_name, null, sab,
+                    util.getTreePathData(ontology_display_name, version, sab,
                         node_id, maxLevel);
 
                 Object[] objs = hmap.keySet().toArray();
@@ -491,9 +492,10 @@ public class CacheController {
             rootsArray =
                 getRootConceptsBySource(ontology_display_name, version, sab);
             try {
-                SourceTreeUtils util = new SourceTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SourceTreeUtils util = new SourceTreeUtils(lbSvc);
                 HashMap hmap =
-                    util.getTreePathData(ontology_display_name, null, sab,
+                    util.getTreePathData(ontology_display_name, version, sab,
                         node_id, maxLevel);
                 Set keyset = hmap.keySet();
                 Object[] objs = keyset.toArray();
@@ -511,9 +513,10 @@ public class CacheController {
             return rootsArray;
         } else {
             try {
-                SourceTreeUtils util = new SourceTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SourceTreeUtils util = new SourceTreeUtils(lbSvc);
                 HashMap hmap =
-                    util.getTreePathData(ontology_display_name, null, sab,
+                    util.getTreePathData(ontology_display_name, version, sab,
                         node_id, maxLevel);
 
                 Object[] objs = hmap.keySet().toArray();
@@ -952,6 +955,22 @@ public class CacheController {
     }
 
     private JSONArray HashMap2JSONArray(HashMap hmap) {
+        JSONArray nodesArray = null;
+        try {
+            nodesArray = new JSONArray();
+            Set keyset = hmap.keySet();
+            Object[] objs = keyset.toArray();
+            String code = (String) objs[0];
+            TreeItem ti = (TreeItem) hmap.get(code);
+            String json = JSON2TreeItem.treeItem2Json(ti);
+            return new JSONArray(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nodesArray;
+	}
+/*
+    private JSONArray HashMap2JSONArray(HashMap hmap) {
         //JSONObject json = new JSONObject();
         JSONArray nodesArray = null;
         try {
@@ -987,6 +1006,7 @@ public class CacheController {
         }
         return nodesArray;
     }
+*/
 
     public JSONArray getPathsToRoots(String scheme, String version, String code) {
         List list = null;// new ArrayList();
@@ -1022,7 +1042,8 @@ public class CacheController {
         if (maxLevel == -1) {
             rootsArray = getRootConcepts(ontology_display_name, version, false);
             try {
-                MetaTreeUtils util = new MetaTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                MetaTreeUtils util = new MetaTreeUtils(lbSvc);
                 HashMap hmap =
                     util.getTreePathData(ontology_display_name, null, null,
                         node_id, maxLevel);
@@ -1041,7 +1062,8 @@ public class CacheController {
             return rootsArray;
         } else {
             try {
-                MetaTreeUtils util = new MetaTreeUtils();
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                MetaTreeUtils util = new MetaTreeUtils(lbSvc);
                 HashMap hmap =
                     util.getTreePathData(ontology_display_name, null, "NCI",
                         node_id, maxLevel);
@@ -1294,8 +1316,11 @@ public class CacheController {
             }
         }
         if (nodeArray == null) {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			SourceTreeUtils util = new SourceTreeUtils(lbSvc);
+
             ResolvedConceptReference src_root =
-                SourceTreeUtils.getRootInSRC(scheme, version, sab);
+                util.getRootInSRC(scheme, version, sab);
             if (src_root == null)
                 return null;
 

@@ -182,7 +182,7 @@
     if (refresh_page) {
         // Note: Called when the user selects "Search By" fields.
         selectSearchOption = HTTPUtils.cleanXSS((String) request.getParameter("opt"));
-        search_string = HTTPUtils.cleanXSS((String) request.getParameter("text"));
+        search_string = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("text"));
         adv_search_algorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
         adv_search_source = HTTPUtils.cleanXSS((String) request.getParameter("sab"));
         rel_search_association = HTTPUtils.cleanXSS((String) request.getParameter("rel"));
@@ -247,10 +247,7 @@
 
         } else {
             bean = (SearchStatusBean) bean_obj;
-
             selectSearchOption = bean.getSearchType();
-            
-            
             
             if (selectSearchOption == null)
                 selectSearchOption = defaultSearchOption;
@@ -262,12 +259,15 @@
             rel_search_association = bean.getSelectedAssociation();
             rel_search_rela = bean.getSelectedRELA();
 
+/*
             _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
             _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
             _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
             _logger.debug("advanced_search.jsp search_string: " + search_string);
             _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
             _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+*/
+            
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
     }

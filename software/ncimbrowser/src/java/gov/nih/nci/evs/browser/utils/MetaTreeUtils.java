@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.browser.utils;
 
+import gov.nih.nci.evs.browser.properties.*;
 import java.util.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
@@ -18,6 +19,9 @@ import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.*;
 import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.MetaBrowserService.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
+
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,32 +68,73 @@ import java.util.Map.Entry;
  * <!-- LICENSE_TEXT_END -->
  */
 
+
 public class MetaTreeUtils {
     private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
     private static final String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
-
     private static final String[] _hierAssociationToParentNodes = new String[] { "PAR" };
-
-    // static String[] _hierAssocToChildNodes = new String[] { "CHD",
-    // "hasSubtype" };
     private static final String[] _hierAssocToChildNodes = new String[] { "CHD" };
     private static SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
 
     private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
     private LexBIGServiceConvenienceMethods _lbscm = null;
-    private LexBIGService _lbsvc = null;
+    private LexBIGService lbSvc = null;
 
     private static final String NCI_META_THESAURUS = "NCI Metathesaurus";
     private static final String NCI_SOURCE = "NCI";
 
     private static boolean _resolveConcept = false;// true;
 
+    private static HashMap _termGroupRankHashMap = null;
+
     // KLO, 020210
     private static String _nciThesaurusCui = "C1140168";
 
+    private LexBIGServiceConvenienceMethods lbscm = null;
+/*
     public MetaTreeUtils() {
+		this.lbSvc = RemoteServerUtil.createLexBIGService();
+        try {
+			this.lbscm =
+				(LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+    }
+*/
+    public MetaTreeUtils(LexBIGService lbSvc) {
+		this.lbSvc = lbSvc;
+
+        try {
+			this.lbscm =
+				(LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+    }
+
+    public MetaTreeUtils(LexBIGService lbSvc, HashMap termGroupRankHashMap) {
+		this.lbSvc = lbSvc;
+
+        try {
+			this.lbscm =
+				(LexBIGServiceConvenienceMethods) lbSvc
+					.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		//this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+		this._termGroupRankHashMap = termGroupRankHashMap;
     }
 
     public static String[] getHierAssociationToParentNodes() {
@@ -98,6 +143,10 @@ public class MetaTreeUtils {
 
     public static String[] getHierAssociationToChildNodes() {
 		return Arrays.copyOf(_hierAssocToChildNodes, _hierAssocToChildNodes.length);
+	}
+
+	public void set_termGroupRankHashMap(HashMap termGroupRankHashMap) {
+		_termGroupRankHashMap = termGroupRankHashMap;
 	}
 
     // /////////////////
@@ -112,7 +161,7 @@ public class MetaTreeUtils {
      */
 
     /*
-     * public static List getSourceHierarchyRoots( String scheme,
+     * public List getSourceHierarchyRoots( String scheme,
      * CodingSchemeVersionOrTag csvt, String sab) throws LBException { ArrayList
      * list = new ArrayList(); ResolvedConceptReferenceList rcrl = null; try {
      * rcrl = getSourceRoots(sab); for (int i=0;
@@ -124,10 +173,12 @@ public class MetaTreeUtils {
      * } return new ArrayList(); }
      */
 
+//NCI Thesaurus (Code C43816)
+
     public List getSourceHierarchyRoots(String scheme,
         CodingSchemeVersionOrTag csvt, String sab) throws LBException {
         try {
-            String code = "C1140168";
+            String code = "C1140168"; // NCI Thesaurus CUI in metathesaurus
             HashMap hmap = getSubconcepts(code, sab, "CHD", true);
 
             ArrayList list = new ArrayList();
@@ -186,7 +237,7 @@ public class MetaTreeUtils {
      * rcrl.addResolvedConceptReference(r); } } } } return rcrl; }
      */
 
-    public static ResolvedConceptReferenceList getSourceRoots(String sab)
+    public ResolvedConceptReferenceList getSourceRoots(String sab)
             throws Exception {
         ResolvedConceptReferenceList rcrl = new ResolvedConceptReferenceList();
         ResolvedConceptReference root = null;
@@ -236,9 +287,8 @@ public class MetaTreeUtils {
      * @return
      * @throws LBException
      */
-    private static ResolvedConceptReference getCodingSchemeRoot(String sab)
+    private ResolvedConceptReference getCodingSchemeRoot(String sab)
             throws LBException {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         CodedNodeSet cns =
             lbSvc.getCodingSchemeConcepts(NCI_META_THESAURUS, null);
 
@@ -271,9 +321,8 @@ public class MetaTreeUtils {
      * @return
      * @throws Exception
      */
-    private static ResolvedConceptReference resolveReferenceGraphForward(
+    private ResolvedConceptReference resolveReferenceGraphForward(
         ResolvedConceptReference ref) throws Exception {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         CodedNodeGraph cng = lbSvc.getNodeGraph(NCI_META_THESAURUS, null, null);
         // cng =
         // cng.restrictToAssociations(Constructors.createNameAndValueList(new
@@ -297,7 +346,7 @@ public class MetaTreeUtils {
      * @param sourceCodingScheme
      * @return
      */
-    private static boolean isSabQualifiedAssociation(AssociatedConcept ac,
+    private boolean isSabQualifiedAssociation(AssociatedConcept ac,
         String sab) {
         NameAndValue[] nvl = ac.getAssociationQualifiers().getNameAndValue();
         for (NameAndValue nv : nvl) {
@@ -311,11 +360,11 @@ public class MetaTreeUtils {
     // ///////////////////
     // Tree
     // ///////////////////
-    private static void Util_displayMessage(String s) {
+    private void Util_displayMessage(String s) {
         _logger.debug(s);
     }
 
-    private static void Util_displayAndLogError(String s, Exception e) {
+    private void Util_displayAndLogError(String s, Exception e) {
         _logger.debug(s);
     }
 
@@ -393,8 +442,7 @@ public class MetaTreeUtils {
         printNeighborhood(scheme, csvt, rcr, sab);
     }
 
-    public HashMap getTreePathData(String scheme, String version, String sab,
-        String code) throws LBException {
+    public HashMap getTreePathData(String scheme, String version, String sab, String code) throws LBException {
         if (sab == null)
             sab = NCI_SOURCE;
         return getTreePathData(scheme, version, sab, code, -1);
@@ -403,7 +451,7 @@ public class MetaTreeUtils {
     // ////////////////
     // search_tree
     // ////////////////
-
+/*
     public HashMap getTreePathData(String scheme, String version, String sab,
         String code, int maxLevel) throws LBException {
         if (sab == null)
@@ -411,17 +459,18 @@ public class MetaTreeUtils {
 
         long ms = System.currentTimeMillis();
 
-        LexBIGService lbsvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm =
-            (LexBIGServiceConvenienceMethods) lbsvc
-                .getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm.setLexBIGService(lbsvc);
+        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        //LexBIGServiceConvenienceMethods lbscm =
+        //    (LexBIGServiceConvenienceMethods) lbSvc
+        //        .getGenericExtension("LexBIGServiceConvenienceMethods");
+        //lbscm.setLexBIGService(lbSvc);
+
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
 
-        HashMap map =
-            getTreePathData(lbsvc, lbscm, scheme, csvt, sab, code, maxLevel);
+        //HashMap map = getTreePathData(lbSvc, lbscm, scheme, csvt, sab, code, maxLevel);
+        HashMap map = getTreePathData(scheme, csvt, sab, code, maxLevel);
 
         _logger.debug("Run time (milliseconds) getTreePathData: "
             + (System.currentTimeMillis() - ms));
@@ -429,18 +478,20 @@ public class MetaTreeUtils {
         return map;
 
     }
+*/
 
-    public HashMap getTreePathData(LexBIGService lbsvc,
-        LexBIGServiceConvenienceMethods lbscm, String scheme,
-        CodingSchemeVersionOrTag csvt, String sab, String focusCode)
+/*
+    public HashMap getTreePathData(String scheme,
+        String version, String sab, String focusCode)
             throws LBException {
+
         if (sab == null)
             sab = NCI_SOURCE;
-        return getTreePathData(lbsvc, lbscm, scheme, csvt, sab, focusCode, -1);
+        return getTreePathData(scheme, version, sab, focusCode, -1);
     }
-
+*/
     /*
-     * public HashMap getTreePathData(LexBIGService lbsvc,
+     * public HashMap getTreePathData(LexBIGService lbSvc,
      * LexBIGServiceConvenienceMethods lbscm, String scheme,
      * CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel)
      * throws LBException { if (sab == null) sab = NCI_SOURCE; HashMap hmap =
@@ -468,10 +519,14 @@ public class MetaTreeUtils {
      * return hmap; }
      */
 
-    public HashMap getTreePathData(LexBIGService lbsvc,
-        LexBIGServiceConvenienceMethods lbscm, String scheme,
-        CodingSchemeVersionOrTag csvt, String sab, String cui, int maxLevel)
+    public HashMap getTreePathData(String scheme,
+        String version, String sab, String cui, int maxLevel)
             throws LBException {
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            csvt.setVersion(version);
+
         if (sab == null)
             sab = NCI_SOURCE;
         HashMap hmap = new HashMap();
@@ -533,7 +588,7 @@ public class MetaTreeUtils {
 
         Util_displayMessage("CUI ....... : " + rcr.getConceptCode());
         Util_displayMessage("Description : "
-            + StringUtils.abbreviate(rcr.getEntityDescription().getContent(),
+            + org.apache.commons.lang.StringUtils.abbreviate(rcr.getEntityDescription().getContent(),
                 60));
         Util_displayMessage("SAB ....... : " + sab);
         Util_displayMessage("");
@@ -555,12 +610,12 @@ public class MetaTreeUtils {
         StringBuffer codeAndText =
             new StringBuffer(indent).append(
                 focusCode.equals(ti._code) ? ">" : " ").append(ti._code).append(
-                ':').append(StringUtils.abbreviate(ti._text, 60)).append(
+                ':').append(org.apache.commons.lang.StringUtils.abbreviate(ti._text, 60)).append(
                 ti._expandable ? " [+]" : "");
         if (ti._auis != null)
             for (String line : ti._auis.split("\\|"))
                 codeAndText.append('\n').append(indent).append("    {").append(
-                    StringUtils.abbreviate(line, 60)).append('}');
+                    org.apache.commons.lang.StringUtils.abbreviate(line, 60)).append('}');
         Util_displayMessage(codeAndText.toString());
 
         indent.append("| ");
@@ -586,7 +641,7 @@ public class MetaTreeUtils {
         // Resolve neighboring concepts with associations
         // qualified by the SAB.
         CodedNodeGraph neighborsBySource =
-            getLexBIGService().getNodeGraph(scheme, csvt, null);
+            lbSvc.getNodeGraph(scheme, csvt, null);
         // neighborsBySource.restrictToAssociations(null,
         // Constructors.createNameAndValueList(sab, "Source"));
         neighborsBySource =
@@ -618,11 +673,11 @@ public class MetaTreeUtils {
             for (ResolvedConceptReference neighbor : neighbors) {
                 Util_displayMessage(neighbor.getCode()
                     + ':'
-                    + StringUtils.abbreviate(neighbor.getEntityDescription()
+                    + org.apache.commons.lang.StringUtils.abbreviate(neighbor.getEntityDescription()
                         .getContent(), 60));
                 for (String line : getAtomText(neighbor, sab).split("\\|"))
                     Util_displayMessage("    {"
-                        + StringUtils.abbreviate(line, 60) + '}');
+                        + org.apache.commons.lang.StringUtils.abbreviate(line, 60) + '}');
             }
         }
     }
@@ -643,12 +698,7 @@ public class MetaTreeUtils {
         HashSet hset = new HashSet();
 
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
-            String name = getCodeDescription(lbSvc, scheme, csvt, code);
+            String name = getCodeDescription(scheme, csvt, code);
             ti = new TreeItem(code, name);
             ti._expandable = false;
 
@@ -699,7 +749,7 @@ public class MetaTreeUtils {
                         for (Association child : childAssociationList
                             .getAssociation()) {
                             String childNavText =
-                                getDirectionalLabel(lbscm, scheme, csvt, child,
+                                getDirectionalLabel(scheme, csvt, child,
                                     associationsNavigatedFwd);
                             // Each association may have multiple children ...
                             AssociatedConceptList branchItemList =
@@ -784,8 +834,7 @@ public class MetaTreeUtils {
     protected ResolvedConceptReference resolveConcept(String scheme,
         CodingSchemeVersionOrTag csvt, String code) throws LBException {
 
-        CodedNodeSet cns =
-            getLexBIGService().getCodingSchemeConcepts(scheme, csvt);
+        CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, csvt);
         cns =
             cns.restrictToMatchingProperties(ConvenienceMethods
                 .createLocalNameList("conceptCode"), null, code, "exactMatch",
@@ -798,33 +847,11 @@ public class MetaTreeUtils {
     }
 
     /**
-     * Returns a cached instance of a LexBIG service.
-     */
-    protected LexBIGService getLexBIGService() throws LBException {
-        if (_lbsvc == null)
-            // lbsvc_ = LexBIGServiceImpl.defaultInstance();
-            _lbsvc = RemoteServerUtil.createLexBIGService();
-        return _lbsvc;
-    }
-
-    /**
-     * Returns a cached instance of convenience methods.
-     */
-    protected LexBIGServiceConvenienceMethods getConvenienceMethods()
-            throws LBException {
-        if (_lbscm == null)
-            _lbscm =
-                (LexBIGServiceConvenienceMethods) getLexBIGService()
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-        _lbscm.setLexBIGService(_lbsvc);
-        return _lbscm;
-    }
-
-    /**
      * Returns the label to display for the given association and directional
      * indicator.
      */
-    protected String getDirectionalLabel(LexBIGServiceConvenienceMethods lbscm,
+     /*
+    protected String getDirectionalLabel(
         String scheme, CodingSchemeVersionOrTag csvt, Association assoc,
         boolean navigatedFwd) throws LBException {
 
@@ -836,27 +863,23 @@ public class MetaTreeUtils {
                 scheme, csvt) : lbscm.getAssociationReverseName(
                 associationName, scheme, csvt);
 
-        if (StringUtils.isBlank(assocLabel))
+        if (org.apache.commons.lang.StringUtils.isBlank(assocLabel))
             assocLabel =
                 (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
         return assocLabel;
     }
+    */
 
     protected String getDirectionalLabel(String scheme,
         CodingSchemeVersionOrTag csvt, Association assoc, boolean navigatedFwd)
             throws LBException {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        LexBIGServiceConvenienceMethods lbscm =
-            (LexBIGServiceConvenienceMethods) lbSvc
-                .getGenericExtension("LexBIGServiceConvenienceMethods");
-        lbscm.setLexBIGService(lbSvc);
 
         String assocLabel =
             navigatedFwd ? lbscm.getAssociationForwardName(assoc
                 .getAssociationName(), scheme, csvt) : lbscm
                 .getAssociationReverseName(assoc.getAssociationName(), scheme,
                     csvt);
-        if (StringUtils.isBlank(assocLabel))
+        if (org.apache.commons.lang.StringUtils.isBlank(assocLabel))
             assocLabel =
                 (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
         return assocLabel;
@@ -1020,7 +1043,7 @@ public class MetaTreeUtils {
         return hset.size();
     }
 
-    public static boolean hasSubconcepts(LexBIGService lbs,
+    public boolean hasSubconcepts(LexBIGService lbs,
         MetaBrowserService mbs, String CUI, String sab, String asso_name,
         boolean direction) {
         List<String> par_chd_assoc_list = new ArrayList();
@@ -1100,13 +1123,13 @@ public class MetaTreeUtils {
          * CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag(); if
          * (version != null) csvt.setVersion(version);
          * ResolvedConceptReferenceList matches = null; //Vector v = new
-         * Vector(); try { LexBIGService lbsvc =
+         * Vector(); try { LexBIGService lbSvc =
          * RemoteServerUtil.createLexBIGService();
          * LexBIGServiceConvenienceMethods lbscm =
-         * (LexBIGServiceConvenienceMethods) lbsvc
+         * (LexBIGServiceConvenienceMethods) lbSvc
          * .getGenericExtension("LexBIGServiceConvenienceMethods");
-         * lbscm.setLexBIGService(lbsvc); String name =
-         * getCodeDescription(lbsvc, scheme, csvt, code); ti = new
+         * lbscm.setLexBIGService(lbSvc); String name =
+         * getCodeDescription(lbSvc, scheme, csvt, code); ti = new
          * TreeItem(code, name); ti.expandable = false;
          *
          * // Resolve the next branch, representing children of the given //
@@ -1114,7 +1137,7 @@ public class MetaTreeUtils {
          * direction. Resolve the children as a code graph, looking 2 // levels
          * deep but leaving the final level unresolved.
          *
-         * CodedNodeGraph cng = lbsvc.getNodeGraph(scheme, csvt, null);
+         * CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
          * ConceptReference focus = Constructors.createConceptReference(code,
          * scheme); cng = cng.restrictToAssociations(
          * Constructors.createNameAndValueList(associationsToNavigate),
@@ -1191,7 +1214,7 @@ public class MetaTreeUtils {
             // .getGenericExtension("LexBIGServiceConvenienceMethods");
             // lbscm.setLexBIGService(lbSvc);
             String name =
-                getCodeDescription(lbs, "NCI Metathesaurus", null, code);
+                getCodeDescription("NCI Metathesaurus", null, code);
             ti = new TreeItem(code, name);
             ti._expandable = false;
 
@@ -1225,18 +1248,11 @@ public class MetaTreeUtils {
 				Entry thisEntry = (Entry) iterator.next();
 				String child_cui = (String) thisEntry.getKey();
 				Vector v = (Vector) thisEntry.getValue();
-/*
-            Set keyset = cui2SynonymsMap.keySet();
-            Iterator iterator = keyset.iterator();
-            while (iterator.hasNext()) {
-                String child_cui = (String) iterator.next();
-                Vector v = (Vector) cui2SynonymsMap.get(child_cui);
-*/
 
                 TreeItem sub = null;
                 // temporary
                 BySourceTabResults result =
-                    DataUtils.findHighestRankedAtom(v, sab);
+                    findHighestRankedAtom(v, sab);
                 // BySourceTabResults result = findHighestRankedAtom(v, sab);
                 if (result == null) {
                     result = (BySourceTabResults) v.elementAt(0);
@@ -1268,10 +1284,10 @@ public class MetaTreeUtils {
     /**
      * Returns the entity description for the given code.
      */
-    protected String getCodeDescription(LexBIGService lbsvc, String scheme,
+    protected String getCodeDescription(String scheme,
         CodingSchemeVersionOrTag csvt, String code) throws LBException {
 
-        CodedNodeSet cns = lbsvc.getCodingSchemeConcepts(scheme, csvt);
+        CodedNodeSet cns = lbSvc.getCodingSchemeConcepts(scheme, csvt);
         cns =
             cns.restrictToCodes(Constructors.createConceptReferenceList(code,
                 scheme));
@@ -1328,11 +1344,11 @@ public class MetaTreeUtils {
         }
     }
 
-    public static void dumpTreeItem(TreeItem ti) {
+    public void dumpTreeItem(TreeItem ti) {
         dumpTreeItem(ti, 0);
     }
 
-    public static void dumpTreeItem(TreeItem ti, int level) {
+    public void dumpTreeItem(TreeItem ti, int level) {
         //String indent = "";
         StringBuffer buf = new StringBuffer();
 
@@ -1357,7 +1373,7 @@ public class MetaTreeUtils {
         }
     }
 
-    public static void dumpTreeItems(HashMap hmap) {
+    public void dumpTreeItems(HashMap hmap) {
 
         try {
             Set keyset = hmap.keySet();
@@ -1460,7 +1476,7 @@ public class MetaTreeUtils {
                 (LexBIGServiceConvenienceMethods) lbSvc
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
-            String name = getCodeDescription(lbSvc, scheme, csvt, code);
+            String name = getCodeDescription(scheme, csvt, code);
             ti = new TreeItem(code, name);
             ti._expandable = false;
 
@@ -1509,7 +1525,7 @@ public class MetaTreeUtils {
                     for (Association child : childAssociationList
                         .getAssociation()) {
                         String childNavText =
-                            getDirectionalLabel(lbscm, scheme, csvt, child,
+                            getDirectionalLabel(scheme, csvt, child,
                                 associationsNavigatedFwd);
                         // Each association may have multiple children ...
                         AssociatedConceptList branchItemList =
@@ -1740,7 +1756,7 @@ public class MetaTreeUtils {
             // the specified sab.
 
             CodedNodeGraph graph =
-                getLexBIGService().getNodeGraph(scheme, csvt, null);
+                lbSvc.getNodeGraph(scheme, csvt, null);
             graph =
                 graph.restrictToAssociations(ConvenienceMethods
                     .createNameAndValueList(upstreamAssoc), ConvenienceMethods
@@ -1865,7 +1881,7 @@ public class MetaTreeUtils {
         }
     }
 
-    public static HashMap createCUI2SynonymsHahMap(
+    public HashMap createCUI2SynonymsHahMap(
         Map<String, List<BySourceTabResults>> map) {
         HashMap hmap = new HashMap();
 
@@ -1967,7 +1983,7 @@ public class MetaTreeUtils {
                 Vector v = (Vector) thisEntry.getValue();
 
                 BySourceTabResults result =
-                    DataUtils.findHighestRankedAtom(v, sab);
+                    findHighestRankedAtom(v, sab);
                 // BySourceTabResults result = findHighestRankedAtom(v, sab);
                 if (result == null) {
                     result = (BySourceTabResults) v.elementAt(0);
@@ -2109,7 +2125,7 @@ public class MetaTreeUtils {
          * (code2Tree.containsKey(child_cui)) { sub = (TreeItem)
          * code2Tree.get(child_cui); } else { Vector v = (Vector)
          * cui2SynonymsMap.get(child_cui); //BySourceTabResults result =
-         * DataUtils.findHighestRankedAtom(v, sab); BySourceTabResults result =
+         * findHighestRankedAtom(v, sab); BySourceTabResults result =
          * findHighestRankedAtom(v, sab); if (result == null) { result =
          * (BySourceTabResults) v.elementAt(0); } //BySourceTabResults result =
          * (BySourceTabResults) v.elementAt(0); sub = new TreeItem(child_cui,
@@ -2137,7 +2153,7 @@ public class MetaTreeUtils {
                 //Vector v = (Vector) cui2SynonymsMap.get(child_cui);
                 Vector v = (Vector) thisEntry.getValue();
                 BySourceTabResults result =
-                    DataUtils.findHighestRankedAtom(v, sab);
+                    findHighestRankedAtom(v, sab);
                 // BySourceTabResults result = findHighestRankedAtom(v, sab);
                 if (result == null) {
                     result = (BySourceTabResults) v.elementAt(0);
@@ -2196,27 +2212,18 @@ public class MetaTreeUtils {
         return ti;
     }
 
-    // For testing use.
-    // to be replaced by DataUtils.findHighestRankedAtom
-    public BySourceTabResults findHighestRankedAtom(
-        Vector<BySourceTabResults> v, String sab) {
-        if (v == null)
-            return null;
-        return (BySourceTabResults) v.elementAt(0);
-    }
 
     // pre-sort, include only the subconcept with subconcept_code and all other
     // remaining subconcepts
     public HashMap getRemainingSubconcepts(String scheme, String version,
         String code, String sab, String subconcept_code) {
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
 
         String name = null;
         try {
-            name = getCodeDescription(lbSvc, scheme, csvt, code);
+            name = getCodeDescription(scheme, csvt, code);
         } catch (Exception ex) {
         }
 
@@ -2258,18 +2265,11 @@ public class MetaTreeUtils {
         while (iterator.hasNext()) {
 			Entry thisEntry = (Entry) iterator.next();
 			String child_cui = (String) thisEntry.getKey();
-/*
-
-        Set keyset = cui2SynonymsMap.keySet();
-        Iterator iterator = keyset.iterator();
-        while (iterator.hasNext()) {
-            String child_cui = (String) iterator.next();
-*/
 
             TreeItem sub = null;
             //Vector v = (Vector) cui2SynonymsMap.get(child_cui);
             Vector v = (Vector) thisEntry.getValue();
-            BySourceTabResults result = DataUtils.findHighestRankedAtom(v, sab);
+            BySourceTabResults result = findHighestRankedAtom(v, sab);
             if (result == null) {
                 result = (BySourceTabResults) v.elementAt(0);
             }
@@ -2294,7 +2294,7 @@ public class MetaTreeUtils {
          * keyset.iterator(); while (iterator.hasNext()) { String child_cui =
          * (String) iterator.next(); TreeItem sub = null; Vector v = (Vector)
          * cui2SynonymsMap.get(child_cui); BySourceTabResults result =
-         * DataUtils.findHighestRankedAtom(v, sab); if (result == null) { result
+         * findHighestRankedAtom(v, sab); if (result == null) { result
          * = (BySourceTabResults) v.elementAt(0); } sub = new
          * TreeItem(child_cui, result.getTerm()); sub.expandable =
          * hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
@@ -2358,9 +2358,61 @@ public class MetaTreeUtils {
         return null;
     }
 
-    public static void main(String[] args) throws Exception {
-        MetaTreeUtils test = new MetaTreeUtils();
 
+    public String getRank(String term_type, String term_source) {
+        String key = term_source + "$" + term_type;
+        if (_termGroupRankHashMap.containsKey(key))
+            return (String) _termGroupRankHashMap.get(key);
+        return "0";
+    }
+
+    public BySourceTabResults findHighestRankedAtom(
+        Vector<BySourceTabResults> v, String source) {
+        if (v == null)
+            return null;
+        if (v.size() == 0)
+            return null;
+        if (v.size() == 1) {
+            return (BySourceTabResults) v.elementAt(0);
+		}
+
+		if (_termGroupRankHashMap == null) {
+			return (BySourceTabResults) v.elementAt(0);
+		}
+
+        BySourceTabResults target = null;
+        for (int i = 0; i < v.size(); i++) {
+            BySourceTabResults r = (BySourceTabResults) v.elementAt(i);
+            if (source != null) {
+                if (r.getSource().compareTo(source) == 0) {
+                    if (target == null) {
+                        target = r;
+                    } else {
+                        // select the higher ranked one as target
+                        String idx_target =
+                            getRank(target.getType(),
+                                target.getSource());
+                        String idx_atom =
+                            getRank(r.getType(), r
+                                .getSource());
+                        if (idx_atom != null
+                            && idx_atom.compareTo(idx_target) > 0) {
+                            target = r;
+                        }
+                    }
+                }
+            } else {
+                return r;
+            }
+        }
+        return target;
+    }
+
+
+    public void main(String[] args) throws Exception {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		HashMap termGroupRankHashMap = new HashMap();
+        MetaTreeUtils test = new MetaTreeUtils(lbSvc, termGroupRankHashMap);
         String scheme = "NCI Metathesaurus";
         String version = null;
         String code = "C1325880";// "C0001206";
@@ -2374,11 +2426,12 @@ public class MetaTreeUtils {
 
         code = "C0007581";
 
+
         // new_map = test.getSubconcepts(code, sab, "CHD", true);
         // test.dumpTreeItems(new_map);
 
         try {
-            new_map = test.getTreePathData(scheme, version, sab, code, -1);
+            new_map = test.getTreePathData(scheme, version, sab, code);
             test.dumpTreeItems(new_map);
         } catch (Exception ex) {
 

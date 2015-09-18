@@ -69,7 +69,7 @@ public class ExportCartXML {
 
     private Document doc = null;
     private DocumentBuilder dBuilder = null;
-    private static Logger _logger = Logger.getLogger(SearchUtils.class);
+    private static Logger _logger = Logger.getLogger(ExportCartXML.class);
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
     // XML attributes

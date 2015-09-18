@@ -854,7 +854,8 @@
   <p>
     <%
       Vector sab_vec = DataUtils.getConceptSources(scheme_curr, version_curr, code_curr);
-      ArrayList self_referential_relationships = SourceTreeUtils.getIntraCUIRelationships(scheme_curr, version_curr, code_curr, sab_vec, true);
+      LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+      ArrayList self_referential_relationships = new SourceTreeUtils(lbSvc).getIntraCUIRelationships(scheme_curr, version_curr, code_curr, sab_vec, true);
       label = "Self-Referential Relationships:";
       if (self_referential_relationships != null && self_referential_relationships.size() > 0)
       {
