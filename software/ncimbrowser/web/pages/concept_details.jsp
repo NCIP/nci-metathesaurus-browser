@@ -37,6 +37,9 @@
 <%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
 
+<%@ page import="gov.nih.nci.evs.browser.utils.*"%>
+<%@ page import="gov.nih.nci.evs.browser.common.*"%>
+
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -65,6 +68,22 @@
 <%
 
 response.setContentType("text/html;charset=utf-8");
+
+
+                         // appscan fix: 09212015
+			 boolean retval = HTTPUtils.validateRequestParameters(request);
+			 if (!retval) {
+				 try {
+					 String error_msg = "WARNING: Invalid parameter(s) encountered.";
+					 request.getSession().setAttribute("error_msg", error_msg);
+					 String redirectURL = request.getContextPath() + "/pages/appscan_response.jsf";
+					 response.sendRedirect(redirectURL);				 
+
+				 } catch (Exception ex) {
+					 ex.printStackTrace();
+				 }
+			 }
+			 
 
 Entity concept_details_c = null;
 String concept_details_code = null;
