@@ -69,7 +69,8 @@ public class HTTPUtils {
     private static final int MIN_FONT_SIZE = 22;
     private static final int MAX_STR_LEN = 18;
 
-    public  static final int ABS_MAX_STR_LEN = 40;
+    //public  static final int ABS_MAX_STR_LEN = 40;
+    public static final int ABS_MAX_STR_LEN = 100;
 
     /**
      * Remove potentially bad XSS syntax
@@ -471,8 +472,34 @@ public class HTTPUtils {
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
 
+			    if (name.compareTo("view") == 0) {
+					value = (String) request.getParameter(name);
+					if (value != null) {
+						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+						if (!isInteger) {
+							System.out.println("Integer value violation???");
+							String error_msg = createErrorMessage(name, value);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+					}
+				}
+
                 Boolean isDynamic = isDynamicId(name);
                 Boolean issearchFormParameter = isSearchFormParameter(name);
+
+                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.TRUE)) {
+					value = (String) request.getParameter(name);
+					if (value != null) {
+						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+						if (!isInteger) {
+							System.out.println("Integer value violation???" + value);
+							String error_msg = createErrorMessage(name, value);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+				    }
+				}
 
                 if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
 					if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
@@ -509,6 +536,13 @@ public class HTTPUtils {
 						// Cross-Site Scripting:
 						if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
 							String error_msg = createErrorMessage(2, name);
+							request.getSession().setAttribute("error_msg", error_msg);
+							return false;
+						}
+
+						bool_obj = checkLimitedLengthCondition(name, value);
+						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+							String error_msg = createErrorMessage(name, value);
 							request.getSession().setAttribute("error_msg", error_msg);
 							return false;
 						}
@@ -691,4 +725,15 @@ public class HTTPUtils {
         return value;
     }
 
+
+	public static Boolean checkLimitedLengthCondition(String name, String value) {
+		if (name == null) return null;
+		if (value == null) return Boolean.TRUE;
+		if (name.compareTo("matchText") != 0 && name.compareTo("message") != 0) {
+			if (value.length() > ABS_MAX_STR_LEN) {
+				return Boolean.FALSE;
+			}
+		}
+        return Boolean.TRUE;
+	}
 }
