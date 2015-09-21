@@ -460,6 +460,8 @@ public class HTTPUtils {
 
 	public static String createErrorMessage(String name, String value) {
 		//return "WARNING: Invalid parameter value encountered - " + cleanXSS(value) + " (name: " + cleanXSS(name) + ").";
+
+		System.out.println("WARNING: name: " + name + " value: " + value);
 		return "WARNING: Invalid parameter name and/or value encountered -- please check your URL and try again. ";
 	}
 
@@ -471,6 +473,8 @@ public class HTTPUtils {
                 SortUtils.sort(request.getParameterNames());
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
+
+System.out.println("name: " + name);
 
 			    if (name.compareTo("view") == 0) {
 					value = (String) request.getParameter(name);
@@ -729,7 +733,7 @@ public class HTTPUtils {
 	public static Boolean checkLimitedLengthCondition(String name, String value) {
 		if (name == null) return null;
 		if (value == null) return Boolean.TRUE;
-		if (name.compareTo("matchText") != 0 && name.compareTo("message") != 0) {
+		if (name.compareTo("matchText") != 0 && name.compareTo("message") != 0 && name.compareTo("referer") != 0) {
 			if (value.length() > ABS_MAX_STR_LEN) {
 				return Boolean.FALSE;
 			}
