@@ -473,9 +473,6 @@ public class HTTPUtils {
                 SortUtils.sort(request.getParameterNames());
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
-
-System.out.println("name: " + name);
-
 			    if (name.compareTo("view") == 0) {
 					value = (String) request.getParameter(name);
 					if (value != null) {
