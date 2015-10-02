@@ -84,6 +84,7 @@ public class SourceTreeUtils {
     private  String[] _hierAssocToChildNodes = new String[] { "CHD" };
 
     public final boolean DIRECTION_FORWARD = true;
+    public final String NC_METATHESAURUS = "NCI Metathesaurus";
 
     private  SortOptionList _sortByCode =
         Constructors.createSortOptionList(new String[] { "code" });
@@ -95,6 +96,8 @@ public class SourceTreeUtils {
     private LexBIGService lbSvc = null;
     private LexBIGServiceConvenienceMethods lbscm = null;
     private MetaBrowserService mbs = null;
+
+    public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
 
     public SourceTreeUtils(LexBIGService lbSvc) {
         this.lbSvc = lbSvc;
@@ -108,7 +111,14 @@ public class SourceTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+    }
 
+    public void setSourceHierarchies(String sourceHierarchies) {
+        this.sourceHierarchies = sourceHierarchies;
+    }
+
+    public String getSourceHierarchies() {
+        return this.sourceHierarchies;
     }
 
 
@@ -1444,165 +1454,6 @@ public class SourceTreeUtils {
         pw.close();
     }
 
-/*
-    public void dumpRootConceptsBySource(String outputfile) {
-        PrintWriter pw = openPrintWriter(outputfile);
-        if (pw == null)
-            return;
-        long ms = System.currentTimeMillis();
-        _logger.debug(outputfile + " opened.");
-        _logger.debug("Writing root concepts by source - please wait.");
-
-        Vector src_with_roots = new Vector();
-        Vector src_without_roots = new Vector();
-        String scheme = "NCI Metathesaurus";
-        String version = null;
-
-        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-        String relation = null;
-        // String association = "CHD";
-        boolean searchInactive = true;
-        //Vector sources = getSupportedSources(scheme, version);
-        Vector sources = getSupportedSources(scheme, csvt);
-
-        if (sources != null) {
-            pw.println("Number of NCIm Supported Sources: " + sources.size());
-        } else {
-            pw.println("getSupportedSources returns null??? ");
-            return;
-        }
-
-        sources = SortUtils.quickSort(sources);
-
-        System.out.println("sources.size(): " + sources.size());
-
-        int max = sources.size();
-        max = 2;
-
-        int lcv = 0;
-        for (int k = 0; k < max; k++) {
-            lcv++;
-            String source = (String) sources.elementAt(k);
-            System.out.println("(" + lcv + ") " + source);
-            int k1 = k + 1;
-            pw.println("\n(" + k1 + ")" + source);
-            _logger.debug("(" + k1 + ")" + source);
-            try {
-                ResolvedConceptReferencesIterator iterator =
-                    findConceptWithSourceCodeMatching(scheme, version, "SRC",
-                        "V-" + source, -1, searchInactive);
-                pw.println("Concepts in SRC with code matching: " + "V-"
-                    + source);
-                if (iterator != null) {
-                    try {
-                        //if (iterator == null)
-                        //    break;
-
-                        int knt = 0;
-                        try {
-                            while (iterator.hasNext()) {
-                                ResolvedConceptReference[] refs =
-                                    iterator.next(100)
-                                        .getResolvedConceptReference();
-
-                                for (ResolvedConceptReference ref : refs) {
-                                    knt++;
-                                    displayRef(pw, knt, ref);
-
-                                    // ArrayList subconcept_list =
-                                    // getNextLevelTreeNodeNamesAndCodes(scheme,
-                                    // version, ref.getConceptCode(), source);
-                                    ArrayList subconcept_list =
-                                        getSubconceptsInTree(scheme, version,
-                                            ref.getConceptCode(), source);
-
-                                    if (subconcept_list == null) {
-										pw.println("\tsubconcept_list: NULL???");
-
-									} else {
-										pw.println("\n\tNumber of roots: " + subconcept_list.size());
-										pw.println("\tRoots:");
-
-                                    //if (subconcept_list != null) {
-                                        if (subconcept_list.size() > 0) {
-                                            src_with_roots.add(source);
-                                        } else {
-                                            src_without_roots.add(source);
-                                        }
-
-                                        int sub_count = 0;
-                                        for (int i = 0; i < subconcept_list
-                                            .size(); i++) {
-                                            sub_count++;
-                                            AssociatedConcept ac =
-                                                (AssociatedConcept) subconcept_list
-                                                    .get(i);
-                                            Entity c = ac.getReferencedEntry();
-                                            String concept_code =
-                                                c.getEntityCode();
-                                            String concept_name =
-                                                getHighestRankedAtomName(c,
-                                                    source);
-                                            pw.println("\t(" + sub_count + ") "
-                                                + concept_name + " ("
-                                                + concept_code + ")");
-                                        }
-									}
-                                }
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    pw.println("iterator == null??? ");
-                }
-
-            } catch (Exception ex) {
-                pw.println("getCodingSchemeRoot throws exception??? ");
-                ex.printStackTrace();
-            }
-        }
-
-        pw.println("Sources with roots: ");
-        //String t = "|";
-
-        StringBuffer buf = new StringBuffer();
-        buf.append("|");
-
-        for (int i = 0; i < src_with_roots.size(); i++) {
-            String src = (String) src_with_roots.elementAt(i);
-            int j = i + 1;
-            pw.println("(" + j + "): " + src);
-            //t = t + src + "|";
-            buf.append(src + "|");
-        }
-        String t = buf.toString();
-        pw.println(t);
-
-        pw.println("\nSources without roots: ");
-        //t = "|";
-        buf = new StringBuffer();
-        for (int i = 0; i < src_without_roots.size(); i++) {
-            String src = (String) src_without_roots.elementAt(i);
-            int j = i + 1;
-            pw.println("(" + j + "): " + src);
-            //t = t + src + "|";
-            buf.append(src + "|");
-        }
-        t = buf.toString();
-        pw.println(t);
-
-        closeWriter(pw);
-        _logger.debug("Output file " + outputfile + " generated.");
-
-        _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
-
-    }
-*/
 
     public HashMap getChildren(String CUI, String SAB) {
         //HashSet hset = new HashSet();
@@ -1679,8 +1530,6 @@ public class SourceTreeUtils {
             _logger.debug("Searching for roots in " + sab + " under -- "
                 + rootName + " (CUI: " + rootCode + ")");
 
-            // HashMap hmap = getSubconcepts(scheme, csvt.getVersion(),
-            // rootCode, sab, associationsToNavigate, associationsNavigatedFwd);
             HashMap hmap = getChildren(rootCode, sab);
 
             ArrayList list = new ArrayList();
@@ -2152,7 +2001,6 @@ public class SourceTreeUtils {
         String childNavText = "CHD";
         boolean hasMoreChildren = false;
         try {
-            //LexBIGService lbs = RemoteServerUtil.createLexBIGService();
             MetaBrowserService mbs =
                 (MetaBrowserService) lbSvc
                     .getGenericExtension("metabrowser-extension");
@@ -2233,10 +2081,10 @@ public class SourceTreeUtils {
         return nodeArray;
     }
 
+    public Vector getSupportedSources() {
+		return getSupportedSources(NC_METATHESAURUS, new CodingSchemeVersionOrTag());
+	}
 
-
-
-/*
     public void getRootConceptsBySource(String outputfile) {
         PrintWriter pw = openPrintWriter(outputfile);
         if (pw == null)
@@ -2265,12 +2113,9 @@ public class SourceTreeUtils {
         }
 
         sources = SortUtils.quickSort(sources);
-
         System.out.println("sources.size(): " + sources.size());
 
         int max = sources.size();
-        max = 2;
-
         int lcv = 0;
         for (int k = 0; k < max; k++) {
             lcv++;
@@ -2279,53 +2124,18 @@ public class SourceTreeUtils {
             int k1 = k + 1;
             pw.println("\n(" + k1 + ")" + source);
             _logger.debug("(" + k1 + ")" + source);
-            try {
-                ResolvedConceptReferencesIterator iterator =
-                    findConceptWithSourceCodeMatching(scheme, version, "SRC",
-                        "V-" + source, -1, searchInactive);
-                pw.println("Concepts in SRC with code matching: " + "V-"
-                    + source);
-                if (iterator != null) {
-                    try {
-                        int knt = 0;
-                        try {
-                            while (iterator.hasNext()) {
-                                ResolvedConceptReference[] refs =
-                                    iterator.next(100)
-                                        .getResolvedConceptReference();
 
-                                for (ResolvedConceptReference ref : refs) {
-                                    knt++;
-                                    displayRef(pw, knt, ref);
-                                    HashMap hmap = getSourceRoots(ref.getConceptCode(), source);
-                                    TreeItem ti = (TreeItem) hmap.get(ref.getConceptCode());
-                                    if (ti != null) {
-										printTree(pw, ti, 0);
-										String json = getSourceRootsJSON(ref.getConceptCode(), source);
-										pw.println(json);
-									}
-								}
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    pw.println("iterator == null??? ");
-                }
-
-            } catch (Exception ex) {
-                pw.println("getCodingSchemeRoot throws exception??? ");
-                ex.printStackTrace();
-            }
+            TreeItem ti = getSourceTree(source);
+			if (ti != null && ti._expandable) {
+				printTree(pw, ti, 0);
+				String json = getSourceRootsJSON(ti._code, source);
+				pw.println(json);
+				src_with_roots.add(source);
+			} else {
+				src_without_roots.add(source);
+			}
         }
-
         pw.println("Sources with roots: ");
-        //String t = "|";
-
         StringBuffer buf = new StringBuffer();
         buf.append("|");
 
@@ -2354,11 +2164,53 @@ public class SourceTreeUtils {
 
         closeWriter(pw);
         _logger.debug("Output file " + outputfile + " generated.");
-
         _logger.debug("Run time (ms): " + (System.currentTimeMillis() - ms));
 
     }
-*/
+
+
+    public TreeItem getSourceTree(String source) {
+		boolean searchInactive = true;
+		TreeItem ti = null;
+        String scheme = NC_METATHESAURUS;
+        String version = null;
+
+		try {
+			ResolvedConceptReferencesIterator iterator =
+				findConceptWithSourceCodeMatching(scheme, version, "SRC",
+					"V-" + source, -1, searchInactive);
+			if (iterator != null) {
+				try {
+					int knt = 0;
+					try {
+						while (iterator.hasNext()) {
+							ResolvedConceptReference[] refs =
+								iterator.next(100)
+									.getResolvedConceptReference();
+
+							for (ResolvedConceptReference ref : refs) {
+								knt++;
+								HashMap hmap = getSourceRoots(ref.getConceptCode(), source);
+								ti = (TreeItem) hmap.get(ref.getConceptCode());
+								if (ti != null && ti._expandable) {
+									return ti;
+								}
+							}
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 
     public static void printTree(PrintWriter pw, TreeItem ti, int depth) {
 		if (ti == null) return;
@@ -2385,36 +2237,87 @@ public class SourceTreeUtils {
         }
     }
 
+/////////////////////////////////////////////////////////////////////////
+    public int uniformInclusive(int min, int max) {
+	   if (max < min) max = min;
+ 	   Random random = new Random();
+ 	   return random.nextInt(max-min+1) + min;
+    }
+
+    public int uniform(int min, int max) {
+ 	   return uniformInclusive(min, max);
+    }
+
+   public ResolvedConceptReference getRandomResolvedConceptReference(String source) {
+	   //    public TreeItem getSourceTree(String source) {
+	    SourceTreeUtils sourceTreeUtils = new SourceTreeUtils(lbSvc);
+		TreeItem ti = sourceTreeUtils.getSourceTree(source);
+		if (ti == null) return null;
+		if (!ti._expandable) {
+			return null;
+		}
+		Vector v = new Vector();
+		Iterator iterator = ti._assocToChildMap.keySet().iterator();
+		while (iterator.hasNext()) {
+			String assocText = (String) iterator.next();
+			List<TreeItem> children = ti._assocToChildMap.get(assocText);
+			for (int k=0; k<children.size(); k++) {
+				TreeItem child_ti = (TreeItem) children.get(k);
+				ResolvedConceptReference rcr = new ResolvedConceptReference();
+				EntityDescription ed = new EntityDescription();
+				ed.setContent(child_ti._text);
+				rcr.setEntityDescription(ed);
+				rcr.setCode(child_ti._code);
+				v.add(rcr);
+			}
+		}
+		if (v.size() == 0) return null;
+		//int m = new RandomVariateGenerator().uniform(0, v.size()-1);
+		int m = uniform(0, v.size()-1);
+		return (ResolvedConceptReference) v.elementAt(m);
+    }
+
+
+    public Vector findViewInHierarchySources(String body) {
+		if (body == null) return null;
+        String source_hierarchy = getSourceHierarchies();
+        Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchy);
+        System.out.println("u.size: " + u.size());
+        for (int i=0; i<u.size(); i++) {
+            String t = (String) u.elementAt(i);
+            if (body.contains("View In " + t + " Hierarchy")) {
+				u.add(t);
+			}
+		}
+		return u;
+    }
+
+
+/////////////////////////////////////////////////////////////////////////
 
 
     public static void main(String[] args) {
+		String outputfile = args[0];
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         SourceTreeUtils test = new SourceTreeUtils(lbSvc);
-        String outputfile = "src_roots_new.out";
-        //test.dumpRootConceptsBySource(outputfile);
         //test.getRootConceptsBySource(outputfile);
 
-        String cui = "C0017446";
-        String sab = "AOD";
-        String json = test.getChildrenJSON(cui, sab);
-        System.out.println(json);
+        String source_hierarchy = test.getSourceHierarchies();
+        Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchy);
+        System.out.println("u.size: " + u.size());
+        for (int i=0; i<u.size(); i++) {
+            String t = (String) u.elementAt(i);
+            int j = i+1;
+            System.out.println("(" + j + ") " + t);
+
+            ResolvedConceptReference rcr = test.getRandomResolvedConceptReference(t);
+            if (rcr != null) {
+            	System.out.println(rcr.getEntityDescription().getContent() + " (" + rcr.getCode() + ")");
+			} else {
+				System.out.println("rcr == null");
+			}
+	    }
+
     }
 }
 
-/*
- * Cartilage Diseases (CUI C0007302) Tendon, ligament and cartilage disorders
- * (CUI C0947764) Musculoskeletal and connective tissue disorders (CUI C0263660)
- * Medical Dictionary for Regulatory Activities Terminology (MedDRA) (CUI
- * C1140263)
- *
- * SourceTreeUtils buildPathsToRoot scheme: NCI Metathesaurus SourceTreeUtils
- * buildPathsToRoot sab: MDR SourceTreeUtils buildPathsToRoot maxLevel: 2
- * SourceTreeUtils buildPathsToRoot root_name: Cartilage disorders
- * SourceTreeUtils buildPathsToRoot root_code: C0007302 Run time (milliseconds)
- * getSubconcepts: 858 to resolve SourceTreeUtils buildPathsToRoot expandable:
- * true SourceTreeUtils buildPathsToUpperNodes: C0007302 Cartilage disorders Run
- * time (milliseconds) getSubconcepts: 266 to resolve SourceTreeUtils
- * getSuperconceptsInTree: 1 SourceTreeUtils sabMatch.length: 6 SourceTreeUtils
- * parentName: Cartilage disorders C0007302 SourceTreeUtils Run time
- * (milliseconds): 14539 to resolve 0 paths from root.
- */

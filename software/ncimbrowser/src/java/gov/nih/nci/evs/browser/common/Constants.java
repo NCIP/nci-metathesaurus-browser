@@ -842,13 +842,20 @@ public class Constants {
             "Other\tSY\tsort_version_of" });
 
 
-    public static final String[] HARZARD_CHARS = {"/SCRIPT", "CAST(", "EXEC(", "IMG SRC=", "BODY ONLOAD",
-                                 "/IFRAME ", "IFRAME ", "INPUT TYPE", "IMG DYNSRC", "IMG LOWSRC", "ALERT(",
-                                 "JAVASCRIPT:ALERT", "BGSOUND SRC", "BR SIZE", "LINK REL",
-                                 "META HTTP-EQUIV", "STYLE=", "XSS:EXPRESSION", "XSS STYLE",
-                                 "DIV STYLE", "BASE HREF", "OBJECT TYPE", "XML ID", "EXPRESSION(EVAL",
-                                 "%2BALERT", "+ALERT", "%22ONMOUSEOVER", "\"ONMOUSEOVER",
-                                 "SPAN DATASRC", "A HREF=", "$WHERE", "SLEEP(", "$QUERY", ";DECLARE", "VARCHAR(", "E-"};
+	public static final String[] HAZARD_CHARS = {
+		"$QUERY", "$WHERE", "()", "(EVAL", ".JPG HTTP",
+		"/IFRAME ", "/SCRIPT", ";DECLARE", "</SPAN>", "</XML>",
+		"<SCRIPT>", "<STYLE>", "=(", "=FUNCTION", "\"ALERT",
+		"ALERT(", "A HREF=", "BASE HREF", "BGSOUND SRC", "BODY ONLOAD",
+		"BR SIZE", "CAST(", "DATA=", "DIV STYLE", "E-",
+		"ECHO(", "EXEC(", "EXPRESSION(", "FONT-FAMILY", "HREF=",
+		"IFRAME ", "IFRAME SRC", "IMG DYNSRC", "IMG LOWSRC", "IMG SRC=",
+		"IMG STYLE", "INPUT TYPE", "JAVASCRIPT:ALERT", "LINK REL", "META HTTP-EQUIV",
+		"OBJECT TYPE", "ONMOUSEOVER", "SCRIPT/SRC", "SCRIPT/XSS ", "SCRIPT SRC=",
+		"SION(EVAL", "SLEEP(", "SPAN DATASRC", "SRC=", "STYLE=",
+		"VARCHAR(", "XML ID", "XSS:EXPRESSION", "XSS STYLE"
+	};
+
 
     private Constants() {
         // Prevent class from being explicitly instantiated

@@ -454,8 +454,8 @@ request.getSession().setAttribute("searchStatusBean", bean);
 			    Vector versions = new Vector();
 			    schemes.add(scheme);
 			    versions.add(version);
-                //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-                wrapper = new CodeSearchUtils().searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
+                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                wrapper = new CodeSearchUtils(lbSvc).searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
 
                 if (wrapper != null) {
                     iterator = wrapper.getIterator();
@@ -768,7 +768,8 @@ response.setContentType("text/html;charset=utf-8");
             } else {
                 //ResolvedConceptReferencesIteratorWrapper wrapper = null;
                 try {
-					wrapper = new CodeSearchUtils().searchByCode(
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					wrapper = new CodeSearchUtils(lbSvc).searchByCode(
 						schemes, versions, matchText,
 						source, matchAlgorithm, ranking, maxToReturn, false);
 

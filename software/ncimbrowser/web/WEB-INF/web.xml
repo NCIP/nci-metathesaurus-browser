@@ -18,6 +18,13 @@
         <param-value>/WEB-INF/faces-config.xml</param-value>
     </context-param>
 
+
+<context-param>  
+    <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
+    <param-value>true</param-value>  
+</context-param>  
+
+
     <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
