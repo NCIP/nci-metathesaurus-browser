@@ -41,7 +41,11 @@
     
         <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
       
-      
+
+<%
+String application_version = new DataUtils().getApplicationVersion();
+String lexevs_version = new DataUtils().getLexVersion();
+%>
 
 <div class="ncibanner">
   <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute">
@@ -86,7 +90,7 @@
 <div class="bannerarea">
     <a href="/ncimbrowser" style="text-decoration: none;">
       <div class="vocabularynamebanner">
-        <span class="vocabularynamelong">Version 2.5 &#40;using LexEVS 6.2&#41;</span>
+        <span class="vocabularynamelong">Version <%=application_version%> &#40;using LexEVS <%=lexevs_version%>&#41;</span>
       </div>
     </a>
 

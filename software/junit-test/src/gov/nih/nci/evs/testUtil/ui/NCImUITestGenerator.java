@@ -215,12 +215,18 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 		   printSetUp(pw, CHROME_SERVER_URL, config.getBaseUrl(), config.getServiceUrl());
 		   printWindowUtils(pw);
 
+		   printNavigationTabTest(pw);
+
            generateSimpleSearchTests(ServiceTestCase.TERMINOLOGY_SAMPLE_SIZE);
            generateAdvancedSearchTests(ServiceTestCase.TERMINOLOGY_SAMPLE_SIZE);
            generateViewSourceHierarchyTests(pw);
            generateViewInSourceHierarchyLinkTests(pw);
 
            printNCItHierarchyLinkTest(pw);
+           printTestSourcesLink(pw);
+           printTestSourceHelp(pw);
+           printTestTermTypeDefinitionsHelp(pw);
+
            printTestFooters(pw);
            printBaseURLExternalLinksTest(pw);
 		   printAfter(pw);
@@ -538,32 +544,6 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // View Hierarchy
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-   public void generateViewSourceHierarchyTests(PrintWriter pw) {
-	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
-	   String version = NCIm_PROD_Version;
-
-
-	   ResolvedConceptReferenceList rcrl = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
-	   int n = rvGenerator.uniform(0, rcrl.getResolvedConceptReferenceCount()-1);
-	   ResolvedConceptReference rcr = (ResolvedConceptReference) rcrl.getResolvedConceptReference(n);
-	   String code = rcr.getConceptCode();
-	   String name = rcr.getEntityDescription().getContent();
-
-	   // code search
-	   test_counter++;
-	   int testNumber = test_counter;
-	   String browserLink = null;
-	   String algorithm = "exactMatch";
-	   String matchText = code;
-	   String target = "Code";
-	   TestCase testCase = testCaseWriter.createTestCase(testNumber, TestCase.VIEW_HIERARCHY,
-											  browserLink,
-											  scheme, version, algorithm, target, matchText);
-	   testCaseWriter.writeTestCase(testCase);
-   }
-*/
-
    public void generateViewSourceHierarchyTests(PrintWriter pw) {
        String source_hierarchies = gov.nih.nci.evs.testUtil.Constants.SOURCE_HIERARCHIES;
        Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchies);
@@ -587,7 +567,8 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
       out.println("		driver.findElement(By.cssSelector(\"img[alt=\\\"View " + source + " Hierarchy\\\"]\")).click();");
       out.println("		Thread.sleep(10000);");
       out.println("		String bodyText = null;");
-      out.println("		bodyText = driver.findElement(By.tagName(\"body\")).getText();");
+      //out.println("		bodyText = driver.findElement(By.tagName(\"body\")).getText();");
+      out.println("		bodyText = getPopupWindowBodyText(driver);");
       out.println("		try {");
       out.println("		    assertTrue(!bodyText.contains(matchedString));");
       out.println("		} catch (Exception ex) {");
@@ -632,6 +613,42 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   public void printNavigationTabTest(PrintWriter out) {
+	   ResolvedConceptReference rcr = getRandomResolvedConceptReference();
+	   String code = rcr.getConceptCode();
+	   test_counter++;
+       out.println("    @Test");
+       out.println("    public void testNavigationTabTestCase_" + test_counter + "() throws Exception {");
+       out.println("    	driver.get(baseUrl + \"/ncimbrowser/\");");
+       out.println("		int searchType = 0; //(NAVIGATION_TAB)");
+       out.println("    	try {");
+       out.println("	    	driver.findElement(By.id(\"matchText\")).clear();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.id(\"matchText\")).sendKeys(\"" + code + "\");");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.id(\"searchTarget1\")).click();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.id(\"searchTerm:search\")).click();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.name(\"sdTab\")).click();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.name(\"relTab\")).click();");
+       out.println("			Thread.sleep(2000);");
+       out.println("			driver.findElement(By.name(\"sourceTab\")).click();");
+       out.println("			Thread.sleep(2000);");
+       out.println("			driver.findElement(By.name(\"vaTab\")).click();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			driver.findElement(By.cssSelector(\"div.vocabularynamebanner\")).click();");
+       out.println("			Thread.sleep(1000);");
+       out.println("			assertTrue(true);");
+       out.println("    	} catch (Exception ex) {");
+       out.println("			ex.printStackTrace();");
+       out.println("			assertTrue(false);");
+       out.println("    	}");
+       out.println("    }");
+   }
+
+
    public void printNCItHierarchyLinkTest(PrintWriter out) {
 	   test_counter++;
 	   String methodName = "testViewNCItHierarchyTestCase_" + test_counter;
@@ -644,7 +661,7 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
        out.println("		Thread.sleep(1000);");
        out.println("		try {");
        out.println("		    popUpWindow(\"NCIt Hierarchy\");");
-       out.println("		    bodyText = driver.findElement(By.tagName(\"body\")).getText();");
+       out.println("		    bodyText = getPopupWindowBodyText(driver);");
        out.println("		    assertTrue(!bodyText.contains(matchedString));");
        out.println("		} catch (Exception ex) {");
        out.println("		    assertTrue(false);");
@@ -774,33 +791,13 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
    }
 
 
-/*
-   public void printTestFooter(PrintWriter out) {
-	   out.println("    public void testFooter() throws Exception {");
-	   out.println("		driver.get(baseUrl);");
-	   out.println("");
-	   out.println("		testPopupWindow(\"NCI Home\");");
-	   out.println("		testPopupWindow(\"Policies\");");
-	   out.println("		testPopupWindow(\"Accessibility\");");
-	   out.println("		testPopupWindow(\"FOIA\");");
-	   out.println("");
-	   out.println("		driver.findElement(By.linkText(\"Contact Us\")).click();");
-	   out.println("		driver.get(baseUrl);");
-	   out.println("    	assertTrue(true);");
-	   out.println("    }");
-	   out.println("");
-   }
-*/
-
-
-   public void printTestHelpInfo(PrintWriter out) {
-	   out.println("    public void testHelpInfoPages() throws Exception {");
-	   out.println("		driver.get(baseUrl + \"/ncitbrowser/\");");
-       System.out.println("NCIm_PROD_Version: " + NCIm_PROD_Version);
-
+   public void printTestTermTypeDefinitionsHelp(PrintWriter out) {
+	   String method_name = "testTermTypeDefinitionsHelp";
+	   out.println("    @Test // (" + method_name + ")");
+	   out.println("    public void testTermTypeDefinitionsHelp() throws Exception {");
+	   out.println("		driver.get(baseUrl + \"/ncimbrowser/\");");
 	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
 	   String version = NCIm_PROD_Version;
-
 
 	   ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
 	   int n = rvGenerator.uniform(0, testCases.getResolvedConceptReferenceCount()-1);
@@ -810,21 +807,81 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 	    	System.out.println("ResolvedConceptReference is NULL -- return ");
 	   }
 	   String code = rcr.getConceptCode();
-//	   out.println("		driver.findElement(By.linkText(\"" + ncit_display_label + "\")).click();");
        out.println("        driver.findElement(By.xpath(\"//input[@name='algorithm'][@value='exactMatch']\")).click();");
-       out.println("        driver.findElement(By.xpath(\"//input[@name='selectValueSetSearchOption'][@value='codes']\")).click();");
-
-
 	   out.println("		driver.findElement(By.name(\"matchText\")).clear();");
+	   out.println("		driver.findElement(By.id(\"searchTarget1\")).click();");
 	   out.println("		driver.findElement(By.name(\"matchText\")).sendKeys(\"" + code + "\");");
-	   out.println("		driver.findElement(By.name(\"searchTerm:search\")).click();");
-	   out.println("		driver.findElement(By.name(\"sdTab\")).click();");
-	   out.println("        testPopupWindowByImage(\"Term Type Definitions\");");
-	   out.println("        assertTrue(true);");
+
+       out.println("		driver.findElement(By.id(\"searchTerm:search\")).click();");
+       out.println("		Thread.sleep(1000);");
+       out.println("		driver.findElement(By.name(\"sdTab\")).click();");
+       out.println("		Thread.sleep(1000);");
+       out.println("		driver.findElement(By.cssSelector(\"img[alt=\\\"Term Type Definitions\\\"]\")).click();");
+
+       out.println("		String bodyText = null;");
+       out.println("		String matchedString = \"Abbreviation in any source vocabulary\";");
+       out.println("		Thread.sleep(4000);");
+       out.println("		bodyText = getPopupWindowBodyText(driver);");
+       out.println("		assertTrue(bodyText.contains(matchedString));");
+       out.println("		Thread.sleep(1000);    ");
 	   out.println("    }");
 	   out.println("");
    }
 
+   public void printTestSourceHelp(PrintWriter out) {
+	   String method_name = "testSourceHelp";
+	   out.println("    @Test // (" + method_name + ")");
+	   out.println("    public void testSourceHelp() throws Exception {");
+	   out.println("		driver.get(baseUrl + \"/ncimbrowser/\");");
+	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
+	   String version = NCIm_PROD_Version;
+
+	   ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
+	   int n = rvGenerator.uniform(0, testCases.getResolvedConceptReferenceCount()-1);
+	   ResolvedConceptReference rcr = (ResolvedConceptReference) testCases.getResolvedConceptReference(n);
+
+	   if (rcr == null) {
+	    	System.out.println("ResolvedConceptReference is NULL -- return ");
+	   }
+	   String code = rcr.getConceptCode();
+       out.println("        driver.findElement(By.xpath(\"//input[@name='algorithm'][@value='exactMatch']\")).click();");
+	   out.println("		driver.findElement(By.name(\"matchText\")).clear();");
+	   out.println("		driver.findElement(By.id(\"searchTarget1\")).click();");
+	   out.println("		driver.findElement(By.name(\"matchText\")).sendKeys(\"" + code + "\");");
+
+       out.println("		driver.findElement(By.id(\"searchTerm:search\")).click();");
+       out.println("		Thread.sleep(1000);");
+       out.println("		driver.findElement(By.name(\"sdTab\")).click();");
+       out.println("		Thread.sleep(1000);");
+       out.println("		driver.findElement(By.cssSelector(\"img[alt=\\\"Source List\\\"]\")).click();");
+
+       out.println("		String bodyText = null;");
+       out.println("		String matchedString = \"National Cancer Institute Thesaurus\";");
+       out.println("		Thread.sleep(4000);");
+       out.println("		bodyText = getPopupWindowBodyText(driver);");
+       out.println("		assertTrue(bodyText.contains(matchedString));");
+       out.println("		Thread.sleep(1000);    ");
+	   out.println("    }");
+	   out.println("");
+   }
+
+
+   public void printTestSourcesLink(PrintWriter out) {
+	   String method_name = "testSourcesLink";
+	   out.println("    @Test // (" + method_name + ")");
+	   out.println("    public void testSourcesLink() throws Exception {");
+	   out.println("		driver.get(baseUrl + \"/ncimbrowser/\");");
+
+	   out.println("        driver.findElement(By.linkText(\"Sources\")).click();");
+       out.println("		String bodyText = null;");
+       out.println("		String matchedString = \"National Cancer Institute Thesaurus\";");
+       out.println("		Thread.sleep(4000);");
+       out.println("		bodyText = getPopupWindowBodyText(driver);");
+       out.println("		assertTrue(bodyText.contains(matchedString));");
+       out.println("		Thread.sleep(1000);    ");
+	   out.println("    }");
+	   out.println("");
+   }
 
 
    public static void printTestStatement(PrintWriter pw, String label) {
@@ -835,25 +892,11 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 	   CodeGeneratorConfiguration config = new CodeGeneratorConfiguration();
 	   config.setPackageName("selenium.webapps.termbrowser");
 	   config.setClassName("TestTermBrowserTestCase");
-	   config.setBaseUrl("http://nciterms-stage.nci.nih.gov/ncitbrowser");
-	   config.setServiceUrl("http://lexevsapi62-stage.nci.nih.gov/lexevsapi62");
+	   config.setBaseUrl("http://nciterms.nci.nih.gov/ncimbrowser");
+	   config.setServiceUrl("http://lexevsapi.nci.nih.gov/lexevsapi63");
 	   NCImUITestGenerator generator = new NCImUITestGenerator(config);
 	   generator.run();
    }
 }
 
 
-/*
-  @Test
-  public void testTraceMeta() throws Exception {
-    driver.get(baseUrl + "/ncimbrowser/");
-    driver.findElement(By.id("searchTarget1")).click();
-    driver.findElement(By.id("matchText")).clear();
-    driver.findElement(By.id("matchText")).sendKeys("C0029235");
-    driver.findElement(By.id("searchTerm:search")).click();
-    driver.findElement(By.name("sdTab")).click();
-    driver.findElement(By.cssSelector("img[alt=\"View In NCI Hierarchy\"]")).click();
-
-    driver.findElement(By.cssSelector("img[alt=\"View In MGED Hierarchy\"]")).click();
-  }
-*/

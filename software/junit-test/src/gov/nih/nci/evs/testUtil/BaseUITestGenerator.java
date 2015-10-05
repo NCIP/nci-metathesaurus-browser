@@ -153,6 +153,23 @@ public class BaseUITestGenerator {
       out.println("		closeAllOtherWindows(mainWindow);");
       out.println("	}");
       out.println("");
+
+      out.println("    public String getPopupWindowBodyText(WebDriver driver) {");
+      out.println("		String parentWindowHandler = driver.getWindowHandle();");
+      out.println("		String subWindowHandler = null;");
+      out.println("		Set<String> handles = driver.getWindowHandles();");
+      out.println("		Iterator<String> iterator = handles.iterator();");
+      out.println("		while (iterator.hasNext()){");
+      out.println("			subWindowHandler = iterator.next();");
+      out.println("		}");
+      out.println("		driver.switchTo().window(subWindowHandler);");
+      out.println("		Thread.sleep(4000);");
+      out.println("		String bodyText = driver.findElement(By.tagName(\"body\")).getText();");
+      out.println("		driver.switchTo().window(parentWindowHandler);");
+      out.println("		return bodyText;");
+      out.println("	}");
+      out.println("");
+
       out.println("	public String getMainWindowHandle(WebDriver driver) {");
       out.println("		return driver.getWindowHandle();");
       out.println("	}");

@@ -44,7 +44,7 @@
         <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
           <a name="evs-content" id="evs-content"></a>
-          <!-- Term Type content -->
+          <!-- Source content -->
           <table width="580px" cellpadding="3" cellspacing="0" border="0">
             <tr class="pageTitle">
               <td align="left">
@@ -168,7 +168,7 @@ Additional information on many of these sources can be found on related pages.
           <br/>
 
         </div>
-        <!-- End of Term Type content -->
+        <!-- End of Source content -->
       </div>
   </div>
   </f:view>

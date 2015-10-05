@@ -34,6 +34,10 @@ public class HTTPParameterConstants {
        "rela",
        "sab",
        "searchTarget",
+       "searchTerm",
+       "searchTerm:search.x",
+       "searchTerm:search.y",
+       "searchTerm:source",
        "searchText",
        "selectProperty",
        "selectPropertyType",
@@ -46,15 +50,12 @@ public class HTTPParameterConstants {
        "subject",
        "text",
        "type",
-       "searchTerm",
-       "searchTerm:search.x",
-       "searchTerm:search.y",
-       "searchTerm:source",
        "advancedSearchForm",
        "advancedSearchForm:adv_search.x",
        "advancedSearchForm:adv_search.y",
        "javax.faces.ViewState",
-       "referer"
+       "referer",
+       "version"
     };
 
     public static final List HTTP_REQUEST_PARAMETER_NAME_LIST = Arrays.asList(HTTP_REQUEST_PARAMETER_NAMES);

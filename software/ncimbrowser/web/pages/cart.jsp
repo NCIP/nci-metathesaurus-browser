@@ -102,6 +102,17 @@
           </tr>
        </table>
       <hr/>
+ 
+<%
+String message = (String) request.getSession().getAttribute("message");
+request.getSession().removeAttribute("message");
+if (message != null) {
+%>
+<p class="textbodyred">&nbsp;<%=message%></p>
+<%
+} 
+%>
+      
       <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
             <tr>
               <th class="dataTableHeader" scope="col" align="left" width="20px">&nbsp;</th>
