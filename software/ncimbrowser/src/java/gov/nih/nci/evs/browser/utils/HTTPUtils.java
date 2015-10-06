@@ -631,6 +631,10 @@ public class HTTPUtils {
 		if (value == null) return Boolean.FALSE;
 		String s = decode(value).toUpperCase();
 		s = s.trim();
+		//SELECT FROM WHERE
+		if (s.indexOf("SELECT") != -1 && s.indexOf("FROM") != -1 && s.indexOf("WHERE") != -1) {
+			return Boolean.TRUE;
+		}
 		for (int i=0; i<Constants.HAZARD_CHARS.length; i++) {
 			String t = Constants.HAZARD_CHARS[i];
 			if (s.indexOf(t) != -1) {
