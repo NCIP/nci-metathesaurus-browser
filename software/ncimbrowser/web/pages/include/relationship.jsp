@@ -111,13 +111,13 @@
  %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Parent"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort0.compareTo("rela") == 0) {
               %>
@@ -137,7 +137,7 @@
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort0.compareTo("name") == 0) {
               %>
@@ -153,7 +153,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort0.compareTo("source") == 0) {
               %>
@@ -237,13 +237,13 @@
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Child"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
-    <th class="dataTableHeader" scope="col" align="left">
+    <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort1.compareTo("rela") == 0) {
               %>
@@ -264,7 +264,7 @@
         </a>
 
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort1.compareTo("name") == 0) {
               %>
@@ -280,7 +280,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort1.compareTo("source") == 0) {
               %>
@@ -363,13 +363,13 @@
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Broader"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
-    <th class="dataTableHeader" scope="col" align="left">
+    <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort2.compareTo("rela") == 0) {
               %>
@@ -390,7 +390,7 @@
         </a>
 
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort2.compareTo("name") == 0) {
               %>
@@ -406,7 +406,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort2.compareTo("source") == 0) {
               %>
@@ -489,13 +489,13 @@
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Narrower"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
-    <th class="dataTableHeader" scope="col" align="left">
+    <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort3.compareTo("rela") == 0) {
               %>
@@ -515,7 +515,7 @@
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort3.compareTo("name") == 0) {
               %>
@@ -531,7 +531,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort3.compareTo("source") == 0) {
               %>
@@ -614,13 +614,13 @@
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Sibling"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
-    <th class="dataTableHeader" scope="col" align="left">
+    <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort4.compareTo("rela") == 0) {
               %>
@@ -640,7 +640,7 @@
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort4.compareTo("name") == 0) {
               %>
@@ -656,7 +656,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort4.compareTo("source") == 0) {
               %>
@@ -739,14 +739,14 @@
     %>
         <span class="textsubtitle-blue-small"><%=label%></span><a name="Other"></a>
   <table class="datatable_960">
-    <th class="dataTableHeader" scope="col" align="left">Relationship
+    <th class="dataTableHeader" scope="col" align="left" width="15%">Relationship
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
     '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
         </a>
     </th>
     </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="25%">
               <%
               if (sort5.compareTo("rela") == 0) {
               %>
@@ -766,7 +766,7 @@
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
         </a>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="45%">
               <%
               if (sort5.compareTo("name") == 0) {
               %>
@@ -782,7 +782,7 @@
               }
               %>
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
               <%
               if (sort5.compareTo("source") == 0) {
               %>

@@ -369,9 +369,10 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       <div class="texttitle-blue">
       <!--
       <table border="0" width="700px">
+      <table border="0" width="900px">
       -->
       
-      <table border="0" width="900px">
+      <table border="0" width="945px">
         <tr>
           <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>

@@ -475,13 +475,13 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 
   <table class="datatable_960">
   
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="25%">
                  Name
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="60%">
                  Value
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
                  Source
           </th>  
   
