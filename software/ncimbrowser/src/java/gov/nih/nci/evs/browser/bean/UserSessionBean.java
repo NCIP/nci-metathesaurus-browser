@@ -180,15 +180,16 @@ public class UserSessionBean extends Object {
 
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
-        String matchText = HTTPUtils.cleanMatchTextXSS((String)  request.getParameter("adv_matchText"));
-
+		String matchText = (String) request.getParameter("adv_matchText");
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
-            // request.getSession().setAttribute("message", message);
             request.setAttribute("message", message);
             return "message";
         }
         matchText = matchText.trim();
+		String matchText0 = matchText;
+		matchText = HTTPUtils.cleanMatchTextXSS(matchText);
+
         bean.setMatchText(matchText);
 
 FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
@@ -475,7 +476,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
         }
 
         request.getSession().setAttribute("key", key);
-        request.getSession().setAttribute("matchText", matchText);
+        request.getSession().setAttribute("matchText", matchText0);
         request.getSession().setAttribute("selectedSource", source);
 
 
@@ -612,22 +613,17 @@ response.setContentType("text/html;charset=utf-8");
 			return "invalid_parameter";
 		}
 
-        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
-        _logger.debug("matchText: " + matchText);
-
-        if (matchText != null) {
-            matchText = matchText.trim();
-            request.getSession().setAttribute("matchText", matchText);
-
-        }
-
-        // [#19965] Error message is not displayed when Search Criteria is not
-        // proivded
+		String matchText = (String) request.getParameter("matchText");
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
-            request.getSession().setAttribute("message", message);
+            request.setAttribute("message", message);
             return "message";
         }
+        matchText = matchText.trim();
+		String matchText0 = matchText;
+		matchText = HTTPUtils.cleanMatchTextXSS(matchText);
+
+        _logger.debug("matchText: " + matchText);
 
         String matchAlgorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
 
@@ -642,10 +638,6 @@ response.setContentType("text/html;charset=utf-8");
         } else {
 			request.getSession().setAttribute("searchTarget", searchTarget);
 		}
-
-        //setSelectedSearchTarget(searchTarget);
-
-
 
         // Remove ranking check box (KLO, 092409)
         // String rankingStr = (String) request.getParameter("ranking");
@@ -854,7 +846,7 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().setAttribute("key", key);
         request.getSession().setAttribute("vocabulary", scheme);
         request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
-        request.getSession().setAttribute("matchText", matchText);
+        request.getSession().setAttribute("matchText", matchText0);
         request.getSession().removeAttribute("neighborhood_synonyms");
         request.getSession().removeAttribute("neighborhood_atoms");
         request.getSession().removeAttribute("concept");
@@ -1138,9 +1130,11 @@ response.setContentType("text/html;charset=utf-8");
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
 
-         String value = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
-         if (value != null)
-         	request.getSession().setAttribute("matchText", value);
+         String value = HTTPUtils.cleanXSS((String) request.getParameter("matchText"));
+         if (value != null) {
+			value = value.trim();
+		 }
+       	 request.getSession().setAttribute("matchText", value);
 
          value = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
          if (value != null)
