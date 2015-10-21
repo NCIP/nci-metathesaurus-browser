@@ -182,8 +182,8 @@
        <DisplayItem>
             <propertyName>PDQ_Closed_Trial_Search_ID</propertyName>
             <itemLabel>PDQ Closed Trial Search ID</itemLabel>
-            <url>http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?idtype=1&amp;closed=1&amp;id=</url>
-            <hyperlinkText>check for NCI PDQ closed clinical trial info</hyperlinkText>
+            <url>null</url>
+            <hyperlinkText>null</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
 
