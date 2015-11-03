@@ -102,7 +102,14 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 
    private Vector supportedSources = null;
 
+   private MetathesaurusUtils metathesaurusUtils = null; //new MetathesaurusUtils(lbSvc);
+
    private static String[] DEFAULT_VIH_TEST_CASES = {"C0005767", "C0007634", "C1261473"}; //blood, cells, sarcoma
+
+   private ResolvedConceptReferenceList ncimTestCases = null; //generateNCImResolvedConceptReferenceList(int number) {
+   private int NCIM_TEST_CASES = 20;
+   private int NCIT_TEST_CASES = 500;
+
 
    public NCImUITestGenerator(CodeGeneratorConfiguration config) {
 	   this.config = config;
@@ -144,8 +151,10 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 	   System.out.println("NCIm_PROD_Version: " + NCIm_PROD_Version);
 	   testMethodName = getTestMethodName();
 	   supportedSources = codingSchemeDataUtils.getSupportedSources(gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS, NCIm_PROD_Version);
+       metathesaurusUtils = new MetathesaurusUtils(lbSvc);
+       System.out.println("Generating random NCIm CUIs...");
+       ncimTestCases = generateNCImResolvedConceptReferenceList(NCIT_TEST_CASES);
    }
-
 
    public String getTestMethodName() {
 	   String className = config.getClassName();
@@ -209,27 +218,40 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 		   if (config.getPackageName() != null) {
 		   	   printPackageStatement(pw, config.getPackageName());
 		   }
+
+		   System.out.println("printImportStatements...");
 		   printImportStatements(pw);
+		   System.out.println("printLicenseStatement...");
 		   printLicenseStatement(pw);
+		   System.out.println("printClassDefinition...");
 		   printClassDefinition(pw, config.getClassName());
 		   printSetUp(pw, CHROME_SERVER_URL, config.getBaseUrl(), config.getServiceUrl());
+		   System.out.println("printWindowUtils...");
 		   printWindowUtils(pw);
-
+           System.out.println("printNavigationTabTest...");
 		   printNavigationTabTest(pw);
-
+           System.out.println("generateSimpleSearchTests...");
            generateSimpleSearchTests(ServiceTestCase.TERMINOLOGY_SAMPLE_SIZE);
+           System.out.println("generateAdvancedSearchTests...");
            generateAdvancedSearchTests(ServiceTestCase.TERMINOLOGY_SAMPLE_SIZE);
+           System.out.println("generateViewSourceHierarchyTests...");
            generateViewSourceHierarchyTests(pw);
+           System.out.println("generateViewInSourceHierarchyLinkTests...");
            generateViewInSourceHierarchyLinkTests(pw);
-
+           System.out.println("printNCItHierarchyLinkTest...");
            printNCItHierarchyLinkTest(pw);
+           System.out.println("printTestSourcesLink...");
            printTestSourcesLink(pw);
+           System.out.println("printTestSourceHelp...");
            printTestSourceHelp(pw);
+           System.out.println("printTestTermTypeDefinitionsHelp...");
            printTestTermTypeDefinitionsHelp(pw);
-
+           System.out.println("printTestFooters...");
            printTestFooters(pw);
+           System.out.println("printBaseURLExternalLinksTest...");
            printBaseURLExternalLinksTest(pw);
 		   printAfter(pw);
+		   System.out.println("Done...");
 
 	   } catch (Exception ex) {
 		   ex.printStackTrace();
@@ -676,11 +698,9 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 		   String cui = DEFAULT_VIH_TEST_CASES[i];
 		   printViewInSourceHierarchyLinkTest(out, cui);
 	   }
-
 	   pw.println("\n");
        String source_hierarchies = gov.nih.nci.evs.testUtil.Constants.SOURCE_HIERARCHIES;
        Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchies);
-
        for (int i=0; i<u.size(); i++) {
 		   int n = rvGenerator.uniform(0, 3);
 		   if (n == 0) {
@@ -799,7 +819,8 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
 	   String version = NCIm_PROD_Version;
 
-	   ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
+	   //ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
+	   ResolvedConceptReferenceList testCases = ncimTestCases;
 	   int n = rvGenerator.uniform(0, testCases.getResolvedConceptReferenceCount()-1);
 	   ResolvedConceptReference rcr = (ResolvedConceptReference) testCases.getResolvedConceptReference(n);
 
@@ -835,11 +856,10 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 	   out.println("		driver.get(baseUrl + \"/ncimbrowser/\");");
 	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
 	   String version = NCIm_PROD_Version;
-
-	   ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
+	   //ResolvedConceptReferenceList testCases = testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
+	   ResolvedConceptReferenceList testCases = ncimTestCases;//testUtils.generateTestCases(scheme, version, 10, TestCaseGenerator.TYPE_TERMINOLOGY);
 	   int n = rvGenerator.uniform(0, testCases.getResolvedConceptReferenceCount()-1);
 	   ResolvedConceptReference rcr = (ResolvedConceptReference) testCases.getResolvedConceptReference(n);
-
 	   if (rcr == null) {
 	    	System.out.println("ResolvedConceptReference is NULL -- return ");
 	   }
@@ -886,6 +906,38 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 
    public static void printTestStatement(PrintWriter pw, String label) {
 	   pw.println("   @Test " + "//" + label);
+   }
+
+   ResolvedConceptReferenceList generateNCImResolvedConceptReferenceList(int number) {
+	   String scheme = gov.nih.nci.evs.browser.common.Constants.NCI_THESAURUS;
+	   String version = null;
+	   ResolvedConceptReferenceList rcrl = testUtils.generateTestCases(scheme, version, number, TestCaseGenerator.TYPE_TERMINOLOGY);
+		//Generate NCI Thesaurus
+		// map NCI Thesaurus to NCIm Metahesaurus
+	   String ncim_scheme = gov.nih.nci.evs.browser.common.Constants.NCI_METATHESAURUS;
+	   String ncim_version = NCIm_PROD_Version;
+	   ResolvedConceptReferenceList testCases = new ResolvedConceptReferenceList();
+       if (rcrl != null) {
+		   for (int i=0; i<rcrl.getResolvedConceptReferenceCount(); i++) {
+			   ResolvedConceptReference rcr = (ResolvedConceptReference) rcrl.getResolvedConceptReference(i);
+			   String code = rcr.getConceptCode();
+			   Vector v = metathesaurusUtils.getMatchedMetathesaurusCUIs(scheme, version, null, code);
+			   if (v != null && v.size() > 0) {
+				   ResolvedConceptReference ncim_rcr = new ResolvedConceptReference();
+				   Entity entity = new Entity();
+				   String cui = (String) v.elementAt(0);
+				   entity.setEntityCodeNamespace(ncim_scheme);
+				   entity.setEntityCode(cui);
+				   ncim_rcr.setEntity(entity);
+				   testCases.addResolvedConceptReference(ncim_rcr);
+				   if (testCases.getResolvedConceptReferenceCount() == NCIM_TEST_CASES) break;
+		       }
+		   }
+
+	   } else {
+    		System.out.println("WARNING: generateNCImResolvedConceptReferenceList rcrl returns null???");
+       }
+	   return testCases;
    }
 
    public static void main(String[] args) {
