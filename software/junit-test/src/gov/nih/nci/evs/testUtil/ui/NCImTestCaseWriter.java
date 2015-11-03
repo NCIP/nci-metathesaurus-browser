@@ -385,7 +385,7 @@ public class NCImTestCaseWriter
 			out.println("        new Select(driver.findElement(By.id(\"selectProperty\"))).selectByVisibleText(" + "\"" + testCase.getPropertyName() + "\");");
 		} else if (testCase.getTarget().compareTo("Relationship") == 0) {
 			out.println("        new Select(driver.findElement(By.id(\"rel_search_association\"))).selectByVisibleText(" + "\"" + testCase.getRelationshipName() + "\");");
-
+/*
             if (testCase.getDirection().compareTo("source") == 0) {
 				      out.println("		driver.findElement(By.xpath(\"//input[@name='direction'][@value='target']\")).click();");
 				      wait(medium_delay);
@@ -393,10 +393,11 @@ public class NCImTestCaseWriter
 				      out.println("		driver.findElement(By.xpath(\"//input[@name='direction'][@value='source']\")).click();");
 				      wait(medium_delay);
 		    }
+*/
 		}
 
-        out.println("		List<WebElement> matchTexts = driver.findElements(By.xpath(\"//input[@name='matchText']\"));");
-        out.println("		((WebElement) matchTexts.get(1)).sendKeys(matchText);");
+        out.println("		List<WebElement> matchTexts = driver.findElements(By.xpath(\"//input[@name='adv_matchText']\"));");
+        out.println("		((WebElement) matchTexts.get(0)).sendKeys(matchText);");
         wait(short_delay);
         out.println("		if (driver != null && driver.findElement(By.name(\"advancedSearchForm:adv_search\")) != null) {");
         out.println("			driver.findElement(By.name(\"advancedSearchForm:adv_search\")).click();");

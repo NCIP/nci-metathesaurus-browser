@@ -706,8 +706,10 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 		   if (n == 0) {
 			   String source = (String) u.elementAt(i);
 			   ResolvedConceptReference rcr = getRandomResolvedConceptReference(source);
-			   printViewInSourceHierarchyLinkTest(out, rcr.getCode());
-			   pw.println("\n");
+			   if (rcr != null) {
+				   printViewInSourceHierarchyLinkTest(out, rcr.getCode());
+				   pw.println("\n");
+			   }
 	       }
 	   }
    }
