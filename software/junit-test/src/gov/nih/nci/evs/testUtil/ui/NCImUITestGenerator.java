@@ -107,8 +107,8 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
    private static String[] DEFAULT_VIH_TEST_CASES = {"C0005767", "C0007634", "C1261473"}; //blood, cells, sarcoma
 
    private ResolvedConceptReferenceList ncimTestCases = null; //generateNCImResolvedConceptReferenceList(int number) {
-   private int NCIM_TEST_CASES = 20;
-   private int NCIT_TEST_CASES = 500;
+   private int NCIM_TEST_CASES = 15;
+   private int NCIT_TEST_CASES = 100;
 
 
    public NCImUITestGenerator(CodeGeneratorConfiguration config) {
@@ -926,11 +926,17 @@ public class NCImUITestGenerator extends BaseUITestGenerator {
 			   Vector v = metathesaurusUtils.getMatchedMetathesaurusCUIs(scheme, version, null, code);
 			   if (v != null && v.size() > 0) {
 				   ResolvedConceptReference ncim_rcr = new ResolvedConceptReference();
+				   //Entity entity = conceptDetails.getConceptByCode(ncim_scheme, ncim_version, code);
+
 				   Entity entity = new Entity();
 				   String cui = (String) v.elementAt(0);
 				   entity.setEntityCodeNamespace(ncim_scheme);
 				   entity.setEntityCode(cui);
+
 				   ncim_rcr.setEntity(entity);
+				   ncim_rcr.setConceptCode(code);
+				   ncim_rcr.setCodingSchemeName(ncim_scheme);
+				   //ncim_rcr.setEntityDescription(entity.getEntityDescription());
 				   testCases.addResolvedConceptReference(ncim_rcr);
 				   if (testCases.getResolvedConceptReferenceCount() == NCIM_TEST_CASES) break;
 		       }
