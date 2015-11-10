@@ -94,8 +94,8 @@ some of which are proprietary and included, by permission, for non-commercial us
     The Medical Dictionary for Regulatory Activities (MedDRA) terminology is licensed for NCI work and may be
     viewed on NCI browsers. All other uses are prohibited, unless covered by separate subscription to MedDRA
     from the MedDRA MSSO
-    (see <a href="http://www.meddramsso.com" target="_blank">http://www.meddramsso.com</a>
-    or contact at mssohelp@ngc.com, 877.258.8280, or 12011 Sunset Hills Road Reston Virginia, 20190-3285).
+    (see <a href="http://www.meddra.org" target="_blank">http://www.meddra.org</a>
+    or contact at mssohelp@meddra.org, 877.258.8280, or 7575 Colshire Drive McLean, VA 22102).
   </li>
 </ul>
 </p>
