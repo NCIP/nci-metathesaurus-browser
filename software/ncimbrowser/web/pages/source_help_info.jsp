@@ -107,12 +107,12 @@ Additional information on many of these sources can be found on related pages.
 
   <li>
     NCI Term Browser sources are described in more detail
-    at: <a href="http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf</a>
+    at: <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf</a>
   </li>
 
   <li>
     Sources with tagged content in NCI Thesaurus are listed at:
-    <a href="http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
+    <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
   </li>
 
   <li>
