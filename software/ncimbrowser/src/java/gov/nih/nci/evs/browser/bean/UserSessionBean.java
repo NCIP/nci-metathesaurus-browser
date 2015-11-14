@@ -126,480 +126,6 @@ public class UserSessionBean extends Object {
         return _quickLinkList;
     }
 
-    public String advancedSearchAction() {
-        ResolvedConceptReferencesIteratorWrapper wrapper = null;
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
-
-        request.getSession().removeAttribute("error_msg");
-        boolean retval = HTTPUtils.validateRequestParameters(request);
-        if (!retval) {
-			return "invalid_parameter";
-		}
-
-        SearchStatusBean bean =
-            (SearchStatusBean) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequestMap().get("searchStatusBean");
-
-        if (bean == null) {
-            bean = new SearchStatusBean();
-            request.setAttribute("searchStatusBean", bean);
-        }
-
-        String matchType =
-            //HTTPUtils.cleanXSS((String) request.getParameter("adv_search_type"));
-            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
-
-        bean.setSearchType(matchType);
-        String matchAlgorithm =
-            HTTPUtils.cleanXSS((String) request.getParameter("adv_search_algorithm"));
-        bean.setAlgorithm(matchAlgorithm);
-
-        String source = HTTPUtils.cleanXSS((String) request.getParameter("adv_search_source"));
-        if (source == null) {
-            //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
-            request.getSession().removeAttribute("selectedSource");
-            source = "ALL";
-        } else {
-			request.getSession().setAttribute("selectedSource", source);
-		}
-        bean.setSelectedSource(source);
-        String selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("selectProperty"));
-        bean.setSelectedProperty(selectProperty);
-
-        String rel_search_association =
-            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_association"));
-        bean.setSelectedAssociation(rel_search_association);
-
-        String rel_search_rela =
-            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_rela"));
-        bean.setSelectedRELA(rel_search_rela);
-
-        //request.setAttribute("searchStatusBean", bean);
-
-        String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
-
-		String matchText = (String) request.getParameter("adv_matchText");
-        if (matchText == null || matchText.length() == 0) {
-            String message = "Please enter a search string.";
-            request.setAttribute("message", message);
-            return "message";
-        }
-        matchText = matchText.trim();
-		String matchText0 = matchText;
-		matchText = HTTPUtils.cleanMatchTextXSS(matchText);
-
-        bean.setMatchText(matchText);
-
-FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
-request.getSession().setAttribute("searchStatusBean", bean);
-
-
-        if (NCImBrowserProperties.get_debugOn()) {
-            _logger.debug(Utils.SEPARATOR);
-            _logger.debug("* criteria: " + matchText);
-            _logger.debug("******* source: " + source);
-        }
-
-        String scheme = Constants.CODING_SCHEME_NAME;
-        Vector schemes = new Vector();
-        schemes.add(scheme);
-
-        String version = null;
-        String max_str = null;
-        int maxToReturn = -1;// 1000;
-        try {
-            max_str =
-                NCImBrowserProperties.getInstance().getProperty(
-                    NCImBrowserProperties.MAXIMUM_RETURN);
-            maxToReturn = Integer.parseInt(max_str);
-        } catch (Exception ex) {
-        }
-        //Utils.StopWatch stopWatch = new Utils.StopWatch();
-        Vector<Entity> v = null;
-
-        boolean excludeDesignation = true;
-        boolean designationOnly = false;
-
-        // check if this search has been performance previously through
-        // IteratorBeanManager
-        IteratorBeanManager iteratorBeanManager =
-            (IteratorBeanManager) FacesContext.getCurrentInstance()
-                .getExternalContext().getSessionMap()
-                .get("iteratorBeanManager");
-
-        if (iteratorBeanManager == null) {
-            iteratorBeanManager = new IteratorBeanManager();
-            FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap()
-                .put("iteratorBeanManager", iteratorBeanManager);
-        }
-
-        IteratorBean iteratorBean = null;
-        ResolvedConceptReferencesIterator iterator = null;
-        boolean ranking = true;
-        SearchFields searchFields = null;
-        String key = null;
-
-        String searchType = HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
-        _logger.debug("UserSessionBean.java searchType: " + searchType);
-
-        if (searchType != null && searchType.compareTo("Property") == 0) {
-
-            String property_type =
-                HTTPUtils.cleanXSS((String) request.getParameter("selectPropertyType"));
-            if (property_type != null && property_type.compareTo("ALL") == 0) {
-                property_type = null;
-            }
-
-            String property_name = selectProperty;
-            if (property_name != null) {
-                property_name = property_name.trim();
-                if (property_name.compareTo("ALL") == 0)
-                    property_name = null;
-            }
-
-            searchFields =
-                SearchFields.setProperty(schemes, matchText, searchTarget,
-                    property_type, property_name, source, matchAlgorithm,
-                    maxToReturn);
-            key = searchFields.getKey();
-            if (iteratorBeanManager.containsIteratorBean(key)) {
-                iteratorBean = iteratorBeanManager.getIteratorBean(key);
-                iterator = iteratorBean.getIterator();
-            } else {
-                String[] property_types = null;
-                if (property_type != null)
-                    property_types = new String[] { property_type };
-                String[] property_names = null;
-                if (property_name != null)
-                    property_names = new String[] { property_name };
-                excludeDesignation = false;
-                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-                wrapper =
-                    new SearchUtils(lbSvc).searchByProperties(scheme, version,
-                        matchText, property_types, property_names, source,
-                        matchAlgorithm, excludeDesignation, ranking,
-                        maxToReturn);
-                if (wrapper != null) {
-                    iterator = wrapper.getIterator();
-                }
-                if (iterator != null) {
-                    iteratorBean = new IteratorBean(iterator);
-                    iteratorBean.setKey(key);
-                    iteratorBean.setMatchText(matchText);
-                    iteratorBeanManager.addIteratorBean(iteratorBean);
-                }
-            }
-
-        } else if (searchType != null
-            && searchType.compareTo("Relationship") == 0) {
-
-			matchText = matchText.trim();
-
-            if (rel_search_association != null
-                && rel_search_association.compareTo("ALL") == 0) {
-                rel_search_association = null;
-			}
-
-            if (rel_search_rela != null) {
-				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
-					String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
-					request.setAttribute("message", msg);
-					return "message";
-				}
-                rel_search_rela = rel_search_rela.trim();
-                if (rel_search_rela.length() == 0) {
-                    rel_search_rela = null;
-				}
-            }
-
-            int search_direction = Constants.SEARCH_SOURCE;
-
-            searchFields =
-                SearchFields.setRelationship(schemes, matchText, searchTarget,
-                    rel_search_association, rel_search_rela, source,
-                    matchAlgorithm, maxToReturn);
-            key = searchFields.getKey();
-
-            if (iteratorBeanManager.containsIteratorBean(key)) {
-                iteratorBean = iteratorBeanManager.getIteratorBean(key);
-                iterator = iteratorBean.getIterator();
-            } else {
-
-                String[] associationsToNavigate = null;
-                String[] association_qualifier_names = null;
-                String[] association_qualifier_values = null;
-
-                String inverse_rel_search_association = rel_search_association;
-                if (rel_search_association != null) {
-					inverse_rel_search_association = DataUtils.getAssociationReverseName(rel_search_association);
-                    associationsToNavigate =
-                        //new String[] { rel_search_association };
-                        new String[] { inverse_rel_search_association };
-                } else {
-                    _logger.debug("rel_search_association == null");
-                }
-
-                if (rel_search_rela != null) {
-                    association_qualifier_names = new String[] { "rela" };
-                    association_qualifier_values =
-                        new String[] { rel_search_rela };
-
-                    if (associationsToNavigate == null) {
-                        Vector w = OntologyBean.getAssociationNames();
-                        if (w == null || w.size() == 0) {
-                            _logger
-                                .warn("OntologyBean.getAssociationNames() returns null, or nothing???");
-                        } else {
-                            associationsToNavigate = new String[w.size()];
-                            for (int i = 0; i < w.size(); i++) {
-                                String nm = (String) w.elementAt(i);
-                                associationsToNavigate[i] = nm;
-                            }
-                        }
-                    }
-
-                } else {
-                    _logger.warn("(*) qualifiers == null");
-                }
-                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-                SearchUtils searchUtils = new SearchUtils(lbSvc);
-				wrapper = new SearchUtils(lbSvc).searchByRELA(scheme,
-					version, matchText, source, matchAlgorithm,
-					inverse_rel_search_association, rel_search_rela, maxToReturn);
-
-                if (wrapper == null) {
-					_logger.debug("searchByAssociations");
-					wrapper =
-						searchUtils.searchByAssociations(scheme, version,
-							matchText, associationsToNavigate,
-							association_qualifier_names,
-							association_qualifier_values, search_direction, source,
-							matchAlgorithm, excludeDesignation, ranking,
-							maxToReturn);
-				}
-
-                if (wrapper != null) {
-                    iterator = wrapper.getIterator();
-                }
-                if (iterator != null) {
-                    iteratorBean = new IteratorBean(iterator);
-                    iteratorBean.setKey(key);
-                    iteratorBean.setMatchText(matchText);
-                    iteratorBeanManager.addIteratorBean(iteratorBean);
-                }
-            }
-        } else if (searchType != null && searchType.compareTo("Name") == 0) {
-            searchFields =
-                SearchFields.setName(schemes, matchText, searchTarget, source,
-                    matchAlgorithm, maxToReturn);
-
-            key = searchFields.getKey();
-            if (iteratorBeanManager.containsIteratorBean(key)) {
-                iteratorBean = iteratorBeanManager.getIteratorBean(key);
-                iterator = iteratorBean.getIterator();
-            } else {
-                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-                SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
-				if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
-					try {
-						iterator = new SimpleSearchUtils(lbSvc).search(scheme, version, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
-						wrapper = null;
-						if (iterator != null) {
-							wrapper = new ResolvedConceptReferencesIteratorWrapper(iterator);
-						}
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				} else {
-
-
-
-					wrapper =
-						new SearchUtils(lbSvc).searchByName(scheme, version, matchText,
-							source, matchAlgorithm, ranking, maxToReturn,
-							SearchUtils.NameSearchType.Name);
-				}
-
-                if (wrapper != null) {
-                    iterator = wrapper.getIterator();
-                    if (iterator != null) {
-                        iteratorBean = new IteratorBean(iterator);
-                        iteratorBean.setKey(key);
-                        iteratorBean.setMatchText(matchText);
-                        iteratorBeanManager.addIteratorBean(iteratorBean);
-
-                        request.getSession().setAttribute("key", key);
-                    }
-                }
-            }
-
-        } else if (searchType != null && searchType.compareTo("Code") == 0) {
-            searchFields =
-                SearchFields.setCode(schemes, matchText, searchTarget, source,
-                    matchAlgorithm, maxToReturn);
-            key = searchFields.getKey();
-            if (iteratorBeanManager.containsIteratorBean(key)) {
-                iteratorBean = iteratorBeanManager.getIteratorBean(key);
-                iterator = iteratorBean.getIterator();
-            } else {
-                /*
-                 * wrapper = new SearchUtils().searchByName(scheme, version,
-                 * matchText, source, matchAlgorithm, ranking, maxToReturn,
-                 * SearchUtils.NameSearchType.Code);
-                 */
-			    schemes = new Vector();
-			    Vector versions = new Vector();
-			    schemes.add(scheme);
-			    versions.add(version);
-                LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-                wrapper = new CodeSearchUtils(lbSvc).searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
-
-                if (wrapper != null) {
-                    iterator = wrapper.getIterator();
-                    if (iterator != null) {
-                        iteratorBean = new IteratorBean(iterator);
-                        iteratorBean.setKey(key);
-
-                        iteratorBean.setMatchText(matchText);
-
-
-                        iteratorBeanManager.addIteratorBean(iteratorBean);
-
-                        request.getSession().setAttribute("key", key);
-                    }
-                }
-            }
-        }
-
-        request.getSession().setAttribute("key", key);
-        request.getSession().setAttribute("matchText", matchText0);
-        request.getSession().setAttribute("selectedSource", source);
-
-
-        request.getSession().removeAttribute("neighborhood_synonyms");
-        request.getSession().removeAttribute("neighborhood_atoms");
-        request.getSession().removeAttribute("concept");
-        request.getSession().removeAttribute("code");
-        request.getSession().removeAttribute("codeInNCI");
-        request.getSession().removeAttribute("AssociationTargetHashMap");
-        request.getSession().removeAttribute("type");
-
-        if (iterator != null) {
-            int size = iteratorBean.getSize();
-            if (size < 0) {
-				int num_iteration = (-1) * size;
-				int matchingConceptCount = 0;
-				try {
-					SearchByAssociationIteratorDecorator assoIterator = (SearchByAssociationIteratorDecorator) iterator;
-					matchingConceptCount = assoIterator.getQuickIteratorSize();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-
-				String msg =
-					"WARNING: No match found, but only able to test the first " + num_iteration + " out of " + matchingConceptCount + " matching target concepts. "
-					+ " Consider using a more specific search or a different relationship.";
-
-				request.setAttribute("message", msg);
-				return "message";
-			}
-
-            _logger.debug("AdvancedSearchActon size: " + size);
-
-            // Write a search log entry
-            SearchLog.writeEntry(searchFields, size, HTTPUtils
-                .getRefererParmDecode(request));
-
-            if (size > 1) {
-                request.getSession().setAttribute("search_results", v);
-                String match_size = Integer.toString(size);
-                request.getSession().setAttribute("match_size", match_size);
-                request.getSession().setAttribute("page_string", "1");
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-
-                return "search_results";
-            } else if (size == 1) {
-                request.getSession().setAttribute("singleton", "true");
-                request.getSession().setAttribute("dictionary",
-                    Constants.CODING_SCHEME_NAME);
-                int pageNumber = 1;
-                List list = iteratorBean.getData(1);
-                ResolvedConceptReference ref =
-                    (ResolvedConceptReference) list.get(0);
-
-                Entity c = null;
-                if (ref == null) {
-                    String msg =
-                        "Error: Null ResolvedConceptReference encountered.";
-                    request.getSession().setAttribute("message", msg);
-                    return "message";
-
-                } else {
-                    c = ref.getReferencedEntry();
-                    if (c == null) {
-                        c =
-                            DataUtils.getConceptByCode(
-                                Constants.CODING_SCHEME_NAME, null, null, ref
-                                    .getConceptCode());
-                    }
-                }
-
-                request.getSession().setAttribute("code", ref.getConceptCode());
-                request.getSession().setAttribute("concept", c);
-                request.getSession().setAttribute("type", "properties");
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-
-HttpServletResponse response =
-	(HttpServletResponse) FacesContext.getCurrentInstance()
-		.getExternalContext().getResponse();
-response.setContentType("text/html;charset=utf-8");
-
-                return "concept_details";
-            }
-        }
-
-        // [#23463] Linking retired concept to corresponding new concept
-        // Test case: C0536142|200601|SY|||C1433544|Y|
-
-        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
-                        null, matchText);
-
-            if (newCUI != null) {
-                _logger.debug("Searching for " + newCUI);
-                Entity c =
-                    DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
-                        null, null, newCUI);
-                request.getSession().setAttribute("code", newCUI);
-                request.getSession().setAttribute("concept", c);
-                request.getSession().setAttribute("type", "properties");
-
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-                request.getSession().setAttribute("retired_cui", matchText);
-
-HttpServletResponse response =
-	(HttpServletResponse) FacesContext.getCurrentInstance()
-		.getExternalContext().getResponse();
-response.setContentType("text/html;charset=utf-8");
-
-                return "concept_details";
-            }
-        }
-        String message = "No match found.";
-        if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
-            message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
-        }
-
-        request.setAttribute("message", message);
-        return "no_match";
-    }
 
     public String searchAction() {
         ResolvedConceptReferencesIteratorWrapper wrapper = null;
@@ -613,15 +139,17 @@ response.setContentType("text/html;charset=utf-8");
 			return "invalid_parameter";
 		}
 
-		String matchText = (String) request.getParameter("matchText");
-        if (matchText == null || matchText.length() == 0) {
+        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
+		if (matchText == null || matchText.compareTo("") == 0) {
             String message = "Please enter a search string.";
-            request.setAttribute("message", message);
+            request.getSession().setAttribute("message", message);
+            request.getSession().setAttribute("matchText", "");
             return "message";
         }
+
         matchText = matchText.trim();
-		String matchText0 = matchText;
-		matchText = HTTPUtils.cleanMatchTextXSS(matchText);
+        String matchText0 = matchText;
+        request.getSession().setAttribute("matchText", matchText);
 
         _logger.debug("matchText: " + matchText);
 
@@ -856,24 +384,20 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().removeAttribute("type");
 
         if (iterator != null) {
-
-
-
-
-
             int size = iteratorBean.getSize();
-
             // Write a search log entry
             SearchLog.writeEntry(searchFields, size, HTTPUtils
                 .getRefererParmDecode(request));
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
-
                 String match_size = Integer.toString(size);
                 request.getSession().setAttribute("match_size", match_size);
                 request.getSession().setAttribute("page_string", "1");
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
+                //KLO 111415
+                request.getSession().setAttribute("matchText", matchText);
+
                 return "search_results";
             } else if (size == 1) {
                 request.getSession().setAttribute("singleton", "true");
@@ -904,20 +428,12 @@ response.setContentType("text/html;charset=utf-8");
                 request.getSession().setAttribute("code", ref.getConceptCode());
                 request.getSession().setAttribute("concept", c);
                 request.getSession().setAttribute("type", "properties");
-
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
 
 HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
 		.getExternalContext().getResponse();
 response.setContentType("text/html;charset=utf-8");
-
-
-
-
-
-
-
                 return "concept_details";
             }
         }
@@ -941,7 +457,6 @@ response.setContentType("text/html;charset=utf-8");
                 request.getSession().setAttribute("code", newCUI);
                 request.getSession().setAttribute("concept", c);
                 request.getSession().setAttribute("type", "properties");
-
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
                 request.getSession().setAttribute("retired_cui", matchText);
 
@@ -959,6 +474,7 @@ response.setContentType("text/html;charset=utf-8");
             message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
         }
         request.getSession().setAttribute("message", message);
+        request.getSession().setAttribute("matchText", matchText0);
         return "message";
     }
 
@@ -1501,5 +1017,488 @@ response.setContentType("text/html;charset=utf-8");
 
     }
 
+    public String advancedSearchAction() {
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        ResolvedConceptReferencesIteratorWrapper wrapper = null;
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+
+        request.getSession().removeAttribute("error_msg");
+        boolean retval = HTTPUtils.validateRequestParameters(request);
+        if (!retval) {
+			return "invalid_parameter";
+		}
+
+        SearchStatusBean bean =
+            (SearchStatusBean) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestMap().get("searchStatusBean");
+
+        if (bean == null) {
+            bean = new SearchStatusBean();
+            request.setAttribute("searchStatusBean", bean);
+        }
+
+        String matchType =
+            //HTTPUtils.cleanXSS((String) request.getParameter("adv_search_type"));
+            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
+
+        bean.setSearchType(matchType);
+
+        String matchAlgorithm =
+            HTTPUtils.cleanXSS((String) request.getParameter("adv_search_algorithm"));
+        bean.setAlgorithm(matchAlgorithm);
+
+        String source = HTTPUtils.cleanXSS((String) request.getParameter("adv_search_source"));
+
+        if (source == null) {
+            //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
+            request.getSession().removeAttribute("selectedSource");
+        } else {
+			request.getSession().setAttribute("selectedSource", source);
+		}
+
+        bean.setSelectedSource(source);
+
+/*
+        String selectSearchOption =
+            HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
+        bean.setSelectedSearchOption(selectSearchOption);
+*/
+
+        String selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("selectProperty"));
+        bean.setSelectedProperty(selectProperty);
+
+        String rel_search_association =
+            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_association"));
+        bean.setSelectedAssociation(rel_search_association);
+
+        String rel_search_rela =
+            HTTPUtils.cleanXSS((String) request.getParameter("rel_search_rela"));
+        bean.setSelectedRELA(rel_search_rela);
+
+
+        //request.setAttribute("searchStatusBean", bean);
+
+        String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
+
+        //String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
+        String matchText = HTTPUtils.cleanMatchTextXSS((String)  request.getParameter("adv_matchText"));
+        if (matchText == null || matchText.length() == 0) {
+            String message = "Please enter a search string.";
+            // request.getSession().setAttribute("message", message);
+            request.setAttribute("message", message);
+            return "message";
+        }
+        matchText = matchText.trim();
+        bean.setMatchText(matchText);
+
+FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
+request.getSession().setAttribute("searchStatusBean", bean);
+
+        if (NCImBrowserProperties.get_debugOn()) {
+            _logger.debug(Utils.SEPARATOR);
+            _logger.debug("* criteria: " + matchText);
+            _logger.debug("* source: " + source);
+        }
+
+        String scheme = Constants.CODING_SCHEME_NAME;
+        Vector schemes = new Vector();
+        schemes.add(scheme);
+
+        String version = null;
+        String max_str = null;
+        int maxToReturn = -1;// 1000;
+        try {
+            max_str =
+                NCImBrowserProperties.getInstance().getProperty(
+                    NCImBrowserProperties.MAXIMUM_RETURN);
+            maxToReturn = Integer.parseInt(max_str);
+        } catch (Exception ex) {
+        }
+        //Utils.StopWatch stopWatch = new Utils.StopWatch();
+        Vector<Entity> v = null;
+
+        boolean excludeDesignation = true;
+        boolean designationOnly = false;
+
+        // check if this search has been performance previously through
+        // IteratorBeanManager
+        IteratorBeanManager iteratorBeanManager =
+            (IteratorBeanManager) FacesContext.getCurrentInstance()
+                .getExternalContext().getSessionMap()
+                .get("iteratorBeanManager");
+
+        if (iteratorBeanManager == null) {
+            iteratorBeanManager = new IteratorBeanManager();
+            FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap()
+                .put("iteratorBeanManager", iteratorBeanManager);
+        }
+
+        IteratorBean iteratorBean = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        boolean ranking = true;
+
+        SearchFields searchFields = null;
+        String key = null;
+
+        String searchType = HTTPUtils.cleanXSS((String) request.getParameter("selectSearchOption"));
+        _logger.debug("UserSessionBean.java searchType: " + searchType);
+
+        if (searchType != null && searchType.compareTo("Property") == 0) {
+
+            String property_type =
+                HTTPUtils.cleanXSS((String) request.getParameter("selectPropertyType"));
+            if (property_type != null && property_type.compareTo("ALL") == 0) {
+                property_type = null;
+            }
+
+            String property_name = selectProperty;
+            if (property_name != null) {
+                property_name = property_name.trim();
+                if (property_name.compareTo("ALL") == 0)
+                    property_name = null;
+            }
+
+            searchFields =
+                SearchFields.setProperty(schemes, matchText, searchTarget,
+                    property_type, property_name, source, matchAlgorithm,
+                    maxToReturn);
+            key = searchFields.getKey();
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                String[] property_types = null;
+                if (property_type != null)
+                    property_types = new String[] { property_type };
+                String[] property_names = null;
+                if (property_name != null)
+                    property_names = new String[] { property_name };
+                excludeDesignation = false;
+                wrapper =
+                    new SearchUtils(lbSvc).searchByProperties(scheme, version,
+                        matchText, property_types, property_names, source,
+                        matchAlgorithm, excludeDesignation, ranking,
+                        maxToReturn);
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+                }
+                if (iterator != null) {
+                    iteratorBean = new IteratorBean(iterator);
+                    iteratorBean.setKey(key);
+                    iteratorBean.setMatchText(matchText);
+                    iteratorBeanManager.addIteratorBean(iteratorBean);
+                }
+            }
+
+        } else if (searchType != null
+            && searchType.compareTo("Relationship") == 0) {
+
+			matchText = matchText.trim();
+
+            if (rel_search_association != null
+                && rel_search_association.compareTo("ALL") == 0) {
+                rel_search_association = null;
+			}
+
+            if (rel_search_rela != null) {
+				if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+					String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
+					request.setAttribute("message", msg);
+					return "message";
+				}
+                rel_search_rela = rel_search_rela.trim();
+                if (rel_search_rela.length() == 0) {
+                    rel_search_rela = null;
+				}
+            }
+
+            int search_direction = Constants.SEARCH_SOURCE;
+
+            searchFields =
+                SearchFields.setRelationship(schemes, matchText, searchTarget,
+                    rel_search_association, rel_search_rela, source,
+                    matchAlgorithm, maxToReturn);
+            key = searchFields.getKey();
+
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+
+                String[] associationsToNavigate = null;
+                String[] association_qualifier_names = null;
+                String[] association_qualifier_values = null;
+
+                String inverse_rel_search_association = rel_search_association;
+                if (rel_search_association != null) {
+					inverse_rel_search_association = DataUtils.getAssociationReverseName(rel_search_association);
+                    associationsToNavigate =
+                        //new String[] { rel_search_association };
+                        new String[] { inverse_rel_search_association };
+                } else {
+                    _logger.debug("rel_search_association == null");
+                }
+
+                if (rel_search_rela != null) {
+                    association_qualifier_names = new String[] { "rela" };
+                    association_qualifier_values =
+                        new String[] { rel_search_rela };
+
+                    if (associationsToNavigate == null) {
+                        Vector w = OntologyBean.getAssociationNames();
+                        if (w == null || w.size() == 0) {
+                            _logger
+                                .warn("OntologyBean.getAssociationNames() returns null, or nothing???");
+                        } else {
+                            associationsToNavigate = new String[w.size()];
+                            for (int i = 0; i < w.size(); i++) {
+                                String nm = (String) w.elementAt(i);
+                                associationsToNavigate[i] = nm;
+                            }
+                        }
+                    }
+
+                } else {
+                    _logger.warn("(*) qualifiers == null");
+                }
+
+				wrapper = new SearchUtils(lbSvc).searchByRELA(scheme,
+					version, matchText, source, matchAlgorithm,
+					inverse_rel_search_association, rel_search_rela, maxToReturn);
+
+                if (wrapper == null) {
+					_logger.debug("searchByAssociations");
+					wrapper =
+						new SearchUtils(lbSvc).searchByAssociations(scheme, version,
+							matchText, associationsToNavigate,
+							association_qualifier_names,
+							association_qualifier_values, search_direction, source,
+							matchAlgorithm, excludeDesignation, ranking,
+							maxToReturn);
+				}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+                }
+                if (iterator != null) {
+                    iteratorBean = new IteratorBean(iterator);
+                    iteratorBean.setKey(key);
+                    iteratorBean.setMatchText(matchText);
+                    iteratorBeanManager.addIteratorBean(iteratorBean);
+                }
+            }
+
+        } else if (searchType != null && searchType.compareTo("Name") == 0) {
+            searchFields =
+                SearchFields.setName(schemes, matchText, searchTarget, source,
+                    matchAlgorithm, maxToReturn);
+
+            key = searchFields.getKey();
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+                SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
+				if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
+					try {
+						iterator = new SimpleSearchUtils(lbSvc).search(scheme, version, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+						wrapper = null;
+						if (iterator != null) {
+							wrapper = new ResolvedConceptReferencesIteratorWrapper(iterator);
+						}
+
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				} else {
+
+
+
+					wrapper =
+						new SearchUtils(lbSvc).searchByName(scheme, version, matchText,
+							source, matchAlgorithm, ranking, maxToReturn,
+							SearchUtils.NameSearchType.Name);
+				}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+                        iteratorBean.setMatchText(matchText);
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+
+                        request.getSession().setAttribute("key", key);
+                    }
+                }
+            }
+
+        } else if (searchType != null && searchType.compareTo("Code") == 0) {
+            searchFields =
+                SearchFields.setCode(schemes, matchText, searchTarget, source,
+                    matchAlgorithm, maxToReturn);
+            key = searchFields.getKey();
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                /*
+                 * wrapper = new SearchUtils(lbSvc).searchByName(scheme, version,
+                 * matchText, source, matchAlgorithm, ranking, maxToReturn,
+                 * SearchUtils.NameSearchType.Code);
+                 */
+			    schemes = new Vector();
+			    Vector versions = new Vector();
+			    schemes.add(scheme);
+			    versions.add(version);
+
+                wrapper = new CodeSearchUtils(lbSvc).searchByCode(schemes, versions, matchText, source, matchAlgorithm, ranking, maxToReturn, false);
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+
+                        iteratorBean.setMatchText(matchText);
+
+
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+
+                        request.getSession().setAttribute("key", key);
+                    }
+                }
+            }
+        }
+
+        request.getSession().setAttribute("key", key);
+        request.getSession().setAttribute("matchText", matchText);
+        request.getSession().removeAttribute("neighborhood_synonyms");
+        request.getSession().removeAttribute("neighborhood_atoms");
+        request.getSession().removeAttribute("concept");
+        request.getSession().removeAttribute("code");
+        request.getSession().removeAttribute("codeInNCI");
+        request.getSession().removeAttribute("AssociationTargetHashMap");
+        request.getSession().removeAttribute("type");
+
+        if (iterator != null) {
+
+//FacesContext.getCurrentInstance().getExternalContext().getRequestMap().set("searchStatusBean", bean);
+
+            int size = iteratorBean.getSize();
+            if (size < 0) {
+				int num_iteration = (-1) * size;
+				int matchingConceptCount = 0;
+				try {
+					SearchByAssociationIteratorDecorator assoIterator = (SearchByAssociationIteratorDecorator) iterator;
+					matchingConceptCount = assoIterator.getQuickIteratorSize();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+				String msg =
+					"WARNING: No match found, but only able to test the first " + num_iteration + " out of " + matchingConceptCount + " matching target concepts. "
+					+ " Consider using a more specific search or a different relationship.";
+
+				request.setAttribute("message", msg);
+				return "message";
+			}
+
+            _logger.debug("AdvancedSearchActon size: " + size);
+
+            // Write a search log entry
+            SearchLog.writeEntry(searchFields, size, HTTPUtils
+                .getRefererParmDecode(request));
+
+            if (size > 1) {
+                request.getSession().setAttribute("search_results", v);
+                String match_size = Integer.toString(size);
+                request.getSession().setAttribute("match_size", match_size);
+                request.getSession().setAttribute("page_string", "1");
+                request.getSession().setAttribute("new_search", Boolean.TRUE);
+                return "search_results";
+            } else if (size == 1) {
+                request.getSession().setAttribute("singleton", "true");
+                request.getSession().setAttribute("dictionary",
+                    Constants.CODING_SCHEME_NAME);
+                int pageNumber = 1;
+                List list = iteratorBean.getData(1);
+                ResolvedConceptReference ref =
+                    (ResolvedConceptReference) list.get(0);
+
+                Entity c = null;
+                if (ref == null) {
+                    String msg =
+                        "Error: Null ResolvedConceptReference encountered.";
+                    request.getSession().setAttribute("message", msg);
+                    return "message";
+
+                } else {
+                    c = ref.getReferencedEntry();
+                    if (c == null) {
+                        c =
+                            DataUtils.getConceptByCode(
+                                Constants.CODING_SCHEME_NAME, null, null, ref
+                                    .getConceptCode());
+                    }
+                }
+
+                request.getSession().setAttribute("code", ref.getConceptCode());
+                request.getSession().setAttribute("concept", c);
+                request.getSession().setAttribute("type", "properties");
+                request.getSession().setAttribute("new_search", Boolean.TRUE);
+
+HttpServletResponse response =
+	(HttpServletResponse) FacesContext.getCurrentInstance()
+		.getExternalContext().getResponse();
+response.setContentType("text/html;charset=utf-8");
+
+                return "concept_details";
+            }
+        }
+
+        // [#23463] Linking retired concept to corresponding new concept
+        // Test case: C0536142|200601|SY|||C1433544|Y|
+
+        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
+
+            //String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(matchText);
+            String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+                        null, matchText);
+
+
+            if (newCUI != null) {
+                _logger.debug("Searching for " + newCUI);
+                Entity c =
+                    DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
+                        null, null, newCUI);
+                request.getSession().setAttribute("code", newCUI);
+                request.getSession().setAttribute("concept", c);
+                request.getSession().setAttribute("type", "properties");
+
+                request.getSession().setAttribute("new_search", Boolean.TRUE);
+                request.getSession().setAttribute("retired_cui", matchText);
+
+HttpServletResponse response =
+	(HttpServletResponse) FacesContext.getCurrentInstance()
+		.getExternalContext().getResponse();
+response.setContentType("text/html;charset=utf-8");
+
+                return "concept_details";
+            }
+        }
+
+        String message = "No match found.";
+        if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
+            message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
+        }
+        request.setAttribute("message", message);
+        return "no_match";
+
+    }
 
 }

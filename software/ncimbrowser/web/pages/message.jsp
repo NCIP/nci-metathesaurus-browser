@@ -35,8 +35,9 @@
       <div class="pagecontent">
         <%
           String message = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("message"));
+          request.getSession().removeAttribute("message");
         %>
-        <b><%=message%></b>
+      <p class="textbodyred"><%=message%></p>
         <%@ include file="/pages/include/nciFooter.jsp" %>
       </div>
       <!-- end Page content -->

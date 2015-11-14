@@ -77,7 +77,7 @@
         match_text = (String) request.getSession().getAttribute("matchText");
     }
     
-    if (DataUtils.isNull(match_text)) match_text = "";
+    if (match_text == null) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>

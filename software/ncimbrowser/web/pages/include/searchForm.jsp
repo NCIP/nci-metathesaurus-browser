@@ -78,7 +78,8 @@
     String _match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_text"));
     String match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     
-    if (DataUtils.isNull(match_text)) match_text = "";
+    //if (DataUtils.isNull(match_text)) match_text = "";
+    if (match_text == null) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
     String algorithm = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
