@@ -45,6 +45,7 @@
 <%
 String application_version = new DataUtils().getApplicationVersion();
 String lexevs_version = new DataUtils().getLexVersion();
+String ncit_url = new DataUtils().getNCItURL();
 %>
 
 <div class="ncibanner">
@@ -373,13 +374,13 @@ Source</label>&nbsp;
         </a>
         <ul>
           <li><a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Home</a></li>
-          <li><a href="https://ncit.nci.nih.gov/ncitbrowser/" target="_blank" alt="EVS">NCI Thesaurus</a></li>
+          <li><a href="<%=ncit_url%>" target="_blank" alt="EVS">NCI Thesaurus</a></li>
           <!--
           <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
            -->
 
 
-          <li><a href="https://ncit.nci.nih.gov/ncitbrowser/start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
+          <li><a href="<%=ncit_url%>start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
 
             
               <li><a href="http://ncitermform.nci.nih.gov/ncitermform/?dictionary=NCI%20Metathesaurus" target="_blank" alt="Term Suggestion">Term Suggestion</a></li>

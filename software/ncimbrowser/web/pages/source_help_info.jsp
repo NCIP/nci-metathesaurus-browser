@@ -8,6 +8,7 @@
 
 <%
   String basePath = request.getContextPath();
+  String ncit_url = new DataUtils().getNCItURL();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
@@ -107,12 +108,12 @@ Additional information on many of these sources can be found on related pages.
 
   <li>
     NCI Term Browser sources are described in more detail
-    at: <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info-termbrowser.jsf</a>
+    at: <a href="<%=ncit_url%>pages/source_help_info-termbrowser.jsf" target="_blank"><%=ncit_url%>pages/source_help_info-termbrowser.jsf</a>
   </li>
 
   <li>
     Sources with tagged content in NCI Thesaurus are listed at:
-    <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank">http://ncit.nci.nih.gov/ncitbrowser/pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
+    <a href="<%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank"><%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
   </li>
 
   <li>
