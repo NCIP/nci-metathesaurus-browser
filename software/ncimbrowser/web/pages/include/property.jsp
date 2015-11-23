@@ -384,9 +384,8 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
             }
             n++;
             %>
-              <td><i><%=propName_label%></i></td>
+              <td><%=propName_label%></td>
               <td>
-                <i>
                   <%=value%>
                   <%
                     if (prop_url != null && prop_url.compareTo("null") != 0) {
@@ -396,7 +395,6 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
                       <%
                     }
                   %>
-                </i>
               </td>
             </tr>
           <%
@@ -477,13 +475,13 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 
   <table class="datatable_960">
   
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="25%">
                  Name
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="60%">
                  Value
           </th>
-          <th class="dataTableHeader" scope="col" align="left">
+          <th class="dataTableHeader" scope="col" align="left" width="15%">
                  Source
           </th>  
   
@@ -504,7 +502,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
             }
             n++;
             %>
-                  <td><i><%=DataUtils.encodeTerm(prop_name)%></i></td>
+                  <td><%=DataUtils.encodeTerm(prop_name)%></td>
                   <td><i>None</i></td>
                 </tr>
             <%
@@ -529,9 +527,9 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
               if (propertySource.compareTo("None") == 0) propertySource = "";
 
               %>
-                  <td><i><%=DataUtils.encodeTerm(prop_name)%></i></td>
-                  <td><i><%=propertyValue%></i></td>
-                  <td><i><%=propertySource%></i></td>
+                  <td><%=DataUtils.encodeTerm(prop_name)%></td>
+                  <td><%=propertyValue%></td>
+                  <td><%=propertySource%></td>
                 </tr>
               <%
             }
@@ -583,8 +581,8 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
     if (primitive != null) {
     %>
     <tr class="dataRowLight">
-      <td><i><%=primitive_label%></i></td>
-      <td><i><%=primitive%></i></td>
+      <td><%=primitive_label%></td>
+      <td><%=primitive%></td>
     </tr>
     <%
     }
@@ -606,7 +604,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 <p>
   <b>URL to Bookmark</b>:
   <a href=javascript:bookmark('<%= url %>','<%= bookmark_title %>')>
-    <i><%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%></i>
+    <%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%>
   </a>
 
 <%

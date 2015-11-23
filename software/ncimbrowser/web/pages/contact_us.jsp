@@ -311,12 +311,12 @@ if (captcha_option.compareTo("default") == 0) {
 <input type="hidden" name="captcha_option" id="captcha_option" value="<%=captcha_option%>">
 
   </h:form>
-            <a href="http://www.cancer.gov/global/web/policies/page2" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
+            <a href="http://www.cancer.gov/policies/privacy-security#NCIWeb" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>
           </div>
           <!-- end Page content -->
         </div>
-        <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
+        <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="962" height="5" alt="Mainbox Bottom" /></div>
         <!-- end Main box -->
       </div>
     </f:view>

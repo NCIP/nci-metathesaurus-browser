@@ -61,10 +61,11 @@ import org.apache.log4j.*;
 
 import gov.nih.nci.evs.browser.bean.LicenseBean;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties.*;
-import gov.nih.nci.evs.browser.utils.MetadataUtils;
+import gov.nih.nci.evs.browser.utils.NCImMetadataUtils;
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.properties.*;
 
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 
 public final class RedirectServlet extends HttpServlet {
@@ -138,7 +139,8 @@ public final class RedirectServlet extends HttpServlet {
         String type = HTTPUtils.cleanXSS((String) request.getParameter("type"));
 
 	    boolean licenseAgreementAccepted = false;
-	    String formal_name = MetadataUtils.getSABFormalName(term_source);
+	    //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+	    String formal_name = NCImMetadataUtils.getSABFormalName(term_source);
 	    boolean isLicensed = DataUtils.checkIsLicensed(term_source);
 
 	    String cs_name = Constants.CODING_SCHEME_NAME;

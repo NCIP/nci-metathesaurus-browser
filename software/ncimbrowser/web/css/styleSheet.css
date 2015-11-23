@@ -640,6 +640,7 @@ h3
     vertical-align:text-bottom;
 }
 
+
 /************************** print styles ***********************************/
 @media print
 {
@@ -684,6 +685,12 @@ h3
  font-size: 11px;
 }
 
-
+.dataCellTextwrap
+{
+ white-space: nowrap;
+ font-size: 11px;
+ color: #444444;
+ word-wrap: break-word;
+}
 
 

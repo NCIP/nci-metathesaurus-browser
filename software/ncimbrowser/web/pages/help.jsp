@@ -65,7 +65,7 @@
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
           4,000,000 terms from more than 75 terminologies. It contains most public domain vocabularies from
-          the National Library of Medicine's <a href="http://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
+          the National Library of Medicine's <a href="https://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
           (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
@@ -77,7 +77,7 @@
           and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
           user community. 
           
-          This 2.4 release uses the new LexEVS 6.1 terminology server without significant changes that would affect users. 
+          This 2.6 release uses the new LexEVS 6.3 terminology server without significant changes that would affect users. 
 
  			The Search box separates Name and Code search, search performance 
 			is better, and Advanced Search offers new 
@@ -176,7 +176,7 @@
           The key differences are:
           <ul>
           
-		    <li><b>Lucene</b>: This option, new to the NCIm Browser 2.4 release, 
+		    <li><b>Lucene</b>: This option  
 			allows use of Name search options not available elsewhere, 
 			including wildcards, Boolean operators, negation, and fuzzy search 
 			(click the radio button to see examples).</li>          
@@ -347,8 +347,8 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This 2.4 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
-          now addresses some of the search and other enhancements made in the companion Term Browser. 
+          This 2.6 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
+          addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 
 			is better, and Advanced Search offers new 
@@ -358,8 +358,8 @@
           
           For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.4+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.4 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.6+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 2.6 Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
@@ -383,7 +383,7 @@
       </div>
       <!-- end Page content -->
     </div>
-    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
+    <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="962" height="5" alt="Mainbox Bottom" /></div>
     <!-- end Main box -->
   </div>
 </f:view>

@@ -1,5 +1,5 @@
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.MetadataUtils" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.NCImMetadataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.DataUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
@@ -78,7 +78,8 @@
     String _match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("match_text"));
     String match_text = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
     
-    if (DataUtils.isNull(match_text)) match_text = "";
+    //if (DataUtils.isNull(match_text)) match_text = "";
+    if (match_text == null) match_text = "";
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
     String algorithm = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("selectedAlgorithm"));
     String check_e = "", check_b = "", check_s = "" , check_c ="";
@@ -183,8 +184,8 @@
 
    <%
 
-   if (!MetadataUtils.isMetadataAvailable()) {
-       MetadataUtils.initialize();
+   if (!NCImMetadataUtils.isMetadataAvailable()) {
+       NCImMetadataUtils.initialize();
    }
 
    String selectedSource = "ALL";
@@ -198,7 +199,7 @@
     if (sf_available_hierarchies != null && selectedSource.compareTo("ALL") != 0 && sf_available_hierarchies.indexOf("|" + selectedSource + "|") != -1) {
       boolean isLicensed = DataUtils.checkIsLicensed(selectedSource);
       boolean licenseAgreementAccepted = false;
-      String formal_name = MetadataUtils.getSABFormalName(selectedSource);
+      String formal_name = NCImMetadataUtils.getSABFormalName(selectedSource);
       String view_source_hierarchy_label = "View " + selectedSource + " Hierarchy";
 
       LicenseBean licenseBean = (LicenseBean) request.getSession().getAttribute("licenseBean");
@@ -213,13 +214,13 @@
 
     %>
             <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_hierarchy.jsf?sab=<%=selectedSource%>', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-              <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
+              <img src="<%=basePath%>/images/visualize.gif" width="12px" height="12px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>" border="0"/>
             </a>
     <%
             } else {
     %>
             <a class="icon_blue" href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/accept_license.jsf?dictionary=<%=formal_name%>&sab=<%=selectedSource%>&type=browsehierarchy', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
-                    <img src="<%=basePath%>/images/visualize.gif" width="16px" height="16px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
+                    <img src="<%=basePath%>/images/visualize.gif" width="12px" height="12px" alt="<%=view_source_hierarchy_label%>" title="<%=view_source_hierarchy_label%>"  border="0"/>
             </a>
     <%
             }

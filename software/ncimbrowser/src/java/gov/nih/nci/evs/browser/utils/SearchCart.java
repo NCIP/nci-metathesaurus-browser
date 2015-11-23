@@ -80,7 +80,7 @@ import java.util.*;
 public class SearchCart {
 
     // Local variables
-    private static Logger _logger = Logger.getLogger(SearchUtils.class);
+    private static Logger _logger = Logger.getLogger(SearchCart.class);
     //private static LexBIGService lbSvc = null;
     //private static LexBIGServiceConvenienceMethods lbscm = null;
     private static MetaBrowserService mbs = null;

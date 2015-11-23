@@ -28,12 +28,17 @@
 <%@ page import="org.LexGrid.commonTypes.EntityDescription" %>
 <%@ page import="org.LexGrid.commonTypes.Property" %>
 <%@ page import="org.LexGrid.commonTypes.PropertyQualifier" %>
+<%@ page import="org.LexGrid.LexBIG.LexBIGService.*" %>
+
 
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Map.Entry" %>
 
 <%@ page import="org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference" %>
+
+<%@ page import="gov.nih.nci.evs.browser.utils.*"%>
+<%@ page import="gov.nih.nci.evs.browser.common.*"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
@@ -63,6 +68,22 @@
 <%
 
 response.setContentType("text/html;charset=utf-8");
+
+
+                         // appscan fix: 09212015
+			 boolean retval = HTTPUtils.validateRequestParameters(request);
+			 if (!retval) {
+				 try {
+					 String error_msg = "WARNING: Invalid parameter(s) encountered.";
+					 request.getSession().setAttribute("error_msg", error_msg);
+					 String redirectURL = request.getContextPath() + "/pages/appscan_response.jsf";
+					 response.sendRedirect(redirectURL);				 
+
+				 } catch (Exception ex) {
+					 ex.printStackTrace();
+				 }
+			 }
+			 
 
 Entity concept_details_c = null;
 String concept_details_code = null;
@@ -161,7 +182,8 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
     sab = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sab"));
     sourcecode = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("sourcecode"));
     int maxToReturn = 100;
-    ResolvedConceptReferencesIterator iterator = new SearchUtils().findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
+    LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+    ResolvedConceptReferencesIterator iterator = new SearchUtils(lbSvc).findConceptWithSourceCodeMatching(Constants.CODING_SCHEME_NAME, null, sab, sourcecode, maxToReturn, searchInactive);
           IteratorBean iteratorBean = new IteratorBean(iterator);
           iteratorBean.setIterator(iterator);
 
@@ -325,7 +347,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
   String term_suggestion_application_url1 = (String) request.getSession().getAttribute("term_suggestion_application_url");
 
   if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
-     term_suggestion_application_url1 = MetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
+     term_suggestion_application_url1 = NCImMetadataUtils.getMetadataValue(Constants.CODING_SCHEME_NAME, null, null, "term_suggestion_application_url");
      if (term_suggestion_application_url1 == null || term_suggestion_application_url1.length() < 1) {
        term_suggestion_application_url1 = NCImBrowserProperties.getTermSuggestionApplicationUrl();
      }
@@ -347,9 +369,10 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       <div class="texttitle-blue">
       <!--
       <table border="0" width="700px">
+      <table border="0" width="900px">
       -->
       
-      <table border="0" width="900px">
+      <table border="0" width="945px">
         <tr>
           <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
@@ -409,7 +432,7 @@ request.getSession().removeAttribute("type");
         </div>
         <!-- end Page content -->
       </div>
-      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="960" height="5" alt="Mainbox Bottom" /></div>
+      <div class="mainbox-bottom"><img src="<%=basePath%>/images/mainbox-bottom.gif" width="962" height="5" alt="Mainbox Bottom" /></div>
       <!-- end Main box -->
     </div>
   </f:view>

@@ -118,6 +118,21 @@ public final class AjaxServlet extends HttpServlet {
 
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+
+			 //[NCIM-209] AppScan Performance.
+			 boolean retval = HTTPUtils.validateRequestParameters(request);
+			 if (!retval) {
+				 try {
+					 String nextJSP = "/pages/appscan_response.jsf";
+					 RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+					 dispatcher.forward(request,response);
+					 return;
+
+				 } catch (Exception ex) {
+					 ex.printStackTrace();
+				 }
+			 }
+
         // Determine request by attributes
         String action = HTTPUtils.cleanXSS((String)request.getParameter("action"));// DataConstants.ACTION);
         if (action == null) action = "concept";

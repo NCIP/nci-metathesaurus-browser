@@ -494,7 +494,7 @@ if (ontology_sab == null) {
     ontology_sab = (String) selectedSource_obj;
       }
 }
-ontology_formalname = MetadataUtils.getSABDefinition(ontology_sab);
+ontology_formalname = NCImMetadataUtils.getSABDefinition(ontology_sab);
 
         if (ontology_sab.compareTo("NCI") == 0) {
 %>

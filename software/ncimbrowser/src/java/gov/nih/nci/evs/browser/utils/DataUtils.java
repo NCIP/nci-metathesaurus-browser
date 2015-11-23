@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.browser.utils;
 
+import gov.nih.nci.evs.browser.properties.*;
+
 import java.io.*;
 import java.util.*;
 import java.text.*;
@@ -191,7 +193,11 @@ public class DataUtils {
     public static HashMap getFormalName2MetadataHashMap() {
         if (_formalName2MetadataHashMap != null)
             return _formalName2MetadataHashMap;
-        MetadataUtils.initialize();
+
+        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+        //NCImMetadataUtils util = new NCImMetadataUtils(lbSvc);
+        _formalName2MetadataHashMap = NCImMetadataUtils.getFormalName2MetadataHashMap();
         return _formalName2MetadataHashMap;
     }
 
@@ -1360,7 +1366,7 @@ public class DataUtils {
                 .getAssociationName(), scheme, csvt) : lbscm
                 .getAssociationReverseName(assoc.getAssociationName(), scheme,
                     csvt);
-        if (StringUtils.isBlank(assocLabel))
+        if (StringUtils.isNullOrBlank(assocLabel))
             assocLabel =
                 (navigatedFwd ? "" : "[Inverse]") + assoc.getAssociationName();
 
@@ -2244,7 +2250,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils.getHierAssociationToChildNodes()),
+                                .createNameAndValueList(new MetaTreeUtils(lbSvc).getHierAssociationToChildNodes()),
                             Constructors.createNameAndValueList("source",
                                 source));
             } else {
@@ -2252,7 +2258,7 @@ public class DataUtils {
                     cng
                         .restrictToAssociations(
                             Constructors
-                                .createNameAndValueList(MetaTreeUtils.getHierAssociationToChildNodes()),
+                                .createNameAndValueList(new MetaTreeUtils(lbSvc).getHierAssociationToChildNodes()),
                             null);
             }
 
@@ -4221,10 +4227,15 @@ public class DataUtils {
          * //formalName2MetadataHashMap = getFormalName2MetadataHashMap();
          * MetadataUtils.setSAB2FormalNameHashMap(); }
          */
+
         if (_formalName2MetadataHashMap == null) {
-            _formalName2MetadataHashMap =
-                MetadataUtils.getFormalName2MetadataHashMap();
-        }
+        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        //NCImMetadataUtils util = new NCImMetadataUtils(lbSvc);
+        _formalName2MetadataHashMap = NCImMetadataUtils.getFormalName2MetadataHashMap();
+
+	    }
+
+
 
         Vector metadataProperties =
             (Vector) _formalName2MetadataHashMap.get(scheme);
@@ -4803,4 +4814,34 @@ public class DataUtils {
 		}
 		return buf.toString();
 	}
+
+
+////////////////////////////////////////////////////////////////////////////
+    public static String getProperty(String property, String propertyName)
+            throws Exception {
+        String value = null;
+        try {
+            value = NCImBrowserProperties.getProperty(property);
+        } catch (Exception e) {
+            throw new Exception("Error reading \"" + propertyName
+                + "\" property.");
+        }
+        return value;
+    }
+
+    public static String[] getRecipients() throws Exception {
+        String value =
+            getProperty(NCImBrowserProperties.NCICB_CONTACT_URL,
+                "ncicb.contact.url");
+        return Utils.toStrings(value, ";", false);
+    }
+
+    public static String getMailSmtpServer() throws Exception {
+        String value =
+            getProperty(NCImBrowserProperties.MAIL_SMTP_SERVER,
+                "mail.smtp.server");
+        return value;
+    }
+
+
 }

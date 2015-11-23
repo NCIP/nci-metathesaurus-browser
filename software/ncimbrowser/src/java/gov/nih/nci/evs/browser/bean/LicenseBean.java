@@ -4,6 +4,9 @@ import java.util.*;
 import gov.nih.nci.evs.browser.utils.*;
 import org.apache.log4j.*;
 
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -65,7 +68,8 @@ public class LicenseBean extends Object {
     public void addLicenseAgreement(String scheme) {
         _logger.debug("(*) LicenseBean addLicenseAgreement " + scheme);
         _licenseAgreementHashSet.add(scheme);
-        String formalName = MetadataUtils.getFormalName(scheme);
+        //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        String formalName = NCImMetadataUtils.getFormalName(scheme);
 
 
         _logger.debug("(*) LicenseBean addLicenseAgreement formalname " + formalName);
