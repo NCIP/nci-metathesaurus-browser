@@ -109,7 +109,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") == 0) {
               %>
-        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
            <%=s%>
         </a>&nbsp;
         <%
@@ -120,7 +120,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") != 0) {
               %>
-        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
            <%=s%>
         </a>&nbsp;
         <%
@@ -388,7 +388,7 @@ if (neighborhood_atoms.size() == 0) {
 
 
       <p></p>
-      Return to <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Sources</a>
+      Return to <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Sources</a>
 
 
 

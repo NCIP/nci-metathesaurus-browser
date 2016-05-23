@@ -1,4 +1,5 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
 
 <%
   List displayItemList = null;
@@ -598,23 +599,20 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
   String requestURL = request.getRequestURL().toString();
   int idx = requestURL.indexOf("pages");
   requestURL = requestURL.substring(0, idx);
-  String url = requestURL + "ConceptReport.jsp?dictionary=NCI%20Thesaurus&code=" + concept_id;
+  String url = requestURL + "ConceptReport.jsp?dictionary=" + Constants.NCI_METATHESAURUS + "&code=" + concept_id;
   String bookmark_title = "NCImBrowser%20" + concept_id;
 %>
 <p>
   <b>URL to Bookmark</b>:
   <a href=javascript:bookmark('<%= url %>','<%= bookmark_title %>')>
-    <%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%>
+    <%= requestURL %>ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=concept_id%>
   </a>
 
 <%
     //NCImBrowserProperties properties = null;
     properties = NCImBrowserProperties.getInstance();
     //String term_suggestion_application_url = properties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLIATION_URL);
-    String default_dictionary = "NCI%20MetaThesaurus";
-    //if (syns != null && syns.size() > 0) {
-    //   tg_dictionary = "NCI%20Thesaurus";
-    //}
+    String default_dictionary = Constants.NCI_METATHESAURUS;
 %>
 <%
 }

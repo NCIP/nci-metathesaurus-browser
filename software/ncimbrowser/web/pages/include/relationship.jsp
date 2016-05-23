@@ -208,7 +208,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>
@@ -334,7 +334,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>
@@ -460,7 +460,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>
@@ -585,7 +585,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>
@@ -710,7 +710,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>
@@ -836,7 +836,7 @@
           <td width=100><%=rel_value%></td>
           <td width=180><%=rel_display_value%></td>
           <td>
-            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=target_concept_code%>">
+            <a href="<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=target_concept_code%>">
               <%=DataUtils.encodeTerm(target_concept_name)%>
             </a>
           </td>

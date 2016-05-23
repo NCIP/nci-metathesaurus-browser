@@ -7,6 +7,8 @@
 <%@ page import="java.util.*"%>
 <%@ page import="org.LexGrid.concepts.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
+
 <%@ page import="gov.nih.nci.evs.browser.properties.*" %>
 
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
@@ -206,7 +208,7 @@ request.getSession().setAttribute("match_match", matchText);
 			    }
 			    %>
 			  <td class="dataCellText" width=600>
-			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=code%>" ><%=DataUtils.encodeTerm(name)%></a>
+			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>" ><%=DataUtils.encodeTerm(name)%></a>
 			  </td>
 			  <td class="dataCellText" width=400>
 			      <%=semantic_type%>

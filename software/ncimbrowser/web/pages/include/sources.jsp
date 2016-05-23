@@ -106,7 +106,7 @@
                   <%
                   } else {
               %>
-    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
        <%=s%>
     </a>&nbsp;
     <%
@@ -124,7 +124,7 @@
                   } else {
 
               %>
-    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
        <%=s%>
     </a>&nbsp;
     <%
