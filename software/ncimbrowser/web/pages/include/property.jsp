@@ -23,9 +23,24 @@
     Vector additionalproperties = new Vector();
     additionalproperties.add("CONCEPT_NAME");
     additionalproperties.add("primitive");
+    
     Entity curr_concept = (Entity) request.getSession().getAttribute("concept");
+    LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+    ConceptDetails cd = new ConceptDetails(lbSvc);
+    HashMap prop_qual_hmap = cd.getPropertyQualifierHashMap(curr_concept);
+    String qualifierName = "STYPE";
+    String qualifierValue = "AUI";
+    Vector exclusion_vec = cd.searchPropertyWithQualifierNameAndValue(prop_qual_hmap, qualifierName, qualifierValue);
+    qualifierValue = "RUI";
+    Vector exclusion_vec_2 = cd.searchPropertyWithQualifierNameAndValue(prop_qual_hmap, qualifierName, qualifierValue);
+    exclusion_vec.addAll(exclusion_vec_2);
+    
+    for (int lcv=0; lcv<exclusion_vec.size(); lcv++) {
+        String t = (String) exclusion_vec.elementAt(lcv);
+        System.out.println("exclusion: " + t);
+    }
+       
     String curr_concept_code = curr_concept.getEntityCode();
-
     String retired_cui = (String) request.getSession().getAttribute("retired_cui");
     if (retired_cui != null) {
         request.getSession().removeAttribute("retired_cui");
@@ -452,6 +467,19 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 }
 
 
+/*
+boolean has_other_properties = false;
+for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
+   prop_name = (String) key_vec.elementAt(key_lcv);
+   if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) && !exclusion_vec.contains(prop_name)) {
+      Vector value_vec = (Vector) hmap.get(prop_name);
+      if (value_vec.size() > 0) {
+          has_other_properties = true;
+          break;
+      }
+   }
+}
+*/
 
   if (!has_other_properties) {
   %>
@@ -489,7 +517,9 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
     <%
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
         prop_name = (String) key_vec.elementAt(key_lcv);
-        if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
+        //if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) && !exclusion_vec.contains(prop_name) ) {
+        if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name)) {
+
           Vector value_vec = (Vector) hmap.get(prop_name);
           if (value_vec == null || value_vec.size() == 0) {
             if (n % 2 == 0) {

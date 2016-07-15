@@ -162,14 +162,14 @@
             <hyperlinkText>see NCI Metathesaurus info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
-
-       <DisplayItem>
+      
+        <DisplayItem>
             <propertyName>NSC_Code</propertyName>
             <itemLabel>NSC Code</itemLabel>
-            <url>http://dtp.nci.nih.gov/dtpstandard/servlet/dwindex?searchtype=NSC&amp;searchlist=</url>
+            <url>https://dtp.cancer.gov/dtpstandard/servlet/dwindex?searchtype=NSC&amp;searchlist=</url>
             <hyperlinkText>see NCI DTP info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
-       </DisplayItem>
+       </DisplayItem>      
 
        <DisplayItem>
             <propertyName>OMIM_Number</propertyName>
