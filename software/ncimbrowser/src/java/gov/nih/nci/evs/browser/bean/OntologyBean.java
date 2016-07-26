@@ -398,18 +398,34 @@ public class OntologyBean {
         return SortUtils.quickSort(v);
     }
 
+	public static boolean isAnnotationPropertyPCode(String t) {
+		if (t == null) return false;
+		if (t.length() <= 1) return false;
+		if (!t.startsWith("P")) return false;
+		for (int i=1; i<t.length(); i++) {
+			char c = t.charAt(i);
+			if (!Character.isDigit(c)) return false;
+		}
+		return true;
+	}
+
     public static Vector<String> getSupportedPropertyNames(CodingScheme cs) {
         Vector w = getSupportedProperties(cs);
-        if (w == null)
-            return null;
-
+		if (w == null) return null;
         Vector<String> v = new Vector<String>();
-        for (int i = 0; i < w.size(); i++) {
-            SupportedProperty sp = (SupportedProperty) w.elementAt(i);
-            v.add(sp.getLocalId());
-        }
+		for (int i=0; i<w.size(); i++)
+		{
+		     SupportedProperty sp = (SupportedProperty) w.elementAt(i);
+		     if (sp.getUri() != null && isAnnotationPropertyPCode(sp.getLocalId())) {
+				 if (!sp.getUri().endsWith(sp.getLocalId())) {
+					 v.add(sp.getLocalId());
+				 }
+			 } else {
+				 v.add(sp.getLocalId());
+			 }
+		}
         return SortUtils.quickSort(v);
-    }
+	}
 
     public static Vector<String> getSupportedPropertyNames() {
         CodingScheme cs = getCodingScheme(_codingSchemeName, null);
