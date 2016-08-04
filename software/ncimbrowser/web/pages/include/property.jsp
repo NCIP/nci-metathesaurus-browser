@@ -37,7 +37,7 @@
     
     for (int lcv=0; lcv<exclusion_vec.size(); lcv++) {
         String t = (String) exclusion_vec.elementAt(lcv);
-        System.out.println("exclusion: " + t);
+        //System.out.println("exclusion: " + t);
     }
        
     String curr_concept_code = curr_concept.getEntityCode();
@@ -485,7 +485,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
   %>
       <b>Other Properties:</b>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
          &nbsp;
@@ -498,7 +498,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 <p>
   <b>Other Properties:</b>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
 

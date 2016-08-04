@@ -63,7 +63,7 @@
               %>
                  Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
         </a>
               <%
@@ -71,7 +71,7 @@
               %>
                 <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=source#SynonymsDetails">Source</a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
         </a>
               <%
@@ -91,7 +91,7 @@
               }
               %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" title="Term Type Definitions" border="0">
               </a>
           </th>

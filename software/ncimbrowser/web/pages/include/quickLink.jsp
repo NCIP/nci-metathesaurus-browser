@@ -20,7 +20,12 @@
   String dictionary_encoded2 = dictionaryName.replaceAll(" ", "%20");
 
 %>
+<!--
 <div class="bluebar">
+-->
+<div style='clear:both;padding:3px;height:30px;color:white;background-color:#C31F40'>
+
+
   <div id="quicklinksholder">
 
     <ul id="quicklinks"

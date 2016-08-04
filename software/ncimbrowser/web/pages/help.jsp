@@ -69,7 +69,7 @@
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
           (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           NCIm Sources</a>).
           <br><br>
           <b>The NCIm Browser</b>
@@ -186,7 +186,7 @@
             <li><b>Relationship</b> search offers drop down lists of broad relationship labels (RELs) and
             specific relationship attributes (RELAs) that can be searched on, as explained in the
             <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
-            '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+            '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
              NCIm Relationship Attributes</a>
             help file. Note that many relationships have no source-assigned RELA value. For example, searching
             on isa RELA value will retrieve only those specifically tagged as such and not others having only a
@@ -331,7 +331,7 @@
           <!-- ************* Sources ************** -->
           Click on the
           <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           <b>Sources</b></a>
           link at the top of the page to bring up a separate window showing the list of sources
           included in the current release of NCI Metathesaurus.  Sources are listed alphabetically  by abbreviation,

@@ -20,10 +20,15 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
   <f:view>
+
   <div id="popupContainer">
       <!-- nci popup banner -->
+      <!--
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/nci-banner-1.gif" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
+      -->
+      <div style='clear:both;margin-top:-5px;padding:8px;height:32px;color:white;background-color:#C31F40'>
+
+        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
         <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->

@@ -48,6 +48,13 @@ String lexevs_version = new DataUtils().getLexVersion();
 String ncit_url = new DataUtils().getNCItURL();
 %>
 
+<div style='clear:both;margin-top:-5px;padding:8px;height:32px;color:white;background-color:#C31F40'>
+  <a href="http://www.cancer.gov" target="_blank">
+    <img src="<%=request.getContextPath()%>/images/banner-red.png"
+      width="955" height="39" border="0"
+      alt="National Cancer Institute"/>
+  </a>
+  <!--
 <div class="ncibanner">
   <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute">
     <img src="/ncimbrowser/images/logotype.gif"
@@ -68,6 +75,7 @@ String ncit_url = new DataUtils().getNCItURL();
       width="125" height="39" border="0"
       alt="www.cancer.gov" />
   </a>
+  -->
 </div>
 
 
@@ -336,7 +344,7 @@ Source</label>&nbsp;
       <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_hierarchy.jsf?&sab=NCI', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="11">
         NCIt Hierarchy</a> |
       <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_help_info.jsf',
-        '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="12">
+        '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="12">
         Sources</a> |
       <a href="/ncimbrowser/pages/help.jsf" alt="Help" tabindex="13">Help</a>
     </td>
@@ -355,11 +363,10 @@ Source</label>&nbsp;
 <!-- end Thesaurus, banner search area -->
 <!-- Quick links bar -->
 
-
-
-
-
+<!--
 <div class="bluebar">
+-->
+<div style='clear:both;padding:3px;height:30px;color:white;background-color:#C31F40'>
   <div id="quicklinksholder">
 
     <ul id="quicklinks"
