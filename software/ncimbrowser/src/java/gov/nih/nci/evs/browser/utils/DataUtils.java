@@ -160,6 +160,7 @@ public class DataUtils {
     public String _evsServiceURL = null;
     public String _ncitURL = null;
     public String _lexevs_version = null;
+    public static String NCIM_VERSION;
 
     private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
@@ -206,6 +207,8 @@ public class DataUtils {
 
     static {
 		rand = new Random();
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		NCIM_VERSION = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag("NCI Metathesayrys", "PRODUCTION");
 	}
 
     public static int getNextRandomNumber() {
@@ -1924,6 +1927,9 @@ public class DataUtils {
         return _ncimAppVersion;
     }
 
+    // NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
+    // CodingSchemeDataUtils   public String getVocabularyVersionByTag(String codingSchemeName, String ltag) {
+
     private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
@@ -1936,7 +1942,12 @@ public class DataUtils {
                 return _ncimAppVersionDisplay = "";
             String version = getApplicationVersion();
             value = value.replace("$application.version", version);
-            return _ncimAppVersionDisplay = value;
+
+            String displayed_value = "NCIm Version: " + NCIM_VERSION + " (Browser " + version.substring(1, version.length());
+
+            //return _ncimAppVersionDisplay = value;
+            return displayed_value;
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return _ncimAppVersionDisplay = "";
