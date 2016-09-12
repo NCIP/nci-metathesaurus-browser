@@ -208,7 +208,7 @@ public class DataUtils {
     static {
 		rand = new Random();
 		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-		NCIM_VERSION = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag("NCI Metathesayrys", "PRODUCTION");
+		NCIM_VERSION = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag("NCI Metathesaurus", "PRODUCTION");
 	}
 
     public static int getNextRandomNumber() {
@@ -1927,9 +1927,7 @@ public class DataUtils {
         return _ncimAppVersion;
     }
 
-    // NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
-    // CodingSchemeDataUtils   public String getVocabularyVersionByTag(String codingSchemeName, String ltag) {
-
+    // Change display version format to: NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
     private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
@@ -1942,9 +1940,7 @@ public class DataUtils {
                 return _ncimAppVersionDisplay = "";
             String version = getApplicationVersion();
             value = value.replace("$application.version", version);
-
-            String displayed_value = "NCIm Version: " + NCIM_VERSION + " (Browser " + version.substring(1, version.length());
-
+            String displayed_value = "NCIm Version: " + NCIM_VERSION + " " + value;
             //return _ncimAppVersionDisplay = value;
             return displayed_value;
 
