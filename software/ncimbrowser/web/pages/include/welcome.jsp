@@ -21,7 +21,9 @@
   <table class="datatable_960" border="0" width="100%">
   <tr>
     <td><div class="texttitle-blue">Welcome</div></td>
+    <!--
     <td><div class="texttitle-blue-rightJust">Version: <%= version %></div></td>
+    -->
   </tr></table>
   <hr/>
   <table border="0">
