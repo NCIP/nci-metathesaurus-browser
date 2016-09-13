@@ -1927,7 +1927,7 @@ public class DataUtils {
         return _ncimAppVersion;
     }
 
-    // Change display version format to: NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
+    // Change application display version format to: NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
     private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
