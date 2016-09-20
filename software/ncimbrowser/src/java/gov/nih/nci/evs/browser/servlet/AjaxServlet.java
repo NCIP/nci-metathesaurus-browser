@@ -256,13 +256,23 @@ public final class AjaxServlet extends HttpServlet {
             JSONObject json = new JSONObject();
             JSONArray nodesArray = null;// new JSONArray();
 
+System.out.println("Build tree -- step 1");
+
             try {
                 if (ontology_source == null
                     || ontology_source.compareTo("null") == 0) {
+
+						System.out.println("Build tree -- step 2 calling CacheController.getInstance().getRootConcepts ");
+
+
                     nodesArray =
                         CacheController.getInstance().getRootConcepts(
                             ontology_display_name, null);
                 } else {
+
+					System.out.println("Build tree -- step 3 calling CacheController.getInstance().getSourceRoots");
+
+
                     nodesArray =
                         CacheController.getInstance().getSourceRoots(
                             ontology_display_name, null, ontology_source, true);
@@ -270,9 +280,19 @@ public final class AjaxServlet extends HttpServlet {
                     // CacheController.getInstance().getRootConceptsBySource(ontology_display_name,
                     // null, ontology_source);
                 }
+
+                System.out.println("Build tree -- step 4");
+
+
                 if (nodesArray != null) {
+
+					System.out.println("nodesArray != null");
+
+
                     json.put("root_nodes", nodesArray);
-                }
+                } else {
+					System.out.println("nodesArray == null ??? ");
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }

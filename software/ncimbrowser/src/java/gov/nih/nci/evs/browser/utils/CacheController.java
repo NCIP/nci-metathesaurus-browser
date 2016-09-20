@@ -248,6 +248,12 @@ public class CacheController {
 
     public JSONArray getRootConcepts(String scheme, String version,
         boolean fromCache) {
+
+System.out.println(	"getRootConcepts: scheme " + scheme);
+System.out.println(	"getRootConcepts: version " + version);
+
+
+
         List list = null;// new ArrayList();
         String key = scheme + "$" + version + "$root";
         JSONArray nodeArray = null;
@@ -275,6 +281,13 @@ public class CacheController {
                     (new MetaTreeUtils(lbSvc)).getSourceHierarchyRoots(scheme, csvt,
                         NCI_SOURCE);
                 // SortUtils.quickSort(list);
+
+                if (list == null) {
+					System.out.println("getSourceHierarchyRoots returns null???");
+				} else {
+					System.out.println("getSourceHierarchyRoots returns " + list.size() + " roots.");
+				}
+
 
                 nodeArray = list2JSONArray(list);
 
@@ -1247,6 +1260,10 @@ public class CacheController {
     }
 
     public HashMap getSourceRoots(String CUI, String SAB) {
+
+		System.out.println("getSourceRoots CUI: " + CUI);
+		System.out.println("getSourceRoots SAB: " + SAB);
+
         HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
@@ -1258,7 +1275,22 @@ public class CacheController {
             MetaBrowserService mbs =
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
+
+
+            if (mbs == null) {
+				System.out.println("getGenericExtension returns NULL???");
+			} else {
+				System.out.println("getGenericExtension returns fine");
+			}
+
+            System.out.println("Step 1:");
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+
+            if (tree == null) {
+				System.out.println("getMetaNeighborhood returns NULL??????");
+			}
+
+
             MetaTreeNode focus = tree.getCurrentFocus();
             ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
@@ -1269,9 +1301,15 @@ public class CacheController {
                 ti._expandable = true;
             }
 
+            System.out.println("Step 2:");
             Iterator iterator = focus.getChildren();
             if (iterator == null) {
                 hmap.put(ti._code, ti);
+
+
+                System.out.println("iterator == null:");
+
+
                 return hmap;
             }
 
@@ -1290,14 +1328,28 @@ public class CacheController {
                     hset.add(child.getCui());
                 }
             }
-        } catch (Exception e) {
+            System.out.println("Step 3:");
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        v = SortUtils.quickSort(v);
-        for (int i = 0; i < v.size(); i++) {
-            TreeItem childItem = (TreeItem) v.elementAt(i);
-            ti.addChild(childNavText, childItem);
-        }
+
+        if (v != null) {
+
+            System.out.println("v.size: " + v.size());
+
+			v = SortUtils.quickSort(v);
+			for (int i = 0; i < v.size(); i++) {
+				TreeItem childItem = (TreeItem) v.elementAt(i);
+				ti.addChild(childNavText, childItem);
+			}
+
+	    } else {
+			System.out.println("v == NULL ???" );
+
+		}
+
+
         if (ti != null) {
         	hmap.put(ti._code, ti);
 		}
@@ -1306,6 +1358,12 @@ public class CacheController {
 
     public JSONArray getSourceRoots(String scheme, String version, String sab,
         boolean fromCache) {
+
+System.out.println("getSourceRoots scheme " + scheme);
+System.out.println("getSourceRoots version " + version);
+System.out.println("getSourceRoots sab " + sab);
+
+
         HashMap map = null;
         String key = scheme + "$" + version + "$" + sab;
         JSONArray nodeArray = null;
@@ -1321,10 +1379,27 @@ public class CacheController {
 
             ResolvedConceptReference src_root =
                 util.getRootInSRC(scheme, version, sab);
+
+if (src_root == null) {
+	System.out.println("SourceTreeUtils getRootInSRC returns src_root == null");
+}
+
+
             if (src_root == null)
                 return null;
 
+System.out.println(sab);
+System.out.println(src_root.getConceptCode());
+
+
             map = getSourceRoots(src_root.getConceptCode(), sab);
+
+            if (map == null) {
+				System.out.println("getSourceRoots returns NULL??? " );
+
+			}
+
+
             nodeArray = HashMap2JSONArray(map);
             if (fromCache) {
                 try {

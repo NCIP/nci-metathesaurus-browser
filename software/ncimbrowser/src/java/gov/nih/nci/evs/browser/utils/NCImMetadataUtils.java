@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.browser.utils;
+import gov.nih.nci.evs.browser.utils.*;
 
 import java.util.*;
 
@@ -88,13 +88,13 @@ public class NCImMetadataUtils {
 
     private static Vector _propertyDescriptionsVec = null;
 
-    public static boolean isMetadataAvailable() {
+    public boolean isMetadataAvailable() {
         if (_formalName2MetadataHashMap == null)
             return false;
         return true;
     }
 
-    public static HashMap getFormalName2MetadataHashMap() {
+    public HashMap getFormalName2MetadataHashMap() {
         if (_formalName2MetadataHashMap == null) {
             initialize();
         }
@@ -103,7 +103,14 @@ public class NCImMetadataUtils {
 
 
     public static Vector getMetadataForCodingSchemes() {
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+        return getMetadataForCodingSchemes(null);
+    }
+
+    public static Vector getMetadataForCodingSchemes(LexBIGService lbs) {
+		Vector w = new Vector();
+        if (lbs == null) {
+        	lbs = RemoteServerUtil.createLexBIGService();
+		}
         LexBIGServiceMetadata lbsm = null;
         MetadataPropertyList mdpl = null;
 
@@ -137,8 +144,6 @@ public class NCImMetadataUtils {
         }
 
         Vector v2 = getMetadataCodingSchemeNames(mdpl);
-        Vector w = new Vector();
-
         if (v != null) {
 			for (int i = 0; i < v.size(); i++) {
 				String name = (String) v.get(i);
@@ -147,7 +152,6 @@ public class NCImMetadataUtils {
 			}
 			w = SortUtils.quickSort(w);
 	    }
-
         return w;
     }
 
@@ -162,7 +166,7 @@ public class NCImMetadataUtils {
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static Vector getTermTypeDescriptionMetaData(String uri,
+    public Vector getTermTypeDescriptionMetaData(String uri,
         String version) {
 
         Map<String, String> map = null;
@@ -186,7 +190,7 @@ public class NCImMetadataUtils {
         }
     }
 
-    private static Map<String, String> getTtyExpandedForm(String uri,
+    private Map<String, String> getTtyExpandedForm(String uri,
         String version) throws Exception {
         Map<String, String> ttys = new HashMap<String, String>();
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -224,7 +228,7 @@ public class NCImMetadataUtils {
 
 
 
-    public static Vector getMetadataNameValuePairs(String codingSchemeName, String version, String urn) {
+    public Vector getMetadataNameValuePairs(String codingSchemeName, String version, String urn) {
 		/*
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         if (version == null) {
@@ -240,7 +244,7 @@ public class NCImMetadataUtils {
 
     }
 
-    public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl,
+    public Vector getMetadataNameValuePairs(MetadataPropertyList mdpl,
         boolean sort) {
         if (mdpl == null)
             return null;
@@ -256,11 +260,11 @@ public class NCImMetadataUtils {
         return v;
     }
 
-    public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl) {
+    public Vector getMetadataNameValuePairs(MetadataPropertyList mdpl) {
         return getMetadataNameValuePairs(mdpl, true);
     }
 
-    public static Vector getMetadataValues(Vector metadata, String propertyName) {
+    public Vector getMetadataValues(Vector metadata, String propertyName) {
         if (metadata == null)
             return null;
         Vector w = new Vector();
@@ -279,7 +283,7 @@ public class NCImMetadataUtils {
 
 
 
-    public static Vector getMetadataValues(String codingSchemeName,
+    public Vector getMetadataValues(String codingSchemeName,
         String version, String urn, String propertyName, boolean sort) {
 			/*
 
@@ -297,13 +301,13 @@ public class NCImMetadataUtils {
         return getMetadataPropertyValues(codingSchemeName, version, urn, propertyName, sort);
     }
 
-    public static Vector getMetadataValues(String codingSchemeName,
+    public Vector getMetadataValues(String codingSchemeName,
         String version, String urn, String propertyName) {
         return getMetadataValues(codingSchemeName, version, urn, propertyName,
             true);
     }
 
-    public static String getMetadataValue(String codingSchemeName,
+    public String getMetadataValue(String codingSchemeName,
         String version, String urn, String propertyName) {
 	    Vector v = getMetadataPropertyValues(codingSchemeName, version, urn, propertyName, true);
 
@@ -353,7 +357,7 @@ public class NCImMetadataUtils {
     }
 
 
-    public static MetadataPropertyList getMetadataPropertyList(
+    public MetadataPropertyList getMetadataPropertyList(
         LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
         LexBIGServiceConvenienceMethods lbscm = null;
         MetadataPropertyList mdpl = null;
@@ -381,12 +385,12 @@ public class NCImMetadataUtils {
     // //////////////////////////////////////////////////////////////////////////////////////////////
     // local name to formal name mapping
 
-    public static Vector<String> parseData(String line) {
+    public Vector<String> parseData(String line) {
         String tab = "|";
         return parseData(line, tab);
     }
 
-    public static Vector<String> parseData(String line, String tab) {
+    public Vector<String> parseData(String line, String tab) {
         Vector data_vec = new Vector();
         StringTokenizer st = new StringTokenizer(line, tab);
         while (st.hasMoreTokens()) {
@@ -399,14 +403,14 @@ public class NCImMetadataUtils {
     }
 
     // For term browse mapping use:
-    public static HashMap getSAB2FormalNameHashMap() {
+    public HashMap getSAB2FormalNameHashMap() {
         if (_sab2FormalNameHashMap == null) {
             initialize();
         }
         return _sab2FormalNameHashMap;
     }
 
-    public static String getSABFormalName(String sab) {
+    public String getSABFormalName(String sab) {
 		/*
         if (_sab2FormalNameHashMap == null) {
             initialize();
@@ -418,7 +422,7 @@ public class NCImMetadataUtils {
         }
         return (String) _sab2FormalNameHashMap.get(sab);    }
 
-    public static String getSABDefinition(String sab) {
+    public String getSABDefinition(String sab) {
         if (_sab2DefinitionHashMap == null) {
             //initialize();
             return null;
@@ -426,7 +430,7 @@ public class NCImMetadataUtils {
         return (String) _sab2DefinitionHashMap.get(sab);
     }
 
-    public static String getFormalName(String localname) {
+    public String getFormalName(String localname) {
         try {
             String formalname =
                 (String) _localname2FormalnameHashMap.get(localname);
@@ -437,12 +441,12 @@ public class NCImMetadataUtils {
         return null;
     }
 
-    public static void initialize() {
+    public void initialize() {
 
 	}
 
 
-	private static boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
+	private boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
 		for (Property prop: cs.getProperties().getProperty()) {
 			if (prop.getPropertyName().equalsIgnoreCase(LexEVSValueSetDefinitionServices.RESOLVED_AGAINST_CODING_SCHEME_VERSION)) {
 				return true;
@@ -451,7 +455,7 @@ public class NCImMetadataUtils {
 		return false;
 	}
 
-    static {
+    {
         //if (_sab2FormalNameHashMap != null)
         //    return;
 
@@ -466,7 +470,8 @@ public class NCImMetadataUtils {
 
         int vocabulary_count = 0;
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
+            //LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(true);
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             /*
             if (lbSvc == null) {
                 _logger
@@ -604,18 +609,18 @@ public class NCImMetadataUtils {
 				_sab2DefinitionHashMap.put(abbr, def);
 			}
 	    }
-        DataUtils.setFormalName2MetadataHashMap(_formalName2MetadataHashMap);
+        //DataUtils.setFormalName2MetadataHashMap(_formalName2MetadataHashMap);
         //return;
     }
 
-    public static NameAndValue createNameAndValue(String name, String value) {
+    public NameAndValue createNameAndValue(String name, String value) {
         NameAndValue nv = new NameAndValue();
         nv.setName(name);
         nv.setContent(value);
         return nv;
     }
 
-    public static NameAndValue[] getMetadataProperties(CodingScheme cs) {
+    public NameAndValue[] getMetadataProperties(CodingScheme cs) {
         String cs_urn = cs.getCodingSchemeURI();
         String version = cs.getRepresentsVersion();
         Vector<NameAndValue> v = new Vector<NameAndValue>();
@@ -662,7 +667,7 @@ public class NCImMetadataUtils {
 
     }
 
-    static {
+    {
         try {
 			String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
 
@@ -712,7 +717,7 @@ public class NCImMetadataUtils {
 
 
 
-    public static Vector getPropertyDescriptions() {
+    public Vector getPropertyDescriptions() {
         return _propertyDescriptionsVec;
     }
 
@@ -737,7 +742,7 @@ public class NCImMetadataUtils {
 		return cs;
 	}
 
-    public static String getVocabularyVersionByTag(String codingSchemeName,
+    public String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
 
         if (codingSchemeName == null)
@@ -793,7 +798,7 @@ public class NCImMetadataUtils {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static Vector nameAndValue2Vector(NameAndValue[] nvList) {
+    public Vector nameAndValue2Vector(NameAndValue[] nvList) {
         if (nvList == null) return null;
         Vector v = new Vector();
 		for (int k=0; k<nvList.length; k++) {
@@ -804,13 +809,13 @@ public class NCImMetadataUtils {
 	}
 
 
-    public static NameAndValue[] getMetadataPropertyNameAndValueList(String codingSchemeName, String version, String urn) {
+    public NameAndValue[] getMetadataPropertyNameAndValueList(String codingSchemeName, String version, String urn) {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         return getMetadataPropertyNameAndValueList(lbSvc, codingSchemeName, version, urn);
 	}
 
 
-    public static NameAndValue[] getMetadataPropertyNameAndValueList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
+    public NameAndValue[] getMetadataPropertyNameAndValueList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
         MetadataPropertyList mdpl = null;
@@ -857,13 +862,13 @@ public class NCImMetadataUtils {
 	}
 
 
-    public static Vector getMetadataPropertyValues(String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
+    public Vector getMetadataPropertyValues(String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         return getMetadataPropertyValues(lbSvc, codingSchemeName, version, urn, propertyName, sort);
 	}
 
 
-    public static Vector getMetadataPropertyValues(LexBIGService lbSvc, String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
+    public Vector getMetadataPropertyValues(LexBIGService lbSvc, String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
 		if (propertyName == null) return null;
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
@@ -910,29 +915,5 @@ public class NCImMetadataUtils {
      * @param args
      * @throws Exception
      */
-     /*
-    public static void main(String[] args) throws Exception {
-        MetadataUtils test = new MetadataUtils();
-        String serviceUrl = "http://ncias-d488-v.nci.nih.gov:29080/lexevsapi60";
-
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService(serviceUrl);
-
-        if (lbSvc == null) {
-            _logger.info("Unable to connect to " + serviceUrl);
-            System.exit(1);
-        } else {
-            _logger.info("Connected to " + serviceUrl);
-        }
-
-        Vector v = test.getMetadataForCodingSchemes();
-        for (int i = 0; i < v.size(); i++) {
-            String t = (String) v.elementAt(i);
-            _logger.info(t);
-        }
-    }
-    */
-
-
-
 
 }
