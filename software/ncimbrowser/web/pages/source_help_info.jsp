@@ -146,7 +146,7 @@ Additional information on many of these sources can be found on related pages.
             <%
               String propertyName = "son";//"formalName";
               //Vector abbr_vec = new NCImMetadataUtils().getMetadataForCodingSchemes(Constants.CODING_SCHEME_NAME, propertyName);
-              Vector abbr_vec = new NCImMetadataUtils().getMetadataForCodingSchemes();
+              Vector abbr_vec = NCImMetadataUtils.getMetadataForCodingSchemes();
               String prev_t = "";
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
