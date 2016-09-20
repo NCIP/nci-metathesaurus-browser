@@ -1,4 +1,4 @@
-import gov.nih.nci.evs.browser.utils.*;
+package gov.nih.nci.evs.browser.utils;
 
 import java.util.*;
 
@@ -94,7 +94,7 @@ public class NCImMetadataUtils {
         return true;
     }
 
-    public HashMap getFormalName2MetadataHashMap() {
+    public static HashMap getFormalName2MetadataHashMap() {
         if (_formalName2MetadataHashMap == null) {
             initialize();
         }
@@ -410,7 +410,7 @@ public class NCImMetadataUtils {
         return _sab2FormalNameHashMap;
     }
 
-    public String getSABFormalName(String sab) {
+    public static String getSABFormalName(String sab) {
 		/*
         if (_sab2FormalNameHashMap == null) {
             initialize();
@@ -430,7 +430,7 @@ public class NCImMetadataUtils {
         return (String) _sab2DefinitionHashMap.get(sab);
     }
 
-    public String getFormalName(String localname) {
+    public static String getFormalName(String localname) {
         try {
             String formalname =
                 (String) _localname2FormalnameHashMap.get(localname);
@@ -441,7 +441,7 @@ public class NCImMetadataUtils {
         return null;
     }
 
-    public void initialize() {
+    public static void initialize() {
 
 	}
 
