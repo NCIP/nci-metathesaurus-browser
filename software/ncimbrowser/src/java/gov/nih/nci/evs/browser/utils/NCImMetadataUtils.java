@@ -88,7 +88,7 @@ public class NCImMetadataUtils {
 
     private static Vector _propertyDescriptionsVec = null;
 
-    public boolean isMetadataAvailable() {
+    public static boolean isMetadataAvailable() {
         if (_formalName2MetadataHashMap == null)
             return false;
         return true;
@@ -166,7 +166,7 @@ public class NCImMetadataUtils {
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public Vector getTermTypeDescriptionMetaData(String uri,
+    public static Vector getTermTypeDescriptionMetaData(String uri,
         String version) {
 
         Map<String, String> map = null;
@@ -190,7 +190,7 @@ public class NCImMetadataUtils {
         }
     }
 
-    private Map<String, String> getTtyExpandedForm(String uri,
+    private static Map<String, String> getTtyExpandedForm(String uri,
         String version) throws Exception {
         Map<String, String> ttys = new HashMap<String, String>();
         LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -228,7 +228,7 @@ public class NCImMetadataUtils {
 
 
 
-    public Vector getMetadataNameValuePairs(String codingSchemeName, String version, String urn) {
+    public static Vector getMetadataNameValuePairs(String codingSchemeName, String version, String urn) {
 		/*
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         if (version == null) {
@@ -244,7 +244,7 @@ public class NCImMetadataUtils {
 
     }
 
-    public Vector getMetadataNameValuePairs(MetadataPropertyList mdpl,
+    public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl,
         boolean sort) {
         if (mdpl == null)
             return null;
@@ -260,11 +260,11 @@ public class NCImMetadataUtils {
         return v;
     }
 
-    public Vector getMetadataNameValuePairs(MetadataPropertyList mdpl) {
+    public static Vector getMetadataNameValuePairs(MetadataPropertyList mdpl) {
         return getMetadataNameValuePairs(mdpl, true);
     }
 
-    public Vector getMetadataValues(Vector metadata, String propertyName) {
+    public static Vector getMetadataValues(Vector metadata, String propertyName) {
         if (metadata == null)
             return null;
         Vector w = new Vector();
@@ -283,7 +283,7 @@ public class NCImMetadataUtils {
 
 
 
-    public Vector getMetadataValues(String codingSchemeName,
+    public static Vector getMetadataValues(String codingSchemeName,
         String version, String urn, String propertyName, boolean sort) {
 			/*
 
@@ -301,13 +301,13 @@ public class NCImMetadataUtils {
         return getMetadataPropertyValues(codingSchemeName, version, urn, propertyName, sort);
     }
 
-    public Vector getMetadataValues(String codingSchemeName,
+    public static Vector getMetadataValues(String codingSchemeName,
         String version, String urn, String propertyName) {
         return getMetadataValues(codingSchemeName, version, urn, propertyName,
             true);
     }
 
-    public String getMetadataValue(String codingSchemeName,
+    public static String getMetadataValue(String codingSchemeName,
         String version, String urn, String propertyName) {
 	    Vector v = getMetadataPropertyValues(codingSchemeName, version, urn, propertyName, true);
 
@@ -339,7 +339,7 @@ public class NCImMetadataUtils {
         return buffer.toString();
     }
 
-    public Vector getSupportedVocabularyMetadataValues(String propertyName) {
+    public static Vector getSupportedVocabularyMetadataValues(String propertyName) {
         String scheme = Constants.CODING_SCHEME_NAME;
         String version = null;
         String urn = null;
@@ -357,7 +357,7 @@ public class NCImMetadataUtils {
     }
 
 
-    public MetadataPropertyList getMetadataPropertyList(
+    public static MetadataPropertyList getMetadataPropertyList(
         LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
         LexBIGServiceConvenienceMethods lbscm = null;
         MetadataPropertyList mdpl = null;
@@ -385,12 +385,12 @@ public class NCImMetadataUtils {
     // //////////////////////////////////////////////////////////////////////////////////////////////
     // local name to formal name mapping
 
-    public Vector<String> parseData(String line) {
+    public static Vector<String> parseData(String line) {
         String tab = "|";
         return parseData(line, tab);
     }
 
-    public Vector<String> parseData(String line, String tab) {
+    public static Vector<String> parseData(String line, String tab) {
         Vector data_vec = new Vector();
         StringTokenizer st = new StringTokenizer(line, tab);
         while (st.hasMoreTokens()) {
@@ -403,7 +403,7 @@ public class NCImMetadataUtils {
     }
 
     // For term browse mapping use:
-    public HashMap getSAB2FormalNameHashMap() {
+    public static HashMap getSAB2FormalNameHashMap() {
         if (_sab2FormalNameHashMap == null) {
             initialize();
         }
@@ -446,7 +446,7 @@ public class NCImMetadataUtils {
 	}
 
 
-	private boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
+	private static boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
 		for (Property prop: cs.getProperties().getProperty()) {
 			if (prop.getPropertyName().equalsIgnoreCase(LexEVSValueSetDefinitionServices.RESOLVED_AGAINST_CODING_SCHEME_VERSION)) {
 				return true;
@@ -613,14 +613,14 @@ public class NCImMetadataUtils {
         //return;
     }
 
-    public NameAndValue createNameAndValue(String name, String value) {
+    public static NameAndValue createNameAndValue(String name, String value) {
         NameAndValue nv = new NameAndValue();
         nv.setName(name);
         nv.setContent(value);
         return nv;
     }
 
-    public NameAndValue[] getMetadataProperties(CodingScheme cs) {
+    public static NameAndValue[] getMetadataProperties(CodingScheme cs) {
         String cs_urn = cs.getCodingSchemeURI();
         String version = cs.getRepresentsVersion();
         Vector<NameAndValue> v = new Vector<NameAndValue>();
@@ -717,7 +717,7 @@ public class NCImMetadataUtils {
 
 
 
-    public Vector getPropertyDescriptions() {
+    public static Vector getPropertyDescriptions() {
         return _propertyDescriptionsVec;
     }
 
@@ -742,7 +742,7 @@ public class NCImMetadataUtils {
 		return cs;
 	}
 
-    public String getVocabularyVersionByTag(String codingSchemeName,
+    public static String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
 
         if (codingSchemeName == null)
@@ -798,7 +798,7 @@ public class NCImMetadataUtils {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Vector nameAndValue2Vector(NameAndValue[] nvList) {
+    public static Vector nameAndValue2Vector(NameAndValue[] nvList) {
         if (nvList == null) return null;
         Vector v = new Vector();
 		for (int k=0; k<nvList.length; k++) {
@@ -809,13 +809,13 @@ public class NCImMetadataUtils {
 	}
 
 
-    public NameAndValue[] getMetadataPropertyNameAndValueList(String codingSchemeName, String version, String urn) {
+    public static NameAndValue[] getMetadataPropertyNameAndValueList(String codingSchemeName, String version, String urn) {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         return getMetadataPropertyNameAndValueList(lbSvc, codingSchemeName, version, urn);
 	}
 
 
-    public NameAndValue[] getMetadataPropertyNameAndValueList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
+    public static NameAndValue[] getMetadataPropertyNameAndValueList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
         MetadataPropertyList mdpl = null;
@@ -862,13 +862,13 @@ public class NCImMetadataUtils {
 	}
 
 
-    public Vector getMetadataPropertyValues(String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
+    public static Vector getMetadataPropertyValues(String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         return getMetadataPropertyValues(lbSvc, codingSchemeName, version, urn, propertyName, sort);
 	}
 
 
-    public Vector getMetadataPropertyValues(LexBIGService lbSvc, String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
+    public static Vector getMetadataPropertyValues(LexBIGService lbSvc, String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
 		if (propertyName == null) return null;
 		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
