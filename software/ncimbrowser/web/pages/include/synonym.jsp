@@ -10,6 +10,11 @@
 
 <%
   HashMap hmap = NCImMetadataUtils.getSAB2FormalNameHashMap();
+  
+  if (hmap == null) {
+      System.out.println("NCImMetadataUtils.getSAB2FormalNameHashMap() returns NULL????????");
+  }
+  
   String entry_type_syn = type;
   String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 
@@ -128,16 +133,17 @@
             String term_browser_formalname = null;
             String term_source_code = (String) synonym_data.elementAt(3);
 
-            if (term_source != null
+            if (hmap != null && term_source != null
                 && term_source.compareTo("") != 0
                 && term_source.compareTo("null") != 0
                 && term_source_code != null
                 && term_source_code.compareTo("") != 0
                 && term_source_code.compareTo("null") != 0
                 && hmap.containsKey(term_source)) {
+                
                 term_browser_formalname = (String) hmap.get(term_source);
             }
-
+           
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             
 	    boolean licenseAgreementAccepted = false;
