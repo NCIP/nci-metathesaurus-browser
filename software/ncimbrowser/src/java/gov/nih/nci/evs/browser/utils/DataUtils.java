@@ -2017,6 +2017,7 @@ public class DataUtils {
         return _ncitURL;
     }
 
+
     public String getLexVersion() {
         if (_lexevs_version != null) {
             return _lexevs_version;

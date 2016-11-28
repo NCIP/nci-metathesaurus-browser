@@ -9,7 +9,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%
   String ncit_url = new DataUtils().getNCItURL();
-  String lexevs_version = new DataUtils().getLexVersion();
+  DataUtils du = new DataUtils();
+  String lexevs_version = du.getLexVersion();
+  String ncim_application_version = du.getApplicationVersion();
 %>
 <html xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
@@ -76,8 +78,8 @@
           is for the retrieval of concepts from the NCI Metathesaurus, and for viewing the contents, structure,
           and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
           user community. 
-          
-          This 2.7 release uses the new LexEVS 6.3 terminology server without significant changes that would affect users. 
+
+          This <%=ncim_application_version%> release uses the new LexEVS <%=lexevs_version%> terminology server without significant changes that would affect users. 
 
  			The Search box separates Name and Code search, search performance 
 			is better, and Advanced Search offers new 
