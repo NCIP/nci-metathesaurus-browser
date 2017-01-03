@@ -28,10 +28,10 @@
   <hr/>
   <table border="0">
     <tr>
-      <td class="textbody">
+      <td class="textbody" valign="top" width="70%">
         <%=html_compatable_description_value%>
       </td>
-      <td valign="top">
+      <td valign="top" width="30%">
         <table border="0">
           <tr valign="top">
             <td width="10px"></td>
