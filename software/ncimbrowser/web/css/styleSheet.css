@@ -185,6 +185,7 @@ h3
  font-size: 10px;
  font-weight: bold;
  color: #2F2F5F;
+ white-space: nowrap;
 }
 
 .texttitle-blue
@@ -692,5 +693,4 @@ h3
  color: #444444;
  word-wrap: break-word;
 }
-
 
