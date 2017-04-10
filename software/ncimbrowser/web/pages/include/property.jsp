@@ -298,7 +298,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     if (presentation_hset.contains(propName)) {
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
-      value_vec = SortUtils.quickSort(value_vec);
+      value_vec = new SortUtils().quickSort(value_vec);
 
       if (value_vec != null && value_vec.size() > 0) {
         HashSet hset2 = new HashSet();
@@ -436,7 +436,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
  	  prop_name = (String) thisEntry.getKey();
           key_vec.add(prop_name);
       }
-      key_vec = SortUtils.quickSort(key_vec);
+      key_vec = new SortUtils().quickSort(key_vec);
 
       n = 0;
       displayed_properties.add("textualPresentation");
@@ -538,7 +538,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
                 </tr>
             <%
           } else {
-            value_vec = SortUtils.quickSort(value_vec);
+            value_vec = new SortUtils().quickSort(value_vec);
             for (int j=0; j<value_vec.size(); j++) {
               String value = (String) value_vec.elementAt(j);
 

@@ -167,7 +167,7 @@ public class MetaTreeUtils {
      * rcrl = getSourceRoots(sab); for (int i=0;
      * i<rcrl.getResolvedConceptReferenceCount(); i++) {
      * ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
-     * list.add(rcr); } SortUtils.quickSort(list); return list; } catch
+     * list.add(rcr); } new SortUtils().quickSort(list); return list; } catch
      * (Exception ex) {
      *
      * } return new ArrayList(); }
@@ -196,7 +196,7 @@ public class MetaTreeUtils {
                     list.add(rcr);
                 }
             }
-            SortUtils.quickSort(list);
+            new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
 
@@ -2166,7 +2166,7 @@ public class MetaTreeUtils {
             }
             w.add(sub);
         }
-        w = SortUtils.quickSort(w);
+        w = new SortUtils().quickSort(w);
 
         /*
          * for (int i=0; i<w.size(); i++) { TreeItem sub = (TreeItem)
@@ -2300,7 +2300,7 @@ public class MetaTreeUtils {
          * hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
          * w.add(sub); }
          */
-        w = SortUtils.quickSort(w);
+        w = new SortUtils().quickSort(w);
         boolean include = false;
         int istart = 0;
         if (subconcept_code != null) {

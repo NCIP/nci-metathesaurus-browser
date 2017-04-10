@@ -285,7 +285,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -371,7 +371,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
 
     }
@@ -504,7 +504,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -621,7 +621,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getRootConceptNamesAndCodes: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -1547,7 +1547,7 @@ public class SourceTreeUtils {
                     list.add(rcr);
                 }
             }
-            SortUtils.quickSort(list);
+            new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
 
@@ -1972,7 +1972,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        // SortUtils.quickSort(list);
+        // new SortUtils().quickSort(list);
         return list;
     }
 
@@ -2039,7 +2039,7 @@ public class SourceTreeUtils {
         } catch (Exception e) {
 
         }
-        v = SortUtils.quickSort(v);
+        v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
             TreeItem childItem = (TreeItem) v.elementAt(i);
             ti.addChild(childNavText, childItem);
@@ -2112,7 +2112,7 @@ public class SourceTreeUtils {
             return;
         }
 
-        sources = SortUtils.quickSort(sources);
+        sources = new SortUtils().quickSort(sources);
         System.out.println("sources.size(): " + sources.size());
 
         int max = sources.size();

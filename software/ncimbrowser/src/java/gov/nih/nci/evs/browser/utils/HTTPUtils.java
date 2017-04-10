@@ -252,7 +252,7 @@ public class HTTPUtils {
 
             HttpSession session = request.getSession();
             Enumeration<?> enumeration =
-                SortUtils.sort(session.getAttributeNames());
+                new SortUtils().sort(session.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -276,7 +276,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getAttributeNames());
+                new SortUtils().sort(request.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -300,7 +300,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -325,7 +325,7 @@ public class HTTPUtils {
 
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -470,7 +470,7 @@ public class HTTPUtils {
 		String value = null;
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
 			    if (name.compareTo("view") == 0) {

@@ -349,7 +349,7 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This 2.7 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
+          This 2.8 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
           addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 

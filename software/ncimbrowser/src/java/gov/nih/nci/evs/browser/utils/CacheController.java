@@ -280,7 +280,7 @@ System.out.println(	"getRootConcepts: version " + version);
                 list =
                     (new MetaTreeUtils(lbSvc)).getSourceHierarchyRoots(scheme, csvt,
                         NCI_SOURCE);
-                // SortUtils.quickSort(list);
+                // new SortUtils().quickSort(list);
 
                 if (list == null) {
 					System.out.println("getSourceHierarchyRoots returns null???");
@@ -608,7 +608,7 @@ System.out.println(	"getRootConcepts: version " + version);
         } catch (Exception e) {
 
         }
-        v = SortUtils.quickSort(v);
+        v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
             TreeItem childItem = (TreeItem) v.elementAt(i);
             ti.addChild(childNavText, childItem);
@@ -741,7 +741,7 @@ System.out.println(	"getRootConcepts: version " + version);
             }
 
             if (v.size() > 0) {
-                v = SortUtils.quickSort(v);
+                v = new SortUtils().quickSort(v);
                 for (int i = 0; i < v.size(); i++) {
                     TreeItem childItem = (TreeItem) v.elementAt(i);
                     ti.addChild(childNavText, childItem);
@@ -799,7 +799,7 @@ System.out.println(	"getRootConcepts: version " + version);
 				}
 				childNodes.add(childItem);
 			}
-			childNodes = SortUtils.quickSort(childNodes);
+			childNodes = new SortUtils().quickSort(childNodes);
 
             ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
@@ -897,7 +897,7 @@ System.out.println(	"getRootConcepts: version " + version);
             }
 
             if (v.size() > 0) {
-                v = SortUtils.quickSort(v);
+                v = new SortUtils().quickSort(v);
                 for (int i = 0; i < v.size(); i++) {
                     TreeItem childItem = (TreeItem) v.elementAt(i);
                     ti.addChild(childNavText, childItem);
@@ -995,7 +995,7 @@ System.out.println(	"getRootConcepts: version " + version);
             for (String association : ti._assocToChildMap.keySet()) {
                 List<TreeItem> children = ti._assocToChildMap.get(association);
 
-                SortUtils.quickSort(children);
+                new SortUtils().quickSort(children);
                 TreeItem firstChildren = (TreeItem) children.get(0);
                 if (firstChildren._text.startsWith("...")) {
 					firstChildren = children.remove(0);
@@ -1154,7 +1154,7 @@ System.out.println(	"getRootConcepts: version " + version);
             List<TreeItem> children = ti._assocToChildMap.get(association);
 
             // KLO 020410
-            SortUtils.quickSort(children);
+            new SortUtils().quickSort(children);
 
             int cut_off = 200;
             int m = cut_off / 2;
@@ -1338,7 +1338,7 @@ System.out.println(	"getRootConcepts: version " + version);
 
             System.out.println("v.size: " + v.size());
 
-			v = SortUtils.quickSort(v);
+			v = new SortUtils().quickSort(v);
 			for (int i = 0; i < v.size(); i++) {
 				TreeItem childItem = (TreeItem) v.elementAt(i);
 				ti.addChild(childNavText, childItem);

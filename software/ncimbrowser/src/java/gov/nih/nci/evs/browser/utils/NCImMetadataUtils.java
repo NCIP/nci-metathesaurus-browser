@@ -150,7 +150,7 @@ public class NCImMetadataUtils {
 				String value = (String) v2.get(i);
 				w.add(name + "|" + value);
 			}
-			w = SortUtils.quickSort(w);
+			w = new SortUtils().quickSort(w);
 	    }
         return w;
     }
@@ -183,7 +183,7 @@ public class NCImMetadataUtils {
 				String value = (String) thisEntry.getValue();
                 v.add(key + "|" + value);
             }
-            v = SortUtils.quickSort(v);
+            v = new SortUtils().quickSort(v);
             return v;
         } catch (Exception ex) {
             return null;
@@ -256,7 +256,7 @@ public class NCImMetadataUtils {
             v.add(t);
         }
         if (sort)
-            return SortUtils.quickSort(v);
+            return new SortUtils().quickSort(v);
         return v;
     }
 
@@ -550,7 +550,7 @@ public class NCImMetadataUtils {
                 }
             }
             _propertyDescriptionsVec =
-                SortUtils.quickSort(_propertyDescriptionsVec);
+                new SortUtils().quickSort(_propertyDescriptionsVec);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -746,7 +746,7 @@ public class NCImMetadataUtils {
 			ex.printStackTrace();
 		}
 		if (sort) {
-			v = SortUtils.quickSort(v);
+			v = new SortUtils().quickSort(v);
 		}
 		return v;
 	}

@@ -470,7 +470,7 @@ public class DataUtils {
 						}
 					}
 
-            		_sourceListData = SortUtils.quickSort(_sourceListData);
+            		_sourceListData = new SortUtils().quickSort(_sourceListData);
 				}
 			}
         } catch (Exception ex) {
@@ -517,7 +517,7 @@ public class DataUtils {
                 _sourceListData.add(source.getLocalId());
             }
 
-            _sourceListData = SortUtils.quickSort(_sourceListData);
+            _sourceListData = new SortUtils().quickSort(_sourceListData);
 
             return _sourceListData;
         } catch (Exception ex) {
@@ -716,7 +716,7 @@ public class DataUtils {
         if (superconcept_vec == null)
             return null;
             */
-        // SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
+        // new SortUtils().quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
         return superconcept_vec;
 
     }
@@ -770,7 +770,7 @@ public class DataUtils {
                         }
                     }
                 }
-                SortUtils.quickSort(v);
+                new SortUtils().quickSort(v);
             }
 
         } catch (Exception ex) {
@@ -1499,25 +1499,25 @@ public class DataUtils {
             }
 
             if (roleList.size() > 0) {
-                SortUtils.quickSort(roleList);
+                new SortUtils().quickSort(roleList);
             }
 
             if (associationList.size() > 0) {
                 // KLO, 052909
                 associationList =
                     removeRedundantRelationships(associationList, "RO");
-                SortUtils.quickSort(associationList);
+                new SortUtils().quickSort(associationList);
             }
 
             if (siblingList.size() > 0) {
-                SortUtils.quickSort(siblingList);
+                new SortUtils().quickSort(siblingList);
             }
             if (btList.size() > 0) {
-                SortUtils.quickSort(btList);
+                new SortUtils().quickSort(btList);
             }
 
             if (ntList.size() > 0) {
-                SortUtils.quickSort(ntList);
+                new SortUtils().quickSort(ntList);
             }
 
             map.put(TYPE_ROLE, roleList);
@@ -1534,7 +1534,7 @@ public class DataUtils {
                 superconceptList.add(pt + "|" + c.getEntityCode());
             }
 
-            SortUtils.quickSort(superconceptList);
+            new SortUtils().quickSort(superconceptList);
             map.put(TYPE_SUPERCONCEPT, superconceptList);
 
             Vector subconcept_vec = getSubconcepts(scheme, version, code);
@@ -1544,7 +1544,7 @@ public class DataUtils {
                 String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
             }
-            SortUtils.quickSort(subconceptList);
+            new SortUtils().quickSort(subconceptList);
             map.put(TYPE_SUBCONCEPT, subconceptList);
 
         } catch (Exception ex) {
@@ -1768,7 +1768,7 @@ public class DataUtils {
         ResolvedConceptReferenceList roots =
             lbscm.getHierarchyRoots(scheme, csvt, hierarchyID);
         List list = resolvedConceptReferenceList2List(roots);
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -1848,7 +1848,7 @@ public class DataUtils {
                 v.add(t);
             }
         }
-        SortUtils.quickSort(v);
+        new SortUtils().quickSort(v);
         return v;
     }
 
@@ -2063,7 +2063,7 @@ public class DataUtils {
                 source_vec.add(src);
             }
         }
-        SortUtils.quickSort(source_vec);
+        new SortUtils().quickSort(source_vec);
         return source_vec;
     }
 
@@ -2114,7 +2114,7 @@ public class DataUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        SortUtils.quickSort(v);
+        new SortUtils().quickSort(v);
         return v;
 
     }
@@ -2160,7 +2160,7 @@ public class DataUtils {
             hmap.put(key, s);
             key_vec.add(key);
         }
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -2768,7 +2768,7 @@ public class DataUtils {
 
         u = removeRedundantRecords(u);
 
-        SortUtils.quickSort(u);
+        new SortUtils().quickSort(u);
         action = "initial sorting";
         delay = System.currentTimeMillis() - ms_sort_delay;
         Debug.println("Run time (ms) for " + action + " " + delay);
@@ -2861,7 +2861,7 @@ public class DataUtils {
             hmap.put(key, s);
             key_vec.add(key);
         }
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -2938,7 +2938,7 @@ public class DataUtils {
             key_vec.add(key);
         }
 
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -3097,11 +3097,11 @@ public class DataUtils {
      * // Sort relationships by sort options (columns) if (sort_option == null)
      * { for (int k = 0; k < category_vec.size(); k++) { String category =
      * (String) category_vec.elementAt(k); w = (Vector) rel_hmap.get(category);
-     * SortUtils.quickSort(w); rel_hmap.put(category, w); } } else { for (int k
+     * new SortUtils().quickSort(w); rel_hmap.put(category, w); } } else { for (int k
      * = 0; k < category_vec.size(); k++) { String category = (String)
      * category_vec.elementAt(k); w = (Vector) rel_hmap.get(category); String
      * sortOption = (String) sort_option.elementAt(k); //
-     * SortUtils.quickSort(w); w = sortRelationshipData(w, sortOption);
+     * new SortUtils().quickSort(w); w = sortRelationshipData(w, sortOption);
      * rel_hmap.put(category, w); } } delay = System.currentTimeMillis() - ms;
      * Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -3408,7 +3408,7 @@ public class DataUtils {
                 String category = (String) category_vec.elementAt(k);
                 w = (HashSet) rel_hmap.get(category);
                 Vector rel_v = hashSet2Vector(w);
-                SortUtils.quickSort(rel_v);
+                new SortUtils().quickSort(rel_v);
                 new_rel_hmap.put(category, rel_v);
             }
         } else {
@@ -3928,7 +3928,7 @@ public class DataUtils {
 
         long ms_sort_delay = System.currentTimeMillis();
         u = removeRedundantRecords(u);
-        SortUtils.quickSort(u);
+        new SortUtils().quickSort(u);
         action = "Initial sorting";
         delay = System.currentTimeMillis() - ms_sort_delay;
         Debug.println("Run time (ms) for " + action + " " + delay);
@@ -4459,7 +4459,7 @@ public class DataUtils {
                         }
                     }
                 }
-                SortUtils.quickSort(v);
+                new SortUtils().quickSort(v);
             }
 
         } catch (Exception ex) {
@@ -4748,14 +4748,14 @@ public class DataUtils {
             }
         }
 
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         for (int i = 0; i < key_vec.size(); i++) {
             String key = (String) key_vec.elementAt(i);
             String value = (String) hmap.get(key);
             v.add(value);
         }
 
-        // return SortUtils.quickSort(v);
+        // return new SortUtils().quickSort(v);
         return v;
     }
 
