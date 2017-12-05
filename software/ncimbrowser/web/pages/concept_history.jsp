@@ -18,7 +18,7 @@
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
-  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <%!
       private static Logger _logger = Utils.getJspLogger("concept_history.jsp");
   %>
@@ -71,7 +71,7 @@ _logger.debug("concept_history.jsp rows " + rows.size());
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0">
+        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0" role='presentation'>
         <tr>
           <td valign="top">
             <a href="http://evs.nci.nih.gov/" target="_blank" alt="Enterprise Vocabulary Services">
@@ -85,19 +85,19 @@ _logger.debug("concept_history.jsp rows " + rows.size());
         <div id="popupContentArea">
           <!-- History content -->
           <div class="pageTitle"><b><%=DataUtils.encodeTerm(concept_name)%> (CUI <%=code%>)</b></div>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr class="textbody">
               <td align="left" class="texttitle-gray">
                 History
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
-                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer" ><i>Send to Printer</i></a>
+                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer"><i>Send to Printer</i></a>
                 </font>
               </td>
             </tr>
           </table>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr>
               <%
                 for (int i=0; i<headers.size(); ++i) {

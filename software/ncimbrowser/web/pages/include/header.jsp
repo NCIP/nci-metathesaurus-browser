@@ -21,7 +21,7 @@
       width="60" height="39" border="0" 
       alt="National Cancer Institute" class="print-header"/>
   </a>
-  <a href="http://www.nih.gov" target="_blank" >      
+  <a href="http://www.nih.gov" target="_blank">      
     <img src="<%=request.getContextPath()%>/images/tagline_nologo.gif"
       width="219" height="39" border="0"
       alt="U.S. National Institutes of Health"/>

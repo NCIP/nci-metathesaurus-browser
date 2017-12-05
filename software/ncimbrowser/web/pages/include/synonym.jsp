@@ -32,7 +32,7 @@
     Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
-	<table border="0" width="708px">
+	<table border="0" width="708px" role='presentation'>
 		<tr>
 			<td class="textsubtitle-blue" align="left">Synonym Details:<a name="SynonymsDetails"></a></td>
 		</tr>
@@ -171,15 +171,15 @@
       
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellTextwrap" ><%=DataUtils.encodeTerm(term_name)%></td>
-              <td class="dataCellText" ><%=term_source%></td>
-              <td class="dataCellText" ><%=term_type%></td>
+              <td class="dataCellTextwrap"><%=DataUtils.encodeTerm(term_name)%></td>
+              <td class="dataCellText"><%=term_source%></td>
+              <td class="dataCellText"><%=term_type%></td>
 
 <%
                // source code 
 		if (term_browser_formalname == null) {
 %>
-			  <td class="dataCellText" >
+			  <td class="dataCellText">
 			      <%=term_source_code%>
 			  </td>
 <%

@@ -141,7 +141,7 @@ if (captcha_option.compareTo("default") == 0) {
 
     <f:view>
       <!-- Begin Skip Top Navigation -->
-        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+        <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
       <!-- End Skip Top Navigation -->
       <%@ include file="/pages/include/header.jsp" %>
       <div class="center-page">
@@ -149,7 +149,7 @@ if (captcha_option.compareTo("default") == 0) {
         <div id="main-area">
           <%@ include file="/pages/include/content-header.jsp" %>
           <div class="pagecontent">
-            <a name="evs-content" id="evs-content"></a>
+            <a name="evs-content" id="evs-content" tabindex="1"></a>
             <div class="texttitle-blue">Contact Us</div>
             <hr></hr>
 
@@ -168,7 +168,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   </div>
   <br/>
 
-  <table class="textbody">
+  <table class="textbody" role='presentation'>
     <tr>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td>Telephone:</td>
@@ -217,7 +217,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   <h:form>
   
 <p>
-<table>
+<table role='presentation'>
 <%
 String answer_label = "Enter the characters appearing in the above image";
 
@@ -299,13 +299,13 @@ if (captcha_option.compareTo("default") == 0) {
       action="#{userSessionBean.clearContactUs}"
       alt="clear">
     </h:commandButton>
-    <img src="<%=basePath%>/images/spacer.gif" width="1" />
+    <img src="<%=basePath%>/images/spacer.gif" width="1" alt="spacer" />
     <h:commandButton
       id="mail"
       value="submit"
       image="/images/submit.gif"
       action="#{userSessionBean.contactUs}"
-      alt="submit" >
+      alt="submit">
     </h:commandButton>
     
 <input type="hidden" name="alt_captcha_option" id="alt_captcha_option" value="<%=alt_captcha_option%>">

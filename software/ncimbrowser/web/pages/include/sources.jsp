@@ -77,7 +77,7 @@
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
 %>
   <a name="sources"></a>
-  <table border="0" width="708px">
+  <table border="0" width="708px" role='presentation'>
     <tr>
       <td class="textsubtitle-blue" align="left">'<%=DataUtils.encodeTerm(concept_neighborhood_name)%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
     </tr>

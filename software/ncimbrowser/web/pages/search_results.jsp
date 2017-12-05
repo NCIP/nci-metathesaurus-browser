@@ -44,7 +44,7 @@
 
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -54,7 +54,7 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="1"></a>
         <%
 
           long ms = System.currentTimeMillis();
@@ -137,10 +137,10 @@ request.getSession().setAttribute("match_match", matchText);
           String next_page_num_str = Integer.toString(next_page_num);
 
         %>
-        <table width="700px">
+        <table width="700px" role='presentation'>
 
           <tr>
-            <table>
+            <table role='presentation'>
               <tr>
                 <td class="texttitle-blue">Result for:</td>
                 <td class="texttitle-gray"><%=matchText%></td>
@@ -209,7 +209,7 @@ request.getSession().setAttribute("match_match", matchText);
 			    }
 			    %>
 			  <td class="dataCellText" width=600>
-			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>" ><%=DataUtils.encodeTerm(name)%></a>
+			    <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>"><%=DataUtils.encodeTerm(name)%></a>
 			  </td>
 			  <td class="dataCellText" width=400>
 			      <%=semantic_type%>

@@ -40,7 +40,7 @@
     <script type="text/javascript"
       src="/ncimbrowser/js/tip_followscroll.js"></script>
     
-        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+        <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
       
 
 <%
@@ -194,12 +194,12 @@ String ncit_url = new DataUtils().getNCItURL();
 
   
 
-  <table border="0" cellspacing="0" cellpadding="0" width="340px">
+  <table border="0" cellspacing="0" cellpadding="0" width="340px" role='presentation'>
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    checked tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Contains
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match"  tabindex="4"/><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With"  tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Begins With&nbsp;
+        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    checked tabindex="4" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm3">Contains&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match"  tabindex="5"/><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With"  tabindex="6" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm2">Begins With&nbsp;</label>
 
       </td>
     </tr>
@@ -213,20 +213,20 @@ String ncit_url = new DataUtils().getNCItURL();
 
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         checked  tabindex="5">Name&nbsp;
-	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"          tabindex="5" onclick="onCodeButtonPressed('searchTerm');" >Code&nbsp;
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties"  tabindex="5"/><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships"  tabindex="5"/><label for="searchTarget3">Relationship</label>
+	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         checked  tabindex="7">Name&nbsp;
+	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"          tabindex="8" onclick="onCodeButtonPressed('searchTerm');">Code&nbsp;
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties"  tabindex="9"/><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships"  tabindex="10"/><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
     <tr><td colspan="2">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%" role='presentation'>
         <tr valign="top">
           <td align="left" class="textbody">
             <label id="searchTerm:sourceLabel" for="searchTerm:source" class="textbody">
 Source</label>&nbsp;
-            <select id="searchTerm:source" name="searchTerm:source" class="textbody" size="1" onchange="submit();" tabindex="6">	<option value="ALL" selected="selected">ALL</option>
+            <select id="searchTerm:source" name="searchTerm:source" class="textbody" size="1" onchange="submit();" tabindex="11">	<option value="ALL" selected="selected">ALL</option>
 	<option value="AOD">AOD</option>
 	<option value="AOT">AOT</option>
 	<option value="BioC">BioC</option>
@@ -338,16 +338,16 @@ Source</label>&nbsp;
 
 
 
-<table border="0" width="100%" class="global-nav">
+<table border="0" width="100%" class="global-nav" role='presentation'>
   <tr>
     <td align="left">
-      <a href="/ncimbrowser" tabindex="10">Home</a> |
-      <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_hierarchy.jsf?&sab=NCI', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="11">
+      <a href="/ncimbrowser" tabindex="12">Home</a> |
+      <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_hierarchy.jsf?&sab=NCI', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="13">
         NCIt Hierarchy</a> |
       <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_help_info.jsf',
-        '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="12">
+        '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="14">
         Sources</a> |
-      <a href="/ncimbrowser/pages/help.jsf" alt="Help" tabindex="13">Help</a>
+      <a href="/ncimbrowser/pages/help.jsf" alt="Help" tabindex="15">Help</a>
     </td>
     <td align="right">
 	  	
@@ -373,7 +373,7 @@ Source</label>&nbsp;
     <ul id="quicklinks"
         onmouseover="document.quicklinksimg.src='/ncimbrowser/images/quicklinks-active.gif';"
         onmouseout="document.quicklinksimg.src='/ncimbrowser/images/quicklinks-inactive.gif';"
-        tabindex="20">
+        tabindex="16">
 
       <li>
         <a href="#">
@@ -406,7 +406,7 @@ Source</label>&nbsp;
 
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="17"></a>
         
 <div class="textbody">
 

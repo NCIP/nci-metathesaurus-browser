@@ -16,7 +16,7 @@
 %>
 <div class="textbody">
 <!--
-  <table border="0" width="700px">
+  <table border="0" width="700px" role='presentation'>
  -->
   <table class="datatable_960" border="0" width="100%">
   <tr>
@@ -26,13 +26,13 @@
     -->
   </tr></table>
   <hr/>
-  <table border="0">
+  <table border="0" role='presentation'>
     <tr>
       <td class="textbody" valign="top" width="70%">
         <%=html_compatable_description_value%>
       </td>
       <td valign="top" width="30%">
-        <table border="0">
+        <table border="0" role='presentation'>
           <tr valign="top">
             <td width="10px"></td>
             <td>

@@ -31,7 +31,7 @@
     <ul id="quicklinks"
         onmouseover="document.quicklinksimg.src='<%=basePath%>/images/quicklinks-active.gif';"
         onmouseout="document.quicklinksimg.src='<%=basePath%>/images/quicklinks-inactive.gif';"
-        tabindex="20">
+        tabindex="1">
 
       <li>
         <a href="#">

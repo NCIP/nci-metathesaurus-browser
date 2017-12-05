@@ -52,7 +52,7 @@
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -73,7 +73,7 @@
       <!-- end Quick links bar -->
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="1"></a>
         <p>
           <%
           	if (display_name == null) {

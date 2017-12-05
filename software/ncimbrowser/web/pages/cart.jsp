@@ -22,7 +22,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/tip_followscroll.js"></script>
 <f:view>
     <!-- Begin Skip Top Navigation -->
-      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+      <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
     <!-- End Skip Top Navigation -->
     <script language="javascript" type="text/javascript">
       function backButton() {
@@ -68,12 +68,12 @@
      <%@ include file="/pages/include/content-header.jsp" %>
         <!-- Page content -->
         <div class="pagecontent">
-          <a name="evs-content" id="evs-content"></a>
+          <a name="evs-content" id="evs-content" tabindex="1"></a>
           <h:form id="cartFormId">
           <table border="0" class="datatable_960">
             <tr>
               <td width="200px">
-              <table border="0" width="100%">
+              <table border="0" width="100%" role='presentation'>
                 <tr>
                   <td class="texttitle-blue" width="40">Cart</td>
                   <td class="texttitle-gray">(<h:outputText value="#{CartActionBean.count}"/>)</td>

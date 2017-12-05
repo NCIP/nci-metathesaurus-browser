@@ -51,7 +51,7 @@
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->
-      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+      <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
     <!-- End Skip Top Navigation -->
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -61,7 +61,7 @@
         <%@ include file="/pages/include/content-header.jsp" %>
         <!-- Page content -->
         <div class="pagecontent">
-          <a name="evs-content" id="evs-content"></a>
+          <a name="evs-content" id="evs-content" tabindex="1"></a>
           <%
             String dictionary = null;
             Entity c = (Entity) request.getSession().getAttribute("concept");

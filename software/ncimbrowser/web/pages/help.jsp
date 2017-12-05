@@ -34,7 +34,7 @@
 
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -44,7 +44,7 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="1"></a>
         <!-- ======================================= -->
         <!--                 HELP CONTENT            -->
         <!-- ======================================= -->
@@ -62,7 +62,7 @@
           <A HREF="#additionalinformation">Additional Information</A>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="introduction">Introduction</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -103,7 +103,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchhelp">Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -169,7 +169,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchavdhelp">Advanced Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -198,7 +198,7 @@
           Advanced Search options will continue to grow in future releases.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchresults">Search Results</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -218,7 +218,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="conceptdetails">Concept Details</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -248,7 +248,7 @@
         
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="cartfunctionality">Cart and Export Functionality</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -303,7 +303,7 @@
         
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="hierarchy">View Hierarchy</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -327,7 +327,7 @@
           in a separate window.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="sources">Sources</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -345,7 +345,7 @@
     
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -371,7 +371,7 @@
           in the upper right of all concept details pages.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="additionalinformation">Additional Information</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>

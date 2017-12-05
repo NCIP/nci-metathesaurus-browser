@@ -15,7 +15,7 @@ System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchTe
   <input type="hidden" id="key" name="key" value="<%=randomStr%>" />
   <input type="hidden" id="matchText" name="matchText" value="<%=searchText%>" />
   
-  <table>
+  <table role='presentation'>
     <tr>
       <td class="textbody" align=left>
         <b>Results <%=istart_str%>-<%=iend_str%> of&nbsp;<%=match_size%></b>

@@ -64,7 +64,7 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
 <%
 
@@ -136,7 +136,7 @@ request.getSession().removeAttribute("new_search");
 
         <!-- Page content -->
         <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="1"></a>
 <%
     String dictionary = null;
     String code = null;
@@ -197,7 +197,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
     <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
 
       <tr>
-        <table>
+        <table role='presentation'>
           <tr>
       <td class="texttitle-blue">Result for:</td>
       <td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
@@ -369,11 +369,11 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       <h:form>
       <div class="texttitle-blue">
       <!--
-      <table border="0" width="700px">
-      <table border="0" width="900px">
+      <table border="0" width="700px" role='presentation'>
+      <table border="0" width="900px" role='presentation'>
       -->
       
-      <table border="0" width="945px">
+      <table border="0" width="945px" role='presentation'>
         <tr>
           <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>

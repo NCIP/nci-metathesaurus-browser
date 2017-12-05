@@ -152,7 +152,7 @@
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->
-      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+      <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
     <!-- End Skip Top Navigation -->
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -308,8 +308,8 @@
 
 %>
         <div class="pagecontent">
-          <a name="evs-content" id="evs-content"></a>
-          <table>
+          <a name="evs-content" id="evs-content" tabindex="1"></a>
+          <table role='presentation'>
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
             </tr>
@@ -322,12 +322,12 @@
 
             <tr class="textbody"><td>
             <!--
-               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
+               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
              -->
 
-               <h:form id="advancedSearchForm" styleClass="search-form" >
+               <h:form id="advancedSearchForm" styleClass="search-form">
 
-                <table>
+                <table role='presentation'>
                   <tr><td>
     <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
@@ -341,12 +341,12 @@
 
                   </td></tr>
                   <tr><td>
-                     <table border="0" cellspacing="0" cellpadding="0">
+                     <table border="0" cellspacing="0" cellpadding="0" role='presentation'>
                     <tr valign="top" align="left"><td align="left" class="textbody">
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                     <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="3" onclick="refresh_algorithm()"; >
+                     <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="2" onclick="refresh_algorithm()"; >
                       Lucene
                     </td></tr>
                   </table>
@@ -425,7 +425,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                 </td></tr>
 
                 <tr><td>
-                  <table>
+                  <table role='presentation'>
                   <% if (selectSearchOption.equals("Property")) { %>
                     <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=HTTPUtils.cleanXSS(rel_search_association)%>" />
                     <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=HTTPUtils.cleanXSS(rel_search_rela)%>" />
@@ -460,7 +460,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                           <!--
                           <h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}"
                               valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
-                              immediate="true" >
+                              immediate="true">
                             <f:selectItems value="#{searchStatusBean.propertyList}" />
                           </h:selectOneMenu>
                           -->
@@ -560,7 +560,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
 
 <tr><td>
 <p>
-<table>
+<table role='presentation'>
    <tr><td class="textbody">&nbsp;Examples:</td></tr>
    <tr>
        <td class="textbody">&nbsp;&nbsp;

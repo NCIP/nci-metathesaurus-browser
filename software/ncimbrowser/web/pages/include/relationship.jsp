@@ -65,7 +65,7 @@
 
  %>
 <a name="relationships"></a>
-<table border="0" width="708px">
+<table border="0" width="708px" role='presentation'>
   <tr>
     <td class="textsubtitle-blue" align="left">
       Relationships with other NCI Metathesaurus Concepts:
@@ -84,7 +84,7 @@
       }
   }
 %>
-  <table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0">
+  <table border="0" width="690px" bgcolor="#ffffff" cellpadding="5" cellspacing="0" role='presentation'>
     <tr>
       <td class="subtab" align="center">
         <b>

@@ -167,7 +167,7 @@
 
 %>
 <A name="properties"></A>
-<table border="0" width="708px">
+<table border="0" width="708px" role='presentation'>
   <tr>
     <td class="textsubtitle-blue" align="left">
       Terms & Properties
@@ -278,7 +278,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 %>
 <p>
 <b>Synonyms &amp; Abbreviations:</b>
-<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(see Synonym Details)</a>
+<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">(see Synonym Details)</a>
 <table class="datatable_960">
 <%
   HashSet presentation_hset = new HashSet();
