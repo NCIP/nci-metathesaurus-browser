@@ -67,7 +67,7 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
-          6,400,000 terms from more than 75 terminologies. It contains most public domain vocabularies from
+          6,700,000 terms from over 85 terminologies. It contains most public domain vocabularies from
           the National Library of Medicine's <a href="https://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
