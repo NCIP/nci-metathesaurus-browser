@@ -361,8 +361,8 @@
           
           For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.7+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.7 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.9+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser 2.9 Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
