@@ -171,7 +171,18 @@
       
         %>
             <tr class="<%=rowColor%>">
+            <!--
               <td class="dataCellTextwrap"><%=DataUtils.encodeTerm(term_name)%></td>
+            -->  
+              
+ <td>
+   <div style="width: 530; word-wrap: break-word">
+       <%=DataUtils.encodeTerm(term_name)%>
+  </div>
+</td>               
+              
+              
+              
               <td class="dataCellText"><%=term_source%></td>
               <td class="dataCellText"><%=term_type%></td>
 
