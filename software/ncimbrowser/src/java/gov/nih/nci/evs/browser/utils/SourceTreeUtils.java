@@ -1,4 +1,5 @@
 package gov.nih.nci.evs.browser.utils;
+import gov.nih.nci.evs.browser.properties.*;
 
 import java.io.*;
 import java.util.*;
@@ -97,7 +98,12 @@ public class SourceTreeUtils {
     private LexBIGServiceConvenienceMethods lbscm = null;
     private MetaBrowserService mbs = null;
 
-    public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+    //public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+
+    private static String default_source_hierarchies="|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA|";
+
+
+    public String sourceHierarchies = null;
 
     public SourceTreeUtils(LexBIGService lbSvc) {
         this.lbSvc = lbSvc;
@@ -108,6 +114,13 @@ public class SourceTreeUtils {
 			this.lbscm.setLexBIGService(lbSvc);
 
 			this.mbs = (MetaBrowserService) lbSvc.getGenericExtension("metabrowser-extension");
+
+			this.sourceHierarchies = NCImBrowserProperties.getSourceHierarchies();
+			if (this.sourceHierarchies == null) {
+				this.sourceHierarchies = default_source_hierarchies;
+			}
+			System.out.println(sourceHierarchies);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
