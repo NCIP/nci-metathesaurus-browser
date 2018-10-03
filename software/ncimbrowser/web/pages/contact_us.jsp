@@ -256,6 +256,7 @@ if (captcha_option.compareTo("default") == 0) {
       <tr>
       <td class="textbody"> 
           <%=answer_label%>: <i style="color:#FF0000;">*</i>
+<label for="answer">Answer</label>
           <input type="text" id="answer" name="answer" value="<%=HTTPUtils.cleanXSS(answer)%>"/>&nbsp;
       </td>
       </tr> 
@@ -276,7 +277,8 @@ if (captcha_option.compareTo("default") == 0) {
     <p>
       <i>Subject of your email:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="subject">Subject</label>      
+    <input class="textbody" size="100" id="subject" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <p>
       <i>Detailed description of your problem or suggestion (no attachments):</i><i style="color:#FF0000;">*</i>
     </p>
@@ -284,7 +286,8 @@ if (captcha_option.compareTo("default") == 0) {
     <p>
       <i>Your e-mail address:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="<%=EMAIL_ADDRESS%>">Email Address</label>    
+    <input class="textbody" size="100" id="<%=EMAIL_ADDRESS%>" name="<%=EMAIL_ADDRESS%>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     
     <p>
        <i style="color:#FF0000;">* Required</i>

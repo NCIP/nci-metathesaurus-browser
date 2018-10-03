@@ -81,7 +81,7 @@
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>
-  <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
+  <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" aria-labelledby="Match Text" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"

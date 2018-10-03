@@ -186,10 +186,10 @@ String ncit_url = new DataUtils().getNCItURL();
 <form id="searchTerm" name="searchTerm" method="post" action="/ncimbrowser/pages/home.jsf;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" class="search-form" enctype="application/x-www-form-urlencoded" onsubmit="javascript:disableAnchor();">
 <input type="hidden" name="searchTerm" value="searchTerm" />
 
-
+<label for="matchText">Match Text</label>
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
-
+<label for="searchTerm:search">Search</label>
     <input id="searchTerm:search" type="image" src="/ncimbrowser/images/search.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" name="searchTerm:search" accesskey="13" alt="Search" onclick="javascript:cursor_wait();" tabindex="2" class="searchbox-btn" /><a href="/ncimbrowser/pages/help.jsf;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC#searchhelp" tabindex="3"><img src="/ncimbrowser/images/search-help.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" alt="Search Help" style="border-width:0;" class="searchbox-btn" /></a>
 
   

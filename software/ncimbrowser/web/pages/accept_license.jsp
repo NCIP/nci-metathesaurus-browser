@@ -90,8 +90,9 @@
         </p>
         <%
         	if (display_name != null) {
-        %>        
-        <textarea cols="87" rows="15" readonly align="left"><%=licenseStmt%></textarea>
+        %> 
+<label for="license_statement">License Statement</label>
+        <textarea cols="87" rows="15" readonly align="left" name="license_statement"><%=licenseStmt%></textarea>
         <p>
           If and only if you agree to these terms and conditions, click the Accept button to proceed.
         </p>

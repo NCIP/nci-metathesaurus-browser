@@ -260,14 +260,6 @@
             rel_search_association = bean.getSelectedAssociation();
             rel_search_rela = bean.getSelectedRELA();
 
-/*
-            _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
-            _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
-            _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
-            _logger.debug("advanced_search.jsp search_string: " + search_string);
-            _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
-            _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
-*/
             
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
@@ -321,15 +313,13 @@
             <% } %>
 
             <tr class="textbody"><td>
-            <!--
-               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
-             -->
 
                <h:form id="advancedSearchForm" styleClass="search-form">
 
                 <table role='presentation'>
                   <tr><td>
-    <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
+               
+    <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" aria-labelledby="Match Text" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
@@ -346,8 +336,7 @@
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                     <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="2" onclick="refresh_algorithm()"; >
-                      Lucene
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="2" onclick="refresh_algorithm()"; ><label for="adv_search_algorithm4">Lucene</label>
                     </td></tr>
                   </table>
                 </td></tr>
@@ -360,7 +349,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
 
                 <tr><td>
                   <h:outputLabel for="adv_search_source" id="rel_search_source_Label" value="Source" styleClass="textbody">
-                    <select id="adv_search_source" name="adv_search_source" size="1">
+                    <select id="adv_search_source" name="adv_search_source" aria-labelledby="Select Source" size="1">
                     <%
                       Vector src_vec = OntologyBean.getSupportedSources();
                       t = "ALL";
@@ -433,7 +422,8 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="selectProperty" id="selectPropertyLabel" value="Property" styleClass="textbody">
-                          <select id="selectProperty" name="selectProperty" size="1">
+
+                          <select id="selectProperty" name="selectProperty" aria-labelledby="Select Property" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(selectProperty) == 0) {
@@ -457,13 +447,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                             }
                           %>
                           </select>
-                          <!--
-                          <h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}"
-                              valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
-                              immediate="true">
-                            <f:selectItems value="#{searchStatusBean.propertyList}" />
-                          </h:selectOneMenu>
-                          -->
+
                         </h:outputLabel>
                       </td>
                     </tr>
@@ -474,7 +458,8 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="rel_search_association" id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
-                          <select id="rel_search_association" name="rel_search_association" size="1">
+                     
+                          <select id="rel_search_association" name="rel_search_association" aria-labelledby="Select Association" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(rel_search_association) == 0) {
@@ -510,7 +495,8 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="rel_search_rela" id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-                          <select id="rel_search_rela" name="rel_search_rela" size="1">
+
+                          <select id="rel_search_rela" name="rel_search_rela" aria-labelledby="Select Rela"  size="1">
                           <%
                             t = " ";
                             if (t.compareTo(rel_search_rela) == 0) {
