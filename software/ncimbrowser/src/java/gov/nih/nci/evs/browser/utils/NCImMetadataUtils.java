@@ -114,7 +114,7 @@ public class NCImMetadataUtils {
         LexBIGServiceMetadata lbsm = null;
         MetadataPropertyList mdpl = null;
 
-		String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+		String version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
         CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
 
         String uri = cs.getCodingSchemeURI();
@@ -232,7 +232,7 @@ public class NCImMetadataUtils {
 		/*
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         if (version == null) {
-            version = DataUtils.getVocabularyVersionByTag(codingSchemeName, "PRODUCTION");
+            version = getVocabularyVersionByTag(codingSchemeName, "PRODUCTION");
         }
 
         MetadataPropertyList mdpl =
@@ -270,7 +270,7 @@ public class NCImMetadataUtils {
         Vector w = new Vector();
         for (int i = 0; i < metadata.size(); i++) {
             String t = (String) metadata.elementAt(i);
-            Vector u = DataUtils.parseData(t, "|");
+            Vector u = StringUtils.parseData(t, "|");
             String name = (String) u.elementAt(0);
             if (name.compareTo(propertyName) == 0) {
                 String value = (String) u.elementAt(1);
@@ -285,19 +285,6 @@ public class NCImMetadataUtils {
 
     public static Vector getMetadataValues(String codingSchemeName,
         String version, String urn, String propertyName, boolean sort) {
-			/*
-
-        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        MetadataPropertyList mdpl =
-            getMetadataPropertyList(lbSvc, codingSchemeName, version, urn);
-        if (mdpl == null)
-            return null;
-
-        Vector metadata = getMetadataNameValuePairs(mdpl, sort);
-        if (metadata == null)
-            return null;
-            */
-        //return getMetadataValues(metadata, propertyName);
         return getMetadataPropertyValues(codingSchemeName, version, urn, propertyName, sort);
     }
 
@@ -513,7 +500,7 @@ public class NCImMetadataUtils {
 
     {
         try {
-			String version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+			String version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
 
             _propertyDescriptionsVec = new Vector();
             LexBIGService lbs = RemoteServerUtil.createLexBIGService();
@@ -667,7 +654,7 @@ public class NCImMetadataUtils {
         try {
             LexBIGServiceMetadata lbsm = lbSvc.getServiceMetadata();
             if (version == null) {
-                version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+                version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
                 CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
                 urn = cs.getCodingSchemeURI();
 			}
@@ -720,7 +707,7 @@ public class NCImMetadataUtils {
         try {
             LexBIGServiceMetadata lbsm = lbSvc.getServiceMetadata();
             if (version == null) {
-                version = DataUtils.getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
+                version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
                 CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
                 urn = cs.getCodingSchemeURI();
 			}
@@ -927,7 +914,17 @@ public class NCImMetadataUtils {
 
     }
 
+    public static void main(String[] args) {
+		String codingSchemeName = "NCI_Metathesaurus";
+		String version = null;
+		String urn = null;
 
+		NameAndValue[] nv_array = getMetadataPropertyNameAndValueList(codingSchemeName, version, urn);
+        for (int i=0; i<nv_array.length; i++) {
+            NameAndValue nv = nv_array[i];
+            System.out.println(nv.getName() + " = " + nv.getContent());
+		}
+	}
 
 
     /**
