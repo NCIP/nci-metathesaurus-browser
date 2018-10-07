@@ -12,9 +12,10 @@ System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchTe
 %>
 
 <h:form id="paginationForm">
+<!--
   <input type="hidden" id="key" name="key" value="<%=randomStr%>" />
   <input type="hidden" id="matchText" name="matchText" value="<%=searchText%>" />
-  
+-->  
   <table role='presentation'>
     <tr>
       <td class="textbody" align=left>
@@ -74,8 +75,10 @@ System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchTe
     </tr>
     <tr>
       <td class="textbody" align=left>
-        Show
+        <label for="paginationForm:resultsPerPage">Show</label>
         <h:selectOneMenu
+          id="resultsPerPage"
+          label="resultsPerPage"
           value="#{userSessionBean.selectedResultsPerPage}"
           valueChangeListener="#{userSessionBean.resultsPerPageChanged}"
           onchange="submit()">

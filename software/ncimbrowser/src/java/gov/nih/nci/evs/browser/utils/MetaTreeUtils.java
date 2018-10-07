@@ -2421,12 +2421,8 @@ public class MetaTreeUtils {
 
         HashMap new_map = null;
         code = "C1154313";
-
         code = "C0012634";
-
         code = "C0007581";
-
-
         // new_map = test.getSubconcepts(code, sab, "CHD", true);
         // test.dumpTreeItems(new_map);
 

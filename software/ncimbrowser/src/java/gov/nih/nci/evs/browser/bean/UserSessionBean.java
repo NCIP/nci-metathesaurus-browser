@@ -132,7 +132,7 @@ public class UserSessionBean extends Object {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-
+        //setSelectedResultsPerPage((String) request.getParameter("resultsPerPage"));
         request.getSession().removeAttribute("error_msg");
         boolean retval = HTTPUtils.validateRequestParameters(request);
         if (!retval) {
@@ -1023,7 +1023,7 @@ response.setContentType("text/html;charset=utf-8");
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-
+        //setSelectedResultsPerPage((String) request.getParameter("resultsPerPage"));
         request.getSession().removeAttribute("error_msg");
         boolean retval = HTTPUtils.validateRequestParameters(request);
         if (!retval) {
@@ -1083,7 +1083,7 @@ response.setContentType("text/html;charset=utf-8");
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
         //String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
-        String matchText = HTTPUtils.cleanMatchTextXSS((String)  request.getParameter("adv_matchText"));
+        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("adv_matchText"));
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
             // request.getSession().setAttribute("message", message);
@@ -1500,5 +1500,17 @@ response.setContentType("text/html;charset=utf-8");
         return "no_match";
 
     }
-
+/*
+    public static List getResultsPerPageValues() {
+        List resultsPerPageList = new ArrayList();
+        resultsPerPageList.add("10");
+        resultsPerPageList.add("25");
+        resultsPerPageList.add("50");
+        resultsPerPageList.add("75");
+        resultsPerPageList.add("100");
+        resultsPerPageList.add("250");
+        resultsPerPageList.add("500");
+        return resultsPerPageList;
+    }
+*/
 }

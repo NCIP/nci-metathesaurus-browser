@@ -117,7 +117,7 @@
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
   <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();">
-    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" aria-labelledby="Match Text" onFocus="active=true"
+    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" aria-label="matchText" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
 
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"

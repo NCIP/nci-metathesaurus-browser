@@ -15,7 +15,7 @@
 <%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
 <script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
   <title>NCI Metathesaurus</title>
@@ -189,10 +189,6 @@
         rel_search_association = HTTPUtils.cleanXSS((String) request.getParameter("rel"));
         rel_search_rela = HTTPUtils.cleanXSS((String) request.getParameter("rela"));
         selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("prop"));
-        
-        
-        
-        
     } else {
         //SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         SearchStatusBean bean = (SearchStatusBean) request.getSession().getAttribute("searchStatusBean");
@@ -319,7 +315,7 @@
                 <table role='presentation'>
                   <tr><td>
                
-    <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" aria-labelledby="Match Text" onFocus="active=true"
+    <input CLASS="searchbox-input" id="adv_matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" aria-label="adv_matchText" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
@@ -349,7 +345,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
 
                 <tr><td>
                   <h:outputLabel for="adv_search_source" id="rel_search_source_Label" value="Source" styleClass="textbody">
-                    <select id="adv_search_source" name="adv_search_source" aria-labelledby="Select Source" size="1">
+                    <select id="adv_search_source" name="adv_search_source" aria-label="Select Source" size="1">
                     <%
                       Vector src_vec = OntologyBean.getSupportedSources();
                       t = "ALL";
@@ -423,7 +419,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>
                         <h:outputLabel for="selectProperty" id="selectPropertyLabel" value="Property" styleClass="textbody">
 
-                          <select id="selectProperty" name="selectProperty" aria-labelledby="Select Property" size="1">
+                          <select id="selectProperty" name="selectProperty" aria-label="Select Property" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(selectProperty) == 0) {
@@ -459,7 +455,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>
                         <h:outputLabel for="rel_search_association" id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
                      
-                          <select id="rel_search_association" name="rel_search_association" aria-labelledby="Select Association" size="1">
+                          <select id="rel_search_association" name="rel_search_association" aria-label="Select Association" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(rel_search_association) == 0) {
@@ -496,7 +492,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>
                         <h:outputLabel for="rel_search_rela" id="rel_search_rela_Label" value="RELA" styleClass="textbody">
 
-                          <select id="rel_search_rela" name="rel_search_rela" aria-labelledby="Select Rela"  size="1">
+                          <select id="rel_search_rela" name="rel_search_rela" aria-label="Select Rela"  size="1">
                           <%
                             t = " ";
                             if (t.compareTo(rel_search_rela) == 0) {
@@ -590,7 +586,9 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
 
 
               </table>
+              <!--
               <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
+              -->
               <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=HTTPUtils.cleanXSS(adv_search_type)%>" />
 
 
