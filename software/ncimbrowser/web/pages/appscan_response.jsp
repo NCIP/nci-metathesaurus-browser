@@ -324,8 +324,9 @@ Source</label>&nbsp;
 
     </td></tr>
   </table>
-
+<!--
 <input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="j_id1:j_id2" />
+-->
 </form>
 
         </div>
