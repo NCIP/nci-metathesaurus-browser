@@ -131,8 +131,8 @@ if (message != null) {
             </c:choose>
               <td><h:selectBooleanCheckbox id="checkboxId" binding="#{item.checkbox}" onclick="submit()"/></td>
               <td>
+<h:outputLabel value="#{item.name}" for="checkboxId" />                <!--
                 <h:outputLabel value="#{item.name}" for="checkboxId" />
-                <!--
                 <h:outputLink value="#{item.url}">${item.name}</h:outputLink>
                 -->
               </td>

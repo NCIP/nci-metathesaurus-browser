@@ -26,7 +26,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.advancedSearchForm.matchText.focus();">
+<body onLoad="document.forms.advancedSearchForm.adv_matchText.focus();">
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
   <script type="text/javascript"
@@ -40,7 +40,7 @@
     
     
     function refresh() {
-      var text = document.forms["advancedSearchForm"].matchText.value;
+      var text = document.forms["advancedSearchForm"].adv_matchText.value;
       algorithm = "exactMatch";
       var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
       for (var i=0; i<algorithmObj.length; i++) {
@@ -75,7 +75,7 @@
     
     function refresh_code() {
 
-      var text = escape(document.forms["advancedSearchForm"].matchText.value);
+      var text = escape(document.forms["advancedSearchForm"].adv_matchText.value);
  
       var selectSearchOption = "Code";
       var algorithm = "exactMatch";
@@ -101,7 +101,7 @@
     
     
      function refresh_algorithm() {
-       var text = escape(document.forms["advancedSearchForm"].matchText.value);
+       var text = escape(document.forms["advancedSearchForm"].adv_matchText.value);
  
        var algorithm = "exactMatch";
        var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
@@ -189,6 +189,10 @@
         rel_search_association = HTTPUtils.cleanXSS((String) request.getParameter("rel"));
         rel_search_rela = HTTPUtils.cleanXSS((String) request.getParameter("rela"));
         selectProperty = HTTPUtils.cleanXSS((String) request.getParameter("prop"));
+        
+        
+        
+        
     } else {
         //SearchStatusBean bean = BeanUtils.getSearchStatusBean();
         SearchStatusBean bean = (SearchStatusBean) request.getSession().getAttribute("searchStatusBean");
@@ -256,6 +260,14 @@
             rel_search_association = bean.getSelectedAssociation();
             rel_search_rela = bean.getSelectedRELA();
 
+/*
+            _logger.debug("advanced_search.jsp adv_search_algorithm: " + adv_search_algorithm);
+            _logger.debug("advanced_search.jsp adv_search_source: " + adv_search_source);
+            _logger.debug("advanced_search.jsp selectProperty: " + selectProperty);
+            _logger.debug("advanced_search.jsp search_string: " + search_string);
+            _logger.debug("advanced_search.jsp rel_search_association: " + rel_search_association);
+            _logger.debug("advanced_search.jsp rel_search_rela: " + rel_search_rela);
+*/
             
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("searchStatusBean", bean);
         }
@@ -309,12 +321,14 @@
             <% } %>
 
             <tr class="textbody"><td>
+            <!--
+               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
+             -->
 
                <h:form id="advancedSearchForm" styleClass="search-form">
 
                 <table role='presentation'>
                   <tr><td>
-               
     <input CLASS="searchbox-input" id="adv_matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" aria-label="adv_matchText" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
@@ -345,7 +359,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
 
                 <tr><td>
                   <h:outputLabel for="adv_search_source" id="rel_search_source_Label" value="Source" styleClass="textbody">
-                    <select id="adv_search_source" name="adv_search_source" aria-label="Select Source" size="1">
+                    <select id="adv_search_source" name="adv_search_source" size="1">
                     <%
                       Vector src_vec = OntologyBean.getSupportedSources();
                       t = "ALL";
@@ -418,8 +432,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="selectProperty" id="selectPropertyLabel" value="Property" styleClass="textbody">
-
-                          <select id="selectProperty" name="selectProperty" aria-label="Select Property" size="1">
+                          <select id="selectProperty" name="selectProperty" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(selectProperty) == 0) {
@@ -443,7 +456,13 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                             }
                           %>
                           </select>
-
+                          <!--
+                          <h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}"
+                              valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
+                              immediate="true">
+                            <f:selectItems value="#{searchStatusBean.propertyList}" />
+                          </h:selectOneMenu>
+                          -->
                         </h:outputLabel>
                       </td>
                     </tr>
@@ -454,8 +473,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="rel_search_association" id="rel_search_associationLabel" value="Relationship" styleClass="textbody">
-                     
-                          <select id="rel_search_association" name="rel_search_association" aria-label="Select Association" size="1">
+                          <select id="rel_search_association" name="rel_search_association" size="1">
                           <%
                             t = "ALL";
                             if (t.compareTo(rel_search_association) == 0) {
@@ -491,8 +509,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td>
                         <h:outputLabel for="rel_search_rela" id="rel_search_rela_Label" value="RELA" styleClass="textbody">
-
-                          <select id="rel_search_rela" name="rel_search_rela" aria-label="Select Rela"  size="1">
+                          <select id="rel_search_rela" name="rel_search_rela" size="1">
                           <%
                             t = " ";
                             if (t.compareTo(rel_search_rela) == 0) {
@@ -586,11 +603,8 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
 
 
               </table>
-              <!--
-              <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
-              -->
+              <input type="hidden" name="referer" id="adv_search_referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
               <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=HTTPUtils.cleanXSS(adv_search_type)%>" />
-
 
             </h:form>
 

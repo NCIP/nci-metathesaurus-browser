@@ -252,6 +252,8 @@ public class CartActionBean {
         if (!_cart.containsKey(code))
             _cart.put(code,item);
 
+        //request.getSession().setAttribute("_cart", _cart);
+
         return null;
     }
 
@@ -277,6 +279,8 @@ public class CartActionBean {
                 }
             }
     	}
+
+    	//request.getSession().setAttribute("_cart", _cart);
 
         return "showcart";
     }
