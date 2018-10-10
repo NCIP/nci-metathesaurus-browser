@@ -15,7 +15,7 @@
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
   <head>
 <script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
     <title>NCI Metathesaurus</title>
@@ -188,18 +188,18 @@ String ncit_url = new DataUtils().getNCItURL();
 
 <label for="matchText">Match Text</label>
     <input CLASS="searchbox-input" id="matchText" name="matchText" value="" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
+        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="0"/>
 <label for="searchTerm:search">Search</label>
-    <input id="searchTerm:search" type="image" src="/ncimbrowser/images/search.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" name="searchTerm:search" accesskey="13" alt="Search" onclick="javascript:cursor_wait();" tabindex="2" class="searchbox-btn" /><a href="/ncimbrowser/pages/help.jsf;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC#searchhelp" tabindex="3"><img src="/ncimbrowser/images/search-help.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" alt="Search Help" style="border-width:0;" class="searchbox-btn" /></a>
+    <input id="searchTerm:search" type="image" src="/ncimbrowser/images/search.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" name="searchTerm:search" accesskey="13" alt="Search" onclick="javascript:cursor_wait();" tabindex="0" class="searchbox-btn" /><a href="/ncimbrowser/pages/help.jsf;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC#searchhelp" tabindex="3"><img src="/ncimbrowser/images/search-help.gif;jsessionid=27E6B8FF8E6B0A4E4022E16829F6CFDC" alt="Search Help" style="border-width:0;" class="searchbox-btn" /></a>
 
   
 
   <table border="0" cellspacing="0" cellpadding="0" width="340px" role='presentation'>
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    checked tabindex="4" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm3">Contains&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match"  tabindex="5"/><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With"  tabindex="6" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm2">Begins With&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    checked tabindex="0" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm3">Contains&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match"  tabindex="0"/><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With"  tabindex="0" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm2">Begins With&nbsp;</label>
 
       </td>
     </tr>
@@ -213,10 +213,10 @@ String ncit_url = new DataUtils().getNCItURL();
 
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         checked  tabindex="7">Name&nbsp;
-	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"          tabindex="8" onclick="onCodeButtonPressed('searchTerm');">Code&nbsp;
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties"  tabindex="9"/><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships"  tabindex="10"/><label for="searchTarget3">Relationship</label>
+	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         checked  tabindex="0">Name&nbsp;
+	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"          tabindex="0" onclick="onCodeButtonPressed('searchTerm');">Code&nbsp;
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties"  tabindex="0"/><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships"  tabindex="0"/><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -226,7 +226,7 @@ String ncit_url = new DataUtils().getNCItURL();
           <td align="left" class="textbody">
             <label id="searchTerm:sourceLabel" for="searchTerm:source" class="textbody">
 Source</label>&nbsp;
-            <select id="searchTerm:source" name="searchTerm:source" class="textbody" size="1" onchange="submit();" tabindex="11">	<option value="ALL" selected="selected">ALL</option>
+            <select id="searchTerm:source" name="searchTerm:source" class="textbody" size="1" onchange="submit();" tabindex="0">	<option value="ALL" selected="selected">ALL</option>
 	<option value="AOD">AOD</option>
 	<option value="AOT">AOT</option>
 	<option value="BioC">BioC</option>
@@ -342,13 +342,13 @@ Source</label>&nbsp;
 <table border="0" width="100%" class="global-nav" role='presentation'>
   <tr>
     <td align="left">
-      <a href="/ncimbrowser" tabindex="12">Home</a> |
-      <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_hierarchy.jsf?&sab=NCI', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="13">
+      <a href="/ncimbrowser" tabindex="0">Home</a> |
+      <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_hierarchy.jsf?&sab=NCI', '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="0">
         NCIt Hierarchy</a> |
       <a href="#" onclick="javascript:window.open('/ncimbrowser/pages/source_help_info.jsf',
-        '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="14">
+        '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');" tabindex="0">
         Sources</a> |
-      <a href="/ncimbrowser/pages/help.jsf" alt="Help" tabindex="15">Help</a>
+      <a href="/ncimbrowser/pages/help.jsf" alt="Help" tabindex="0">Help</a>
     </td>
     <td align="right">
 	  	
@@ -374,7 +374,7 @@ Source</label>&nbsp;
     <ul id="quicklinks"
         onmouseover="document.quicklinksimg.src='/ncimbrowser/images/quicklinks-active.gif';"
         onmouseout="document.quicklinksimg.src='/ncimbrowser/images/quicklinks-inactive.gif';"
-        tabindex="16">
+        tabindex="0">
 
       <li>
         <a href="#">
@@ -407,7 +407,7 @@ Source</label>&nbsp;
 
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content" tabindex="17"></a>
+        <a name="evs-content" id="evs-content" tabindex="0"></a>
         
 <div class="textbody">
 

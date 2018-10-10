@@ -15,7 +15,7 @@
 <%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
 <script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
   <title>NCI Metathesaurus</title>
@@ -308,7 +308,7 @@
 
 %>
         <div class="pagecontent">
-          <a name="evs-content" id="evs-content" tabindex="1"></a>
+          <a name="evs-content" id="evs-content" tabindex="0"></a>
           <table role='presentation'>
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
@@ -346,7 +346,7 @@
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="2" onclick="refresh_algorithm()"; ><label for="adv_search_algorithm4">Lucene</label>
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="0" onclick="refresh_algorithm()"; ><label for="adv_search_algorithm4">Lucene</label>
                     </td></tr>
                   </table>
                 </td></tr>
