@@ -350,7 +350,7 @@
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This 2.9 NCIm Browser release, based on LexEVS <%=lexevs_version%>, 
+          This <%=ncim_application_version%> NCIm Browser release, based on LexEVS <%=lexevs_version%>, 
           addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 
@@ -361,8 +361,8 @@
           
           For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.9+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.9 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+<%=ncim_application_version%>+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser <%=ncim_application_version%> Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
