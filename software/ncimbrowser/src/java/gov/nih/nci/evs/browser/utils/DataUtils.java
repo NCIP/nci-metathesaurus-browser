@@ -3977,6 +3977,7 @@ public class DataUtils {
         return null;
     }
 
+/*
     public static String encodeTerm(String s) {
 		if (s == null) return null;
 		if (StringUtils.isAlphanumeric(s)) return s;
@@ -3992,6 +3993,10 @@ public class DataUtils {
         }
         return buf.toString();
     }
+*/
+    public static String encodeTerm(String s) {
+		return gov.nih.nci.evs.browser.utils.StringUtils.encodeTerm(s);
+	}
 
 
 //&#32;&lt;
