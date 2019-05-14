@@ -192,7 +192,25 @@
 %>
 			  <td class="dataCellText">
 			      <%=term_source_code%>
+			      
+
+		                <%	  
+				if (source_hierarchy_available) {
+		                %>		          
+		                          &nbsp;
+					  <a class="icon_blue" href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=tree&dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy',
+					  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+					      <img src="<%=basePath%>/images/visualize.gif" width="12px" height="12px" title="<%=view_in_source_hierarchy_label%>" alt="<%=view_in_source_hierarchy_label%>" border="0"/>
+					  </a>
+                                <%
+				} 
+				%>
+				
+			      
+			      
 			  </td>
+			  
+			  
 <%
 		} else {
 %>		      
