@@ -4026,6 +4026,21 @@ public class DataUtils {
     }
 
 
+    public static String replaceDoubleQuotes(String term) {
+		if (term == null) return null;
+		if (term.length() == 0) return term;
+		StringBuffer buf = new StringBuffer();
+		for (int i=0; i<term.length(); i++) {
+			char c = term.charAt(i);
+			if (c != '"') {
+				buf.append(c);
+			} else {
+				buf.append("&quot;");
+			}
+		}
+		return buf.toString();
+	}
+
     // [#23318] Maintain a history of visited concepts
     public static String getVisitedConceptLink(Vector concept_vec) {
         StringBuffer strbuf = new StringBuffer();
@@ -4040,13 +4055,16 @@ public class DataUtils {
             String code = (String) w.elementAt(0);
             String name = (String) w.elementAt(1);
 
-            //name = encodeTerm(name);
             name = encode_term(name);
+            //[NCIM-257] Visited Concepts link fails on concepts with a label containing double quote characters.
+            name = replaceDoubleQuotes(name);
 
             strbuf.append("<li>");
+
             line =
                 "<a href=\\'/ncimbrowser/ConceptReport.jsp?dictionary="
                     + scheme + "&code=" + code + "\\'>" + name + "</a><br>";
+
             strbuf.append(line);
             strbuf.append("</li>");
         }
