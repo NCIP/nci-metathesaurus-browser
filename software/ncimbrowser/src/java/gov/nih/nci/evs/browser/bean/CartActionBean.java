@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+import java.io.Serializable;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 
@@ -536,7 +537,7 @@ public class CartActionBean {
      * Subclass to hold contents of the cart
      * @author garciawa2
      */
-    public static class Concept {
+    public static class Concept implements Serializable {
         private String code = null;
         private String codingScheme = null;
         private String nameSpace = null;
