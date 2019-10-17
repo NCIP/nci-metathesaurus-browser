@@ -1395,7 +1395,9 @@ request.getSession().setAttribute("searchStatusBean", bean);
 				int matchingConceptCount = 0;
 				try {
 					SearchByAssociationIteratorDecorator assoIterator = (SearchByAssociationIteratorDecorator) iterator;
-					matchingConceptCount = assoIterator.getQuickIteratorSize();
+					//KLO 10172019
+					//matchingConceptCount = assoIterator.getQuickIteratorSize();
+					matchingConceptCount = assoIterator.numberRemaining();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
