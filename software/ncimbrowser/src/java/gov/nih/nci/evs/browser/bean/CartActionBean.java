@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.Set;
 import java.io.Serializable;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
@@ -33,6 +34,8 @@ import org.LexGrid.valueSets.EntityReference;
 import org.LexGrid.valueSets.ValueSetDefinition;
 import org.LexGrid.valueSets.ValueSetDefinitionReference;
 import org.LexGrid.valueSets.types.DefinitionOperator;
+
+import javax.faces.context.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -85,12 +88,22 @@ public class CartActionBean {
 
     // Local class variables
     private static Logger _logger = Logger.getLogger(CartActionBean.class);
+
+    /*
     private String _entity = null;
     private String _codingScheme = null;
     private HashMap<String, Concept> _cart = null;
     private String _backurl = null;
     private boolean _messageflag = false;
     private String _message = null;
+    */
+
+    public String _entity = null;
+    public String _codingScheme = null;
+    public HashMap<String, Concept> _cart = null;
+    public String _backurl = null;
+    public boolean _messageflag = false;
+    public String _message = null;
 
     // Local constants
     static public final String XML_FILE_NAME = "cart.xml";
@@ -102,6 +115,11 @@ public class CartActionBean {
 
     static public final String NO_CONCEPTS = "No concepts in cart.";
     static public final String NOTHING_SELECTED = "No concepts selected.";
+
+
+    public CartActionBean() {
+
+	}
 
     // Getters & Setters
 
@@ -170,14 +188,27 @@ public class CartActionBean {
         return _cart.values();
     }
 
+
+    public void setCart(HashMap hmap) {
+        this._cart = hmap;
+    }
+
+
     // ******************** Class methods ************************
 
     /**
      * Initialize the cart container
      */
-    private void _init() {
+    public void _init() {
         if (_cart == null) _cart = new HashMap<String, Concept>();
+/*
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        request.getSession().setAttribute("cartActionBean", this);
+*/
     }
+
 
     /**
      * Add concept to the Cart
@@ -200,6 +231,7 @@ public class CartActionBean {
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
+        request.getSession().removeAttribute("message");
 
         // Get Entity object
         Entity curr_concept = (Entity) request.getSession().getAttribute(_entity);
@@ -258,21 +290,115 @@ public class CartActionBean {
         return null;
     }
 
+
+    public String addToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String code = null;
+        String codingScheme = null;
+        String nameSpace = null;
+        String name = null;
+        String url = null;
+        String version = null;
+        String semanticType = null;
+
+        _messageflag = false;
+        SearchCart search = new SearchCart();
+
+        // Get concept information from the Entity item passed in
+
+        request.getSession().removeAttribute("message");
+
+        // Get Entity object
+        Entity curr_concept = (Entity) request.getSession().getAttribute(_entity);
+
+
+        if (curr_concept == null) {
+        	// Called from a non search area
+        	_logger.error("*** Cart error: Entity object is null!");
+        	return null;
+        }
+        code = curr_concept.getEntityCode(); // Store identifier
+
+        // Get coding scheme
+        codingScheme = (String)request.getSession().getAttribute(_codingScheme);
+        if (codingScheme == null) {
+			codingScheme = "NCI Metathesaurus";
+		}
+
+        // Get concept name space
+        nameSpace = curr_concept.getEntityCodeNamespace();
+
+        // Get concept name
+        name = curr_concept.getEntityDescription().getContent();
+
+        // Get scheme version
+        ResolvedConceptReference ref = null;
+        ref = search.getConceptByCode(codingScheme, code);
+
+
+        version = ref.getCodingSchemeVersion();
+
+        // Get concept URL
+        String protocol = request.getScheme();
+        String domain = request.getServerName();
+        String port = Integer.toString(request.getServerPort());
+        if (port.equals("80")) port = ""; else port = ":" + port;
+        String path = request.getContextPath();
+        url = protocol + "://" + domain
+            + port + path
+            + "/pages/concept_details.jsf?dictionary=" + codingScheme
+            + "&version=" + version
+            + "&code=" + code;
+
+        // Get Semantic type
+        semanticType = search.getSemanticType(curr_concept.getEntityCode());
+
+        // Add concept to cart
+        if (_cart == null) _init();
+        Concept item = new Concept();
+        item.setCode(code);
+        item.setCodingScheme(codingScheme);
+        item.setNameSpace(nameSpace);
+        item.setName(name);
+        item.setVersion(version);
+        item.setUrl(url);
+        item.setSemanticType(semanticType);
+
+        if (!_cart.containsKey(code))
+            _cart.put(code,item);
+
+        //request.getSession().setAttribute("_cart", _cart);
+
+        return null;
+    }
+
+
     /**
      * Remove concept(s) from the Cart
      * @return
      */
+
+/*
     public String removeFromCart() {
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        request.getSession().removeAttribute("message");
+
+
+
+
+		CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean");
+
     	_messageflag = false;
 
-    	if (getCount() < 1) {
+    	if (cartActionBean.getCount() < 1) {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
     	} else if (!hasSelected()) {
         	_messageflag = true;
         	_message = NOTHING_SELECTED;
     	} else {
-            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+            for (Iterator<Concept> i = cartActionBean.getConcepts().iterator(); i.hasNext();) {
                 Concept item = (Concept)i.next();
                 if (item.getCheckbox().isSelected()) {
                     if (_cart.containsKey(item.code))
@@ -282,58 +408,17 @@ public class CartActionBean {
     	}
 
     	//request.getSession().setAttribute("_cart", _cart);
-
         return "showcart";
     }
 
-    /**
-     * Unselect all concept(s) in the Cart
-     * @return
-     */
-    public String selectAllInCart() {
-        _messageflag = false;
-
-    	if (getCount() < 1) {
-        	_messageflag = true;
-        	_message = NO_CONCEPTS;
-    	} else {
-            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept)i.next();
-                item.setSelected(true);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Unselect all concept(s) in the Cart
-     * @return
-     */
-    public String unselectAllInCart() {
-        _messageflag = false;
-
-    	if (getCount() < 1) {
-        	_messageflag = true;
-        	_message = NO_CONCEPTS;
-    	} else if (!hasSelected()) {
-        	_messageflag = true;
-        	_message = NOTHING_SELECTED;
-    	} else {
-            for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
-                Concept item = (Concept)i.next();
-                item.setSelected(false);
-            }
-        }
-        return null;
-    }
-
+*/
     /**
      * Export cart in XML format
      * @return
      * @throws Exception
      */
-    public String exportCartXML() throws Exception {
-
+    public String exportCartXML(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        updateSelection(request);
         _messageflag = false;
 
         SearchCart search = new SearchCart();
@@ -342,12 +427,12 @@ public class CartActionBean {
     	if (getCount() < 1) {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
-        	return null;
+        	//return null;
     	}
     	if (!hasSelected()) {
         	_messageflag = true;
         	_message = NOTHING_SELECTED;
-        	return null;
+        	//return null;
     	}
 
         // Get Entities to be exported and build export xml string
@@ -447,8 +532,6 @@ public class CartActionBean {
 
 		// Send export file to browser
 
-        HttpServletResponse response = (HttpServletResponse) FacesContext
-                .getCurrentInstance().getExternalContext().getResponse();
         response.setContentType(XML_CONTENT_TYPE);
         response.setHeader("Content-Disposition", "attachment; filename="
                 + XML_FILE_NAME);
@@ -460,7 +543,7 @@ public class CartActionBean {
         ouputStream.close();
 
         // Don't allow JSF to forward to cart.jsf
-        FacesContext.getCurrentInstance().responseComplete();
+        //FacesContext.getCurrentInstance().responseComplete();
 
         return null;
     }
@@ -470,24 +553,27 @@ public class CartActionBean {
      * @return
      * @throws Exception
      */
-    public String exportCartCSV() throws Exception {
-
-        _messageflag = false;
-
+    public String exportCartCSV(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        updateSelection(request);
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
         StringBuffer sb = new StringBuffer();
 
+try {
+        _messageflag = false;
+
     	if (getCount() < 1) {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
-        	return null;
     	}
     	if (!hasSelected()) {
         	_messageflag = true;
         	_message = NOTHING_SELECTED;
-        	return null;
     	}
+} catch (Exception ex) {
+	ex.printStackTrace();
+}
+
 
         // Get Entities to be exported and build export file
         // in memory
@@ -512,11 +598,8 @@ public class CartActionBean {
                 sb.append("\r\n");
             }
         }
-
         // Send export file to browser
 
-        HttpServletResponse response = (HttpServletResponse) FacesContext
-                .getCurrentInstance().getExternalContext().getResponse();
         response.setContentType(CSV_CONTENT_TYPE);
         response.setHeader("Content-Disposition", "attachment; filename="
                 + CSV_FILE_NAME);
@@ -528,8 +611,7 @@ public class CartActionBean {
         ouputStream.close();
 
         // Don't allow JSF to forward to cart.jsf
-        FacesContext.getCurrentInstance().responseComplete();
-
+        //FacesContext.getCurrentInstance().responseComplete();
         return null;
     }
 
@@ -546,6 +628,7 @@ public class CartActionBean {
         private String url = null;
         private String semanticType = null;
         private HtmlSelectBooleanCheckbox checkbox = null;
+        private boolean selected = false;
 
         // Getters & setters
 
@@ -615,14 +698,26 @@ public class CartActionBean {
         }
 
         // *** Private Methods ***
-
-        private void setSelected(boolean selected) {
+/*
+        public void setSelected(boolean selected) {
+			if (this.checkbox == null) this.checkbox = new HtmlSelectBooleanCheckbox();
         	this.checkbox.setSelected(selected);
         }
 
-        private boolean getSelected() {
+        public boolean getSelected() {
+			if (this.checkbox == null) return false;
         	return this.checkbox.isSelected();
         }
+*/
+
+        public void setSelected(boolean selected) {
+        	this.selected = selected;
+        }
+
+        public boolean getSelected() {
+        	return this.selected;
+        }
+
 
     } // End of Concept
 
@@ -681,6 +776,40 @@ public class CartActionBean {
     private String clean(String str) {
         String tmpStr = str.replace('"', ' ');
         return tmpStr;
+    }
+
+    public void updateSelection(HttpServletRequest request) {
+		gov.nih.nci.evs.browser.bean.CartActionBean.Concept item = null;
+        Set<String> paramNames = request.getParameterMap().keySet();
+		Collection<gov.nih.nci.evs.browser.bean.CartActionBean.Concept> items = getConcepts();
+		int count = items.size();//cartActionBean.getCount();
+		if (count == 0) {
+			return;
+		}
+		Iterator it = null;
+		it = items.iterator();
+		while (it.hasNext()) {
+			item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it.next();
+			item.setSelected(false);
+		}
+
+        for (String name : paramNames) {
+            String value = request.getParameter(name);
+			it = items.iterator();
+			while (it.hasNext()) {
+				item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it.next();
+				if (item.getCode().compareTo(value) == 0) {
+					item.setSelected(true);
+				}
+			}
+		}
+		HashMap cart = new HashMap();
+		it = items.iterator();
+		while (it.hasNext()) {
+			item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it.next();
+			cart.put(item.getCode(), item);
+		}
+		setCart(cart);
     }
 
 } // End of CartActionBean

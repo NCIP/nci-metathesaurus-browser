@@ -1,4 +1,8 @@
 <%@ page import="gov.nih.nci.evs.browser.common.*" %>
+<%@ page import="gov.nih.nci.evs.browser.bean.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+
+
 <%@ page import="gov.nih.nci.evs.browser.properties.NCImBrowserProperties" %>
 <%@ page import="java.util.Vector"%>
 
@@ -21,11 +25,23 @@
       <a href="<%= request.getContextPath() %>/pages/help.jsf" alt="Help" tabindex="0">Help</a>
     </td>
     <td align="right">
+    <!--
 	  <c:choose>	
 		<c:when test="${sessionScope.CartActionBean.count>0}">
 		  <a href="<%= request.getContextPath() %>/pages/cart.jsf" tabindex="0">Cart</a>&nbsp;|
-	    </c:when>
-      </c:choose>
+	        </c:when>
+          </c:choose>
+    -->
+<%
+CartActionBean cartbean = (CartActionBean) request.getSession().getAttribute("cartActionBean"); 
+if (cartbean != null && cartbean.getCount() > 0) {
+%>
+  <a href="<%= request.getContextPath() %>/pages/cart.jsf" tabindex="0">Cart</a>
+  |
+<%     
+}
+%>
+      
     <%
       Vector visitedConcepts = (Vector) request.getSession().getAttribute("visitedConcepts");
       if (visitedConcepts != null && visitedConcepts.size() > 0) {

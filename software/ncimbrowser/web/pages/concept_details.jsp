@@ -39,6 +39,7 @@
 
 <%@ page import="gov.nih.nci.evs.browser.utils.*"%>
 <%@ page import="gov.nih.nci.evs.browser.common.*"%>
+<%@ page import="gov.nih.nci.evs.browser.bean.*"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
@@ -101,6 +102,13 @@ response.setContentType("text/html;charset=utf-8");
 				 }
 			 }
 			 
+CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean"); 
+if (cartActionBean == null) {
+    cartActionBean = new CartActionBean();
+    cartActionBean._init();
+    request.getSession().setAttribute("cartActionBean", cartActionBean); 
+}
+
 
 Entity concept_details_c = null;
 String concept_details_code = null;
@@ -355,6 +363,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
         if (c != null) {
        request.getSession().setAttribute("concept", c);
        request.getSession().setAttribute("code", code);
+       
        name = c.getEntityDescription().getContent();
 
       } else {
@@ -395,6 +404,8 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
              <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
        <br>
+       
+<!--       
        <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">
          <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
          <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
@@ -404,6 +415,18 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
             (<h:outputText value="#{CartActionBean.count}"/>)
           </c:when>
        </c:choose>
+-->
+ <a href="<%=request.getContextPath()%>/ajax?action=addtocart&code=<%=code%>" title="Add concept to cart.">Add to Cart</a>
+
+<%
+if (cartActionBean != null && cartActionBean.getCount()>0) {
+%>
+     (<%=cartActionBean.getCount()%>)
+<%     
+}
+%>  
+       
+       
           </td>
         </tr>
       </table>
