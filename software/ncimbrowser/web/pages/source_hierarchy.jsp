@@ -248,7 +248,7 @@
 
 
     function showNoPathFoundStatus() {
-      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source – check other relationships.</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source ï¿½ check other relationships.</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
@@ -466,7 +466,7 @@
   a.async = 1;
   a.src = g;
   m.parentNode.insertBefore(a, m)
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
    ga('create, 'UA-150112876-2', 'auto');
    ga('send', 'pageview');
 </script>
