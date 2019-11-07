@@ -67,11 +67,6 @@
       Collection<gov.nih.nci.evs.browser.bean.CartActionBean.Concept> items = cartActionBean.getConcepts(); 
       int count = items.size();//cartActionBean.getCount();
       
-      
-      
-   
-      
-      
     %>
     
  
@@ -85,10 +80,8 @@
          <div class="pagecontent">
           <a name="evs-content" id="evs-content" tabindex="0"></a>
   
-  
- <form name="cartFormId" method="post" action="<%=request.getContextPath() %>/ajax?action=cart"><br>
- 
-            
+<form name="cartFormId" method="post" action="<%=request.getContextPath() %>/ajax?action=cart"><br>
+             
             <table border="0" class="datatable_960">
               <tr>
                 <td width="200px">
@@ -98,18 +91,7 @@
                     <td class="texttitle-gray"> (<%=count%>)</td>
                    
                     <td class="texttitle-gray">
-  
-  <%
-  if (count > 0) {
-  %>
-       <a href="javascript:history.back()"><font size="2">Exit Cart</font></a>  
-  <%     
-  } else {
-  %>
-       <a href="<%=request.getContextPath() %>/pages/home.jsf"><font size="2">Exit Cart</font></a>
-  <%        
-  }
-  %>  
+<a href="<%=request.getContextPath() %>/pages/home.jsf"><font size="2">Exit Cart</font></a>
                     </td>
                   </tr>
                 </table>
