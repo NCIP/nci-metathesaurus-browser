@@ -347,7 +347,6 @@ public final class AjaxServlet extends HttpServlet {
 		return retval;
 	}
 
-
     public String selectAllInCart(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean");
@@ -366,7 +365,7 @@ public final class AjaxServlet extends HttpServlet {
 
 				String nextJSP = "/pages/cart.jsf";
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-				dispatcher.forward(request,response);
+			    dispatcher.forward(request,response);
 
 			}
 		} catch (Exception ex) {
@@ -585,10 +584,12 @@ public final class AjaxServlet extends HttpServlet {
         if (ans != null) {
 			cart_action = 3;
 		}
+
         switch (cart_action) {
             case 0:  removeFromCart(request, response);
                      break;
             case 1:  selectAllInCart(request, response);
+
                      break;
             case 2:  unselectAllInCart(request, response);
                      break;
