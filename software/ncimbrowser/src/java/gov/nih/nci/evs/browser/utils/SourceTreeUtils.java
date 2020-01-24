@@ -1,4 +1,5 @@
 package gov.nih.nci.evs.browser.utils;
+import gov.nih.nci.evs.browser.properties.*;
 
 import java.io.*;
 import java.util.*;
@@ -97,7 +98,12 @@ public class SourceTreeUtils {
     private LexBIGServiceConvenienceMethods lbscm = null;
     private MetaBrowserService mbs = null;
 
-    public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+    //public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+
+    private static String default_source_hierarchies="|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA|";
+
+
+    public String sourceHierarchies = null;
 
     public SourceTreeUtils(LexBIGService lbSvc) {
         this.lbSvc = lbSvc;
@@ -108,6 +114,13 @@ public class SourceTreeUtils {
 			this.lbscm.setLexBIGService(lbSvc);
 
 			this.mbs = (MetaBrowserService) lbSvc.getGenericExtension("metabrowser-extension");
+
+			this.sourceHierarchies = NCImBrowserProperties.getSourceHierarchies();
+			if (this.sourceHierarchies == null) {
+				this.sourceHierarchies = default_source_hierarchies;
+			}
+			System.out.println(sourceHierarchies);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -285,7 +298,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -371,7 +384,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
 
     }
@@ -504,7 +517,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -621,7 +634,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getRootConceptNamesAndCodes: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -1547,7 +1560,7 @@ public class SourceTreeUtils {
                     list.add(rcr);
                 }
             }
-            SortUtils.quickSort(list);
+            new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
 
@@ -1972,7 +1985,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        // SortUtils.quickSort(list);
+        // new SortUtils().quickSort(list);
         return list;
     }
 
@@ -2039,7 +2052,7 @@ public class SourceTreeUtils {
         } catch (Exception e) {
 
         }
-        v = SortUtils.quickSort(v);
+        v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
             TreeItem childItem = (TreeItem) v.elementAt(i);
             ti.addChild(childNavText, childItem);
@@ -2112,7 +2125,7 @@ public class SourceTreeUtils {
             return;
         }
 
-        sources = SortUtils.quickSort(sources);
+        sources = new SortUtils().quickSort(sources);
         System.out.println("sources.size(): " + sources.size());
 
         int max = sources.size();

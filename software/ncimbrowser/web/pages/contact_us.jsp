@@ -34,8 +34,9 @@
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
   <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
     <title>NCI Metathesaurus</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -58,6 +59,7 @@
     </script>
     
     
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
   </head>
   <%
   
@@ -140,7 +142,7 @@ if (captcha_option.compareTo("default") == 0) {
 
     <f:view>
       <!-- Begin Skip Top Navigation -->
-        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+        <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
       <!-- End Skip Top Navigation -->
       <%@ include file="/pages/include/header.jsp" %>
       <div class="center-page">
@@ -148,7 +150,7 @@ if (captcha_option.compareTo("default") == 0) {
         <div id="main-area">
           <%@ include file="/pages/include/content-header.jsp" %>
           <div class="pagecontent">
-            <a name="evs-content" id="evs-content"></a>
+            <a name="evs-content" id="evs-content" tabindex="0"></a>
             <div class="texttitle-blue">Contact Us</div>
             <hr></hr>
 
@@ -167,7 +169,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   </div>
   <br/>
 
-  <table class="textbody">
+  <table class="textbody" role='presentation'>
     <tr>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td>Telephone:</td>
@@ -216,7 +218,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   <h:form>
   
 <p>
-<table>
+<table role='presentation'>
 <%
 String answer_label = "Enter the characters appearing in the above image";
 
@@ -255,6 +257,7 @@ if (captcha_option.compareTo("default") == 0) {
       <tr>
       <td class="textbody"> 
           <%=answer_label%>: <i style="color:#FF0000;">*</i>
+<label for="answer">Answer</label>
           <input type="text" id="answer" name="answer" value="<%=HTTPUtils.cleanXSS(answer)%>"/>&nbsp;
       </td>
       </tr> 
@@ -275,15 +278,18 @@ if (captcha_option.compareTo("default") == 0) {
     <p>
       <i>Subject of your email:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="subject">Subject</label>      
+    <input class="textbody" size="100" id="subject" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <p>
       <i>Detailed description of your problem or suggestion (no attachments):</i><i style="color:#FF0000;">*</i>
     </p>
-    <TEXTAREA class="textbody" Name="<%= EMAIL_MSG %>" rows="4" cols="98"><%= message %></TEXTAREA>
+<label for="<%= EMAIL_MSG %>"><%= EMAIL_MSG %></label>
+    <TEXTAREA class="textbody" id="<%= EMAIL_MSG %>" Name="<%= EMAIL_MSG %>" rows="4" cols="98"><%= message %></TEXTAREA>
     <p>
       <i>Your e-mail address:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="<%=EMAIL_ADDRESS%>">Email Address</label>    
+    <input class="textbody" size="100" id="<%=EMAIL_ADDRESS%>" name="<%=EMAIL_ADDRESS%>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     
     <p>
        <i style="color:#FF0000;">* Required</i>
@@ -298,13 +304,13 @@ if (captcha_option.compareTo("default") == 0) {
       action="#{userSessionBean.clearContactUs}"
       alt="clear">
     </h:commandButton>
-    <img src="<%=basePath%>/images/spacer.gif" width="1" />
+    <img src="<%=basePath%>/images/spacer.gif" width="1" alt="spacer" />
     <h:commandButton
       id="mail"
       value="submit"
       image="/images/submit.gif"
       action="#{userSessionBean.contactUs}"
-      alt="submit" >
+      alt="submit">
     </h:commandButton>
     
 <input type="hidden" name="alt_captcha_option" id="alt_captcha_option" value="<%=alt_captcha_option%>">
@@ -320,5 +326,6 @@ if (captcha_option.compareTo("default") == 0) {
         <!-- end Main box -->
       </div>
     </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
   </body>
 </html>

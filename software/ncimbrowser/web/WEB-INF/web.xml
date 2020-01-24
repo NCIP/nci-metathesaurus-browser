@@ -13,6 +13,12 @@
         <param-value>server</param-value>
     </context-param>
 
+<!-- remove id attribute from view-state -->
+<context-param>
+    <param-name>com.sun.faces.enableViewStateIdRendering</param-name>
+    <param-value>false</param-value>
+</context-param>
+
     <context-param>
         <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>/WEB-INF/faces-config.xml</param-value>

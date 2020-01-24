@@ -296,7 +296,7 @@ public class OntologyBean {
             ex.printStackTrace();
         }
         hset.clear();
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     // /////////////////////
@@ -336,7 +336,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     private static Vector getSupportedPropertyQualifier(CodingScheme cs) {
@@ -352,7 +352,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     public static Vector getSupportedSources() {
@@ -372,7 +372,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     private static Vector getSupportedPropertyTypes() {
@@ -381,7 +381,7 @@ public class OntologyBean {
         v.add("DEFINITION");
         v.add("COMMENT");
         v.add("GENERIC");
-        return v;// SortUtils.quickSort(v);
+        return v;// new SortUtils().quickSort(v);
     }
 
     public static Vector<SupportedProperty> getSupportedProperties(
@@ -395,21 +395,37 @@ public class OntologyBean {
             SupportedProperty sp = (SupportedProperty) properties[i];
             v.add(sp);
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
+
+	public static boolean isAnnotationPropertyPCode(String t) {
+		if (t == null) return false;
+		if (t.length() <= 1) return false;
+		if (!t.startsWith("P")) return false;
+		for (int i=1; i<t.length(); i++) {
+			char c = t.charAt(i);
+			if (!Character.isDigit(c)) return false;
+		}
+		return true;
+	}
 
     public static Vector<String> getSupportedPropertyNames(CodingScheme cs) {
         Vector w = getSupportedProperties(cs);
-        if (w == null)
-            return null;
-
+		if (w == null) return null;
         Vector<String> v = new Vector<String>();
-        for (int i = 0; i < w.size(); i++) {
-            SupportedProperty sp = (SupportedProperty) w.elementAt(i);
-            v.add(sp.getLocalId());
-        }
-        return SortUtils.quickSort(v);
-    }
+		for (int i=0; i<w.size(); i++)
+		{
+		     SupportedProperty sp = (SupportedProperty) w.elementAt(i);
+		     if (sp.getUri() != null && isAnnotationPropertyPCode(sp.getLocalId())) {
+				 if (!sp.getUri().endsWith(sp.getLocalId())) {
+					 v.add(sp.getLocalId());
+				 }
+			 } else {
+				 v.add(sp.getLocalId());
+			 }
+		}
+        return new SortUtils().quickSort(v);
+	}
 
     public static Vector<String> getSupportedPropertyNames() {
         CodingScheme cs = getCodingScheme(_codingSchemeName, null);
@@ -432,7 +448,7 @@ public class OntologyBean {
         } catch (Exception e) {
             return null;
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     public static Vector<String> getSupportedAssociationNames() {
@@ -450,7 +466,7 @@ public class OntologyBean {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
             v.add(sa.getLocalId());
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     public static Vector getAssociationCodesByNames(String codingScheme,
@@ -482,7 +498,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(w);
+        return new SortUtils().quickSort(w);
     }
 
     public static void dumpVector(String label, Vector v) {

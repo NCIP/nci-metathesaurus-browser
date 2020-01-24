@@ -16,7 +16,7 @@ _logger.warn("(*) concept_typelinks == null???");
   //Vector sources_typelinks = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_typelinks_id);
 %>
 
-<table class="tabTable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<table class="tabTable" width="100%" cellspacing="0" cellpadding="0" border="0" role='presentation'>
   <tr>
     <%
       String scheme = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));

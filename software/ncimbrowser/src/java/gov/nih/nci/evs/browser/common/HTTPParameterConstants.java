@@ -56,7 +56,21 @@ public class HTTPParameterConstants {
        "advancedSearchForm:adv_search.y",
        "javax.faces.ViewState",
        "referer",
-       "version"
+       "version",
+       "cartAction.x",
+       "cartAction.y",
+       "cartAction1.x",
+       "cartAction1.y",
+       "cartAction2.x",
+       "cartAction2.y",
+       "cartAction3.x",
+       "cartAction3.y",
+       "cartAction4.x",
+       "cartAction4.y",
+       "cartAction5.x",
+       "cartAction5.y",
+       "ans",
+       "addtocart"
     };
 
     public static final List HTTP_REQUEST_PARAMETER_NAME_LIST = Arrays.asList(HTTP_REQUEST_PARAMETER_NAMES);

@@ -10,8 +10,9 @@
 %>
 <!-- Build info: <%=ncim_build_info%> -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
 <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -19,6 +20,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
     <script type="text/javascript"
@@ -30,7 +32,7 @@
 
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -40,7 +42,7 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
-      <a name="evs-content" id="evs-content"></a>
+      <a name="evs-content" id="evs-content" tabindex="0"></a>
 <%
   String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
   Entity concept_neighborhood = null;
@@ -109,7 +111,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") == 0) {
               %>
-        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
            <%=s%>
         </a>&nbsp;
         <%
@@ -120,7 +122,7 @@
               String s = (String) src_vec.elementAt(n);
               if (s.compareTo("NCI") != 0) {
               %>
-        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+        <a href="<%= request.getContextPath() %>/pages/neighborhood.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
            <%=s%>
         </a>&nbsp;
         <%
@@ -182,7 +184,7 @@
               }
               %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
               </a>
           </th>
@@ -326,7 +328,7 @@ if (neighborhood_atoms.size() == 0) {
               }
               %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" border="0">
               </a>
           </th>
@@ -388,7 +390,7 @@ if (neighborhood_atoms.size() == 0) {
 
 
       <p></p>
-      Return to <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=NCI%20MetaThesaurus&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Sources</a>
+      Return to <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&type=sources&sab=<%=neighborhood_sab%>&sortBy=name">Sources</a>
 
 
 
@@ -400,5 +402,6 @@ if (neighborhood_atoms.size() == 0) {
     <!-- end Main box -->
   </div>
 </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>

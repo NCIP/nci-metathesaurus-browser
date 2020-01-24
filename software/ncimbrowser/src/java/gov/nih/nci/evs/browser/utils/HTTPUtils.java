@@ -252,7 +252,7 @@ public class HTTPUtils {
 
             HttpSession session = request.getSession();
             Enumeration<?> enumeration =
-                SortUtils.sort(session.getAttributeNames());
+                new SortUtils().sort(session.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -276,7 +276,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getAttributeNames());
+                new SortUtils().sort(request.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -300,7 +300,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -325,7 +325,7 @@ public class HTTPUtils {
 
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -470,82 +470,85 @@ public class HTTPUtils {
 		String value = null;
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
-			    if (name.compareTo("view") == 0) {
-					value = (String) request.getParameter(name);
-					if (value != null) {
-						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
-						if (!isInteger) {
-							System.out.println("Integer value violation???");
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+				if (!name.startsWith("code_")) {
+
+					if (name.compareTo("view") == 0) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???");
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
 					}
-				}
 
-                Boolean isDynamic = isDynamicId(name);
-                Boolean issearchFormParameter = isSearchFormParameter(name);
+					Boolean isDynamic = isDynamicId(name);
+					Boolean issearchFormParameter = isSearchFormParameter(name);
 
-                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.TRUE)) {
-					value = (String) request.getParameter(name);
-					if (value != null) {
-						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
-						if (!isInteger) {
-							System.out.println("Integer value violation???" + value);
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
-				    }
-				}
-
-                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
-					if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
-						if (name.endsWith("value=")) return true;
-                        if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
-							System.out.println("WARNING: parameter name: " + name + " is not in the list.");
-							String error_msg = createErrorMessage(1, name);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
+					if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.TRUE)) {
 						value = (String) request.getParameter(name);
-						Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???" + value);
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
+					}
 
-						bool_obj = containsPercentSign(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
+					if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
+						if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+							if (name.endsWith("value=")) return true;
+							if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
+								System.out.println("WARNING: parameter name: " + name + " is not in the list.");
+								String error_msg = createErrorMessage(1, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+							value = (String) request.getParameter(name);
+							Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 
-						bool_obj = validateValueSetCheckBox(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
+							bool_obj = containsPercentSign(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 
-						bool_obj = containsHazardCharacters(value);
-						// Cross-Site Scripting:
-						if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
-							String error_msg = createErrorMessage(2, name);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
+							bool_obj = validateValueSetCheckBox(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 
-						bool_obj = checkLimitedLengthCondition(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+							bool_obj = containsHazardCharacters(value);
+							// Cross-Site Scripting:
+							if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
+								String error_msg = createErrorMessage(2, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = checkLimitedLengthCondition(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
 					}
 			    }

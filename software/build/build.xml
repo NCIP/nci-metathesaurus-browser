@@ -436,6 +436,7 @@ L-->
             <resources>
                 <file file="${exploded.dir}/install/${webapp.prop.file}"/>
                 <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
+                <file file="${exploded.dir}/install/${ehcache.xml.file}"/>
                 <file file="${exploded.dir}/install/log4j.dtd"/>
             </resources>
         </copy>

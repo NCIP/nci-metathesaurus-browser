@@ -127,6 +127,9 @@ public class NCImBrowserProperties {
     private static String _license_page_option = null;
     private static int _subconcept_page_size = 1000;
 
+    private static String _ncim_app_version = null;
+    private static String _lexevs_version = null;
+
     public static final String AUDIO_CAPTCHA_BACKGROUND_NOISE_ON = "AUDIO_CAPTCHA_BACKGROUND_NOISE_ON";
     private static boolean _audio_captcha_background_noise_on = true;
 
@@ -240,6 +243,16 @@ public class NCImBrowserProperties {
 			if (_max_search_time_limit_str != null) {
 				_max_search_time_limit = Integer.parseInt(_max_search_time_limit_str);
 			}
+
+            _ncim_app_version =
+                NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.NCIM_APP_VERSION);
+
+            _lexevs_version =
+                NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.LEXEVS_VERSION);
+
+
 	    } catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -267,6 +280,13 @@ public class NCImBrowserProperties {
         return _max_search_time_limit;
 	}
 
+	public static String get_ncim_app_version() {
+        return _ncim_app_version;
+	}
+
+	public static String get_lexevs_version() {
+        return _lexevs_version;
+	}
 
     /**
      * Private constructor for singleton pattern.

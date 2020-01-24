@@ -11,28 +11,30 @@
   String ncit_url = new DataUtils().getNCItURL();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
   <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
     <title>NCIm Sources</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
   </head>
-  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</a>
   <!-- End Skip Top Navigation -->
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/nci-banner-1.gif" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
+        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px">
+        <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px" role='presentation'>
         <tr>
           <td valign="top">
             <a href="http://evs.nci.nih.gov/" target="_blank" alt="Enterprise Vocabulary Services">
@@ -44,22 +46,22 @@
         </table>
         <div><img src="<%=basePath%>/images/thesaurus_popup_banner.gif" width="612" height="56" alt="NCI Thesaurus" title="" border="0" /></div>
         <div id="popupContentArea">
-          <a name="evs-content" id="evs-content"></a>
+          <a name="evs-content" id="evs-content" tabindex="0"></a>
           <!-- Source content -->
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr class="pageTitle">
               <td align="left">
                 <b>NCIm Sources</b>
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
-                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer" ><i>Send to Printer</i></a>
+                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer"><i>Send to Printer</i></a>
                 </font>
               </td>
             </tr>
           </table>
           <hr/>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr class="textbody"><td align="left">
 
 <p>
@@ -137,7 +139,7 @@ Additional information on many of these sources can be found on related pages.
             </td></tr>
           </table>
           <br/>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
              <tr class="dataRowDark">
                <th scope="col" align="left">Source</th>
                <th scope="col" align="left">Description</th>
@@ -146,7 +148,7 @@ Additional information on many of these sources can be found on related pages.
             <%
               String propertyName = "son";//"formalName";
               //Vector abbr_vec = new NCImMetadataUtils().getMetadataForCodingSchemes(Constants.CODING_SCHEME_NAME, propertyName);
-              Vector abbr_vec = new NCImMetadataUtils().getMetadataForCodingSchemes();
+              Vector abbr_vec = NCImMetadataUtils.getMetadataForCodingSchemes();
               String prev_t = "";
               for (int n=0; n<abbr_vec.size(); n++) {
                  String t = (String) abbr_vec.elementAt(n);
@@ -173,5 +175,6 @@ Additional information on many of these sources can be found on related pages.
       </div>
   </div>
   </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
   </body>
 </html>

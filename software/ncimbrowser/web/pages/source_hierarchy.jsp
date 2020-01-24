@@ -11,20 +11,21 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="org.apache.log4j.*" %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/dom-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/animation-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/container-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/connection-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/autocomplete-min.js" ></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/treeview-min.js" ></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/dom-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/animation-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/container-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/connection-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/autocomplete-min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/treeview-min.js"></script>
 <%
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
   <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
   <title>Source Hierarchy</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -247,7 +248,7 @@
 
 
     function showNoPathFoundStatus() {
-      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source – check other relationships.</span>");
+      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source ï¿½ check other relationships.</span>");
       rootDescDiv.show();
       rootDescDiv.render();
     }
@@ -453,6 +454,7 @@
 
 
   </script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
 </head>
 <body>
   <%!
@@ -460,18 +462,19 @@
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->
-        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+        <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
     <!-- End Skip Top Navigation --> 
-  
-    <div id="popupContainer">
+
+<div id="popupContainer">
+    
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/nci-banner-1.gif" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
         <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0">
+        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0" role='presentation'>
         <tr>
           <td valign="top">
             <a href="http://evs.nci.nih.gov/" target="_blank" alt="Enterprise Vocabulary Services">
@@ -509,9 +512,9 @@ ontology_formalname = NCImMetadataUtils.getSABDefinition(ontology_sab);
 %>
 
         <div id="popupContentArea">
-          <a name="evs-content" id="evs-content"></a>
+          <a name="evs-content" id="evs-content" tabindex="0"></a>
          
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr class="textbody">
               <td class="pageTitle" align="left">
 
@@ -572,5 +575,6 @@ ontology_formalname = NCImMetadataUtils.getSABDefinition(ontology_sab);
       </div>
     </div>
   </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>

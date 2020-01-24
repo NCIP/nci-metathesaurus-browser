@@ -9,10 +9,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%
   String ncit_url = new DataUtils().getNCItURL();
-  String lexevs_version = new DataUtils().getLexVersion();
+  DataUtils du = new DataUtils();
+  String lexevs_version = du.getLexVersion();
+  String ncim_application_version = du.getApplicationVersion();
 %>
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -20,6 +23,7 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
 </head>
 <body onLoad="document.forms.searchTerm.matchText.focus();">
     <script type="text/javascript"
@@ -31,7 +35,7 @@
 
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -41,7 +45,7 @@
       <%@ include file="/pages/include/content-header.jsp" %>
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="0"></a>
         <!-- ======================================= -->
         <!--                 HELP CONTENT            -->
         <!-- ======================================= -->
@@ -59,25 +63,25 @@
           <A HREF="#additionalinformation">Additional Information</A>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="introduction">Introduction</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
-          4,000,000 terms from more than 75 terminologies. It contains most public domain vocabularies from
+          6,700,000 terms from over 85 terminologies. It contains most public domain vocabularies from
           the National Library of Medicine's <a href="https://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
           (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           NCIm Sources</a>).
           <br><br>
           <b>The NCIm Browser</b>
           is for the retrieval of concepts from the NCI Metathesaurus, and for viewing the contents, structure,
           and cross mappings of individual source terminologies. It is designed for ease of use by a diverse
           user community. 
-          
-          This 2.6 release uses the new LexEVS 6.3 terminology server without significant changes that would affect users. 
+
+          This <%=ncim_application_version%> release uses the new LexEVS <%=lexevs_version%> terminology server without significant changes that would affect users. 
 
  			The Search box separates Name and Code search, search performance 
 			is better, and Advanced Search offers new 
@@ -100,7 +104,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchhelp">Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -166,7 +170,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchavdhelp">Advanced Search</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -186,7 +190,7 @@
             <li><b>Relationship</b> search offers drop down lists of broad relationship labels (RELs) and
             specific relationship attributes (RELAs) that can be searched on, as explained in the
             <a href="#" onclick="javascript:window.open('<%= request.getContextPath()%>/pages/rela_help_info.jsf',
-            '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+            '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
              NCIm Relationship Attributes</a>
             help file. Note that many relationships have no source-assigned RELA value. For example, searching
             on isa RELA value will retrieve only those specifically tagged as such and not others having only a
@@ -195,7 +199,7 @@
           Advanced Search options will continue to grow in future releases.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="searchresults">Search Results</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -215,7 +219,7 @@
           </ul>
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="conceptdetails">Concept Details</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -245,7 +249,7 @@
         
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="cartfunctionality">Cart and Export Functionality</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -300,7 +304,7 @@
         
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="hierarchy">View Hierarchy</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -324,14 +328,14 @@
           in a separate window.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="sources">Sources</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Sources ************** -->
           Click on the
           <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
           <b>Sources</b></a>
           link at the top of the page to bring up a separate window showing the list of sources
           included in the current release of NCI Metathesaurus.  Sources are listed alphabetically  by abbreviation,
@@ -342,12 +346,12 @@
     
         
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="knownissues">Known Issues</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
           <!-- ************* Known Issues ************** -->
-          This 2.6 NCIm Browser release, based on LexEVS <%=lexevs_version %>, 
+          This <%=ncim_application_version%> NCIm Browser release, based on LexEVS <%=lexevs_version%>, 
           addresses some of the search and other enhancements made in the companion Term Browser. 
          
  			The Search box separates Name and Code search, search performance 
@@ -358,8 +362,8 @@
           
           For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.6+Release+Notes" target="_blank">
-          NCI Metathesaurus Browser 2.6 Release Notes.
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+<%=ncim_application_version%>+Release+Notes" target="_blank">
+          NCI Metathesaurus Browser <%=ncim_application_version%> Release Notes.
           </a>
           <br><br>
           Please report any bugs or suggestions using the browser's <a href="contact_us.jsf">Contact Us</a> page.
@@ -368,7 +372,7 @@
           in the upper right of all concept details pages.
         </p>
         <p class="textbody">
-          <table width="930px" cellpadding="0" cellspacing="0" border="0"><tr>
+          <table width="930px" cellpadding="0" cellspacing="0" border="0" role='presentation'><tr>
             <td><h2><A NAME="additionalinformation">Additional Information</A></h2></td>
             <td align="right"><a href="#"><img src="<%= request.getContextPath() %>/images/up_arrow.jpg" width="16" height="16" border="0" alt="top" /></a></td>
           </tr></table>
@@ -387,5 +391,6 @@
     <!-- end Main box -->
   </div>
 </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>
