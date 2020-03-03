@@ -197,6 +197,7 @@ L-->
                 <filter token="max_search_iteration" value="${max_search_iteration}"/>
                 <filter token="max_search_time_limit" value="${max_search_time_limit}"/>
                 <filter token="lexevs_version" value="${lexevs_version}"/>
+                <filter token="graph.db.url" value="${graph.db.url}"/>
             </filterset>
             <resources>
                 <file file="${bda.conf.dir}/${webapp.prop.file}"/>
@@ -277,6 +278,7 @@ L-->
                 <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
                 <filter token="term.suggestion.application.url" value="${term.suggestion.application.url}"/>
                 <filter token="meddra_security_token" value="${meddra_security_token}"/>
+                <filter token="graph.db.url" value="${graph.db.url}"/>
             </filterset>
             <resources>
                 <file file="${exploded.dir}/deploy/${webapp.prop.file}"/>

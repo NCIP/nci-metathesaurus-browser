@@ -2305,6 +2305,11 @@
                  <value>@audio_captcha_background_noise_on@</value>
         </ConfigurableItem>
 
+         <ConfigurableItem>
+                 <key>GRAPH_DB_URL</key>
+                 <value>@graph.db.url@</value>
+        </ConfigurableItem>   
+        
     </ConfigurableItems>
 
     <MetadataElements>

@@ -133,7 +133,8 @@ public class NCImBrowserProperties {
     public static final String AUDIO_CAPTCHA_BACKGROUND_NOISE_ON = "AUDIO_CAPTCHA_BACKGROUND_NOISE_ON";
     private static boolean _audio_captcha_background_noise_on = true;
 
-
+    public static final String GRAPH_DB_URL = "GRAPH_DB_URL";
+    private static String _graph_db_url = null;
 
     static {
 		try {
@@ -252,6 +253,9 @@ public class NCImBrowserProperties {
                 NCImBrowserProperties
 					.getProperty(NCImBrowserProperties.LEXEVS_VERSION);
 
+			_graph_db_url =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.GRAPH_DB_URL);
 
 	    } catch (Exception ex) {
 			ex.printStackTrace();
@@ -575,4 +579,7 @@ public class NCImBrowserProperties {
         return _ncicb_contact_url;
     }
 
+	public static String getGraphDBURL() {
+		return _graph_db_url;
+	}
 }

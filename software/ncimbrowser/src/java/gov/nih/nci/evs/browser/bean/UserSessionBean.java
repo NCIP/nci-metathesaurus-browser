@@ -331,13 +331,13 @@ public class UserSessionBean extends Object {
 			}
 
 		} else if (searchTarget.compareTo("relationships") == 0) {
-
-			if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			matchText = matchText.trim();
+ 			//if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			if (matchText.length()<NCImBrowserProperties.getMinimumSearchStringLength() && matchAlgorithm.compareTo("contains") == 0) {
 				String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
 				request.getSession().setAttribute("message", msg);
 				return "message";
 			}
-
 
 			designationOnly = true;
 			if (iteratorBeanManager.containsIteratorBean(key)) {
