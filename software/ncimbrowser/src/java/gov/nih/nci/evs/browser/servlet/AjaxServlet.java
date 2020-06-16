@@ -451,7 +451,7 @@ public final class AjaxServlet extends HttpServlet {
 			}
 			String ans = (String) request.getParameter("ans");
 			if (ans == null) {
-				String message = "Are you sure you want to permanently remove the following seleced concepts from the cart? " +
+				String message = "Are you sure you want to permanently remove the following selected concepts from the cart? " +
 				"&nbsp;<input type=\"radio\" name=\"ans\" checked=\"checked\" value=\"yes\" >Yes</input>&nbsp;<input type=\"radio\" value=\"no\" name=\"ans\">No</input>" +
 				". &nbsp;Click <a href=\"javascript:submitform()\">here</a> to confirm.";
 				request.getSession().setAttribute("message", message);
