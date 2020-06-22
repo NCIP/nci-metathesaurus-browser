@@ -4,10 +4,14 @@
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.*" %>
+<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.CartActionBean" %>
 <%@ page import="gov.nih.nci.evs.browser.bean.CartActionBean.Concept" %>
 <%@ page import="javax.faces.context.*" %>
+
+<%@ page import="org.LexGrid.LexBIG.LexBIGService.*" %>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
@@ -36,10 +40,22 @@
 	}
 	</script>
 
+<script type="text/javascript">
+	function submitform(btn)
+	{
+	    document.getElementById('btn').value=btn;
+	    document.cartFormId.submit();
+	}
+</script>
+
 
 <f:view>
     <%
       String default_cs = "NCI Metathesaurus";
+      String scheme = "NCI_Metathesaurus";
+      LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+      String chding_scheme_version = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(scheme, "PRODUCTION");
+      
       String contactUsUrl = request.getContextPath() + "/pages/contact_us.jsf";
       String subsetsUrl = request.getContextPath() + "/pages/subset.jsf";
       gov.nih.nci.evs.browser.bean.CartActionBean.Concept item = null;
@@ -66,7 +82,12 @@
           <a name="evs-content" id="evs-content" tabindex="0"></a>
   
 <form name="cartFormId" method="post" action="<%=request.getContextPath() %>/ajax?action=cart"><br>
-             
+
+ <input type="hidden" id="btn" name="btn" value="not_selected">
+ <input type="hidden" id="scheme" name="scheme" value="NCI_Metathesaurus">
+ <input type="hidden" id="version" name="version" value="<%=chding_scheme_version%>">
+ 
+ 
             <table border="0" class="datatable_960">
               <tr>
                 <td width="200px">
@@ -86,7 +107,7 @@
   if (count > 0) {              
   %>                
               <td align="right" valign="bottom" nowrap>
-              
+<!--              
 <input type=image src="<%=request.getContextPath() %>/images/selectall.gif"  id="cartAction" name="cartAction1" value="selectall" alt="Select All" title="Select all concepts" onclick="this.form.submit();">
 &nbsp;
 <input type=image src="<%=request.getContextPath() %>/images/clearselections.gif"  id="cartAction" name="cartAction2" value="unselectall" alt="Unselect" title="Unselect all concepts"  onclick="this.form.submit();">
@@ -96,6 +117,19 @@
 <input type=image src="<%=request.getContextPath() %>/images/exportxml.gif"  id="cartAction" name="cartAction4" value="exportxml" alt="Export XML" title="Export cart contents in LexGrid XML format" onclick="this.form.submit();">
 &nbsp; 
 <input type=image src="<%=request.getContextPath() %>/images/exportcsv.gif"  id="cartAction" name="cartAction5" value="exportcsv" alt="Export CSV" title="Generate a list of cart concepts in CSV format readable from Excel" onclick="this.form.submit();">
+-->
+
+<input type=image src="<%=request.getContextPath() %>/images/selectall.gif"  id="cartAction" name="cartAction" value="selectall" alt="Select All" title="Select all concepts" onclick="submitform('selectall');">
+&nbsp;
+<input type=image src="<%=request.getContextPath() %>/images/clearselections.gif"  id="cartAction" name="cartAction" value="unselectall" alt="Unselect" title="Unselect all concepts" onclick="submitform('unselectall');">
+&nbsp;
+<input type=image src="<%=request.getContextPath() %>/images/remove.gif"  id="cartAction" name="cartAction" value="removefromcart" alt="Remove" title="Remove concepts from the cart" onclick="submitform('removefromcart');">
+&nbsp; 
+<input type=image src="<%=request.getContextPath() %>/images/exportxml.gif"  id="cartAction" name="cartAction" value="exportxml" alt="Export XML" title="Export cart contents in LexGrid XML format" onclick="submitform('exportxml');">
+&nbsp; 
+<input type=image src="<%=request.getContextPath() %>/images/exportcsv.gif"  id="cartAction" name="cartAction" value="exportcsv" alt="Export CSV" title="Generate a list of cart concepts in CSV format readable from Excel" onclick="submitform('exportcsv');">
+
+
 
               </td>              
             </tr>

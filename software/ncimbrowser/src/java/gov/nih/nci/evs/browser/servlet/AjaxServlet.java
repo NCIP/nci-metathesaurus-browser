@@ -424,7 +424,7 @@ public final class AjaxServlet extends HttpServlet {
 		return "refresh_cart";
 	}
 
-
+/*
     public String removeFromCart(HttpServletRequest request, HttpServletResponse response) {
 		request.getSession().removeAttribute("message");
 		try {
@@ -484,7 +484,9 @@ public final class AjaxServlet extends HttpServlet {
 		}
 		return "refresh_cart";
 	}
+*/
 
+/*
     public String processCartActions(HttpServletRequest request, HttpServletResponse response) {
 		request.getSession().removeAttribute("message");
         Set<String> paramNames = request.getParameterMap().keySet();
@@ -598,6 +600,183 @@ public final class AjaxServlet extends HttpServlet {
             case 4:  exportCart2XML(request, response);
                      break;
             case 5:  exportCart2CSV(request, response);
+                     break;
+		}
+        return "refresh_cart";
+	}
+*/
+
+
+    public String removeFromCart(HttpServletRequest request, HttpServletResponse response) {
+		request.getSession().removeAttribute("message");
+		try {
+			Set<String> paramNames = request.getParameterMap().keySet();
+			CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean");
+			gov.nih.nci.evs.browser.bean.CartActionBean.Concept item = null;
+			HashMap cart_hmap = new HashMap();
+			Collection<gov.nih.nci.evs.browser.bean.CartActionBean.Concept> items = cartActionBean.getConcepts();
+			Iterator it = items.iterator();
+			while (it.hasNext()) {
+				item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it.next();
+				cart_hmap.put(item.getCode(), item);
+			}
+			Vector removed_codes = new Vector();
+			for (String name : paramNames) {
+				String value = request.getParameter(name);
+				Iterator it2 = items.iterator();
+				while (it2.hasNext()) {
+					item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it2.next();
+					if (item.getCode().compareTo(value) == 0) {
+						removed_codes.add(value);
+					}
+				}
+			}
+			String ans = (String) request.getParameter("ans");
+			if (ans == null) {
+				/*
+				String message = "Are you sure you want to permanently remove the following selected concepts from the cart? " +
+				"&nbsp;<input type=\"radio\" name=\"ans\" checked=\"checked\" value=\"yes\" >Yes</input>&nbsp;<input type=\"radio\" value=\"no\" name=\"ans\">No</input>" +
+				". &nbsp;Click <a href=\"javascript:submitform()\">here</a> to confirm.";
+				*/
+				String message = "Are you sure you want to permanently remove the following selected concepts from the cart? " +
+				"&nbsp;<input type=\"radio\" name=\"ans\" checked=\"checked\" value=\"yes\" >Yes</input>&nbsp;<input type=\"radio\" value=\"no\" name=\"ans\">No</input>";
+
+				request.getSession().setAttribute("message", message);
+				request.getSession().setAttribute("confirmation", "true");
+				String nextJSP = "/pages/cart.jsf";
+				try {
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+					dispatcher.forward(request,response);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				return null;
+			} else {
+			    if (ans.compareToIgnoreCase("yes") == 0) {
+					for (int i=0; i<removed_codes.size(); i++) {
+						String code = (String) removed_codes.elementAt(i);
+						cart_hmap.remove(code);
+					}
+					cartActionBean.setCart(cart_hmap);
+				}
+			}
+			request.getSession().setAttribute("cartActionBean", cartActionBean);
+			//items = cartActionBean.getConcepts();
+			//int count = items.size();
+		    String nextJSP = "/pages/cart.jsf";
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			dispatcher.forward(request,response);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return "refresh_cart";
+	}
+
+
+    public String processCartActions(HttpServletRequest request, HttpServletResponse response) {
+		Set<String> paramNames = request.getParameterMap().keySet();
+		CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean");
+		gov.nih.nci.evs.browser.bean.CartActionBean.Concept item = null;
+		Collection<gov.nih.nci.evs.browser.bean.CartActionBean.Concept> items = cartActionBean.getConcepts();
+
+		Iterator it0 = items.iterator();
+		while (it0.hasNext()) {
+			item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it0.next();
+			item.setSelected(false);
+		}
+
+		for (String name : paramNames) {
+			String value = request.getParameter(name);
+			Iterator it2 = items.iterator();
+			while (it2.hasNext()) {
+				item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it2.next();
+				if (item.getCode().compareTo(value) == 0) {
+					item.setSelected(true);
+				}
+			}
+		}
+
+		HashMap cart_hmap = new HashMap();
+		Iterator it = items.iterator();
+		while (it.hasNext()) {
+			item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it.next();
+			cart_hmap.put(item.getCode(), item);
+		}
+        cartActionBean.setCart(cart_hmap);
+        request.getSession().setAttribute("cartActionBean", cartActionBean);
+
+		String ans = (String) request.getSession().getAttribute("ans");
+		request.getSession().removeAttribute("message");
+		int count = items.size();
+		String btn = (String) request.getParameter("btn");
+		if (count == 0 && btn.compareTo("exit_cart") != 0) {
+			String message = "INFO: The cart is empty.";
+			request.getSession().setAttribute("message", message);
+			String nextJSP = "/pages/cart.jsf";
+			if (cartActionBean.getCount() == 0) {
+				nextJSP = "/pages/home.jsf";
+			}
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			try {
+				dispatcher.forward(request,response);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+
+		Iterator it3 = items.iterator();
+		int selected_count = 0;
+		while (it3.hasNext()) {
+			item = (gov.nih.nci.evs.browser.bean.CartActionBean.Concept) it3.next();
+			if (item.getSelected()) {
+				selected_count++;
+			}
+		}
+		if ((btn.compareTo("removefromcart") == 0
+		    || btn.compareTo("exportxml") == 0
+		    || btn.compareTo("exportcsv") == 0)
+		    && selected_count == 0) {
+			String message = "WARNING: No concept is selected.";
+			request.getSession().setAttribute("message", message);
+
+			String nextJSP = "/pages/cart.jsf";
+			if (cartActionBean.getCount() == 0) {
+				nextJSP = "/pages/home.jsf";
+			}
+
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			try {
+				dispatcher.forward(request,response);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+		if (btn.compareTo("exit_cart") == 0) {
+			String scheme = (String) request.getParameter("scheme");
+			String version = (String) request.getParameter("version");
+			//String nextJSP = "/pages/multiple_search.jsf?nav_type=terminologies";
+			String nextJSP = "/pages/home.jsf";
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			try {
+				dispatcher.forward(request,response);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+        switch (btn) {
+            case "selectall":  selectAllInCart(request, response);
+                     break;
+            case "unselectall":  unselectAllInCart(request, response);
+                     break;
+            case "removefromcart":  removeFromCart(request, response);
+                     break;
+            case "exportxml":  exportCart2XML(request, response);
+                     break;
+            case "exportcsv":  exportCart2CSV(request, response);
                      break;
 		}
         return "refresh_cart";
