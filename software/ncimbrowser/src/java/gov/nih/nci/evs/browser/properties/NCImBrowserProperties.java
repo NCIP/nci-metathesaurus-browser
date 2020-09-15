@@ -136,6 +136,12 @@ public class NCImBrowserProperties {
     public static final String GRAPH_DB_URL = "GRAPH_DB_URL";
     private static String _graph_db_url = null;
 
+    public static String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
+    public static String RECAPTCHA_SECURITY_KEY = "RECAPTCHA_SECURITY_KEY";
+
+    private static String _recaptcha_site_key = null;
+    private static String _recaptcha_security_key = null;
+
     static {
 		try {
 			NCImBrowserProperties = new NCImBrowserProperties();
@@ -256,6 +262,15 @@ public class NCImBrowserProperties {
 			_graph_db_url =
 				NCImBrowserProperties
 					.getProperty(NCImBrowserProperties.GRAPH_DB_URL);
+
+			_recaptcha_site_key =
+				NCImBrowserProperties
+					.getProperty(NCImBrowserProperties.RECAPTCHA_SITE_KEY);
+
+			_recaptcha_security_key =
+			    NCImBrowserProperties
+				    .getProperty(NCImBrowserProperties.RECAPTCHA_SECURITY_KEY);
+
 
 	    } catch (Exception ex) {
 			ex.printStackTrace();
@@ -430,6 +445,14 @@ public class NCImBrowserProperties {
 
     public static String getSecuredVocabularies() {
         return _secured_vocabularies;
+    }
+
+    public static String getRecaptchaSiteKey() {
+        return _recaptcha_site_key;
+    }
+
+    public static String getRecaptchaSecurityKey() {
+        return _recaptcha_security_key;
     }
 
     public static List getSecurityTokenList() {

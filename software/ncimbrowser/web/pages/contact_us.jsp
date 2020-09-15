@@ -44,7 +44,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
-    
+    <script src='https://www.google.com/recaptcha/api.js'></script>    
     
     <script>
     function getContextPath() {
@@ -56,13 +56,39 @@
         document.getElementById("audioCaptcha").src = path + new Date().getTime();
         document.getElementById("audioSupport").innerHTML = document.createElement('audio').canPlayType("audio/wav");
     }
+    
+function verifyRecaptcha() {
+    var response = grecaptcha.getResponse();
+    $.ajax({
+        type: "POST",
+        url: 'https://www.google.com/recaptcha/api/siteverify',
+        data: {"secret" : "<%=NCImBrowserProperties.getRecaptchaSiteKey()%>", "response" : response},
+        contentType: 'application/x-www-form-urlencoded',
+        success: function(data) { 
+           //console.log(data); 
+           //alert("pass");
+           
+            String redirectURL = request.getContextPath() + "/redirect?action='contactus";
+            response.sendRedirect(redirectURL);
+           
+		if(data.response == '') {
+		    alert("Please complete the I'm-not-a-robot widget before submitting your entry.");
+		    return false;
+		}
+               
+        }
+    });
+}
+    
+    
+    
     </script>
     
     
 <script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
   </head>
   <%
-  
+    //String recaptcha_site_key = NCImBrowserProperties.getRecaptchaSiteKey(); 
     //String warnings = (String) request.getSession().getAttribute("warnings");
 
     boolean audio_captcha_background_noise_on = true;
@@ -110,6 +136,8 @@ if (captcha_option.compareTo("default") == 0) {
     
     System.out.println("captcha_option: " + captcha_option);
     System.out.println("alt_captcha_option: " + alt_captcha_option);  
+    
+     
     
     //String ncicb_contact_url = new DataUtils().getNCICBContactURL();
     
@@ -217,64 +245,6 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   
   <h:form>
   
-<p>
-<table role='presentation'>
-<%
-String answer_label = "Enter the characters appearing in the above image";
-
-if (captcha_option.compareTo("default") == 0) {
-%>
-      <tr>
-      <td class="textbody">
-             <img src="<c:url value="/nci.simpleCaptcha.png"  />" alt="simpleCaptcha.png">
-             
-       &nbsp;<h:commandLink value="Unable to read this image?" action="#{userSessionBean.regenerateCaptchaImage}" />
-       <br/>             
-      </td>
-      </tr>
-
-       
-
-<%
-} else {
-      answer_label = "Enter the numbers you hear from the audio";
-%>
-
-<tr>
-<td>
-<p class="textbody">Click 
-
-
-<a href="<%=request.getContextPath()%>/<%=audio_captcha_str%> ">here</a> to listen to the audio. 
-</td>
-</tr>
-
-
-<%
-} 
-%>
-
-      <tr>
-      <td class="textbody"> 
-          <%=answer_label%>: <i style="color:#FF0000;">*</i>
-<label for="answer">Answer</label>
-          <input type="text" id="answer" name="answer" value="<%=HTTPUtils.cleanXSS(answer)%>"/>&nbsp;
-      </td>
-      </tr> 
-      
-      
-      <tr>
-      <td class="textbody">
-       <h:commandLink value="Prefer an alternative form of CAPTCHA?" action="#{userSessionBean.switchCaptchaMode}" />
-       <br/>             
-      </td>
-      </tr>
-     
-
-      </table>  
-      
-</p>    
-  
     <p>
       <i>Subject of your email:</i><i style="color:#FF0000;">*</i>
     </p>
@@ -294,7 +264,9 @@ if (captcha_option.compareTo("default") == 0) {
     <p>
        <i style="color:#FF0000;">* Required</i>
     </p> 
-    
+
+<div class="g-recaptcha" data-sitekey="<%=NCImBrowserProperties.getRecaptchaSiteKey()%>"></div>
+
     <br/><br/>
       
     <h:commandButton
@@ -309,6 +281,7 @@ if (captcha_option.compareTo("default") == 0) {
       id="mail"
       value="submit"
       image="/images/submit.gif"
+      onclick="return verifyRecaptcha();"
       action="#{userSessionBean.contactUs}"
       alt="submit">
     </h:commandButton>

@@ -2309,7 +2309,17 @@
                  <key>GRAPH_DB_URL</key>
                  <value>@graph.db.url@</value>
         </ConfigurableItem>   
-        
+ 
+        <ConfigurableItem>
+                 <key>RECAPTCHA_SITE_KEY</key>
+                 <value>@recaptcha.site.key@</value>
+        </ConfigurableItem>
+     
+        <ConfigurableItem>
+                 <key>RECAPTCHA_SECURITY_KEY</key>
+                 <value>@recaptcha.security.key@</value>
+        </ConfigurableItem>
+    
     </ConfigurableItems>
 
     <MetadataElements>

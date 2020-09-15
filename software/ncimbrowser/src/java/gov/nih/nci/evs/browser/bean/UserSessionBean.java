@@ -22,6 +22,7 @@ import nl.captcha.Captcha;
 import nl.captcha.audio.AudioCaptcha;
 
 import org.LexGrid.LexBIG.LexBIGService.*;
+import org.json.JSONObject;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -75,6 +76,7 @@ import org.LexGrid.LexBIG.LexBIGService.*;
 
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
+    public static final String INCOMPLETE_CAPTCHA_RESPONSE = "WARNING: Incomplete Captcha Response";
 
     private String _selectedQuickLink = null;
     private List _quickLinkList = null;
@@ -860,7 +862,22 @@ response.setContentType("text/html;charset=utf-8");
 		request.getSession().setAttribute("message", message);
 		request.getSession().setAttribute("emailaddress", from);
 
-		if (isNull(answer) || isNull(subject) || isNull(message) || isNull(from)) {
+
+        String str = HTTPUtils.cleanXSS((String) request.getParameter("g-recaptcha-response"));
+        String recaptcha_security_key = NCImBrowserProperties.getRecaptchaSecurityKey();
+        JSONObject json = new CaptchaUtils().getCaptchaJsonResponse(recaptcha_security_key, request.getParameter("g-recaptcha-response"));
+        String json_str = json.toString();
+
+        if (str.length() == 0 || json_str.indexOf("error-code") != -1) {
+			msg = INCOMPLETE_CAPTCHA_RESPONSE;
+			request.getSession().setAttribute("errorMsg", msg);
+			request.getSession().setAttribute("retry", "true");
+			return "retry";
+		}
+
+
+		//if (isNull(answer) || isNull(subject) || isNull(message) || isNull(from)) {
+		if (isNull(subject) || isNull(message) || isNull(from)) {
 			msg = Constants.PLEASE_COMPLETE_DATA_ENTRIES;
 			request.getSession().setAttribute("errorMsg", msg);
 			request.getSession().setAttribute("retry", "true");
@@ -875,6 +892,7 @@ response.setContentType("text/html;charset=utf-8");
 			return "retry";
 		}
 
+/*
         String captcha_option = HTTPUtils.cleanXSS((String) request.getParameter("captcha_option"));
         if (isNull(captcha_option)) {
 			captcha_option = "default";
@@ -911,6 +929,24 @@ response.setContentType("text/html;charset=utf-8");
             request.getSession().setAttribute("errorType", "user");
             return "retry";
 
+        } catch (Exception e) {
+            msg = "Your message was not sent.\n";
+            msg += "    (If possible, please contact NCI systems team.)\n";
+            msg += "\n";
+            msg += e.getMessage();
+            request.getSession().setAttribute("errorMsg", Utils.toHtml(msg));
+            request.getSession().setAttribute("errorType", "system");
+            e.printStackTrace();
+            return "error";
+        }
+        return "message";
+        */
+
+         try {
+            String recipientStr = NCImBrowserProperties.getNCICB_CONTACT_URL();
+            String mail_smtp_server = NCImBrowserProperties.getMAIL_SMTP_SERVER();
+            MailUtils.postMail(from, recipientStr, subject, message, mail_smtp_server);
+			request.getSession().setAttribute("message", msg);
         } catch (Exception e) {
             msg = "Your message was not sent.\n";
             msg += "    (If possible, please contact NCI systems team.)\n";
