@@ -174,7 +174,7 @@
        <DisplayItem>
             <propertyName>OMIM_Number</propertyName>
             <itemLabel>OMIM Number</itemLabel>
-            <url>http://www.ncbi.nlm.nih.gov:80/entrez/dispomim.cgi?id=</url>
+            <url>http://omim.org/entry/</url>
             <hyperlinkText>see OMIM info</hyperlinkText>
             <isExternalCode>true</isExternalCode>
        </DisplayItem>
