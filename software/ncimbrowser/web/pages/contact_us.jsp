@@ -211,7 +211,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
     <tr>
       <td/>
       <td>Web Page:</td>
-      <td><a href="<%=NCICB_URL%>" target="_blank"><%=NCICB_URL%></a></td>
+      <td><a href="<%=Constants.NCICB_URL%>" target="_blank"><%=Constants.NCICB_URL%></a></td>
     </tr>
   </table>
   <br/>
