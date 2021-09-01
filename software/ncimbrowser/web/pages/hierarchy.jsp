@@ -8,6 +8,7 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.HTTPUtils" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 
+<!--
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/dom-min.js"></script>
@@ -16,6 +17,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/connection-min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/autocomplete-min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/treeview-min.js"></script>
+-->
 <%
   String basePath = request.getContextPath();
 %>
@@ -27,10 +29,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
   <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
+  <!--
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/fonts.css" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/grids.css" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/code.css" />
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/tree.css" />
+  -->
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
 
   <script language="JavaScript">

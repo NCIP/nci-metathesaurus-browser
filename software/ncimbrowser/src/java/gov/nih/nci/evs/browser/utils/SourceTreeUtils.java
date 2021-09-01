@@ -98,10 +98,9 @@ public class SourceTreeUtils {
     private LexBIGServiceConvenienceMethods lbscm = null;
     private MetaBrowserService mbs = null;
 
-    //public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+    private String default_source_hierarchies = "|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA";
 
-    private static String default_source_hierarchies="|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA|";
-
+    //private static String default_source_hierarchies="|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA|";
 
     public String sourceHierarchies = null;
 
@@ -115,11 +114,11 @@ public class SourceTreeUtils {
 
 			this.mbs = (MetaBrowserService) lbSvc.getGenericExtension("metabrowser-extension");
 
-			this.sourceHierarchies = NCImBrowserProperties.getSourceHierarchies();
+			this.sourceHierarchies = null;//NCImBrowserProperties.getSourceHierarchies();
 			if (this.sourceHierarchies == null) {
 				this.sourceHierarchies = default_source_hierarchies;
 			}
-			System.out.println(sourceHierarchies);
+			//System.out.println(sourceHierarchies);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1518,27 +1517,25 @@ public class SourceTreeUtils {
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
+
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            if (hierarchies == null || hierarchies.length == 0)
-                return null;
+            if (hierarchies == null || hierarchies.length == 0) {
+                //return null;
+			}
 
-//            SupportedHierarchy hierarchyDefn = hierarchies[0];
-            //String hier_id = hierarchyDefn.getLocalId();
-/*
-            String[] associationsToNavigate =
-                hierarchyDefn.getAssociationNames();
-
-            boolean associationsNavigatedFwd =
-                hierarchyDefn.getIsForwardNavigable();
-*/
             // String code = "C1140168";
             ResolvedConceptReference SRC_root =
                 getRootInSRC(scheme, csvt.getVersion(), sab);
             String rootName =
                 SRC_root.getReferencedEntry().getEntityDescription()
                     .getContent();
+
             String rootCode = SRC_root.getCode();
+
+
+            System.out.println("rootName: " + rootName);
+            System.out.println("rootCode: " + rootCode);
 
             _logger.debug("Searching for roots in " + sab + " under -- "
                 + rootName + " (CUI: " + rootCode + ")");
@@ -1738,7 +1735,6 @@ public class SourceTreeUtils {
 
     public String getSelfReferentialRelationship(String associationName,
         AssociatedConcept ac, String sab) {
-        //Vector v = new Vector();
         String rela = associationName;
         String source = null;
         String self_referencing = null;
@@ -2308,29 +2304,42 @@ public class SourceTreeUtils {
 
 /////////////////////////////////////////////////////////////////////////
 
-
-    public static void main(String[] args) {
-		String outputfile = args[0];
+    public static void main0(String[] args) {
+		//String outputfile = args[0];
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         SourceTreeUtils test = new SourceTreeUtils(lbSvc);
         //test.getRootConceptsBySource(outputfile);
 
         String source_hierarchy = test.getSourceHierarchies();
         Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchy);
+        Vector w = new Vector();
         System.out.println("u.size: " + u.size());
         for (int i=0; i<u.size(); i++) {
             String t = (String) u.elementAt(i);
             int j = i+1;
             System.out.println("(" + j + ") " + t);
+            w.add("(" + j + ") " + t);
 
             ResolvedConceptReference rcr = test.getRandomResolvedConceptReference(t);
             if (rcr != null) {
-            	System.out.println(rcr.getEntityDescription().getContent() + " (" + rcr.getCode() + ")");
+				String s = rcr.getEntityDescription().getContent() + " (" + rcr.getCode() + ")";
+            	System.out.println(s);
+            	w.add(s);
 			} else {
 				System.out.println("rcr == null");
+				w.add("rcr == null");
 			}
 	    }
+        Utils.saveToFile("test.txt", w);
 
     }
+
+    public static void main(String[] args) {
+		String outputfile = args[0];
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        SourceTreeUtils test = new SourceTreeUtils(lbSvc);
+        test.getRootConceptsBySource(outputfile);
+	}
+
 }
 

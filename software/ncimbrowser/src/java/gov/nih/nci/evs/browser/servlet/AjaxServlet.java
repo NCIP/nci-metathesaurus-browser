@@ -1,12 +1,14 @@
 package gov.nih.nci.evs.browser.servlet;
 
+import org.LexGrid.LexBIG.LexBIGService.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
  * with the National Cancer Institute, and so to the extent government
  * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *   1. Redistributions of source code must retain the above copyright
@@ -50,6 +52,8 @@ package gov.nih.nci.evs.browser.servlet;
  *     Initial implementation kim.ong@ngc.com
  *
  */
+
+import gov.nih.nci.evs.browser.utils.*;
 
 import org.json.*;
 import java.io.*;
@@ -144,7 +148,18 @@ public final class AjaxServlet extends HttpServlet {
         String ontology_source = HTTPUtils.cleanXSS((String)request.getParameter("ontology_source"));
 
         long ms = System.currentTimeMillis();
-        if (action.equals("expand_tree")) {
+
+        if (action.equals("build_tree")) {
+
+            build_hierarchy(request, response);
+        } else if (action.equals("expand_tree")) {
+
+            expand_hierarchy(request, response);
+
+        } else if (action.equals("search_tree")) {
+			search_hierarchy(request, response);
+
+        } else if (action.equals("expand_tree0")) {
             String node_id_0 = node_id;
             if (node_id != null && ontology_display_name != null) {
                 int pos = node_id.indexOf("|");
@@ -207,7 +222,7 @@ public final class AjaxServlet extends HttpServlet {
             }
         }
 
-        else if (action.equals("search_tree")) {
+        else if (action.equals("search_tree0")) {
             if (node_id != null && ontology_display_name != null) {
                 response.setContentType("text/html");
                 response.setHeader("Cache-Control", "no-cache");
@@ -248,7 +263,7 @@ public final class AjaxServlet extends HttpServlet {
             }
         }
 
-        else if (action.equals("build_tree")) {
+        else if (action.equals("build_tree1")) {
             if (ontology_display_name == null)
                 ontology_display_name = "NCI Thesaurus";
 
@@ -782,4 +797,97 @@ public final class AjaxServlet extends HttpServlet {
         return "refresh_cart";
 	}
 
+    public void build_hierarchy(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/csv");
+		ServletOutputStream ouputStream = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			ouputStream = response.getOutputStream();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			MetaTreeHelper metaTreeHelper = new MetaTreeHelper(lbSvc);
+			String scheme = request.getParameter("ontology_display_name");
+			String sab = request.getParameter("ontology_sab");
+			if (scheme == null) {
+				scheme = "NCI Thesaurus";
+			}
+	        String version = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(scheme, "PRODUCTION");
+			String content = metaTreeHelper.build_tree(scheme, version, sab);
+
+			sb.append(content);
+			ouputStream.write(sb.toString().getBytes("UTF-8"), 0, sb.length());
+			ouputStream.flush();
+			try {
+				ouputStream.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			//FacesContext.getCurrentInstance().responseComplete();
+			return;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+    public void expand_hierarchy(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/csv");
+		ServletOutputStream ouputStream = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			ouputStream = response.getOutputStream();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			MetaTreeHelper metaTreeHelper = new MetaTreeHelper(lbSvc);
+			String scheme = request.getParameter("ontology_display_name");
+			String version = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(scheme, "PRODUCTION");
+			String sab = request.getParameter("ontology_sab");
+			String cui = request.getParameter("ontology_node_id");
+			String id = request.getParameter("id");
+
+			String content = metaTreeHelper.expand_tree(scheme, version, cui, sab, id);
+
+			sb.append(content);
+			ouputStream.write(sb.toString().getBytes("UTF-8"), 0, sb.length());
+			ouputStream.flush();
+
+			try {
+				ouputStream.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			//FacesContext.getCurrentInstance().responseComplete();
+			return;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+    public void search_hierarchy(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/csv");
+		ServletOutputStream ouputStream = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			ouputStream = response.getOutputStream();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			MetaTreeHelper metaTreeHelper = new MetaTreeHelper(lbSvc);
+			String scheme = request.getParameter("ontology_display_name");
+			String version = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(scheme, "PRODUCTION");
+			String sab = request.getParameter("ontology_sab");
+			String cui = request.getParameter("ontology_node_id");
+
+			String content = metaTreeHelper.search_tree(scheme, version, sab, cui);
+
+			sb.append(content);
+			ouputStream.write(sb.toString().getBytes("UTF-8"), 0, sb.length());
+			ouputStream.flush();
+
+			try {
+				ouputStream.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			//FacesContext.getCurrentInstance().responseComplete();
+			return;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

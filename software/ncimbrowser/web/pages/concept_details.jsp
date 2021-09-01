@@ -72,7 +72,6 @@
 
 response.setContentType("text/html;charset=utf-8");
 
-
                          // appscan fix: 09212015
 			 boolean retval = HTTPUtils.validateRequestParameters(request);
 			 if (!retval) {
@@ -100,6 +99,10 @@ String concept_details_code = null;
 Object concept_details_obj = null;
 
 Object req_parameter_code = request.getParameter("code");
+
+
+
+
 if (req_parameter_code != null) {
     concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) req_parameter_code);
 }
@@ -125,7 +128,6 @@ if (active_code == null) {
        request.getSession().setAttribute("active_code", concept_details_code);
    }
 }
-
 
 
 String concept_details_type = (String) request.getSession().getAttribute("type");

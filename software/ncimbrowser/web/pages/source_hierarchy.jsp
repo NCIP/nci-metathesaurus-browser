@@ -1,462 +1,163 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<%@ page contentType="text/html; charset=UTF-8" %>
-
-<%@ page import="java.util.*"%>
-<%@ page import="org.LexGrid.concepts.*" %>
+<%@ page import="java.util.Vector" %>
+<%@ page import="org.LexGrid.concepts.Entity" %>
+<%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="gov.nih.nci.evs.browser.common.*" %>
-<%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="gov.nih.nci.evs.browser.bean.*" %>
 <%@ page import="org.apache.log4j.*" %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/yahoo-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/event-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/dom-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/animation-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/container-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/connection-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/autocomplete-min.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/yui/treeview-min.js"></script>
-<%
-  String basePath = request.getContextPath();
-%>
+<% String basePath = request.getContextPath(); %>
+
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
-  <head>
-<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
-  <title>Source Hierarchy</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
-  <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/fonts.css" />
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/grids.css" />
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/code.css" />
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/yui/tree.css" />
-  <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
-
-  <script language="JavaScript">
-
-    var tree;
-    var nodeIndex;
-    var rootDescDiv;
-    var emptyRootDiv;
-    var treeStatusDiv;
-    var nodes = [];
-    var currOpener;
-
-    function load(url,target) {
-      if (target != '')
-        target.window.location.href = url;
-      else
-        window.location.href = url;
-    }
-
-    function init() {
-
-      rootDescDiv = new YAHOO.widget.Module("rootDesc", {visible:false} );
-      resetRootDesc();
-
-      emptyRootDiv = new YAHOO.widget.Module("emptyRoot", {visible:true} );
-      resetEmptyRoot();
-
-      treeStatusDiv = new YAHOO.widget.Module("treeStatus", {visible:true} );
-      resetTreeStatus();
-
-      currOpener = opener;
-      initTree();
-    }
-
-
-    function addTreeNode(rootNode, nodeInfo) {
-      var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
-      var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
-      var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, false);
-      if (nodeInfo.ontology_node_child_count > 0) {
-          newNode.setDynamicLoad(loadNodeData);
-      }
-    }
-
-
-    function buildTree(ontology_node_id, ontology_display_name) {
-
-      var handleBuildTreeSuccess = function(o) {
-        var respTxt = o.responseText;
-        var respObj = eval('(' + respTxt + ')');
-        if ( typeof(respObj) != "undefined") {
-          if ( typeof(respObj.root_nodes) != "undefined") {
-            var root = tree.getRoot();
-            if (respObj.root_nodes.length == 0) {
-              showEmptyRoot();
-            }
-            else {
-              for (var i=0; i < respObj.root_nodes.length; i++) {
-                var nodeInfo = respObj.root_nodes[i];
-                var expand = false;
-                addTreeNode(root, nodeInfo, expand);
-              }
-            }
-
-            tree.draw();
-          }
-        }
-        resetTreeStatus();
-      }
-
-      var handleBuildTreeFailure = function(o) {
-        resetTreeStatus();
-        resetEmptyRoot();
-        alert('responseFailure: ' + o.statusText);
-      }
-
-      var buildTreeCallback =
-      {
-        success:handleBuildTreeSuccess,
-        failure:handleBuildTreeFailure
-      };
-
-      if (ontology_display_name!='') {
-        resetEmptyRoot();
-
-        showTreeLoadingStatus();
-        //var ontology_source = ontology_sab;//document.pg_form.ontology_source.value;
-        var ontology_source = document.forms["pg_form"].ontology_sab.value;
-        var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=build_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
-
-      }
-    }
-
-    function resetTree(ontology_node_id, ontology_display_name) {
-
-      var handleResetTreeSuccess = function(o) {
-        var respTxt = o.responseText;
-        var respObj = eval('(' + respTxt + ')');
-        if ( typeof(respObj) != "undefined") {
-          if ( typeof(respObj.root_node) != "undefined") {
-            var root = tree.getRoot();
-            var nodeDetails = "javascript:onClickTreeNode('" + respObj.root_node.ontology_node_id + "');";
-            var rootNodeData = { label:respObj.root_node.ontology_node_name, id:respObj.root_node.ontology_node_id, href:nodeDetails };
-            var expand = false;
-            if (respObj.root_node.ontology_node_child_count > 0) {
-              expand = true;
-            }
-            var ontRoot = new YAHOO.widget.TextNode(rootNodeData, root, expand);
-
-            if ( typeof(respObj.child_nodes) != "undefined") {
-              for (var i=0; i < respObj.child_nodes.length; i++) {
-                var nodeInfo = respObj.child_nodes[i];
-                addTreeNode(ontRoot, nodeInfo);
-              }
-            }
-            tree.draw();
-            setRootDesc(respObj.root_node.ontology_node_name, ontology_display_name);
-          }
-        }
-        resetTreeStatus();
-      }
-
-      var handleResetTreeFailure = function(o) {
-        resetTreeStatus();
-        alert('responseFailure: ' + o.statusText);
-      }
-
-      var resetTreeCallback =
-      {
-        success:handleResetTreeSuccess,
-        failure:handleResetTreeFailure
-      };
-      if (ontology_node_id!= '') {
-        showTreeLoadingStatus();
-        var ontology_source = null;//document.pg_form.ontology_source.value;
-        var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=reset_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,resetTreeCallback);
-      }
-    }
-
-    function onClickTreeNode(ontology_node_id) {
-      //document.pg_form.ontology_node_id.value = ontology_node_id;
-      //var ontology_display_name = document.pg_form.ontology_display_name.value;
-      //var graph_type = document.pg_form.graph_type.options[document.pg_form.graph_type.selectedIndex].value;
-      //setNodeDetails(ontology_node_id, ontology_display_name);
-      //buildGraph(ontology_node_id, ontology_display_name, graph_type);
-
-      if (ontology_node_id.indexOf("|") != -1) return;
-      load('<%= request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20Metathesaurus&code=' + ontology_node_id, currOpener);
-
-    }
-
-    function onClickViewEntireOntology(ontology_display_name) {
-      var ontology_display_name = "NCI Metathesaurus";//document.pg_form.ontology_display_name.value;
-      tree = new YAHOO.widget.TreeView("treecontainer");
-      tree.draw();
-      resetRootDesc();
-      buildTree('', ontology_display_name);
-    }
-
-    function initTree() {
-
-      tree = new YAHOO.widget.TreeView("treecontainer");
-      var ontology_node_id = document.forms["pg_form"].ontology_node_id.value;
-      var ontology_sab = document.forms["pg_form"].ontology_sab.value;
-      var ontology_display_name = "NCI Metathesaurus";
-
-      if (ontology_node_id == null || ontology_node_id == "null")
-      {
-          buildTree(ontology_node_id, ontology_display_name);
-      }
-      else
-      {
-          searchTree(ontology_node_id, ontology_display_name);
-      }
-    }
-
-    function initRootDesc() {
-      rootDescDiv.setBody('');
-      initRootDesc.show();
-      rootDescDiv.render();
-    }
-
-    function resetRootDesc() {
-      rootDescDiv.hide();
-      rootDescDiv.setBody('');
-      rootDescDiv.render();
-    }
-
-    function resetEmptyRoot() {
-      emptyRootDiv.hide();
-      emptyRootDiv.setBody('');
-      emptyRootDiv.render();
-    }
-
-    function resetTreeStatus() {
-      treeStatusDiv.hide();
-      treeStatusDiv.setBody('');
-      treeStatusDiv.render();
-    }
-
-    function showEmptyRoot() {
-      emptyRootDiv.setBody("<span class='instruction_text'>No root nodes available.</span>");
-      emptyRootDiv.show();
-      emptyRootDiv.render();
-    }
-
-    function showPartialHierarchy() {
-      rootDescDiv.setBody("<span class='instruction_text'>(Note: This tree only shows partial hierarchy.)</span>");
-      rootDescDiv.show();
-      rootDescDiv.render();
-    }
-
-
-    function showNoPathFoundStatus() {
-      rootDescDiv.setBody("<span class='instruction_text'>Concept not part of the parent-child hierarchy in this source � check other relationships.</span>");
-      rootDescDiv.show();
-      rootDescDiv.render();
-    }
-
-
-    function showTreeLoadingStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Building tree ...</span>");
-      treeStatusDiv.show();
-      treeStatusDiv.render();
-    }
-
-    function showSearchingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Retrieving data -- please wait ...</span>");
-      treeStatusDiv.show();
-      treeStatusDiv.render();
-    }
-
-    function showRenderingTreeStatus() {
-      treeStatusDiv.setBody("<img src='<%=basePath%>/images/loading.gif' alt='Loading'/> <span class='instruction_text'>Rendering tree -- please wait ...</span>");
-      treeStatusDiv.show();
-      treeStatusDiv.render();
-    }
-
-    function loadNodeData(node, fnLoadComplete) {
-      var id = node.data.id;
-
-      var responseSuccess = function(o)
-      {
-        var path;
-        var dirs;
-        var files;
-        var respTxt = o.responseText;
-        var respObj = eval('(' + respTxt + ')');
-        var fileNum = 0;
-        var categoryNum = 0;
-        var pos = id.indexOf("|");
-        if ( typeof(respObj.nodes) != "undefined") {
-
-      if (pos == -1) {
-          for (var i=0; i < respObj.nodes.length; i++) {
-      var name = respObj.nodes[i].ontology_node_name;
-      var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-      var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-      var newNode = new YAHOO.widget.TextNode(newNodeData, node, false);
-      if (respObj.nodes[i].ontology_node_child_count > 0) {
-          newNode.setDynamicLoad(loadNodeData);
-      }
-          }
-
-      } else {
-    var parent = node.parent;
-    var parent_label = parent.label;
-    if (parent_label == undefined) {
-        parent = tree.getRoot();
-    }
-    for (var i=0; i < respObj.nodes.length; i++) {
-        var name = respObj.nodes[i].ontology_node_name;
-        var nodeDetails = "javascript:onClickTreeNode('" + respObj.nodes[i].ontology_node_id + "');";
-        var newNodeData = { label:name, id:respObj.nodes[i].ontology_node_id, href:nodeDetails };
-        var newNode = new YAHOO.widget.TextNode(newNodeData, parent, true);
-        if (respObj.nodes[i].ontology_node_child_count > 0) {
-      newNode.setDynamicLoad(loadNodeData);
-        }
-    }
-    tree.removeNode(node,true);
-    if (parent_label == undefined) {
-        tree.draw();
-    }
-      }
-        }
-        fnLoadComplete();
-      }
-
-      var responseFailure = function(o){
-        alert('responseFailure: ' + o.statusText);
-      }
-
-      var callback =
-      {
-        success:responseSuccess,
-        failure:responseFailure
-      };
-
-      var ontology_display_name = document.forms["pg_form"].ontology_display_name.value;
-      var ontology_source = document.forms["pg_form"].ontology_sab.value;
-
-      var cObj = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=expand_tree&ontology_node_id=' +id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,callback);
-    }
-
-    function setRootDesc(rootNodeName, ontology_display_name) {
-      var newDesc = "<span class='instruction_text'>Root set to <b>" + rootNodeName + "</b></span>";
-      rootDescDiv.setBody(newDesc);
-      var footer = "<a onClick='javascript:onClickViewEntireOntology();' href='#' class='link_text'>view full ontology}</a>";
-      rootDescDiv.setFooter(footer);
-      rootDescDiv.show();
-      rootDescDiv.render();
-    }
-
-
-    function searchTree(ontology_node_id, ontology_display_name) {
-        var handleBuildTreeSuccess = function(o) {
-        var respTxt = o.responseText;
-        var respObj = eval('(' + respTxt + ')');
-        if ( typeof(respObj) != "undefined") {
-          if ( typeof(respObj.root_nodes) != "undefined") {
-            var root = tree.getRoot();
-            if (respObj.root_nodes.length == 0) {
-                showNoPathFoundStatus();
-            }
-            else {
-              showPartialHierarchy();
-              for (var i=0; i < respObj.root_nodes.length; i++) {
-                var nodeInfo = respObj.root_nodes[i];
-                addTreeBranch(ontology_node_id, root, nodeInfo);
-              }
-            }
-          }
-        }
-        resetTreeStatus();
-      }
-
-      var handleBuildTreeFailure = function(o) {
-        resetTreeStatus();
-        resetEmptyRoot();
-        alert('responseFailure: ' + o.statusText);
-      }
-
-      var buildTreeCallback =
-      {
-        success:handleBuildTreeSuccess,
-        failure:handleBuildTreeFailure
-      };
-
-      if (ontology_display_name!='') {
-        resetEmptyRoot();
-        showSearchingTreeStatus();
-        var ontology_source = document.forms["pg_form"].ontology_sab.value;
-        var request = YAHOO.util.Connect.asyncRequest('GET','<%= request.getContextPath() %>/ajax?action=search_tree&ontology_node_id=' +ontology_node_id+'&ontology_display_name='+ontology_display_name+'&ontology_source='+ontology_source,buildTreeCallback);
-      }
-    }
-
-
-
-
-    function addTreeBranch(ontology_node_id, rootNode, nodeInfo) {
-
-      var newNodeDetails = "javascript:onClickTreeNode('" + nodeInfo.ontology_node_id + "');";
-      var newNodeData = { label:nodeInfo.ontology_node_name, id:nodeInfo.ontology_node_id, href:newNodeDetails };
-
-      var expand = false;
-      var childNodes = nodeInfo.children_nodes;
-
-      if (childNodes.length > 0) {
-          expand = true;
-      }
-      var newNode = new YAHOO.widget.TextNode(newNodeData, rootNode, expand);
-      if (nodeInfo.ontology_node_id == ontology_node_id) {
-          newNode.labelStyle = "ygtvlabel_highlight";
-      }
-
-      if (nodeInfo.ontology_node_id == ontology_node_id) {
-         newNode.isLeaf = true;
-         if (nodeInfo.ontology_node_child_count > 0) {
-             newNode.isLeaf = false;
-             //newNode.setDynamicLoad(loadNodeData);
-         }
-
-      } else {
-          if (nodeInfo.ontology_node_child_count == 0 && nodeInfo.ontology_node_id != ontology_node_id) {
-              newNode.isLeaf = true;
-          } else if (childNodes.length == 0) {
-              newNode.setDynamicLoad(loadNodeData);
-          }
-      }
-      tree.draw();
-
-      for (var i=0; i < childNodes.length; i++) {
-          var childnodeInfo = childNodes[i];
-          addTreeBranch(ontology_node_id, newNode, childnodeInfo);
-      }
-    }
-
-
-
-    // Note: Need to refresh the parent window so the LicenseBean has a
-    //  chance to update.  The following line helps avoid reprompting
-    //  the license again.
-
-    //function refresh() {
-    //        var licensed = document.forms["pg_form"].isLicensed_str.value;
-    //        if (licensed == "true") {
-  //      var accepted = document.forms["pg_form"].licenseAgreementAccepted.value;
-  //      if (accepted == "true") {
-  //    window.opener.location.reload(true);
-  //      }
-//      }
-//   }
-
-
-    YAHOO.util.Event.addListener(window, "load", init);
-
-    //YAHOO.util.Event.addListener(window, "load", refresh);
-
-
-  </script>
-<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-2", {"cookieDomain":"auto"});ga("send", "pageview");</script>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <script
+        src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js">
+    </script>
+    <title>Vocabulary Hierarchy</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
+
+
+<style>
+ul {text-align: left;}
+li {text-align: left;}
+div {text-align: left;}
+</style>
+
+
+    <script type="text/javascript">
+
+        var currOpener = opener;
+	function load(url,target) {
+		if (target != '')
+			target.window.location.href = url;
+		else
+			window.location.href = url;
+	}
+      
+	function onClickTreeNode(ontology_node_id) {
+		var ontology_display_name = document.forms["pg_form"].ontology_display_name.value;
+		load('/ncimbrowser/pages/concept_details.jsf?dictionary='+ ontology_display_name
+		+ '&code=' + ontology_node_id, currOpener);
+	}  
+	
+	function show_hide_div(div_id) {
+		var img_id = "IMG_" + div_id.substring(4, div_id.length);
+		var img_obj = document.getElementById(img_id);
+		if (img_obj.getAttribute("src").indexOf("minus") != -1) {
+			document.getElementById(div_id).style.display = "none";
+		} else if (img_obj.getAttribute("src").indexOf("plus") != -1) {
+			document.getElementById(div_id).style.display = "block";
+		}
+		changeImage(img_id);
+	}
+	
+	function show_hide(div_id) {
+		var curr_node = document.getElementById(div_id);
+		var code = curr_node.getAttribute("code");
+		var img_id = "IMG_" + div_id.substring(4, div_id.length);
+		var img_obj = document.getElementById(img_id);
+		
+		if (img_obj.getAttribute("src").indexOf("plus") != -1) {
+		        expand_node(div_id, code);
+		        changeImage(img_id); 
+		} else if (img_obj.getAttribute("src").indexOf("minus") != -1) {
+		     var i = 1;
+		     var next_div_id = div_id + "_" + i;
+		     var next_img_id = img_id + "_" + i;
+		     var e = document.getElementById(next_div_id);
+		     while (e != null) {
+		             document.getElementById(next_img_id).remove();
+		             document.getElementById(next_div_id).remove();
+			     i = i+1;
+			     next_div_id = div_id + "_" + i;
+			     next_img_id = img_id + "_" + i;
+			     e = document.getElementById(next_div_id);
+		     }
+		     changeImage(img_id); 
+		}
+	}
+
+	function changeImage(img_id) {
+		var img_obj = document.getElementById(img_id);
+		if (img_obj.getAttribute("src").indexOf("minus") != -1) {
+			var s = img_obj.getAttribute("src");
+			s = s.replace("minus", "plus");
+			img_obj.setAttribute("src", s);
+		} else if (img_obj.getAttribute("src").indexOf("plus") != -1) {
+			var s = img_obj.getAttribute("src");
+			s = s.replace("plus", "minus");
+			img_obj.setAttribute("src", s);
+		}
+	} 
+
+	function search(ontology_node_id, ontology_sab, ontology_display_name) {
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", '/ncimbrowser/ajax?action=search_tree&ontology_display_name=' + ontology_display_name + '&ontology_sab=' + ontology_sab + '&ontology_node_id=' + ontology_node_id, true);
+		ajax.send(); 
+		ajax.onreadystatechange = function() {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				document.getElementById("tree").innerHTML = this.responseText;
+			}
+		}
+	}
+
+	function initTree() {
+		var ontology_node_id = document.forms["pg_form"].ontology_node_id.value;
+		var ontology_display_name = document.forms["pg_form"].ontology_display_name.value;
+		var ontology_sab = document.forms["pg_form"].ontology_sab.value;
+		if (ontology_node_id == null || ontology_node_id == "null")
+		{
+                   var content = "<center><br></br><img src='/ncimbrowser/images/loading.gif' alt='Loading'/>" + 
+                        "<p>Loading hierarchy. Please wait...</p><center>";
+		        document.getElementById("tree").innerHTML = content;
+			init(ontology_sab, ontology_display_name);
+			
+		}
+		else
+		{
+                   var content = "<center><br></br><img src='/ncimbrowser/images/loading.gif' alt='Loading'/>" + 
+                        "<p>Searching concept in hierarchy. Please wait...</p><center>";
+		        document.getElementById("tree").innerHTML = content;
+			search(ontology_node_id, ontology_sab, ontology_display_name);
+		}
+	}
+    
+	function init(ontology_sab, ontology_display_name) {
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", '/ncimbrowser/ajax?action=build_tree&ontology_sab=' +ontology_sab+'&ontology_display_name='+ontology_display_name, true);
+		ajax.send();
+		ajax.onreadystatechange = function() {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				document.getElementById("tree").innerHTML = this.responseText;
+			}
+		}
+	}
+
+	function expand_node(div_id, code) {
+                var ontology_display_name = document.forms["pg_form"].ontology_display_name.value;
+                var ontology_sab = document.forms["pg_form"].ontology_sab.value;
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", '/ncimbrowser/ajax?action=expand_tree&ontology_node_id=' +code +'&ontology_sab='+ontology_sab+'&ontology_display_name='+ontology_display_name+'&id=' + div_id, true);
+		ajax.send();
+		ajax.onreadystatechange = function() {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+			     var content = document.getElementById(div_id).innerHTML;
+			     document.getElementById(div_id).innerHTML = content + this.responseText;
+			}
+		}
+	}
+
+
+	</script>
+	<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-150112876-1", {"cookieDomain":"auto"});ga("send", "pageview");</script>
 </head>
-<body>
+<body onload="javascript:initTree()">
   <%!
       private static Logger _logger = Utils.getJspLogger("source_hierarchy.jsp");
   %>
@@ -575,6 +276,8 @@ ontology_formalname = NCImMetadataUtils.getSABDefinition(ontology_sab);
       </div>
     </div>
   </f:view>
+                <div id="status"><div>
+		<div id="tree"><div>             
 <script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>
