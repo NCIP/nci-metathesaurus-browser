@@ -4,7 +4,7 @@ import gov.nih.nci.evs.browser.bean.*;
 import java.io.*;
 import java.util.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;

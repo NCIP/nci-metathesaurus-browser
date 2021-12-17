@@ -5,7 +5,7 @@ import java.util.*;
 import org.LexGrid.LexBIG.caCore.interfaces.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.Impl.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 
 import gov.nih.nci.system.client.*;
@@ -66,7 +66,7 @@ import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
  */
 
 public class RemoteServerUtil {
-    private static Logger _logger = Logger.getLogger(RemoteServerUtil.class);
+	private static Logger _logger = LogManager.getLogger(RemoteServerUtil.class);
     private static boolean debug = false;
     private static String _serviceInfo = "EvsServiceInfo";
     // private Properties _systemProperties = null;

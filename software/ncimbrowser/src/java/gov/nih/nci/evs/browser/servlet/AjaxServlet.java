@@ -62,7 +62,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.LexGrid.concepts.Entity;
 
 import gov.nih.nci.evs.browser.bean.*;
@@ -71,7 +71,7 @@ import gov.nih.nci.evs.browser.common.*;
 import javax.faces.context.*;
 
 public final class AjaxServlet extends HttpServlet {
-    private static Logger _logger = Logger.getLogger(AjaxServlet.class);
+	private static Logger _logger = LogManager.getLogger(AjaxServlet.class);
 
     /**
      * Validates the Init and Context parameters, configures authentication URL

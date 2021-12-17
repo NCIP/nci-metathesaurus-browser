@@ -27,7 +27,7 @@ import javax.servlet.ServletOutputStream;
 import org.LexGrid.concepts.Entity;
 import org.LexGrid.commonTypes.Property;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 import org.LexGrid.valueSets.DefinitionEntry;
 import org.LexGrid.valueSets.EntityReference;
@@ -87,7 +87,7 @@ import javax.faces.context.*;
 public class CartActionBean {
 
     // Local class variables
-    private static Logger _logger = Logger.getLogger(CartActionBean.class);
+	private static Logger _logger = LogManager.getLogger(CartActionBean.class);
 
     /*
     private String _entity = null;

@@ -25,7 +25,7 @@ import org.LexGrid.lexevs.metabrowser.MetaBrowserService.Direction;
 import org.LexGrid.lexevs.metabrowser.model.RelationshipTabResults;
 import org.LexGrid.naming.SupportedHierarchy;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import gov.nih.nci.evs.browser.common.Constants;
 import java.util.Map.Entry;
 import java.util.*;
@@ -80,7 +80,7 @@ import java.util.*;
 public class SearchCart {
 
     // Local variables
-    private static Logger _logger = Logger.getLogger(SearchCart.class);
+	private static Logger _logger = LogManager.getLogger(SearchCart.class);
     //private static LexBIGService lbSvc = null;
     //private static LexBIGServiceConvenienceMethods lbscm = null;
     private static MetaBrowserService mbs = null;

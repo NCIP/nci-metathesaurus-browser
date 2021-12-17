@@ -16,7 +16,7 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 import org.LexGrid.lexevs.metabrowser.impl.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.LexGrid.lexevs.metabrowser.helper.*;
 
 /**
@@ -70,7 +70,7 @@ import org.LexGrid.lexevs.metabrowser.helper.*;
  */
 
 public class MetaTreeHelper {
-    private static Logger _logger = Logger.getLogger(MetaTreeHelper.class);
+	private static Logger _logger = LogManager.getLogger(MetaTreeHelper.class);
     public static final String ONTOLOGY_ADMINISTRATORS =
         "ontology_administrators";
     public static final String ONTOLOGY_FILE = "ontology_file";

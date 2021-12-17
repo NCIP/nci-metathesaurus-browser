@@ -57,7 +57,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import gov.nih.nci.evs.browser.bean.LicenseBean;
 import gov.nih.nci.evs.browser.properties.NCImBrowserProperties.*;
@@ -69,7 +69,7 @@ import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 
 public final class RedirectServlet extends HttpServlet {
-    private static Logger _logger = Logger.getLogger(RedirectServlet.class);
+	private static Logger _logger = LogManager.getLogger(RedirectServlet.class);
 
     /**
      * Validates the Init and Context parameters, configures authentication URL

@@ -16,7 +16,7 @@ import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.properties.*;
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.searchlog.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import nl.captcha.Captcha;
 import nl.captcha.audio.AudioCaptcha;
@@ -75,7 +75,7 @@ import org.json.JSONObject;
  */
 
 public class UserSessionBean extends Object {
-    private static Logger _logger = Logger.getLogger(UserSessionBean.class);
+	private static Logger _logger = LogManager.getLogger(UserSessionBean.class);
     public static final String INCOMPLETE_CAPTCHA_RESPONSE = "WARNING: Incomplete Captcha Response";
 
     private String _selectedQuickLink = null;

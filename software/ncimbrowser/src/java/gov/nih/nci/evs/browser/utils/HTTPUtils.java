@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.regex.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.properties.*;
@@ -63,7 +63,7 @@ import gov.nih.nci.evs.browser.properties.*;
  *
  */
 public class HTTPUtils {
-    private static Logger _logger = Logger.getLogger(HTTPUtils.class);
+	private static Logger _logger = LogManager.getLogger(HTTPUtils.class);
     private static final String REFERER = "referer";
     private static final int MAX_FONT_SIZE = 29;
     private static final int MIN_FONT_SIZE = 22;

@@ -10,7 +10,7 @@ import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
@@ -70,7 +70,7 @@ import java.util.Map.Entry;
 
 
 public class MetaTreeUtils {
-    private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
+	private static Logger _logger = LogManager.getLogger(MetaTreeUtils.class);
     private static final String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
     private static final String[] _hierAssociationToParentNodes = new String[] { "PAR" };

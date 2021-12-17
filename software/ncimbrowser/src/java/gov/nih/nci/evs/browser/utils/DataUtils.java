@@ -8,7 +8,7 @@ import java.text.*;
 import java.sql.*;
 
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
@@ -87,7 +87,7 @@ import java.util.Map.Entry;
  */
 
 public class DataUtils {
-    private static Logger _logger = Logger.getLogger(DataUtils.class);
+	private static Logger _logger = LogManager.getLogger(DataUtils.class);
     private static Vector<String> _sourceListData = null;
     private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
     private static SortOptionList _sortByCode =

@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 import org.LexGrid.commonTypes.Property;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
@@ -69,7 +69,7 @@ public class ExportCartXML {
 
     private Document doc = null;
     private DocumentBuilder dBuilder = null;
-    private static Logger _logger = Logger.getLogger(ExportCartXML.class);
+	private static Logger _logger = LogManager.getLogger(ExportCartXML.class);
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
     // XML attributes

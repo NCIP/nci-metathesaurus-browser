@@ -1,7 +1,8 @@
 package gov.nih.nci.evs.searchlog;
 
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -49,8 +50,7 @@ import org.apache.log4j.*;
  * @author garciawa2 AccessLog class
  */
 public class SearchLog {
-    private static Logger _logger = Logger.getLogger(SearchLog.class);
-    static Logger logger = null;
+	private static Logger _logger = LogManager.getLogger(SearchLog.class);
     public static final char SEPARATOR = '|';
     public static final String UK = "Unknown";
 
@@ -65,18 +65,18 @@ public class SearchLog {
      * Destructor - called to release logger
      */
     public static void destroy() {
-        if (logger != null) {
-            logger = null;
+        if (_logger != null) {
+            _logger.debug("Search log is shutdown.");
+            _logger = null;
         }
-        _logger.debug("Search log is shutdown.");
     }
 
     /**
      * Initializer
      */
     public static void init() {
-        if (logger == null) {
-            logger = Logger.getLogger(SearchLog.class);
+        if (_logger == null) {
+	        _logger = LogManager.getLogger(SearchLog.class);
         }
     }
 
@@ -89,9 +89,18 @@ public class SearchLog {
 
         // Report format:
         // SEARCH_TYPE|TERM|ALGORITHM|TARGET|SOURCE|COUNT|PROPERTY_NAME|PROPERTY_TYPE
-        // REL_ASSOCICATION|REL_RELA|REFERRER
-
-        logger.log(SearchLevel.SEARCH_LOG_LEVEL, fields.getType().toString()
+        // RELATIONSHIP|REL_ASSOCICATION|REL_RELA|REFERRER
+/*
+        _logger.log(SearchLevel.SEARCH_LOG_LEVEL, fields.getType().toString()
+            + SEPARATOR + fields.getMatchText() + SEPARATOR
+            + fields.getMatchAlgorithm() + SEPARATOR + fields.getSearchTarget()
+            + SEPARATOR + fields.getSource() + SEPARATOR + maxReturn
+            + SEPARATOR + fields.getPropertyName() + SEPARATOR
+            + fields.getPropertyType() + SEPARATOR
+            + fields.getRelSearchAssociation() + SEPARATOR
+            + fields.getRelSearchRela() + SEPARATOR + referrer);
+*/
+        _logger.log(Level.INFO, fields.getType().toString()
             + SEPARATOR + fields.getMatchText() + SEPARATOR
             + fields.getMatchAlgorithm() + SEPARATOR + fields.getSearchTarget()
             + SEPARATOR + fields.getSource() + SEPARATOR + maxReturn

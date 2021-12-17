@@ -12,7 +12,7 @@ import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
 
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -57,7 +57,7 @@ import org.apache.log4j.*;
  */
 
 public class OntologyBean {
-    private static Logger _logger = Logger.getLogger(OntologyBean.class);
+	private static Logger _logger = LogManager.getLogger(OntologyBean.class);
     private static List _rela_list = null;
     private static List _association_name_list = null;
     private static List _property_name_list = null;

@@ -12,7 +12,7 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="javax.faces.context.*" %>
 <%@ page import="org.LexGrid.LexBIG.DataModel.Core.*" %>
-<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.logging.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
@@ -149,7 +149,7 @@
     
   </script>
   <%!
-      private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
+      private static Logger _logger = LogManager.getLogger("advanced_search.jsp");
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->

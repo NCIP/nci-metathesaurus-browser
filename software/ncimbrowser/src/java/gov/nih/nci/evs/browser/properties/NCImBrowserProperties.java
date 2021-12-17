@@ -4,7 +4,7 @@ import java.util.*;
 
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.bean.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -57,8 +57,7 @@ import org.apache.log4j.*;
  */
 
 public class NCImBrowserProperties {
-    private static Logger _logger =
-        Logger.getLogger(NCImBrowserProperties.class);
+	private static Logger _logger = LogManager.getLogger(NCImBrowserProperties.class);
 
     private static List _displayItemList;
     private static List _termGroupRankList;

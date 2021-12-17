@@ -6,7 +6,7 @@
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.common.Constants" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.logging.log4j.*" %>
 
 <% String basePath = request.getContextPath(); %>
 
@@ -159,7 +159,7 @@ div {text-align: left;}
 </head>
 <body onload="javascript:initTree()">
   <%!
-      private static Logger _logger = Utils.getJspLogger("source_hierarchy.jsp");
+      private static Logger _logger = LogManager.getLogger("source_hierarchy.jsp");
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->

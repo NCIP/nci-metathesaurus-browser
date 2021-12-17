@@ -13,7 +13,7 @@ import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -66,7 +66,7 @@ import org.apache.log4j.*;
  */
 
 public class CacheController {
-    private static Logger _logger = Logger.getLogger(CacheController.class);
+	private static Logger _logger = LogManager.getLogger(CacheController.class);
     public static final String ONTOLOGY_ADMINISTRATORS =
         "ontology_administrators";
     public static final String ONTOLOGY_FILE = "ontology_file";

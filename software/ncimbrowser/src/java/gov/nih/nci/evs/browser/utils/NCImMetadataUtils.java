@@ -13,7 +13,7 @@ import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.DataModel.Core.types.*;
 
 import gov.nih.nci.evs.browser.common.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,7 +76,7 @@ import org.LexGrid.commonTypes.Properties;
  */
 
 public class NCImMetadataUtils {
-    private static Logger _logger = Logger.getLogger(MetadataUtils.class);
+	private static Logger _logger = LogManager.getLogger(NCImMetadataUtils.class);
     private static final String SOURCE_ABBREVIATION = "rsab";
     private static final String SOURCE_DESCRIPTION = "son";
 

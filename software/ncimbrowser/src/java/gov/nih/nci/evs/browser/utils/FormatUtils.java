@@ -1,7 +1,7 @@
 package gov.nih.nci.evs.browser.utils;
 
 import java.util.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -54,7 +54,7 @@ import org.apache.log4j.*;
  */
 
 public class FormatUtils {
-    private static Logger _logger = Logger.getLogger(FormatUtils.class);
+	private static Logger _logger = LogManager.getLogger(FormatUtils.class);
     private static final String _ncitUrl =
         "http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&";
 

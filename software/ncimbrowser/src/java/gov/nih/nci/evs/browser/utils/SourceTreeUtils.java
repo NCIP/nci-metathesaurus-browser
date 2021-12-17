@@ -21,7 +21,7 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.json.*;
 
 /**
@@ -75,9 +75,7 @@ import org.json.*;
  */
 
 public class SourceTreeUtils {
-    private  Logger _logger = Logger.getLogger(SourceTreeUtils.class);
-
-    // protected final Logger logger = Logger.getLogger(getClass());
+	private static Logger _logger = LogManager.getLogger(SourceTreeUtils.class);
     private  String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 

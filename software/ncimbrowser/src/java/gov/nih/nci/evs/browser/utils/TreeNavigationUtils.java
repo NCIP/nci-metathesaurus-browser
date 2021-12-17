@@ -31,7 +31,7 @@ import org.LexGrid.codingSchemes.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.LexGrid.naming.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -90,7 +90,7 @@ import org.json.JSONException;
 
 public class TreeNavigationUtils {
 	public static int MAX_CHILDREN = 5;
-	private static Logger _logger = Logger.getLogger(TreeNavigationUtils.class);
+	private static Logger _logger = LogManager.getLogger(TreeNavigationUtils.class);
 	private static Random rand = new Random();
 
 	String contextPath = "/ncimbrowser/";
