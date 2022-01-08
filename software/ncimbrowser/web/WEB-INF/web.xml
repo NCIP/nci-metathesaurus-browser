@@ -35,6 +35,13 @@
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
 
+
+<error-page>
+<error-code>500</error-code>
+<location>/pages/server_error.html</location>
+</error-page>
+
+
     <servlet>
         <servlet-name>ajax</servlet-name>
         <servlet-class>gov.nih.nci.evs.browser.servlet.AjaxServlet</servlet-class>
