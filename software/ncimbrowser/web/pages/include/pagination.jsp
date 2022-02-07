@@ -6,8 +6,6 @@ String randomStr = iteratorBean.getRandomNumberString();
 
 request.getSession().setAttribute("matchText", iteratorBean.getMatchText());
 String searchText = iteratorBean.getMatchText();
-System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchText);
-
 
 %>
 

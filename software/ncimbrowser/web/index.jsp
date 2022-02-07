@@ -2,7 +2,6 @@
 
 <%
   String queryString = request.getQueryString();
-  System.out.println("queryString: " + queryString);
 %>  
 
 <html>
