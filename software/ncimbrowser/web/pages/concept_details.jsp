@@ -389,7 +389,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
         <tr>
           <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
-             <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+             <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" rel="noopener"  alt="Term Suggestion">Suggest changes to this concept</a>
        <br>
        
 <!--       

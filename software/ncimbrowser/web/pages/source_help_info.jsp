@@ -29,15 +29,15 @@
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
+        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px" role='presentation'>
         <tr>
           <td valign="top">
-            <a href="http://evs.nci.nih.gov/" target="_blank" alt="Enterprise Vocabulary Services">
+            <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
               <img src="<%=basePath%>/images/evs-popup-logo.gif" width="213" height="26" alt="EVS: Enterprise Vocabulary Services" title="EVS: Enterprise Vocabulary Services" border="0" />
             </a>
           </td>
@@ -71,33 +71,33 @@ some of which are proprietary and included, by permission, for non-commercial us
   <li>
     NCIm is built using the National Library of Medicine's UMLS Metathesaurus, use of which is restricted
     under the UMLS license agreement
-    (see <a href="http://www.nlm.nih.gov/research/umls/license.html" target="_blank">
+    (see <a href="http://www.nlm.nih.gov/research/umls/license.html" target="_blank" rel="noopener" >
     http://www.nlm.nih.gov/research/umls/license.html</a>).
   </li>
   <li>
     The World Health Organization allows use of ICD-10 and ICD-O-3 in NCI Enterprise Vocabulary Services, but
     requires licensing for other purposes
-    (see <a href="http://www.who.int/classifications/icd/en/" target="_blank">http://www.who.int/classifications/icd/en/</a>).
+    (see <a href="http://www.who.int/classifications/icd/en/" target="_blank" rel="noopener" >http://www.who.int/classifications/icd/en/</a>).
   </li>
 
   <li>
     The International Organization for Standardization (ISO) allows reference use of its 3166-2 codes in NCI Enterprise Vocabulary Services, 
     but requires licensing for other purposes
-    (see <a href="http://www.iso.org/iso/home/standards/country_codes.htm" target="_blank">http://www.iso.org/iso/home/standards/country_codes.htm</a>).
+    (see <a href="http://www.iso.org/iso/home/standards/country_codes.htm" target="_blank" rel="noopener" >http://www.iso.org/iso/home/standards/country_codes.htm</a>).
   </li>
 
   <li>
     The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in
     NCI Enterprise Vocabulary Services, but requires licensing for other purposes.
     Terms of use for SNOMED CT are contained in Appendix 2, SNOMED CT Affiliate Licence Agreement, of the License for Use of the UMLS Metathesaurus.
-    (see <a href="http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" alt="SNOMED CT License">SNOMED CT license agreement</a>).
+    (see <a href="http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" rel="noopener"  alt="SNOMED CT License">SNOMED CT license agreement</a>).
   </li>
 
   <li>
     The Medical Dictionary for Regulatory Activities (MedDRA) terminology is licensed for NCI work and may be
     viewed on NCI browsers. All other uses are prohibited, unless covered by separate subscription to MedDRA
     from the MedDRA MSSO
-    (see <a href="http://www.meddra.org" target="_blank">http://www.meddra.org</a>
+    (see <a href="http://www.meddra.org" target="_blank" rel="noopener" >http://www.meddra.org</a>
     or contact at mssohelp@meddra.org, 877.258.8280, or 7575 Colshire Drive McLean, VA 22102).
   </li>
 </ul>
@@ -110,27 +110,27 @@ Additional information on many of these sources can be found on related pages.
 
   <li>
     NCI Term Browser sources are described in more detail
-    at: <a href="<%=ncit_url%>pages/source_help_info-termbrowser.jsf" target="_blank"><%=ncit_url%>pages/source_help_info-termbrowser.jsf</a>
+    at: <a href="<%=ncit_url%>pages/source_help_info-termbrowser.jsf" target="_blank" rel="noopener" ><%=ncit_url%>pages/source_help_info-termbrowser.jsf</a>
   </li>
 
   <li>
     Sources with tagged content in NCI Thesaurus are listed at:
-    <a href="<%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank"><%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
+    <a href="<%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus" target="_blank" rel="noopener" ><%=ncit_url%>pages/source_help_info.jsf?dictionary=NCI%20Thesaurus</a>
   </li>
 
   <li>
     UMLS Metathesaurus sources are described in detail at:
-    <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank">http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
+    <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank" rel="noopener" >http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
   </li>
 
   <li>
     Many are described at: 
-    <a href="https://wiki.nci.nih.gov/x/FgjrAw" target="_blank">https://wiki.nci.nih.gov/x/FgjrAw</a>
+    <a href="https://wiki.nci.nih.gov/x/FgjrAw" target="_blank" rel="noopener" >https://wiki.nci.nih.gov/x/FgjrAw</a>
   </li>
   
   <li>
     Statistical profiles of sources included in NCI Thesaurus and NCI Metathesaurus are
-    at: <a href="https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development" target="_blank">https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development</a>
+    at: <a href="https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development" target="_blank" rel="noopener" >https://wiki.nci.nih.gov/display/EVS/10+-+Shared+Terminology+Development</a>
   </li>
 </ul>
 </p>

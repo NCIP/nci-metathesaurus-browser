@@ -51,28 +51,28 @@ String ncit_url = new DataUtils().getNCItURL();
 %>
 
 <div style='clear:both;margin-top:-5px;padding:8px;height:32px;color:white;background-color:#C31F40'>
-  <a href="http://www.cancer.gov" target="_blank">
+  <a href="http://www.cancer.gov" target="_blank" rel="noopener" >
     <img src="<%=request.getContextPath()%>/images/banner-red.png"
       width="955" height="39" border="0"
       alt="National Cancer Institute"/>
   </a>
   <!--
 <div class="ncibanner">
-  <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute">
+  <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute">
     <img src="/ncimbrowser/images/logotype.gif"
       width="556" height="39" border="0"
       alt="National Cancer Institute" />
   </a>
-  <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute">
+  <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute">
     <img src="/ncimbrowser/images/spacer.gif"
       width="60" height="39" border="0" 
       alt="National Cancer Institute" class="print-header" /></a>
-  <a href="http://www.nih.gov" target="_blank" alt="U.S. National Institutes of Health">
+  <a href="http://www.nih.gov" target="_blank" rel="noopener"  alt="U.S. National Institutes of Health">
     <img src="/ncimbrowser/images/tagline_nologo.gif"
       width="219" height="39" border="0"
       alt="U.S. National Institutes of Health" />
   </a>
-  <a href="http://www.cancer.gov" target="_blank" alt="www.cancer.gov">
+  <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="www.cancer.gov">
     <img src="/ncimbrowser/images/cancer-gov.gif"
       width="125" height="39" border="0"
       alt="www.cancer.gov" />
@@ -85,7 +85,7 @@ String ncit_url = new DataUtils().getNCItURL();
         
 <div>
   <a href="http://evs.nci.nih.gov/"
-      target="_blank" alt="Enterprise Vocabulary Services">
+      target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
       
     <img src="/ncimbrowser/images/evs-logo.gif" width="960" height="26" alt="Enterprise Vocabulary Services" border="0"/>
     
@@ -383,21 +383,21 @@ Source</label>&nbsp;
             height="18" border="0" name="quicklinksimg" alt="Quick Links" />
         </a>
         <ul>
-          <li><a href="http://evs.nci.nih.gov/" target="_blank" alt="EVS">EVS Home</a></li>
-          <li><a href="<%=ncit_url%>" target="_blank" alt="EVS">NCI Thesaurus</a></li>
+          <li><a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="EVS">EVS Home</a></li>
+          <li><a href="<%=ncit_url%>" target="_blank" rel="noopener"  alt="EVS">NCI Thesaurus</a></li>
           <!--
-          <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
+          <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" rel="noopener"  alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
            -->
 
 
-          <li><a href="<%=ncit_url%>start.jsf" target="_blank" alt="NCI Term Browser">NCI Term Browser</a></li>
+          <li><a href="<%=ncit_url%>start.jsf" target="_blank" rel="noopener"  alt="NCI Term Browser">NCI Term Browser</a></li>
 
             
-              <li><a href="http://ncitermform.nci.nih.gov/ncitermform/?dictionary=NCI%20Metathesaurus" target="_blank" alt="Term Suggestion">Term Suggestion</a></li>
+              <li><a href="http://ncitermform.nci.nih.gov/ncitermform/?dictionary=NCI%20Metathesaurus" target="_blank" rel="noopener"  alt="Term Suggestion">Term Suggestion</a></li>
             
 
 
-          <li><a href="http://www.cancer.gov/cancertopics/terminologyresources" target="_blank" alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
+          <li><a href="http://www.cancer.gov/cancertopics/terminologyresources" target="_blank" rel="noopener"  alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
         </ul>
       </li>
     </ul>
@@ -423,11 +423,11 @@ request.getSession().removeAttribute("error_msg");
         <!-- footer -->
 <div class="footer">
   <ul>
-    <li><a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute">NCI Home</a> |</li>
+    <li><a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute">NCI Home</a> |</li>
     <li><a href="/ncimbrowser/pages/contact_us.jsf">Contact Us</a> |</i>
-    <li><a href="http://www.cancer.gov/policies" target="_blank" alt="National Cancer Institute Policies">Policies</a> |</li>
-    <li><a href="http://www.cancer.gov/global/web/policies/page3" target="_blank" alt="National Cancer Institute Accessibility">Accessibility</a> |</li>
-    <li><a href="http://www.cancer.gov/global/web/policies/page6" target="_blank" alt="National Cancer Institute FOIA">FOIA</a></li>
+    <li><a href="http://www.cancer.gov/policies" target="_blank" rel="noopener"  alt="National Cancer Institute Policies">Policies</a> |</li>
+    <li><a href="http://www.cancer.gov/global/web/policies/page3" target="_blank" rel="noopener"  alt="National Cancer Institute Accessibility">Accessibility</a> |</li>
+    <li><a href="http://www.cancer.gov/global/web/policies/page6" target="_blank" rel="noopener"  alt="National Cancer Institute FOIA">FOIA</a></li>
   </ul>
   <p>
     A Service of the National Cancer Institute<br />
@@ -437,16 +437,16 @@ request.getSession().removeAttribute("error_msg");
   </p>
   <map id="external-footer" name="external-footer">
     <area shape="rect" coords="0,0,46,34"
-      href="http://www.cancer.gov" target="_blank"
+      href="http://www.cancer.gov" target="_blank" rel="noopener" 
       alt="National Cancer Institute" />
     <area shape="rect" coords="55,1,99,32"
-      href="http://www.hhs.gov/" target="_blank"
+      href="http://www.hhs.gov/" target="_blank" rel="noopener" 
       alt="U.S. Health &amp; Human Services" />
     <area shape="rect" coords="103,1,147,31"
-      href="http://www.nih.gov/" target="_blank"
+      href="http://www.nih.gov/" target="_blank" rel="noopener" 
       alt="National Institutes of Health" />
     <area shape="rect" coords="148,1,235,33"
-      href="http://www.usa.gov/" target="_blank"
+      href="http://www.usa.gov/" target="_blank" rel="noopener" 
       alt="USA.gov" />
   </map>
 </div>

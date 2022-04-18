@@ -250,6 +250,7 @@ public class MetaTreeHelper {
 		Vector topNodes = getTopNode(sab, true);
 		Vector w = new Vector();
 		HashMap parentCUIMap = new HashMap();
+		HashSet hset = new HashSet();
         try {
             MetaTreeImp mti = new MetaTreeImp(mbs, sab);
             MetaTree tree = mbs.getMetaNeighborhood(cui, sab);
@@ -267,6 +268,14 @@ public class MetaTreeHelper {
 						if (!topNodes.contains(parentNode.getCui())) {
 							parentCUIMap.put(getNodeData(parentNode), getNodeData(node));
 							stack.push(parentNode);
+
+                            //[NCIM-283] Excessively High CPU Usage.
+							if (hset.contains(parentNode.getCui())) {
+								System.out.println("WARNING: LOOP encountered while trying to find paths to roots from (CUI: " + cui + " SAB: " + sab + ")");
+								System.out.println("\t\t-- Conflicting relationship found at: " + parentNode.getName() + "(CUI: " + parentNode.getCui() + ")");
+								return null;
+							}
+							hset.add(parentNode.getCui());
 						}
 					}
 				} catch (Exception ex) {
@@ -329,6 +338,7 @@ public class MetaTreeHelper {
 		return w;
 	}
 
+/*
     public String search_tree(String scheme, String version, String sab, String cui) {
 		Vector w = new Vector();
 		//w.add(scheme + "|" + version + "|" + sab + "|"  + code + "|" + name + "|" + is_expandable);
@@ -362,6 +372,42 @@ public class MetaTreeHelper {
 		w.addAll(v);
 
 
+		TreeNavigationHelper treeNavigationHelper = new TreeNavigationHelper(cui, w);
+		treeNavigationHelper.setFocusNodeExpandable(isNodeExpandable(cui, sab));
+		return treeNavigationHelper.print_tree();
+	}
+*/
+    public String search_tree(String scheme, String version, String sab, String cui) {
+        Vector w2 = searchTree(cui, sab);
+        if (w2 == null) return null;
+
+		Vector w = new Vector();
+		Vector roots = getSourceRoots(scheme, version, sab);
+		for (int i=0; i<roots.size(); i++) {
+			String line = (String) roots.elementAt(i);
+			//NCI Metathesaurus|202008|C0333717|Abnormal Cell|true
+			Vector u = StringUtils.parseData(line, '|');
+			String name = (String) u.elementAt(4);
+			String code = (String) u.elementAt(3);
+			String is_expandable = (String) u.elementAt(5);
+			w.add("Root" + "|" + "<Root>" + "|" + name + "|" + code + "|" + sab + "|" + is_expandable);
+		}
+
+		for (int i=0; i<w2.size(); i++) {
+			String line = (String) w2.elementAt(i);
+			Vector u = StringUtils.parseData(line, '|');
+			w.add((String) u.elementAt(0) +  "|"
+                 +(String) u.elementAt(1) +  "|"
+                 +(String) u.elementAt(4) +  "|"
+                 +(String) u.elementAt(5) +  "|"
+                 +(String) u.elementAt(6) +  "|"
+                 +(String) u.elementAt(7));
+
+			Vector v = get_tree_data_from_root((String) u.elementAt(1), sab);
+			w.addAll(v);
+		}
+		Vector v = get_tree_data_from_root(cui, sab);
+		w.addAll(v);
 		TreeNavigationHelper treeNavigationHelper = new TreeNavigationHelper(cui, w);
 		treeNavigationHelper.setFocusNodeExpandable(isNodeExpandable(cui, sab));
 		return treeNavigationHelper.print_tree();

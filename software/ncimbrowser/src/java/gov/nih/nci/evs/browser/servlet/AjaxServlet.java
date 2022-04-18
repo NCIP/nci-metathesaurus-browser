@@ -874,6 +874,9 @@ public final class AjaxServlet extends HttpServlet {
 			String cui = request.getParameter("ontology_node_id");
 
 			String content = metaTreeHelper.search_tree(scheme, version, sab, cui);
+			if (content == null) {
+				content = "<p><center>Unable to resolve paths to roots. Source hierarchy is not available.</center></p>";
+			}
 
 			sb.append(content);
 			ouputStream.write(sb.toString().getBytes("UTF-8"), 0, sb.length());

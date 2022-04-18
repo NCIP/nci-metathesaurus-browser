@@ -66,7 +66,7 @@
           </tr></table>
           <b>NCI Metathesaurus (NCIm)</b> is a comprehensive biomedical terminology database, connecting
           4,000,000 terms from more than 75 terminologies. It contains most public domain vocabularies from
-          the National Library of Medicine's <a href="http://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank">UMLS Metathesaurus</a>,
+          the National Library of Medicine's <a href="http://www.nlm.nih.gov/research/umls/umlsmain.html" target="_blank" rel="noopener" >UMLS Metathesaurus</a>,
           as well as many other biomedical vocabularies created by or of interest to NCI and its partners, including some propriety
           vocabularies with restrictions on their use
           (see <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
@@ -334,7 +334,7 @@
           We are still
           working on remaining issues of data, functionality and documentation.  For the latest updates of
           known issues, see
-          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.3+Release+Notes" target="_blank">
+          <a href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Browser+2.3+Release+Notes" target="_blank" rel="noopener" >
           NCI Metathesaurus Browser 2.3 Release Notes.
           </a>
           <br><br>
@@ -350,8 +350,8 @@
           </tr></table>
           <!-- ************* Additional Information ************** -->
           Additional information about NCIm and EVS can be found on the
-          <a href="http://evs.nci.nih.gov/" target="_blank">EVS Web</a> and 
-          <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank">EVS Wiki</a>
+          <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener" >EVS Web</a> and 
+          <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank" rel="noopener" >EVS Wiki</a>
           sites. 
         </p>
         <br>
