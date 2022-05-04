@@ -9,7 +9,7 @@
     <li><a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" alt="HHS Vulnerability Disclosure">HHS Vulnerability Disclosure</a></li>
   </ul>
 <center>
-<a href="http://www.hhs.gov/" alt="U.S. Department of Health and Human Services">
+<a href="https://www.hhs.gov/" alt="U.S. Department of Health and Human Services">
 U.S. Department of Health and Human Services
 </a>
 &nbsp;|&nbsp;

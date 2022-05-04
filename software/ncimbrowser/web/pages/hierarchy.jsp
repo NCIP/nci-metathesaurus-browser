@@ -422,8 +422,8 @@
     <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
-        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
@@ -431,7 +431,7 @@
         <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0" role='presentation'>
         <tr>
           <td valign="top">
-            <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
+            <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
               <img src="<%=basePath%>/images/evs-popup-logo.gif" width="213" height="26" alt="EVS: Enterprise Vocabulary Services" title="EVS: Enterprise Vocabulary Services" border="0" />
             </a>
           </td>

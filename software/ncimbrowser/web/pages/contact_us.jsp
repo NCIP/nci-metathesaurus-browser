@@ -229,11 +229,11 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
 
     For questions related to NCI's Cancer.gov Web site,
     see the
-    <a href="http://www.cancer.gov/help" target="_blank" rel="noopener" >
+    <a href="https://www.cancer.gov/help" target="_blank" rel="noopener" >
       Cancer.gov help page</a>. &nbsp;
     For help and other questions concerning NCI Enterprise Vocabulary
     Services (EVS),
-    see the <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener" >
+    see the <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener" >
       EVS Web site</a>.
   </div>
 
@@ -290,7 +290,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
 <input type="hidden" name="captcha_option" id="captcha_option" value="<%=captcha_option%>">
 
   </h:form>
-            <a href="http://www.cancer.gov/policies/privacy-security#NCIWeb" target="_blank" rel="noopener"  alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
+            <a href="https://www.cancer.gov/policies/privacy-security#NCIWeb" target="_blank" rel="noopener"  alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>
           </div>
           <!-- end Page content -->

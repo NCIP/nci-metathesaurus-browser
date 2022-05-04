@@ -29,15 +29,15 @@
   <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
-        <a href="http://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
         <table class="evsLogoBg" cellspacing="3" cellpadding="0" border="0" width="570px" role='presentation'>
         <tr>
           <td valign="top">
-            <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
+            <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
               <img src="<%=basePath%>/images/evs-popup-logo.gif" width="213" height="26" alt="EVS: Enterprise Vocabulary Services" title="EVS: Enterprise Vocabulary Services" border="0" />
             </a>
           </td>
@@ -71,8 +71,8 @@ some of which are proprietary and included, by permission, for non-commercial us
   <li>
     NCIm is built using the National Library of Medicine's UMLS Metathesaurus, use of which is restricted
     under the UMLS license agreement
-    (see <a href="http://www.nlm.nih.gov/research/umls/license.html" target="_blank" rel="noopener" >
-    http://www.nlm.nih.gov/research/umls/license.html</a>).
+    (see <a href="https://www.nlm.nih.gov/research/umls/license.html" target="_blank" rel="noopener" >
+    https://www.nlm.nih.gov/research/umls/license.html</a>).
   </li>
   <li>
     The World Health Organization allows use of ICD-10 and ICD-O-3 in NCI Enterprise Vocabulary Services, but
@@ -90,7 +90,7 @@ some of which are proprietary and included, by permission, for non-commercial us
     The International Health Terminology Standards Development Organisation (IHTSDO) allows use of SNOMED CT in
     NCI Enterprise Vocabulary Services, but requires licensing for other purposes.
     Terms of use for SNOMED CT are contained in Appendix 2, SNOMED CT Affiliate Licence Agreement, of the License for Use of the UMLS Metathesaurus.
-    (see <a href="http://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" rel="noopener"  alt="SNOMED CT License">SNOMED CT license agreement</a>).
+    (see <a href="https://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/license_agreement_snomed.html" target="_blank" rel="noopener"  alt="SNOMED CT License">SNOMED CT license agreement</a>).
   </li>
 
   <li>
@@ -120,7 +120,7 @@ Additional information on many of these sources can be found on related pages.
 
   <li>
     UMLS Metathesaurus sources are described in detail at:
-    <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank" rel="noopener" >http://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
+    <a href="https://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html" target="_blank" rel="noopener" >https://www.nlm.nih.gov/research/umls/sourcereleasedocs/index.html</a>
   </li>
 
   <li>

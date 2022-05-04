@@ -1,6 +1,6 @@
 <!-- EVS Logo -->
 <div>
-  <a href="http://evs.nci.nih.gov/"
+  <a href="https://evs.nci.nih.gov/"
       target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
       <!--
     <img src="<%=basePath%>/images/evs-logo.gif" width="960" height="26" alt="Enterprise Vocabulary Services" border="0"/>

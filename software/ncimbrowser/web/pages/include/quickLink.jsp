@@ -39,10 +39,10 @@
             height="18" border="0" name="quicklinksimg" alt="Quick Links" />
         </a>
         <ul>
-          <li><a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="EVS">EVS Home</a></li>
+          <li><a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="EVS">EVS Home</a></li>
           <li><a href="<%=ql_ncit_url%>" target="_blank" rel="noopener"  alt="EVS">NCI Thesaurus</a></li>
           <!--
-          <li><a href="http://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" rel="noopener"  alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
+          <li><a href="https://ncimeta.nci.nih.gov/MetaServlet/" target="_blank" rel="noopener"  alt="NCI Metathesaurus">NCI Metathesaurus</a></li>
            -->
 
 
@@ -53,7 +53,7 @@
             <% } %>
 
 
-          <li><a href="http://www.cancer.gov/cancertopics/terminologyresources" target="_blank" rel="noopener"  alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
+          <li><a href="https://www.cancer.gov/cancertopics/terminologyresources" target="_blank" rel="noopener"  alt="NCI Terminology Resources">NCI Terminology Resources</a></li>
         </ul>
       </li>
     </ul>

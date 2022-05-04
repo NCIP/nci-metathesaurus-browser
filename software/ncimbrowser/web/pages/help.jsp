@@ -378,7 +378,7 @@
           </tr></table>
           <!-- ************* Additional Information ************** -->
           Additional information about NCIm and EVS can be found on the
-          <a href="http://evs.nci.nih.gov/" target="_blank" rel="noopener" >EVS Web</a> and 
+          <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener" >EVS Web</a> and 
           <a href="https://wiki.nci.nih.gov/display/EVS/EVS+Wiki" target="_blank" rel="noopener" >EVS Wiki</a>
           sites. 
         </p>
