@@ -89,7 +89,7 @@ import org.json.JSONException;
 // Note: Version with the has more (...) nodes feature.
 
 public class TreeNavigationUtils {
-	public static int MAX_CHILDREN = 5;
+	public static final int MAX_CHILDREN = 5;
 	private static Logger _logger = LogManager.getLogger(TreeNavigationUtils.class);
 	private static Random rand = new Random();
 
@@ -226,7 +226,7 @@ public class TreeNavigationUtils {
 		ChildTreeNodeIterator itr = focusNode.getChildIterator();
 		Vector w = new Vector();
 		try {
-			HashSet hset = new HashSet();
+			//HashSet hset = new HashSet();
 			int lcv = 0;
 			while(itr.hasNext()){
 				LexEvsTreeNode child = itr.next();
@@ -263,7 +263,7 @@ public class TreeNavigationUtils {
 		ChildTreeNodeIterator itr = focusNode.getChildIterator();
 		Vector w = new Vector();
 		try {
-			HashSet hset = new HashSet();
+			//HashSet hset = new HashSet();
 			int lcv = 0;
 			while(itr.hasNext()){
 				LexEvsTreeNode child = itr.next();
@@ -551,7 +551,7 @@ public class TreeNavigationUtils {
 		}
 		buf.append("<ul>");
 		ChildTreeNodeIterator itr = focusNode.getChildIterator();
-		Vector w = new Vector();
+		//Vector w = new Vector();
 		try {
 			HashMap hmap = new HashMap();
 			Vector keys = new Vector();
@@ -583,7 +583,7 @@ public class TreeNavigationUtils {
 					buf.append(buf2);
 				}
 			}
-			w = new SortUtils().quickSort(w);
+			//w = new SortUtils().quickSort(w);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -637,7 +637,7 @@ public class TreeNavigationUtils {
 		if (version != null) {
 			versionOrTag.setVersion(version);
 		}
-		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		//LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 		LexEvsTreeNode node = treeService.getSubConcepts(scheme, versionOrTag, code, namespace);
         if (node != null && node.getExpandableStatus().toString().compareTo("IS_EXPANDABLE") == 0) return true;
         return false;

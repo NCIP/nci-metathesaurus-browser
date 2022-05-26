@@ -721,7 +721,7 @@ public final class AjaxServlet extends HttpServlet {
         cartActionBean.setCart(cart_hmap);
         request.getSession().setAttribute("cartActionBean", cartActionBean);
 
-		String ans = (String) request.getSession().getAttribute("ans");
+		//String ans = (String) request.getSession().getAttribute("ans");
 		request.getSession().removeAttribute("message");
 		int count = items.size();
 		String btn = (String) request.getParameter("btn");

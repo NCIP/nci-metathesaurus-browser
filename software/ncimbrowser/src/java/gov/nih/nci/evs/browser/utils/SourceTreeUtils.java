@@ -569,7 +569,7 @@ public class SourceTreeUtils {
                             new LocalNameList(), propertyTypes, null, 10);
 
                 } catch (Exception ex) {
-                    // ex.printStackTrace();
+                     ex.printStackTrace();
                     _logger
                         .error("\tNo top nodes could be located for the supplied restriction set in the requested direction.\n");
                     return new ArrayList();
@@ -722,13 +722,14 @@ public class SourceTreeUtils {
                 try {
                     matchIterator = cns.resolve(sortCriteria, null, null);// ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
                 return matchIterator;
             }
 
         } catch (Exception e) {
             // getLogger().error("ERROR: Exception in findConceptWithSourceCodeMatching.");
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -768,7 +769,7 @@ public class SourceTreeUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
 
@@ -1501,7 +1502,7 @@ public class SourceTreeUtils {
                 ti.addChild(childNavText, childItem);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         if (ti != null) {
         	hmap.put(ti._code, ti);
@@ -1558,7 +1559,7 @@ public class SourceTreeUtils {
             new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return new ArrayList();
     }
@@ -2044,7 +2045,7 @@ public class SourceTreeUtils {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
@@ -2057,7 +2058,7 @@ public class SourceTreeUtils {
         return hmap;
     }
 
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         JSONArray nodesArray = null;
         try {
             nodesArray = new JSONArray();
@@ -2084,7 +2085,7 @@ public class SourceTreeUtils {
 			return null;
 
 		map = getSourceRoots(src_root.getConceptCode(), sab);
-		nodeArray = HashMap2JSONArray(map);
+		nodeArray = hashMap2JSONArray(map);
         return nodeArray;
     }
 

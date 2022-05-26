@@ -204,7 +204,7 @@ public class UserSessionBean extends Object {
                     NCImBrowserProperties.MAXIMUM_RETURN);
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
@@ -296,7 +296,7 @@ public class UserSessionBean extends Object {
 						source, matchAlgorithm, ranking, maxToReturn, false);
 
 				} catch (Exception ex) {
-                    //ex.printStackTrace();
+                    ex.printStackTrace();
 				}
 
                 if (wrapper != null) {
@@ -1151,6 +1151,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
                     NCImBrowserProperties.MAXIMUM_RETURN);
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
         //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Entity> v = null;

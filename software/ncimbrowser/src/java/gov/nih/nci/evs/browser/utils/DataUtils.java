@@ -160,7 +160,7 @@ public class DataUtils {
     public String _evsServiceURL = null;
     public String _ncitURL = null;
     public String _lexevs_version = null;
-    public static String NCIM_VERSION;
+    public final static String NCIM_VERSION;
 
     private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
@@ -580,6 +580,7 @@ public class DataUtils {
                         return entry;
                     } catch (Exception ex1) {
                         _logger.error("Exception entry == null");
+                        ex1.printStackTrace();
                         return null;
                     }
                 }
@@ -617,6 +618,7 @@ public class DataUtils {
                     contextList, qualifierList);
         } catch (Exception ex) {
             _logger.error("restrictToSource throws exceptions.");
+            ex.printStackTrace();
             return null;
         }
         return cns;
@@ -672,7 +674,7 @@ public class DataUtils {
                 return entry;
             }
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -838,6 +840,7 @@ public class DataUtils {
                 } catch (Exception e) {
                     _logger
                         .error("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
+                    e.printStackTrace();
                     return v;
                 }
 
@@ -985,7 +988,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
 
         if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
@@ -1025,7 +1028,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return v;
     }
@@ -1152,6 +1155,7 @@ public class DataUtils {
             CodingScheme cs = getCodingScheme(codingScheme, versionOrTag);
             return getSupportedPropertyNames(cs);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
         return null;
     }
@@ -1289,7 +1293,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -1328,7 +1332,7 @@ public class DataUtils {
 
     public String[] getSortedKeys(HashMap map) {
         if (map == null)
-            return null;
+            return new String[0];
         Set keyset = map.keySet();
         String[] names = new String[keyset.size()];
         Iterator it = keyset.iterator();
@@ -1866,7 +1870,7 @@ public class DataUtils {
                 _ncicbContactURL = default_url;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         _logger.debug("getNCICBContactURL returns " + _ncicbContactURL);
@@ -1881,7 +1885,7 @@ public class DataUtils {
                 properties
                     .getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _terminologySubsetDownloadURL;
     }
@@ -1900,7 +1904,7 @@ public class DataUtils {
                 _ncimBuildInfo = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         _logger.debug("getNCIMBuildInfo returns " + _ncimBuildInfo);
@@ -2012,7 +2016,7 @@ public class DataUtils {
                 _ncitURL = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _ncitURL;
     }
@@ -2031,7 +2035,7 @@ public class DataUtils {
             	_lexevs_version = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _lexevs_version;
     }
@@ -2404,6 +2408,7 @@ public class DataUtils {
                                     Debug
                                         .println("(*) getDirectionalLabel throws exceptions: "
                                             + directionalLabel);
+                                    e.printStackTrace();
                                 }
 
                                 //Vector v = new Vector();
@@ -2479,6 +2484,7 @@ public class DataUtils {
                                         Debug
                                             .println("(**) getDirectionalLabel throws exceptions: "
                                                 + directionalLabel);
+                                        e.printStackTrace();
                                     }
 
                                     //Vector v = new Vector();
@@ -2560,7 +2566,7 @@ public class DataUtils {
                     scheme, csvt) : lbscm.getAssociationReverseName(
                     associationName, scheme, csvt);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return assocLabel;
     }
@@ -4203,6 +4209,7 @@ public class DataUtils {
                 _logger.error("* ERROR: cns.resolve throws exceptions.");
                 _logger.error("* " + e.getClass().getSimpleName() + ": "
                     + e.getMessage());
+               e.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -4244,6 +4251,7 @@ public class DataUtils {
             v = getMetadataValues(scheme, propertyName);
         } catch (Exception e) {
             _logger.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
         if (v == null || v.size() == 0)
@@ -4315,6 +4323,7 @@ public class DataUtils {
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
         } catch (Exception ex) {
+			ex.printStackTrace();
             return sibling_vec;
         }
 
@@ -4580,6 +4589,7 @@ public class DataUtils {
             } catch (Exception e) {
                 _logger.error("* " + e.getClass().getSimpleName() + ": "
                     + e.getMessage());
+                e.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -4729,7 +4739,7 @@ public class DataUtils {
             }
 
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return null;
     }

@@ -220,36 +220,38 @@ public class SearchCart {
 						.getGenericExtension("metabrowser-extension");
 				if (mbs == null) {
 					_logger.error("Error! metabrowser-extension is null!");
+					return null;
 				}
 
             	Map<String, List<RelationshipTabResults>> map = null;
             	map = mbs.getRelationshipsDisplay(cui, null, Direction.SOURCEOF);
+            	if (map == null) return null;
 
 				Iterator it = map.entrySet().iterator();
 				while (it.hasNext()) {
 					Entry thisEntry = (Entry) it.next();
-					String rel = (String) thisEntry.getKey();
-					List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+					if (thisEntry != null) {
+						String rel = (String) thisEntry.getKey();
+						List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
+                        if (relations != null) {
+							// Add parents
+							if (parents && _hierAssocToChildNodes.contains(rel)) {
+								for (RelationshipTabResults result : relations) {
+									String name = result.getName();
+									if (!v.contains(name)) v.add(name);
+								}
 
-            	//for (String rel : map.keySet()) {
-            		//List<RelationshipTabResults> relations = map.get(rel);
+							}
 
-            		// Add parents
-            		if (parents && _hierAssocToChildNodes.contains(rel)) {
-	                    for (RelationshipTabResults result : relations) {
-	                        String name = result.getName();
-	                    	if (!v.contains(name)) v.add(name);
-	                    }
-
-            		}
-
-            		// Add children
-            		if (!parents && _hierAssocToParentNodes.contains(rel)) {
-	                    for (RelationshipTabResults result : relations) {
-	                    	String name = result.getName();
-	                    	if (!v.contains(name)) v.add(name);
-	                    }
-            		}
+							// Add children
+							if (!parents && _hierAssocToParentNodes.contains(rel)) {
+								for (RelationshipTabResults result : relations) {
+									String name = result.getName();
+									if (!v.contains(name)) v.add(name);
+								}
+							}
+						}
+					}
 
             	}
 

@@ -84,6 +84,7 @@ import java.io.Serializable;
  */
 public class JSONArray implements Serializable {
 
+    private static final long serialVersionUID = 2L;
 
     /**
      * The arrayList where the JSONArray's properties are kept.

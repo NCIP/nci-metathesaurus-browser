@@ -647,12 +647,14 @@ public class NCImMetadataUtils {
 
 
     public static NameAndValue[] getMetadataPropertyNameAndValueList(LexBIGService lbSvc, String codingSchemeName, String version, String urn) {
-		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
+		if (lbSvc == null) return new NameAndValue[0];
+		//AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
         MetadataPropertyList mdpl = null;
         NameAndValue[] nv_array = null;
         try {
             LexBIGServiceMetadata lbsm = lbSvc.getServiceMetadata();
+            if (lbsm == null) return new NameAndValue[0];
             if (version == null) {
                 version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
                 CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
@@ -664,7 +666,9 @@ public class NCImMetadataUtils {
                     .createAbsoluteCodingSchemeVersionReference(
                         urn, version));
 			try {
+				if (lbsm == null) return new NameAndValue[0];
 				mdpl = lbsm.resolve();
+				if (mdpl == null) return new NameAndValue[0];
 				Iterator<? extends MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
 				while (metaItr.hasNext()) {
 					MetadataProperty property = (MetadataProperty) metaItr.next();
@@ -679,13 +683,12 @@ public class NCImMetadataUtils {
 					return nv_array;
 				}
 
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				return null;
+				return new NameAndValue[0];
 			}
 
-			if (mdpl == null) return null;
+			//if (mdpl == null) return null;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -700,12 +703,14 @@ public class NCImMetadataUtils {
 
 
     public static Vector getMetadataPropertyValues(LexBIGService lbSvc, String codingSchemeName, String version, String urn, String propertyName, boolean sort) {
+		if (lbSvc == null) return null;
 		if (propertyName == null) return null;
-		AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
+		//AbsoluteCodingSchemeVersionReference acsvr = new AbsoluteCodingSchemeVersionReference();
         Vector v = new Vector();
         MetadataPropertyList mdpl = null;
         try {
             LexBIGServiceMetadata lbsm = lbSvc.getServiceMetadata();
+            if (lbsm == null) return null;
             if (version == null) {
                 version = getVocabularyVersionByTag(Constants.CODING_SCHEME_NAME, "PRODUCTION");
                 CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
@@ -716,7 +721,9 @@ public class NCImMetadataUtils {
                     .createAbsoluteCodingSchemeVersionReference(
                         urn, version));
 			try {
+				if (lbsm == null) return null;
 				mdpl = lbsm.resolve();
+				if (mdpl == null) return null;
 				Iterator<? extends MetadataProperty> metaItr = mdpl.iterateMetadataProperty();
 				while (metaItr.hasNext()) {
 					MetadataProperty property = (MetadataProperty) metaItr.next();
@@ -728,7 +735,7 @@ public class NCImMetadataUtils {
 				ex.printStackTrace();
 				return null;
 			}
-			if (mdpl == null) return null;
+			//if (mdpl == null) return null;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -741,10 +748,6 @@ public class NCImMetadataUtils {
 
 
     public static void initialize() {
-
-//System.out.println("initialize ....");
-
-
         _logger.info("initialize ...");
         _sab2FormalNameHashMap = new HashMap();
         _localname2FormalnameHashMap = new HashMap();
@@ -754,11 +757,14 @@ public class NCImMetadataUtils {
             _formalName2MetadataHashMap = new HashMap();
         }
 
-//System.out.println("Step 1");
-
         int vocabulary_count = 0;
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            if (lbSvc == null) {
+				_logger.error("lbSvc == null -- initialization FAILED...");
+				return;
+			}
+
             CodingSchemeRenderingList csrl = null;
             try {
                 csrl = lbSvc.getSupportedCodingSchemes();
@@ -768,20 +774,23 @@ public class NCImMetadataUtils {
                     + ex.getCause());
                // return;
             }
-
-//System.out.println("Step 1");
+            if (csrl == null) {
+				System.out.println("csrl == null -- initialization failed.");
+				return;
+			}
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+             if (csrs == null) {
+				System.out.println("csrs == null -- initialization failed.");
+				return;
+			}
+
             for (int i = 0; i < csrs.length; i++) {
                 int j = i + 1;
                 CodingSchemeRendering csr = csrs[i];
                 if (csr != null) {
 					CodingSchemeSummary css = csr.getCodingSchemeSummary();
 					String formalname = css.getFormalName();
-
-
-//System.out.println("Step 2 " + formalname);
-
 					String css_local_name = css.getLocalName();
 					Boolean isActive = null;
 					if (csr.getRenderingDetail() == null) {
@@ -796,10 +805,6 @@ public class NCImMetadataUtils {
 					}
 
 					String representsVersion = css.getRepresentsVersion();
-
-                   // System.out.println(representsVersion);
-
-
 					if ((includeInactive && isActive == null)
 						|| (isActive != null && isActive.equals(Boolean.TRUE))
 						|| (includeInactive && (isActive != null && isActive
@@ -815,7 +820,6 @@ public class NCImMetadataUtils {
 								getCodingScheme(formalname, representsVersion);
 
 							if (cs != null && !isResolvedValueSetCodingScheme(cs)) {
-							//if (cs != null) {
 								NameAndValue[] nvList =
 									//MetadataUtils.getMetadataProperties(cs);
 									getMetadataProperties(cs);
@@ -881,14 +885,8 @@ public class NCImMetadataUtils {
 							+ formalname);
 						_logger.warn("\t\trepresentsVersion " + representsVersion);
 					}
-
-					//_logger.info("\n");
 			    }
-
             }
-
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

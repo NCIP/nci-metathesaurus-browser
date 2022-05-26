@@ -217,13 +217,13 @@ public class CacheController {
                 new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version,
                     code, NCI_SOURCE, null);
 
-            nodeArray = HashMap2JSONArray(map);
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+					ex.printStackTrace();
                 }
             }
         }
@@ -238,7 +238,7 @@ public class CacheController {
         map =
             new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version, code,
                 NCI_SOURCE, subconcept_code);
-        nodeArray = HashMap2JSONArray(map);
+        nodeArray = hashMap2JSONArray(map);
         return nodeArray;
     }
 
@@ -323,13 +323,13 @@ System.out.println(	"getRootConcepts: version " + version);
         }
         if (nodeArray == null) {
             map = getChildrenExt(code, sab);
-            nodeArray = HashMap2JSONArray(map);
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
             }
         }
@@ -493,6 +493,7 @@ System.out.println(	"getRootConcepts: version " + version);
             return t1 + t0 + t2;
         } catch (Exception ex) {
             // to be modified
+            ex.printStackTrace();
             return "[]";
         }
     }
@@ -606,7 +607,7 @@ System.out.println(	"getRootConcepts: version " + version);
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
@@ -677,7 +678,7 @@ System.out.println(	"getRootConcepts: version " + version);
         if (hmap == null)
             return null;
         JSONArray nodeArray = null;
-        nodeArray = HashMap2JSONArray(hmap);
+        nodeArray = hashMap2JSONArray(hmap);
         return nodeArray;
     }
 /*
@@ -765,11 +766,11 @@ System.out.println(	"getRootConcepts: version " + version);
 */
 
     public HashMap getRemainingSubconcepts(String CUI, String SAB, int records_to_skip) {
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
         int max = 100;//NCImBrowserProperties.getSubconceptPageSize();
-        Vector v = new Vector();
+        //Vector v = new Vector();
         String childNavText = "CHD";
         boolean hasMoreChildren = false;
         int knt0 = 0;
@@ -781,6 +782,8 @@ System.out.println(	"getRootConcepts: version " + version);
                     .getGenericExtension("metabrowser-extension");
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
             MetaTreeNode focus = tree.getCurrentFocus();
+
+            ti = new TreeItem(focus.getCui(), focus.getName());
 
             Iterator iterator = focus.getChildren();
             if (iterator == null) {
@@ -801,7 +804,7 @@ System.out.println(	"getRootConcepts: version " + version);
 			}
 			childNodes = new SortUtils().quickSort(childNodes);
 
-            ti = new TreeItem(focus.getCui(), focus.getName());
+            //ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
                 ti._expandable = false;
                 hmap.put(ti._code, ti);
@@ -962,12 +965,12 @@ System.out.println(	"getRootConcepts: version " + version);
             }
 
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return nodesArray;
     }
 
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         JSONArray nodesArray = null;
         try {
             nodesArray = new JSONArray();
@@ -983,7 +986,7 @@ System.out.println(	"getRootConcepts: version " + version);
         return nodesArray;
 	}
 /*
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         //JSONObject json = new JSONObject();
         JSONArray nodesArray = null;
         try {
@@ -1260,10 +1263,6 @@ System.out.println(	"getRootConcepts: version " + version);
     }
 
     public HashMap getSourceRoots(String CUI, String SAB) {
-
-		System.out.println("getSourceRoots CUI: " + CUI);
-		System.out.println("getSourceRoots SAB: " + SAB);
-
         HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
@@ -1276,20 +1275,16 @@ System.out.println(	"getRootConcepts: version " + version);
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
 
-
             if (mbs == null) {
 				System.out.println("getGenericExtension returns NULL???");
-			} else {
-				System.out.println("getGenericExtension returns fine");
+				return null;
 			}
 
-            System.out.println("Step 1:");
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
-
             if (tree == null) {
 				System.out.println("getMetaNeighborhood returns NULL??????");
+				return null;
 			}
-
 
             MetaTreeNode focus = tree.getCurrentFocus();
             ti = new TreeItem(focus.getCui(), focus.getName());
@@ -1300,16 +1295,9 @@ System.out.println(	"getRootConcepts: version " + version);
             } else {
                 ti._expandable = true;
             }
-
-            System.out.println("Step 2:");
             Iterator iterator = focus.getChildren();
             if (iterator == null) {
                 hmap.put(ti._code, ti);
-
-
-                System.out.println("iterator == null:");
-
-
                 return hmap;
             }
 
@@ -1328,28 +1316,18 @@ System.out.println(	"getRootConcepts: version " + version);
                     hset.add(child.getCui());
                 }
             }
-            System.out.println("Step 3:");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (v != null) {
-
-            System.out.println("v.size: " + v.size());
-
 			v = new SortUtils().quickSort(v);
 			for (int i = 0; i < v.size(); i++) {
 				TreeItem childItem = (TreeItem) v.elementAt(i);
 				ti.addChild(childNavText, childItem);
 			}
-
-	    } else {
-			System.out.println("v == NULL ???" );
-
-		}
-
-
+	    }
         if (ti != null) {
         	hmap.put(ti._code, ti);
 		}
@@ -1400,13 +1378,13 @@ System.out.println(src_root.getConceptCode());
 			}
 
 
-            nodeArray = HashMap2JSONArray(map);
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
             }
         }

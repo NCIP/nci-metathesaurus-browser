@@ -199,7 +199,7 @@ public class MetaTreeUtils {
             new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return new ArrayList();
     }
@@ -1054,9 +1054,11 @@ public class MetaTreeUtils {
         // LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         // MetaBrowserService mbs = null;
         try {
-            mbs =
-                (MetaBrowserService) lbs
-                    .getGenericExtension("metabrowser-extension");
+			if (mbs == null) {
+				mbs =
+					(MetaBrowserService) lbs
+						.getGenericExtension("metabrowser-extension");
+		    }
             if (direction) {
                 map =
                     mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list,
@@ -1397,7 +1399,7 @@ public class MetaTreeUtils {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -1408,7 +1410,7 @@ public class MetaTreeUtils {
         try {
             rcr = resolveConcept(scheme, csvt, code);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         if (rcr == null) {
             Util_displayMessage("Unable to resolve a concept for CUI = '"
@@ -1422,6 +1424,7 @@ public class MetaTreeUtils {
             name = getCodeDescription(rcr);
         } catch (Exception ex) {
             name = "Unknown";
+            ex.printStackTrace();
         }
         _logger.debug("Coding scheme: " + scheme);
         _logger.debug("code: " + code);
@@ -1670,7 +1673,7 @@ public class MetaTreeUtils {
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         ti._expandable =
@@ -1954,9 +1957,11 @@ public class MetaTreeUtils {
         // LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         // MetaBrowserService mbs = null;
         try {
-            mbs =
-                (MetaBrowserService) lbs
-                    .getGenericExtension("metabrowser-extension");
+			if (mbs == null) {
+				mbs =
+					(MetaBrowserService) lbs
+						.getGenericExtension("metabrowser-extension");
+			}
             map =
                 mbs.getBySourceTabDisplay(ti._code, sab, par_chd_assoc_list,
                     Direction.TARGETOF);
@@ -2225,6 +2230,7 @@ public class MetaTreeUtils {
         try {
             name = getCodeDescription(scheme, csvt, code);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
 
         TreeItem ti = new TreeItem(code, name);
@@ -2430,7 +2436,7 @@ public class MetaTreeUtils {
             new_map = test.getTreePathData(scheme, version, sab, code);
             test.dumpTreeItems(new_map);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
     }

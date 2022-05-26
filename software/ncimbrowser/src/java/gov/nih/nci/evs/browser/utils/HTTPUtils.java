@@ -72,6 +72,96 @@ public class HTTPUtils {
     //public  static final int ABS_MAX_STR_LEN = 40;
     public static final int ABS_MAX_STR_LEN = 100;
 
+    private static final String[] HTTP_REQUEST_PARAMETER_NAMES = {
+       "action",
+       "adv_matchText",
+       "adv_search_algorithm",
+       "adv_search_source",
+       "adv_search_type",
+       "algorithm",
+       "answer",
+       "btn",
+       "captcha_option",
+       "checkmultiplicity",
+       "code",
+       "dictionary",
+       "emailaddress",
+       "key",
+       "id",
+       "matchText",
+       "message",
+       "ontology_display_name",
+       "ontology_node_id",
+       "ontology_source",
+       "ontology_sab",
+       "opt",
+       "page_number",
+       "prop",
+       "ranking",
+       "refresh",
+       "rel",
+       "rel_search_association",
+       "rel_search_rela",
+       "rela",
+       "sab",
+       "scheme",
+       "searchTarget",
+       "searchTerm",
+       "searchTerm:search.x",
+       "searchTerm:search.y",
+       "searchTerm:source",
+       "searchText",
+       "selectProperty",
+       "selectPropertyType",
+       "selectSearchOption",
+       "sort",
+       "sort0","sort1","sort2","sort3","sort4","sort5",
+       "sortBy",
+       "sortBy2",
+       "source",
+       "sourcecode",
+       "subject",
+       "text",
+       "type",
+       "advancedSearchForm",
+       "advancedSearchForm:adv_search.x",
+       "advancedSearchForm:adv_search.y",
+       "javax.faces.ViewState",
+       "referer",
+       "version",
+       "cartAction",
+       "cartAction.x",
+       "cartAction.y",
+       "cartAction1.x",
+       "cartAction1.y",
+       "cartAction2.x",
+       "cartAction2.y",
+       "cartAction3.x",
+       "cartAction3.y",
+       "cartAction4.x",
+       "cartAction4.y",
+       "cartAction5.x",
+       "cartAction5.y",
+       "ans",
+       "addtocart"
+    };
+
+    private static final List HTTP_REQUEST_PARAMETER_NAME_LIST = Collections.unmodifiableList(Arrays.asList(HTTP_REQUEST_PARAMETER_NAMES));
+
+
+	private static final String[] adv_search_algorithm_values = new String[] {"contains", "exactMatch", "lucene", "startsWith"};
+	private static final String[] algorithm_values = new String[] {"contains", "exactMatch", "startsWith"};
+	private static final String[] direction_values = new String[] {"source", "target"};
+	private static final String[] searchTarget_values = new String[] {"codes", "names", "properties", "relationships"};
+	private static final String[] selectSearchOption_values = new String[] {"Code", "Name", "Property", "Relationship"};
+
+	private static final List adv_search_algorithm_value_list = Collections.unmodifiableList(Arrays.asList(adv_search_algorithm_values));
+	private static final List algorithm_value_list = Collections.unmodifiableList(Arrays.asList(algorithm_values));
+	private static final List direction_value_list = Collections.unmodifiableList(Arrays.asList(direction_values));
+	private static final List searchTarget_value_list = Collections.unmodifiableList(Arrays.asList(searchTarget_values));
+	private static final List selectSearchOption_value_list = Collections.unmodifiableList(Arrays.asList(selectSearchOption_values));
+
+
     /**
      * Remove potentially bad XSS syntax
      *
@@ -101,7 +191,7 @@ public class HTTPUtils {
     }
 */
 
-    public void HTTPUtils() {
+    public HTTPUtils() {
 
 	}
 
@@ -466,7 +556,7 @@ public class HTTPUtils {
 	}
 
 	public static boolean validateRequestParameters(HttpServletRequest request) {
-		List list = HTTPParameterConstants.HTTP_REQUEST_PARAMETER_NAME_LIST;
+		List list = HTTP_REQUEST_PARAMETER_NAME_LIST;
 		String value = null;
         try {
             Enumeration<?> enumeration =
@@ -561,7 +651,46 @@ public class HTTPUtils {
 	}
 
 
+	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
+		if (name == null || value == null || value.length() == 0) return null;
 
+
+		if (name.compareTo("adv_search_algorithm") == 0) {
+			if (adv_search_algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("algorithm") == 0) {
+			if (algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("direction") == 0) {
+			if (direction_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+
+		} else if (name.compareTo("searchTarget") == 0) {
+			if (searchTarget_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("selectSearchOption") == 0) {
+			if (selectSearchOption_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		}
+		return null;
+	}
+
+/*
 	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
 		if (name == null || value == null || value.length() == 0) return null;
 
@@ -600,7 +729,7 @@ public class HTTPUtils {
 		}
 		return null;
 	}
-
+*/
     public static Boolean containsPercentSign(String name, String value) {
 		if (name == null || value == null) return null;
 		if (!name.endsWith(".x")
@@ -632,14 +761,15 @@ public class HTTPUtils {
 
     public static Boolean containsHazardCharacters(String value) {
 		if (value == null) return Boolean.FALSE;
-		String s = decode(value).toUpperCase();
+		String s = decode(value).toUpperCase(Locale.ENGLISH);
 		s = s.trim();
 		//SELECT FROM WHERE
 		if (s.indexOf("SELECT") != -1 && s.indexOf("FROM") != -1 && s.indexOf("WHERE") != -1) {
 			return Boolean.TRUE;
 		}
-		for (int i=0; i<Constants.HAZARD_CHARS.length; i++) {
-			String t = Constants.HAZARD_CHARS[i];
+		String[] hazard_chars = Constants.get_HAZARD_CHARS();
+		for (int i=0; i<hazard_chars.length; i++) {
+			String t = hazard_chars[i];
 			if (s.indexOf(t) != -1) {
 				return Boolean.TRUE;
 			}
@@ -657,7 +787,7 @@ public class HTTPUtils {
 
 	public static Boolean isSearchFormParameter(String name) {
 		if (name == null) return null;
-		String nm = name.toLowerCase();
+		String nm = name.toLowerCase(Locale.ENGLISH);
 		if (nm.endsWith("search.x") || nm.endsWith("search.y")) {
 			return Boolean.TRUE;
 		}

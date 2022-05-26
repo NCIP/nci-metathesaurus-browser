@@ -398,12 +398,12 @@ public class SearchStatusBean extends Object {
     private String _searchType;
 
     private String mapSearchTypeToSimpleSearch(String searchType) {
-        if (searchType.toLowerCase().startsWith("relationship"))
+        if (searchType.toLowerCase(Locale.ENGLISH).startsWith("relationship"))
             return "relationships";
-        else if (searchType.toLowerCase().startsWith("propert"))
+        else if (searchType.toLowerCase(Locale.ENGLISH).startsWith("propert"))
             return "properties";
 
-        else if (searchType.toLowerCase().startsWith("code"))
+        else if (searchType.toLowerCase(Locale.ENGLISH).startsWith("code"))
             return "codes";
 
         else return "names";
@@ -426,9 +426,9 @@ public class SearchStatusBean extends Object {
     }
 
     private String mapSearchTypeToAdvanceSearch(String searchType) {
-        if (searchType.toLowerCase().startsWith("relationship"))
+        if (searchType.toLowerCase(Locale.ENGLISH).startsWith("relationship"))
             return "Relationship";
-        else if ((searchType.toLowerCase().startsWith("propert")))
+        else if ((searchType.toLowerCase(Locale.ENGLISH).startsWith("propert")))
             return "Property";
         else return "Name";
     }

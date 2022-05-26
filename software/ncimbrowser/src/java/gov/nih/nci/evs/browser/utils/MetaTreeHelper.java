@@ -221,7 +221,7 @@ public class MetaTreeHelper {
     public boolean isNodeExpandable(String cui, String sab) {
 		boolean expandabe = false;
         try {
-            MetaTreeImp mti = new MetaTreeImp(mbs, sab);
+            //MetaTreeImp mti = new MetaTreeImp(mbs, sab);
             MetaTree tree = mbs.getMetaNeighborhood(cui, sab);
             MetaTreeNode focus = tree.getCurrentFocus();
 			if (focus.getExpandedState() == MetaTreeNode.ExpandedState.EXPANDABLE) {
@@ -235,7 +235,7 @@ public class MetaTreeHelper {
 
  	public Vector get_tree_data_from_root(String cui, String sab) {
         try {
-            MetaTreeImp mti = new MetaTreeImp(mbs, sab);
+            //MetaTreeImp mti = new MetaTreeImp(mbs, sab);
             MetaTree tree = mbs.getMetaNeighborhood(cui, sab);
             MetaTreeNode focus = tree.getCurrentFocus();
             return build_children_path_to_root_nodes(focus);
@@ -443,7 +443,7 @@ public class MetaTreeHelper {
 
     public MetaTreeNode getFocusNode(String scheme, String version,
         String node_id, String sab) {
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+        //LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         try {
             MetaTree tree = mbs.getMetaNeighborhood(node_id, sab);
             MetaTreeNode focus = tree.getCurrentFocus();
@@ -501,7 +501,7 @@ public class MetaTreeHelper {
 
 	private Vector walk_tree_from_root(MetaTreeNode node, boolean isRoot){
 		Vector w = new Vector();
-		String node_obj = build_node(node);
+		//String node_obj = build_node(node);
 		try {
 			if(node.getPathToRootChilden() == null){
 				System.out.println("getPathToRootChilden == null???");

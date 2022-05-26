@@ -135,8 +135,8 @@ public class NCImBrowserProperties {
     public static final String GRAPH_DB_URL = "GRAPH_DB_URL";
     private static String _graph_db_url = null;
 
-    public static String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
-    public static String RECAPTCHA_SECURITY_KEY = "RECAPTCHA_SECURITY_KEY";
+    public static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
+    public static final String RECAPTCHA_SECURITY_KEY = "RECAPTCHA_SECURITY_KEY";
 
     private static String _recaptcha_site_key = null;
     private static String _recaptcha_security_key = null;

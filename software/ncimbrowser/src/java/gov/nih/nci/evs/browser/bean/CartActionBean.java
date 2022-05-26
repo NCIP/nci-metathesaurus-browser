@@ -526,6 +526,7 @@ public class CartActionBean {
 					reader.close();
 				} catch (Exception e) {
 					// ignored
+					e.printStackTrace();
 				}
 			}
 		}
@@ -620,6 +621,7 @@ try {
      * @author garciawa2
      */
     public static class Concept implements Serializable {
+		private static final long serialVersionUID = 1L;
         private String code = null;
         private String codingScheme = null;
         private String nameSpace = null;
