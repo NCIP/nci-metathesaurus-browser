@@ -65,8 +65,8 @@ public class FormatUtils {
         Vector<String> v = new Vector<String>();
         boolean found = false;
         // "aspx?"
-        String t1 = t;
-        String t2 = t;
+        //String t1 = t;
+        //String t2 = t;
         String doubleQuote = "\"";
         String t6 = null;
         String replacedWith = null;
@@ -76,13 +76,13 @@ public class FormatUtils {
             String substr = t.substring(i, i + target.length());
             if (substr.compareTo(target) == 0) {
                 found = true;
-                t1 = t.substring(0, i);
+                //t1 = t.substring(0, i);
                 int k1 = i;
                 while (k1 < t.length() - 1) {
                     k1++;
                     String c = t.substring(k1, k1 + 1);
                     if (c.compareTo(doubleQuote) == 0) {
-                        t1 = t.substring(0, k1);
+                        //t1 = t.substring(0, k1);
                         break;
                     }
                 }
@@ -91,12 +91,12 @@ public class FormatUtils {
                     k2--;
                     String c = t.substring(k2, k2 + 1);
                     if (c.compareTo(doubleQuote) == 0) {
-                        t2 = t.substring(0, k2);
+                        //t2 = t.substring(0, k2);
                         break;
                     }
                 }
 
-                String t3 = t.substring(k2, k1 + 1);
+                //String t3 = t.substring(k2, k1 + 1);
                 String t4 = t.substring(k2 + 1, k1);
                 v.add(t4);
             }

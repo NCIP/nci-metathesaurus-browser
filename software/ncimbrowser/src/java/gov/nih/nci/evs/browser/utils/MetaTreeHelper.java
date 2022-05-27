@@ -508,15 +508,12 @@ public class MetaTreeHelper {
 			}
 
 			if(node.getPathToRootChilden() != null){
-				List<String> childrenCuis = new ArrayList<String>();
+				//List<String> childrenCuis = new ArrayList<String>();
 				for(MetaTreeNode child : node.getPathToRootChilden()){
-
 					String child_obj = build_node(child);
-
 					w.add(node.getName() + "|" + node.getCui() + "|" + child_obj);
-
 					//System.out.println("walk_tree_from_root child " + child.getName() + " " + child.getCui());
-					childrenCuis.add(child.getCui());
+					//childrenCuis.add(child.getCui());
 					Vector v = walk_tree_from_root(child, false);
 
 					if (v != null) {
@@ -529,19 +526,14 @@ public class MetaTreeHelper {
 				if(itr != null){
 					while(itr.hasNext()){
 						MetaTreeNode child = itr.next();
-
 						String child_obj = build_node(child);
-
 						w.add(node.getName() + "|" + node.getCui() + "|" + child_obj);
-
-
 						if(!knownChildrenContainsCode(node.getPathToRootChilden(), child.getCui())){
 							Vector v = walk_tree_from_root(child, false);
-
 							if (v != null && v.size() > 0) {
 								w.addAll(v);
 							}
-							childrenCuis.add(child.getCui());
+							//childrenCuis.add(child.getCui());
 						}
 					}
 				}

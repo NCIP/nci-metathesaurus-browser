@@ -510,7 +510,7 @@ public class NCImMetadataUtils {
 
             CodingScheme cs = getCodingScheme(Constants.CODING_SCHEME_NAME, version);
             String urn = cs.getCodingSchemeURI();
-            lbsm = lbs.getServiceMetadata();
+            //lbsm = lbs.getServiceMetadata();
             lbsm =
                 lbsm.restrictToCodingScheme(Constructors
                     .createAbsoluteCodingSchemeVersionReference(urn, version));
@@ -786,7 +786,7 @@ public class NCImMetadataUtils {
 			}
 
             for (int i = 0; i < csrs.length; i++) {
-                int j = i + 1;
+                //int j = i + 1;
                 CodingSchemeRendering csr = csrs[i];
                 if (csr != null) {
 					CodingSchemeSummary css = csr.getCodingSchemeSummary();

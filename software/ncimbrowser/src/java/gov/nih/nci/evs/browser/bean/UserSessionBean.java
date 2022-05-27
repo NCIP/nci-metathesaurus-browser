@@ -254,7 +254,7 @@ public class UserSessionBean extends Object {
                 try {
 					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 					SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
-					boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
+					//boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
 					if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
 						iterator = simpleSearchUtils.search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
 						wrapper = null;

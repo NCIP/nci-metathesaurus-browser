@@ -249,11 +249,6 @@ public class CacheController {
     public JSONArray getRootConcepts(String scheme, String version,
         boolean fromCache) {
 
-System.out.println(	"getRootConcepts: scheme " + scheme);
-System.out.println(	"getRootConcepts: version " + version);
-
-
-
         List list = null;// new ArrayList();
         String key = scheme + "$" + version + "$root";
         JSONArray nodeArray = null;
@@ -282,12 +277,13 @@ System.out.println(	"getRootConcepts: version " + version);
                         NCI_SOURCE);
                 // new SortUtils().quickSort(list);
 
+/*
                 if (list == null) {
 					System.out.println("getSourceHierarchyRoots returns null???");
 				} else {
 					System.out.println("getSourceHierarchyRoots returns " + list.size() + " roots.");
 				}
-
+*/
 
                 nodeArray = list2JSONArray(list);
 
@@ -947,8 +943,8 @@ System.out.println(	"getRootConcepts: version " + version);
                         code = node.getEntityCode();
                         name = node.getEntityDescription().getContent();
                     }
-                    ResolvedConceptReference node =
-                        (ResolvedConceptReference) list.get(i);
+                    //ResolvedConceptReference node =
+                    //    (ResolvedConceptReference) list.get(i);
                     int childCount = 1;
                     try {
                         JSONObject nodeObject = new JSONObject();

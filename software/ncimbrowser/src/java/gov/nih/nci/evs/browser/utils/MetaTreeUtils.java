@@ -788,9 +788,9 @@ public class MetaTreeUtils {
 
                                                 for (Association grandchild : grandchildBranch
                                                     .getAssociation()) {
-                                                    java.lang.String association_name =
-                                                        grandchild
-                                                            .getAssociationName();
+                                                    //java.lang.String association_name =
+                                                    //    grandchild
+                                                    //        .getAssociationName();
                                                     AssociatedConceptList grandchildbranchItemList =
                                                         grandchild
                                                             .getAssociatedConcepts();
@@ -1024,7 +1024,7 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+			//String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 
         //for (String rel : map.keySet()) {
@@ -1035,7 +1035,7 @@ public class MetaTreeUtils {
                 if (code.compareTo(CUI) != 0 && !hset.contains(code)) {
                     hset.add(code);
                 }
-                String name = result.getTerm();
+                //String name = result.getTerm();
                 // _logger.debug("(***) subconcept: " + name + " " + code);
                 knt++;
             }
@@ -1076,7 +1076,7 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+			//String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 
         //for (String rel : map.keySet()) {
@@ -1567,9 +1567,9 @@ public class MetaTreeUtils {
                                             for (Association grandchild : grandchildBranch
                                                 .getAssociation()) {
 
-                                                java.lang.String association_name =
-                                                    grandchild
-                                                        .getAssociationName();
+                                                //java.lang.String association_name =
+                                                //    grandchild
+                                                //        .getAssociationName();
 
                                                 // String grandchildNavText =
                                                 // getDirectionalLabel(lbscm,
@@ -1840,9 +1840,9 @@ public class MetaTreeUtils {
                                             // they are handled through
                                             // recursion.
 
-                                            String[] downstreamAssoc =
-                                                fwd ? _hierAssocToChildNodes
-                                                    : _hierAssocToParentNodes;
+                                            //String[] downstreamAssoc =
+                                            //    fwd ? _hierAssocToChildNodes
+                                            //        : _hierAssocToParentNodes;
                                             // addChildren(tiParent, scheme,
                                             // csvt, sab, parentCode,
                                             // code2Tree.keySet(),
@@ -1891,17 +1891,17 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+//			String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 /*
         for (String rel : map.keySet()) {
             List<BySourceTabResults> relations = map.get(rel);
 */
             for (BySourceTabResults result : relations) {
-                String rela = result.getRela();
+                //String rela = result.getRela();
                 String cui = result.getCui();
-                String source = result.getSource();
-                String name = result.getTerm();
+                //String source = result.getSource();
+                //String name = result.getTerm();
 
                 Vector v = null;
                 if (hmap.containsKey(cui)) {
@@ -2342,7 +2342,7 @@ public class MetaTreeUtils {
         Property[] properties = ce.getPresentation();
         for (int i = 0; i < properties.length; i++) {
             Property property = (Property) properties[i];
-            java.lang.String name = property.getPropertyName();
+            //java.lang.String name = property.getPropertyName();
             java.lang.String prop_value = property.getValue().getContent();
             if (property instanceof org.LexGrid.concepts.Presentation) {
                 Presentation presentation = (Presentation) property;

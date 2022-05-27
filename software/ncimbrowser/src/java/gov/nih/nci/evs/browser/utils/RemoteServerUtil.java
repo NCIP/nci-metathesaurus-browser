@@ -223,8 +223,8 @@ public class RemoteServerUtil {
                 (LexEVSApplicationService) ApplicationServiceProvider
                     .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
 
-            Boolean retval = false;
-            retval =
+            //Boolean retval = false;
+            Boolean retval =
                 lexevsService
                     .registerSecurityToken(codingScheme, securityToken);
 

@@ -770,8 +770,8 @@ public final class AjaxServlet extends HttpServlet {
 			return null;
 		}
 		if (btn.compareTo("exit_cart") == 0) {
-			String scheme = (String) request.getParameter("scheme");
-			String version = (String) request.getParameter("version");
+			//String scheme = (String) request.getParameter("scheme");
+			//String version = (String) request.getParameter("version");
 			//String nextJSP = "/pages/multiple_search.jsf?nav_type=terminologies";
 			String nextJSP = "/pages/home.jsf";
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);

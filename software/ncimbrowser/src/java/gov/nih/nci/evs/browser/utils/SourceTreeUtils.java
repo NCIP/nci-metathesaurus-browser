@@ -1519,9 +1519,9 @@ public class SourceTreeUtils {
 
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            if (hierarchies == null || hierarchies.length == 0) {
+            //if (hierarchies == null || hierarchies.length == 0) {
                 //return null;
-			}
+			//}
 
             // String code = "C1140168";
             ResolvedConceptReference SRC_root =
@@ -1714,7 +1714,7 @@ public class SourceTreeUtils {
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
             Presentation presentation = (Presentation) presentations[i];
-            java.lang.String name = presentation.getPropertyName();
+            //java.lang.String name = presentation.getPropertyName();
             java.lang.String prop_value = presentation.getValue().getContent();
             PropertyQualifier[] qualifiers =
                 presentation.getPropertyQualifier();
@@ -1988,7 +1988,7 @@ public class SourceTreeUtils {
 
     public String getChildrenJSON(String CUI, String SAB) {
 		HashMap hmap = getChildren(CUI, SAB);
-		if (hmap == null) return null;
+		//if (hmap == null) return null;
 		TreeItem root = (TreeItem) hmap.get(CUI);
 		return JSON2TreeItem.treeItem2Json(root);
 	}
@@ -1996,7 +1996,7 @@ public class SourceTreeUtils {
 
     public String getSourceRootsJSON(String CUI, String SAB) {
 		HashMap hmap = getSourceRoots(CUI, SAB);
-		if (hmap == null) return null;
+		//if (hmap == null) return null;
 		TreeItem root = (TreeItem) hmap.get(CUI);
 		return JSON2TreeItem.treeItem2Json(root);
 	}
@@ -2112,14 +2112,7 @@ public class SourceTreeUtils {
         boolean searchInactive = true;
         //Vector sources = getSupportedSources(scheme, version);
         Vector sources = getSupportedSources(scheme, csvt);
-
-        if (sources != null) {
-            pw.println("Number of NCIm Supported Sources: " + sources.size());
-        } else {
-            pw.println("getSupportedSources returns null??? ");
-            return;
-        }
-
+        pw.println("Number of NCIm Supported Sources: " + sources.size());
         sources = new SortUtils().quickSort(sources);
         System.out.println("sources.size(): " + sources.size());
 

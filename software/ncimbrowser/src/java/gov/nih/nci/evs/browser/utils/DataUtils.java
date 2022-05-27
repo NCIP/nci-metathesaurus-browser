@@ -2058,10 +2058,10 @@ public class DataUtils {
         for (int i = 0; i < sources.size(); i++) {
             String s = (String) sources.elementAt(i);
             Vector ret_vec = parseData(s, "|");
-            String name = (String) ret_vec.elementAt(0);
-            String type = (String) ret_vec.elementAt(1);
+            //String name = (String) ret_vec.elementAt(0);
+            //String type = (String) ret_vec.elementAt(1);
             String src = (String) ret_vec.elementAt(2);
-            String srccode = (String) ret_vec.elementAt(3);
+            //String srccode = (String) ret_vec.elementAt(3);
             if (!hset.contains(src)) {
                 hset.add(src);
                 source_vec.add(src);
@@ -2670,7 +2670,7 @@ public class DataUtils {
                     for (int i = 0; i < v.size(); i++) {
                         AssociatedConcept ac =
                             (AssociatedConcept) v.elementAt(i);
-                        EntityDescription ed = ac.getEntityDescription();
+                        //EntityDescription ed = ac.getEntityDescription();
                         Entity c = ac.getReferencedEntry();
                         if (!hset.contains(c.getEntityCode())) {
                             hset.add(c.getEntityCode());
@@ -3163,7 +3163,7 @@ public class DataUtils {
             rel_hmap.put(category, hset);
         }
 
-        HashSet w = new HashSet();
+
         Map<String, List<RelationshipTabResults>> map = null;
         Map<String, List<RelationshipTabResults>> map2 = null;
 
@@ -3211,6 +3211,7 @@ public class DataUtils {
 
         // Categorize relationships into six categories and find association
         // source data
+        HashSet w = null;
         ms = System.currentTimeMillis();
         action =
             "Categorizing relationships into six categories; finding source data for each relationship";
@@ -3455,8 +3456,6 @@ public class DataUtils {
         Map<String, List<BySourceTabResults>> map2) {
         HashMap hmap = new HashMap();
         if (map != null) {
-
-
 			Iterator it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3467,10 +3466,10 @@ public class DataUtils {
 				//List<BySourceTabResults> relations = map.get(rel);
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
-						String rela = result.getRela();
+						//String rela = result.getRela();
 						String cui = result.getCui();
-						String source = result.getSource();
-						String name = result.getTerm();
+						//String source = result.getSource();
+						//String name = result.getTerm();
 						Vector v = null;
 						if (hmap.containsKey(cui)) {
 							v = (Vector) hmap.get(cui);
@@ -3498,10 +3497,10 @@ public class DataUtils {
 
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
-						String rela = result.getRela();
+						//String rela = result.getRela();
 						String cui = result.getCui();
-						String source = result.getSource();
-						String name = result.getTerm();
+						//String source = result.getSource();
+						//String name = result.getTerm();
 						Vector v = null;
 						if (hmap.containsKey(cui)) {
 							v = (Vector) hmap.get(cui);
@@ -3652,7 +3651,6 @@ public class DataUtils {
         ms_find_highest_rank_atom_delay = 0;
         String t = null;
         if (map != null) {
-
 			Iterator it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3767,7 +3765,6 @@ public class DataUtils {
 
         // *** do the same for map2
         if (map2 != null) {
-
 			Iterator it = map2.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3895,7 +3892,7 @@ public class DataUtils {
         action = "Remove redundant relationships";
         for (int i = 0; i < w.size(); i++) {
             String s = (String) w.elementAt(i);
-            int j = i + 1;
+            //int j = i + 1;
 
             Vector<String> v = parseData(s, "|");
 
@@ -4336,9 +4333,9 @@ public class DataUtils {
         for (int i = 0; i < v.size(); i++) {
             String t = (String) v.elementAt(i);
             Vector w = parseData(t);
-            String rel = (String) w.elementAt(0);
-            String rela = (String) w.elementAt(1);
-            String parent_name = (String) w.elementAt(2);
+            //String rel = (String) w.elementAt(0);
+            //String rela = (String) w.elementAt(1);
+            //String parent_name = (String) w.elementAt(2);
             String parent_code = (String) w.elementAt(3);
 
             Vector u =
@@ -4347,8 +4344,8 @@ public class DataUtils {
             for (int j = 0; j < u.size(); j++) {
                 String t2 = (String) u.elementAt(j);
                 Vector w2 = parseData(t2);
-                String sib_rel = (String) w2.elementAt(0);
-                String sib_rela = (String) w2.elementAt(1);
+                //String sib_rel = (String) w2.elementAt(0);
+                //String sib_rela = (String) w2.elementAt(1);
                 String sib_name = (String) w2.elementAt(2);
                 String sib_code = (String) w2.elementAt(3);
                 String sib_sab = (String) w2.elementAt(4);
@@ -4612,7 +4609,7 @@ public class DataUtils {
             if (source == null)
                 source = "None";
             prop_value = prop_value + "|" + source;
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4633,7 +4630,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4654,7 +4651,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4675,7 +4672,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4721,7 +4718,7 @@ public class DataUtils {
 				Iterator it = map.entrySet().iterator();
 				while (it.hasNext()) {
 					Entry thisEntry = (Entry) it.next();
-					String rel = (String) thisEntry.getKey();
+					//String rel = (String) thisEntry.getKey();
 					List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
 
                 //for (String rel : map.keySet()) {

@@ -572,7 +572,7 @@ public class TreeNavigationUtils {
 				if (child != null) {
 					String child_code = child.getCode();
 					String child_label = child.getEntityDescription();
-					String child_ns = child.getNamespace();
+					//String child_ns = child.getNamespace();
 					boolean expandable = false;
 					boolean expanded = false;
 					if (child.getExpandableStatus() == LexEvsTreeNode.ExpandableStatus.IS_EXPANDABLE) {
