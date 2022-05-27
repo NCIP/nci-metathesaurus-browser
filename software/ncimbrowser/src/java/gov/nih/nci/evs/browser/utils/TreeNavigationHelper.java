@@ -445,7 +445,7 @@ public class TreeNavigationHelper {
 			pw.println("</html>");
 
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		} finally {
 			try {
 				pw.close();
@@ -477,7 +477,7 @@ public class TreeNavigationHelper {
 			pw.println("</html>");
 
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		} finally {
 			try {
 				pw.close();

@@ -1066,7 +1066,7 @@ public class JSONObject implements Serializable {
             sb.append('}');
             return sb.toString();
         } catch (Exception e) {
-            //return null;
+            e.printStackTrace();
             return "";
         }
     }

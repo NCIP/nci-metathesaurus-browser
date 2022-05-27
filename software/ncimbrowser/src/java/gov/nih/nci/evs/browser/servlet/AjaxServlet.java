@@ -214,6 +214,7 @@ public final class AjaxServlet extends HttpServlet {
                     }
 
                 } catch (Exception e) {
+					e.printStackTrace();
                 }
                 response.getWriter().write(json.toString());
                 _logger.debug("Run time (milliseconds): "
@@ -793,6 +794,8 @@ public final class AjaxServlet extends HttpServlet {
                      break;
             case "exportcsv":  exportCart2CSV(request, response);
                      break;
+            default:
+                selectAllInCart(request, response);
 		}
         return "refresh_cart";
 	}

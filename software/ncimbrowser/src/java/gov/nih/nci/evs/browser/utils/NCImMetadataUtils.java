@@ -877,6 +877,7 @@ public class NCImMetadataUtils {
 							_logger
 								.warn("\t\tAccess to " + formalname + " denied.");
 							//ex.printStackTrace();
+							ex.printStackTrace();
 						}
 
 

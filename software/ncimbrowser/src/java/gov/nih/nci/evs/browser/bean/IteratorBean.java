@@ -231,7 +231,7 @@ public class IteratorBean extends Object {
                 }
             }
         } catch (Exception ex) {
-
+			ex.printStackTrace();
         }
 
         List rcr_list = new ArrayList();

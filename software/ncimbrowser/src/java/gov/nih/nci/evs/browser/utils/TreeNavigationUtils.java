@@ -516,7 +516,7 @@ public class TreeNavigationUtils {
 			pw.println("</html>");
 
 		} catch (Exception ex) {
-
+            ex.printStackTrace();
 		} finally {
 			try {
 				pw.close();

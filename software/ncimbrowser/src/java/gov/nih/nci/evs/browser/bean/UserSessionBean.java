@@ -195,7 +195,7 @@ public class UserSessionBean extends Object {
             }
         }
         String scheme = Constants.CODING_SCHEME_NAME;
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;
         String max_str = null;
         int maxToReturn = -1;// 1000;
         try {
@@ -678,7 +678,7 @@ response.setContentType("text/html;charset=utf-8");
 
     public List getConceptSourceList() {
         String codingSchemeName = Constants.CODING_SCHEME_NAME;
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -1142,7 +1142,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
         Vector schemes = new Vector();
         schemes.add(scheme);
 
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;;
         String max_str = null;
         int maxToReturn = -1;// 1000;
         try {
