@@ -106,7 +106,7 @@ public class OntologyBean {
 
 
     static {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         _association_name_vec = getSupportedAssociationNames(cs);
 	}
 
@@ -125,7 +125,7 @@ public class OntologyBean {
 
     static {
         _association_name_list = new ArrayList();
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         if (_association_name_vec == null) {
             _association_name_vec = getSupportedAssociationNames(cs);
         }
@@ -157,7 +157,7 @@ public class OntologyBean {
         _property_name_list = new ArrayList();
         _property_name_list.add(new SelectItem("ALL", "ALL"));
 
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         Vector<String> properties = getSupportedPropertyNames(cs);
         for (int k = 0; k < properties.size(); k++) {
             String value = (String) properties.elementAt(k);
@@ -186,7 +186,7 @@ public class OntologyBean {
 
     static {
         _source_list = new ArrayList();
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         _source_list.add(new SelectItem("ALL", "ALL"));
 
         Vector<String> sources = getSupportedSources(cs);
@@ -260,7 +260,7 @@ public class OntologyBean {
         try {
             lbsm = lbs.getServiceMetadata();
 
-            CodingScheme cs = getCodingScheme(scheme, null);
+            CodingScheme cs = getCodingScheme(scheme, DataUtils.NCIM_VERSION);
             String uri = cs.getCodingSchemeURI();
             String ver = cs.getRepresentsVersion();
             lbsm =
@@ -314,7 +314,8 @@ public class OntologyBean {
             try {
                 cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
             } catch (Exception ex2) {
-                cs = null;
+                //cs = null;
+                ex2.printStackTrace();
             }
 
         } catch (Exception ex) {
@@ -356,7 +357,7 @@ public class OntologyBean {
     }
 
     public static Vector getSupportedSources() {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         return getSupportedSources(cs);
     }
 
@@ -428,7 +429,7 @@ public class OntologyBean {
 	}
 
     public static Vector<String> getSupportedPropertyNames() {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         return getSupportedPropertyNames(cs);
     }
 
@@ -493,6 +494,7 @@ public class OntologyBean {
                     w.add(name);
                 } catch (Exception e) {
                     w.add("<NOT ASSIGNED>");
+                    e.printStackTrace();
                 }
             }
         } catch (Exception ex) {

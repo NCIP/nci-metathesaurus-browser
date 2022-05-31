@@ -398,7 +398,7 @@ public class HTTPUtils {
                 //Object value = cleanXSS((String) request.getParameter(name));
                 String value = (String) request.getParameter(name);
                 //_logger.debug("  " + i + ") " + name + ": " + value);
-                System.out.println("name: " + name + " value: " + value.toString());
+                System.out.println("name: " + name + " value: " + value);
 
                 ++i;
             }
@@ -423,7 +423,7 @@ public class HTTPUtils {
                 //Object value = cleanXSS((String) request.getParameter(name));
                 String value = (String) request.getParameter(name);
                 //_logger.debug("  " + i + ") " + name + ": " + value);
-                System.out.println("name: " + name + " value: " + value.toString());
+                System.out.println("name: " + name + " value: " + value);
 
                 ++i;
             }
