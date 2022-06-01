@@ -310,7 +310,7 @@ public class DataUtils {
 
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -341,7 +341,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -388,7 +388,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -428,7 +428,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -541,7 +541,7 @@ public class DataUtils {
     public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc == null???");
                 return null;
@@ -627,7 +627,7 @@ public class DataUtils {
     public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code, String source) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc == null???");
                 return null;
@@ -1003,7 +1003,7 @@ public class DataUtils {
 
         Vector<String> v = new Vector();
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
@@ -2183,7 +2183,7 @@ public class DataUtils {
         String vers, String code, String source, int resolveCodedEntryDepth) {
         HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -2333,7 +2333,7 @@ public class DataUtils {
         String vers, String code, String source, int resolveCodedEntryDepth) {
         HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -4092,7 +4092,7 @@ public class DataUtils {
 		MetaBrowserService mbs = null;
 		HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
@@ -4118,7 +4118,7 @@ public class DataUtils {
     public static HashMap getPropertyValuesForCodes(String scheme,
         String version, Vector codes, String propertyName) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
@@ -4501,6 +4501,7 @@ public class DataUtils {
         return getPropertyValueHashMap(Constants.CODING_SCHEME_NAME, null, code);
     }
 
+/*
     private static String getSourceQualifierValue(Property p) {
         if (p == null)
             return null;
@@ -4518,6 +4519,7 @@ public class DataUtils {
         }
         return null;
     }
+*/
 
     private static String getPropertySource(Property p) {
         if (p == null)
@@ -4534,7 +4536,7 @@ public class DataUtils {
     public static HashMap getPropertyValueHashMap(String scheme,
         String version, String code) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
                 return null;

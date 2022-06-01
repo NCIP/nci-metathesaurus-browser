@@ -596,6 +596,7 @@ public class HTTPUtils {
 
 					if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
 						if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+						//if (isDynamic.equals(Boolean.FALSE)) {
 							if (name.endsWith("value=")) return true;
 							if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
 								System.out.println("WARNING: parameter name: " + name + " is not in the list.");
@@ -778,7 +779,7 @@ public class HTTPUtils {
 	}
 
 	public static Boolean isDynamicId(String id) {
-		if (id == null) return null;
+		if (id == null) return Boolean.FALSE;
 		if (id.startsWith("j_id_jsp_")) {
 			return Boolean.TRUE;
 		}

@@ -397,6 +397,7 @@ public class SearchStatusBean extends Object {
 
     private String _searchType;
 
+/*
     private String mapSearchTypeToSimpleSearch(String searchType) {
         if (searchType.toLowerCase(Locale.ENGLISH).startsWith("relationship"))
             return "relationships";
@@ -408,7 +409,7 @@ public class SearchStatusBean extends Object {
 
         else return "names";
     }
-
+*/
     public void setSearchType(String searchType, boolean updateUserSessionBean) {
         _searchType = searchType;
 

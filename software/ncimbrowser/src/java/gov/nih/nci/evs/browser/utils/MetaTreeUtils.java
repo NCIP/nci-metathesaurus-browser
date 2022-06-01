@@ -364,9 +364,11 @@ public class MetaTreeUtils {
         _logger.debug(s);
     }
 
+/*
     private void Util_displayAndLogError(String s, Exception e) {
         _logger.debug(s);
     }
+*/
 
     /**
      * Process the provided code, constraining relationships to the given source

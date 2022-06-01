@@ -291,6 +291,7 @@ public class TreeNavigationUtils {
 		return jsonArray.toString();
 	}
 
+/*
 	private JSONObject buildNode(int count, String code, String ns, String description){
 		JSONObject nodeObject = new JSONObject();
 		try {
@@ -307,6 +308,7 @@ public class TreeNavigationUtils {
 			throw new RuntimeException(e);
 		}
 	}
+*/
 
 	private JSONObject buildNode(LexEvsTreeNode node){
 		JSONObject nodeObject = new JSONObject();

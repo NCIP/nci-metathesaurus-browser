@@ -208,13 +208,14 @@ public class PropertyFileParser {
             return true;
         return false;
     }
-
+/*
     private void printData() {
         Iterator it = _displayItemList.iterator();
         while (it.hasNext()) {
             _logger.debug(it.next().toString());
         }
     }
+*/
 
     public List getTermGroupRankList() {
         return _termGroupRankList;

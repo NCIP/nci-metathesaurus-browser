@@ -960,6 +960,7 @@ response.setContentType("text/html;charset=utf-8");
         return "message";
     }
 
+/*
     private String validateCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
         Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
@@ -993,16 +994,7 @@ response.setContentType("text/html;charset=utf-8");
     private String validateAudioCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
         AudioCaptcha captcha = (AudioCaptcha) request.getSession().getAttribute(AudioCaptcha.NAME);
-/*
-        if (captcha == null) {
-			AudioCaptcha ac = new AudioCaptcha.Builder()
-				.addAnswer()
-				.addNoise()
-				.build();
 
-			request.getSession().setAttribute(AudioCaptcha.NAME, ac);
-		}
-*/
         // Do this so we can capture non-Latin chars
         request.setCharacterEncoding("UTF-8");
         String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
@@ -1021,7 +1013,7 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().removeAttribute(AudioCaptcha.NAME);
         return null;
     }
-
+*/
 
     private static class NoReloadException extends Exception {
         private static final long serialVersionUID = 1L;

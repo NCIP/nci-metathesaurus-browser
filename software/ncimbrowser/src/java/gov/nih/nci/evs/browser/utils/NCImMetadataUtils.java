@@ -560,7 +560,7 @@ public class NCImMetadataUtils {
 			versionOrTag.setVersion(version);
 		CodingScheme cs = null;
 		try {
-			LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			try {
 				cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
 			} catch (Exception ex2) {

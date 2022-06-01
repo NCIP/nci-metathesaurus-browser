@@ -196,9 +196,9 @@ public class FormatUtils {
             "PDQ Definition: A recombinant, chimeric monoclonal antibody directed against the epidermal growth factor (EGFR) with antineoplastic activity. Cetuximab binds to the extracellular domain of the EGFR, thereby preventing the activation and subsequent dimerization of the receptor; the decrease in receptor activation and dimerization may result in an inhibition in signal transduction and anti-proliferative effects. This agent may inhibit EGFR-dependent primary tumor growth and metastasis. EGFR is overexpressed on the cell surfaces of various solid tumors."
                 + " Check for \"http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?id=42384&idtype=1\" active clinical trials or \"http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?id=42384&idtype=1&closed=1\" closed clinical trials using this agent."
                 + "(\"http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&code=C1723\" NCI Thesaurus)\";";
-        FormatUtils test = new FormatUtils();
+        //FormatUtils test = new FormatUtils();
 
-        String t = test.reformatPDQDefinition(def);
+        String t = FormatUtils.reformatPDQDefinition(def);
         _logger.info(t);
     }
 }
