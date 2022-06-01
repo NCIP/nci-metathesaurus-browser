@@ -576,6 +576,9 @@ public class NCImMetadataUtils {
     public static String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
 
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		return new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(codingSchemeName, ltag);
+/*
         if (codingSchemeName == null)
             return null;
         String version = null;
@@ -625,6 +628,7 @@ public class NCImMetadataUtils {
             return version;
         }
         return null;
+        */
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

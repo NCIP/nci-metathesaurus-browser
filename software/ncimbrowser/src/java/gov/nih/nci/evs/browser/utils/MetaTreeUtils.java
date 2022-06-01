@@ -108,6 +108,11 @@ public class MetaTreeUtils {
 		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
     }
 */
+
+    static {
+		_termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+	}
+
     public MetaTreeUtils(LexBIGService lbSvc) {
 		this.lbSvc = lbSvc;
 
@@ -119,7 +124,7 @@ public class MetaTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+		//this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
     }
 
     public MetaTreeUtils(LexBIGService lbSvc, HashMap termGroupRankHashMap) {
@@ -134,7 +139,7 @@ public class MetaTreeUtils {
 			ex.printStackTrace();
 		}
 		//this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
-		this._termGroupRankHashMap = termGroupRankHashMap;
+		//this._termGroupRankHashMap = termGroupRankHashMap;
     }
 
     public static String[] getHierAssociationToParentNodes() {

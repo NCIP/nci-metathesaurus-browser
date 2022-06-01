@@ -950,6 +950,10 @@ public class DataUtils {
     public static String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
 
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		return new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(codingSchemeName, ltag);
+
+/*
         if (codingSchemeName == null)
             return null;
         String version = null;
@@ -972,10 +976,7 @@ public class DataUtils {
                     CodingSchemeTagList cstl = rd.getVersionTags();
                     java.lang.String[] tags = cstl.getTag();
                     // KLO, 102409
-                    /*
-                    if (tags == null)
-                        return version;
-                        */
+
 
                     if (tags != null && tags.length > 0) {
                         for (int j = 0; j < tags.length; j++) {
@@ -997,6 +998,7 @@ public class DataUtils {
             return version;
         }
         return null;
+        */
     }
 
     public static Vector<String> getVersionListData(String codingSchemeName) {

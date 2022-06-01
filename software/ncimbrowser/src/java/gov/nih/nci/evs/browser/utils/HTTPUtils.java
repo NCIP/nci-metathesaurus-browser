@@ -555,6 +555,7 @@ public class HTTPUtils {
 		return "WARNING: Invalid parameter name and/or value encountered -- please check your URL and try again. ";
 	}
 
+/*
 	public static boolean validateRequestParameters(HttpServletRequest request) {
 		List list = HTTP_REQUEST_PARAMETER_NAME_LIST;
 		String value = null;
@@ -650,11 +651,106 @@ public class HTTPUtils {
         }
         return false;
 	}
+*/
 
+	public static boolean validateRequestParameters(HttpServletRequest request) {
+		List list = HTTP_REQUEST_PARAMETER_NAME_LIST;
+		String value = null;
+        try {
+            Enumeration<?> enumeration =
+                new SortUtils().sort(request.getParameterNames());
+            while (enumeration.hasMoreElements()) {
+				String name = (String) enumeration.nextElement();
+				if (!name.startsWith("code_")) {
+					if (name.compareTo("view") == 0) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???");
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+						}
+					}
+
+					Boolean isDynamic = isDynamicId(name);
+					Boolean issearchFormParameter = isSearchFormParameter(name);
+
+					if (issearchFormParameter.equals(Boolean.TRUE)) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???" + value);
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+						}
+					}
+
+					if (issearchFormParameter.equals(Boolean.FALSE)) {
+						if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+						//if (isDynamic.equals(Boolean.FALSE)) {
+							if (name.endsWith("value=")) return true;
+							if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
+								System.out.println("WARNING: parameter name: " + name + " is not in the list.");
+								String error_msg = createErrorMessage(1, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+							value = (String) request.getParameter(name);
+							Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsPercentSign(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = validateValueSetCheckBox(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsHazardCharacters(value);
+							// Cross-Site Scripting:
+							if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
+								String error_msg = createErrorMessage(2, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = checkLimitedLengthCondition(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+						}
+					}
+			    }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+	}
 
 	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
-		if (name == null || value == null || value.length() == 0) return null;
-
+		//if (name == null || value == null || value.length() == 0) return null;
+        if (name == null || value == null || value.length() == 0) return Boolean.TRUE;
 
 		if (name.compareTo("adv_search_algorithm") == 0) {
 			if (adv_search_algorithm_value_list.contains(value)) {
@@ -688,7 +784,7 @@ public class HTTPUtils {
 				return Boolean.FALSE;
 			}
 		}
-		return null;
+		return Boolean.TRUE;
 	}
 
 /*
@@ -732,20 +828,21 @@ public class HTTPUtils {
 	}
 */
     public static Boolean containsPercentSign(String name, String value) {
-		if (name == null || value == null) return null;
+		//if (name == null || value == null) return null;
+		if (name == null || value == null) return Boolean.TRUE;
 		if (!name.endsWith(".x")
 		    && !name.endsWith(".y")
 		    && name.compareTo("javax.faces.ViewState") != 0) {
-		    return null;
+		    return Boolean.TRUE;
 		}
 		if (value.indexOf("%") == -1) return Boolean.TRUE;
 		return Boolean.FALSE;
 	}
 
     public static Boolean validateValueSetCheckBox(String name, String value) {
-		if (name == null || value == null) return null;
+		if (name == null || value == null) return Boolean.TRUE;
 		if (!name.startsWith("TVS_") && !name.startsWith("http:")) {
-		    return null;
+		    return Boolean.TRUE;
 		}
 
 		if (isValueSetURI(name)) {
@@ -787,7 +884,7 @@ public class HTTPUtils {
 	}
 
 	public static Boolean isSearchFormParameter(String name) {
-		if (name == null) return null;
+		if (name == null) return Boolean.FALSE;
 		String nm = name.toLowerCase(Locale.ENGLISH);
 		if (nm.endsWith("search.x") || nm.endsWith("search.y")) {
 			return Boolean.TRUE;
@@ -866,7 +963,7 @@ public class HTTPUtils {
 
 
 	public static Boolean checkLimitedLengthCondition(String name, String value) {
-		if (name == null) return null;
+		if (name == null) return Boolean.TRUE;
 		if (value == null) return Boolean.TRUE;
 		if (name.compareTo("matchText") != 0 && name.compareTo("message") != 0 && name.compareTo("referer") != 0) {
 			if (value.length() > ABS_MAX_STR_LEN) {
