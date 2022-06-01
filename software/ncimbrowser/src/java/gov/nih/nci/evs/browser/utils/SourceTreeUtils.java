@@ -1517,7 +1517,7 @@ public class SourceTreeUtils {
             if (cs == null)
                 return null;
 
-            Mappings mappings = cs.getMappings();
+            //Mappings mappings = cs.getMappings();
             //SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
             //if (hierarchies == null || hierarchies.length == 0) {
                 //return null;

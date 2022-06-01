@@ -134,10 +134,6 @@ if (captcha_option.compareTo("default") == 0) {
 } 
 */   
     
-    System.out.println("captcha_option: " + captcha_option);
-    System.out.println("alt_captcha_option: " + alt_captcha_option);  
-    
-     
     
     //String ncicb_contact_url = new DataUtils().getNCICBContactURL();
     

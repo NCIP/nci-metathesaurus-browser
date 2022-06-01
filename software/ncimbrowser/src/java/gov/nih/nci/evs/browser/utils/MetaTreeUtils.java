@@ -145,7 +145,7 @@ public class MetaTreeUtils {
 		return Arrays.copyOf(_hierAssocToChildNodes, _hierAssocToChildNodes.length);
 	}
 
-	public void set_termGroupRankHashMap(HashMap termGroupRankHashMap) {
+	public static void set_termGroupRankHashMap(HashMap termGroupRankHashMap) {
 		_termGroupRankHashMap = termGroupRankHashMap;
 	}
 

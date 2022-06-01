@@ -88,7 +88,7 @@ public class IteratorBeanManager {
 	    Iterator entries = iteratorBeanHashMap.entrySet().iterator();
 	    while (entries.hasNext()) {
 		    Entry thisEntry = (Entry) entries.next();
-		    String key = (String) thisEntry.getKey();
+		    //String key = (String) thisEntry.getKey();
 		    IteratorBean bean = (IteratorBean) thisEntry.getValue();
 /*
 
