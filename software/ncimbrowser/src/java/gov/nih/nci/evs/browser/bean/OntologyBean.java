@@ -324,6 +324,7 @@ public class OntologyBean {
         return cs;
     }
 
+/*
     private static Vector getSupportedEntityType(CodingScheme cs) {
         if (cs == null)
             return null;
@@ -355,7 +356,7 @@ public class OntologyBean {
         }
         return new SortUtils().quickSort(v);
     }
-
+*/
     public static Vector getSupportedSources() {
         CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         return getSupportedSources(cs);

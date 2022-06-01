@@ -602,9 +602,9 @@ public class DataUtils {
             || source.compareTo("") == 0 || source.compareTo("ALL") == 0)
             return cns;
 
-        LocalNameList contextList = null;
+        //LocalNameList contextList = null;
         LocalNameList sourceLnL = null;
-        NameAndValueList qualifierList = null;
+        //NameAndValueList qualifierList = null;
 
         Vector<String> w2 = new Vector<String>();
         w2.add(source);
@@ -613,9 +613,12 @@ public class DataUtils {
         CodedNodeSet.PropertyType[] types =
             new PropertyType[] { PropertyType.PRESENTATION };
         try {
+            //cns =
+            //    cns.restrictToProperties(propertyLnL, types, sourceLnL,
+            //        contextList, qualifierList);
             cns =
                 cns.restrictToProperties(propertyLnL, types, sourceLnL,
-                    contextList, qualifierList);
+                    null, null);
         } catch (Exception ex) {
             _logger.error("restrictToSource throws exceptions.");
             ex.printStackTrace();

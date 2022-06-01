@@ -64,9 +64,9 @@ public class TreeNavigationHelper {
 	HashSet expandableSet = null;
 	HashMap nsMap = null;
 	HierarchyHelper hh = null;
-	Vector roots = null;
+	//Vector roots = null;
     static String TAB = "";
-    private String URL = null;
+    //private String URL = null;
     private int tabindex = 0;
 
     private HashSet path_to_roots_nodes = null;
@@ -93,7 +93,7 @@ public class TreeNavigationHelper {
 	public void initialize() {
 		tabindex = 0;
 	    hh = new HierarchyHelper(parent_child_vec);
-		roots = hh.getRoots();
+		//roots = hh.getRoots();
         expandableSet = new HashSet();
         nsMap = new HashMap();
         for (int i=0; i<parent_child_vec.size(); i++) {

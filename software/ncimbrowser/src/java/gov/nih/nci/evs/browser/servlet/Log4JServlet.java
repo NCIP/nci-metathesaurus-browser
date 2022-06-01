@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 public class Log4JServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	static boolean isInit = false;
+	//static boolean isInit = false;
 
 	static {
 
@@ -73,7 +73,7 @@ public class Log4JServlet extends HttpServlet {
 				.parse(log4JConfig);
 
 			DOMConfigurator.configure( doc.getDocumentElement() );
-			isInit = true;
+			//isInit = true;
 		} catch(ParserConfigurationException e){
 			System.out.println( "*** Error: Failed to parse log4j configuration file!" );
 			e.printStackTrace();
