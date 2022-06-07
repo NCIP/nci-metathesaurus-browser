@@ -11,6 +11,8 @@
   }
 
 
+				
+
   if ((type.compareTo("properties") == 0 || type.compareTo("all") == 0) &&
     displayItemList != null) {
 
@@ -25,7 +27,14 @@
     additionalproperties.add("primitive");
     
     Entity curr_concept = (Entity) request.getSession().getAttribute("concept");
-    LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+    
+LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+	null, c.getEntityCode());
+if (newCUI != null) { 
+    request.getSession().setAttribute("retired_cui", c.getEntityCode());
+}
+    
     ConceptDetails cd = new ConceptDetails(lbSvc);
     HashMap prop_qual_hmap = cd.getPropertyQualifierHashMap(curr_concept);
     String qualifierName = "STYPE";

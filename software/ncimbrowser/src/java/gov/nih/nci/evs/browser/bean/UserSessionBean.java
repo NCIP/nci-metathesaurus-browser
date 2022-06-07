@@ -432,6 +432,22 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("type", "properties");
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
 
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+					null, c.getEntityCode());
+				if (newCUI != null) {
+					_logger.debug("Searching for " + newCUI);
+					c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
+							null, null, newCUI);
+					request.getSession().setAttribute("code", newCUI);
+					request.getSession().setAttribute("concept", c);
+					//request.getSession().setAttribute("type", "properties");
+					request.getSession().setAttribute("new_search", Boolean.TRUE);
+					request.getSession().setAttribute("retired_cui", c.getEntityCode());
+
+				}
+
+
 HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
 		.getExternalContext().getResponse();
@@ -445,7 +461,10 @@ response.setContentType("text/html;charset=utf-8");
         // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
 
         //if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
-        if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
+        //if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
+
+/*
+
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
                 null, matchText);
@@ -469,7 +488,11 @@ response.setContentType("text/html;charset=utf-8");
 
                 return "concept_details";
             }
-        }
+
+*/
+
+
+        //}
 
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
@@ -1495,7 +1518,7 @@ response.setContentType("text/html;charset=utf-8");
         // [#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
 
-        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
+        //if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
 
             //String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(matchText);
             String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
@@ -1512,7 +1535,7 @@ response.setContentType("text/html;charset=utf-8");
                 request.getSession().setAttribute("type", "properties");
 
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
-                request.getSession().setAttribute("retired_cui", matchText);
+                request.getSession().setAttribute("retired_cui", c.getEntityCode());
 
 HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
@@ -1521,7 +1544,7 @@ response.setContentType("text/html;charset=utf-8");
 
                 return "concept_details";
             }
-        }
+        //}
 
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
