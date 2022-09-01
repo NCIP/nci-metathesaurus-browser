@@ -162,12 +162,17 @@ public final class RedirectServlet extends HttpServlet {
 				  response.sendRedirect(response.encodeRedirectURL(url));
 
  	          } else {
-
+/*
 				  String url = nciterm_browser_url + "/ConceptReport.jsp?"
 														+ "dictionary=" + formal_name
 														+ "&code=" + code
 														+ "&type=" + type
 														+ "&sortBy=name#SynonymsDetails";
+*/
+				  String url = nciterm_browser_url + "/pages/concept_details.jsf?"
+														+ "dictionary=" + formal_name
+														+ "&code=" + code;
+
 
 				  response.sendRedirect(response.encodeRedirectURL(url));
               }
