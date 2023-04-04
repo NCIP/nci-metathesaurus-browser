@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.Set;
+import java.util.List;
 import java.io.Serializable;
 
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
@@ -36,6 +37,7 @@ import org.LexGrid.valueSets.ValueSetDefinitionReference;
 import org.LexGrid.valueSets.types.DefinitionOperator;
 
 import javax.faces.context.*;
+import org.apache.commons.io.IOUtils;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -352,6 +354,8 @@ public class CartActionBean {
         // Get Semantic type
         semanticType = search.getSemanticType(curr_concept.getEntityCode());
 
+
+
         // Add concept to cart
         if (_cart == null) _init();
         Concept item = new Concept();
@@ -362,6 +366,15 @@ public class CartActionBean {
         item.setVersion(version);
         item.setUrl(url);
         item.setSemanticType(semanticType);
+
+
+System.out.println("code: " + code);
+System.out.println("CodingScheme: " + codingScheme);
+System.out.println("NameSpace: " + nameSpace);
+System.out.println("name: " + name);
+System.out.println("version: " + version);
+System.out.println("url: " + url);
+System.out.println("semanticType: " + semanticType);
 
         if (!_cart.containsKey(code))
             _cart.put(code,item);
@@ -417,13 +430,11 @@ public class CartActionBean {
      * @return
      * @throws Exception
      */
-    public String exportCartXML(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String exportCartXML0(HttpServletRequest request, HttpServletResponse response) throws Exception {
         updateSelection(request);
         _messageflag = false;
-
         SearchCart search = new SearchCart();
         ResolvedConceptReference ref = null;
-
     	if (getCount() < 1) {
         	_messageflag = true;
         	_message = NO_CONCEPTS;
@@ -437,7 +448,6 @@ public class CartActionBean {
 
         // Get Entities to be exported and build export xml string
         // in memory
-
 		LexEVSValueSetDefinitionServices vsd_service = RemoteServerUtil
 				.getLexEVSValueSetDefinitionServices();
 
@@ -506,24 +516,45 @@ public class CartActionBean {
 				}
 			}
         }
-
         // Build a buffer holding the XML data
 
         StringBuffer buf = new StringBuffer();
-
 		InputStream reader = vsd_service.exportValueSetResolution(vsd, null,
 			null, null, false);
+
+        String content = null;
 
 		if (reader != null) {
 			buf = new StringBuffer();
 			try {
-				for (int c = reader.read(); c != -1; c = reader.read())
-					buf.append((char) c);
+                /*
+				for (int c = reader.read(); c != -1; c = reader.read()) {
+					char ch = (char) c;
+					System.out.println(ch);
+					buf.append(ch);
+				}
+				*/
+				int data = reader.read();
+				while(data != -1) {
+
+					char ch = (char) data;
+					System.out.println(ch);
+
+					// do something with data variable
+                    buf.append((char) data);
+					data = reader.read(); // read next byte
+				}
+
 			} catch (IOException e) {
 				throw e;
 			} finally {
 				try {
 					reader.close();
+					content = buf.toString();
+					if (!content.endsWith(">")) {
+						content = content + ">";
+					}
+
 				} catch (Exception e) {
 					// ignored
 					e.printStackTrace();
@@ -536,10 +567,18 @@ public class CartActionBean {
         response.setContentType(XML_CONTENT_TYPE);
         response.setHeader("Content-Disposition", "attachment; filename="
                 + XML_FILE_NAME);
-        response.setContentLength(buf.length());
+
+		response.setContentLength(content.length());
+
+        //response.setContentLength(buf.length());
         ServletOutputStream ouputStream = response.getOutputStream();
         //ouputStream.write(buf.toString().getBytes(), 0, buf.length());
-        ouputStream.write(buf.toString().getBytes("UTF-8"), 0, buf.length());
+
+
+		ouputStream.write(content.getBytes("UTF-8"), 0, content.length());
+
+        //ouputStream.write(buf.toString().getBytes("UTF-8"), 0, buf.length());
+
         ouputStream.flush();
         ouputStream.close();
 
@@ -548,6 +587,77 @@ public class CartActionBean {
 
         return null;
     }
+
+    public gov.nih.nci.evs.bean.Concept item2Concept(Concept item) {
+         return new gov.nih.nci.evs.bean.Concept(
+                    item.getCode(),
+                    item.getName(),
+			        item.getCodingScheme(),
+			        item.getVersion(),
+			        item.getNameSpace(),
+			        item.getSemanticType(),
+			        item.getUrl()
+			        );
+    }
+
+
+    /**
+     * Export cart in XML format
+     * @return
+     * @throws Exception
+     */
+    public String exportCartXML(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        updateSelection(request);
+        _messageflag = false;
+        SearchCart search = new SearchCart();
+        ResolvedConceptReference ref = null;
+    	if (getCount() < 1) {
+        	_messageflag = true;
+        	_message = NO_CONCEPTS;
+        	//return null;
+    	}
+    	if (!hasSelected()) {
+        	_messageflag = true;
+        	_message = NOTHING_SELECTED;
+        	//return null;
+    	}
+
+        // Get Entities to be exported and build export xml string
+        // in memory
+        gov.nih.nci.evs.bean.Concept c = null;
+        gov.nih.nci.evs.bean.Cart cart = null;
+        List concepts = new ArrayList();
+        for (Iterator<Concept> i = getConcepts().iterator(); i.hasNext();) {
+            Concept item = (Concept) i.next();
+            c = item2Concept(item);
+            concepts.add(c);
+		}
+		cart = new gov.nih.nci.evs.bean.Cart(concepts);
+		String content = cart.toXML();
+
+		// Send export file to browser
+        response.setContentType(XML_CONTENT_TYPE);
+        response.setHeader("Content-Disposition", "attachment; filename="
+                + XML_FILE_NAME);
+		response.setContentLength(content.length());
+
+        //response.setContentLength(buf.length());
+        ServletOutputStream ouputStream = response.getOutputStream();
+        //ouputStream.write(buf.toString().getBytes(), 0, buf.length());
+
+		ouputStream.write(content.getBytes("UTF-8"), 0, content.length());
+
+        //ouputStream.write(buf.toString().getBytes("UTF-8"), 0, buf.length());
+
+        ouputStream.flush();
+        ouputStream.close();
+
+        // Don't allow JSF to forward to cart.jsf
+        //FacesContext.getCurrentInstance().responseComplete();
+
+        return null;
+    }
+
 
     /**
      * Export cart in Excel format
