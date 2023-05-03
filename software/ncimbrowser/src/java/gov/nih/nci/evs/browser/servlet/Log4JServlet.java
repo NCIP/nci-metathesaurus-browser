@@ -60,6 +60,7 @@ public class Log4JServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	//static boolean isInit = false;
 
+/*
 	static {
 
 		String logfile = System.getProperty("gov.nih.nci.evs.browser.NCImlog4jProperties");
@@ -92,7 +93,7 @@ public class Log4JServlet extends HttpServlet {
 		}
 
 	}
-
+*/
 
 
 

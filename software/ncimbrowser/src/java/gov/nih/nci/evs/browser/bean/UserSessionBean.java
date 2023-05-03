@@ -15,7 +15,6 @@ import org.LexGrid.concepts.Entity;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.browser.properties.*;
 import gov.nih.nci.evs.browser.common.*;
-import gov.nih.nci.evs.searchlog.*;
 import org.apache.logging.log4j.*;
 
 import nl.captcha.Captcha;
@@ -236,7 +235,6 @@ public class UserSessionBean extends Object {
 
         boolean ranking = true;
 
-
         SearchFields searchFields = null;
         String key = null;
 
@@ -388,8 +386,8 @@ public class UserSessionBean extends Object {
         if (iterator != null) {
             int size = iteratorBean.getSize();
             // Write a search log entry
-            SearchLog.writeEntry(searchFields, size, HTTPUtils
-                .getRefererParmDecode(request));
+            //SearchLog.writeEntry(searchFields, size, HTTPUtils
+            //    .getRefererParmDecode(request));
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
@@ -1218,6 +1216,8 @@ request.getSession().setAttribute("searchStatusBean", bean);
                     property_type, property_name, source, matchAlgorithm,
                     maxToReturn);
             key = searchFields.getKey();
+
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1344,11 +1344,13 @@ request.getSession().setAttribute("searchStatusBean", bean);
             }
 
         } else if (searchType != null && searchType.compareTo("Name") == 0) {
+
             searchFields =
                 SearchFields.setName(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
 
             key = searchFields.getKey();
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1390,10 +1392,12 @@ request.getSession().setAttribute("searchStatusBean", bean);
             }
 
         } else if (searchType != null && searchType.compareTo("Code") == 0) {
+
             searchFields =
                 SearchFields.setCode(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1465,8 +1469,8 @@ request.getSession().setAttribute("searchStatusBean", bean);
             _logger.debug("AdvancedSearchActon size: " + size);
 
             // Write a search log entry
-            SearchLog.writeEntry(searchFields, size, HTTPUtils
-                .getRefererParmDecode(request));
+            // SearchLog.writeEntry(searchFields, size, HTTPUtils
+            //    .getRefererParmDecode(request));
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
