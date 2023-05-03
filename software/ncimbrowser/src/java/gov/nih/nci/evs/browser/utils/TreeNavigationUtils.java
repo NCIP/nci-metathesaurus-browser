@@ -26,7 +26,7 @@ import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.LexBIG.Utility.Constructors;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
+//import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.codingSchemes.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;

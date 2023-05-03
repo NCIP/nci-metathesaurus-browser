@@ -255,7 +255,8 @@ public class OntologyBean {
     public static Vector getRELAs(String scheme) {
         Vector v = new Vector();
         HashSet hset = new HashSet();
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService(false);
+        //LexBIGService lbs = RemoteServerUtil.createLexBIGService(false);
+        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         LexBIGServiceMetadata lbsm = null;
         try {
             lbsm = lbs.getServiceMetadata();
