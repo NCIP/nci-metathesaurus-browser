@@ -102,14 +102,7 @@
 	<load-on-startup>1</load-on-startup>
 	</servlet>
 
-<!--
-	<servlet>
-	<servlet-name>NCIAudioCaptcha</servlet-name>
-	<servlet-class>gov.nih.nci.evs.browser.servlet.NCIAudioCaptchaServlet</servlet-class>
-	<load-on-startup>1</load-on-startup>
-	</servlet>
--->	
-	
+
 	<servlet>
 	<servlet-name>SimpleCaptcha</servlet-name>
 	<servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
@@ -161,12 +154,6 @@
 		<url-pattern>/audio.wav</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>NCIAudioCaptcha</servlet-name>
-		<url-pattern>/nci.audio.wav</url-pattern>
-	</servlet-mapping>
-	
-	
 	<servlet-mapping>
 		<servlet-name>SimpleCaptcha</servlet-name>
 		<url-pattern>/simpleCaptcha.png</url-pattern>
