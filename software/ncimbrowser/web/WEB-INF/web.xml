@@ -102,12 +102,13 @@
 	<load-on-startup>1</load-on-startup>
 	</servlet>
 
+<!--
 	<servlet>
 	<servlet-name>NCIAudioCaptcha</servlet-name>
 	<servlet-class>gov.nih.nci.evs.browser.servlet.NCIAudioCaptchaServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+-->	
 	
 	<servlet>
 	<servlet-name>SimpleCaptcha</servlet-name>
