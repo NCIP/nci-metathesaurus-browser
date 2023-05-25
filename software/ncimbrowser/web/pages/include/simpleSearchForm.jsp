@@ -81,7 +81,7 @@
     String displayed_match_text = HTTPUtils.convertJSPString(match_text);
 
 %>
-  <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active = true"
+  <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" aria-label="simpleMatchText" onFocus="active = true"
     onBlur="active = false" onkeypress="return submitEnter('search',event)" />
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       onclick="javascript:cursor_wait();"
@@ -91,7 +91,7 @@
 
   <h:outputLink
     value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp"
-    tabindex="3">
+    tabindex="0">
     <h:graphicImage value="/images/search-help.gif" styleClass="searchbox-btn" alt="Search Help"
     style="border-width:0;"/>
   </h:outputLink>
@@ -122,7 +122,7 @@
       check_e = "checked";
       
  %>
-  <table border="0" cellspacing="0" cellpadding="0">
+  <table border="0" cellspacing="0" cellpadding="0" role='presentation'>
     <tr valign="top" align="left">
       <td align="left" class="textbody">
         <input type="radio" name="algorithm" id="algorithm3" value="contains" alt="Contains" <%=check_c%>><label for="algorithm3">Contains</label>
@@ -145,10 +145,10 @@
      %>
     <tr valign="top" align="left">
       <td align="left" class="textbody">
-	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         <%=check_n%>  tabindex="5">Name&nbsp;
-	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"         <%=check_cd%> tabindex="5" onclick="onCodeButtonPressed('searchTerm');" >Code&nbsp;
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="5"/><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="5"/><label for="searchTarget3">Relationship</label>
+	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         <%=check_n%>  tabindex="0">Name&nbsp;
+	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"         <%=check_cd%> tabindex="0" onclick="onCodeButtonPressed('searchTerm');">Code&nbsp;
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="0"/><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="0"/><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
@@ -157,7 +157,7 @@
         <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody">
           <h:selectOneMenu id="source" value="#{userSessionBean.selectedSource}"
             valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-            immediate="true" onchange="submit()" >
+            immediate="true" onchange="submit()">
             <f:selectItems value="#{userSessionBean.sourceList}" />
           </h:selectOneMenu>
         </h:outputLabel>

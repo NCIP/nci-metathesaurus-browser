@@ -10,7 +10,7 @@ import org.LexGrid.LexBIG.Utility.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
@@ -70,7 +70,7 @@ import java.util.Map.Entry;
 
 
 public class MetaTreeUtils {
-    private static Logger _logger = Logger.getLogger(MetaTreeUtils.class);
+	private static Logger _logger = LogManager.getLogger(MetaTreeUtils.class);
     private static final String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
     private static final String[] _hierAssociationToParentNodes = new String[] { "PAR" };
@@ -108,6 +108,11 @@ public class MetaTreeUtils {
 		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
     }
 */
+
+    static {
+		_termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+	}
+
     public MetaTreeUtils(LexBIGService lbSvc) {
 		this.lbSvc = lbSvc;
 
@@ -119,7 +124,7 @@ public class MetaTreeUtils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
+		//this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
     }
 
     public MetaTreeUtils(LexBIGService lbSvc, HashMap termGroupRankHashMap) {
@@ -134,7 +139,7 @@ public class MetaTreeUtils {
 			ex.printStackTrace();
 		}
 		//this._termGroupRankHashMap = NCImBrowserProperties.getTermGroupRankHashMap();
-		this._termGroupRankHashMap = termGroupRankHashMap;
+		//this._termGroupRankHashMap = termGroupRankHashMap;
     }
 
     public static String[] getHierAssociationToParentNodes() {
@@ -145,7 +150,7 @@ public class MetaTreeUtils {
 		return Arrays.copyOf(_hierAssocToChildNodes, _hierAssocToChildNodes.length);
 	}
 
-	public void set_termGroupRankHashMap(HashMap termGroupRankHashMap) {
+	public static void set_termGroupRankHashMap(HashMap termGroupRankHashMap) {
 		_termGroupRankHashMap = termGroupRankHashMap;
 	}
 
@@ -167,7 +172,7 @@ public class MetaTreeUtils {
      * rcrl = getSourceRoots(sab); for (int i=0;
      * i<rcrl.getResolvedConceptReferenceCount(); i++) {
      * ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
-     * list.add(rcr); } SortUtils.quickSort(list); return list; } catch
+     * list.add(rcr); } new SortUtils().quickSort(list); return list; } catch
      * (Exception ex) {
      *
      * } return new ArrayList(); }
@@ -196,10 +201,10 @@ public class MetaTreeUtils {
                     list.add(rcr);
                 }
             }
-            SortUtils.quickSort(list);
+            new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return new ArrayList();
     }
@@ -364,9 +369,11 @@ public class MetaTreeUtils {
         _logger.debug(s);
     }
 
+/*
     private void Util_displayAndLogError(String s, Exception e) {
         _logger.debug(s);
     }
+*/
 
     /**
      * Process the provided code, constraining relationships to the given source
@@ -788,9 +795,9 @@ public class MetaTreeUtils {
 
                                                 for (Association grandchild : grandchildBranch
                                                     .getAssociation()) {
-                                                    java.lang.String association_name =
-                                                        grandchild
-                                                            .getAssociationName();
+                                                    //java.lang.String association_name =
+                                                    //    grandchild
+                                                    //        .getAssociationName();
                                                     AssociatedConceptList grandchildbranchItemList =
                                                         grandchild
                                                             .getAssociatedConcepts();
@@ -1024,7 +1031,7 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+			//String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 
         //for (String rel : map.keySet()) {
@@ -1035,7 +1042,7 @@ public class MetaTreeUtils {
                 if (code.compareTo(CUI) != 0 && !hset.contains(code)) {
                     hset.add(code);
                 }
-                String name = result.getTerm();
+                //String name = result.getTerm();
                 // _logger.debug("(***) subconcept: " + name + " " + code);
                 knt++;
             }
@@ -1054,9 +1061,11 @@ public class MetaTreeUtils {
         // LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         // MetaBrowserService mbs = null;
         try {
-            mbs =
-                (MetaBrowserService) lbs
-                    .getGenericExtension("metabrowser-extension");
+			if (mbs == null) {
+				mbs =
+					(MetaBrowserService) lbs
+						.getGenericExtension("metabrowser-extension");
+		    }
             if (direction) {
                 map =
                     mbs.getBySourceTabDisplay(CUI, sab, par_chd_assoc_list,
@@ -1074,7 +1083,7 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+			//String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 
         //for (String rel : map.keySet()) {
@@ -1397,7 +1406,7 @@ public class MetaTreeUtils {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -1408,7 +1417,7 @@ public class MetaTreeUtils {
         try {
             rcr = resolveConcept(scheme, csvt, code);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         if (rcr == null) {
             Util_displayMessage("Unable to resolve a concept for CUI = '"
@@ -1422,6 +1431,7 @@ public class MetaTreeUtils {
             name = getCodeDescription(rcr);
         } catch (Exception ex) {
             name = "Unknown";
+            ex.printStackTrace();
         }
         _logger.debug("Coding scheme: " + scheme);
         _logger.debug("code: " + code);
@@ -1564,9 +1574,9 @@ public class MetaTreeUtils {
                                             for (Association grandchild : grandchildBranch
                                                 .getAssociation()) {
 
-                                                java.lang.String association_name =
-                                                    grandchild
-                                                        .getAssociationName();
+                                                //java.lang.String association_name =
+                                                //    grandchild
+                                                //        .getAssociationName();
 
                                                 // String grandchildNavText =
                                                 // getDirectionalLabel(lbscm,
@@ -1670,7 +1680,7 @@ public class MetaTreeUtils {
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         ti._expandable =
@@ -1837,9 +1847,9 @@ public class MetaTreeUtils {
                                             // they are handled through
                                             // recursion.
 
-                                            String[] downstreamAssoc =
-                                                fwd ? _hierAssocToChildNodes
-                                                    : _hierAssocToParentNodes;
+                                            //String[] downstreamAssoc =
+                                            //    fwd ? _hierAssocToChildNodes
+                                            //        : _hierAssocToParentNodes;
                                             // addChildren(tiParent, scheme,
                                             // csvt, sab, parentCode,
                                             // code2Tree.keySet(),
@@ -1888,17 +1898,17 @@ public class MetaTreeUtils {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
 			Entry thisEntry = (Entry) it.next();
-			String rel = (String) thisEntry.getKey();
+//			String rel = (String) thisEntry.getKey();
 			List<BySourceTabResults> relations = (List<BySourceTabResults>) thisEntry.getValue();
 /*
         for (String rel : map.keySet()) {
             List<BySourceTabResults> relations = map.get(rel);
 */
             for (BySourceTabResults result : relations) {
-                String rela = result.getRela();
+                //String rela = result.getRela();
                 String cui = result.getCui();
-                String source = result.getSource();
-                String name = result.getTerm();
+                //String source = result.getSource();
+                //String name = result.getTerm();
 
                 Vector v = null;
                 if (hmap.containsKey(cui)) {
@@ -1954,9 +1964,11 @@ public class MetaTreeUtils {
         // LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         // MetaBrowserService mbs = null;
         try {
-            mbs =
-                (MetaBrowserService) lbs
-                    .getGenericExtension("metabrowser-extension");
+			if (mbs == null) {
+				mbs =
+					(MetaBrowserService) lbs
+						.getGenericExtension("metabrowser-extension");
+			}
             map =
                 mbs.getBySourceTabDisplay(ti._code, sab, par_chd_assoc_list,
                     Direction.TARGETOF);
@@ -2080,6 +2092,9 @@ public class MetaTreeUtils {
                     }
                 }
             }
+		} catch (RuntimeException e) {
+		    throw e;
+
         } catch (Exception e) {
 			e.printStackTrace();
         }
@@ -2166,7 +2181,7 @@ public class MetaTreeUtils {
             }
             w.add(sub);
         }
-        w = SortUtils.quickSort(w);
+        w = new SortUtils().quickSort(w);
 
         /*
          * for (int i=0; i<w.size(); i++) { TreeItem sub = (TreeItem)
@@ -2225,6 +2240,7 @@ public class MetaTreeUtils {
         try {
             name = getCodeDescription(scheme, csvt, code);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
 
         TreeItem ti = new TreeItem(code, name);
@@ -2300,7 +2316,7 @@ public class MetaTreeUtils {
          * hasSubconcepts(lbSvc, mbs, child_cui, "NCI", "CHD", true);
          * w.add(sub); }
          */
-        w = SortUtils.quickSort(w);
+        w = new SortUtils().quickSort(w);
         boolean include = false;
         int istart = 0;
         if (subconcept_code != null) {
@@ -2336,7 +2352,7 @@ public class MetaTreeUtils {
         Property[] properties = ce.getPresentation();
         for (int i = 0; i < properties.length; i++) {
             Property property = (Property) properties[i];
-            java.lang.String name = property.getPropertyName();
+            //java.lang.String name = property.getPropertyName();
             java.lang.String prop_value = property.getValue().getContent();
             if (property instanceof org.LexGrid.concepts.Presentation) {
                 Presentation presentation = (Presentation) property;
@@ -2421,12 +2437,8 @@ public class MetaTreeUtils {
 
         HashMap new_map = null;
         code = "C1154313";
-
         code = "C0012634";
-
         code = "C0007581";
-
-
         // new_map = test.getSubconcepts(code, sab, "CHD", true);
         // test.dumpTreeItems(new_map);
 
@@ -2434,7 +2446,7 @@ public class MetaTreeUtils {
             new_map = test.getTreePathData(scheme, version, sab, code);
             test.dumpTreeItems(new_map);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
     }

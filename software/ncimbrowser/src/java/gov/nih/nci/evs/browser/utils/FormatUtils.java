@@ -1,7 +1,7 @@
 package gov.nih.nci.evs.browser.utils;
 
 import java.util.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -54,7 +54,7 @@ import org.apache.log4j.*;
  */
 
 public class FormatUtils {
-    private static Logger _logger = Logger.getLogger(FormatUtils.class);
+	private static Logger _logger = LogManager.getLogger(FormatUtils.class);
     private static final String _ncitUrl =
         "http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI%20Thesaurus&";
 
@@ -65,8 +65,8 @@ public class FormatUtils {
         Vector<String> v = new Vector<String>();
         boolean found = false;
         // "aspx?"
-        String t1 = t;
-        String t2 = t;
+        //String t1 = t;
+        //String t2 = t;
         String doubleQuote = "\"";
         String t6 = null;
         String replacedWith = null;
@@ -76,13 +76,13 @@ public class FormatUtils {
             String substr = t.substring(i, i + target.length());
             if (substr.compareTo(target) == 0) {
                 found = true;
-                t1 = t.substring(0, i);
+                //t1 = t.substring(0, i);
                 int k1 = i;
                 while (k1 < t.length() - 1) {
                     k1++;
                     String c = t.substring(k1, k1 + 1);
                     if (c.compareTo(doubleQuote) == 0) {
-                        t1 = t.substring(0, k1);
+                        //t1 = t.substring(0, k1);
                         break;
                     }
                 }
@@ -91,12 +91,12 @@ public class FormatUtils {
                     k2--;
                     String c = t.substring(k2, k2 + 1);
                     if (c.compareTo(doubleQuote) == 0) {
-                        t2 = t.substring(0, k2);
+                        //t2 = t.substring(0, k2);
                         break;
                     }
                 }
 
-                String t3 = t.substring(k2, k1 + 1);
+                //String t3 = t.substring(k2, k1 + 1);
                 String t4 = t.substring(k2 + 1, k1);
                 v.add(t4);
             }
@@ -196,9 +196,9 @@ public class FormatUtils {
             "PDQ Definition: A recombinant, chimeric monoclonal antibody directed against the epidermal growth factor (EGFR) with antineoplastic activity. Cetuximab binds to the extracellular domain of the EGFR, thereby preventing the activation and subsequent dimerization of the receptor; the decrease in receptor activation and dimerization may result in an inhibition in signal transduction and anti-proliferative effects. This agent may inhibit EGFR-dependent primary tumor growth and metastasis. EGFR is overexpressed on the cell surfaces of various solid tumors."
                 + " Check for \"http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?id=42384&idtype=1\" active clinical trials or \"http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?id=42384&idtype=1&closed=1\" closed clinical trials using this agent."
                 + "(\"http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&code=C1723\" NCI Thesaurus)\";";
-        FormatUtils test = new FormatUtils();
+        //FormatUtils test = new FormatUtils();
 
-        String t = test.reformatPDQDefinition(def);
+        String t = FormatUtils.reformatPDQDefinition(def);
         _logger.info(t);
     }
 }

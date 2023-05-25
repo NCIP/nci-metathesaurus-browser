@@ -3,13 +3,18 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 <%@ page import="org.LexGrid.concepts.Entity" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 
 <%
   HashMap hmap = NCImMetadataUtils.getSAB2FormalNameHashMap();
+  
+  if (hmap == null) {
+      System.out.println("NCImMetadataUtils.getSAB2FormalNameHashMap() returns NULL????????");
+  }
+  
   String entry_type_syn = type;
   String available_hierarchies = NCImBrowserProperties.getSourceHierarchies();
 
@@ -27,7 +32,7 @@
     Entity syn_details_concept = (Entity) request.getSession().getAttribute("concept");
     String syn_details_concept_code = syn_details_concept.getEntityCode();
     %>
-	<table border="0" width="708px">
+	<table border="0" width="708px" role='presentation'>
 		<tr>
 			<td class="textsubtitle-blue" align="left">Synonym Details:<a name="SynonymsDetails"></a></td>
 		</tr>
@@ -52,7 +57,7 @@
               <%
               } else {
               %>
-              <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=name#SynonymsDetails">Term</a>
+              <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=name#SynonymsDetails">Term</a>
               <%
               }
               %>
@@ -63,15 +68,15 @@
               %>
                  Source
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
         </a>
               <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("source") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=source#SynonymsDetails">Source</a>
+                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=source#SynonymsDetails">Source</a>
         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-    '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+    '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
     <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
         </a>
               <%
@@ -86,12 +91,12 @@
               <%
               } else if ((sort_by == null) || sort_by != null  && sort_by.compareTo("type") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=type#SynonymsDetails">Type</a>
+                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=type#SynonymsDetails">Type</a>
               <%
               }
               %>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definitions" title="Term Type Definitions" border="0">
               </a>
           </th>
@@ -103,7 +108,7 @@
               <%
               } else if ((sort_by == null) || sort_by != null && sort_by.compareTo("code") != 0) {
               %>
-                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=code#SynonymsDetails">Code</a>
+                <a href="<%=request.getContextPath() %>/ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=syn_details_concept_code%>&type=<%=entry_type_syn%>&sortBy=code#SynonymsDetails">Code</a>
               <%
               }
               %>
@@ -128,16 +133,17 @@
             String term_browser_formalname = null;
             String term_source_code = (String) synonym_data.elementAt(3);
 
-            if (term_source != null
+            if (hmap != null && term_source != null
                 && term_source.compareTo("") != 0
                 && term_source.compareTo("null") != 0
                 && term_source_code != null
                 && term_source_code.compareTo("") != 0
                 && term_source_code.compareTo("null") != 0
                 && hmap.containsKey(term_source)) {
+                
                 term_browser_formalname = (String) hmap.get(term_source);
             }
-
+           
             String rowColor = (n%2 == 0) ? "dataRowDark" : "dataRowLight";
             
 	    boolean licenseAgreementAccepted = false;
@@ -165,17 +171,46 @@
       
         %>
             <tr class="<%=rowColor%>">
-              <td class="dataCellTextwrap" ><%=DataUtils.encodeTerm(term_name)%></td>
-              <td class="dataCellText" ><%=term_source%></td>
-              <td class="dataCellText" ><%=term_type%></td>
+            <!--
+              <td class="dataCellTextwrap"><%=DataUtils.encodeTerm(term_name)%></td>
+            -->  
+              
+ <td>
+   <div style="width: 530; word-wrap: break-word">
+       <%=DataUtils.encodeTerm(term_name)%>
+  </div>
+</td>               
+              
+              
+              
+              <td class="dataCellText"><%=term_source%></td>
+              <td class="dataCellText"><%=term_type%></td>
 
 <%
                // source code 
 		if (term_browser_formalname == null) {
 %>
-			  <td class="dataCellText" >
+			  <td class="dataCellText">
 			      <%=term_source_code%>
+			      
+
+		                <%	  
+				if (source_hierarchy_available) {
+		                %>		          
+		                          &nbsp;
+					  <a class="icon_blue" href="#" onclick="javascript:window.open('<%= request.getContextPath() %>/redirect?action=tree&dictionary=<%=cs_name%>&code=<%=id%>&sab=<%=term_source%>&type=hierarchy',
+					  '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+					      <img src="<%=basePath%>/images/visualize.gif" width="12px" height="12px" title="<%=view_in_source_hierarchy_label%>" alt="<%=view_in_source_hierarchy_label%>" border="0"/>
+					  </a>
+                                <%
+				} 
+				%>
+				
+			      
+			      
 			  </td>
+			  
+			  
 <%
 		} else {
 %>		      

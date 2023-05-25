@@ -92,6 +92,7 @@ import java.io.Serializable;
 //KLO
 public class JSONObject implements Serializable {
 
+    private static final long serialVersionUID = 3L;
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
      * whilst Java's null is equivalent to the value that JavaScript calls
@@ -1065,7 +1066,7 @@ public class JSONObject implements Serializable {
             sb.append('}');
             return sb.toString();
         } catch (Exception e) {
-            //return null;
+            e.printStackTrace();
             return "";
         }
     }

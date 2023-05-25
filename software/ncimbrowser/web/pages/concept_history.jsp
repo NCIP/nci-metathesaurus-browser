@@ -3,23 +3,32 @@
 <%@ page import="java.util.*" %>
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
 <%@ page import="org.LexGrid.concepts.*" %>
-<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.logging.log4j.*" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%
   String basePath = request.getContextPath();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
   <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0G7WV400Q"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-N0G7WV400Q');
+</script>
     <title>NCI Metathesaurus History</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
   </head>
-  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+  <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <%!
-      private static Logger _logger = Utils.getJspLogger("concept_history.jsp");
+      private static Logger _logger = LogManager.getLogger("concept_history.jsp");
   %>
   <%
     String code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getParameter("code"));
@@ -62,18 +71,18 @@ _logger.debug("concept_history.jsp rows " + rows.size());
       String concept_name = concept.getEntityDescription().getContent();
       Vector headers = HistoryUtils.getTableHeader();
   %>
-    <div id="popupContainer">
+  <div id="popupContainer">
       <!-- nci popup banner -->
       <div class="ncipopupbanner">
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/nci-banner-1.gif" width="440" height="39" border="0" alt="National Cancer Institute" /></a>
-        <a href="http://www.cancer.gov" target="_blank" alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="48" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/banner-red.png" width="680" height="39" border="0" alt="National Cancer Institute" /></a>
+        <a href="https://www.cancer.gov" target="_blank" rel="noopener"  alt="National Cancer Institute"><img src="<%=basePath%>/images/spacer.gif" width="60" height="39" border="0" alt="National Cancer Institute" class="print-header" /></a>
       </div>
       <!-- end nci popup banner -->
       <div id="popupMainArea">
-        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0">
+        <table class="evsLogoBg" cellspacing="0" cellpadding="0" border="0" role='presentation'>
         <tr>
           <td valign="top">
-            <a href="http://evs.nci.nih.gov/" target="_blank" alt="Enterprise Vocabulary Services">
+            <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="Enterprise Vocabulary Services">
               <img src="<%=basePath%>/images/evs-popup-logo.gif" width="213" height="26" alt="EVS: Enterprise Vocabulary Services" title="EVS: Enterprise Vocabulary Services" border="0" />
             </a>
           </td>
@@ -84,19 +93,19 @@ _logger.debug("concept_history.jsp rows " + rows.size());
         <div id="popupContentArea">
           <!-- History content -->
           <div class="pageTitle"><b><%=DataUtils.encodeTerm(concept_name)%> (CUI <%=code%>)</b></div>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr class="textbody">
               <td align="left" class="texttitle-gray">
                 History
               </td>
               <td align="right">
                 <font size="1" color="red" align="right">
-                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer" ><i>Send to Printer</i></a>
+                  <a href="javascript:printPage()"><img src="<%= request.getContextPath() %>/images/printer.bmp" border="0" alt="Send to Printer"><i>Send to Printer</i></a>
                 </font>
               </td>
             </tr>
           </table>
-          <table width="580px" cellpadding="3" cellspacing="0" border="0">
+          <table width="580px" cellpadding="3" cellspacing="0" border="0" role='presentation'>
             <tr>
               <%
                 for (int i=0; i<headers.size(); ++i) {
@@ -139,5 +148,6 @@ _logger.debug("concept_history.jsp rows " + rows.size());
     }
     %>
   </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
   </body>
 </html>

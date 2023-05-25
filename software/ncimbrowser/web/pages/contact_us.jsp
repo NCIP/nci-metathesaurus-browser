@@ -34,8 +34,17 @@
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
   <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0G7WV400Q"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-N0G7WV400Q');
+</script>
     <title>NCI Metathesaurus</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -43,7 +52,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/script.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
-    
+    <script src='https://www.google.com/recaptcha/api.js'></script>    
     
     <script>
     function getContextPath() {
@@ -55,12 +64,38 @@
         document.getElementById("audioCaptcha").src = path + new Date().getTime();
         document.getElementById("audioSupport").innerHTML = document.createElement('audio').canPlayType("audio/wav");
     }
+    
+function verifyRecaptcha() {
+    var response = grecaptcha.getResponse();
+    $.ajax({
+        type: "POST",
+        url: 'https://www.google.com/recaptcha/api/siteverify',
+        data: {"secret" : "<%=NCImBrowserProperties.getRecaptchaSiteKey()%>", "response" : response},
+        contentType: 'application/x-www-form-urlencoded',
+        success: function(data) { 
+           //console.log(data); 
+           //alert("pass");
+           
+            String redirectURL = request.getContextPath() + "/redirect?action='contactus";
+            response.sendRedirect(redirectURL);
+           
+		if(data.response == '') {
+		    alert("Please complete the I'm-not-a-robot widget before submitting your entry.");
+		    return false;
+		}
+               
+        }
+    });
+}
+    
+    
+    
     </script>
     
     
   </head>
   <%
-  
+    //String recaptcha_site_key = NCImBrowserProperties.getRecaptchaSiteKey(); 
     //String warnings = (String) request.getSession().getAttribute("warnings");
 
     boolean audio_captcha_background_noise_on = true;
@@ -106,8 +141,6 @@ if (captcha_option.compareTo("default") == 0) {
 } 
 */   
     
-    System.out.println("captcha_option: " + captcha_option);
-    System.out.println("alt_captcha_option: " + alt_captcha_option);  
     
     //String ncicb_contact_url = new DataUtils().getNCICBContactURL();
     
@@ -140,7 +173,7 @@ if (captcha_option.compareTo("default") == 0) {
 
     <f:view>
       <!-- Begin Skip Top Navigation -->
-        <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+        <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
       <!-- End Skip Top Navigation -->
       <%@ include file="/pages/include/header.jsp" %>
       <div class="center-page">
@@ -148,7 +181,7 @@ if (captcha_option.compareTo("default") == 0) {
         <div id="main-area">
           <%@ include file="/pages/include/content-header.jsp" %>
           <div class="pagecontent">
-            <a name="evs-content" id="evs-content"></a>
+            <a name="evs-content" id="evs-content" tabindex="0"></a>
             <div class="texttitle-blue">Contact Us</div>
             <hr></hr>
 
@@ -167,7 +200,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   </div>
   <br/>
 
-  <table class="textbody">
+  <table class="textbody" role='presentation'>
     <tr>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td>Telephone:</td>
@@ -181,7 +214,7 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
     <tr>
       <td/>
       <td>Web Page:</td>
-      <td><a href="<%=NCICB_URL%>" target="_blank"><%=NCICB_URL%></a></td>
+      <td><a href="<%=Constants.NCICB_URL%>" target="_blank" rel="noopener" ><%=Constants.NCICB_URL%></a></td>
     </tr>
   </table>
   <br/>
@@ -199,11 +232,11 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
 
     For questions related to NCI's Cancer.gov Web site,
     see the
-    <a href="http://www.cancer.gov/help" target="_blank">
+    <a href="https://www.cancer.gov/help" target="_blank" rel="noopener" >
       Cancer.gov help page</a>. &nbsp;
     For help and other questions concerning NCI Enterprise Vocabulary
     Services (EVS),
-    see the <a href="http://evs.nci.nih.gov/" target="_blank">
+    see the <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener" >
       EVS Web site</a>.
   </div>
 
@@ -215,80 +248,28 @@ if (errorMsg != null && errorMsg.compareTo("") != 0) {
   
   <h:form>
   
-<p>
-<table>
-<%
-String answer_label = "Enter the characters appearing in the above image";
-
-if (captcha_option.compareTo("default") == 0) {
-%>
-      <tr>
-      <td class="textbody">
-             <img src="<c:url value="/nci.simpleCaptcha.png"  />" alt="simpleCaptcha.png">
-             
-       &nbsp;<h:commandLink value="Unable to read this image?" action="#{userSessionBean.regenerateCaptchaImage}" />
-       <br/>             
-      </td>
-      </tr>
-
-       
-
-<%
-} else {
-      answer_label = "Enter the numbers you hear from the audio";
-%>
-
-<tr>
-<td>
-<p class="textbody">Click 
-
-
-<a href="<%=request.getContextPath()%>/<%=audio_captcha_str%> ">here</a> to listen to the audio. 
-</td>
-</tr>
-
-
-<%
-} 
-%>
-
-      <tr>
-      <td class="textbody"> 
-          <%=answer_label%>: <i style="color:#FF0000;">*</i>
-          <input type="text" id="answer" name="answer" value="<%=HTTPUtils.cleanXSS(answer)%>"/>&nbsp;
-      </td>
-      </tr> 
-      
-      
-      <tr>
-      <td class="textbody">
-       <h:commandLink value="Prefer an alternative form of CAPTCHA?" action="#{userSessionBean.switchCaptchaMode}" />
-       <br/>             
-      </td>
-      </tr>
-     
-
-      </table>  
-      
-</p>    
-  
     <p>
       <i>Subject of your email:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="subject">Subject</label>      
+    <input class="textbody" size="100" id="subject" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <p>
       <i>Detailed description of your problem or suggestion (no attachments):</i><i style="color:#FF0000;">*</i>
     </p>
-    <TEXTAREA class="textbody" Name="<%= EMAIL_MSG %>" rows="4" cols="98"><%= message %></TEXTAREA>
+<label for="<%= EMAIL_MSG %>"><%= EMAIL_MSG %></label>
+    <TEXTAREA class="textbody" id="<%= EMAIL_MSG %>" Name="<%= EMAIL_MSG %>" rows="4" cols="98"><%= message %></TEXTAREA>
     <p>
       <i>Your e-mail address:</i><i style="color:#FF0000;">*</i>
     </p>
-    <input class="textbody" size="100" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+<label for="<%=EMAIL_ADDRESS%>">Email Address</label>    
+    <input class="textbody" size="100" id="<%=EMAIL_ADDRESS%>" name="<%=EMAIL_ADDRESS%>" alt="<%= EMAIL_ADDRESS %>" value="<%= emailaddress %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     
     <p>
        <i style="color:#FF0000;">* Required</i>
     </p> 
-    
+
+<div class="g-recaptcha" data-sitekey="<%=NCImBrowserProperties.getRecaptchaSiteKey()%>"></div>
+
     <br/><br/>
       
     <h:commandButton
@@ -298,20 +279,21 @@ if (captcha_option.compareTo("default") == 0) {
       action="#{userSessionBean.clearContactUs}"
       alt="clear">
     </h:commandButton>
-    <img src="<%=basePath%>/images/spacer.gif" width="1" />
+    <img src="<%=basePath%>/images/spacer.gif" width="1" alt="spacer" />
     <h:commandButton
       id="mail"
       value="submit"
       image="/images/submit.gif"
+      onclick="return verifyRecaptcha();"
       action="#{userSessionBean.contactUs}"
-      alt="submit" >
+      alt="submit">
     </h:commandButton>
     
 <input type="hidden" name="alt_captcha_option" id="alt_captcha_option" value="<%=alt_captcha_option%>">
 <input type="hidden" name="captcha_option" id="captcha_option" value="<%=captcha_option%>">
 
   </h:form>
-            <a href="http://www.cancer.gov/policies/privacy-security#NCIWeb" target="_blank" alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
+            <a href="https://www.cancer.gov/policies/privacy-security#NCIWeb" target="_blank" rel="noopener"  alt="Privacy Policy"><i>Privacy Policy on E-mail Messages Sent to the NCI Web Site</i></a>
             <%@ include file="/pages/include/nciFooter.jsp" %>
           </div>
           <!-- end Page content -->
@@ -320,5 +302,6 @@ if (captcha_option.compareTo("default") == 0) {
         <!-- end Main box -->
       </div>
     </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
   </body>
 </html>

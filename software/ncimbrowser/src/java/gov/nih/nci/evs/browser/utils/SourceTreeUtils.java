@@ -1,4 +1,5 @@
 package gov.nih.nci.evs.browser.utils;
+import gov.nih.nci.evs.browser.properties.*;
 
 import java.io.*;
 import java.util.*;
@@ -20,7 +21,7 @@ import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import org.json.*;
 
 /**
@@ -74,9 +75,7 @@ import org.json.*;
  */
 
 public class SourceTreeUtils {
-    private  Logger _logger = Logger.getLogger(SourceTreeUtils.class);
-
-    // protected final Logger logger = Logger.getLogger(getClass());
+	private static Logger _logger = LogManager.getLogger(SourceTreeUtils.class);
     private  String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
 
@@ -97,7 +96,11 @@ public class SourceTreeUtils {
     private LexBIGServiceConvenienceMethods lbscm = null;
     private MetaBrowserService mbs = null;
 
-    public String sourceHierarchies = "AOD|AOT|CBO|CCS|CSP|CST|FMA|GO|HL7V3.0|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SOP|UMD|USPMG|UWDA";
+    private String default_source_hierarchies = "|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA";
+
+    //private static String default_source_hierarchies="|AOD|AOT|CBO|CCS_10|CSP|CST|FMA|GO|HL7V3.0|HPO|ICD10|ICD10CM|ICD10PCS|ICD9CM|ICDO|ICPC|LNC|MDBCAC|MDR|MED-RT|MEDLINEPLUS|MGED|MSH|MTHHH|NCBI|NCI|NDFRT|NPO|OMIM|PDQ|PNDS|RADLEX|SNOMEDCT_US|SOP|UMD|USPMG|UWDA|";
+
+    public String sourceHierarchies = null;
 
     public SourceTreeUtils(LexBIGService lbSvc) {
         this.lbSvc = lbSvc;
@@ -108,6 +111,13 @@ public class SourceTreeUtils {
 			this.lbscm.setLexBIGService(lbSvc);
 
 			this.mbs = (MetaBrowserService) lbSvc.getGenericExtension("metabrowser-extension");
+
+			this.sourceHierarchies = null;//NCImBrowserProperties.getSourceHierarchies();
+			if (this.sourceHierarchies == null) {
+				this.sourceHierarchies = default_source_hierarchies;
+			}
+			//System.out.println(sourceHierarchies);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -285,7 +295,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -371,7 +381,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
 
     }
@@ -504,7 +514,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -559,7 +569,7 @@ public class SourceTreeUtils {
                             new LocalNameList(), propertyTypes, null, 10);
 
                 } catch (Exception ex) {
-                    // ex.printStackTrace();
+                     ex.printStackTrace();
                     _logger
                         .error("\tNo top nodes could be located for the supplied restriction set in the requested direction.\n");
                     return new ArrayList();
@@ -621,7 +631,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getRootConceptNamesAndCodes: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -712,13 +722,14 @@ public class SourceTreeUtils {
                 try {
                     matchIterator = cns.resolve(sortCriteria, null, null);// ConvenienceMethods.createLocalNameList(getPropertyForCodingScheme(cs)),null);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
                 return matchIterator;
             }
 
         } catch (Exception e) {
             // getLogger().error("ERROR: Exception in findConceptWithSourceCodeMatching.");
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -758,7 +769,7 @@ public class SourceTreeUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
 
@@ -1491,7 +1502,7 @@ public class SourceTreeUtils {
                 ti.addChild(childNavText, childItem);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         if (ti != null) {
         	hmap.put(ti._code, ti);
@@ -1505,27 +1516,25 @@ public class SourceTreeUtils {
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
             if (cs == null)
                 return null;
-            Mappings mappings = cs.getMappings();
-            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            if (hierarchies == null || hierarchies.length == 0)
-                return null;
 
-//            SupportedHierarchy hierarchyDefn = hierarchies[0];
-            //String hier_id = hierarchyDefn.getLocalId();
-/*
-            String[] associationsToNavigate =
-                hierarchyDefn.getAssociationNames();
+            //Mappings mappings = cs.getMappings();
+            //SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            //if (hierarchies == null || hierarchies.length == 0) {
+                //return null;
+			//}
 
-            boolean associationsNavigatedFwd =
-                hierarchyDefn.getIsForwardNavigable();
-*/
             // String code = "C1140168";
             ResolvedConceptReference SRC_root =
                 getRootInSRC(scheme, csvt.getVersion(), sab);
             String rootName =
                 SRC_root.getReferencedEntry().getEntityDescription()
                     .getContent();
+
             String rootCode = SRC_root.getCode();
+
+
+            System.out.println("rootName: " + rootName);
+            System.out.println("rootCode: " + rootCode);
 
             _logger.debug("Searching for roots in " + sab + " under -- "
                 + rootName + " (CUI: " + rootCode + ")");
@@ -1547,10 +1556,10 @@ public class SourceTreeUtils {
                     list.add(rcr);
                 }
             }
-            SortUtils.quickSort(list);
+            new SortUtils().quickSort(list);
             return list;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return new ArrayList();
     }
@@ -1705,7 +1714,7 @@ public class SourceTreeUtils {
         Presentation[] presentations = c.getPresentation();
         for (int i = 0; i < presentations.length; i++) {
             Presentation presentation = (Presentation) presentations[i];
-            java.lang.String name = presentation.getPropertyName();
+            //java.lang.String name = presentation.getPropertyName();
             java.lang.String prop_value = presentation.getValue().getContent();
             PropertyQualifier[] qualifiers =
                 presentation.getPropertyQualifier();
@@ -1725,7 +1734,6 @@ public class SourceTreeUtils {
 
     public String getSelfReferentialRelationship(String associationName,
         AssociatedConcept ac, String sab) {
-        //Vector v = new Vector();
         String rela = associationName;
         String source = null;
         String self_referencing = null;
@@ -1972,7 +1980,7 @@ public class SourceTreeUtils {
         }
         _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
-        // SortUtils.quickSort(list);
+        // new SortUtils().quickSort(list);
         return list;
     }
 
@@ -1980,7 +1988,7 @@ public class SourceTreeUtils {
 
     public String getChildrenJSON(String CUI, String SAB) {
 		HashMap hmap = getChildren(CUI, SAB);
-		if (hmap == null) return null;
+		//if (hmap == null) return null;
 		TreeItem root = (TreeItem) hmap.get(CUI);
 		return JSON2TreeItem.treeItem2Json(root);
 	}
@@ -1988,7 +1996,7 @@ public class SourceTreeUtils {
 
     public String getSourceRootsJSON(String CUI, String SAB) {
 		HashMap hmap = getSourceRoots(CUI, SAB);
-		if (hmap == null) return null;
+		//if (hmap == null) return null;
 		TreeItem root = (TreeItem) hmap.get(CUI);
 		return JSON2TreeItem.treeItem2Json(root);
 	}
@@ -2037,9 +2045,9 @@ public class SourceTreeUtils {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-        v = SortUtils.quickSort(v);
+        v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
             TreeItem childItem = (TreeItem) v.elementAt(i);
             ti.addChild(childNavText, childItem);
@@ -2050,7 +2058,7 @@ public class SourceTreeUtils {
         return hmap;
     }
 
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         JSONArray nodesArray = null;
         try {
             nodesArray = new JSONArray();
@@ -2077,7 +2085,7 @@ public class SourceTreeUtils {
 			return null;
 
 		map = getSourceRoots(src_root.getConceptCode(), sab);
-		nodeArray = HashMap2JSONArray(map);
+		nodeArray = hashMap2JSONArray(map);
         return nodeArray;
     }
 
@@ -2104,15 +2112,8 @@ public class SourceTreeUtils {
         boolean searchInactive = true;
         //Vector sources = getSupportedSources(scheme, version);
         Vector sources = getSupportedSources(scheme, csvt);
-
-        if (sources != null) {
-            pw.println("Number of NCIm Supported Sources: " + sources.size());
-        } else {
-            pw.println("getSupportedSources returns null??? ");
-            return;
-        }
-
-        sources = SortUtils.quickSort(sources);
+        pw.println("Number of NCIm Supported Sources: " + sources.size());
+        sources = new SortUtils().quickSort(sources);
         System.out.println("sources.size(): " + sources.size());
 
         int max = sources.size();
@@ -2295,29 +2296,42 @@ public class SourceTreeUtils {
 
 /////////////////////////////////////////////////////////////////////////
 
-
-    public static void main(String[] args) {
-		String outputfile = args[0];
+    public static void main0(String[] args) {
+		//String outputfile = args[0];
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
         SourceTreeUtils test = new SourceTreeUtils(lbSvc);
         //test.getRootConceptsBySource(outputfile);
 
         String source_hierarchy = test.getSourceHierarchies();
         Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(source_hierarchy);
+        Vector w = new Vector();
         System.out.println("u.size: " + u.size());
         for (int i=0; i<u.size(); i++) {
             String t = (String) u.elementAt(i);
             int j = i+1;
             System.out.println("(" + j + ") " + t);
+            w.add("(" + j + ") " + t);
 
             ResolvedConceptReference rcr = test.getRandomResolvedConceptReference(t);
             if (rcr != null) {
-            	System.out.println(rcr.getEntityDescription().getContent() + " (" + rcr.getCode() + ")");
+				String s = rcr.getEntityDescription().getContent() + " (" + rcr.getCode() + ")";
+            	System.out.println(s);
+            	w.add(s);
 			} else {
 				System.out.println("rcr == null");
+				w.add("rcr == null");
 			}
 	    }
+        Utils.saveToFile("test.txt", w);
 
     }
+
+    public static void main(String[] args) {
+		String outputfile = args[0];
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        SourceTreeUtils test = new SourceTreeUtils(lbSvc);
+        test.getRootConceptsBySource(outputfile);
+	}
+
 }
 

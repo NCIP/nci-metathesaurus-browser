@@ -8,7 +8,7 @@ import java.text.*;
 import java.sql.*;
 
 import org.apache.commons.lang.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
@@ -87,7 +87,7 @@ import java.util.Map.Entry;
  */
 
 public class DataUtils {
-    private static Logger _logger = Logger.getLogger(DataUtils.class);
+	private static Logger _logger = LogManager.getLogger(DataUtils.class);
     private static Vector<String> _sourceListData = null;
     private LocalNameList _noopList = Constructors.createLocalNameList("_noop_");
     private static SortOptionList _sortByCode =
@@ -160,6 +160,7 @@ public class DataUtils {
     public String _evsServiceURL = null;
     public String _ncitURL = null;
     public String _lexevs_version = null;
+    public final static String NCIM_VERSION;
 
     private static String[] _hierAssocToParentNodes =
         new String[] { "PAR", "isa", "branch_of", "part_of", "tributary_of" };
@@ -206,6 +207,8 @@ public class DataUtils {
 
     static {
 		rand = new Random();
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		NCIM_VERSION = new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag("NCI Metathesaurus", "PRODUCTION");
 	}
 
     public static int getNextRandomNumber() {
@@ -307,7 +310,7 @@ public class DataUtils {
 
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -338,7 +341,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
@@ -385,7 +388,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -425,7 +428,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
@@ -467,7 +470,7 @@ public class DataUtils {
 						}
 					}
 
-            		_sourceListData = SortUtils.quickSort(_sourceListData);
+            		_sourceListData = new SortUtils().quickSort(_sourceListData);
 				}
 			}
         } catch (Exception ex) {
@@ -514,7 +517,7 @@ public class DataUtils {
                 _sourceListData.add(source.getLocalId());
             }
 
-            _sourceListData = SortUtils.quickSort(_sourceListData);
+            _sourceListData = new SortUtils().quickSort(_sourceListData);
 
             return _sourceListData;
         } catch (Exception ex) {
@@ -538,7 +541,7 @@ public class DataUtils {
     public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc == null???");
                 return null;
@@ -577,6 +580,7 @@ public class DataUtils {
                         return entry;
                     } catch (Exception ex1) {
                         _logger.error("Exception entry == null");
+                        ex1.printStackTrace();
                         return null;
                     }
                 }
@@ -598,9 +602,9 @@ public class DataUtils {
             || source.compareTo("") == 0 || source.compareTo("ALL") == 0)
             return cns;
 
-        LocalNameList contextList = null;
+        //LocalNameList contextList = null;
         LocalNameList sourceLnL = null;
-        NameAndValueList qualifierList = null;
+        //NameAndValueList qualifierList = null;
 
         Vector<String> w2 = new Vector<String>();
         w2.add(source);
@@ -609,11 +613,15 @@ public class DataUtils {
         CodedNodeSet.PropertyType[] types =
             new PropertyType[] { PropertyType.PRESENTATION };
         try {
+            //cns =
+            //    cns.restrictToProperties(propertyLnL, types, sourceLnL,
+            //        contextList, qualifierList);
             cns =
                 cns.restrictToProperties(propertyLnL, types, sourceLnL,
-                    contextList, qualifierList);
+                    null, null);
         } catch (Exception ex) {
             _logger.error("restrictToSource throws exceptions.");
+            ex.printStackTrace();
             return null;
         }
         return cns;
@@ -622,7 +630,7 @@ public class DataUtils {
     public static Entity getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code, String source) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc == null???");
                 return null;
@@ -669,7 +677,7 @@ public class DataUtils {
                 return entry;
             }
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -713,7 +721,7 @@ public class DataUtils {
         if (superconcept_vec == null)
             return null;
             */
-        // SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
+        // new SortUtils().quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
         return superconcept_vec;
 
     }
@@ -767,7 +775,7 @@ public class DataUtils {
                         }
                     }
                 }
-                SortUtils.quickSort(v);
+                new SortUtils().quickSort(v);
             }
 
         } catch (Exception ex) {
@@ -835,6 +843,7 @@ public class DataUtils {
                 } catch (Exception e) {
                     _logger
                         .error("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
+                    e.printStackTrace();
                     return v;
                 }
 
@@ -944,6 +953,10 @@ public class DataUtils {
     public static String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
 
+		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+		return new CodingSchemeDataUtils(lbSvc).getVocabularyVersionByTag(codingSchemeName, ltag);
+
+/*
         if (codingSchemeName == null)
             return null;
         String version = null;
@@ -966,10 +979,7 @@ public class DataUtils {
                     CodingSchemeTagList cstl = rd.getVersionTags();
                     java.lang.String[] tags = cstl.getTag();
                     // KLO, 102409
-                    /*
-                    if (tags == null)
-                        return version;
-                        */
+
 
                     if (tags != null && tags.length > 0) {
                         for (int j = 0; j < tags.length; j++) {
@@ -982,7 +992,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
 
         if (ltag != null && ltag.compareToIgnoreCase("PRODUCTION") == 0
@@ -991,13 +1001,14 @@ public class DataUtils {
             return version;
         }
         return null;
+        */
     }
 
     public static Vector<String> getVersionListData(String codingSchemeName) {
 
         Vector<String> v = new Vector();
         try {
-            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // RemoteServerUtil rsu = RemoteServerUtil;
             // EVSApplicationService lbSvc = rsu.createLexBIGService();
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
@@ -1022,7 +1033,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return v;
     }
@@ -1149,6 +1160,7 @@ public class DataUtils {
             CodingScheme cs = getCodingScheme(codingScheme, versionOrTag);
             return getSupportedPropertyNames(cs);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
         return null;
     }
@@ -1286,7 +1298,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -1325,7 +1337,7 @@ public class DataUtils {
 
     public String[] getSortedKeys(HashMap map) {
         if (map == null)
-            return null;
+            return new String[0];
         Set keyset = map.keySet();
         String[] names = new String[keyset.size()];
         Iterator it = keyset.iterator();
@@ -1496,25 +1508,25 @@ public class DataUtils {
             }
 
             if (roleList.size() > 0) {
-                SortUtils.quickSort(roleList);
+                new SortUtils().quickSort(roleList);
             }
 
             if (associationList.size() > 0) {
                 // KLO, 052909
                 associationList =
                     removeRedundantRelationships(associationList, "RO");
-                SortUtils.quickSort(associationList);
+                new SortUtils().quickSort(associationList);
             }
 
             if (siblingList.size() > 0) {
-                SortUtils.quickSort(siblingList);
+                new SortUtils().quickSort(siblingList);
             }
             if (btList.size() > 0) {
-                SortUtils.quickSort(btList);
+                new SortUtils().quickSort(btList);
             }
 
             if (ntList.size() > 0) {
-                SortUtils.quickSort(ntList);
+                new SortUtils().quickSort(ntList);
             }
 
             map.put(TYPE_ROLE, roleList);
@@ -1531,7 +1543,7 @@ public class DataUtils {
                 superconceptList.add(pt + "|" + c.getEntityCode());
             }
 
-            SortUtils.quickSort(superconceptList);
+            new SortUtils().quickSort(superconceptList);
             map.put(TYPE_SUPERCONCEPT, superconceptList);
 
             Vector subconcept_vec = getSubconcepts(scheme, version, code);
@@ -1541,7 +1553,7 @@ public class DataUtils {
                 String pt = c.getEntityDescription().getContent();
                 subconceptList.add(pt + "|" + c.getEntityCode());
             }
-            SortUtils.quickSort(subconceptList);
+            new SortUtils().quickSort(subconceptList);
             map.put(TYPE_SUBCONCEPT, subconceptList);
 
         } catch (Exception ex) {
@@ -1765,7 +1777,7 @@ public class DataUtils {
         ResolvedConceptReferenceList roots =
             lbscm.getHierarchyRoots(scheme, csvt, hierarchyID);
         List list = resolvedConceptReferenceList2List(roots);
-        SortUtils.quickSort(list);
+        new SortUtils().quickSort(list);
         return list;
     }
 
@@ -1845,7 +1857,7 @@ public class DataUtils {
                 v.add(t);
             }
         }
-        SortUtils.quickSort(v);
+        new SortUtils().quickSort(v);
         return v;
     }
 
@@ -1863,7 +1875,7 @@ public class DataUtils {
                 _ncicbContactURL = default_url;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         _logger.debug("getNCICBContactURL returns " + _ncicbContactURL);
@@ -1878,7 +1890,7 @@ public class DataUtils {
                 properties
                     .getProperty(NCImBrowserProperties.TERMINOLOGY_SUBSET_DOWNLOAD_URL);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _terminologySubsetDownloadURL;
     }
@@ -1897,7 +1909,7 @@ public class DataUtils {
                 _ncimBuildInfo = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         _logger.debug("getNCIMBuildInfo returns " + _ncimBuildInfo);
@@ -1924,6 +1936,7 @@ public class DataUtils {
         return _ncimAppVersion;
     }
 
+    // Change application display version format to: NCIm Version: 201604 (Browser Version 2.7, using LexEVS 6.4.1)
     private String getApplicationVersionDisplay() {
         if (_ncimAppVersionDisplay != null)
             return _ncimAppVersionDisplay;
@@ -1936,7 +1949,10 @@ public class DataUtils {
                 return _ncimAppVersionDisplay = "";
             String version = getApplicationVersion();
             value = value.replace("$application.version", version);
-            return _ncimAppVersionDisplay = value;
+            String displayed_value = "NCIm Version: " + NCIM_VERSION + " " + value;
+            //return _ncimAppVersionDisplay = value;
+            return displayed_value;
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return _ncimAppVersionDisplay = "";
@@ -2005,10 +2021,11 @@ public class DataUtils {
                 _ncitURL = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _ncitURL;
     }
+
 
     public String getLexVersion() {
         if (_lexevs_version != null) {
@@ -2023,7 +2040,7 @@ public class DataUtils {
             	_lexevs_version = default_info;
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return _lexevs_version;
     }
@@ -2046,16 +2063,16 @@ public class DataUtils {
         for (int i = 0; i < sources.size(); i++) {
             String s = (String) sources.elementAt(i);
             Vector ret_vec = parseData(s, "|");
-            String name = (String) ret_vec.elementAt(0);
-            String type = (String) ret_vec.elementAt(1);
+            //String name = (String) ret_vec.elementAt(0);
+            //String type = (String) ret_vec.elementAt(1);
             String src = (String) ret_vec.elementAt(2);
-            String srccode = (String) ret_vec.elementAt(3);
+            //String srccode = (String) ret_vec.elementAt(3);
             if (!hset.contains(src)) {
                 hset.add(src);
                 source_vec.add(src);
             }
         }
-        SortUtils.quickSort(source_vec);
+        new SortUtils().quickSort(source_vec);
         return source_vec;
     }
 
@@ -2106,7 +2123,7 @@ public class DataUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        SortUtils.quickSort(v);
+        new SortUtils().quickSort(v);
         return v;
 
     }
@@ -2152,7 +2169,7 @@ public class DataUtils {
             hmap.put(key, s);
             key_vec.add(key);
         }
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -2171,7 +2188,7 @@ public class DataUtils {
         String vers, String code, String source, int resolveCodedEntryDepth) {
         HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -2321,7 +2338,7 @@ public class DataUtils {
         String vers, String code, String source, int resolveCodedEntryDepth) {
         HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) return null;
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -2396,6 +2413,7 @@ public class DataUtils {
                                     Debug
                                         .println("(*) getDirectionalLabel throws exceptions: "
                                             + directionalLabel);
+                                    e.printStackTrace();
                                 }
 
                                 //Vector v = new Vector();
@@ -2471,6 +2489,7 @@ public class DataUtils {
                                         Debug
                                             .println("(**) getDirectionalLabel throws exceptions: "
                                                 + directionalLabel);
+                                        e.printStackTrace();
                                     }
 
                                     //Vector v = new Vector();
@@ -2552,7 +2571,7 @@ public class DataUtils {
                     scheme, csvt) : lbscm.getAssociationReverseName(
                     associationName, scheme, csvt);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return assocLabel;
     }
@@ -2656,7 +2675,7 @@ public class DataUtils {
                     for (int i = 0; i < v.size(); i++) {
                         AssociatedConcept ac =
                             (AssociatedConcept) v.elementAt(i);
-                        EntityDescription ed = ac.getEntityDescription();
+                        //EntityDescription ed = ac.getEntityDescription();
                         Entity c = ac.getReferencedEntry();
                         if (!hset.contains(c.getEntityCode())) {
                             hset.add(c.getEntityCode());
@@ -2760,7 +2779,7 @@ public class DataUtils {
 
         u = removeRedundantRecords(u);
 
-        SortUtils.quickSort(u);
+        new SortUtils().quickSort(u);
         action = "initial sorting";
         delay = System.currentTimeMillis() - ms_sort_delay;
         Debug.println("Run time (ms) for " + action + " " + delay);
@@ -2853,7 +2872,7 @@ public class DataUtils {
             hmap.put(key, s);
             key_vec.add(key);
         }
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -2930,7 +2949,7 @@ public class DataUtils {
             key_vec.add(key);
         }
 
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         Vector v = new Vector();
         for (int i = 0; i < key_vec.size(); i++) {
             String s = (String) key_vec.elementAt(i);
@@ -3089,11 +3108,11 @@ public class DataUtils {
      * // Sort relationships by sort options (columns) if (sort_option == null)
      * { for (int k = 0; k < category_vec.size(); k++) { String category =
      * (String) category_vec.elementAt(k); w = (Vector) rel_hmap.get(category);
-     * SortUtils.quickSort(w); rel_hmap.put(category, w); } } else { for (int k
+     * new SortUtils().quickSort(w); rel_hmap.put(category, w); } } else { for (int k
      * = 0; k < category_vec.size(); k++) { String category = (String)
      * category_vec.elementAt(k); w = (Vector) rel_hmap.get(category); String
      * sortOption = (String) sort_option.elementAt(k); //
-     * SortUtils.quickSort(w); w = sortRelationshipData(w, sortOption);
+     * new SortUtils().quickSort(w); w = sortRelationshipData(w, sortOption);
      * rel_hmap.put(category, w); } } delay = System.currentTimeMillis() - ms;
      * Debug.println("Run time (ms) for " + action + " " + delay);
      * DBG.debugDetails(delay, action, "getAssociationTargetHashMap");
@@ -3149,7 +3168,7 @@ public class DataUtils {
             rel_hmap.put(category, hset);
         }
 
-        HashSet w = new HashSet();
+
         Map<String, List<RelationshipTabResults>> map = null;
         Map<String, List<RelationshipTabResults>> map2 = null;
 
@@ -3197,6 +3216,7 @@ public class DataUtils {
 
         // Categorize relationships into six categories and find association
         // source data
+        HashSet w = null;
         ms = System.currentTimeMillis();
         action =
             "Categorizing relationships into six categories; finding source data for each relationship";
@@ -3400,7 +3420,7 @@ public class DataUtils {
                 String category = (String) category_vec.elementAt(k);
                 w = (HashSet) rel_hmap.get(category);
                 Vector rel_v = hashSet2Vector(w);
-                SortUtils.quickSort(rel_v);
+                new SortUtils().quickSort(rel_v);
                 new_rel_hmap.put(category, rel_v);
             }
         } else {
@@ -3441,8 +3461,6 @@ public class DataUtils {
         Map<String, List<BySourceTabResults>> map2) {
         HashMap hmap = new HashMap();
         if (map != null) {
-
-
 			Iterator it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3453,10 +3471,10 @@ public class DataUtils {
 				//List<BySourceTabResults> relations = map.get(rel);
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
-						String rela = result.getRela();
+						//String rela = result.getRela();
 						String cui = result.getCui();
-						String source = result.getSource();
-						String name = result.getTerm();
+						//String source = result.getSource();
+						//String name = result.getTerm();
 						Vector v = null;
 						if (hmap.containsKey(cui)) {
 							v = (Vector) hmap.get(cui);
@@ -3484,10 +3502,10 @@ public class DataUtils {
 
 				if (rel.compareTo(INCOMPLETE) != 0) {
 					for (BySourceTabResults result : relations) {
-						String rela = result.getRela();
+						//String rela = result.getRela();
 						String cui = result.getCui();
-						String source = result.getSource();
-						String name = result.getTerm();
+						//String source = result.getSource();
+						//String name = result.getTerm();
 						Vector v = null;
 						if (hmap.containsKey(cui)) {
 							v = (Vector) hmap.get(cui);
@@ -3638,7 +3656,6 @@ public class DataUtils {
         ms_find_highest_rank_atom_delay = 0;
         String t = null;
         if (map != null) {
-
 			Iterator it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3753,7 +3770,6 @@ public class DataUtils {
 
         // *** do the same for map2
         if (map2 != null) {
-
 			Iterator it = map2.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry thisEntry = (Entry) it.next();
@@ -3881,7 +3897,7 @@ public class DataUtils {
         action = "Remove redundant relationships";
         for (int i = 0; i < w.size(); i++) {
             String s = (String) w.elementAt(i);
-            int j = i + 1;
+            //int j = i + 1;
 
             Vector<String> v = parseData(s, "|");
 
@@ -3920,7 +3936,7 @@ public class DataUtils {
 
         long ms_sort_delay = System.currentTimeMillis();
         u = removeRedundantRecords(u);
-        SortUtils.quickSort(u);
+        new SortUtils().quickSort(u);
         action = "Initial sorting";
         delay = System.currentTimeMillis() - ms_sort_delay;
         Debug.println("Run time (ms) for " + action + " " + delay);
@@ -3969,6 +3985,7 @@ public class DataUtils {
         return null;
     }
 
+/*
     public static String encodeTerm(String s) {
 		if (s == null) return null;
 		if (StringUtils.isAlphanumeric(s)) return s;
@@ -3984,6 +4001,10 @@ public class DataUtils {
         }
         return buf.toString();
     }
+*/
+    public static String encodeTerm(String s) {
+		return gov.nih.nci.evs.browser.utils.StringUtils.encodeTerm(s);
+	}
 
 
 //&#32;&lt;
@@ -4013,6 +4034,21 @@ public class DataUtils {
     }
 
 
+    public static String replaceDoubleQuotes(String term) {
+		if (term == null) return null;
+		if (term.length() == 0) return term;
+		StringBuffer buf = new StringBuffer();
+		for (int i=0; i<term.length(); i++) {
+			char c = term.charAt(i);
+			if (c != '"') {
+				buf.append(c);
+			} else {
+				buf.append("&quot;");
+			}
+		}
+		return buf.toString();
+	}
+
     // [#23318] Maintain a history of visited concepts
     public static String getVisitedConceptLink(Vector concept_vec) {
         StringBuffer strbuf = new StringBuffer();
@@ -4027,13 +4063,16 @@ public class DataUtils {
             String code = (String) w.elementAt(0);
             String name = (String) w.elementAt(1);
 
-            //name = encodeTerm(name);
             name = encode_term(name);
+            //[NCIM-257] Visited Concepts link fails on concepts with a label containing double quote characters.
+            name = replaceDoubleQuotes(name);
 
             strbuf.append("<li>");
+
             line =
                 "<a href=\\'/ncimbrowser/ConceptReport.jsp?dictionary="
                     + scheme + "&code=" + code + "\\'>" + name + "</a><br>";
+
             strbuf.append(line);
             strbuf.append("</li>");
         }
@@ -4058,7 +4097,7 @@ public class DataUtils {
 		MetaBrowserService mbs = null;
 		HashMap hmap = new HashMap();
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
@@ -4084,7 +4123,7 @@ public class DataUtils {
     public static HashMap getPropertyValuesForCodes(String scheme,
         String version, Vector codes, String propertyName) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
@@ -4172,6 +4211,7 @@ public class DataUtils {
                 _logger.error("* ERROR: cns.resolve throws exceptions.");
                 _logger.error("* " + e.getClass().getSimpleName() + ": "
                     + e.getMessage());
+               e.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -4213,6 +4253,7 @@ public class DataUtils {
             v = getMetadataValues(scheme, propertyName);
         } catch (Exception e) {
             _logger.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
         if (v == null || v.size() == 0)
@@ -4284,6 +4325,7 @@ public class DataUtils {
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
         } catch (Exception ex) {
+			ex.printStackTrace();
             return sibling_vec;
         }
 
@@ -4296,9 +4338,9 @@ public class DataUtils {
         for (int i = 0; i < v.size(); i++) {
             String t = (String) v.elementAt(i);
             Vector w = parseData(t);
-            String rel = (String) w.elementAt(0);
-            String rela = (String) w.elementAt(1);
-            String parent_name = (String) w.elementAt(2);
+            //String rel = (String) w.elementAt(0);
+            //String rela = (String) w.elementAt(1);
+            //String parent_name = (String) w.elementAt(2);
             String parent_code = (String) w.elementAt(3);
 
             Vector u =
@@ -4307,8 +4349,8 @@ public class DataUtils {
             for (int j = 0; j < u.size(); j++) {
                 String t2 = (String) u.elementAt(j);
                 Vector w2 = parseData(t2);
-                String sib_rel = (String) w2.elementAt(0);
-                String sib_rela = (String) w2.elementAt(1);
+                //String sib_rel = (String) w2.elementAt(0);
+                //String sib_rela = (String) w2.elementAt(1);
                 String sib_name = (String) w2.elementAt(2);
                 String sib_code = (String) w2.elementAt(3);
                 String sib_sab = (String) w2.elementAt(4);
@@ -4451,7 +4493,7 @@ public class DataUtils {
                         }
                     }
                 }
-                SortUtils.quickSort(v);
+                new SortUtils().quickSort(v);
             }
 
         } catch (Exception ex) {
@@ -4464,6 +4506,7 @@ public class DataUtils {
         return getPropertyValueHashMap(Constants.CODING_SCHEME_NAME, null, code);
     }
 
+/*
     private static String getSourceQualifierValue(Property p) {
         if (p == null)
             return null;
@@ -4481,6 +4524,7 @@ public class DataUtils {
         }
         return null;
     }
+*/
 
     private static String getPropertySource(Property p) {
         if (p == null)
@@ -4497,7 +4541,7 @@ public class DataUtils {
     public static HashMap getPropertyValueHashMap(String scheme,
         String version, String code) {
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.warn("lbSvc = null");
                 return null;
@@ -4549,6 +4593,7 @@ public class DataUtils {
             } catch (Exception e) {
                 _logger.error("* " + e.getClass().getSimpleName() + ": "
                     + e.getMessage());
+                e.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -4571,7 +4616,7 @@ public class DataUtils {
             if (source == null)
                 source = "None";
             prop_value = prop_value + "|" + source;
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4592,7 +4637,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4613,7 +4658,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4634,7 +4679,7 @@ public class DataUtils {
                 source = "None";
             prop_value = prop_value + "|" + source;
 
-            Vector u = new Vector();
+            Vector u = null;
             if (hmap.containsKey(prop_name)) {
                 u = (Vector) hmap.get(prop_name);
             } else {
@@ -4680,7 +4725,7 @@ public class DataUtils {
 				Iterator it = map.entrySet().iterator();
 				while (it.hasNext()) {
 					Entry thisEntry = (Entry) it.next();
-					String rel = (String) thisEntry.getKey();
+					//String rel = (String) thisEntry.getKey();
 					List<RelationshipTabResults> relations = (List<RelationshipTabResults>) thisEntry.getValue();
 
                 //for (String rel : map.keySet()) {
@@ -4698,7 +4743,7 @@ public class DataUtils {
             }
 
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return null;
     }
@@ -4740,14 +4785,14 @@ public class DataUtils {
             }
         }
 
-        key_vec = SortUtils.quickSort(key_vec);
+        key_vec = new SortUtils().quickSort(key_vec);
         for (int i = 0; i < key_vec.size(); i++) {
             String key = (String) key_vec.elementAt(i);
             String value = (String) hmap.get(key);
             v.add(value);
         }
 
-        // return SortUtils.quickSort(v);
+        // return new SortUtils().quickSort(v);
         return v;
     }
 

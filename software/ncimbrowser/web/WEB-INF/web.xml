@@ -4,14 +4,26 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <session-config>
-        <session-timeout>120</session-timeout>
-    </session-config>
+
+<session-config>
+  <session-timeout>120</session-timeout>
+  <cookie-config>
+    <http-only>true</http-only>
+    <secure>true</secure>
+  </cookie-config>
+</session-config>
+
 
     <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
         <param-value>server</param-value>
     </context-param>
+
+<!-- remove id attribute from view-state -->
+<context-param>
+    <param-name>com.sun.faces.enableViewStateIdRendering</param-name>
+    <param-value>false</param-value>
+</context-param>
 
     <context-param>
         <param-name>javax.faces.CONFIG_FILES</param-name>
@@ -28,6 +40,13 @@
     <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
+
+
+<error-page>
+<error-code>500</error-code>
+<location>/pages/server_error.html</location>
+</error-page>
+
 
     <servlet>
         <servlet-name>ajax</servlet-name>
@@ -83,12 +102,13 @@
 	<load-on-startup>1</load-on-startup>
 	</servlet>
 
+<!--
 	<servlet>
 	<servlet-name>NCIAudioCaptcha</servlet-name>
 	<servlet-class>gov.nih.nci.evs.browser.servlet.NCIAudioCaptchaServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+-->	
 	
 	<servlet>
 	<servlet-name>SimpleCaptcha</servlet-name>

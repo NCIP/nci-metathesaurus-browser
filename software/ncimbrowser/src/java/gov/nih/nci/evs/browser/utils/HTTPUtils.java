@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.regex.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.properties.*;
@@ -63,7 +63,7 @@ import gov.nih.nci.evs.browser.properties.*;
  *
  */
 public class HTTPUtils {
-    private static Logger _logger = Logger.getLogger(HTTPUtils.class);
+	private static Logger _logger = LogManager.getLogger(HTTPUtils.class);
     private static final String REFERER = "referer";
     private static final int MAX_FONT_SIZE = 29;
     private static final int MIN_FONT_SIZE = 22;
@@ -71,6 +71,96 @@ public class HTTPUtils {
 
     //public  static final int ABS_MAX_STR_LEN = 40;
     public static final int ABS_MAX_STR_LEN = 100;
+
+    private static final String[] HTTP_REQUEST_PARAMETER_NAMES = {
+       "action",
+       "adv_matchText",
+       "adv_search_algorithm",
+       "adv_search_source",
+       "adv_search_type",
+       "algorithm",
+       "answer",
+       "btn",
+       "captcha_option",
+       "checkmultiplicity",
+       "code",
+       "dictionary",
+       "emailaddress",
+       "key",
+       "id",
+       "matchText",
+       "message",
+       "ontology_display_name",
+       "ontology_node_id",
+       "ontology_source",
+       "ontology_sab",
+       "opt",
+       "page_number",
+       "prop",
+       "ranking",
+       "refresh",
+       "rel",
+       "rel_search_association",
+       "rel_search_rela",
+       "rela",
+       "sab",
+       "scheme",
+       "searchTarget",
+       "searchTerm",
+       "searchTerm:search.x",
+       "searchTerm:search.y",
+       "searchTerm:source",
+       "searchText",
+       "selectProperty",
+       "selectPropertyType",
+       "selectSearchOption",
+       "sort",
+       "sort0","sort1","sort2","sort3","sort4","sort5",
+       "sortBy",
+       "sortBy2",
+       "source",
+       "sourcecode",
+       "subject",
+       "text",
+       "type",
+       "advancedSearchForm",
+       "advancedSearchForm:adv_search.x",
+       "advancedSearchForm:adv_search.y",
+       "javax.faces.ViewState",
+       "referer",
+       "version",
+       "cartAction",
+       "cartAction.x",
+       "cartAction.y",
+       "cartAction1.x",
+       "cartAction1.y",
+       "cartAction2.x",
+       "cartAction2.y",
+       "cartAction3.x",
+       "cartAction3.y",
+       "cartAction4.x",
+       "cartAction4.y",
+       "cartAction5.x",
+       "cartAction5.y",
+       "ans",
+       "addtocart"
+    };
+
+    private static final List HTTP_REQUEST_PARAMETER_NAME_LIST = Collections.unmodifiableList(Arrays.asList(HTTP_REQUEST_PARAMETER_NAMES));
+
+
+	private static final String[] adv_search_algorithm_values = new String[] {"contains", "exactMatch", "lucene", "startsWith"};
+	private static final String[] algorithm_values = new String[] {"contains", "exactMatch", "startsWith"};
+	private static final String[] direction_values = new String[] {"source", "target"};
+	private static final String[] searchTarget_values = new String[] {"codes", "names", "properties", "relationships"};
+	private static final String[] selectSearchOption_values = new String[] {"Code", "Name", "Property", "Relationship"};
+
+	private static final List adv_search_algorithm_value_list = Collections.unmodifiableList(Arrays.asList(adv_search_algorithm_values));
+	private static final List algorithm_value_list = Collections.unmodifiableList(Arrays.asList(algorithm_values));
+	private static final List direction_value_list = Collections.unmodifiableList(Arrays.asList(direction_values));
+	private static final List searchTarget_value_list = Collections.unmodifiableList(Arrays.asList(searchTarget_values));
+	private static final List selectSearchOption_value_list = Collections.unmodifiableList(Arrays.asList(selectSearchOption_values));
+
 
     /**
      * Remove potentially bad XSS syntax
@@ -101,7 +191,7 @@ public class HTTPUtils {
     }
 */
 
-    public void HTTPUtils() {
+    public HTTPUtils() {
 
 	}
 
@@ -252,7 +342,7 @@ public class HTTPUtils {
 
             HttpSession session = request.getSession();
             Enumeration<?> enumeration =
-                SortUtils.sort(session.getAttributeNames());
+                new SortUtils().sort(session.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -276,7 +366,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getAttributeNames());
+                new SortUtils().sort(request.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -300,7 +390,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -308,7 +398,7 @@ public class HTTPUtils {
                 //Object value = cleanXSS((String) request.getParameter(name));
                 String value = (String) request.getParameter(name);
                 //_logger.debug("  " + i + ") " + name + ": " + value);
-                System.out.println("name: " + name + " value: " + value.toString());
+                System.out.println("name: " + name + " value: " + value);
 
                 ++i;
             }
@@ -325,7 +415,7 @@ public class HTTPUtils {
 
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -333,7 +423,7 @@ public class HTTPUtils {
                 //Object value = cleanXSS((String) request.getParameter(name));
                 String value = (String) request.getParameter(name);
                 //_logger.debug("  " + i + ") " + name + ": " + value);
-                System.out.println("name: " + name + " value: " + value.toString());
+                System.out.println("name: " + name + " value: " + value);
 
                 ++i;
             }
@@ -465,87 +555,188 @@ public class HTTPUtils {
 		return "WARNING: Invalid parameter name and/or value encountered -- please check your URL and try again. ";
 	}
 
+/*
 	public static boolean validateRequestParameters(HttpServletRequest request) {
-		List list = HTTPParameterConstants.HTTP_REQUEST_PARAMETER_NAME_LIST;
+		List list = HTTP_REQUEST_PARAMETER_NAME_LIST;
 		String value = null;
         try {
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                new SortUtils().sort(request.getParameterNames());
             while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
-			    if (name.compareTo("view") == 0) {
-					value = (String) request.getParameter(name);
-					if (value != null) {
-						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
-						if (!isInteger) {
-							System.out.println("Integer value violation???");
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+				if (!name.startsWith("code_")) {
+
+					if (name.compareTo("view") == 0) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???");
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
 					}
-				}
 
-                Boolean isDynamic = isDynamicId(name);
-                Boolean issearchFormParameter = isSearchFormParameter(name);
+					Boolean isDynamic = isDynamicId(name);
+					Boolean issearchFormParameter = isSearchFormParameter(name);
 
-                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.TRUE)) {
-					value = (String) request.getParameter(name);
-					if (value != null) {
-						boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
-						if (!isInteger) {
-							System.out.println("Integer value violation???" + value);
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
-				    }
-				}
-
-                if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
-					if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
-						if (name.endsWith("value=")) return true;
-                        if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
-							System.out.println("WARNING: parameter name: " + name + " is not in the list.");
-							String error_msg = createErrorMessage(1, name);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
-						}
+					if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.TRUE)) {
 						value = (String) request.getParameter(name);
-						Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???" + value);
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
+					}
 
-						bool_obj = containsPercentSign(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+					if (issearchFormParameter != null && issearchFormParameter.equals(Boolean.FALSE)) {
+						if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+						//if (isDynamic.equals(Boolean.FALSE)) {
+							if (name.endsWith("value=")) return true;
+							if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
+								System.out.println("WARNING: parameter name: " + name + " is not in the list.");
+								String error_msg = createErrorMessage(1, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+							value = (String) request.getParameter(name);
+							Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsPercentSign(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = validateValueSetCheckBox(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsHazardCharacters(value);
+							// Cross-Site Scripting:
+							if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
+								String error_msg = createErrorMessage(2, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = checkLimitedLengthCondition(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
+					}
+			    }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+	}
+*/
 
-						bool_obj = validateValueSetCheckBox(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+	public static boolean validateRequestParameters(HttpServletRequest request) {
+		List list = HTTP_REQUEST_PARAMETER_NAME_LIST;
+		String value = null;
+        try {
+            Enumeration<?> enumeration =
+                new SortUtils().sort(request.getParameterNames());
+            while (enumeration.hasMoreElements()) {
+				String name = (String) enumeration.nextElement();
+				if (!name.startsWith("code_")) {
+					if (name.compareTo("view") == 0) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???");
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
+					}
 
-						bool_obj = containsHazardCharacters(value);
-						// Cross-Site Scripting:
-						if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
-							String error_msg = createErrorMessage(2, name);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+					Boolean isDynamic = isDynamicId(name);
+					Boolean issearchFormParameter = isSearchFormParameter(name);
+
+					if (issearchFormParameter.equals(Boolean.TRUE)) {
+						value = (String) request.getParameter(name);
+						if (value != null) {
+							boolean isInteger = gov.nih.nci.evs.browser.utils.StringUtils.isInteger(value);
+							if (!isInteger) {
+								System.out.println("Integer value violation???" + value);
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
+					}
 
-						bool_obj = checkLimitedLengthCondition(name, value);
-						if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
-							String error_msg = createErrorMessage(name, value);
-							request.getSession().setAttribute("error_msg", error_msg);
-							return false;
+					if (issearchFormParameter.equals(Boolean.FALSE)) {
+						if (isDynamic != null && isDynamic.equals(Boolean.FALSE)) {
+						//if (isDynamic.equals(Boolean.FALSE)) {
+							if (name.endsWith("value=")) return true;
+							if (!name.startsWith("TVS_") && !name.startsWith("http:") && !list.contains(name)) {
+								System.out.println("WARNING: parameter name: " + name + " is not in the list.");
+								String error_msg = createErrorMessage(1, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+							value = (String) request.getParameter(name);
+							Boolean bool_obj = validateRadioButtonNameAndValue(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsPercentSign(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = validateValueSetCheckBox(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = containsHazardCharacters(value);
+							// Cross-Site Scripting:
+							if (bool_obj != null && bool_obj.equals(Boolean.TRUE)) {
+								String error_msg = createErrorMessage(2, name);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
+
+							bool_obj = checkLimitedLengthCondition(name, value);
+							if (bool_obj != null && bool_obj.equals(Boolean.FALSE)) {
+								String error_msg = createErrorMessage(name, value);
+								request.getSession().setAttribute("error_msg", error_msg);
+								return false;
+							}
 						}
 					}
 			    }
@@ -557,8 +748,46 @@ public class HTTPUtils {
         return false;
 	}
 
+	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
+		//if (name == null || value == null || value.length() == 0) return null;
+        if (name == null || value == null || value.length() == 0) return Boolean.TRUE;
 
+		if (name.compareTo("adv_search_algorithm") == 0) {
+			if (adv_search_algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("algorithm") == 0) {
+			if (algorithm_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("direction") == 0) {
+			if (direction_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
 
+		} else if (name.compareTo("searchTarget") == 0) {
+			if (searchTarget_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else if (name.compareTo("selectSearchOption") == 0) {
+			if (selectSearchOption_value_list.contains(value)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		}
+		return Boolean.TRUE;
+	}
+
+/*
 	public static Boolean validateRadioButtonNameAndValue(String name, String value) {
 		if (name == null || value == null || value.length() == 0) return null;
 
@@ -597,22 +826,23 @@ public class HTTPUtils {
 		}
 		return null;
 	}
-
+*/
     public static Boolean containsPercentSign(String name, String value) {
-		if (name == null || value == null) return null;
+		//if (name == null || value == null) return null;
+		if (name == null || value == null) return Boolean.TRUE;
 		if (!name.endsWith(".x")
 		    && !name.endsWith(".y")
 		    && name.compareTo("javax.faces.ViewState") != 0) {
-		    return null;
+		    return Boolean.TRUE;
 		}
 		if (value.indexOf("%") == -1) return Boolean.TRUE;
 		return Boolean.FALSE;
 	}
 
     public static Boolean validateValueSetCheckBox(String name, String value) {
-		if (name == null || value == null) return null;
+		if (name == null || value == null) return Boolean.TRUE;
 		if (!name.startsWith("TVS_") && !name.startsWith("http:")) {
-		    return null;
+		    return Boolean.TRUE;
 		}
 
 		if (isValueSetURI(name)) {
@@ -629,14 +859,15 @@ public class HTTPUtils {
 
     public static Boolean containsHazardCharacters(String value) {
 		if (value == null) return Boolean.FALSE;
-		String s = decode(value).toUpperCase();
+		String s = decode(value).toUpperCase(Locale.ENGLISH);
 		s = s.trim();
 		//SELECT FROM WHERE
 		if (s.indexOf("SELECT") != -1 && s.indexOf("FROM") != -1 && s.indexOf("WHERE") != -1) {
 			return Boolean.TRUE;
 		}
-		for (int i=0; i<Constants.HAZARD_CHARS.length; i++) {
-			String t = Constants.HAZARD_CHARS[i];
+		String[] hazard_chars = Constants.get_HAZARD_CHARS();
+		for (int i=0; i<hazard_chars.length; i++) {
+			String t = hazard_chars[i];
 			if (s.indexOf(t) != -1) {
 				return Boolean.TRUE;
 			}
@@ -645,7 +876,7 @@ public class HTTPUtils {
 	}
 
 	public static Boolean isDynamicId(String id) {
-		if (id == null) return null;
+		if (id == null) return Boolean.FALSE;
 		if (id.startsWith("j_id_jsp_")) {
 			return Boolean.TRUE;
 		}
@@ -653,8 +884,8 @@ public class HTTPUtils {
 	}
 
 	public static Boolean isSearchFormParameter(String name) {
-		if (name == null) return null;
-		String nm = name.toLowerCase();
+		if (name == null) return Boolean.FALSE;
+		String nm = name.toLowerCase(Locale.ENGLISH);
 		if (nm.endsWith("search.x") || nm.endsWith("search.y")) {
 			return Boolean.TRUE;
 		}
@@ -732,7 +963,7 @@ public class HTTPUtils {
 
 
 	public static Boolean checkLimitedLengthCondition(String name, String value) {
-		if (name == null) return null;
+		if (name == null) return Boolean.TRUE;
 		if (value == null) return Boolean.TRUE;
 		if (name.compareTo("matchText") != 0 && name.compareTo("message") != 0 && name.compareTo("referer") != 0) {
 			if (value.length() > ABS_MAX_STR_LEN) {

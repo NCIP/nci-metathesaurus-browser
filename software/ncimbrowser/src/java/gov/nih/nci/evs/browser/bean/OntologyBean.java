@@ -12,7 +12,7 @@ import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
 
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -57,7 +57,7 @@ import org.apache.log4j.*;
  */
 
 public class OntologyBean {
-    private static Logger _logger = Logger.getLogger(OntologyBean.class);
+	private static Logger _logger = LogManager.getLogger(OntologyBean.class);
     private static List _rela_list = null;
     private static List _association_name_list = null;
     private static List _property_name_list = null;
@@ -106,7 +106,7 @@ public class OntologyBean {
 
 
     static {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         _association_name_vec = getSupportedAssociationNames(cs);
 	}
 
@@ -125,7 +125,7 @@ public class OntologyBean {
 
     static {
         _association_name_list = new ArrayList();
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         if (_association_name_vec == null) {
             _association_name_vec = getSupportedAssociationNames(cs);
         }
@@ -157,7 +157,7 @@ public class OntologyBean {
         _property_name_list = new ArrayList();
         _property_name_list.add(new SelectItem("ALL", "ALL"));
 
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         Vector<String> properties = getSupportedPropertyNames(cs);
         for (int k = 0; k < properties.size(); k++) {
             String value = (String) properties.elementAt(k);
@@ -186,7 +186,7 @@ public class OntologyBean {
 
     static {
         _source_list = new ArrayList();
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         _source_list.add(new SelectItem("ALL", "ALL"));
 
         Vector<String> sources = getSupportedSources(cs);
@@ -255,12 +255,13 @@ public class OntologyBean {
     public static Vector getRELAs(String scheme) {
         Vector v = new Vector();
         HashSet hset = new HashSet();
-        LexBIGService lbs = RemoteServerUtil.createLexBIGService(false);
+        //LexBIGService lbs = RemoteServerUtil.createLexBIGService(false);
+        LexBIGService lbs = RemoteServerUtil.createLexBIGService();
         LexBIGServiceMetadata lbsm = null;
         try {
             lbsm = lbs.getServiceMetadata();
 
-            CodingScheme cs = getCodingScheme(scheme, null);
+            CodingScheme cs = getCodingScheme(scheme, DataUtils.NCIM_VERSION);
             String uri = cs.getCodingSchemeURI();
             String ver = cs.getRepresentsVersion();
             lbsm =
@@ -296,7 +297,7 @@ public class OntologyBean {
             ex.printStackTrace();
         }
         hset.clear();
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     // /////////////////////
@@ -310,11 +311,12 @@ public class OntologyBean {
             versionOrTag.setVersion(version);
         CodingScheme cs = null;
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             try {
                 cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
             } catch (Exception ex2) {
-                cs = null;
+                //cs = null;
+                ex2.printStackTrace();
             }
 
         } catch (Exception ex) {
@@ -323,6 +325,7 @@ public class OntologyBean {
         return cs;
     }
 
+/*
     private static Vector getSupportedEntityType(CodingScheme cs) {
         if (cs == null)
             return null;
@@ -336,7 +339,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     private static Vector getSupportedPropertyQualifier(CodingScheme cs) {
@@ -352,11 +355,11 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
-
+*/
     public static Vector getSupportedSources() {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         return getSupportedSources(cs);
     }
 
@@ -372,7 +375,7 @@ public class OntologyBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     private static Vector getSupportedPropertyTypes() {
@@ -381,7 +384,7 @@ public class OntologyBean {
         v.add("DEFINITION");
         v.add("COMMENT");
         v.add("GENERIC");
-        return v;// SortUtils.quickSort(v);
+        return v;// new SortUtils().quickSort(v);
     }
 
     public static Vector<SupportedProperty> getSupportedProperties(
@@ -395,24 +398,40 @@ public class OntologyBean {
             SupportedProperty sp = (SupportedProperty) properties[i];
             v.add(sp);
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
+
+	public static boolean isAnnotationPropertyPCode(String t) {
+		if (t == null) return false;
+		if (t.length() <= 1) return false;
+		if (!t.startsWith("P")) return false;
+		for (int i=1; i<t.length(); i++) {
+			char c = t.charAt(i);
+			if (!Character.isDigit(c)) return false;
+		}
+		return true;
+	}
 
     public static Vector<String> getSupportedPropertyNames(CodingScheme cs) {
         Vector w = getSupportedProperties(cs);
-        if (w == null)
-            return null;
-
+		if (w == null) return null;
         Vector<String> v = new Vector<String>();
-        for (int i = 0; i < w.size(); i++) {
-            SupportedProperty sp = (SupportedProperty) w.elementAt(i);
-            v.add(sp.getLocalId());
-        }
-        return SortUtils.quickSort(v);
-    }
+		for (int i=0; i<w.size(); i++)
+		{
+		     SupportedProperty sp = (SupportedProperty) w.elementAt(i);
+		     if (sp.getUri() != null && isAnnotationPropertyPCode(sp.getLocalId())) {
+				 if (!sp.getUri().endsWith(sp.getLocalId())) {
+					 v.add(sp.getLocalId());
+				 }
+			 } else {
+				 v.add(sp.getLocalId());
+			 }
+		}
+        return new SortUtils().quickSort(v);
+	}
 
     public static Vector<String> getSupportedPropertyNames() {
-        CodingScheme cs = getCodingScheme(_codingSchemeName, null);
+        CodingScheme cs = getCodingScheme(_codingSchemeName, DataUtils.NCIM_VERSION);
         return getSupportedPropertyNames(cs);
     }
 
@@ -432,7 +451,7 @@ public class OntologyBean {
         } catch (Exception e) {
             return null;
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     public static Vector<String> getSupportedAssociationNames() {
@@ -450,7 +469,7 @@ public class OntologyBean {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
             v.add(sa.getLocalId());
         }
-        return SortUtils.quickSort(v);
+        return new SortUtils().quickSort(v);
     }
 
     public static Vector getAssociationCodesByNames(String codingScheme,
@@ -462,7 +481,7 @@ public class OntologyBean {
         Vector w = new Vector();
 
         try {
-            LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             lbscm =
                 (LexBIGServiceConvenienceMethodsImpl) lbSvc
                     .getGenericExtension("LexBIGServiceConvenienceMethods");
@@ -477,12 +496,13 @@ public class OntologyBean {
                     w.add(name);
                 } catch (Exception e) {
                     w.add("<NOT ASSIGNED>");
+                    e.printStackTrace();
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return SortUtils.quickSort(w);
+        return new SortUtils().quickSort(w);
     }
 
     public static void dumpVector(String label, Vector v) {

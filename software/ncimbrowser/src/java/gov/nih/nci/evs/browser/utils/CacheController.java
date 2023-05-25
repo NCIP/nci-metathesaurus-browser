@@ -13,7 +13,7 @@ import org.LexGrid.lexevs.metabrowser.*;
 import org.LexGrid.lexevs.metabrowser.model.*;
 import org.LexGrid.lexevs.metabrowser.model.MetaTreeNode.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -66,7 +66,7 @@ import org.apache.log4j.*;
  */
 
 public class CacheController {
-    private static Logger _logger = Logger.getLogger(CacheController.class);
+	private static Logger _logger = LogManager.getLogger(CacheController.class);
     public static final String ONTOLOGY_ADMINISTRATORS =
         "ontology_administrators";
     public static final String ONTOLOGY_FILE = "ontology_file";
@@ -217,13 +217,13 @@ public class CacheController {
                 new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version,
                     code, NCI_SOURCE, null);
 
-            nodeArray = HashMap2JSONArray(map);
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+					ex.printStackTrace();
                 }
             }
         }
@@ -238,7 +238,7 @@ public class CacheController {
         map =
             new MetaTreeUtils(lbSvc).getRemainingSubconcepts(scheme, version, code,
                 NCI_SOURCE, subconcept_code);
-        nodeArray = HashMap2JSONArray(map);
+        nodeArray = hashMap2JSONArray(map);
         return nodeArray;
     }
 
@@ -248,6 +248,7 @@ public class CacheController {
 
     public JSONArray getRootConcepts(String scheme, String version,
         boolean fromCache) {
+
         List list = null;// new ArrayList();
         String key = scheme + "$" + version + "$root";
         JSONArray nodeArray = null;
@@ -274,7 +275,15 @@ public class CacheController {
                 list =
                     (new MetaTreeUtils(lbSvc)).getSourceHierarchyRoots(scheme, csvt,
                         NCI_SOURCE);
-                // SortUtils.quickSort(list);
+                // new SortUtils().quickSort(list);
+
+/*
+                if (list == null) {
+					System.out.println("getSourceHierarchyRoots returns null???");
+				} else {
+					System.out.println("getSourceHierarchyRoots returns " + list.size() + " roots.");
+				}
+*/
 
                 nodeArray = list2JSONArray(list);
 
@@ -310,13 +319,13 @@ public class CacheController {
         }
         if (nodeArray == null) {
             map = getChildrenExt(code, sab);
-            nodeArray = HashMap2JSONArray(map);
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
             }
         }
@@ -480,6 +489,7 @@ public class CacheController {
             return t1 + t0 + t2;
         } catch (Exception ex) {
             // to be modified
+            ex.printStackTrace();
             return "[]";
         }
     }
@@ -593,9 +603,9 @@ public class CacheController {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-        v = SortUtils.quickSort(v);
+        v = new SortUtils().quickSort(v);
         for (int i = 0; i < v.size(); i++) {
             TreeItem childItem = (TreeItem) v.elementAt(i);
             ti.addChild(childNavText, childItem);
@@ -664,7 +674,7 @@ public class CacheController {
         if (hmap == null)
             return null;
         JSONArray nodeArray = null;
-        nodeArray = HashMap2JSONArray(hmap);
+        nodeArray = hashMap2JSONArray(hmap);
         return nodeArray;
     }
 /*
@@ -728,7 +738,7 @@ public class CacheController {
             }
 
             if (v.size() > 0) {
-                v = SortUtils.quickSort(v);
+                v = new SortUtils().quickSort(v);
                 for (int i = 0; i < v.size(); i++) {
                     TreeItem childItem = (TreeItem) v.elementAt(i);
                     ti.addChild(childNavText, childItem);
@@ -752,11 +762,11 @@ public class CacheController {
 */
 
     public HashMap getRemainingSubconcepts(String CUI, String SAB, int records_to_skip) {
-        HashSet hset = new HashSet();
+        //HashSet hset = new HashSet();
         HashMap hmap = new HashMap();
         TreeItem ti = null;
         int max = 100;//NCImBrowserProperties.getSubconceptPageSize();
-        Vector v = new Vector();
+        //Vector v = new Vector();
         String childNavText = "CHD";
         boolean hasMoreChildren = false;
         int knt0 = 0;
@@ -768,6 +778,8 @@ public class CacheController {
                     .getGenericExtension("metabrowser-extension");
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
             MetaTreeNode focus = tree.getCurrentFocus();
+
+            ti = new TreeItem(focus.getCui(), focus.getName());
 
             Iterator iterator = focus.getChildren();
             if (iterator == null) {
@@ -786,9 +798,9 @@ public class CacheController {
 				}
 				childNodes.add(childItem);
 			}
-			childNodes = SortUtils.quickSort(childNodes);
+			childNodes = new SortUtils().quickSort(childNodes);
 
-            ti = new TreeItem(focus.getCui(), focus.getName());
+            //ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
                 ti._expandable = false;
                 hmap.put(ti._code, ti);
@@ -884,7 +896,7 @@ public class CacheController {
             }
 
             if (v.size() > 0) {
-                v = SortUtils.quickSort(v);
+                v = new SortUtils().quickSort(v);
                 for (int i = 0; i < v.size(); i++) {
                     TreeItem childItem = (TreeItem) v.elementAt(i);
                     ti.addChild(childNavText, childItem);
@@ -931,8 +943,8 @@ public class CacheController {
                         code = node.getEntityCode();
                         name = node.getEntityDescription().getContent();
                     }
-                    ResolvedConceptReference node =
-                        (ResolvedConceptReference) list.get(i);
+                    //ResolvedConceptReference node =
+                    //    (ResolvedConceptReference) list.get(i);
                     int childCount = 1;
                     try {
                         JSONObject nodeObject = new JSONObject();
@@ -949,12 +961,12 @@ public class CacheController {
             }
 
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return nodesArray;
     }
 
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         JSONArray nodesArray = null;
         try {
             nodesArray = new JSONArray();
@@ -970,7 +982,7 @@ public class CacheController {
         return nodesArray;
 	}
 /*
-    private JSONArray HashMap2JSONArray(HashMap hmap) {
+    private JSONArray hashMap2JSONArray(HashMap hmap) {
         //JSONObject json = new JSONObject();
         JSONArray nodesArray = null;
         try {
@@ -982,7 +994,7 @@ public class CacheController {
             for (String association : ti._assocToChildMap.keySet()) {
                 List<TreeItem> children = ti._assocToChildMap.get(association);
 
-                SortUtils.quickSort(children);
+                new SortUtils().quickSort(children);
                 TreeItem firstChildren = (TreeItem) children.get(0);
                 if (firstChildren._text.startsWith("...")) {
 					firstChildren = children.remove(0);
@@ -1141,7 +1153,7 @@ public class CacheController {
             List<TreeItem> children = ti._assocToChildMap.get(association);
 
             // KLO 020410
-            SortUtils.quickSort(children);
+            new SortUtils().quickSort(children);
 
             int cut_off = 200;
             int m = cut_off / 2;
@@ -1258,7 +1270,18 @@ public class CacheController {
             MetaBrowserService mbs =
                 (MetaBrowserService) lbs
                     .getGenericExtension("metabrowser-extension");
+
+            if (mbs == null) {
+				System.out.println("getGenericExtension returns NULL???");
+				return null;
+			}
+
             MetaTree tree = mbs.getMetaNeighborhood(CUI, SAB);
+            if (tree == null) {
+				System.out.println("getMetaNeighborhood returns NULL??????");
+				return null;
+			}
+
             MetaTreeNode focus = tree.getCurrentFocus();
             ti = new TreeItem(focus.getCui(), focus.getName());
             if (isLeaf(focus)) {
@@ -1268,7 +1291,6 @@ public class CacheController {
             } else {
                 ti._expandable = true;
             }
-
             Iterator iterator = focus.getChildren();
             if (iterator == null) {
                 hmap.put(ti._code, ti);
@@ -1290,14 +1312,18 @@ public class CacheController {
                     hset.add(child.getCui());
                 }
             }
-        } catch (Exception e) {
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        v = SortUtils.quickSort(v);
-        for (int i = 0; i < v.size(); i++) {
-            TreeItem childItem = (TreeItem) v.elementAt(i);
-            ti.addChild(childNavText, childItem);
-        }
+
+        if (v != null) {
+			v = new SortUtils().quickSort(v);
+			for (int i = 0; i < v.size(); i++) {
+				TreeItem childItem = (TreeItem) v.elementAt(i);
+				ti.addChild(childNavText, childItem);
+			}
+	    }
         if (ti != null) {
         	hmap.put(ti._code, ti);
 		}
@@ -1306,6 +1332,12 @@ public class CacheController {
 
     public JSONArray getSourceRoots(String scheme, String version, String sab,
         boolean fromCache) {
+
+System.out.println("getSourceRoots scheme " + scheme);
+System.out.println("getSourceRoots version " + version);
+System.out.println("getSourceRoots sab " + sab);
+
+
         HashMap map = null;
         String key = scheme + "$" + version + "$" + sab;
         JSONArray nodeArray = null;
@@ -1321,17 +1353,34 @@ public class CacheController {
 
             ResolvedConceptReference src_root =
                 util.getRootInSRC(scheme, version, sab);
+
+if (src_root == null) {
+	System.out.println("SourceTreeUtils getRootInSRC returns src_root == null");
+}
+
+
             if (src_root == null)
                 return null;
 
+System.out.println(sab);
+System.out.println(src_root.getConceptCode());
+
+
             map = getSourceRoots(src_root.getConceptCode(), sab);
-            nodeArray = HashMap2JSONArray(map);
+
+            if (map == null) {
+				System.out.println("getSourceRoots returns NULL??? " );
+
+			}
+
+
+            nodeArray = hashMap2JSONArray(map);
             if (fromCache) {
                 try {
                     Element element = new Element(key, nodeArray);
                     _cache.put(element);
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
             }
         }

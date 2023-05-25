@@ -7,7 +7,7 @@ import javax.faces.event.*;
 import javax.faces.model.*;
 import javax.servlet.http.*;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import gov.nih.nci.evs.browser.utils.*;
 
 /**
@@ -68,7 +68,7 @@ import gov.nih.nci.evs.browser.utils.*;
  */
 
 public class SearchStatusBean extends Object {
-    private static Logger _logger = Logger.getLogger(SearchStatusBean.class);
+	private static Logger _logger = LogManager.getLogger(SearchStatusBean.class);
 
     public SearchStatusBean() {
     }
@@ -397,18 +397,19 @@ public class SearchStatusBean extends Object {
 
     private String _searchType;
 
+/*
     private String mapSearchTypeToSimpleSearch(String searchType) {
-        if (searchType.toLowerCase().startsWith("relationship"))
+        if (searchType.toLowerCase(Locale.ENGLISH).startsWith("relationship"))
             return "relationships";
-        else if (searchType.toLowerCase().startsWith("propert"))
+        else if (searchType.toLowerCase(Locale.ENGLISH).startsWith("propert"))
             return "properties";
 
-        else if (searchType.toLowerCase().startsWith("code"))
+        else if (searchType.toLowerCase(Locale.ENGLISH).startsWith("code"))
             return "codes";
 
         else return "names";
     }
-
+*/
     public void setSearchType(String searchType, boolean updateUserSessionBean) {
         _searchType = searchType;
 
@@ -426,9 +427,9 @@ public class SearchStatusBean extends Object {
     }
 
     private String mapSearchTypeToAdvanceSearch(String searchType) {
-        if (searchType.toLowerCase().startsWith("relationship"))
+        if (searchType.toLowerCase(Locale.ENGLISH).startsWith("relationship"))
             return "Relationship";
-        else if ((searchType.toLowerCase().startsWith("propert")))
+        else if ((searchType.toLowerCase(Locale.ENGLISH).startsWith("propert")))
             return "Property";
         else return "Name";
     }

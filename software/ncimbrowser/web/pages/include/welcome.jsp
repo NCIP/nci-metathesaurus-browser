@@ -16,32 +16,34 @@
 %>
 <div class="textbody">
 <!--
-  <table border="0" width="700px">
+  <table border="0" width="700px" role='presentation'>
  -->
   <table class="datatable_960" border="0" width="100%">
   <tr>
     <td><div class="texttitle-blue">Welcome</div></td>
+    <!--
     <td><div class="texttitle-blue-rightJust">Version: <%= version %></div></td>
+    -->
   </tr></table>
   <hr/>
-  <table border="0">
+  <table border="0" role='presentation'>
     <tr>
-      <td class="textbody">
+      <td class="textbody" valign="top" width="70%">
         <%=html_compatable_description_value%>
       </td>
-      <td valign="top">
-        <table border="0">
+      <td valign="top" width="30%">
+        <table border="0" role='presentation'>
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="http://evs.nci.nih.gov/" target="_blank" alt="NCI Enterprise Vocabulary Services">
+              <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="NCI Enterprise Vocabulary Services">
                 <img src="<%=basePath%>/images/EVSTile.gif"
                   width="77" height="38px" alt="EVS" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="http://evs.nci.nih.gov/" target="_blank" alt="NCI Enterprise Vocabulary Services">
+              <a href="https://evs.nci.nih.gov/" target="_blank" rel="noopener"  alt="NCI Enterprise Vocabulary Services">
                 NCI Enterprise Vocabulary Services</a>:
               Terminology resources and services for NCI and the biomedical community.
             </td>
@@ -49,14 +51,14 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">
+              <a href="<%=ncit_url%>" target="_blank" rel="noopener"  alt="NCI Thesaurus">
                 <img src="<%=basePath%>/images/NCItTile.jpg"
                   width="77" height="38px" alt="NCIt" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="<%=ncit_url%>" target="_blank" alt="NCI Thesaurus">
+              <a href="<%=ncit_url%>" target="_blank" rel="noopener"  alt="NCI Thesaurus">
                 NCI Thesaurus</a>:
                 Reference terminology for NCI, NCI Metathesaurus and NCI informatics infrastructure.
             </td>
@@ -64,14 +66,14 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="<%=ncit_url%>start.jsf" target="_blank" alt="NCI Term Browser">
+              <a href="<%=ncit_url%>start.jsf" target="_blank" rel="noopener"  alt="NCI Term Browser">
                 <img src="<%=basePath%>/images/EVSTermsBrowserTile.gif"
                   width="77" height="38px" alt="NCI Term Browser" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="<%=ncit_url%>start.jsf" target="_blank" alt="Bio Portal">
+              <a href="<%=ncit_url%>start.jsf" target="_blank" rel="noopener"  alt="Bio Portal">
                 NCI Term Browser</a>:
                 NCI and other terminologies in an integrated environment.
             </td>
@@ -79,14 +81,14 @@
           <tr valign="top">
             <td width="10px"></td>
             <td>
-              <a href="http://www.cancer.gov/cancertopics/terminologyresources/" target="_blank" alt="Cancer.gov">
+              <a href="https://www.cancer.gov/cancertopics/terminologyresources/" target="_blank" rel="noopener"  alt="Cancer.gov">
                 <img src="<%=basePath%>/images/Cancer_govTile.gif"
                   alt="Cancer.gov" border="0"/>
               </a>
             </td>
             <td width="3px"></td>
             <td class="textbody" valign="top">
-              <a href="http://www.cancer.gov/cancertopics/terminologyresources/" target="_blank" alt="Cancer.gov">
+              <a href="https://www.cancer.gov/cancertopics/terminologyresources/" target="_blank" rel="noopener"  alt="Cancer.gov">
                 NCI Terminology Resources</a>:
               More information on NCI dictionaries and resources.
             </td>

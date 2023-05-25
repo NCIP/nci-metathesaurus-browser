@@ -9,8 +9,17 @@
 <%@ page import="gov.nih.nci.evs.browser.bean.LicenseBean" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0G7WV400Q"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-N0G7WV400Q');
+</script>
   <title>NCI Metathesaurus Browser</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -51,7 +60,7 @@
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
   <%@ include file="/pages/include/header.jsp" %>
   <div class="center-page">
@@ -72,7 +81,7 @@
       <!-- end Quick links bar -->
       <!-- Page content -->
       <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="0"></a>
         <p>
           <%
           	if (display_name == null) {
@@ -89,8 +98,9 @@
         </p>
         <%
         	if (display_name != null) {
-        %>        
-        <textarea cols="87" rows="15" readonly align="left"><%=licenseStmt%></textarea>
+        %> 
+<label for="license_statement">License Statement</label>
+        <textarea cols="87" rows="15" readonly align="left" id="license_statement" name="license_statement"><%=licenseStmt%></textarea>
         <p>
           If and only if you agree to these terms and conditions, click the Accept button to proceed.
         </p>
@@ -129,5 +139,6 @@
     <!-- end Main box -->
   </div>
 </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>

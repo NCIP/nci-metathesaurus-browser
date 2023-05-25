@@ -39,12 +39,22 @@
 
 <%@ page import="gov.nih.nci.evs.browser.utils.*"%>
 <%@ page import="gov.nih.nci.evs.browser.common.*"%>
+<%@ page import="gov.nih.nci.evs.browser.bean.*"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core"> 
 <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0G7WV400Q"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-N0G7WV400Q');
+</script>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   
@@ -63,12 +73,11 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <f:view>
   <!-- Begin Skip Top Navigation -->
-    <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+    <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
   <!-- End Skip Top Navigation -->
 <%
 
 response.setContentType("text/html;charset=utf-8");
-
 
                          // appscan fix: 09212015
 			 boolean retval = HTTPUtils.validateRequestParameters(request);
@@ -84,12 +93,23 @@ response.setContentType("text/html;charset=utf-8");
 				 }
 			 }
 			 
+CartActionBean cartActionBean = (CartActionBean) request.getSession().getAttribute("cartActionBean"); 
+if (cartActionBean == null) {
+    cartActionBean = new CartActionBean();
+    cartActionBean._init();
+    request.getSession().setAttribute("cartActionBean", cartActionBean); 
+}
+
 
 Entity concept_details_c = null;
 String concept_details_code = null;
 Object concept_details_obj = null;
 
 Object req_parameter_code = request.getParameter("code");
+
+
+
+
 if (req_parameter_code != null) {
     concept_details_code = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) req_parameter_code);
 }
@@ -117,7 +137,6 @@ if (active_code == null) {
 }
 
 
-
 String concept_details_type = (String) request.getSession().getAttribute("type");
 Boolean isNew = (Boolean) request.getSession().getAttribute("new_search");
 request.getSession().removeAttribute("new_search");
@@ -135,7 +154,7 @@ request.getSession().removeAttribute("new_search");
 
         <!-- Page content -->
         <div class="pagecontent">
-        <a name="evs-content" id="evs-content"></a>
+        <a name="evs-content" id="evs-content" tabindex="0"></a>
 <%
     String dictionary = null;
     String code = null;
@@ -196,7 +215,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
     <table class="datatable_960" summary="" cellpadding="3" cellspacing="0" border="0" width="100%">
 
       <tr>
-        <table>
+        <table role='presentation'>
           <tr>
       <td class="texttitle-blue">Result for:</td>
       <td class="texttitle-gray"><%=sab%> code &nbsp;<%=sourcecode%></td>
@@ -338,6 +357,7 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
         if (c != null) {
        request.getSession().setAttribute("concept", c);
        request.getSession().setAttribute("code", code);
+       
        name = c.getEntityDescription().getContent();
 
       } else {
@@ -368,16 +388,18 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
       <h:form>
       <div class="texttitle-blue">
       <!--
-      <table border="0" width="700px">
-      <table border="0" width="900px">
+      <table border="0" width="700px" role='presentation'>
+      <table border="0" width="900px" role='presentation'>
       -->
       
-      <table border="0" width="945px">
+      <table border="0" width="945px" role='presentation'>
         <tr>
           <td class="texttitle-blue"><%=DataUtils.encodeTerm(name)%> (CUI <%=code%>)</td>
           <td align="right" valign="bottom" class="texttitle-blue-rightJust" nowrap>
-             <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" alt="Term Suggestion">Suggest changes to this concept</a>
+             <a href="<%=term_suggestion_application_url1%>?dictionary=<%=tg_dictionary%>&code=<%=code%>" target="_blank" rel="noopener"  alt="Term Suggestion">Suggest changes to this concept</a>
        <br>
+       
+<!--       
        <h:commandLink action="#{CartActionBean.addToCart}" value="Add to Cart">
          <f:setPropertyActionListener target="#{CartActionBean.entity}" value="concept" />
          <f:setPropertyActionListener target="#{CartActionBean.codingScheme}" value="dictionary" />
@@ -387,6 +409,18 @@ if (isNew == null || isNew.equals(Boolean.FALSE))
             (<h:outputText value="#{CartActionBean.count}"/>)
           </c:when>
        </c:choose>
+-->
+ <a href="<%=request.getContextPath()%>/ajax?action=addtocart&code=<%=code%>" title="Add concept to cart.">Add to Cart</a>
+
+<%
+if (cartActionBean != null && cartActionBean.getCount()>0) {
+%>
+     (<%=cartActionBean.getCount()%>)
+<%     
+}
+%>  
+       
+       
           </td>
         </tr>
       </table>
@@ -436,5 +470,6 @@ request.getSession().removeAttribute("type");
       <!-- end Main box -->
     </div>
   </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>

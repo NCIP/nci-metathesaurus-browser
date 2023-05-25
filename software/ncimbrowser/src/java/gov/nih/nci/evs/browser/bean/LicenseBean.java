@@ -2,7 +2,7 @@ package gov.nih.nci.evs.browser.bean;
 
 import java.util.*;
 import gov.nih.nci.evs.browser.utils.*;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
@@ -58,7 +58,7 @@ import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
  */
 
 public class LicenseBean extends Object {
-    private static Logger _logger = Logger.getLogger(LicenseBean.class);
+	private static Logger _logger = LogManager.getLogger(LicenseBean.class);
     private HashSet _licenseAgreementHashSet = null;
 
     public LicenseBean() {

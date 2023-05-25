@@ -110,10 +110,9 @@
  <!--
  <FORM NAME="searchTerm" METHOD="POST" CLASS="search-form" onsubmit="javascript:disableAnchor();">
   -->
-  <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();" >
-
-    <input CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
-        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="1"/>
+  <h:form id="searchTerm" styleClass="search-form" onsubmit="javascript:disableAnchor();">
+    <input aria-label="Match Text" CLASS="searchbox-input" id="matchText" name="matchText" value="<%=displayed_match_text%>" onFocus="active=true"
+        onBlur="active=false"  onkeypress="return submitEnter('searchTerm:search',event)" tabindex="0"/>
 
     <h:commandButton id="search" value="Search" action="#{userSessionBean.searchAction}"
       accesskey="13"
@@ -121,23 +120,22 @@
       image="#{requestContextPath}/images/search.gif"
       alt="Search"
       styleClass="searchbox-btn"
-      tabindex="2">
+      tabindex="0">
     </h:commandButton>
 
   <h:outputLink
     value="#{facesContext.externalContext.requestContextPath}/pages/help.jsf#searchhelp"
-    tabindex="3">
+    tabindex="0">
     <h:graphicImage value="/images/search-help.gif" styleClass="searchbox-btn" alt="Search Help"
     style="border-width:0;"/>
   </h:outputLink>
 
-  <table border="0" cellspacing="0" cellpadding="0" width="340px">
+  <table border="0" cellspacing="0" cellpadding="0" width="340px" role='presentation'>
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    <%=check_c%> tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Contains
-        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> tabindex="4"/><label for="algorithm1">Exact Match&nbsp;</label>
-        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> tabindex="4" onclick="onAlgorithmChanged('searchTerm');">Begins With&nbsp;
-
+        <input type="radio" name="algorithm" id="algorithm3" value="contains"   alt="Contains"    <%=check_c%> tabindex="0" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm3">Contains&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm1" value="exactMatch" alt="Exact Match" <%=check_e%> tabindex="0"/><label for="algorithm1">Exact Match&nbsp;</label>
+        <input type="radio" name="algorithm" id="algorithm2" value="startsWith" alt="Begins With" <%=check_s%> tabindex="0" onclick="onAlgorithmChanged('searchTerm');"><label for="algorithm2">Begins With&nbsp;</label>
       </td>
     </tr>
     <tr align="left">
@@ -152,21 +150,21 @@
 
     <tr valign="top" align="left">
       <td align="left" class="textbody" colspan="2">
-	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         <%=check_n%>  tabindex="5">Name&nbsp;
-	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"         <%=check_cd%> tabindex="5" onclick="onCodeButtonPressed('searchTerm');" >Code&nbsp;
-        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="5"/><label for="searchTarget2">Property&nbsp;</label>
-        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="5"/><label for="searchTarget3">Relationship</label>
+	<input type="radio" name="searchTarget" id="searchTarget0" value="names"         alt="Name"         <%=check_n%>  tabindex="0"><label for="searchTarget0">Name&nbsp;</label>
+	<input type="radio" name="searchTarget" id="searchTarget1" value="codes"         alt="Code"         <%=check_cd%> tabindex="0" onclick="onCodeButtonPressed('searchTerm');"><label for="searchTarget1">Code&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget2" value="properties" alt="Properties" <%=check_p%> tabindex="0"/><label for="searchTarget2">Property&nbsp;</label>
+        <input type="radio" name="searchTarget" id="searchTarget3" value="relationships" alt="Relationships" <%=check_r%> tabindex="0"/><label for="searchTarget3">Relationship</label>
       </td>
     </tr>
     <tr><td height="5px;"></td></tr>
     <tr><td colspan="2">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%" role='presentation'>
         <tr valign="top">
           <td align="left" class="textbody">
             <h:outputLabel id="sourceLabel" value="Source" styleClass="textbody" for="source"/>&nbsp;
             <h:selectOneMenu styleClass="textbody" id="source" value="#{userSessionBean.selectedSource}"
                valueChangeListener="#{userSessionBean.sourceSelectionChanged}"
-               immediate="true" onchange="submit();" tabindex="6">
+               immediate="true" onchange="submit();" tabindex="0">
                <f:selectItems value="#{userSessionBean.sourceList}" />
             </h:selectOneMenu>
 

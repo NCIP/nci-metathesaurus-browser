@@ -1,6 +1,6 @@
 package gov.nih.nci.evs.browser.utils;
 
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -49,7 +49,7 @@ import org.apache.log4j.*;
  * with the Performance testing.
  */
 public class Debug {
-    private static Logger _logger = Logger.getLogger(Debug.class);
+	private static Logger _logger = LogManager.getLogger(Debug.class);
     private static boolean _display = true;
 
     public static void setDisplay(boolean display) {

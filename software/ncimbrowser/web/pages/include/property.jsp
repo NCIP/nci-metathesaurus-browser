@@ -1,4 +1,5 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
+<%@ page import="gov.nih.nci.evs.browser.common.*" %>
 
 <%
   List displayItemList = null;
@@ -9,6 +10,8 @@
     // Do nothing
   }
 
+
+				
 
   if ((type.compareTo("properties") == 0 || type.compareTo("all") == 0) &&
     displayItemList != null) {
@@ -22,9 +25,31 @@
     Vector additionalproperties = new Vector();
     additionalproperties.add("CONCEPT_NAME");
     additionalproperties.add("primitive");
+    
     Entity curr_concept = (Entity) request.getSession().getAttribute("concept");
+    
+LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+	null, c.getEntityCode());
+if (newCUI != null) { 
+    request.getSession().setAttribute("retired_cui", c.getEntityCode());
+}
+    
+    ConceptDetails cd = new ConceptDetails(lbSvc);
+    HashMap prop_qual_hmap = cd.getPropertyQualifierHashMap(curr_concept);
+    String qualifierName = "STYPE";
+    String qualifierValue = "AUI";
+    Vector exclusion_vec = cd.searchPropertyWithQualifierNameAndValue(prop_qual_hmap, qualifierName, qualifierValue);
+    qualifierValue = "RUI";
+    Vector exclusion_vec_2 = cd.searchPropertyWithQualifierNameAndValue(prop_qual_hmap, qualifierName, qualifierValue);
+    exclusion_vec.addAll(exclusion_vec_2);
+    
+    for (int lcv=0; lcv<exclusion_vec.size(); lcv++) {
+        String t = (String) exclusion_vec.elementAt(lcv);
+        //System.out.println("exclusion: " + t);
+    }
+       
     String curr_concept_code = curr_concept.getEntityCode();
-
     String retired_cui = (String) request.getSession().getAttribute("retired_cui");
     if (retired_cui != null) {
         request.getSession().removeAttribute("retired_cui");
@@ -151,7 +176,7 @@
 
 %>
 <A name="properties"></A>
-<table border="0" width="708px">
+<table border="0" width="708px" role='presentation'>
   <tr>
     <td class="textsubtitle-blue" align="left">
       Terms & Properties
@@ -262,7 +287,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
 %>
 <p>
 <b>Synonyms &amp; Abbreviations:</b>
-<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym" >(see Synonym Details)</a>
+<a href="<%=request.getContextPath() %>/pages/concept_details.jsf?dictionary=<%=scheme%>&code=<%=id%>&type=synonym">(see Synonym Details)</a>
 <table class="datatable_960">
 <%
   HashSet presentation_hset = new HashSet();
@@ -282,7 +307,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
     if (presentation_hset.contains(propName)) {
       displayed_properties.add(propName);
       Vector value_vec = (Vector) hmap.get(propName);
-      value_vec = SortUtils.quickSort(value_vec);
+      value_vec = new SortUtils().quickSort(value_vec);
 
       if (value_vec != null && value_vec.size() > 0) {
         HashSet hset2 = new HashSet();
@@ -420,7 +445,7 @@ else if (concept_status != null && concept_status.compareToIgnoreCase("Retired C
  	  prop_name = (String) thisEntry.getKey();
           key_vec.add(prop_name);
       }
-      key_vec = SortUtils.quickSort(key_vec);
+      key_vec = new SortUtils().quickSort(key_vec);
 
       n = 0;
       displayed_properties.add("textualPresentation");
@@ -451,12 +476,25 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 }
 
 
+/*
+boolean has_other_properties = false;
+for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
+   prop_name = (String) key_vec.elementAt(key_lcv);
+   if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) && !exclusion_vec.contains(prop_name)) {
+      Vector value_vec = (Vector) hmap.get(prop_name);
+      if (value_vec.size() > 0) {
+          has_other_properties = true;
+          break;
+      }
+   }
+}
+*/
 
   if (!has_other_properties) {
   %>
       <b>Other Properties:</b>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
          &nbsp;
@@ -469,7 +507,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
 <p>
   <b>Other Properties:</b>
          <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/property_help_info.jsf',
-          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
          <img src="<%= request.getContextPath() %>/images/help.gif" alt="Property Definitions" title="Property Definitions" border="0">
          </a>
 
@@ -488,7 +526,9 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
     <%
       for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
         prop_name = (String) key_vec.elementAt(key_lcv);
-        if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) ) {
+        //if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name) && !exclusion_vec.contains(prop_name) ) {
+        if (!displayed_properties.contains(prop_name) && !additionalproperties.contains(prop_name)) {
+
           Vector value_vec = (Vector) hmap.get(prop_name);
           if (value_vec == null || value_vec.size() == 0) {
             if (n % 2 == 0) {
@@ -507,7 +547,7 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
                 </tr>
             <%
           } else {
-            value_vec = SortUtils.quickSort(value_vec);
+            value_vec = new SortUtils().quickSort(value_vec);
             for (int j=0; j<value_vec.size(); j++) {
               String value = (String) value_vec.elementAt(j);
 
@@ -598,23 +638,20 @@ for (int key_lcv=0; key_lcv<key_vec.size(); key_lcv++) {
   String requestURL = request.getRequestURL().toString();
   int idx = requestURL.indexOf("pages");
   requestURL = requestURL.substring(0, idx);
-  String url = requestURL + "ConceptReport.jsp?dictionary=NCI%20Thesaurus&code=" + concept_id;
+  String url = requestURL + "ConceptReport.jsp?dictionary=" + Constants.NCI_METATHESAURUS + "&code=" + concept_id;
   String bookmark_title = "NCImBrowser%20" + concept_id;
 %>
 <p>
   <b>URL to Bookmark</b>:
   <a href=javascript:bookmark('<%= url %>','<%= bookmark_title %>')>
-    <%= requestURL %>ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=<%=concept_id%>
+    <%= requestURL %>ConceptReport.jsp?dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=concept_id%>
   </a>
 
 <%
     //NCImBrowserProperties properties = null;
     properties = NCImBrowserProperties.getInstance();
     //String term_suggestion_application_url = properties.getProperty(NCImBrowserProperties.TERM_SUGGESTION_APPLIATION_URL);
-    String default_dictionary = "NCI%20MetaThesaurus";
-    //if (syns != null && syns.size() > 0) {
-    //   tg_dictionary = "NCI%20Thesaurus";
-    //}
+    String default_dictionary = Constants.NCI_METATHESAURUS;
 %>
 <%
 }

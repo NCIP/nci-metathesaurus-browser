@@ -50,10 +50,12 @@ import java.util.*;
  * @author garciawa2
  */
 public class Constants {
-
+    public static final String NCI_METATHESAURUS = "NCI Metathesaurus";
     public static final String TELEPHONE = "240-276-5541 or Toll-Free: 1-888-478-4423";
-    public static final String MAIL_TO = "ncicbiit@mail.nih.gov";
-    public static final String NCICB_URL = "http://ncicb.nci.nih.gov/support";
+    public static final String MAIL_TO = "NCIAppSupport@nih.gov";
+
+    //public static final String NCICB_URL = "http://ncicb.nci.nih.gov/support";
+    public static final String NCICB_URL = "https://datascience.cancer.gov/about/application-support";
 
     // Application version
     public static final int MAJOR_VER = 1;
@@ -94,7 +96,8 @@ public class Constants {
     public static final String PLEASE_COMPLETE_DATA_ENTRIES = "Please complete data entries.";
     public static final String INVALID_EMAIL_ADDRESS = "Invalid email address.";
 
-    public static final List<String> REL =
+
+    private static final List<String> REL =
         Arrays
             .asList(new String[] {
                 "Parent\tPAR\tAnother concept&#39s term subsumes a term in the current concept as a subtype, part, or otherwise.",
@@ -108,7 +111,7 @@ public class Constants {
                 "Other\tRQ\tAnother concept&#39s term is related and possibly synonymous with a term in the current concept.",
                 "Other\tSY\tAnother concept&#39s term is synonymous with a term in the current concept." });
 
-    public static final List<String> RELA =
+    private static final List<String> RELA =
         Arrays.asList(new String[] {
             "Parent\tPAR\t[none]",
             "Parent\tPAR\tcontains",
@@ -842,7 +845,7 @@ public class Constants {
             "Other\tSY\tsort_version_of" });
 
 
-	public static final String[] HAZARD_CHARS = {
+	private static final String[] HAZARD_CHARS = {
 		"$QUERY", "$WHERE", "()", "(EVAL", ".JPG HTTP",
 		"/IFRAME ", "/SCRIPT", ";DECLARE", "</SPAN>", "</XML>",
 		"<SCRIPT>", "<STYLE>", "=(", "=FUNCTION", "\"ALERT",
@@ -855,6 +858,14 @@ public class Constants {
 		"SION(EVAL", "SLEEP(", "SPAN DATASRC", "SRC=", "STYLE=",
 		"VARCHAR(", "XML ID", "XSS:EXPRESSION", "XSS STYLE"
 	};
+
+	public static String[] get_HAZARD_CHARS() {
+		String[] copyArray = new String[HAZARD_CHARS.length];
+		for (int i=0; i<HAZARD_CHARS.length; i++) {
+			copyArray[i] = HAZARD_CHARS[i];
+		}
+		return copyArray;
+	}
 
 
     private Constants() {

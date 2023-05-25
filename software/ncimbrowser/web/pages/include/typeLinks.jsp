@@ -1,8 +1,8 @@
 <%@ page import="gov.nih.nci.evs.browser.utils.*" %>
-<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.logging.log4j.*" %>
 
 <%!
-    private static Logger _logger = Utils.getJspLogger("typeLinks.jsp");
+    private static Logger _logger = LogManager.getLogger("typeLinks.jsp");
 %>
 <%
   Entity concept_typelinks = (Entity) request.getSession().getAttribute("concept");
@@ -16,7 +16,7 @@ _logger.warn("(*) concept_typelinks == null???");
   //Vector sources_typelinks = new DataUtils().getSources(Constants.CODING_SCHEME_NAME, null, null, concept_typelinks_id);
 %>
 
-<table class="tabTable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<table class="tabTable" width="100%" cellspacing="0" cellpadding="0" border="0" role='presentation'>
   <tr>
     <%
       String scheme = gov.nih.nci.evs.browser.utils.HTTPUtils.cleanXSS((String) request.getSession().getAttribute("dictionary"));

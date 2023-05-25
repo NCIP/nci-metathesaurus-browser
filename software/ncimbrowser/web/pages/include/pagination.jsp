@@ -6,16 +6,15 @@ String randomStr = iteratorBean.getRandomNumberString();
 
 request.getSession().setAttribute("matchText", iteratorBean.getMatchText());
 String searchText = iteratorBean.getMatchText();
-System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchText);
-
 
 %>
 
 <h:form id="paginationForm">
+<!--
   <input type="hidden" id="key" name="key" value="<%=randomStr%>" />
   <input type="hidden" id="matchText" name="matchText" value="<%=searchText%>" />
-  
-  <table>
+-->  
+  <table role='presentation'>
     <tr>
       <td class="textbody" align=left>
         <b>Results <%=istart_str%>-<%=iend_str%> of&nbsp;<%=match_size%></b>
@@ -74,8 +73,10 @@ System.out.println("(*) pagination.jsp iteratorBean.getMatchText(): " + searchTe
     </tr>
     <tr>
       <td class="textbody" align=left>
-        Show
+        <label for="paginationForm:resultsPerPage">Show</label>
         <h:selectOneMenu
+          id="resultsPerPage"
+          label="resultsPerPage"
           value="#{userSessionBean.selectedResultsPerPage}"
           valueChangeListener="#{userSessionBean.resultsPerPageChanged}"
           onchange="submit()">
