@@ -77,6 +77,7 @@ if (randomKey == null) {
     randomKey = HTTPUtils.cleanXSS((String) request.getParameter("key"));
 }
 
+System.out.println("randomKey: " + randomKey);
 
 IteratorBeanManager iteratorBeanManager = (IteratorBeanManager) FacesContext.getCurrentInstance().getExternalContext()
     .getSessionMap().get("iteratorBeanManager");
@@ -90,7 +91,12 @@ if (iteratorBeanManager == null) {
 
 if (randomKey != null) {
         iteratorBean = iteratorBeanManager.getIteratorBean(randomKey);
-} 
+} else {
+    System.out.println("randomKey == null???");
+    _logger.warn("iteratorBean NOT FOUND???" + randomKey);
+}
+
+	
 
           String matchText = HTTPUtils.cleanXSS((String) request.getSession().getAttribute("matchText"));
 request.getSession().setAttribute("match_match", matchText);
