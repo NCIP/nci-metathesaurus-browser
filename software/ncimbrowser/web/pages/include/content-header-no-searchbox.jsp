@@ -8,6 +8,7 @@
 
     <div class="search-globalnav">
         <!-- Global Navigation -->
+            <img src="<%=basePath%>/images/shim.gif" width="1" height="100" alt="Shim" border="0" />
             <%@ include file="menuBar.jsp" %>
         <!-- end Global Navigation -->
     </div>

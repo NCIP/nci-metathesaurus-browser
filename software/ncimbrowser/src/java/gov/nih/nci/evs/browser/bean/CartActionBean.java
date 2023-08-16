@@ -367,7 +367,7 @@ public class CartActionBean {
         item.setUrl(url);
         item.setSemanticType(semanticType);
 
-
+/*
 System.out.println("code: " + code);
 System.out.println("CodingScheme: " + codingScheme);
 System.out.println("NameSpace: " + nameSpace);
@@ -375,14 +375,13 @@ System.out.println("name: " + name);
 System.out.println("version: " + version);
 System.out.println("url: " + url);
 System.out.println("semanticType: " + semanticType);
+*/
 
         if (!_cart.containsKey(code))
             _cart.put(code,item);
 
         //KLO 08162023
         request.getSession().setAttribute("_cart", _cart);
-        System.out.println("exiting addToCart...");
-
         return null;
     }
 
@@ -538,10 +537,8 @@ System.out.println("semanticType: " + semanticType);
 				*/
 				int data = reader.read();
 				while(data != -1) {
-
 					char ch = (char) data;
 					System.out.println(ch);
-
 					// do something with data variable
                     buf.append((char) data);
 					data = reader.read(); // read next byte

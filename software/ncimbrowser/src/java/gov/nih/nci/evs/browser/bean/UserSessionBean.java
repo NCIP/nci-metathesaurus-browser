@@ -477,8 +477,6 @@ response.setContentType("text/html;charset=utf-8");
     }
 */
     public String searchAction() {
-		System.out.println("UserSessionBean searchAction...");
-
         ResolvedConceptReferencesIteratorWrapper wrapper = null;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
@@ -561,13 +559,8 @@ response.setContentType("text/html;charset=utf-8");
         boolean excludeDesignation = true;
         boolean designationOnly = false;
 
-
-
         // check if this search has been performance previously through
         // IteratorBeanManager
-
-        System.out.println("UserSessionBean iteratorBeanManager #1...");
-
 
         IteratorBeanManager iteratorBeanManager =
             (IteratorBeanManager) FacesContext.getCurrentInstance()
@@ -581,9 +574,6 @@ response.setContentType("text/html;charset=utf-8");
                 .put("iteratorBeanManager", iteratorBeanManager);
         }
 
-
-        System.out.println("UserSessionBean iteratorBeanManager #2...");
-
         IteratorBean iteratorBean = null;
         ResolvedConceptReferencesIterator iterator = null;
         Vector schemes = new Vector();
@@ -596,17 +586,12 @@ response.setContentType("text/html;charset=utf-8");
 
         SearchFields searchFields = null;
         String key = null;
-
-        System.out.println("UserSessionBean searchFields");
 		searchFields =
 			SearchFields.setSimple(schemes, matchText, searchTarget,
 				source, matchAlgorithm, maxToReturn);
 		key = searchFields.getKey();
-		System.out.println("UserSessionBean key: " + key);
 
         if (searchTarget.compareTo("names") == 0) {
-			System.out.println("UserSessionBean searchTarget - name: ");
-
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -642,8 +627,6 @@ response.setContentType("text/html;charset=utf-8");
                     }
                 }
             }
-
-            System.out.println("UserSessionBean searchTarget - name: Done");
 
         } else if (searchTarget.compareTo("codes") == 0) {
             if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -747,12 +730,8 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().removeAttribute("AssociationTargetHashMap");
         request.getSession().removeAttribute("type");
 
-        System.out.println("UserSessionBean checking iterator: ");
-
         if (iterator != null) {
-			System.out.println("UserSessionBean checking iterator: iterator != null.");
             if (iteratorBean == null) {
-				System.out.println("WARNING: iteratorBean == null.");
 				String message = "An error encountered - iteratorBean == null.";
 				request.getSession().setAttribute("message", message);
 				request.getSession().setAttribute("matchText", matchText0);
@@ -760,13 +739,11 @@ response.setContentType("text/html;charset=utf-8");
 
 			} else {
 				int size = iteratorBean.getSize();
-                System.out.println("match size: " + size);
 				// Write a search log entry
 				//SearchLog.writeEntry(searchFields, size, HTTPUtils
 				//    .getRefererParmDecode(request));
 
 				if (size > 1) {
-					System.out.println("********** size > 1 ");
 					request.getSession().setAttribute("search_results", v);
 					String match_size = Integer.toString(size);
 					request.getSession().setAttribute("match_size", match_size);
@@ -774,7 +751,6 @@ response.setContentType("text/html;charset=utf-8");
 					request.getSession().setAttribute("new_search", Boolean.TRUE);
 					//KLO 111415
 					request.getSession().setAttribute("matchText", matchText);
-                    System.out.println("********** forwarding to search_results ... ");
 					return "search_results";
 				} else if (size == 1) {
 					request.getSession().setAttribute("singleton", "true");
