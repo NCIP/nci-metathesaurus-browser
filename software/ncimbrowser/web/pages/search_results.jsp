@@ -48,6 +48,7 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <%!
       private static Logger _logger = LogManager.getLogger("search_results.jsp");
+      System.out.println("************* Enter search_results.jsp.");
   %>
 
 <f:view>
@@ -64,7 +65,6 @@
       <div class="pagecontent">
         <a name="evs-content" id="evs-content" tabindex="0"></a>
         <%
-
           long ms = System.currentTimeMillis();
           long iterator_delay;
 

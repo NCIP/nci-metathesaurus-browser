@@ -766,6 +766,7 @@ response.setContentType("text/html;charset=utf-8");
 				//    .getRefererParmDecode(request));
 
 				if (size > 1) {
+					System.out.println("********** size > 1 ");
 					request.getSession().setAttribute("search_results", v);
 					String match_size = Integer.toString(size);
 					request.getSession().setAttribute("match_size", match_size);
@@ -773,7 +774,7 @@ response.setContentType("text/html;charset=utf-8");
 					request.getSession().setAttribute("new_search", Boolean.TRUE);
 					//KLO 111415
 					request.getSession().setAttribute("matchText", matchText);
-
+                    System.out.println("********** forwarding to search_results ... ");
 					return "search_results";
 				} else if (size == 1) {
 					request.getSession().setAttribute("singleton", "true");

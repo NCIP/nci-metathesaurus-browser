@@ -83,7 +83,7 @@
        <%@ include file="/pages/include/sub-header.jsp" %>
        <!-- Main box -->
        <div id="main-area">
-      <%@ include file="/pages/include/content-header.jsp" %>
+      <%@ include file="/pages/include/content-header-no-searchbox.jsp" %>
          <!-- Page content -->
          <div class="pagecontent">
           <a name="evs-content" id="evs-content" tabindex="0"></a>
