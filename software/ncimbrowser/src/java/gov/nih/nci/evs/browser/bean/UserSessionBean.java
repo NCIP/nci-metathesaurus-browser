@@ -751,74 +751,83 @@ response.setContentType("text/html;charset=utf-8");
 
         if (iterator != null) {
 			System.out.println("UserSessionBean checking iterator: iterator != null.");
+            if (iteratorBean == null) {
+				System.out.println("WARNING: iteratorBean == null.");
+				String message = "An error encountered - iteratorBean == null.";
+				request.getSession().setAttribute("message", message);
+				request.getSession().setAttribute("matchText", matchText0);
+				return "message";
 
-            int size = iteratorBean.getSize();
-            // Write a search log entry
-            //SearchLog.writeEntry(searchFields, size, HTTPUtils
-            //    .getRefererParmDecode(request));
+			} else {
+				int size = iteratorBean.getSize();
+                System.out.println("match size: " + size);
+				// Write a search log entry
+				//SearchLog.writeEntry(searchFields, size, HTTPUtils
+				//    .getRefererParmDecode(request));
 
-            if (size > 1) {
-                request.getSession().setAttribute("search_results", v);
-                String match_size = Integer.toString(size);
-                request.getSession().setAttribute("match_size", match_size);
-                request.getSession().setAttribute("page_string", "1");
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-                //KLO 111415
-                request.getSession().setAttribute("matchText", matchText);
-
-                return "search_results";
-            } else if (size == 1) {
-                request.getSession().setAttribute("singleton", "true");
-                request.getSession().setAttribute("dictionary",
-                    Constants.CODING_SCHEME_NAME);
-                int pageNumber = 1;
-                List list = iteratorBean.getData(1);
-                ResolvedConceptReference ref =
-                    (ResolvedConceptReference) list.get(0);
-
-                Entity c = null;
-                if (ref == null) {
-                    String msg =
-                        "Error: Null ResolvedConceptReference encountered.";
-                    request.getSession().setAttribute("message", msg);
-                    return "message";
-
-                } else {
-                    c = ref.getReferencedEntry();
-                    if (c == null) {
-                        c =
-                            DataUtils.getConceptByCode(
-                                Constants.CODING_SCHEME_NAME, null, null, ref
-                                    .getConceptCode());
-                    }
-                }
-
-                request.getSession().setAttribute("code", ref.getConceptCode());
-                request.getSession().setAttribute("concept", c);
-                request.getSession().setAttribute("type", "properties");
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-
-				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-				String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
-					null, c.getEntityCode());
-				if (newCUI != null) {
-					_logger.debug("Searching for " + newCUI);
-					c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
-							null, null, newCUI);
-					request.getSession().setAttribute("code", newCUI);
-					request.getSession().setAttribute("concept", c);
-					//request.getSession().setAttribute("type", "properties");
+				if (size > 1) {
+					request.getSession().setAttribute("search_results", v);
+					String match_size = Integer.toString(size);
+					request.getSession().setAttribute("match_size", match_size);
+					request.getSession().setAttribute("page_string", "1");
 					request.getSession().setAttribute("new_search", Boolean.TRUE);
-					request.getSession().setAttribute("retired_cui", c.getEntityCode());
+					//KLO 111415
+					request.getSession().setAttribute("matchText", matchText);
 
+					return "search_results";
+				} else if (size == 1) {
+					request.getSession().setAttribute("singleton", "true");
+					request.getSession().setAttribute("dictionary",
+						Constants.CODING_SCHEME_NAME);
+					int pageNumber = 1;
+					List list = iteratorBean.getData(1);
+					ResolvedConceptReference ref =
+						(ResolvedConceptReference) list.get(0);
+
+					Entity c = null;
+					if (ref == null) {
+						String msg =
+							"Error: Null ResolvedConceptReference encountered.";
+						request.getSession().setAttribute("message", msg);
+						return "message";
+
+					} else {
+						c = ref.getReferencedEntry();
+						if (c == null) {
+							c =
+								DataUtils.getConceptByCode(
+									Constants.CODING_SCHEME_NAME, null, null, ref
+										.getConceptCode());
+						}
+					}
+
+					request.getSession().setAttribute("code", ref.getConceptCode());
+					request.getSession().setAttribute("concept", c);
+					request.getSession().setAttribute("type", "properties");
+					request.getSession().setAttribute("new_search", Boolean.TRUE);
+
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+						null, c.getEntityCode());
+					if (newCUI != null) {
+						_logger.debug("Searching for " + newCUI);
+						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
+								null, null, newCUI);
+						request.getSession().setAttribute("code", newCUI);
+						request.getSession().setAttribute("concept", c);
+						//request.getSession().setAttribute("type", "properties");
+						request.getSession().setAttribute("new_search", Boolean.TRUE);
+						request.getSession().setAttribute("retired_cui", c.getEntityCode());
+
+					}
+
+					HttpServletResponse response =
+						(HttpServletResponse) FacesContext.getCurrentInstance()
+							.getExternalContext().getResponse();
+					response.setContentType("text/html;charset=utf-8");
+					return "concept_details";
 				}
-
-				HttpServletResponse response =
-					(HttpServletResponse) FacesContext.getCurrentInstance()
-						.getExternalContext().getResponse();
-				response.setContentType("text/html;charset=utf-8");
-                return "concept_details";
-            }
+			}
         }
 
         // [#23463] Linking retired concept to corresponding new concept
