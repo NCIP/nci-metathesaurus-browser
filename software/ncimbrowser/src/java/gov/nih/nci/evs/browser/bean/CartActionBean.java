@@ -287,7 +287,7 @@ public class CartActionBean {
         if (!_cart.containsKey(code))
             _cart.put(code,item);
 
-        //request.getSession().setAttribute("_cart", _cart);
+        request.getSession().setAttribute("_cart", _cart);
 
         return null;
     }
@@ -379,7 +379,9 @@ System.out.println("semanticType: " + semanticType);
         if (!_cart.containsKey(code))
             _cart.put(code,item);
 
-        //request.getSession().setAttribute("_cart", _cart);
+        //KLO 08162023
+        request.getSession().setAttribute("_cart", _cart);
+        System.out.println("exiting addToCart...");
 
         return null;
     }
