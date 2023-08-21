@@ -48,7 +48,6 @@
       src="<%=request.getContextPath()%>/js/tip_followscroll.js"></script>
   <%!
       private static Logger _logger = LogManager.getLogger("search_results.jsp");
-      System.out.println("************* Enter search_results.jsp.");
   %>
 
 <f:view>
