@@ -20,6 +20,7 @@
 	gtag('js', new Date());
 	gtag('config', 'G-N0G7WV400Q');
 </script>
+  <script src="https://cbiit.github.io/nci-softwaresolutions-elements/components/include-html.js"></script>
   <title>NCI Metathesaurus Browser</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -58,6 +59,9 @@
   //if (dictionary != null) dictionary = dictionary.replaceAll("%20", " ");
 %>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <header class="flex-grow-0">
+	<include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown-test.html"></include-html>
+  </header>
 <f:view>
   <!-- Begin Skip Top Navigation -->
     <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
