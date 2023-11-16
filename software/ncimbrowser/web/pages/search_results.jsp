@@ -41,7 +41,9 @@
 </head>
 <body onLoad="document.forms.searchTerm.matchText.focus();">
   <header class="flex-grow-0">
+	<div style='text-align: left'>
 	<include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
+	</div>
   </header>
 
     <script type="text/javascript"

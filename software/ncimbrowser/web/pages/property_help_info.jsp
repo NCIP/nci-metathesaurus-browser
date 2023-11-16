@@ -30,7 +30,9 @@
   </head>
   <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
   <header class="flex-grow-0">
+	<div style='text-align: left'>
 	<include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
+	</div>
   </header>
   <f:view>
   <!-- Begin Skip Top Navigation -->
