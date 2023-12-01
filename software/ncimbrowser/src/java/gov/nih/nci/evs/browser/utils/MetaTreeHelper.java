@@ -1,7 +1,7 @@
 package gov.nih.nci.evs.browser.utils;
 
 import java.util.*;
-import net.sf.ehcache.*;
+//import net.sf.ehcache.*;
 import gov.nih.nci.evs.browser.properties.*;
 import org.json.*;
 

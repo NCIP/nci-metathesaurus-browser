@@ -176,7 +176,7 @@ public final class AjaxServlet extends HttpServlet {
                         // nodesArray =
                         // CacheController.getInstance().getRemainingSubconcepts(ontology_display_name,
                         // null, parent_id, node_id);
-                        nodesArray = CacheController.getInstance().getRemainingSubconcepts(node_id_0);
+                        nodesArray = CacheController.getTreeInstance().getRemainingSubconcepts(node_id_0);
 
                         if (nodesArray != null) {
                             json.put("nodes", nodesArray);
@@ -197,7 +197,7 @@ public final class AjaxServlet extends HttpServlet {
                 try {
                     if (ontology_source == null) {
                         nodesArray =
-                            CacheController.getInstance().getSubconcepts(
+                            CacheController.getTreeInstance().getSubconcepts(
                                 ontology_display_name, null, node_id);
                     } else {
 						/*
@@ -206,7 +206,7 @@ public final class AjaxServlet extends HttpServlet {
                                 .getSubconceptsBySource(ontology_display_name,
                                     null, node_id, ontology_source);
                         */
-                        nodesArray = CacheController.getInstance().getRemainingSubconcepts(node_id_0 + "|" + ontology_source + "|0");
+                        nodesArray = CacheController.getTreeInstance().getRemainingSubconcepts(node_id_0 + "|" + ontology_source + "|0");
                     }
 
                     if (nodesArray != null) {
@@ -254,7 +254,7 @@ public final class AjaxServlet extends HttpServlet {
                  * _logger.debug("search_tree: " + json.toString());
                  */
                 String t =
-                    CacheController.getInstance().getPathsToRootsExt(
+                    CacheController.getRootInstance().getPathsToRootsExt(
                         ontology_display_name, null, node_id, ontology_source,
                         false);
                 response.getWriter().write(t);
@@ -278,13 +278,13 @@ public final class AjaxServlet extends HttpServlet {
                     || ontology_source.compareTo("null") == 0) {
 
                     nodesArray =
-                        CacheController.getInstance().getRootConcepts(
+                        CacheController.getTreeInstance().getRootConcepts(
                             ontology_display_name, null);
                 } else {
 
 
                     nodesArray =
-                        CacheController.getInstance().getSourceRoots(
+                        CacheController.getTreeInstance().getSourceRoots(
                             ontology_display_name, null, ontology_source, true);
                     // nodesArray =
                     // CacheController.getInstance().getRootConceptsBySource(ontology_display_name,
