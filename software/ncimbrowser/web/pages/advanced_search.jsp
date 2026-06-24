@@ -15,8 +15,18 @@
 <%@ page import="org.apache.log4j.*" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html lang="en" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
+<script src="//assets.adobedtm.com/f1bfa9f7170c81b1a9a9ecdcc6c5215ee0b03c84/satelliteLib-4b219b82c4737db0e1797b6c511cf10c802c95cb.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0G7WV400Q"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-N0G7WV400Q');
+</script>
+  <script src="https://cbiit.github.io/nci-softwaresolutions-elements/components/include-html.js"></script>
   <title>NCI Metathesaurus</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
@@ -25,7 +35,12 @@
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/search.js"></script>
   <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
 </head>
-<body onLoad="document.forms.advancedSearchForm.matchText.focus();">
+<body onLoad="document.forms.advancedSearchForm.adv_matchText.focus();">
+  <header class="flex-grow-0">
+	<div style='text-align: left'>
+	<include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
+	</div>
+  </header>
   <script type="text/javascript"
     src="<%=request.getContextPath()%>/js/wz_tooltip.js"></script>
   <script type="text/javascript"
@@ -39,7 +54,7 @@
     
     
     function refresh() {
-      var text = document.forms["advancedSearchForm"].matchText.value;
+      var text = document.forms["advancedSearchForm"].adv_matchText.value;
       algorithm = "exactMatch";
       var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
       for (var i=0; i<algorithmObj.length; i++) {
@@ -74,7 +89,7 @@
     
     function refresh_code() {
 
-      var text = escape(document.forms["advancedSearchForm"].matchText.value);
+      var text = escape(document.forms["advancedSearchForm"].adv_matchText.value);
  
       var selectSearchOption = "Code";
       var algorithm = "exactMatch";
@@ -100,7 +115,7 @@
     
     
      function refresh_algorithm() {
-       var text = escape(document.forms["advancedSearchForm"].matchText.value);
+       var text = escape(document.forms["advancedSearchForm"].adv_matchText.value);
  
        var algorithm = "exactMatch";
        var algorithmObj = document.forms["advancedSearchForm"].adv_search_algorithm;
@@ -147,11 +162,11 @@
     
   </script>
   <%!
-      private static Logger _logger = Utils.getJspLogger("advanced_search.jsp");
+      private static Logger _logger = LogManager.getLogger("advanced_search.jsp");
   %>
   <f:view>
     <!-- Begin Skip Top Navigation -->
-      <a href="#evs-content" class="hideLink" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
+      <a href="#evs-content" class="skip-main" accesskey="1" title="Skip repetitive navigation links">skip navigation links</A>
     <!-- End Skip Top Navigation -->
     <%@ include file="/pages/include/header.jsp" %>
     <div class="center-page">
@@ -307,8 +322,8 @@
 
 %>
         <div class="pagecontent">
-          <a name="evs-content" id="evs-content"></a>
-          <table>
+          <a name="evs-content" id="evs-content" tabindex="0"></a>
+          <table role='presentation'>
             <tr>
             <td class="texttitle-blue">Advanced Search</td>
             </tr>
@@ -321,14 +336,14 @@
 
             <tr class="textbody"><td>
             <!--
-               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form" >
+               <FORM NAME="advancedSearchForm" METHOD="POST" CLASS="search-form">
              -->
 
-               <h:form id="advancedSearchForm" styleClass="search-form" >
+               <h:form id="advancedSearchForm" styleClass="search-form">
 
-                <table>
+                <table role='presentation'>
                   <tr><td>
-    <input CLASS="searchbox-input" id="matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" onFocus="active=true"
+    <input CLASS="searchbox-input" id="adv_matchText" name="adv_matchText" value="<%=HTTPUtils.cleanXSS(search_string)%>" aria-label="adv_matchText" onFocus="active=true"
         onBlur="active=false"  onkeypress="return submitEnter('advancedSearchForm:adv_search',event)"  />
 
                     <h:commandButton id="adv_search" value="Search" action="#{userSessionBean.advancedSearchAction}"
@@ -340,13 +355,14 @@
 
                   </td></tr>
                   <tr><td>
-                     <table border="0" cellspacing="0" cellpadding="0">
+                     <table border="0" cellspacing="0" cellpadding="0" role='presentation'>
                     <tr valign="top" align="left"><td align="left" class="textbody">
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm3" value="contains" alt="Contains" <%=check__c%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm3">Contains</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm1" value="exactMatch" alt="Exact Match" <%=check__e%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm1">Exact Match&nbsp;</label>
                       <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm2" value="startsWith" alt="Begins With" <%=check__s%> onclick="refresh_algorithm()"; /><label for="adv_search_algorithm2">Begins With&nbsp;</label>
-                     <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="3" onclick="refresh_algorithm()"; >
-                      Lucene
+<!--                      
+                      <input type="radio" name="adv_search_algorithm" id="adv_search_algorithm4" value="lucene" alt="Lucene" <%=check__b%> tabindex="0" onclick="refresh_algorithm()"; ><label for="adv_search_algorithm4">Lucene</label>
+-->                    
                     </td></tr>
                   </table>
                 </td></tr>
@@ -424,7 +440,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                 </td></tr>
 
                 <tr><td>
-                  <table>
+                  <table role='presentation'>
                   <% if (selectSearchOption.equals("Property")) { %>
                     <input type="hidden" name="rel_search_association" id="rel_search_association" value="<%=HTTPUtils.cleanXSS(rel_search_association)%>" />
                     <input type="hidden" name="rel_search_rela" id="rel_search_rela" value="<%=HTTPUtils.cleanXSS(rel_search_rela)%>" />
@@ -459,7 +475,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                           <!--
                           <h:selectOneMenu id="selectProperty" value="#{searchStatusBean.selectedProperty}"
                               valueChangeListener="#{searchStatusBean.selectedPropertyChanged}"
-                              immediate="true" >
+                              immediate="true">
                             <f:selectItems value="#{searchStatusBean.propertyList}" />
                           </h:selectOneMenu>
                           -->
@@ -499,7 +515,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                           </select>
                         </h:outputLabel>
                         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
-                          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                             <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
                         </a>
                       </td>
@@ -536,7 +552,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") != 0) {
                           </select>
                         </h:outputLabel>
                         <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
-                          '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                          '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                             <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
                         </a>
                       </td>
@@ -559,7 +575,7 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
 
 <tr><td>
 <p>
-<table>
+<table role='presentation'>
    <tr><td class="textbody">&nbsp;Examples:</td></tr>
    <tr>
        <td class="textbody">&nbsp;&nbsp;
@@ -603,9 +619,8 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
 
 
               </table>
-              <input type="hidden" name="referer" id="referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
+              <input type="hidden" name="referer" id="adv_search_referer" value="<%=HTTPUtils.getRefererParmEncode(request)%>" />
               <input type="hidden" name="adv_search_type" id="adv_search_type" value="<%=HTTPUtils.cleanXSS(adv_search_type)%>" />
-
 
             </h:form>
 
@@ -619,5 +634,6 @@ if (adv_search_algorithm.compareToIgnoreCase("lucene") == 0) {
     <!-- end Main box -->
   </div>
 </f:view>
+<script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 </html>

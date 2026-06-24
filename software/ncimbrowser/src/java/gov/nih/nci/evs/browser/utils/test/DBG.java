@@ -48,7 +48,7 @@ import org.apache.log4j.*;
 
 
 public class DBG {
-    private static Logger _logger = Logger.getLogger(DBG.class);
+	private static Logger _logger = LogManager.getLogger(DBG.class);
     private static boolean _isPerformanceTesting = false;
     private static boolean _displayDetails = false;
     private static boolean _displayTabDelimitedFormat = false;

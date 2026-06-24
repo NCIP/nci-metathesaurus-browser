@@ -77,7 +77,7 @@
   neighborhood_atoms = new DataUtils().sortSynonymData(neighborhood_atoms, sort_by2);
 %>
   <a name="sources"></a>
-  <table border="0" width="708px">
+  <table border="0" width="708px" role='presentation'>
     <tr>
       <td class="textsubtitle-blue" align="left">'<%=DataUtils.encodeTerm(concept_neighborhood_name)%>'&nbsp;By Source:&nbsp;<%=neighborhood_sab%></td>
     </tr>
@@ -106,7 +106,7 @@
                   <%
                   } else {
               %>
-    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
        <%=s%>
     </a>&nbsp;
     <%
@@ -124,7 +124,7 @@
                   } else {
 
               %>
-    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=NCI%20MetaThesaurus&code=<%=code%>&sab=<%=s%>">
+    <a href="<%= request.getContextPath() %>/pages/concept_details.jsf?type=<%=entry_type_src%>&dictionary=<%=Constants.NCI_METATHESAURUS%>&code=<%=code%>&sab=<%=s%>">
        <%=s%>
     </a>&nbsp;
     <%
@@ -157,7 +157,7 @@
           <th class="dataTableHeader" scope="col" align="left" valign="top" nowrap>
             Source
             <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-              '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
               <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
             </a>
           </th>
@@ -167,7 +167,7 @@
               %>
                  Type
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" title="Term Type Definition" border="0">
               </a>
               <%
@@ -242,7 +242,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
             Relationship
             <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
-              '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
               <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
             </a>
               <%
@@ -250,7 +250,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
             <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?code=<%=code%>&type=<%=entry_type_src%>&sortBy2=rel_type&sortBy=<%=sort_by%>&sab=<%=neighborhood_sab%>#Relationships">Relationship</a>
             <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rel_help_info.jsf',
-              '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
               <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Definitions" title="Relationship Definitions" border="0">
             </a>
               <%
@@ -263,7 +263,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
               Rel. Attribute
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
-              '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
               <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
               </a>
               <%
@@ -271,7 +271,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
               <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?code=<%=code%>&type=<%=entry_type_src%>&sortBy2=rel&sortBy=<%=sort_by%>&sab=<%=neighborhood_sab%>#Relationships">Rel. Attribute</a>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/rela_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Relationship Attr. Definitions" title="Relationship Attr. Definitions" border="0">
               </a>
               <%
@@ -307,7 +307,7 @@ if (neighborhood_atoms.size() == 0) {
           <th class="dataTableHeader" scope="col" align="left" valign="top">
             Source
             <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/source_help_info.jsf',
-              '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+              '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
               <img src="<%= request.getContextPath() %>/images/help.gif" alt="Source List" title="Source List" border="0">
             </a>
           </th>
@@ -317,7 +317,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
               Type
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" title="Term Type Definition" border="0">
               </a>
               <%
@@ -325,7 +325,7 @@ if (neighborhood_atoms.size() == 0) {
               %>
               <a href="<%=request.getContextPath() %>/pages/concept_details.jsf?code=<%=code%>&type=<%=entry_type_src%>&sortBy2=type&sortBy=<%=sort_by%>&sab=<%=neighborhood_sab%>#Relationships">Type</a>
               <a href="#" onclick="javascript:window.open('<%=request.getContextPath() %>/pages/term_type_help_info.jsf',
-                '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
+                '_blank','top=100, left=100, height=740, width=680, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">
                 <img src="<%= request.getContextPath() %>/images/help.gif" alt="Term Type Definition" title="Term Type Definition" border="0">
               </a>
               <%

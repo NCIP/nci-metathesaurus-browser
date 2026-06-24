@@ -7,21 +7,23 @@ import javax.faces.context.*;
 import javax.faces.event.*;
 import javax.faces.model.*;
 import javax.servlet.http.*;
+import jakarta.mail.MessagingException;
 
 import org.LexGrid.LexBIG.DataModel.Core.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
 import org.LexGrid.concepts.Entity;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import gov.nih.nci.evs.browser.utils.*;
-import gov.nih.nci.evs.browser.properties.*;
+import gov.nih.nci.evs.browser.utils.MailUtils;
 import gov.nih.nci.evs.browser.common.*;
-import gov.nih.nci.evs.searchlog.*;
-import org.apache.log4j.*;
-
+import gov.nih.nci.evs.browser.properties.NCImBrowserProperties;
 import nl.captcha.Captcha;
 import nl.captcha.audio.AudioCaptcha;
 
 import org.LexGrid.LexBIG.LexBIGService.*;
+import org.json.JSONObject;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -74,7 +76,8 @@ import org.LexGrid.LexBIG.LexBIGService.*;
  */
 
 public class UserSessionBean extends Object {
-    private static Logger _logger = Logger.getLogger(UserSessionBean.class);
+	private static Logger _logger = LogManager.getLogger(UserSessionBean.class);
+    public static final String INCOMPLETE_CAPTCHA_RESPONSE = "WARNING: Incomplete Captcha Response";
 
     private String _selectedQuickLink = null;
     private List _quickLinkList = null;
@@ -126,13 +129,15 @@ public class UserSessionBean extends Object {
         return _quickLinkList;
     }
 
-
+/*
     public String searchAction() {
+		System.out.println("UserSessionBean searchAction...");
+
         ResolvedConceptReferencesIteratorWrapper wrapper = null;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-
+        //setSelectedResultsPerPage((String) request.getParameter("resultsPerPage"));
         request.getSession().removeAttribute("error_msg");
         boolean retval = HTTPUtils.validateRequestParameters(request);
         if (!retval) {
@@ -151,7 +156,7 @@ public class UserSessionBean extends Object {
         String matchText0 = matchText;
         request.getSession().setAttribute("matchText", matchText);
 
-        _logger.debug("matchText: " + matchText);
+        _logger.debug("UserSessionBean matchText: " + matchText);
 
         String matchAlgorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
 
@@ -193,7 +198,7 @@ public class UserSessionBean extends Object {
             }
         }
         String scheme = Constants.CODING_SCHEME_NAME;
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;
         String max_str = null;
         int maxToReturn = -1;// 1000;
         try {
@@ -202,13 +207,15 @@ public class UserSessionBean extends Object {
                     NCImBrowserProperties.MAXIMUM_RETURN);
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<org.LexGrid.concepts.Concept> v = null;
 
         boolean excludeDesignation = true;
         boolean designationOnly = false;
+
+
 
         // check if this search has been performance previously through
         // IteratorBeanManager
@@ -234,7 +241,6 @@ public class UserSessionBean extends Object {
 
         boolean ranking = true;
 
-
         SearchFields searchFields = null;
         String key = null;
 
@@ -252,7 +258,7 @@ public class UserSessionBean extends Object {
                 try {
 					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 					SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
-					boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
+					//boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
 					if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
 						iterator = simpleSearchUtils.search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
 						wrapper = null;
@@ -294,7 +300,7 @@ public class UserSessionBean extends Object {
 						source, matchAlgorithm, ranking, maxToReturn, false);
 
 				} catch (Exception ex) {
-                    //ex.printStackTrace();
+                    ex.printStackTrace();
 				}
 
                 if (wrapper != null) {
@@ -331,13 +337,13 @@ public class UserSessionBean extends Object {
 			}
 
 		} else if (searchTarget.compareTo("relationships") == 0) {
-
-			if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			matchText = matchText.trim();
+ 			//if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			if (matchText.length()<NCImBrowserProperties.getMinimumSearchStringLength() && matchAlgorithm.compareTo("contains") == 0) {
 				String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
 				request.getSession().setAttribute("message", msg);
 				return "message";
 			}
-
 
 			designationOnly = true;
 			if (iteratorBeanManager.containsIteratorBean(key)) {
@@ -386,8 +392,8 @@ public class UserSessionBean extends Object {
         if (iterator != null) {
             int size = iteratorBean.getSize();
             // Write a search log entry
-            SearchLog.writeEntry(searchFields, size, HTTPUtils
-                .getRefererParmDecode(request));
+            //SearchLog.writeEntry(searchFields, size, HTTPUtils
+            //    .getRefererParmDecode(request));
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
@@ -430,6 +436,22 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("type", "properties");
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
 
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+					null, c.getEntityCode());
+				if (newCUI != null) {
+					_logger.debug("Searching for " + newCUI);
+					c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
+							null, null, newCUI);
+					request.getSession().setAttribute("code", newCUI);
+					request.getSession().setAttribute("concept", c);
+					//request.getSession().setAttribute("type", "properties");
+					request.getSession().setAttribute("new_search", Boolean.TRUE);
+					request.getSession().setAttribute("retired_cui", c.getEntityCode());
+
+				}
+
+
 HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
 		.getExternalContext().getResponse();
@@ -443,31 +465,9 @@ response.setContentType("text/html;charset=utf-8");
         // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
 
         //if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
-        if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
-                null, matchText);
-            //String newCUI = HistoryUtils.getReferencedCUI(matchText);
+        //if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
 
-            if (newCUI != null) {
-                _logger.debug("Searching for " + newCUI);
-                Entity c =
-                    DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
-                        null, null, newCUI);
-                request.getSession().setAttribute("code", newCUI);
-                request.getSession().setAttribute("concept", c);
-                request.getSession().setAttribute("type", "properties");
-                request.getSession().setAttribute("new_search", Boolean.TRUE);
-                request.getSession().setAttribute("retired_cui", matchText);
-
-HttpServletResponse response =
-	(HttpServletResponse) FacesContext.getCurrentInstance()
-		.getExternalContext().getResponse();
-response.setContentType("text/html;charset=utf-8");
-
-                return "concept_details";
-            }
-        }
+        //}
 
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0) {
@@ -477,6 +477,356 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().setAttribute("matchText", matchText0);
         return "message";
     }
+*/
+    public String searchAction() {
+        ResolvedConceptReferencesIteratorWrapper wrapper = null;
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        //setSelectedResultsPerPage((String) request.getParameter("resultsPerPage"));
+        request.getSession().removeAttribute("error_msg");
+        boolean retval = HTTPUtils.validateRequestParameters(request);
+        if (!retval) {
+			return "invalid_parameter";
+		}
+
+        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("matchText"));
+		if (matchText == null || matchText.compareTo("") == 0) {
+            String message = "Please enter a search string.";
+            request.getSession().setAttribute("message", message);
+            request.getSession().setAttribute("matchText", "");
+            return "message";
+        }
+
+        matchText = matchText.trim();
+        String matchText0 = matchText;
+        request.getSession().setAttribute("matchText", matchText);
+
+        _logger.debug("UserSessionBean matchText: " + matchText);
+
+        String matchAlgorithm = HTTPUtils.cleanXSS((String) request.getParameter("algorithm"));
+
+        request.getSession().setAttribute("selectedAlgorithm", matchAlgorithm);
+        //setSelectedAlgorithm(matchAlgorithm);
+
+        String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
+        if (searchTarget == null || searchTarget.length() == 0) {
+            String message = "Please specify a search target.";
+            request.getSession().setAttribute("message", message);
+            return "message";
+        } else {
+			request.getSession().setAttribute("searchTarget", searchTarget);
+		}
+
+        // Remove ranking check box (KLO, 092409)
+        // String rankingStr = (String) request.getParameter("ranking");
+        // boolean ranking = rankingStr != null && rankingStr.equals("on");
+        // request.getSession().setAttribute("ranking",
+        // Boolean.toString(ranking));
+
+		String source = (String) request.getSession().getAttribute("selectedSource");
+
+        if (source == null) {
+            source = "ALL";
+            //GForge #28784 If a single source is selected, make it the default source selection in the By Source tab
+            request.getSession().removeAttribute("selectedSource");
+        } else {
+			request.getSession().setAttribute("selectedSource", source);
+		}
+
+        if (NCImBrowserProperties.get_debugOn()) {
+            try {
+                _logger.debug(Utils.SEPARATOR);
+                _logger.debug("* criteria: " + matchText);
+                _logger.debug("* source: " + source);
+            } catch (Exception e) {
+				e.printStackTrace();
+            }
+        }
+        String scheme = Constants.CODING_SCHEME_NAME;
+        String version = DataUtils.NCIM_VERSION;
+        String max_str = null;
+        int maxToReturn = -1;// 1000;
+        try {
+            max_str =
+                NCImBrowserProperties.getInstance().getProperty(
+                    NCImBrowserProperties.MAXIMUM_RETURN);
+            maxToReturn = Integer.parseInt(max_str);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        //Utils.StopWatch stopWatch = new Utils.StopWatch();
+        Vector<org.LexGrid.concepts.Concept> v = null;
+
+        boolean excludeDesignation = true;
+        boolean designationOnly = false;
+
+        // check if this search has been performance previously through
+        // IteratorBeanManager
+
+        IteratorBeanManager iteratorBeanManager =
+            (IteratorBeanManager) FacesContext.getCurrentInstance()
+                .getExternalContext().getSessionMap()
+                .get("iteratorBeanManager");
+
+        if (iteratorBeanManager == null) {
+            iteratorBeanManager = new IteratorBeanManager();
+            FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap()
+                .put("iteratorBeanManager", iteratorBeanManager);
+        }
+
+        IteratorBean iteratorBean = null;
+        ResolvedConceptReferencesIterator iterator = null;
+        Vector schemes = new Vector();
+        schemes.add(scheme);
+
+        Vector versions = new Vector();
+        versions.add(version);
+
+        boolean ranking = true;
+
+        SearchFields searchFields = null;
+        String key = null;
+		searchFields =
+			SearchFields.setSimple(schemes, matchText, searchTarget,
+				source, matchAlgorithm, maxToReturn);
+		key = searchFields.getKey();
+
+        if (searchTarget.compareTo("names") == 0) {
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                try {
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					SimpleSearchUtils simpleSearchUtils = new SimpleSearchUtils(lbSvc);
+					//boolean isSimpleSearchSupported = simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES);
+					if (simpleSearchUtils.searchAllSources(source) && simpleSearchUtils.isSimpleSearchSupported(matchAlgorithm, SimpleSearchUtils.NAMES)) {
+						iterator = simpleSearchUtils.search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, matchAlgorithm);
+						wrapper = null;
+						if (iterator != null) {
+							wrapper = new ResolvedConceptReferencesIteratorWrapper(iterator);
+						}
+
+				    } else {
+						wrapper = new SearchUtils(lbSvc)
+							.searchByNameOrCode(schemes, versions, matchText, source,
+								matchAlgorithm, ranking, maxToReturn, SearchUtils.SEARCH_BY_NAME_ONLY);
+					}
+				} catch (Exception ex) {
+                    ex.printStackTrace();
+				}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+                        iteratorBean.setMatchText(matchText);
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+                    }
+                }
+            }
+
+        } else if (searchTarget.compareTo("codes") == 0) {
+            if (iteratorBeanManager.containsIteratorBean(key)) {
+                iteratorBean = iteratorBeanManager.getIteratorBean(key);
+                iterator = iteratorBean.getIterator();
+            } else {
+                //ResolvedConceptReferencesIteratorWrapper wrapper = null;
+                try {
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					wrapper = new CodeSearchUtils(lbSvc).searchByCode(
+						schemes, versions, matchText,
+						source, matchAlgorithm, ranking, maxToReturn, false);
+
+				} catch (Exception ex) {
+                    ex.printStackTrace();
+				}
+
+                if (wrapper != null) {
+                    iterator = wrapper.getIterator();
+
+                    if (iterator != null) {
+                        iteratorBean = new IteratorBean(iterator);
+                        iteratorBean.setKey(key);
+                        iteratorBean.setMatchText(matchText);
+                        iteratorBeanManager.addIteratorBean(iteratorBean);
+                    }
+                }
+            }
+
+		} else if (searchTarget.compareTo("properties") == 0) {
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+			} else {
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				wrapper =
+					new SearchUtils(lbSvc).searchByProperties(scheme, version,
+						matchText, source, matchAlgorithm,
+						excludeDesignation, ranking, maxToReturn);
+				if (wrapper != null) {
+					iterator = wrapper.getIterator();
+					if (iterator != null) {
+						iteratorBean = new IteratorBean(iterator);
+						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
+						iteratorBeanManager.addIteratorBean(iteratorBean);
+					}
+				}
+			}
+
+		} else if (searchTarget.compareTo("relationships") == 0) {
+			matchText = matchText.trim();
+ 			//if (matchText.indexOf(" ") == -1 && matchAlgorithm.compareTo("contains") == 0) {
+			if (matchText.length()<NCImBrowserProperties.getMinimumSearchStringLength() && matchAlgorithm.compareTo("contains") == 0) {
+				String msg = Constants.USE_MORE_SPECIFIC_SEARCH_CRITERIA;
+				request.getSession().setAttribute("message", msg);
+				return "message";
+			}
+
+			designationOnly = true;
+			if (iteratorBeanManager.containsIteratorBean(key)) {
+				iteratorBean = iteratorBeanManager.getIteratorBean(key);
+				iterator = iteratorBean.getIterator();
+
+			} else {
+				//[GF#28946] Contains relationship results possibly missing some concepts
+				//KLO, 062310
+				LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+				wrapper = new SearchUtils(lbSvc).searchByRELA(scheme,
+					version, matchText, source, matchAlgorithm,
+					null, null, maxToReturn);
+
+				if (wrapper == null) {
+					wrapper =
+						new SearchUtils(lbSvc).searchByAssociations(scheme, version,
+							matchText, source, matchAlgorithm, designationOnly,
+							ranking, maxToReturn);
+				}
+
+				if (wrapper != null) {
+					iterator = wrapper.getIterator();
+					if (iterator != null) {
+						iteratorBean = new IteratorBean(iterator);
+						iteratorBean.setKey(key);
+						iteratorBean.setMatchText(matchText);
+						iteratorBeanManager.addIteratorBean(iteratorBean);
+					}
+				}
+			}
+		}
+
+        request.getSession().setAttribute("key", key);
+        request.getSession().setAttribute("vocabulary", scheme);
+        request.getSession().setAttribute("matchAlgorithm", matchAlgorithm);
+        request.getSession().setAttribute("matchText", matchText0);
+        request.getSession().removeAttribute("neighborhood_synonyms");
+        request.getSession().removeAttribute("neighborhood_atoms");
+        request.getSession().removeAttribute("concept");
+        request.getSession().removeAttribute("code");
+        request.getSession().removeAttribute("codeInNCI");
+        request.getSession().removeAttribute("AssociationTargetHashMap");
+        request.getSession().removeAttribute("type");
+
+        if (iterator != null) {
+            if (iteratorBean == null) {
+				String message = "An error encountered - iteratorBean == null.";
+				request.getSession().setAttribute("message", message);
+				request.getSession().setAttribute("matchText", matchText0);
+				return "message";
+
+			} else {
+				int size = iteratorBean.getSize();
+				// Write a search log entry
+				//SearchLog.writeEntry(searchFields, size, HTTPUtils
+				//    .getRefererParmDecode(request));
+
+				if (size > 1) {
+					request.getSession().setAttribute("search_results", v);
+					String match_size = Integer.toString(size);
+					request.getSession().setAttribute("match_size", match_size);
+					request.getSession().setAttribute("page_string", "1");
+					request.getSession().setAttribute("new_search", Boolean.TRUE);
+					//KLO 111415
+					request.getSession().setAttribute("matchText", matchText);
+					return "search_results";
+				} else if (size == 1) {
+					request.getSession().setAttribute("singleton", "true");
+					request.getSession().setAttribute("dictionary",
+						Constants.CODING_SCHEME_NAME);
+					int pageNumber = 1;
+					List list = iteratorBean.getData(1);
+					ResolvedConceptReference ref =
+						(ResolvedConceptReference) list.get(0);
+
+					Entity c = null;
+					if (ref == null) {
+						String msg =
+							"Error: Null ResolvedConceptReference encountered.";
+						request.getSession().setAttribute("message", msg);
+						return "message";
+
+					} else {
+						c = ref.getReferencedEntry();
+						if (c == null) {
+							c =
+								DataUtils.getConceptByCode(
+									Constants.CODING_SCHEME_NAME, null, null, ref
+										.getConceptCode());
+						}
+					}
+
+					request.getSession().setAttribute("code", ref.getConceptCode());
+					request.getSession().setAttribute("concept", c);
+					request.getSession().setAttribute("type", "properties");
+					request.getSession().setAttribute("new_search", Boolean.TRUE);
+
+					LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+					String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
+						null, c.getEntityCode());
+					if (newCUI != null) {
+						_logger.debug("Searching for " + newCUI);
+						c = DataUtils.getConceptByCode(Constants.CODING_SCHEME_NAME,
+								null, null, newCUI);
+						request.getSession().setAttribute("code", newCUI);
+						request.getSession().setAttribute("concept", c);
+						//request.getSession().setAttribute("type", "properties");
+						request.getSession().setAttribute("new_search", Boolean.TRUE);
+						request.getSession().setAttribute("retired_cui", c.getEntityCode());
+
+					}
+
+					HttpServletResponse response =
+						(HttpServletResponse) FacesContext.getCurrentInstance()
+							.getExternalContext().getResponse();
+					response.setContentType("text/html;charset=utf-8");
+					return "concept_details";
+				}
+			}
+        }
+
+        // [#23463] Linking retired concept to corresponding new concept
+        // Test case: C0536142|200601|SY|||C1433544|Y|
+        // [#28861] Searching for "retired" or "redirected" concept codes with Contains or Begins With fails
+
+        //if (searchTarget == null || (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0)) {
+        //if (searchTarget.compareToIgnoreCase("Relationship") != 0 && searchTarget.compareToIgnoreCase("Property") != 0) {
+
+        //}
+
+        String message = "No match found.";
+        if (matchAlgorithm.compareTo("exactMatch") == 0) {
+            message = Constants.ERROR_NO_MATCH_FOUND_TRY_OTHER_ALGORITHMS;
+        }
+        request.getSession().setAttribute("message", message);
+        request.getSession().setAttribute("matchText", matchText0);
+        return "message";
+    }
+
 
     private String _selectedResultsPerPage = null;
     private List _resultsPerPageList = null;
@@ -676,7 +1026,7 @@ response.setContentType("text/html;charset=utf-8");
 
     public List getConceptSourceList() {
         String codingSchemeName = Constants.CODING_SCHEME_NAME;
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -860,7 +1210,22 @@ response.setContentType("text/html;charset=utf-8");
 		request.getSession().setAttribute("message", message);
 		request.getSession().setAttribute("emailaddress", from);
 
-		if (isNull(answer) || isNull(subject) || isNull(message) || isNull(from)) {
+
+        String str = HTTPUtils.cleanXSS((String) request.getParameter("g-recaptcha-response"));
+        String recaptcha_security_key = NCImBrowserProperties.getRecaptchaSecurityKey();
+        JSONObject json = new CaptchaUtils().getCaptchaJsonResponse(recaptcha_security_key, request.getParameter("g-recaptcha-response"));
+        String json_str = json.toString();
+
+        if (str.length() == 0 || json_str.indexOf("error-code") != -1) {
+			msg = INCOMPLETE_CAPTCHA_RESPONSE;
+			request.getSession().setAttribute("errorMsg", msg);
+			request.getSession().setAttribute("retry", "true");
+			return "retry";
+		}
+
+
+		//if (isNull(answer) || isNull(subject) || isNull(message) || isNull(from)) {
+		if (isNull(subject) || isNull(message) || isNull(from)) {
 			msg = Constants.PLEASE_COMPLETE_DATA_ENTRIES;
 			request.getSession().setAttribute("errorMsg", msg);
 			request.getSession().setAttribute("retry", "true");
@@ -875,6 +1240,7 @@ response.setContentType("text/html;charset=utf-8");
 			return "retry";
 		}
 
+/*
         String captcha_option = HTTPUtils.cleanXSS((String) request.getParameter("captcha_option"));
         if (isNull(captcha_option)) {
 			captcha_option = "default";
@@ -922,8 +1288,27 @@ response.setContentType("text/html;charset=utf-8");
             return "error";
         }
         return "message";
+        */
+
+         try {
+            String recipientStr = NCImBrowserProperties.getNCICB_CONTACT_URL();
+            String mail_smtp_server = NCImBrowserProperties.getMAIL_SMTP_SERVER();
+           // MailUtils.postMail(from, recipientStr, subject, message, mail_smtp_server);
+			request.getSession().setAttribute("message", msg);
+        } catch (Exception e) {
+            msg = "Your message was not sent.\n";
+            msg += "    (If possible, please contact NCI systems team.)\n";
+            msg += "\n";
+            msg += e.getMessage();
+            request.getSession().setAttribute("errorMsg", Utils.toHtml(msg));
+            request.getSession().setAttribute("errorType", "system");
+            e.printStackTrace();
+            return "error";
+        }
+        return "message";
     }
 
+/*
     private String validateCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
         Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
@@ -957,16 +1342,7 @@ response.setContentType("text/html;charset=utf-8");
     private String validateAudioCaptcha(HttpServletRequest request,
         String returnIncompleteState) throws Exception {
         AudioCaptcha captcha = (AudioCaptcha) request.getSession().getAttribute(AudioCaptcha.NAME);
-/*
-        if (captcha == null) {
-			AudioCaptcha ac = new AudioCaptcha.Builder()
-				.addAnswer()
-				.addNoise()
-				.build();
 
-			request.getSession().setAttribute(AudioCaptcha.NAME, ac);
-		}
-*/
         // Do this so we can capture non-Latin chars
         request.setCharacterEncoding("UTF-8");
         String answer = HTTPUtils.cleanXSS((String) request.getParameter("answer"));
@@ -985,7 +1361,7 @@ response.setContentType("text/html;charset=utf-8");
         request.getSession().removeAttribute(AudioCaptcha.NAME);
         return null;
     }
-
+*/
 
     private static class NoReloadException extends Exception {
         private static final long serialVersionUID = 1L;
@@ -1023,7 +1399,7 @@ response.setContentType("text/html;charset=utf-8");
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
-
+        //setSelectedResultsPerPage((String) request.getParameter("resultsPerPage"));
         request.getSession().removeAttribute("error_msg");
         boolean retval = HTTPUtils.validateRequestParameters(request);
         if (!retval) {
@@ -1083,7 +1459,7 @@ response.setContentType("text/html;charset=utf-8");
         String searchTarget = HTTPUtils.cleanXSS((String) request.getParameter("searchTarget"));
 
         //String matchText = HTTPUtils.cleanXSS((String)  request.getParameter("matchText"));
-        String matchText = HTTPUtils.cleanMatchTextXSS((String)  request.getParameter("adv_matchText"));
+        String matchText = HTTPUtils.cleanMatchTextXSS((String) request.getParameter("adv_matchText"));
         if (matchText == null || matchText.length() == 0) {
             String message = "Please enter a search string.";
             // request.getSession().setAttribute("message", message);
@@ -1106,7 +1482,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
         Vector schemes = new Vector();
         schemes.add(scheme);
 
-        String version = null;
+        String version = DataUtils.NCIM_VERSION;;
         String max_str = null;
         int maxToReturn = -1;// 1000;
         try {
@@ -1115,6 +1491,7 @@ request.getSession().setAttribute("searchStatusBean", bean);
                     NCImBrowserProperties.MAXIMUM_RETURN);
             maxToReturn = Integer.parseInt(max_str);
         } catch (Exception ex) {
+			ex.printStackTrace();
         }
         //Utils.StopWatch stopWatch = new Utils.StopWatch();
         Vector<Entity> v = null;
@@ -1166,6 +1543,8 @@ request.getSession().setAttribute("searchStatusBean", bean);
                     property_type, property_name, source, matchAlgorithm,
                     maxToReturn);
             key = searchFields.getKey();
+
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1292,11 +1671,13 @@ request.getSession().setAttribute("searchStatusBean", bean);
             }
 
         } else if (searchType != null && searchType.compareTo("Name") == 0) {
+
             searchFields =
                 SearchFields.setName(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
 
             key = searchFields.getKey();
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1338,10 +1719,12 @@ request.getSession().setAttribute("searchStatusBean", bean);
             }
 
         } else if (searchType != null && searchType.compareTo("Code") == 0) {
+
             searchFields =
                 SearchFields.setCode(schemes, matchText, searchTarget, source,
                     matchAlgorithm, maxToReturn);
             key = searchFields.getKey();
+
             if (iteratorBeanManager.containsIteratorBean(key)) {
                 iteratorBean = iteratorBeanManager.getIteratorBean(key);
                 iterator = iteratorBean.getIterator();
@@ -1395,7 +1778,9 @@ request.getSession().setAttribute("searchStatusBean", bean);
 				int matchingConceptCount = 0;
 				try {
 					SearchByAssociationIteratorDecorator assoIterator = (SearchByAssociationIteratorDecorator) iterator;
-					matchingConceptCount = assoIterator.getQuickIteratorSize();
+					//KLO 10172019
+					//matchingConceptCount = assoIterator.getQuickIteratorSize();
+					matchingConceptCount = assoIterator.numberRemaining();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -1411,8 +1796,8 @@ request.getSession().setAttribute("searchStatusBean", bean);
             _logger.debug("AdvancedSearchActon size: " + size);
 
             // Write a search log entry
-            SearchLog.writeEntry(searchFields, size, HTTPUtils
-                .getRefererParmDecode(request));
+            // SearchLog.writeEntry(searchFields, size, HTTPUtils
+            //    .getRefererParmDecode(request));
 
             if (size > 1) {
                 request.getSession().setAttribute("search_results", v);
@@ -1464,7 +1849,7 @@ response.setContentType("text/html;charset=utf-8");
         // [#23463] Linking retired concept to corresponding new concept
         // Test case: C0536142|200601|SY|||C1433544|Y|
 
-        if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
+        //if (searchType == null || (searchType.compareTo("Relationship") != 0 && searchType.compareTo("Property") != 0)) {
 
             //String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(matchText);
             String newCUI = new HistoryUtils(lbSvc).getReferencedCUI(Constants.CODING_SCHEME_NAME,
@@ -1481,7 +1866,7 @@ response.setContentType("text/html;charset=utf-8");
                 request.getSession().setAttribute("type", "properties");
 
                 request.getSession().setAttribute("new_search", Boolean.TRUE);
-                request.getSession().setAttribute("retired_cui", matchText);
+                request.getSession().setAttribute("retired_cui", c.getEntityCode());
 
 HttpServletResponse response =
 	(HttpServletResponse) FacesContext.getCurrentInstance()
@@ -1490,7 +1875,7 @@ response.setContentType("text/html;charset=utf-8");
 
                 return "concept_details";
             }
-        }
+        //}
 
         String message = "No match found.";
         if (matchAlgorithm.compareTo("exactMatch") == 0 && searchType.compareTo("Relationship") != 0) {
@@ -1500,5 +1885,17 @@ response.setContentType("text/html;charset=utf-8");
         return "no_match";
 
     }
-
+/*
+    public static List getResultsPerPageValues() {
+        List resultsPerPageList = new ArrayList();
+        resultsPerPageList.add("10");
+        resultsPerPageList.add("25");
+        resultsPerPageList.add("50");
+        resultsPerPageList.add("75");
+        resultsPerPageList.add("100");
+        resultsPerPageList.add("250");
+        resultsPerPageList.add("500");
+        return resultsPerPageList;
+    }
+*/
 }
